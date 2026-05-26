@@ -122,6 +122,7 @@ export type XrefOccurrenceNode = NodeBase & {
 	attributes?: Record<string, string | number | boolean>;
 	sourceSpan?: SourceSpan;
 	containingSectionId?: string;
+	scope?: "local" | "external" | "unresolved";
 	targetKind?: string;
 };
 

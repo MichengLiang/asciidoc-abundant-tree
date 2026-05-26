@@ -136,7 +136,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 
 function formatScalar(value: unknown): string {
 	if (typeof value === "string") {
-		return JSON.stringify(value);
+		return `"${escapeAttribute(value)}"`;
 	}
 	if (value === undefined) {
 		return "undefined";
@@ -145,5 +145,13 @@ function formatScalar(value: unknown): string {
 }
 
 function indent(depth: number): string {
-	return "  ".repeat(depth);
+	return "    ".repeat(depth);
+}
+
+function escapeAttribute(value: string): string {
+	return value
+		.replaceAll("&", "&amp;")
+		.replaceAll('"', "&quot;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;");
 }

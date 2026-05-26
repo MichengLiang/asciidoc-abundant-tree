@@ -1,0 +1,15 @@
+= Code Surface Audit
+
+== Real Section
+
+[#code]
+[source,txt]
+----
+== Not A Section
+This code mentions <<not-a-real-target>> and [[not-anchor]].
+----
+
+After code, see <<real-target>>.
+
+[#real-target]
+== Real Target

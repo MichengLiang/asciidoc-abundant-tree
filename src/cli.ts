@@ -9,7 +9,8 @@ import { formatAbundantTree, serializeAbundantTreeToJson } from "./serializers";
 
 export type CliResult = {
 	code: number;
-	output: string;
+	stdout: string;
+	stderr: string;
 };
 
 const USAGE = `Usage:
@@ -27,21 +28,24 @@ export function runCli(args: string[]): CliResult {
 	} catch (error) {
 		return {
 			code: 1,
-			output: formatError(error),
+			stdout: "",
+			stderr: formatError(error),
 		};
 	}
 
 	if (parsed.help) {
 		return {
 			code: 0,
-			output: USAGE,
+			stdout: USAGE,
+			stderr: "",
 		};
 	}
 
 	if (parsed.sourcePath === undefined) {
 		return {
 			code: 1,
-			output: `${USAGE}\n\nMissing input file.`,
+			stdout: "",
+			stderr: `${USAGE}\n\nMissing input file.`,
 		};
 	}
 
@@ -50,7 +54,8 @@ export function runCli(args: string[]): CliResult {
 	if (!existsSync(inputPath)) {
 		return {
 			code: 1,
-			output: `Input file not found: ${parsed.sourcePath}`,
+			stdout: "",
+			stderr: `Input file not found: ${parsed.sourcePath}`,
 		};
 	}
 
@@ -60,15 +65,17 @@ export function runCli(args: string[]): CliResult {
 		});
 		return {
 			code: 0,
-			output:
+			stdout:
 				parsed.format === "json"
 					? `${JSON.stringify(serializeAbundantTreeToJson(document), null, 2)}\n`
 					: `${formatAbundantTree(document)}\n`,
+			stderr: "",
 		};
 	} catch (error) {
 		return {
 			code: 1,
-			output: formatError(error),
+			stdout: "",
+			stderr: formatError(error),
 		};
 	}
 }
@@ -105,7 +112,7 @@ function parseArgs(args: string[]): {
 				throw new Error("--format requires a value");
 			}
 			if (next !== "tree" && next !== "json") {
-				throw new Error(`Unsupported format: ${next}`);
+				throw new Error(`Unsupported format: ${next}. Expected tree or json.`);
 			}
 			format = next;
 			index += 1;
@@ -137,9 +144,14 @@ function formatError(error: unknown): string {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
 	const result = runCli(process.argv.slice(2));
-	if (result.output) {
+	if (result.stdout) {
 		process.stdout.write(
-			result.output.endsWith("\n") ? result.output : `${result.output}\n`,
+			result.stdout.endsWith("\n") ? result.stdout : `${result.stdout}\n`,
+		);
+	}
+	if (result.stderr) {
+		process.stderr.write(
+			result.stderr.endsWith("\n") ? result.stderr : `${result.stderr}\n`,
 		);
 	}
 	process.exitCode = result.code;

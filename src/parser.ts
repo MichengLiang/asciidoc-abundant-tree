@@ -1,12 +1,66 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { createAsciidoctorAdapter } from "./asciidoctor-adapter";
-import type { AbundantDocument, ParseAbundantTreeOptions } from "./model";
+import { addAnchorTargets, bindXrefs } from "./binding-merge";
+import type {
+	AbundantDocument,
+	AsciidoctorLayer,
+	ParseAbundantTreeOptions,
+} from "./model";
+import { definedObject } from "./object-utils";
+import { projectOfficialDocument } from "./official-projector";
+import { buildLineTable, spanForLineText } from "./source-lines";
+import { scanSourceSurfaces } from "./source-surfaces";
 
 export function parseAbundantTree(
 	options: ParseAbundantTreeOptions,
 ): AbundantDocument {
+	const sourcePath = resolve(options.sourcePath);
+	const source = readFileSync(sourcePath, "utf8");
+	const lineTable = buildLineTable(source);
 	const adapter = createAsciidoctorAdapter();
+	const officialDocument = adapter.loadFile(sourcePath);
+	const sourceSurfaces = scanSourceSurfaces(lineTable);
+	const officialProjection = projectOfficialDocument({
+		officialDocument,
+		lineTable,
+		sections: sourceSurfaces.sections,
+		sectionByLine: sourceSurfaces.sectionByLine,
+		xrefOccurrences: sourceSurfaces.xrefOccurrences,
+		anchorOccurrences: sourceSurfaces.anchorOccurrences,
+		adapter,
+	});
 
-	throw new Error(
-		`parseAbundantTree is not implemented yet for ${options.sourcePath} using @asciidoctor/core ${adapter.parserVersion}`,
+	addAnchorTargets(
+		officialProjection.targets,
+		sourceSurfaces.anchorOccurrences,
 	);
+	bindXrefs(sourceSurfaces.xrefOccurrences, officialProjection.targets);
+
+	return {
+		kind: "document",
+		sourcePath,
+		mode: "single-file",
+		parser: {
+			name: "@asciidoctor/core",
+			version: adapter.parserVersion,
+		},
+		title: {
+			kind: "title",
+			text: officialDocument.getDocumentTitle?.() ?? "",
+			source: {
+				line: 1,
+				sourceSpan: spanForLineText(lineTable, 1, 1),
+			},
+			asciidoctor: definedObject({
+				context: officialDocument.getContext?.(),
+				nodeName: officialDocument.getNodeName?.(),
+			}) as AsciidoctorLayer,
+		},
+		children: officialProjection.children,
+		targets: officialProjection.targets,
+		xrefOccurrences: sourceSurfaces.xrefOccurrences,
+		anchorOccurrences: sourceSurfaces.anchorOccurrences,
+		toolDiagnostics: [],
+	};
 }

@@ -34,8 +34,8 @@ describe("serializers", () => {
 		const output = formatAbundantTree(document);
 
 		expect(output).toMatch(/^<document /);
-		expect(output).toMatch(/\n {2}<parser /);
-		expect(output).toMatch(/\n {2}children\[\]/);
+		expect(output).toMatch(/\n {4}<parser /);
+		expect(output).toMatch(/\n {4}children\[\]/);
 	});
 
 	it("serializes to plain JSON-safe data", () => {
