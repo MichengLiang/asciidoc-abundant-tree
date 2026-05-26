@@ -20,8 +20,8 @@
 	"scripts": {
 		"build": "tsdown",
 		"dev": "tsx src/cli.ts",
-		"lint": "biome check --vcs-use-ignore-file=false src test docs samples package.json tsconfig.json tsdown.config.ts vitest.config.ts .gitignore",
-		"format": "biome check --write --vcs-use-ignore-file=false src test docs samples package.json tsconfig.json tsdown.config.ts vitest.config.ts .gitignore",
+		"lint": "biome check --vcs-use-ignore-file=false src test docs samples README.md package.json tsconfig.json tsdown.config.ts vitest.config.ts .gitignore",
+		"format": "biome check --write --vcs-use-ignore-file=false src test docs samples README.md package.json tsconfig.json tsdown.config.ts vitest.config.ts .gitignore",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
