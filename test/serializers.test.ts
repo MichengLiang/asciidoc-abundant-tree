@@ -38,6 +38,30 @@ describe("serializers", () => {
 		expect(output).toMatch(/\n {4}children\[\]/);
 	});
 
+	it("formats multiline scalar text as indented body lines", () => {
+		const output = formatAbundantTree({
+			...document,
+			children: [
+				{
+					kind: "listing",
+					ids: ["example"],
+					content: 'first line\n    print("hello")\nlast line',
+				},
+			],
+		});
+
+		expect(output).not.toContain('content="first line\n');
+		expect(output).toContain(
+			[
+				"        <listing>",
+				"            content:",
+				"                first line",
+				'                    print("hello")',
+				"                last line",
+			].join("\n"),
+		);
+	});
+
 	it("serializes to plain JSON-safe data", () => {
 		const json = serializeAbundantTreeToJson(document);
 

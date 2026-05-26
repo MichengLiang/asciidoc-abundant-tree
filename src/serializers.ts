@@ -28,6 +28,10 @@ function formatValue(value: unknown, depth: number, label: string): string[] {
 		return formatObject(value as Record<string, unknown>, depth, label);
 	}
 
+	if (isMultilineString(value)) {
+		return formatMultilineScalar(value, depth, label);
+	}
+
 	return [`${indent(depth)}${label}: ${formatScalar(value)}`];
 }
 
@@ -76,6 +80,17 @@ function formatObject(
 	return lines;
 }
 
+function formatMultilineScalar(
+	value: string,
+	depth: number,
+	label: string,
+): string[] {
+	return [
+		`${indent(depth)}${label}:`,
+		...value.split("\n").map((line) => `${indent(depth + 1)}${line}`),
+	];
+}
+
 function buildHeadline(object: Record<string, unknown>, label: string): string {
 	const nodeName =
 		typeof object.kind === "string" && object.kind.length > 0
@@ -95,10 +110,14 @@ function buildHeadline(object: Record<string, unknown>, label: string): string {
 }
 
 function orderedChildKeys(object: Record<string, unknown>): string[] {
-	const keys = Object.keys(object).filter((key) => !isScalar(object[key]));
+	const keys = Object.keys(object).filter(
+		(key) => !isScalar(object[key]) || isMultilineString(object[key]),
+	);
 	const priority = [
 		"parser",
 		"title",
+		"text",
+		"content",
 		"children",
 		"metadata",
 		"targets",
@@ -114,7 +133,7 @@ function orderedChildKeys(object: Record<string, unknown>): string[] {
 
 function orderedScalarKeys(object: Record<string, unknown>): string[] {
 	return Object.keys(object)
-		.filter((key) => isScalar(object[key]))
+		.filter((key) => isScalar(object[key]) && !isMultilineString(object[key]))
 		.sort((a, b) => {
 			if (a === "kind") {
 				return -1;
@@ -128,6 +147,10 @@ function orderedScalarKeys(object: Record<string, unknown>): string[] {
 
 function isScalar(value: unknown): boolean {
 	return value === null || value === undefined || typeof value !== "object";
+}
+
+function isMultilineString(value: unknown): value is string {
+	return typeof value === "string" && value.includes("\n");
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

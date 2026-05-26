@@ -35,6 +35,10 @@ Default output is pretty text:
     <section ...>
         <paragraph ...>
             <xref ...>
+        <listing ...>
+            content:
+                first line
+                second line
 ```
 
 JSON output preserves the same object fields and omits `undefined` values.
