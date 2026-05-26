@@ -25,7 +25,7 @@ containment 的唯一来源是 `AbundantDocument.children`。
 
 . document resource 对每个顶层 child resource 生成 `aat:containsDirectly`。
 . section resource 对每个直接 child resource 生成 `aat:containsDirectly`。
-. paragraph resource 可以对其直接 xref occurrence 和 anchor occurrence 生成 `aat:containsDirectly`。
+. paragraph resource 对其直接 xref occurrence 和 anchor occurrence 生成 `aat:containsDirectly`。
 . listing、table 和 payload block 不从 raw text 中生成额外 child。
 
 投影器不得使用标题 level 自行重建第二套 section tree。section tree 已经由 `AbundantDocument` 提供。

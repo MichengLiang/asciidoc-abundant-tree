@@ -18,17 +18,17 @@ projection graph:: 从 `AbundantDocument` 派生出的 RDF 1.2 图。
 
 source document 是事实来源。`AbundantDocument` 是结构恢复层的公共契约。projection graph 是对该公共契约的图表达。
 
-投影器不把 RDF 图写回 source document。投影器生成的 IRI resource 不进入作者维护的 AsciiDoc 表面。源文件重新解析以后，新的 `AbundantDocument` 可以重新生成新的 projection graph。
+投影器不把 RDF 图写回 source document。投影器生成的 IRI resource 不进入作者维护的 AsciiDoc 表面。源文件重新解析以后，`AbundantDocument` 与 projection graph 均由当前源文件重新产生。
 
 === 选择性投影
 
 选择性投影表示：只有 `AbundantDocument` 已经提供的结构事实才能进入 projection graph。投影器不得为缺失字段发明事实。
 
-`AbundantDocument` 提供 section span 时，section resource 可以带行范围。`AbundantDocument` 提供 xref raw target 时，xref occurrence resource 可以带 target selector。`AbundantDocument` 未提供字符 offset 时，projection graph 不生成字符 offset。`AbundantDocument` 未提供 payload 内部结构时，projection graph 不展开 payload raw。
+`AbundantDocument` 提供 section span 时，section resource 必须带行范围。`AbundantDocument` 提供 xref raw target 时，xref occurrence resource 必须带 target selector。`AbundantDocument` 未提供字符 offset 时，projection graph 不生成字符 offset。`AbundantDocument` 未提供 payload 内部结构时，projection graph 不展开 payload raw。
 
 选择性投影不是任意裁剪。投影规则必须完整覆盖当前输入契约中的结构事实。一个字段是否进入图，由该字段是否服务结构查询、源文件定位、selector binding、关系 reification、attribute 表达或 payload 回源决定。
 
-=== 当前职责
+=== 职责边界
 
 该投影器负责以下对象：
 

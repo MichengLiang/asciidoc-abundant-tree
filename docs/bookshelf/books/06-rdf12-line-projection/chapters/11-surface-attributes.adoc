@@ -47,11 +47,17 @@ metadata attribute list 中的字段连接到所属结构 resource：
 
 :attr-l1-kind-o0 a aat:SurfaceAttribute ;
   aat:name "kind" ;
-  rdf:value "policy" .
+  rdf:value "policy" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 1 ;
+  aat:endLine 1 .
 
 :attr-l1-status-o0 a aat:SurfaceAttribute ;
   aat:name "status" ;
-  rdf:value "active" .
+  rdf:value "active" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 1 ;
+  aat:endLine 1 .
 ----
 
 该投影表达“源文档表面有字段 kind=policy”。它不表达 section 是 `Policy` class。
@@ -73,7 +79,10 @@ xref:capacity-rule[运力规则, weight=0.8]
 
 :attr-xref-l4-weight-o0 a aat:SurfaceAttribute ;
   aat:name "weight" ;
-  rdf:value "0.8" .
+  rdf:value "0.8" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 4 ;
+  aat:endLine 4 .
 ----
 
 edge attribute 属于 xref occurrence reifier，不属于 source node，也不属于 target node。
@@ -90,7 +99,7 @@ xref attributes 中的 `rel` 和 `payload` 是控制字段。它们使用专门�
 
 === 查询
 
-查询者可以通过 `aat:SurfaceAttribute` 查找源文档表面字段：
+查询者通过 `aat:SurfaceAttribute` 查找源文档表面字段：
 
 [source,sparql]
 ----

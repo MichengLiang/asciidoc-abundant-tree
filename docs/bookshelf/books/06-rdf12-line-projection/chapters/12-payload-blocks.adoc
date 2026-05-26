@@ -10,12 +10,12 @@ payload resource IRI 由投影器生成。作者写出的 payload ID 是 address
 示例：
 
 [source,asciidoc]
-----
+------
 [#delivery-policy-payload.payload, for=delivery-policy, data=json]
 [source,json]
-----
+------
 
-`delivery-policy-payload` 投影为 `aat:AddressLabel`。payload resource IRI 可以是：
+`delivery-policy-payload` 投影为 `aat:AddressLabel`。payload resource IRI 形式为：
 
 [source,text]
 ----
@@ -37,10 +37,10 @@ role token 同时投影为 `aat:RoleLabel`。
 node payload 使用 `for` 字段绑定到 node selector。
 
 [source,asciidoc]
-----
+------
 [#delivery-policy-payload.payload, for=delivery-policy, data=json]
 [source,json]
-----
+------
 
 投影为：
 
@@ -70,12 +70,12 @@ xref payload 通过 xref occurrence 的 `payloadSelector` 绑定。
 源文档：
 
 [source,asciidoc]
-----
+------
 xref:capacity-rule[运力规则, payload=rel-delivery-capacity]
 
 [#rel-delivery-capacity.xref-payload, data=json]
 [source,json]
-----
+------
 
 投影为：
 

@@ -60,7 +60,7 @@
 
 * `aat:containsDirectly` 只来自 `AbundantDocument.children`。
 * projection graph 不默认输出 containment 传递闭包。
-* section、paragraph、listing、table、anchor 和 xref occurrence 可以参与直接包含关系。
+* section、paragraph、listing、table、anchor 和 xref occurrence 按 `AbundantDocument.children` 参与直接包含关系。
 * containment relation 与 xref relation 使用不同谓词。
 
 === 来源不变量

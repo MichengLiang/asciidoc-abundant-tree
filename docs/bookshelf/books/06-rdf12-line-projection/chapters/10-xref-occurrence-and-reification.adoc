@@ -86,7 +86,8 @@ predicate 由 xref attributes 中的 `rel` 字段或默认规则决定。
 . 没有 `rel` 字段时，predicate IRI 是 `aat:references`。
 . `rel` 字段是绝对 IRI 时，predicate IRI 是该 IRI。
 . `rel` 字段是已知 CURIE 时，predicate IRI 是展开后的 IRI。
-. `rel` 字段是普通 token 时，predicate IRI 是 `rel:<token>`。
+. `rel` 字段是普通 token 时，predicate IRI 是 `rel:` 命名空间下由该 token 经过 IRI-safe 编码得到的 IRI。
+. `rel` 字段不能映射为合法 IRI 时，xref occurrence 保留 `aat:rawRel`，不生成 relation triple。
 
 示例：
 
@@ -116,7 +117,7 @@ xref:capacity-rule[运力规则, rel=depends-on]
 :source rel:depends-on :target .
 ----
 
-`rel` 的映射是表面谓词选择，不是业务正确性判断。
+`rel` 的映射是表面谓词选择，不是业务正确性判断。`rel=depends-on` 的 Turtle 示例使用前缀形式 `rel:depends-on`；其它 token 的序列化形式由 IRI-safe 编码结果决定。
 
 === Relation Triple
 
@@ -152,7 +153,7 @@ RDF graph 中相同 triple 只有一个。多个 xref occurrence 指向同一 so
 
 === Official Evidence
 
-`asciidoctor.href`、`asciidoctor.resolvedId`、`asciidoctor.resolvedType` 和 `asciidoctor.reftext` 可以投影为 official evidence：
+`asciidoctor.href`、`asciidoctor.resolvedId`、`asciidoctor.resolvedType` 和 `asciidoctor.reftext` 投影为 official evidence：
 
 [source,turtle]
 ----

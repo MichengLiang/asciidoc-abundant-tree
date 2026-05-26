@@ -7,6 +7,6 @@
 
 本书的核心断言是：源文档是事实来源，`AbundantDocument` 是输入契约，RDF 图是派生投影。投影器只消费输入对象已经恢复出的结构事实，不重新解析 AsciiDoc，不解释 payload 内部格式，不执行业务 lint，不执行语义推理。
 
-本书面向两类读者。开发者可以根据各章的转换规则实现投影器。使用 RDF 图的查询者可以根据本书的查询契约定位结构资源、交叉引用 occurrence、payload block 和源文件行范围。
+本书面向两类读者。开发者依据各章的转换规则实现投影器。使用 RDF 图的查询者依据本书的查询契约定位结构资源、交叉引用 occurrence、payload block 和源文件行范围。
 
 本书使用中文叙事。RDF、IRI、literal、triple term、reifier、selector、label、provenance、payload 等术语在正文中保留英文形式或中英并列形式，以保持与 W3C 文档和工程实现之间的术语连续性。

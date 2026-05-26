@@ -41,7 +41,7 @@
 . 创建 document resource。
 . 遍历 `AbundantDocument.children`，创建结构 resources。
 . 为结构 resources 写入 relative path 和 line span。
-. 从结构 resource 的 title、ID、metadata 和 target catalog 生成 label resources。
+. 从结构 resource、payload resource、title、ID、metadata 和 target catalog 生成 label resources。
 . 建立 label catalog。
 . 从 `children` 关系生成 `aat:containsDirectly`。
 . 创建 xref occurrence resources。
@@ -49,8 +49,8 @@
 . 绑定 xref target node。
 . 映射 xref predicate IRI。
 . 对绑定完整的 xref 生成 relation triple 和 reifier。
-. 创建 surface attribute resources。
 . 创建 payload block resources。
+. 创建 surface attribute resources。
 . 绑定 payload selectors。
 . 输出 RDF graph。
 
@@ -69,7 +69,7 @@
   aat:sourceDigest "sha256:..." .
 ----
 
-若投影器无法取得 source digest，该字段可以缺失。relative path 不可缺失。
+投影器未取得 source text 或调用方提供的 content digest 时，`aat:sourceDigest` 缺失。relative path 不可缺失。
 
 === 结构遍历
 
@@ -122,7 +122,7 @@ source node、target node 和 predicate IRI 都存在时，输出 relation tripl
 步骤：
 
 . 判断 role：`payload` 或 `xref-payload`。
-. 写入 address label。
+. 写入 address label，并将 payload address label 纳入 label catalog。
 . 写入 data format。
 . 写入 source text。
 . 写入完整 line span 和 content line span。

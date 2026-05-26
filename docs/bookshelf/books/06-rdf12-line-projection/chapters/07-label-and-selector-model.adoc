@@ -8,7 +8,7 @@ label 是源文档表面中的可显示、可寻址或可查询字符串。selec
 projection graph 使用受控 label class：
 
 [horizontal]
-`aat:TitleLabel`:: document title、section title 或普通 block title。
+`aat:TitleLabel`:: document title 或 section title。
 `aat:BlockTitleLabel`:: listing、table 或其它 block 的标题。
 `aat:AddressLabel`:: 作者显式 ID 或可寻址 anchor ID。
 `aat:GeneratedAddressLabel`:: Asciidoctor generated ID。
@@ -40,7 +40,7 @@ label resource 必须包含 `rdf:value`。可回源 label 必须包含 `relative
   aat:endLine 11 .
 ----
 
-`rdfs:label` 可以作为主要显示 label 的冗余表达。`rdfs:label` 不替代 label resource，因为 label resource 承载 label kind 和 source location。
+`rdfs:label` 是主要显示 label 的冗余表达。`rdfs:label` 不替代 label resource，因为 label resource 承载 label kind 和 source location。
 
 === Selector Class
 
@@ -51,9 +51,9 @@ selector 是绑定输入。projection graph 使用以下 selector 字段：
 `aat:sourceSelector`:: xref 所在作用域的 source selector。
 `aat:forSelector`:: node payload 的 `for` 字段。
 `aat:payloadSelector`:: xref attribute 中的 payload 字段。
-`aat:rawRel`:: xref attribute 中的 rel 字段。
+`aat:rawRel`:: xref attribute 中的 rel 字段。该字段是 predicate IRI 映射的输入，不参与 target resource binding。
 
-selector 是 literal。selector 可以绑定到 projection resource，也可以保持未绑定状态。
+selector 是 literal。selector 绑定到 projection resource，或保持未绑定状态。
 
 示例：
 
@@ -83,7 +83,7 @@ catalog 条目的输入来源包括：
 * `TargetNode.asciidoctor.reftext`。
 * metadata 中的 IDs、roles 和 titles。
 
-`TargetNode` 不默认生成 target resource。`TargetNode` 补充 label catalog，使 target selector 可以绑定到已有结构 resource。
+`TargetNode` 不生成 target resource。`TargetNode` 补充 label catalog，使 target selector 绑定到已有结构 resource。
 
 === Selector Binding
 

@@ -1,0 +1,2 @@
+:series-name: asciidoc-abundant-tree
+:source-format: AsciiDoc

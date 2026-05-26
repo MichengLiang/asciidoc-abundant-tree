@@ -53,12 +53,13 @@ triple term 本身不自动断言该 triple。projection graph 在 source node�
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 ----
 
-`aat:` 命名空间承载投影词表。`rel:` 命名空间承载由 xref `rel` token 映射出的关系谓词。`rdf:` 和 `rdfs:` 来自 RDF/RDFS。`prov:` 来自 PROV-O。`dcterms:` 用作通用来源描述补充。
+`aat:` 命名空间承载投影词表。`rel:` 命名空间承载由 xref `rel` token 映射出的关系谓词。`rdf:` 和 `rdfs:` 来自 RDF/RDFS。`prov:` 来自 PROV-O。`dcterms:` 用作通用来源描述补充。`xsd:` 用于 typed literal。
 
 === Turtle 序列化
 
 Turtle 文本是 RDF graph 的序列化。投影验收比较 RDF graph 语义，不以 Turtle 排版、前缀顺序或三元组顺序为准。
 
-实现可以输出等价的显式 reifier triples，也可以使用 Turtle 1.2 支持的紧凑写法。无论序列化形式如何，抽象 graph 必须包含本书定义的 resource、triple、literal 和 reifier 关系。
+显式 reifier triples 与 Turtle 1.2 紧凑写法是同一抽象 graph 的两种合法序列化表面。无论序列化形式如何，抽象 graph 必须包含本书定义的 resource、triple、literal 和 reifier 关系。

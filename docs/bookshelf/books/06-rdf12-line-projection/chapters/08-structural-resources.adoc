@@ -14,6 +14,8 @@ document resource 表示源文档的结构根。
 * `aat:hasLabel` 指向 document title label。
 * `aat:containsDirectly` 指向顶层 child resource。
 
+document resource 的 line span 只有在输入对象或调用方提供源文件总行数时生成。缺少源文件总行数时，document resource 仅以 `aat:relativePath` 回到整份文件。
+
 示例：
 
 [source,turtle]
@@ -62,9 +64,9 @@ document resource 表示源文档的结构根。
 * `rdf:type aat:Paragraph`。
 * `aat:relativePath`。
 * `aat:startLine` 与 `aat:endLine`。
-* `aat:sourceText` 或 `aat:paragraphText`。
+* `aat:sourceText`。
 
-paragraph 中的 xref 和 anchor occurrence 可以通过 `aat:containsDirectly` 连接到 paragraph resource。
+paragraph 中的 xref 和 anchor occurrence 通过 `aat:containsDirectly` 连接到 paragraph resource。
 
 === ListingBlock Resource
 
@@ -114,11 +116,11 @@ paragraph 中的 xref 和 anchor occurrence 可以通过 `aat:containsDirectly` 
 * block title label。
 * metadata 派生出的 surface attribute。
 
-`rows` 和 `cells` 只有在输入对象提供稳定结构时才投影。投影器不从 raw table 文本中恢复 table AST。
+table content facts 只来自 `TableNode.rows` 和 `TableNode.cells`。投影器不从 raw table 文本中恢复 table AST。
 
 === AnchorTarget Resource
 
-anchor occurrence 可投影为 `aat:AnchorTarget`。当 anchor 可以被 xref target selector 引用时，它必须成为可绑定 resource。
+anchor occurrence 投影为 `aat:AnchorTarget`。该 resource 进入 label catalog，并成为 xref target selector 的可绑定对象。
 
 必备输出：
 
@@ -150,7 +152,7 @@ xref occurrence 的详细规则见 <<xref-occurrence-and-reification>>。
 
 === PayloadBlock Resource
 
-具有 payload role 的 listing 或 block 可投影为 `aat:PayloadBlock`。payload resource 的详细规则见 <<payload-blocks>>。
+具有 payload role 的 listing 或 block 投影为 `aat:PayloadBlock`。payload resource 的详细规则见 <<payload-blocks>>。
 
 === SurfaceAttribute Resource
 

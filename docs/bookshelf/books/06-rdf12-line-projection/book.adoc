@@ -1,5 +1,5 @@
 = AsciiDoc AbundantDocument 到 RDF 1.2 行级结构图投影规约
-作者 <author@example.com>
+弥澄亮 <MichengLiang>
 v0.1, 2026-05
 :doctype: book
 :toc: left

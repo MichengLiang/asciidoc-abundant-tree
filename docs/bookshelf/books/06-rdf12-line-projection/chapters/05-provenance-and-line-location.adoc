@@ -42,6 +42,8 @@ projection activity:: 表示生成 projection graph 的活动。
 
 `relativePath` 是投影闭环的文件坐标。投影器根据 `AbundantDocument.sourcePath` 和调用方提供的 document root 计算 relative path。
 
+`relativePath` 使用 `/` 作为路径分隔符。该路径不得包含 `..` 段，不得越出 document root。无法归入 document root 的 `sourcePath` 不产生合法 projection graph。
+
 示例：
 
 [source,text]
@@ -73,7 +75,7 @@ line span 使用 1-based line number。字段为：
   aat:endLine 11 .
 ----
 
-列号可以作为 occurrence 的补充定位：
+列号是 occurrence 的补充定位：
 
 [source,turtle]
 ----
@@ -85,7 +87,7 @@ line span 使用 1-based line number。字段为：
   aat:endColumn 73 .
 ----
 
-当前投影的核心定位单位是 line span。字符 offset 不属于核心输出。
+本投影的核心定位单位是 line span。字符 offset 不属于核心输出。
 
 === Specialized Line Spans
 
@@ -107,7 +109,7 @@ line span 使用 1-based line number。字段为：
 
 === Source Digest
 
-source document entity 应携带 source digest。source digest 表示 projection graph 对应的源文件快照。
+source document entity 在调用方提供 source digest 或 source text 时必须携带 source digest。source digest 表示 projection graph 对应的源文件快照。
 
 [source,turtle]
 ----

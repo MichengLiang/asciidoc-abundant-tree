@@ -1,7 +1,7 @@
 [#worked-example]
 == 完整样例
 
-本章展示一段 AsciiDoc source、对应的结构事实和 RDF 1.2 projection graph 片段。
+本章展示一段 AsciiDoc source、对应的结构事实和 RDF 1.2 projection graph 片段。示例中的行号按 source block 内部内容计算，不包含 AsciiDoc 示例围栏。
 
 === Source Document
 
@@ -28,15 +28,15 @@
 
 恢复层提供以下投影输入：
 
-* section `配送策略`，行范围 1 到 9。
-* section `运力规则`，行范围 11 到 12。
+* section `配送策略`，行范围 1 到 11。
+* section `运力规则`，行范围 12 到 13。
 * address label `delivery-policy`。
 * address label `capacity-rule`。
 * xref occurrence，target selector 为 `capacity-rule`，display label 为 `运力规则`。
 * xref attribute `rel=depends-on`。
 * xref attribute `weight=0.8`。
 * xref payload selector `rel-delivery-capacity`。
-* payload block，address label 为 `rel-delivery-capacity`，data format 为 `json`，content 为 `{"reason":"risk-control"}`。
+* payload block，完整行范围 6 到 10，content 行范围 9 到 9，address label 为 `rel-delivery-capacity`，data format 为 `json`，content 为 `{"reason":"risk-control"}`。
 
 === Projection Graph
 
@@ -48,6 +48,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :source-doc a prov:Entity, aat:AsciiDocSourceDocument ;
   aat:relativePath "docs/policy.adoc" ;
@@ -66,13 +67,13 @@
 :document a aat:AsciiDocDocument ;
   aat:relativePath "docs/policy.adoc" ;
   aat:containsDirectly :section-l1-o0 ;
-  aat:containsDirectly :section-l11-o0 .
+  aat:containsDirectly :section-l12-o0 .
 
 :section-l1-o0 a aat:Section ;
   rdfs:label "配送策略"@zh ;
   aat:relativePath "docs/policy.adoc" ;
   aat:startLine 1 ;
-  aat:endLine 9 ;
+  aat:endLine 11 ;
   aat:sectionLevel 1 ;
   aat:hasLabel :label-l1-address-o0 ;
   aat:hasLabel :label-l1-role-o0 ;
@@ -108,32 +109,60 @@
 
 :attr-l1-status-o0 a aat:SurfaceAttribute ;
   aat:name "status" ;
-  rdf:value "active" .
+  rdf:value "active" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 1 ;
+  aat:endLine 1 .
 
 :attr-l1-owner-o0 a aat:SurfaceAttribute ;
   aat:name "owner" ;
-  rdf:value "ops" .
+  rdf:value "ops" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 1 ;
+  aat:endLine 1 .
 
-:section-l11-o0 a aat:Section ;
+:section-l12-o0 a aat:Section ;
   rdfs:label "运力规则"@zh ;
   aat:relativePath "docs/policy.adoc" ;
-  aat:startLine 11 ;
-  aat:endLine 12 ;
-  aat:hasLabel :label-l11-address-o0 ;
-  aat:hasLabel :label-l12-title-o0 .
+  aat:startLine 12 ;
+  aat:endLine 13 ;
+  aat:sectionLevel 1 ;
+  aat:hasLabel :label-l12-address-o0 ;
+  aat:hasLabel :label-l12-role-o0 ;
+  aat:hasLabel :label-l13-title-o0 ;
+  aat:hasAttribute :attr-l12-kind-o0 .
 
-:label-l11-address-o0 a aat:AddressLabel ;
-  rdf:value "capacity-rule" .
+:label-l12-address-o0 a aat:AddressLabel ;
+  rdf:value "capacity-rule" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 12 ;
+  aat:endLine 12 .
 
-:label-l12-title-o0 a aat:TitleLabel ;
-  rdf:value "运力规则" .
+:label-l12-role-o0 a aat:RoleLabel ;
+  rdf:value "section" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 12 ;
+  aat:endLine 12 .
 
-:section-l1-o0 rel:depends-on :section-l11-o0 .
+:label-l13-title-o0 a aat:TitleLabel ;
+  rdf:value "运力规则" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 13 ;
+  aat:endLine 13 .
+
+:attr-l12-kind-o0 a aat:SurfaceAttribute ;
+  aat:name "kind" ;
+  rdf:value "rule" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 12 ;
+  aat:endLine 12 .
+
+:section-l1-o0 rel:depends-on :section-l12-o0 .
 
 :xref-l4-c7-o0 a aat:XrefOccurrence ;
-  rdf:reifies <<( :section-l1-o0 rel:depends-on :section-l11-o0 )>> ;
+  rdf:reifies <<( :section-l1-o0 rel:depends-on :section-l12-o0 )>> ;
   aat:sourceNode :section-l1-o0 ;
-  aat:targetNode :section-l11-o0 ;
+  aat:targetNode :section-l12-o0 ;
   aat:targetSelector "capacity-rule" ;
   aat:rawRel "depends-on" ;
   aat:raw "xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]" ;
@@ -147,7 +176,10 @@
 
 :attr-xref-l4-weight-o0 a aat:SurfaceAttribute ;
   aat:name "weight" ;
-  rdf:value "0.8" .
+  rdf:value "0.8" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 4 ;
+  aat:endLine 4 .
 
 :payload-l6-o0 a aat:PayloadBlock ;
   aat:payloadKind "xref" ;
@@ -161,7 +193,10 @@
   aat:sourceText "{\"reason\":\"risk-control\"}" .
 
 :label-payload-l6-address-o0 a aat:AddressLabel ;
-  rdf:value "rel-delivery-capacity" .
+  rdf:value "rel-delivery-capacity" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 6 ;
+  aat:endLine 6 .
 ----
 
 === 查询结果
@@ -184,10 +219,10 @@ SELECT ?node ?path ?start ?end WHERE {
 
 [source,text]
 ----
-node   = :section-l11-o0
+node   = :section-l12-o0
 path   = docs/policy.adoc
-start  = 11
-end    = 12
+start  = 12
+end    = 13
 ----
 
 按 relation reifier 查找 xref occurrence：
@@ -196,7 +231,7 @@ end    = 12
 ----
 SELECT ?xref ?path ?start ?end WHERE {
   ?xref a aat:XrefOccurrence ;
-        rdf:reifies <<( :section-l1-o0 rel:depends-on :section-l11-o0 )>> ;
+        rdf:reifies <<( :section-l1-o0 rel:depends-on :section-l12-o0 )>> ;
         aat:relativePath ?path ;
         aat:startLine ?start ;
         aat:endLine ?end .

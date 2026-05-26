@@ -20,7 +20,7 @@ projection graph 的主要消费者是能够查询 RDF、读取源文件并修�
 
 === 查询入口
 
-编程 agent 的常见查询入口不是 RDF resource IRI，而是源文档表面字符串。标题、显式 ID、生成 ID、anchor ID 和 xref target 都可以成为查询入口。
+编程 agent 的公共查询入口不是 RDF resource IRI，而是源文档表面字符串。标题、显式 ID、生成 ID、anchor ID 和 xref target 构成 label catalog 与 selector binding 的查询入口。
 
 显式 ID 查询示例：
 
@@ -70,7 +70,7 @@ projection graph 必须把这些行级事实放在对应 resource 上。查询�
 
 xref relation 不只是 `source predicate target`。一次 xref 写法还包含 raw text、target selector、display label、attributes、source line span 和可能的 payload selector。
 
-projection graph 使用 RDF 1.2 reifier 表达 xref occurrence。主 triple 表达结构关系；reifier resource 表达该关系在源文档中的出现点。编程 agent 可以查询 reifier 得到源文件位置，再修改对应 xref 写法。
+projection graph 使用 RDF 1.2 reifier 表达 xref occurrence。主 triple 表达结构关系；reifier resource 表达该关系在源文档中的出现点。编程 agent 查询 reifier 取得源文件位置，并修改对应 xref 写法。
 
 === 回源闭环
 
@@ -82,4 +82,4 @@ projection graph 使用 RDF 1.2 reifier 表达 xref occurrence。主 triple 表�
 * 结束行号。
 * 必要时的起始列号和结束列号。
 
-列号用于 occurrence 精确显示。行号用于文件读取和 patch 范围判断。当前投影的核心定位单位是 line span。
+列号用于 occurrence 精确显示。行号用于文件读取和 patch 范围判断。本投影的核心定位单位是 line span。

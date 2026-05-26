@@ -5,7 +5,7 @@ projection resource 使用投影器生成的确定性 IRI。作者显式 ID、�
 
 === 身份来源
 
-resource IRI 的输入是 relative path、resource kind、line coordinate 和 ordinal。
+resource IRI 的输入是 base IRI、relative path、resource kind、line coordinate 和 ordinal。
 
 规范形式：
 
@@ -13,10 +13,12 @@ resource IRI 的输入是 relative path、resource kind、line coordinate 和 or
 ----
 documentKey      = sha256(relativePath)
 resourceLocalId  = <kind>-l<startLine>-c<startColumn>-o<ordinal>
-resourceIRI      = urn:aat:doc:<documentKey>#<resourceLocalId>
+resourceIRI      = <baseIri><documentKey>#<resourceLocalId>
 ----
 
-对于不需要列号区分的 block resource，可以省略 column：
+默认 `baseIri` 是 `urn:aat:doc:`。
+
+block resource 的 local id 省略 column：
 
 [source,text]
 ----
@@ -25,7 +27,7 @@ urn:aat:doc:<documentKey>#listing-l29-o0
 urn:aat:doc:<documentKey>#table-l46-o0
 ----
 
-同一行出现多个 occurrence 的 resource 应包含 column：
+同一行出现多个 occurrence 的 resource 包含 column：
 
 [source,text]
 ----
@@ -58,7 +60,7 @@ urn:aat:doc:<documentKey>#anchor-l56-c27-o0
 == 2. 基础概念
 ----
 
-该 section resource 的 IRI 可以是：
+该 section resource 的 IRI 形式为：
 
 [source,text]
 ----
@@ -76,7 +78,7 @@ urn:aat:doc:7f3a9c#section-l12-o0
 urn:aat:doc:<documentKey>#document
 ----
 
-document resource 表示该 source document 的结构根。source document entity 表示来源文件。两者可以使用不同 IRI。document resource 参与 `aat:containsDirectly`；source document entity 参与 PROV-O 来源关系。
+document resource 表示该 source document 的结构根。source document entity 表示来源文件。两者使用不同 IRI。document resource 参与 `aat:containsDirectly`；source document entity 参与 PROV-O 来源关系。
 
 === Snapshot 与身份
 
@@ -105,4 +107,4 @@ activity
 source
 ----
 
-实现可以扩展 kind，但扩展 kind 必须对应 `AbundantDocument` 中的结构事实或投影过程中的证据对象。扩展 kind 不得表示业务领域类型。
+扩展 kind 必须对应 `AbundantDocument` 中的结构事实或投影过程中的证据对象。扩展 kind 不得表示业务领域类型。
