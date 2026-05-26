@@ -1,7 +1,21 @@
 {
-	"name": "@micheng-ts-project/asciidoc-abundant-tree",
-	"version": "0.0.0",
-	"private": true,
+	"name": "asciidoc-abundant-tree",
+	"version": "0.1.0",
+	"description": "Recover a source-aware, analysis-ready tree from a single AsciiDoc file.",
+	"license": "Apache-2.0",
+	"author": {
+		"name": "弥澄亮",
+		"email": "t103ooooo@stu.mju.edu.cn",
+		"url": "https://github.com/MichengLiang"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/MichengLiang/asciidoc-abundant-tree.git"
+	},
+	"bugs": {
+		"url": "https://github.com/MichengLiang/asciidoc-abundant-tree/issues"
+	},
+	"homepage": "https://github.com/MichengLiang/asciidoc-abundant-tree#readme",
 	"type": "module",
 	"types": "./dist/index.d.mts",
 	"bin": {
@@ -17,29 +31,49 @@
 	"files": [
 		"dist"
 	],
+	"sideEffects": false,
+	"keywords": [
+		"asciidoc",
+		"asciidoctor",
+		"ast",
+		"parser",
+		"source-map",
+		"cross-reference",
+		"documentation",
+		"static-analysis"
+	],
+	"packageManager": "pnpm@10.33.0",
+	"engines": {
+		"node": ">=20.19.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"build": "tsdown",
+		"check": "pnpm lint && pnpm typecheck && pnpm test && pnpm pack:check && pnpm smoke:cli",
 		"dev": "tsx src/cli.ts",
-		"lint": "biome check --vcs-use-ignore-file=false src test docs samples README.md package.json tsconfig.json tsdown.config.ts vitest.config.ts .gitignore",
-		"format": "biome check --write --vcs-use-ignore-file=false src test docs samples README.md package.json tsconfig.json tsdown.config.ts vitest.config.ts .gitignore",
+		"lint": "biome check --vcs-use-ignore-file=false .",
+		"format": "biome check --write --vcs-use-ignore-file=false .",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
-		"pack:check": "pnpm build && publint && attw --pack . --profile esm-only",
+		"pack:check": "pnpm build && publint && npm pack --dry-run",
+		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format json >/dev/null",
 		"clean": "rm -rf dist coverage"
 	},
 	"dependencies": {
-		"@asciidoctor/core": "catalog:",
-		"parse5": "catalog:"
+		"@asciidoctor/core": "^3.0.4",
+		"parse5": "^8.0.1"
 	},
 	"devDependencies": {
-		"@arethetypeswrong/cli": "catalog:",
-		"@micheng-ts/tsconfig": "workspace:*",
-		"@types/node": "catalog:",
-		"publint": "catalog:",
-		"tsdown": "catalog:",
-		"tsx": "catalog:",
-		"typescript": "catalog:",
-		"vitest": "catalog:"
+		"@biomejs/biome": "^2.4.14",
+		"@types/node": "^24.12.2",
+		"@vitest/coverage-v8": "^4.1.5",
+		"publint": "^0.3.18",
+		"tsdown": "^0.21.10",
+		"tsx": "^4.21.0",
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.5"
 	}
 }

@@ -36,7 +36,7 @@ projects/asciidoc-abundant-tree
 package 名称：
 
 ```text
-@micheng-ts-project/asciidoc-abundant-tree
+asciidoc-abundant-tree
 ```
 
 CLI bin 名称：
@@ -45,14 +45,14 @@ CLI bin 名称：
 asciidoc-abundant-tree
 ```
 
-包是 private workspace package，不对 npm 发布。
+包是公开 npm package，源码仓库是独立 GitHub repository。
 
 ## 4. 技术栈
 
 运行时：
 
 ```text
-Node >= 24
+Node >= 20.19
 ESM only
 ```
 
@@ -86,7 +86,7 @@ Biome
 
 ```text
 pnpm 10
-catalog dependencies
+direct semver dependencies
 ```
 
 ## 5. 依赖
@@ -95,8 +95,8 @@ catalog dependencies
 
 ```json
 {
-	"@asciidoctor/core": "catalog:",
-	"parse5": "catalog:"
+	"@asciidoctor/core": "^3.0.4",
+	"parse5": "^8.0.1"
 }
 ```
 
@@ -104,28 +104,28 @@ catalog dependencies
 
 ```json
 {
-	"@arethetypeswrong/cli": "catalog:",
-	"@micheng-ts/tsconfig": "workspace:*",
-	"@types/node": "catalog:",
-	"publint": "catalog:",
-	"tsdown": "catalog:",
-	"tsx": "catalog:",
-	"typescript": "catalog:",
-	"vitest": "catalog:"
+	"@biomejs/biome": "^2.4.14",
+	"@types/node": "^24.12.2",
+	"@vitest/coverage-v8": "^4.1.5",
+	"publint": "^0.3.18",
+	"tsdown": "^0.21.10",
+	"tsx": "^4.21.0",
+	"typescript": "^6.0.3",
+	"vitest": "^4.1.5"
 }
 ```
 
-根 `pnpm-workspace.yaml` catalog 需要包含：
+项目 `pnpm-workspace.yaml` 只包含当前 package：
 
 ```yaml
-"@asciidoctor/core": "^3.0.4"
-"parse5": "^8.0.1"
+packages:
+  - "."
 ```
 
 依赖位置规则：
 
 - AsciiDoc parser 和 HTML fragment parser 是项目运行依赖。
-- tsdown、tsx、Vitest、publint、ATTW 和 TypeScript 是开发依赖。
+- tsdown、tsx、Vitest、publint、Biome 和 TypeScript 是开发依赖。
 - 不引入 React、Tailwind、Playwright、Hono、数据库、ORM、Docker 或部署工具。
 
 ## 6. Root 配置要求
@@ -313,17 +313,17 @@ dist/cli.d.mts
 项目局部门禁：
 
 ```bash
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree test
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree typecheck
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree build
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree pack:check
+pnpm test
+pnpm typecheck
+pnpm build
+pnpm pack:check
 ```
 
 项目局部快捷方式：
 
 ```bash
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree lint
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree format
+pnpm lint
+pnpm format
 ```
 
 根门禁：

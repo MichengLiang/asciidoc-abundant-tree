@@ -16,11 +16,10 @@
 
 初始化工作完成时必须满足：
 
-- 项目 package 名是 `@micheng-ts-project/asciidoc-abundant-tree`。
+- 项目 package 名是 `asciidoc-abundant-tree`。
 - CLI bin 名是 `asciidoc-abundant-tree`。
-- 根 catalog 包含 `@asciidoctor/core` 和 `parse5`。
-- `projects/*/vitest.config.ts` 进入根 Vitest workspace。
-- `projects/*/src/cli.ts` 进入 Knip entry。
+- 项目直接声明 `@asciidoctor/core` 和 `parse5` 运行依赖。
+- 项目存在独立 `pnpm-workspace.yaml`，只包含当前 package。
 - 项目存在 `package.json`、`tsconfig.json`、`tsdown.config.ts`、`vitest.config.ts`。
 - 项目 package 暴露 `lint` 和 `format` 快捷脚本。
 - 项目存在公共 TypeScript model 文件。
@@ -295,10 +294,10 @@ xref:engine-code[查看 Python 脚本]
 项目验证：
 
 ```bash
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree test
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree typecheck
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree build
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree pack:check
+pnpm test
+pnpm typecheck
+pnpm build
+pnpm pack:check
 ```
 
 根验证：

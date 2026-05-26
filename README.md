@@ -1,21 +1,68 @@
 # asciidoc-abundant-tree
 
-`asciidoc-abundant-tree` is a single-file AsciiDoc structure recovery tool. It reads one `.adoc` source file and returns an `AbundantDocument` object that preserves source surfaces, source spans, Asciidoctor official bindings, and the section-scoped block tree needed by downstream analysis.
+[![npm version](https://img.shields.io/npm/v/asciidoc-abundant-tree.svg)](https://www.npmjs.com/package/asciidoc-abundant-tree)
+[![CI](https://github.com/MichengLiang/asciidoc-abundant-tree/actions/workflows/ci.yml/badge.svg)](https://github.com/MichengLiang/asciidoc-abundant-tree/actions/workflows/ci.yml)
+[![License](https://img.shields.io/npm/l/asciidoc-abundant-tree.svg)](./LICENSE)
+[![Node.js](https://img.shields.io/node/v/asciidoc-abundant-tree.svg)](./package.json)
 
-The TypeScript object is the primary artifact. Pretty text and JSON are projections of the same object.
+`asciidoc-abundant-tree` turns one AsciiDoc source file into a source-aware, analysis-ready document tree.
 
-## Scope
+The package exists for tools that need more than rendered HTML and less than a full AsciiDoc language server. Asciidoctor is excellent at conversion and official reference resolution, but its public output surfaces are not shaped as a compact source map for downstream static analysis. This package keeps Asciidoctor as the authority for AsciiDoc semantics, then adds a TypeScript object model that preserves the authored surface, source spans, block structure, target catalog, xref occurrences, and official xref bindings in one object.
 
-The parser recovers these document facts:
+## What It Gives You
 
-- document title and section tree
-- paragraph, listing, and table blocks
-- block metadata such as IDs, titles, attribute lists, roles, and languages
-- xref occurrences and anchor occurrences with raw source spans
-- target catalog entries for sections, blocks, listings, tables, and anchors
-- official Asciidoctor href, resolved ID, resolved type, and reftext for xrefs
+- A single `AbundantDocument` object for a `.adoc` file.
+- Section, paragraph, listing, table, title, metadata, target, anchor, and xref nodes.
+- Raw source text and source spans for recoverable authored surfaces.
+- A target catalog for sections, blocks, listings, tables, inline anchors, and block anchors.
+- Xref occurrence records that keep raw target text, labels, local/external/unresolved scope, containing section, and resolved target kind.
+- Official Asciidoctor binding data for xrefs: `href`, `resolvedId`, `resolvedType`, and `reftext`.
+- Pretty tree output for terminal inspection and JSON output for automation.
 
-The parser does not recover a complete inline CST, validate cross-file targets, lint document style, or generate HTML/PDF/site output.
+The primary artifact is the TypeScript object. Pretty text and JSON are projections of the same parsed document.
+
+## When To Use It
+
+Use this package when you are building:
+
+- documentation analyzers
+- xref and anchor audits
+- source-aware migration tools
+- documentation inventory scripts
+- authoring diagnostics that need line and column evidence
+- experiments that compare authored AsciiDoc with Asciidoctor's resolved model
+
+It is especially useful when a tool needs to answer questions such as:
+
+- Where is this xref written in the source file?
+- Does this target come from a section, listing, table, block ID, or inline anchor?
+- Which section contains this occurrence?
+- What did Asciidoctor resolve this xref to?
+- What source text produced this block or metadata layer?
+
+## Current Boundaries
+
+This package is intentionally narrow.
+
+- It reads one source file at a time.
+- It does not expand an AsciiDoc include graph as a multi-file workspace.
+- It does not validate interdocument xref targets by opening other files.
+- It does not expose a complete inline CST.
+- It does not lint prose style.
+- It does not generate HTML, PDF, EPUB, or a static site.
+- It does not replace Asciidoctor; it uses Asciidoctor as the official parser and resolver layer.
+
+The model is designed for static analysis and source inspection. It is not a complete AsciiDoc implementation.
+
+## Install
+
+```bash
+pnpm add asciidoc-abundant-tree
+```
+
+```bash
+npm install asciidoc-abundant-tree
+```
 
 ## CLI
 
@@ -27,27 +74,24 @@ asciidoc-abundant-tree <file.adoc> --format json
 asciidoc-abundant-tree --help
 ```
 
-Default output is pretty text:
+Default output is a pretty tree:
 
 ```text
-<document sourcePath="..." mode="single-file">
-    <title ...>
-    <section ...>
-        <paragraph ...>
-            <xref ...>
-        <listing ...>
-            content:
-                first line
-                second line
+<document mode="single-file" sourcePath="samples/reference-links.adoc">
+    <parser name="@asciidoctor/core" version="3.0.4">
+    children[]
+        <section idOrigin="source" ids="section-basics" level=1 title="基础概念">
+            <source>
+                <sourceSpan>
+                    <end column=10 line=19>
+                    <start column=1 line=19>
+            children[]
 ```
 
-JSON output preserves the same object fields and omits `undefined` values.
-
-During local development, run the CLI through the package script:
+JSON output preserves the same object fields and omits `undefined` values:
 
 ```bash
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree dev samples/reference-links.adoc
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree dev samples/reference-links.adoc --json
+asciidoc-abundant-tree docs/index.adoc --json > tree.json
 ```
 
 ## Library API
@@ -57,44 +101,81 @@ import {
 	formatAbundantTree,
 	parseAbundantTree,
 	serializeAbundantTreeToJson,
-} from "@micheng-ts-project/asciidoc-abundant-tree";
+} from "asciidoc-abundant-tree";
 
 const document = parseAbundantTree({
-	sourcePath: "samples/reference-links.adoc",
+	sourcePath: "docs/index.adoc",
 });
 
-const text = formatAbundantTree(document);
-const json = serializeAbundantTreeToJson(document);
+const prettyText = formatAbundantTree(document);
+const jsonData = serializeAbundantTreeToJson(document);
 ```
 
-`parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href, but the parser does not open the referenced `.adoc` file.
+`parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.
 
-## Source And Official Layers
+## Object Layers
 
-Source-layer fields describe the authored file surface: raw text, line, span, source span, syntax, target, label, IDs, roles, attributes, metadata span, and content span.
+The output separates authored source facts from official Asciidoctor facts.
+
+Source-layer fields describe the file surface: raw text, source line, line span, source span, syntax, target, label, IDs, roles, attributes, metadata span, and content span.
 
 Official-layer fields describe Asciidoctor results: context, node name, href, resolved ID, resolved type, and reftext.
 
-These layers are separate. Raw xref targets are not overwritten by official bindings, and official xref data is not inferred from ordinary links in a converted block. Each source xref occurrence receives its official binding from an Asciidoctor xref conversion for that occurrence.
+The separation matters. Raw xref targets are not overwritten by official bindings, and official xref data is not inferred from ordinary links in converted HTML. Each source xref occurrence receives its official binding from the Asciidoctor xref conversion for that occurrence.
 
-## Verification
+## Example Tasks
 
-Project-level checks:
+List unresolved local xrefs:
 
-```bash
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree test
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree typecheck
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree build
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree pack:check
-pnpm --filter @micheng-ts-project/asciidoc-abundant-tree lint
+```ts
+import { parseAbundantTree } from "asciidoc-abundant-tree";
+
+const document = parseAbundantTree({ sourcePath: "docs/index.adoc" });
+
+for (const xref of document.xrefOccurrences) {
+	if (xref.scope === "unresolved") {
+		console.log(`${xref.target} at line ${xref.sourceSpan?.start.line}`);
+	}
+}
 ```
 
-Workspace checks:
+Inspect target kinds:
+
+```ts
+import { parseAbundantTree } from "asciidoc-abundant-tree";
+
+const document = parseAbundantTree({ sourcePath: "docs/index.adoc" });
+
+const byKind = new Map<string, number>();
+for (const target of document.targets) {
+	byKind.set(target.targetType, (byKind.get(target.targetType) ?? 0) + 1);
+}
+
+console.log(Object.fromEntries(byKind));
+```
+
+## Development
 
 ```bash
+pnpm install
+pnpm test
+pnpm typecheck
 pnpm lint
-pnpm deps:check
-pnpm check
+pnpm build
+pnpm pack:check
 ```
 
-The detailed object contract, engineering contract, and acceptance criteria live in `docs/`.
+Run the CLI from source:
+
+```bash
+pnpm dev samples/reference-links.adoc
+pnpm dev samples/reference-links.adoc --json
+```
+
+## Release State
+
+The package is usable for single-file source analysis and xref/target auditing. The object model is still small and conservative. Prefer pinning a minor version in production workflows and checking the JSON shape against your own fixtures before relying on it for large document systems.
+
+## License
+
+Apache-2.0. See [LICENSE](./LICENSE).
