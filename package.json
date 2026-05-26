@@ -10,7 +10,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@github.com/MichengLiang/asciidoc-abundant-tree.git"
+		"url": "git+https://github.com/MichengLiang/asciidoc-abundant-tree.git"
 	},
 	"bugs": {
 		"url": "https://github.com/MichengLiang/asciidoc-abundant-tree/issues"

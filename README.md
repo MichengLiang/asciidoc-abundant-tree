@@ -9,6 +9,8 @@
 
 The package exists for tools that need more than rendered HTML and less than a full AsciiDoc language server. Asciidoctor is excellent at conversion and official reference resolution, but its public output surfaces are not shaped as a compact source map for downstream static analysis. This package keeps Asciidoctor as the authority for AsciiDoc semantics, then adds a TypeScript object model that preserves the authored surface, source spans, block structure, target catalog, xref occurrences, and official xref bindings in one object.
 
+The pretty tree format is designed for terminal reading. Its shape is intentionally close to the `docutils` `pformat()` style: object headlines carry compact scalar attributes, nested objects keep stable indentation, and multiline source text is printed as an indented body instead of being squeezed into an escaped attribute.
+
 ## What It Gives You
 
 - A single `AbundantDocument` object for a `.adoc` file.
@@ -65,6 +67,12 @@ npm install asciidoc-abundant-tree
 ```
 
 ## CLI
+
+Try it without installing a project dependency:
+
+```bash
+npx asciidoc-abundant-tree path/to/file.adoc --format tree
+```
 
 ```bash
 asciidoc-abundant-tree <file.adoc>
@@ -179,3 +187,7 @@ The package is usable for single-file source analysis and xref/target auditing. 
 ## License
 
 Apache-2.0. See [LICENSE](./LICENSE).
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md).
