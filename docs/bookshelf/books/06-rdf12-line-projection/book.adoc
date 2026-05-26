@@ -1,0 +1,79 @@
+= AsciiDoc AbundantDocument 到 RDF 1.2 行级结构图投影规约
+作者 <author@example.com>
+v0.1, 2026-05
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:experimental:
+:idprefix:
+:idseparator: -
+
+include::../../shared/attributes.adoc[]
+
+[preface]
+include::frontmatter/preface.adoc[]
+
+= 第一部：投影对象
+
+[partintro]
+这一部定义投影规则的对象边界、消费动作和输入契约。
+
+include::chapters/01-object-boundary.adoc[]
+
+include::chapters/02-consumer-actions.adoc[]
+
+include::chapters/03-input-contract.adoc[]
+
+= 第二部：RDF 坐标
+
+[partintro]
+这一部定义 RDF 1.2、来源关系、行级定位和资源身份规则。
+
+include::chapters/04-rdf-coordinate-system.adoc[]
+
+include::chapters/05-provenance-and-line-location.adoc[]
+
+include::chapters/06-resource-identity.adoc[]
+
+= 第三部：表面事实模型
+
+[partintro]
+这一部定义 label、selector、结构资源和直接包含关系。
+
+include::chapters/07-label-and-selector-model.adoc[]
+
+include::chapters/08-structural-resources.adoc[]
+
+include::chapters/09-containment-projection.adoc[]
+
+= 第四部：引用、属性与载荷
+
+[partintro]
+这一部定义交叉引用 occurrence、RDF 1.2 reifier、表面属性和 payload block。
+
+include::chapters/10-xref-occurrence-and-reification.adoc[]
+
+include::chapters/11-surface-attributes.adoc[]
+
+include::chapters/12-payload-blocks.adoc[]
+
+= 第五部：实现契约
+
+[partintro]
+这一部定义确定性投影算法、公共查询面、不变量、验收条件和完整样例。
+
+include::chapters/13-projection-algorithm.adoc[]
+
+include::chapters/14-query-contracts.adoc[]
+
+include::chapters/15-invariants-and-acceptance.adoc[]
+
+include::chapters/16-worked-example.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]
+
+[bibliography]
+include::backmatter/bibliography.adoc[]

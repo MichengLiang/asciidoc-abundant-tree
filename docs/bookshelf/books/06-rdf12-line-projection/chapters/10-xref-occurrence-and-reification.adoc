@@ -1,0 +1,166 @@
+[#xref-occurrence-and-reification]
+== Xref Occurrence 与 Reification
+
+xref occurrence 表示源文档中一次交叉引用写法。projection graph 为每个 xref occurrence 生成 `aat:XrefOccurrence` resource。
+
+=== Occurrence Resource
+
+xref occurrence resource 必须保留源文档表面：
+
+* `aat:syntax`。
+* `aat:raw`。
+* `aat:targetSelector`。
+* `aat:XrefDisplayLabel`。
+* `aat:relativePath`。
+* `aat:startLine` 与 `aat:endLine`。
+* 可用时的 `aat:startColumn` 与 `aat:endColumn`。
+* `aat:sourceSelector` 或 `aat:sourceNode`。
+* 可用时的 official layer evidence。
+
+示例：
+
+[source,turtle]
+----
+:xref-l10-c60-o0 a aat:XrefOccurrence ;
+  aat:syntax "shorthand" ;
+  aat:raw "<<3. 核心引擎设计>>" ;
+  aat:targetSelector "3. 核心引擎设计" ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:startLine 10 ;
+  aat:endLine 10 ;
+  aat:startColumn 60 ;
+  aat:endColumn 73 .
+----
+
+=== Source Node
+
+source node 是 xref occurrence 所在结构作用域对应的 resource。
+
+规则：
+
+. `containingSectionId` 存在时，它作为 source selector 进入 label catalog binding。
+. source selector 唯一绑定到 section resource 时，xref occurrence 获得 `aat:sourceNode`。
+. `containingSectionId` 缺失时，document resource 是 source node。
+. source selector 无法唯一绑定时，xref occurrence 保留 source selector，不生成 relation triple。
+
+示例：
+
+[source,turtle]
+----
+:xref-l10-c60-o0
+  aat:sourceSelector "_1_引言" ;
+  aat:sourceNode :section-l8-o0 .
+----
+
+`containingSectionId` 是 selector，不是 resource identity。
+
+=== Target Node
+
+target node 由 xref `target` 字段绑定得到。
+
+规则：
+
+. `target` 投影为 `aat:targetSelector`。
+. `targetSelector` 对 label catalog 执行 selector binding。
+. 唯一匹配时，xref occurrence 获得 `aat:targetNode`。
+. 零匹配时，不生成 target node。
+. 多匹配时，可输出 `aat:candidateNode`，不生成单一 target node。
+
+示例：
+
+[source,turtle]
+----
+:xref-l10-c60-o0
+  aat:targetSelector "3. 核心引擎设计" ;
+  aat:targetNode :section-l25-o0 .
+----
+
+target selector 不是 RDF object IRI。target node 才是 relation triple 的 object。
+
+=== Predicate
+
+predicate 由 xref attributes 中的 `rel` 字段或默认规则决定。
+
+规则：
+
+. 没有 `rel` 字段时，predicate IRI 是 `aat:references`。
+. `rel` 字段是绝对 IRI 时，predicate IRI 是该 IRI。
+. `rel` 字段是已知 CURIE 时，predicate IRI 是展开后的 IRI。
+. `rel` 字段是普通 token 时，predicate IRI 是 `rel:<token>`。
+
+示例：
+
+[source,asciidoc]
+----
+xref:capacity-rule[运力规则]
+----
+
+投影为：
+
+[source,turtle]
+----
+:source aat:references :target .
+----
+
+示例：
+
+[source,asciidoc]
+----
+xref:capacity-rule[运力规则, rel=depends-on]
+----
+
+投影为：
+
+[source,turtle]
+----
+:source rel:depends-on :target .
+----
+
+`rel` 的映射是表面谓词选择，不是业务正确性判断。
+
+=== Relation Triple
+
+当 source node、predicate IRI 和 target node 都确定时，projection graph 输出 relation triple。
+
+示例：
+
+[source,turtle]
+----
+:section-l8-o0 aat:references :section-l25-o0 .
+----
+
+当任一部分不确定时，projection graph 不输出 relation triple。xref occurrence resource 仍然保留 raw、selector 和 line span。
+
+=== Reifier
+
+每个成功生成 relation triple 的 xref occurrence 都使用 `rdf:reifies` 指向对应 triple term。
+
+示例：
+
+[source,turtle]
+----
+:section-l8-o0 aat:references :section-l25-o0 .
+
+:xref-l10-c60-o0 a aat:XrefOccurrence ;
+  rdf:reifies <<( :section-l8-o0 aat:references :section-l25-o0 )>> ;
+  aat:sourceNode :section-l8-o0 ;
+  aat:targetNode :section-l25-o0 ;
+  aat:targetSelector "3. 核心引擎设计" .
+----
+
+RDF graph 中相同 triple 只有一个。多个 xref occurrence 指向同一 source、predicate 和 target 时，每个 occurrence 都有独立 reifier。
+
+=== Official Evidence
+
+`asciidoctor.href`、`asciidoctor.resolvedId`、`asciidoctor.resolvedType` 和 `asciidoctor.reftext` 可以投影为 official evidence：
+
+[source,turtle]
+----
+:xref-l10-c60-o0
+  aat:officialHref "#_3_核心引擎设计" ;
+  aat:officialResolvedId "_3_核心引擎设计" ;
+  aat:officialResolvedType "section" ;
+  aat:officialReftext "3. 核心引擎设计" .
+----
+
+official evidence 不覆盖 `aat:targetSelector`。source layer 和 official layer 在 projection graph 中保持可区分。

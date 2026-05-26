@@ -1,0 +1,64 @@
+[#rdf-coordinate-system]
+== RDF 坐标
+
+projection graph 使用 RDF 1.2 抽象数据模型表达结构事实。RDF 1.2 Concepts 是本书的抽象模型坐标；RDF 1.2 Turtle 是默认可读序列化坐标。参见 <<rdf12-concepts>> 和 <<rdf12-turtle>>。
+
+=== Term 类型
+
+projection graph 使用以下 RDF term：
+
+[horizontal]
+IRI:: projection resource、谓词和词表项使用 IRI。
+literal:: label value、relative path、raw text、source text、attribute value 和 line number 使用 literal。
+triple term:: xref relation 的被 reify triple 使用 triple term。
+
+blank node 不作为 projection resource 的默认身份。projection resource 需要可测试、可缓存、可查询和可回源的确定性 IRI。
+
+=== Resource 与 label
+
+RDF resource identity 和 source document label 是不同对象。
+
+projection resource 使用投影器生成的 IRI。标题文本、显式 ID、生成 ID、xref display label 和 anchor reftext 使用 literal 表达，并通过 label resource 或 label predicate 连接到 projection resource。
+
+该规则避免把作者可编辑字符串误认为 RDF identity。作者改标题或 ID 时，label 发生变化；投影器仍按行级结构和确定性规则生成 projection resource IRI。
+
+=== Triple 与 reifier
+
+RDF triple 表达结构关系。例如：
+
+[source,turtle]
+----
+:section-l8-o0 aat:references :section-l25-o0 .
+----
+
+xref occurrence 使用 RDF 1.2 reifier 表达。reifier resource 通过 `rdf:reifies` 指向 triple term：
+
+[source,turtle]
+----
+:xref-l10-c60-o0
+  rdf:reifies <<( :section-l8-o0 aat:references :section-l25-o0 )>> .
+----
+
+triple term 本身不自动断言该 triple。projection graph 在 source node、predicate 和 target node 都确定时，同时输出主 triple 和 reifier。主 triple 服务结构查询；reifier 服务 occurrence 证据和回源。
+
+=== 谓词命名空间
+
+本书使用以下命名空间前缀：
+
+[source,turtle]
+----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+----
+
+`aat:` 命名空间承载投影词表。`rel:` 命名空间承载由 xref `rel` token 映射出的关系谓词。`rdf:` 和 `rdfs:` 来自 RDF/RDFS。`prov:` 来自 PROV-O。`dcterms:` 用作通用来源描述补充。
+
+=== Turtle 序列化
+
+Turtle 文本是 RDF graph 的序列化。投影验收比较 RDF graph 语义，不以 Turtle 排版、前缀顺序或三元组顺序为准。
+
+实现可以输出等价的显式 reifier triples，也可以使用 Turtle 1.2 支持的紧凑写法。无论序列化形式如何，抽象 graph 必须包含本书定义的 resource、triple、literal 和 reifier 关系。

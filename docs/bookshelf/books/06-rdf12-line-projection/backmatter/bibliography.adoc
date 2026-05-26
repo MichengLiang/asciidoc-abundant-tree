@@ -1,0 +1,10 @@
+[#bibliography]
+== 参考坐标
+
+* [[[rdf12-concepts]]] W3C, _RDF 1.2 Concepts and Abstract Data Model_, W3C Candidate Recommendation Snapshot, 07 April 2026. https://www.w3.org/TR/rdf12-concepts/
+* [[[rdf12-turtle]]] W3C, _RDF 1.2 Turtle_, W3C Working Draft, 19 May 2026. https://www.w3.org/TR/rdf12-turtle/
+* [[[prov-o]]] W3C, _PROV-O: The PROV Ontology_, W3C Recommendation, 30 April 2013. https://www.w3.org/TR/prov-o/
+* [[[dcmi-terms]]] DCMI, _DCMI Metadata Terms_. https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+* [[[asciidoc-abundant-tree-ontology]]] `asciidoc-abundant-tree 本体规约.md`。
+* [[[asciidoc-abundant-tree-engineering]]] `asciidoc-abundant-tree 工程实现规约.md`。
+* [[[asciidoc-abundant-tree-acceptance]]] `asciidoc-abundant-tree 验收标准与黑盒测试.md`。

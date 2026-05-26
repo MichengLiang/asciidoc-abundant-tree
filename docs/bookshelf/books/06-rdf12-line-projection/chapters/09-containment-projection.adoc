@@ -1,0 +1,66 @@
+[#containment-projection]
+== Containment 投影
+
+containment 表示 `AbundantDocument` 恢复树中的直接结构包含关系。projection graph 使用 `aat:containsDirectly` 表达该关系。
+
+=== 直接包含
+
+`aat:containsDirectly` 只表达直接父子关系。它不表达传递闭包。
+
+示例：
+
+[source,turtle]
+----
+:document aat:containsDirectly :section-l8-o0 .
+:section-l25-o0 aat:containsDirectly :listing-l29-o0 .
+----
+
+如果 section A 包含 section B，section B 包含 listing C，则 projection graph 输出 A 到 B、B 到 C 的直接关系。A 到 C 的包含关系可以由查询或推理层推导，不由投影器默认物化。
+
+=== 来源
+
+containment 的唯一来源是 `AbundantDocument.children`。
+
+规则：
+
+. document resource 对每个顶层 child resource 生成 `aat:containsDirectly`。
+. section resource 对每个直接 child resource 生成 `aat:containsDirectly`。
+. paragraph resource 可以对其直接 xref occurrence 和 anchor occurrence 生成 `aat:containsDirectly`。
+. listing、table 和 payload block 不从 raw text 中生成额外 child。
+
+投影器不得使用标题 level 自行重建第二套 section tree。section tree 已经由 `AbundantDocument` 提供。
+
+=== Section 与 Block
+
+section containment 和 block containment 使用同一个谓词 `aat:containsDirectly`。二者都来自恢复树中的父子关系。
+
+示例：
+
+[source,turtle]
+----
+:section-l25-o0 aat:containsDirectly :paragraph-l27-o0 .
+:section-l25-o0 aat:containsDirectly :listing-l29-o0 .
+:paragraph-l27-o0 aat:containsDirectly :xref-l27-c15-o0 .
+----
+
+该表达使查询者能够从 section 找到其内部可编辑 block，也能够从 paragraph 找到其中的 xref occurrence。
+
+=== 与 Xref Relation 的区别
+
+containment 和 xref relation 是不同关系。
+
+`aat:containsDirectly` 来自结构树。`aat:references` 或 `rel:*` 来自 xref occurrence。一个 xref occurrence 可以被 paragraph 包含，同时 reify 一条从 source node 到 target node 的 relation triple。
+
+示例：
+
+[source,turtle]
+----
+:paragraph-l10-o0 aat:containsDirectly :xref-l10-c60-o0 .
+
+:section-l8-o0 aat:references :section-l25-o0 .
+
+:xref-l10-c60-o0
+  rdf:reifies <<( :section-l8-o0 aat:references :section-l25-o0 )>> .
+----
+
+第一个 triple 表达出现位置。第二个 triple 表达结构引用关系。第三个 triple 表达该引用关系由某个 xref occurrence 提供证据。

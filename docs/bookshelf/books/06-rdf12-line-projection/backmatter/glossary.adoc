@@ -1,0 +1,40 @@
+[#glossary]
+== 术语表
+
+AbundantDocument:: `asciidoc-abundant-tree` 从单个 AsciiDoc 源文件恢复出的 TypeScript 结构对象。
+
+projection graph:: 从 `AbundantDocument` 派生出的 RDF 1.2 图。
+
+projection resource:: RDF 图中表示源文档结构单位、出现点、表面属性、label 或 payload block 的 IRI resource。
+
+source document:: 作为事实来源的 AsciiDoc 源文件。
+
+relative path:: 相对于投影调用方指定文档根目录的文件路径。
+
+line span:: 使用 1-based line number 表示的源文件连续行范围。
+
+label:: 文档表面中可显示、可寻址或可作为查询入口的字符串。
+
+selector:: occurrence 或绑定字段中用于寻找目标 resource 的字符串。
+
+label catalog:: 由 projection resource 的 label 组成的查询和绑定索引。
+
+selector binding:: selector 字符串与 label catalog 中目标 projection resource 之间的机械匹配关系。
+
+source node:: xref occurrence 所在结构作用域对应的 projection resource。
+
+target node:: xref target selector 绑定到的 projection resource。
+
+xref occurrence:: 源文档中一次交叉引用写法的出现点。
+
+triple term:: RDF 1.2 中作为 RDF term 使用的 triple。
+
+reifier:: 使用 `rdf:reifies` 指向 triple term 的 resource。
+
+surface attribute:: 从 AsciiDoc attribute list 或 xref named attribute 恢复出的表面字段。
+
+payload block:: 以 block 形式保存复杂载荷原文的源文档结构单位。
+
+containment:: 从 `AbundantDocument.children` 派生出的直接结构包含关系。
+
+provenance:: 描述投影图、投影活动和源文档之间来源关系的信息。

@@ -1,0 +1,85 @@
+[#consumer-actions]
+== 消费动作
+
+projection graph 的主要消费者是能够查询 RDF、读取源文件并修改源文件的编程 agent。该消费者需要从图结构回到源文档行范围，再通过文件编辑工具修改源文本。
+
+=== 行动轨迹
+
+该消费者的基本行动轨迹是：
+
+. 查询 projection graph。
+. 得到 projection resource。
+. 读取该 resource 的 `relativePath`、`startLine` 和 `endLine`。
+. 读取源文件的对应行范围。
+. 根据源文本执行判断。
+. 修改源文件。
+. 重新生成 `AbundantDocument`。
+. 重新生成 projection graph。
+
+因此，`relativePath` 和 line span 是 projection graph 的公共契约，不是调试信息。缺少这两个字段时，查询结果无法稳定进入源文件阅读和 patch 回写循环。
+
+=== 查询入口
+
+编程 agent 的常见查询入口不是 RDF resource IRI，而是源文档表面字符串。标题、显式 ID、生成 ID、anchor ID 和 xref target 都可以成为查询入口。
+
+显式 ID 查询示例：
+
+[source,sparql]
+----
+SELECT ?node ?path ?start ?end WHERE {
+  ?node aat:hasLabel ?label .
+  ?label a aat:AddressLabel ;
+         rdf:value "engine-code" .
+  ?node aat:relativePath ?path ;
+        aat:startLine ?start ;
+        aat:endLine ?end .
+}
+----
+
+标题查询示例：
+
+[source,sparql]
+----
+SELECT ?node ?path ?start ?end WHERE {
+  ?node aat:hasLabel ?label .
+  ?label a aat:TitleLabel ;
+         rdf:value "3. 核心引擎设计" .
+  ?node aat:relativePath ?path ;
+        aat:startLine ?start ;
+        aat:endLine ?end .
+}
+----
+
+这些查询通过 label catalog 定位 resource。作者字符串不参与 resource IRI 的构造。
+
+=== 结构定位
+
+编程 agent 需要定位不同粒度的结构：
+
+* section 的完整行范围，用于阅读或移动一个标题作用域。
+* paragraph 的行范围，用于修改正文语句。
+* listing 的完整行范围，用于移动或删除代码块。
+* listing 的 content line span，用于只修改代码内容。
+* metadata line span，用于修改 block ID、role 或 attribute list。
+* xref occurrence 的行范围，用于修改一次交叉引用写法。
+* payload block 的 content line span，用于修改 payload raw。
+
+projection graph 必须把这些行级事实放在对应 resource 上。查询者不应从 Turtle 文本中解析行号，也不应从 resource IRI 中反推出行号。
+
+=== 关系定位
+
+xref relation 不只是 `source predicate target`。一次 xref 写法还包含 raw text、target selector、display label、attributes、source line span 和可能的 payload selector。
+
+projection graph 使用 RDF 1.2 reifier 表达 xref occurrence。主 triple 表达结构关系；reifier resource 表达该关系在源文档中的出现点。编程 agent 可以查询 reifier 得到源文件位置，再修改对应 xref 写法。
+
+=== 回源闭环
+
+一个 projection resource 对编程 agent 有用，当且仅当该 resource 能独立给出：
+
+* 所属 source document。
+* source document 的 relative path。
+* 起始行号。
+* 结束行号。
+* 必要时的起始列号和结束列号。
+
+列号用于 occurrence 精确显示。行号用于文件读取和 patch 范围判断。当前投影的核心定位单位是 line span。

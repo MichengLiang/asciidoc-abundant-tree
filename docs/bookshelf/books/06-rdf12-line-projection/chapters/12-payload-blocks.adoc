@@ -1,0 +1,124 @@
+[#payload-blocks]
+== Payload Block
+
+payload block 是源文档中保存复杂载荷原文的 block。projection graph 使用 `aat:PayloadBlock` resource 表达 payload block。
+
+=== Payload Identity
+
+payload resource IRI 由投影器生成。作者写出的 payload ID 是 address label，不是 resource identity。
+
+示例：
+
+[source,asciidoc]
+----
+[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[source,json]
+----
+
+`delivery-policy-payload` 投影为 `aat:AddressLabel`。payload resource IRI 可以是：
+
+[source,text]
+----
+urn:aat:doc:7f3a9c#payload-l29-o0
+----
+
+=== Payload Kind
+
+payload block 的 kind 由 role 决定：
+
+[horizontal]
+`payload`:: node payload。
+`xref-payload`:: xref payload。
+
+role token 同时投影为 `aat:RoleLabel`。
+
+=== Node Payload
+
+node payload 使用 `for` 字段绑定到 node selector。
+
+[source,asciidoc]
+----
+[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[source,json]
+----
+
+投影为：
+
+[source,turtle]
+----
+:payload-l29-o0 a aat:PayloadBlock ;
+  aat:payloadKind "node" ;
+  aat:forSelector "delivery-policy" ;
+  aat:dataFormat "json" ;
+  aat:hasLabel :label-payload-address-l29-o0 .
+----
+
+`forSelector` 对 label catalog 唯一绑定到 node resource 时，projection graph 输出：
+
+[source,turtle]
+----
+:section-l2-o0 aat:hasPayload :payload-l29-o0 .
+:payload-l29-o0 aat:payloadOf :section-l2-o0 .
+----
+
+未绑定或多义绑定时，projection graph 保留 `forSelector`，不生成 `aat:payloadOf`。
+
+=== Xref Payload
+
+xref payload 通过 xref occurrence 的 `payloadSelector` 绑定。
+
+源文档：
+
+[source,asciidoc]
+----
+xref:capacity-rule[运力规则, payload=rel-delivery-capacity]
+
+[#rel-delivery-capacity.xref-payload, data=json]
+[source,json]
+----
+
+投影为：
+
+[source,turtle]
+----
+:xref-l4-c7-o0 aat:payloadSelector "rel-delivery-capacity" .
+
+:payload-l6-o0 a aat:PayloadBlock ;
+  aat:payloadKind "xref" ;
+  aat:hasLabel :label-payload-address-l6-o0 ;
+  aat:dataFormat "json" .
+
+:xref-l4-c7-o0 aat:hasPayload :payload-l6-o0 .
+----
+
+xref payload 连接到 xref occurrence reifier。它不连接到 source node 或 target node。
+
+=== Source Text
+
+payload raw 保存为 opaque source text：
+
+[source,turtle]
+----
+:payload-l6-o0
+  aat:sourceText "{ \"reason\": \"risk-control\" }" ;
+  aat:contentStartLine 8 ;
+  aat:contentEndLine 8 .
+----
+
+projection graph 不解释 payload 内部字段。JSON、YAML、TOML、XML 或其它 payload 格式的内部结构不进入本投影。专用 payload 转换器可以读取 `aat:PayloadBlock`、`aat:dataFormat` 和 `aat:sourceText` 作为输入。
+
+=== Line Span
+
+payload block 必须带完整 line span。若输入 block 是 listing，则还应带 content line span。
+
+[source,turtle]
+----
+:payload-l6-o0 a aat:PayloadBlock ;
+  aat:relativePath "samples/policy.adoc" ;
+  aat:startLine 6 ;
+  aat:endLine 10 ;
+  aat:contentStartLine 8 ;
+  aat:contentEndLine 8 .
+----
+
+完整 line span 用于移动或删除 payload block。content line span 用于修改 payload raw。

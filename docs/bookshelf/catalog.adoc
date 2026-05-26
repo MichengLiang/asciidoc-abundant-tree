@@ -1,0 +1,36 @@
+= asciidoc-abundant-tree
+作者 <author@example.com>
+v0.1, 2026-05
+:toc: left
+:toclevels: 2
+:icons: font
+:experimental:
+:idprefix:
+:idseparator: -
+
+本目录展示如何在一个共享 pnpm / Asciidoctor 环境下维护多本独立 AsciiDoc book。
+
+本目录的基本单位是书。每本书都有自己的 `book.adoc`，根目录提供统一依赖、统一构建和总入口。
+
+== 书目
+
+* xref:books/01-foundations/book.adoc[第一本：基础结构]
+* xref:books/02-practice/book.adoc[第二本：实践工作流]
+* xref:books/03-reference/book.adoc[第三本：参考手册]
+* xref:books/04-upper-volume/book.adoc[上册示例]
+* xref:books/05-lower-volume/book.adoc[下册示例]
+* xref:books/06-rdf12-line-projection/book.adoc[RDF 1.2 行级结构图投影规约]
+
+== 展示范围
+
+* 多本独立 book 共用一个根 `package.json`。
+* 一本书内部使用 AsciiDoc 原生 part 表达“第一部、第二部”。
+* 上册和下册作为两本独立书存在。
+* 一本书可以通过 inter-document xref 引用另一本书。
+* 共享主题和共享图片放在 `shared/`，每本书自己的图片放在书内 `assets/`。
+
+image::shared/images/workspace-map.svg[多本书工作区结构]
+
+== 边界
+
+本示例不把多本书合并成一个超级 book，也不把书稿改造成 Antora 文档站。需要站点导航、版本切换和搜索时，可以再考虑 Antora 路线。

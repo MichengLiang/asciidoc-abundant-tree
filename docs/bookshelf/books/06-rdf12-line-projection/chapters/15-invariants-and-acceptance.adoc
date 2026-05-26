@@ -1,0 +1,89 @@
+[#invariants-and-acceptance]
+== 不变量与验收
+
+投影实现必须满足本章不变量。验收比较 RDF graph 中的结构事实，不依赖 Turtle 文本排版。
+
+=== 身份不变量
+
+* projection resource IRI 由投影器确定性生成。
+* resource IRI 不使用作者显式 ID、标题文本、生成 ID 或 xref display label 作为身份依据。
+* 相同输入、相同 document root、相同 base IRI 生成相同 resource IRI。
+* source digest 不进入每个 resource IRI。
+
+=== 回源不变量
+
+* 每个可回源 resource 必须有 `aat:relativePath`。
+* 每个可回源 resource 必须有 `aat:startLine` 和 `aat:endLine`。
+* line number 使用 1-based line number。
+* line span 使用闭区间。
+* listing block 必须区分完整 line span、metadata line span 和 content line span。
+
+=== Label 不变量
+
+* 标题文本投影为 `aat:TitleLabel` 或 `aat:BlockTitleLabel`。
+* 作者显式 ID 投影为 `aat:AddressLabel`。
+* Asciidoctor generated ID 投影为 `aat:GeneratedAddressLabel`。
+* xref target raw string 投影为 `aat:targetSelector`。
+* label resource 必须带 `rdf:value`。
+* 查询者通过 label catalog 定位 resource，不通过作者字符串拼接 resource IRI。
+
+=== Xref 不变量
+
+* 每个 `XrefOccurrenceNode` 必须生成 `aat:XrefOccurrence` resource。
+* xref occurrence 必须保留 raw、target selector 和 line span。
+* 没有 `rel` 的 xref 使用 `aat:references`。
+* `rel` 字段只决定 predicate IRI，不触发业务语义判断。
+* source node、predicate IRI 和 target node 都确定时，projection graph 必须生成主 relation triple。
+* 成功生成 relation triple 的 xref occurrence 必须使用 `rdf:reifies` 指向对应 triple term。
+* target selector 未绑定或多义绑定时，不生成虚构 target node。
+* 相同 relation triple 的多个 xref occurrence 必须保留多个 reifier。
+
+=== Attribute 不变量
+
+* attribute list 字段投影为 `aat:SurfaceAttribute`。
+* xref ordinary named attributes 投影为 `aat:SurfaceAttribute`。
+* `rel` 和 `payload` 是 xref 控制字段，不重复作为普通 surface attribute。
+* surface attribute 使用 `aat:name` 和 `rdf:value`。
+* surface attribute 不升格为业务 RDF predicate。
+
+=== Payload 不变量
+
+* payload block resource IRI 由投影器生成。
+* payload ID 投影为 address label。
+* payload raw 保存为 `aat:sourceText`。
+* payload raw 不展开为业务图。
+* node payload 通过 `forSelector` 绑定。
+* xref payload 通过 `payloadSelector` 绑定。
+* 绑定不完整时，payload resource 保留 selector，不生成虚构绑定。
+
+=== Containment 不变量
+
+* `aat:containsDirectly` 只来自 `AbundantDocument.children`。
+* projection graph 不默认输出 containment 传递闭包。
+* section、paragraph、listing、table、anchor 和 xref occurrence 可以参与直接包含关系。
+* containment relation 与 xref relation 使用不同谓词。
+
+=== 来源不变量
+
+* projection graph 必须包含 source document entity。
+* projection graph 必须包含 projection entity。
+* projection graph 必须包含 projection activity。
+* projection entity 必须通过 `prov:wasDerivedFrom` 和 `prov:hadPrimarySource` 指向 source document entity。
+* projection activity 必须通过 `prov:used` 指向 source document entity 和 `AbundantDocument` entity。
+
+=== 样例验收
+
+使用 `samples/reference-links.adoc` 的投影结果应满足：
+
+* `_1_引言` 作为 generated address label 可查询到 line 8 到 line 11 的 section resource。
+* `section-basics` 作为 address label 可查询到 line 12 到 line 24 的 section resource。
+* `3. 核心引擎设计` 作为 title label 可查询到 line 25 到 line 39 的 section resource。
+* `engine-code` 作为 address label 可查询到 listing resource。
+* listing resource 带完整 line span、metadata line span 和 content line span。
+* `<<3. 核心引擎设计>>` 生成 xref occurrence resource。
+* 该 xref occurrence 带 `targetSelector = "3. 核心引擎设计"`。
+* 该 xref occurrence 使用 `aat:references` 作为默认 predicate。
+* 该 xref occurrence 在唯一绑定时 reify 从引言 section 到核心引擎设计 section 的 relation triple。
+* `warning-text` 作为 anchor label 可查询到 anchor target resource。
+
+使用跨文件 xref 样例时，投影器不得打开外部文件。跨文件 target selector 保留为 literal。只有当前 `AbundantDocument` 能唯一绑定的本地 target 才生成 target node。

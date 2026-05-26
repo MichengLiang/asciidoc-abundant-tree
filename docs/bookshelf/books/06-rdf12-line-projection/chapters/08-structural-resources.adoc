@@ -1,0 +1,157 @@
+[#structural-resources]
+== 结构资源
+
+结构资源表示 `AbundantDocument` 中可回源的结构单位。每个结构资源使用确定性 IRI，并携带 relative path 和 line span。
+
+=== Document Resource
+
+document resource 表示源文档的结构根。
+
+必备输出：
+
+* `rdf:type aat:AsciiDocDocument`。
+* `aat:relativePath`。
+* `aat:hasLabel` 指向 document title label。
+* `aat:containsDirectly` 指向顶层 child resource。
+
+示例：
+
+[source,turtle]
+----
+:document a aat:AsciiDocDocument ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:hasLabel :label-document-title ;
+  aat:containsDirectly :section-l8-o0 .
+----
+
+=== Section Resource
+
+`SectionNode` 投影为 `aat:Section`。
+
+必备输出：
+
+* `rdf:type aat:Section`。
+* `aat:sectionLevel`。
+* `aat:relativePath`。
+* `aat:startLine` 与 `aat:endLine`。
+* title label。
+* ID label。
+* metadata 派生出的 label 或 surface attribute。
+
+示例：
+
+[source,turtle]
+----
+:section-l12-o0 a aat:Section ;
+  aat:sectionLevel 1 ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:startLine 12 ;
+  aat:endLine 24 ;
+  aat:hasLabel :label-l12-title-o0 ;
+  aat:hasLabel :label-l11-address-o0 .
+----
+
+`SectionNode.idOrigin` 决定 ID label class。source ID 生成 `aat:AddressLabel`。generated ID 生成 `aat:GeneratedAddressLabel`。
+
+=== Paragraph Resource
+
+`ParagraphNode` 投影为 `aat:Paragraph`。
+
+必备输出：
+
+* `rdf:type aat:Paragraph`。
+* `aat:relativePath`。
+* `aat:startLine` 与 `aat:endLine`。
+* `aat:sourceText` 或 `aat:paragraphText`。
+
+paragraph 中的 xref 和 anchor occurrence 可以通过 `aat:containsDirectly` 连接到 paragraph resource。
+
+=== ListingBlock Resource
+
+`ListingNode` 投影为 `aat:ListingBlock`。
+
+必备输出：
+
+* `rdf:type aat:ListingBlock`。
+* `aat:relativePath`。
+* 完整 line span。
+* metadata line span。
+* content line span。
+* address label。
+* block title label。
+* language 和 style。
+* `aat:sourceText` 保存 content。
+
+示例：
+
+[source,turtle]
+----
+:listing-l29-o0 a aat:ListingBlock ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:startLine 29 ;
+  aat:endLine 36 ;
+  aat:metadataStartLine 29 ;
+  aat:metadataEndLine 31 ;
+  aat:contentStartLine 33 ;
+  aat:contentEndLine 35 ;
+  aat:language "python" ;
+  aat:listingStyle "source" ;
+  aat:sourceText "def start_warp_drive():\n    print(\"Engaging warp drive...\")\n    return True" .
+----
+
+`language` 和 `style` 来自 `ListingNode` 的稳定字段。metadata 中相同信息仍可作为 surface attribute 保留。
+
+=== TableBlock Resource
+
+`TableNode` 投影为 `aat:TableBlock`。
+
+必备输出：
+
+* `rdf:type aat:TableBlock`。
+* `aat:relativePath`。
+* line span。
+* address label。
+* block title label。
+* metadata 派生出的 surface attribute。
+
+`rows` 和 `cells` 只有在输入对象提供稳定结构时才投影。投影器不从 raw table 文本中恢复 table AST。
+
+=== AnchorTarget Resource
+
+anchor occurrence 可投影为 `aat:AnchorTarget`。当 anchor 可以被 xref target selector 引用时，它必须成为可绑定 resource。
+
+必备输出：
+
+* `rdf:type aat:AnchorTarget`。
+* `aat:relativePath`。
+* line span。
+* anchor label。
+* `aat:containedIn` 指向所在 section resource。
+
+示例：
+
+[source,turtle]
+----
+:anchor-l56-c27-o0 a aat:AnchorTarget ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:startLine 56 ;
+  aat:endLine 56 ;
+  aat:hasLabel :label-anchor-warning-text ;
+  aat:containedIn :section-l53-o0 .
+----
+
+若 xref 指向该 anchor，target node 是 anchor resource，不是自动折叠为 containing section。
+
+=== XrefOccurrence Resource
+
+`XrefOccurrenceNode` 投影为 `aat:XrefOccurrence`。xref occurrence 既是 paragraph 中的出现点，也是 relation triple 的 reifier。
+
+xref occurrence 的详细规则见 <<xref-occurrence-and-reification>>。
+
+=== PayloadBlock Resource
+
+具有 payload role 的 listing 或 block 可投影为 `aat:PayloadBlock`。payload resource 的详细规则见 <<payload-blocks>>。
+
+=== SurfaceAttribute Resource
+
+metadata attribute 和 xref named attribute 投影为 `aat:SurfaceAttribute`。surface attribute 的详细规则见 <<surface-attributes>>。

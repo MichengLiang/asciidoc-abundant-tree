@@ -1,0 +1,108 @@
+[#resource-identity]
+== 资源身份
+
+projection resource 使用投影器生成的确定性 IRI。作者显式 ID、标题文本和 Asciidoctor generated ID 均不作为 resource identity。
+
+=== 身份来源
+
+resource IRI 的输入是 relative path、resource kind、line coordinate 和 ordinal。
+
+规范形式：
+
+[source,text]
+----
+documentKey      = sha256(relativePath)
+resourceLocalId  = <kind>-l<startLine>-c<startColumn>-o<ordinal>
+resourceIRI      = urn:aat:doc:<documentKey>#<resourceLocalId>
+----
+
+对于不需要列号区分的 block resource，可以省略 column：
+
+[source,text]
+----
+urn:aat:doc:<documentKey>#section-l8-o0
+urn:aat:doc:<documentKey>#listing-l29-o0
+urn:aat:doc:<documentKey>#table-l46-o0
+----
+
+同一行出现多个 occurrence 的 resource 应包含 column：
+
+[source,text]
+----
+urn:aat:doc:<documentKey>#xref-l10-c60-o0
+urn:aat:doc:<documentKey>#xref-l10-c100-o1
+urn:aat:doc:<documentKey>#anchor-l56-c27-o0
+----
+
+`ordinal` 用于解决同 kind、同行、同列仍可能冲突的 resource。普通 block 的 ordinal 通常为 `0`。
+
+=== 作者字符串不是身份
+
+以下字符串均不进入 resource IRI 的身份规则：
+
+* section title。
+* block title。
+* 显式 ID。
+* inline anchor ID。
+* Asciidoctor generated ID。
+* xref display label。
+* xref target raw string。
+
+这些字符串投影为 label 或 selector。查询者通过 label catalog 定位 resource。
+
+示例：
+
+[source,asciidoc]
+----
+[#section-basics]
+== 2. 基础概念
+----
+
+该 section resource 的 IRI 可以是：
+
+[source,text]
+----
+urn:aat:doc:7f3a9c#section-l12-o0
+----
+
+`section-basics` 是 `aat:AddressLabel`。`2. 基础概念` 是 `aat:TitleLabel`。它们不构成 IRI。
+
+=== Document Resource
+
+每份 source document 在 projection graph 中有一个 document resource。document resource 也使用确定性 IRI：
+
+[source,text]
+----
+urn:aat:doc:<documentKey>#document
+----
+
+document resource 表示该 source document 的结构根。source document entity 表示来源文件。两者可以使用不同 IRI。document resource 参与 `aat:containsDirectly`；source document entity 参与 PROV-O 来源关系。
+
+=== Snapshot 与身份
+
+source digest 表示源文件快照。source digest 不进入 resource IRI。该规则使同一 relative path 下的结构 resource 在常见编辑中保持可比较的 IRI 形状。
+
+当源文件行结构变化时，line coordinate 随之变化，resource IRI 也随之变化。该变化反映投影 resource 是文档位置上的结构单位，不是长期业务实体。
+
+=== Resource Kind
+
+`kind` 必须来自受控集合：
+
+[source,text]
+----
+document
+section
+paragraph
+listing
+table
+anchor
+xref
+payload
+attribute
+label
+projection
+activity
+source
+----
+
+实现可以扩展 kind，但扩展 kind 必须对应 `AbundantDocument` 中的结构事实或投影过程中的证据对象。扩展 kind 不得表示业务领域类型。

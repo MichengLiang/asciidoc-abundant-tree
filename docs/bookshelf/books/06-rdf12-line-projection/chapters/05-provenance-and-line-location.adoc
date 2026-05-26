@@ -1,0 +1,117 @@
+[#provenance-and-line-location]
+== 来源与行级定位
+
+projection graph 必须表达来源关系和行级定位。来源关系说明图从哪份源文档和哪次投影活动派生。行级定位说明每个 resource 对应源文件中的哪一段连续行。
+
+=== 来源实体
+
+每次投影至少产生三个来源对象：
+
+[horizontal]
+source document entity:: 表示 AsciiDoc 源文件。
+projection entity:: 表示本次生成的 RDF projection graph。
+projection activity:: 表示生成 projection graph 的活动。
+
+来源关系使用 PROV-O。PROV-O 的命名空间是 `http://www.w3.org/ns/prov#`，参见 <<prov-o>>。
+
+基本表达：
+
+[source,turtle]
+----
+:source-doc a prov:Entity, aat:AsciiDocSourceDocument ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:sourceDigest "sha256:..." .
+
+:projection a prov:Entity, aat:RdfProjection ;
+  prov:wasDerivedFrom :source-doc ;
+  prov:hadPrimarySource :source-doc ;
+  prov:wasGeneratedBy :projection-activity ;
+  dcterms:source :source-doc .
+
+:projection-activity a prov:Activity, aat:ProjectionActivity ;
+  prov:used :source-doc ;
+  prov:used :abundant-document .
+
+:abundant-document a prov:Entity, aat:AbundantDocument ;
+  prov:wasDerivedFrom :source-doc .
+----
+
+`prov:hadPrimarySource` 表示 source document 是 projection graph 的 primary source。`prov:wasGeneratedBy` 连接 projection graph 与投影活动。`prov:used` 表示投影活动使用了 source document 和 `AbundantDocument`。`dcterms:source` 提供通用 metadata 表达，参见 <<dcmi-terms>>。
+
+=== Relative Path
+
+`relativePath` 是投影闭环的文件坐标。投影器根据 `AbundantDocument.sourcePath` 和调用方提供的 document root 计算 relative path。
+
+示例：
+
+[source,text]
+----
+sourcePath   = /home/t103o/workbench/micheng-ts/projects/asciidoc-abundant-tree/samples/reference-links.adoc
+documentRoot = /home/t103o/workbench/micheng-ts/projects/asciidoc-abundant-tree
+relativePath = samples/reference-links.adoc
+----
+
+source document entity 必须带 `aat:relativePath`。每个可回源 projection resource 也必须带相同 `aat:relativePath`。这种冗余服务查询结果直接回源。查询者得到任意结构 resource 后，不需要再追溯 source document entity 才能读取文件。
+
+=== Line Span
+
+line span 使用 1-based line number。字段为：
+
+[horizontal]
+`aat:startLine`:: resource 覆盖范围的起始行。
+`aat:endLine`:: resource 覆盖范围的结束行。
+
+该 line span 是闭区间。`startLine = 8` 且 `endLine = 11` 表示源文件第 8 行到第 11 行。
+
+可回源 resource 必须带 line span：
+
+[source,turtle]
+----
+:section-l8-o0 a aat:Section ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:startLine 8 ;
+  aat:endLine 11 .
+----
+
+列号可以作为 occurrence 的补充定位：
+
+[source,turtle]
+----
+:xref-l10-c60-o0 a aat:XrefOccurrence ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:startLine 10 ;
+  aat:endLine 10 ;
+  aat:startColumn 60 ;
+  aat:endColumn 73 .
+----
+
+当前投影的核心定位单位是 line span。字符 offset 不属于核心输出。
+
+=== Specialized Line Spans
+
+某些结构 resource 具有多个行范围。listing block 同时具有完整范围、metadata 范围和内容范围。
+
+[source,turtle]
+----
+:listing-l29-o0 a aat:ListingBlock ;
+  aat:relativePath "samples/reference-links.adoc" ;
+  aat:startLine 29 ;
+  aat:endLine 36 ;
+  aat:metadataStartLine 29 ;
+  aat:metadataEndLine 31 ;
+  aat:contentStartLine 33 ;
+  aat:contentEndLine 35 .
+----
+
+完整 line span 用于移动、删除或阅读整个 block。metadata line span 用于修改 ID、role 或 attribute list。content line span 用于修改 block 内容。
+
+=== Source Digest
+
+source document entity 应携带 source digest。source digest 表示 projection graph 对应的源文件快照。
+
+[source,turtle]
+----
+:source-doc aat:sourceDigest "sha256:..." .
+----
+
+source digest 不进入每个 resource IRI。资源 IRI 的稳定性服务测试、缓存和查询；source digest 服务 freshness 判断和快照比较。
