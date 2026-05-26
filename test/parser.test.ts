@@ -38,6 +38,10 @@ const tableSectionPollutionAuditPath = join(
 	projectRoot,
 	"test/fixtures/table-section-pollution-audit.adoc",
 );
+const paragraphIdAuditPath = join(
+	projectRoot,
+	"test/fixtures/paragraph-id-audit.adoc",
+);
 
 describe("parseAbundantTree", () => {
 	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", () => {
@@ -378,6 +382,49 @@ describe("parseAbundantTree", () => {
 			}),
 		);
 		expect(xref?.asciidoctor?.resolvedType).toBeUndefined();
+	});
+
+	it("uses official paragraph block ids as target catalog entries", () => {
+		const document = parseAbundantTree({ sourcePath: paragraphIdAuditPath });
+		const paragraph = findNode(document.children, "paragraph") as {
+			asciidoctor?: { resolvedId?: string };
+		};
+		const target = document.targets.find(
+			(candidate) => candidate.id === "para-target",
+		);
+		const xref = document.xrefOccurrences[0];
+
+		expect(paragraph.asciidoctor?.resolvedId).toBe("para-target");
+		expect(target).toEqual(
+			expect.objectContaining({
+				id: "para-target",
+				targetType: "block",
+				idOrigin: "source",
+				sourceSpan: expect.objectContaining({
+					start: { line: 5, column: 1 },
+				}),
+				asciidoctor: expect.objectContaining({
+					context: "paragraph",
+					resolvedId: "para-target",
+					resolvedType: "block",
+				}),
+			}),
+		);
+		expect(xref).toEqual(
+			expect.objectContaining({
+				raw: "<<para-target>>",
+				target: "para-target",
+				scope: "local",
+				sourceSpan: expect.objectContaining({
+					start: { line: 8, column: 5 },
+				}),
+				asciidoctor: expect.objectContaining({
+					href: "#para-target",
+					resolvedId: "para-target",
+					resolvedType: "block",
+				}),
+			}),
+		);
 	});
 });
 

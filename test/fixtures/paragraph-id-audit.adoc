@@ -1,0 +1,8 @@
+= Paragraph ID Audit
+
+== Section
+
+[#para-target]
+A paragraph with an explicit block id.
+
+See <<para-target>>.

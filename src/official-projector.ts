@@ -13,6 +13,7 @@ import type {
 	SectionNode,
 	TableNode,
 	TargetNode,
+	TargetType,
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
@@ -100,6 +101,18 @@ function buildNode(
 	if (blockContext === "table" && line !== undefined) {
 		return buildTable(block, line, context);
 	}
+	if (line !== undefined) {
+		registerOfficialBlockTarget(context, block, {
+			targetType: "block",
+			sourceSpan: sourceSpanFromLineSpan(context.lineTable, {
+				startLine: line,
+				endLine: nextBlankLine(context.lineTable, line) - 1,
+			}),
+		});
+		for (const child of block.getBlocks?.() ?? []) {
+			buildNode(child, context);
+		}
+	}
 	return undefined;
 }
 
@@ -125,18 +138,13 @@ function buildSection(
 		resolvedType: "section",
 		reftext: block.getTitle?.(),
 	}) as AsciidoctorLayer;
-	addTarget(
-		context.targets,
-		definedObject({
-			kind: "target",
-			id: section.ids[0] ?? officialId ?? "",
-			targetType: "section",
-			title: section.title,
-			idOrigin: section.idOrigin,
-			sourceSpan: sourceSpanFromLineSpan(context.lineTable, section.span),
-			asciidoctor: section.asciidoctor,
-		}) as TargetNode,
-	);
+	registerOfficialBlockTarget(context, block, {
+		targetType: "section",
+		title: section.title,
+		idOrigin: section.idOrigin,
+		sourceSpan: sourceSpanFromLineSpan(context.lineTable, section.span),
+		asciidoctor: section.asciidoctor,
+	});
 	section.children = (block.getBlocks?.() ?? [])
 		.map((child) => buildNode(child, context))
 		.filter((node): node is AbundantNode => node !== undefined);
@@ -148,6 +156,8 @@ function buildParagraph(
 	line: number,
 	context: ProjectContext,
 ): ParagraphNode {
+	const metadata = collectPrecedingMetadata(context.lineTable, line);
+	const startLine = metadata.at(0)?.line ?? line;
 	const blockEnd = nextBlankLine(context.lineTable, line) - 1;
 	const xrefs = collectOccurrencesInLineRange(
 		context.xrefsByLine,
@@ -171,26 +181,38 @@ function buildParagraph(
 	);
 	applyOfficialBindings(xrefs, bindings);
 	const sourceSpan = sourceSpanFromLineSpan(context.lineTable, {
-		startLine: line,
+		startLine,
 		endLine: blockEnd,
 	});
 	const source = sourceSpan
 		? {
-				span: { startLine: line, endLine: blockEnd },
+				span: { startLine, endLine: blockEnd },
 				sourceSpan,
 			}
-		: { span: { startLine: line, endLine: blockEnd } };
-
-	return {
+		: { span: { startLine, endLine: blockEnd } };
+	const asciidoctor = definedObject({
+		context: block.getContext?.(),
+		nodeName: block.getNodeName?.(),
+		resolvedId: block.getId?.(),
+		resolvedType: block.getId?.() ? "block" : undefined,
+		reftext: block.getTitle?.(),
+	}) as AsciidoctorLayer;
+	const paragraph = {
 		kind: "paragraph",
 		text: sourceLines(context.lineTable, line, blockEnd).join("\n"),
 		source,
-		asciidoctor: definedObject({
-			context: block.getContext?.(),
-			nodeName: block.getNodeName?.(),
-		}) as AsciidoctorLayer,
+		asciidoctor,
 		children: [...xrefs, ...anchors].sort(compareNodesBySource),
-	};
+	} as ParagraphNode;
+
+	registerOfficialBlockTarget(context, block, {
+		targetType: "block",
+		title: block.getTitle?.(),
+		sourceSpan,
+		asciidoctor,
+	});
+
+	return paragraph;
 }
 
 function buildListing(
@@ -247,20 +269,16 @@ function buildListing(
 		}) as AsciidoctorLayer,
 	}) as ListingNode;
 
-	if (listing.ids.length > 0) {
-		addTarget(
-			context.targets,
-			definedObject({
-				kind: "target",
-				id: listing.ids[0] ?? "",
-				targetType: "listing",
-				title: listing.title,
-				idOrigin: "source",
-				sourceSpan: listing.source?.sourceSpan,
-				asciidoctor: listing.asciidoctor,
-			}) as TargetNode,
-		);
+	const officialId = block.getId?.();
+	if (listing.ids.length === 0 && officialId) {
+		listing.ids = [officialId];
 	}
+	registerOfficialBlockTarget(context, block, {
+		targetType: "listing",
+		title: listing.title,
+		sourceSpan: listing.source?.sourceSpan,
+		asciidoctor: listing.asciidoctor,
+	});
 	return listing;
 }
 
@@ -323,21 +341,58 @@ function buildTable(
 		children: [...tableXrefs, ...tableAnchors].sort(compareNodesBySource),
 	}) as TableNode;
 
-	if (table.ids.length > 0) {
-		addTarget(
-			context.targets,
-			definedObject({
-				kind: "target",
-				id: table.ids[0] ?? "",
-				targetType: "table",
-				title: table.title,
-				idOrigin: "source",
-				sourceSpan: table.source?.sourceSpan,
-				asciidoctor: table.asciidoctor,
-			}) as TargetNode,
-		);
+	const officialId = block.getId?.();
+	if (table.ids.length === 0 && officialId) {
+		table.ids = [officialId];
 	}
+	registerOfficialBlockTarget(context, block, {
+		targetType: "table",
+		title: table.title,
+		sourceSpan: table.source?.sourceSpan,
+		asciidoctor: table.asciidoctor,
+	});
 	return table;
+}
+
+function registerOfficialBlockTarget(
+	context: ProjectContext,
+	block: AsciidoctorBlock,
+	options: {
+		targetType: TargetType;
+		title?: string | undefined;
+		idOrigin?: TargetNode["idOrigin"] | undefined;
+		sourceSpan?: TargetNode["sourceSpan"] | undefined;
+		asciidoctor?: AsciidoctorLayer | undefined;
+	},
+): void {
+	const id = block.getId?.();
+	if (!id) {
+		return;
+	}
+	const asciidoctor = definedObject({
+		context: block.getContext?.(),
+		nodeName: block.getNodeName?.(),
+		...options.asciidoctor,
+		resolvedId: id,
+		resolvedType: options.targetType,
+		reftext: options.asciidoctor?.reftext ?? options.title ?? block.getTitle?.(),
+	}) as AsciidoctorLayer;
+	addTarget(
+		context.targets,
+		definedObject({
+			kind: "target",
+			id,
+			targetType: options.targetType,
+			title: options.title ?? block.getTitle?.(),
+			idOrigin:
+				options.idOrigin ??
+				(options.targetType === "section"
+					? "asciidoctor-generated"
+					: "source"),
+			sourceSpan: options.sourceSpan,
+			asciidoctor,
+		}) as TargetNode,
+	);
 }
 
 function extractTableAnchorBindings(
