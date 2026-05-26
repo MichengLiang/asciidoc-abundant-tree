@@ -6,24 +6,24 @@ const HOME_MARKER = "data-multi-book-home";
 const TOC_PATTERN = /<div id="toc" class="toc2">/;
 
 function escapeHtmlAttribute(value) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
+	return value
+		.replaceAll("&", "&amp;")
+		.replaceAll('"', "&quot;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;");
 }
 
 export function addHomeLinkToBookHtml(html, href) {
-  if (html.includes(HOME_MARKER)) return html;
+	if (html.includes(HOME_MARKER)) return html;
 
-  const tocMatch = html.match(TOC_PATTERN);
-  if (!tocMatch || tocMatch.index === undefined) {
-    throw new Error("book HTML is missing the left TOC container");
-  }
+	const tocMatch = html.match(TOC_PATTERN);
+	if (!tocMatch || tocMatch.index === undefined) {
+		throw new Error("book HTML is missing the left TOC container");
+	}
 
-  const insertAt = tocMatch.index + tocMatch[0].length;
-  const escapedHref = escapeHtmlAttribute(href);
-  const homeBlock = `
+	const insertAt = tocMatch.index + tocMatch[0].length;
+	const escapedHref = escapeHtmlAttribute(href);
+	const homeBlock = `
 <style>
 .multi-book-home {
   margin: 0 0 1rem;
@@ -53,46 +53,49 @@ export function addHomeLinkToBookHtml(html, href) {
   <a href="${escapedHref}">← 书库首页<span>AsciiDoc 多本书工作区</span></a>
 </div>`;
 
-  return `${html.slice(0, insertAt)}${homeBlock}${html.slice(insertAt)}`;
+	return `${html.slice(0, insertAt)}${homeBlock}${html.slice(insertAt)}`;
 }
 
 export async function bookHtmlFiles(rootDir) {
-  const booksDir = path.join(rootDir, "books");
-  const entries = await readdir(booksDir, { withFileTypes: true });
-  const files = [];
+	const booksDir = path.join(rootDir, "books");
+	const entries = await readdir(booksDir, { withFileTypes: true });
+	const files = [];
 
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    files.push(path.join(booksDir, entry.name, "book.html"));
-  }
+	for (const entry of entries) {
+		if (!entry.isDirectory()) continue;
+		files.push(path.join(booksDir, entry.name, "book.html"));
+	}
 
-  return files.sort();
+	return files.sort();
 }
 
 export async function addHomeLinksToWorkspace(rootDir) {
-  const files = await bookHtmlFiles(rootDir);
+	const files = await bookHtmlFiles(rootDir);
 
-  for (const file of files) {
-    const html = await readFile(file, "utf8");
-    const href = path.relative(path.dirname(file), path.join(rootDir, "catalog.html"));
-    const updated = addHomeLinkToBookHtml(html, href);
-    if (updated !== html) {
-      await writeFile(file, updated);
-    }
-  }
+	for (const file of files) {
+		const html = await readFile(file, "utf8");
+		const href = path.relative(
+			path.dirname(file),
+			path.join(rootDir, "catalog.html"),
+		);
+		const updated = addHomeLinkToBookHtml(html, href);
+		if (updated !== html) {
+			await writeFile(file, updated);
+		}
+	}
 }
 
 async function main() {
-  const rootDir = path.resolve(process.argv[2] ?? "build/html");
-  await addHomeLinksToWorkspace(rootDir);
+	const rootDir = path.resolve(process.argv[2] ?? "build/html");
+	await addHomeLinksToWorkspace(rootDir);
 }
 
 const executedPath = process.argv[1] ? path.resolve(process.argv[1]) : "";
 const modulePath = fileURLToPath(import.meta.url);
 
 if (executedPath === modulePath) {
-  main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
+	main().catch((error) => {
+		console.error(error);
+		process.exitCode = 1;
+	});
 }
