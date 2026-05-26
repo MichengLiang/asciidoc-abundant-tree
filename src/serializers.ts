@@ -110,8 +110,16 @@ function buildHeadline(object: Record<string, unknown>, label: string): string {
 }
 
 function orderedChildKeys(object: Record<string, unknown>): string[] {
+	const sourceSpan = sourceSpanFingerprint(object.sourceSpan);
+	const sourceLayerSpan = isPlainObject(object.source)
+		? sourceSpanFingerprint(object.source.sourceSpan)
+		: undefined;
+	const omitMirroredSourceSpan =
+		sourceSpan !== undefined && sourceSpan === sourceLayerSpan;
 	const keys = Object.keys(object).filter(
-		(key) => !isScalar(object[key]) || isMultilineString(object[key]),
+		(key) =>
+			(!isScalar(object[key]) || isMultilineString(object[key])) &&
+			!(key === "sourceSpan" && omitMirroredSourceSpan),
 	);
 	const priority = [
 		"parser",
@@ -129,6 +137,22 @@ function orderedChildKeys(object: Record<string, unknown>): string[] {
 		.filter((key) => !priority.includes(key))
 		.sort((a, b) => a.localeCompare(b));
 	return [...priority, ...rest];
+}
+
+function sourceSpanFingerprint(value: unknown): string | undefined {
+	if (!isPlainObject(value)) {
+		return undefined;
+	}
+
+	const { start, end } = value;
+	if (!isPlainObject(start) || !isPlainObject(end)) {
+		return undefined;
+	}
+
+	const fields = [start.line, start.column, end.line, end.column];
+	return fields.every((field) => typeof field === "number")
+		? fields.join(":")
+		: undefined;
 }
 
 function orderedScalarKeys(object: Record<string, unknown>): string[] {

@@ -62,11 +62,74 @@ describe("serializers", () => {
 		);
 	});
 
+	it("prints one sourceSpan when a node source layer carries the same span", () => {
+		const sourceSpan = {
+			start: { line: 10, column: 100 },
+			end: { line: 10, column: 128 },
+		};
+		const output = formatAbundantTree({
+			...document,
+			xrefOccurrences: [
+				{
+					kind: "xref",
+					syntax: "shorthand",
+					raw: "<<conclusion-section, 最终结论>>",
+					target: "conclusion-section",
+					label: "最终结论",
+					sourceSpan,
+					source: {
+						raw: "<<conclusion-section, 最终结论>>",
+						line: 10,
+						sourceSpan,
+					},
+				},
+			],
+		});
+
+		const xrefOutput = output.slice(output.indexOf("<xref "));
+		expect(xrefOutput.match(/<sourceSpan>/g)).toHaveLength(1);
+		expect(xrefOutput).toContain(
+			[
+				'            <source line=10 raw="&lt;&lt;conclusion-section, 最终结论&gt;&gt;">',
+				"                <sourceSpan>",
+				"                    <end column=128 line=10>",
+				"                    <start column=100 line=10>",
+			].join("\n"),
+		);
+	});
+
 	it("serializes to plain JSON-safe data", () => {
 		const json = serializeAbundantTreeToJson(document);
 
 		expect(json.kind).toBe("document");
 		expect(json.parser.name).toBe("@asciidoctor/core");
 		expect(JSON.parse(JSON.stringify(json))).toEqual(json);
+	});
+
+	it("keeps mirrored source spans in JSON data", () => {
+		const sourceSpan = {
+			start: { line: 10, column: 100 },
+			end: { line: 10, column: 128 },
+		};
+		const json = serializeAbundantTreeToJson({
+			...document,
+			xrefOccurrences: [
+				{
+					kind: "xref",
+					syntax: "shorthand",
+					raw: "<<conclusion-section, 最终结论>>",
+					target: "conclusion-section",
+					sourceSpan,
+					source: {
+						raw: "<<conclusion-section, 最终结论>>",
+						line: 10,
+						sourceSpan,
+					},
+				},
+			],
+		});
+
+		expect(json.xrefOccurrences[0]?.sourceSpan).toEqual(sourceSpan);
+		expect(json.xrefOccurrences[0]?.source?.sourceSpan).toEqual(sourceSpan);
 	});
 });
