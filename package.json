@@ -19,7 +19,7 @@
 	"type": "module",
 	"types": "./dist/index.d.mts",
 	"bin": {
-		"asciidoc-abundant-tree": "./dist/cli.mjs"
+		"asciidoc-abundant-tree": "dist/cli.mjs"
 	},
 	"exports": {
 		".": {
