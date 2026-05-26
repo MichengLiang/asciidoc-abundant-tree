@@ -6,7 +6,7 @@
 
 ## 1. 问题世界
 
-AsciiDoc 文档中存在可被人类作者直接观察的结构表面：标题、标题前元数据、block 标题、block 属性列表、listing、table、paragraph、inline xref、inline anchor 和显式 ID。这些结构表面可以支撑后续图投影、引用分析、文档 lint、作用域解释和其它下游程序。
+AsciiDoc 文档中存在可被人类作者直接观察的结构表面：标题、标题前元数据、block 标题、block 属性列表、listing、table、paragraph、inline xref、inline anchor 和显式 ID。这些结构表面可以支撑图投影、引用分析、文档 lint、作用域解释和其它下游程序。
 
 现有参考工具 `notes/关于AsciiDoc/asciidoc-ast-viewer` 使用 `@ggrossetie/haddock` 打印 parser 返回的树。该工具提供了有价值的观察材料，但它不能作为当前正式对象继续扩展，原因是：
 

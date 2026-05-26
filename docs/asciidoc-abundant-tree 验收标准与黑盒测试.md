@@ -22,6 +22,7 @@
 - `projects/*/vitest.config.ts` 进入根 Vitest workspace。
 - `projects/*/src/cli.ts` 进入 Knip entry。
 - 项目存在 `package.json`、`tsconfig.json`、`tsdown.config.ts`、`vitest.config.ts`。
+- 项目 package 暴露 `lint` 和 `format` 快捷脚本。
 - 项目存在公共 TypeScript model 文件。
 - CLI 参数面有测试。
 - pretty text 和 JSON serializer 有最小对象测试。
@@ -328,6 +329,6 @@ pnpm check:full
 - `samples/reference-links.adoc` 和 `samples/interdocument-xref.adoc` 黑盒测试通过。
 - 局部门禁通过。
 - 根相关门禁通过。
-- 剩余非目标被明确归档为相邻人工制品或后续独立任务。
+- 剩余非目标被明确归档为相邻人工制品或独立任务。
 
 任何完成报告必须列出实际运行的命令和结果。未运行的验证不能被写成通过。

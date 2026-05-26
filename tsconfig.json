@@ -1,0 +1,4 @@
+{
+	"extends": "@micheng-ts/tsconfig/node",
+	"include": ["src", "test", "tsdown.config.ts", "vitest.config.ts"]
+}

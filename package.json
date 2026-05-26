@@ -1,0 +1,45 @@
+{
+	"name": "@micheng-ts-project/asciidoc-abundant-tree",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"types": "./dist/index.d.mts",
+	"bin": {
+		"asciidoc-abundant-tree": "./dist/cli.mjs"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsx src/cli.ts",
+		"lint": "biome check --vcs-use-ignore-file=false src test docs samples package.json tsconfig.json tsdown.config.ts vitest.config.ts .gitignore",
+		"format": "biome check --write --vcs-use-ignore-file=false src test docs samples package.json tsconfig.json tsdown.config.ts vitest.config.ts .gitignore",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage",
+		"pack:check": "pnpm build && publint && attw --pack . --profile esm-only",
+		"clean": "rm -rf dist coverage"
+	},
+	"dependencies": {
+		"@asciidoctor/core": "catalog:",
+		"parse5": "catalog:"
+	},
+	"devDependencies": {
+		"@arethetypeswrong/cli": "catalog:",
+		"@micheng-ts/tsconfig": "workspace:*",
+		"@types/node": "catalog:",
+		"publint": "catalog:",
+		"tsdown": "catalog:",
+		"tsx": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
+	}
+}

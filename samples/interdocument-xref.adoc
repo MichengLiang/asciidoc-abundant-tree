@@ -1,0 +1,12 @@
+= 单文件跨文档引用样例
+
+== 本文件标题
+
+这个本地引用指向 <<local-target, 本文件目标>>。
+
+[#local-target]
+== 本文件目标
+
+这个跨文档引用指向 xref:other.adoc#remote-target[远程目标]。
+
+这个跨文档短写引用指向 <<other.adoc#remote-target, 远程目标短写>>。

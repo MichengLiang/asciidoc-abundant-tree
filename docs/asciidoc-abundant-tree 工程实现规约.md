@@ -10,7 +10,7 @@
 /home/t103o/workbench/micheng-ts
 ```
 
-根包名是 `micheng-ts`。包作用域同步使用 `@micheng-ts/*`、`@micheng-ts-experiment/*` 和 `@micheng-ts-project/*`。旧 `@ts-foundry/*` 命名不属于当前工程身份。
+根包名是 `micheng-ts`。包作用域同步使用 `@micheng-ts/*`、`@micheng-ts-experiment/*` 和 `@micheng-ts-project/*`。
 
 `projects/asciidoc-abundant-tree` 是一个内部 Git 仓库。根工作区配置属于外层 `micheng-ts` 仓库；项目源码、项目文档和项目 package 属于内层 `asciidoc-abundant-tree` 仓库。
 
@@ -28,7 +28,7 @@ projects/asciidoc-abundant-tree
 
 - 当前对象已经有明确长期用途。
 - 它提供 CLI 和 library API。
-- 它会成为后续图投影、lint、引用分析和解释器的事实供给层。
+- 它是图投影、lint、引用分析和解释器的事实供给层。
 - 它需要纳入根 workspace 的质量门禁。
 
 ## 3. Package 身份
@@ -174,8 +174,10 @@ projects/asciidoc-abundant-tree/
 │   └── interdocument-xref.adoc
 ├── src/
 │   ├── cli.ts
+│   ├── asciidoctor-adapter.ts
 │   ├── index.ts
 │   ├── model.ts
+│   ├── parser.ts
 │   └── serializers.ts
 ├── test/
 │   └── cli.test.ts
@@ -185,11 +187,13 @@ projects/asciidoc-abundant-tree/
 └── vitest.config.ts
 ```
 
-初始化只建立工程边界、公共类型、CLI 参数面和序列化入口。完整 parser、source span enhancer、xref scanner、binding merger 和 table renderer 属于后续实现任务。
+初始化只建立工程边界、公共类型、CLI 参数面和序列化入口。完整 parser、source span enhancer、xref scanner、binding merger 和 table renderer 属于独立实现任务。
 
 ## 8. 模块职责
 
 `src/model.ts` 定义公共 TypeScript 数据模型。该文件是 library API 和 serializer 的共享类型来源。
+
+`src/asciidoctor-adapter.ts` 承载 `@asciidoctor/core` 和 `parse5` 的直接调用。该文件提供 official document load 和 official HTML fragment parse 的边界，避免 parser 主流程直接散落第三方 API 调用。
 
 `src/index.ts` 导出公共 API：
 
@@ -199,7 +203,7 @@ export { formatAbundantTree, serializeAbundantTreeToJson } from "./serializers";
 export { parseAbundantTree } from "./parser";
 ```
 
-初始化阶段可以暂不提供完整 `parser.ts`。如果导出 `parseAbundantTree`，它必须明确抛出未实现错误，不能返回伪造成功树。
+在初始化阶段，`parser.ts` 可以暂不提供完整实现；如果导出 `parseAbundantTree`，它必须明确抛出未实现错误，不能返回伪造成功树。
 
 `src/serializers.ts` 只负责把 `AbundantDocument` 投影为 pretty text 或 JSON-ready object。它不读取文件，不调用 Asciidoctor，不扫描 source。
 
@@ -315,6 +319,13 @@ pnpm --filter @micheng-ts-project/asciidoc-abundant-tree build
 pnpm --filter @micheng-ts-project/asciidoc-abundant-tree pack:check
 ```
 
+项目局部快捷方式：
+
+```bash
+pnpm --filter @micheng-ts-project/asciidoc-abundant-tree lint
+pnpm --filter @micheng-ts-project/asciidoc-abundant-tree format
+```
+
 根门禁：
 
 ```bash
@@ -333,7 +344,7 @@ pnpm check:full
 
 ## 14. 实现顺序
 
-后续核心实现按 TDD 进入：
+核心实现按 TDD 进入：
 
 1. 为一个结构行为写失败测试。
 2. 运行目标测试确认失败原因正确。
