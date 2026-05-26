@@ -401,7 +401,7 @@ read source file
   -> recover metadata spans
   -> recover section scopes
   -> scan xref and anchor occurrences
-  -> extract official xref bindings from converted HTML fragments
+  -> extract official xref bindings from per-occurrence official xref fragments
   -> merge source layer and official layer
   -> produce AbundantDocument
   -> serialize to pretty text or JSON
@@ -410,9 +410,9 @@ read source file
 各步骤职责：
 
 - source line table 提供 line、column、span 和 raw slicing。
-- Asciidoctor adapter 只负责 official structure、refs catalog 和 converted content。
+- Asciidoctor adapter 只负责 official structure、refs catalog 和 official xref conversion fragments。
 - source surface scanners 只负责原文 occurrence 和 metadata surface。
-- binding merger 将 raw occurrence 与 official anchor 按 block 内文档顺序配对。
+- binding merger 将 raw xref occurrence 与为同一个 occurrence 生成的 official xref binding 合并。
 - serializer 只读取 `AbundantDocument`，不重新解析 AsciiDoc。
 
 该流水线允许官方 parser 提供有价值的语义结果，同时保留原文事实。它避免把 Asciidoctor 的耦合结果误称为 CST。
@@ -441,16 +441,18 @@ Asciidoctor source location 不足以独立定义完整 source span。实现必�
 
 ## 11. HTML Fragment Parser
 
-`parse5` 只解析 Asciidoctor `block.getContent()` 返回的 HTML fragment。
+`parse5` 只解析 Asciidoctor 为单个 xref occurrence 转换出的 HTML fragment。
 
 职责：
 
 - 提取 `<a>` 元素。
 - 读取 `href`。
 - 读取 link text。
-- 按文档顺序与 source xref occurrence 配对。
+- 将该 fragment 中的 official xref anchor 转成当前 occurrence 的 official layer。
 
 `parse5` 不解析 AsciiDoc，不决定 section，不解释 xref，不参与 source span recovery。
+
+整段 block HTML 中的普通 link、inline anchor 或其它 `<a>` 元素不能参与 xref binding。即使普通 link 出现在 xref 前面、文本相同或 href 相同，也不能污染 xref 的 `asciidoctor.href`、`asciidoctor.resolvedId` 或 `asciidoctor.reftext`。
 
 ## 12. 单文件边界
 

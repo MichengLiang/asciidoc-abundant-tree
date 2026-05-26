@@ -29,6 +29,7 @@ import {
 } from "./source-lines";
 
 type ProjectContext = {
+	officialDocument: AsciidoctorBlock;
 	lineTable: LineTable;
 	sections: SectionNode[];
 	sectionByLine: Map<number, SectionNode>;
@@ -50,6 +51,7 @@ export function projectOfficialDocument(options: {
 }): { children: AbundantNode[]; targets: TargetNode[] } {
 	const targets: TargetNode[] = [];
 	const context: ProjectContext = {
+		officialDocument: options.officialDocument,
 		lineTable: options.lineTable,
 		sections: options.sections,
 		sectionByLine: options.sectionByLine,
@@ -176,10 +178,12 @@ function buildParagraph(
 		context.usedAnchorKeys.add(key);
 		return true;
 	});
-	const bindings = context.adapter.extractAnchorBindings(
-		block.getContent?.() ?? "",
+	applyOfficialBindings(
+		xrefs,
+		xrefs.map((xref) =>
+			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
+		),
 	);
-	applyOfficialBindings(xrefs, bindings);
 	const sourceSpan = sourceSpanFromLineSpan(context.lineTable, {
 		startLine,
 		endLine: blockEnd,
@@ -314,7 +318,9 @@ function buildTable(
 	});
 	applyOfficialBindings(
 		tableXrefs,
-		extractTableAnchorBindings(block, context.adapter),
+		tableXrefs.map((xref) =>
+			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
+		),
 	);
 	const table = definedObject({
 		kind: "table",
@@ -375,7 +381,8 @@ function registerOfficialBlockTarget(
 		...options.asciidoctor,
 		resolvedId: id,
 		resolvedType: options.targetType,
-		reftext: options.asciidoctor?.reftext ?? options.title ?? block.getTitle?.(),
+		reftext:
+			options.asciidoctor?.reftext ?? options.title ?? block.getTitle?.(),
 	}) as AsciidoctorLayer;
 	addTarget(
 		context.targets,
@@ -386,43 +393,11 @@ function registerOfficialBlockTarget(
 			title: options.title ?? block.getTitle?.(),
 			idOrigin:
 				options.idOrigin ??
-				(options.targetType === "section"
-					? "asciidoctor-generated"
-					: "source"),
+				(options.targetType === "section" ? "asciidoctor-generated" : "source"),
 			sourceSpan: options.sourceSpan,
 			asciidoctor,
 		}) as TargetNode,
 	);
-}
-
-function extractTableAnchorBindings(
-	block: AsciidoctorBlock,
-	adapter: AsciidoctorAdapter,
-): ReturnType<AsciidoctorAdapter["extractAnchorBindings"]> {
-	const rows = block.getRows?.();
-	if (!isRecord(rows)) {
-		return [];
-	}
-	const bindings: ReturnType<AsciidoctorAdapter["extractAnchorBindings"]> = [];
-	for (const groupName of ["head", "body", "foot"]) {
-		const group = rows[groupName];
-		if (!Array.isArray(group)) {
-			continue;
-		}
-		for (const row of group) {
-			if (!Array.isArray(row)) {
-				continue;
-			}
-			for (const cell of row) {
-				const html =
-					isRecord(cell) && typeof cell.getText === "function"
-						? String(cell.getText())
-						: "";
-				bindings.push(...adapter.extractAnchorBindings(html));
-			}
-		}
-	}
-	return bindings;
 }
 
 function rowsFromTable(rows: unknown): unknown[] {

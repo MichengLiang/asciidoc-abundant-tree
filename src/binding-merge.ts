@@ -1,3 +1,4 @@
+import type { OfficialXrefBinding } from "./asciidoctor-adapter";
 import type {
 	AnchorOccurrenceNode,
 	AsciidoctorLayer,
@@ -5,11 +6,6 @@ import type {
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
-
-type HtmlBinding = {
-	href?: string | undefined;
-	text: string;
-};
 
 export function addTarget(targets: TargetNode[], target: TargetNode): void {
 	if (!target.id || targets.some((existing) => existing.id === target.id)) {
@@ -49,26 +45,22 @@ export function addAnchorTargets(
 
 export function applyOfficialBindings(
 	xrefs: XrefOccurrenceNode[],
-	bindings: HtmlBinding[],
+	bindings: Array<OfficialXrefBinding | undefined>,
 ): void {
-	const linkBindings = bindings.filter((binding) => binding.href);
-	xrefs.forEach((xref, index) => {
-		const binding = linkBindings[index];
+	for (const [index, xref] of xrefs.entries()) {
+		const binding = bindings[index];
 		if (!binding?.href) {
-			return;
+			continue;
 		}
-		const resolvedId = binding.href.startsWith("#")
-			? binding.href.slice(1)
-			: binding.href.split("#").at(1);
 		if (!binding.href.startsWith("#")) {
 			xref.scope = "external";
 		}
 		xref.asciidoctor = definedObject({
 			href: binding.href,
-			resolvedId,
-			reftext: binding.text,
+			resolvedId: binding.resolvedId,
+			reftext: binding.reftext,
 		}) as AsciidoctorLayer;
-	});
+	}
 }
 
 export function bindXrefs(

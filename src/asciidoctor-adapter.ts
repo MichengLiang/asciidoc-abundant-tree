@@ -16,8 +16,10 @@ export type AsciidoctorBlock = {
 	getSourceLocation?: () => {
 		getLineNumber?: () => number;
 	};
+	getRefs?: () => Record<string, unknown>;
 	getStyle?: () => string;
 	getTitle?: () => string;
+	$resolve_id?: (target: string) => unknown;
 };
 
 type HtmlAnchorBinding = {
@@ -26,14 +28,46 @@ type HtmlAnchorBinding = {
 	id?: string | undefined;
 };
 
+type RuntimeInlineFactory = {
+	create(
+		parent: AsciidoctorBlock,
+		context: string,
+		text: string,
+		options: Record<string, unknown>,
+	): {
+		convert: () => string;
+	};
+};
+
+export type OfficialXrefBinding = {
+	href?: string | undefined;
+	resolvedId?: string | undefined;
+	reftext?: string | undefined;
+};
+
 export type AsciidoctorAdapter = {
 	parserVersion: string;
 	loadFile(sourcePath: string): AsciidoctorBlock;
 	extractAnchorBindings(html: string): HtmlAnchorBinding[];
+	resolveXrefTarget(
+		document: AsciidoctorBlock,
+		target: string,
+	): string | undefined;
+	resolveXrefBinding(
+		document: AsciidoctorBlock,
+		parent: AsciidoctorBlock,
+		xref: {
+			target: string;
+			label?: string | undefined;
+		},
+	): OfficialXrefBinding | undefined;
 };
 
 export function createAsciidoctorAdapter(): AsciidoctorAdapter {
 	const processor = createAsciidoctor();
+	if (!hasRuntimeInlineFactory(processor)) {
+		throw new Error("Asciidoctor runtime does not expose Inline.create");
+	}
 
 	return {
 		parserVersion: processor.getVersion(),
@@ -47,7 +81,94 @@ export function createAsciidoctorAdapter(): AsciidoctorAdapter {
 		extractAnchorBindings(html) {
 			return extractAnchorBindings(parseFragment(html));
 		},
+		resolveXrefTarget(document, target) {
+			if (target.includes(".adoc#")) {
+				return target.replace(".adoc#", ".html#");
+			}
+			const refs = document.getRefs?.() ?? {};
+			if (Object.hasOwn(refs, target)) {
+				return `#${target}`;
+			}
+			const resolved = document.$resolve_id?.(target);
+			return typeof resolved === "string" ? `#${resolved}` : undefined;
+		},
+		resolveXrefBinding(document, parent, xref) {
+			const href = this.resolveXrefTarget(document, xref.target);
+			const target = href ?? unresolvedLocalHref(xref.target);
+			const reftext = resolveXrefReftext(document, xref, href);
+			const inline = processor.Inline.create(parent, "anchor", reftext, {
+				type: "xref",
+				target,
+			});
+			const converted = extractAnchorBindings(parseFragment(inline.convert()));
+			const anchor = converted.find((binding) => binding.href);
+			if (!anchor?.href) {
+				return undefined;
+			}
+			return {
+				href: anchor.href,
+				resolvedId: resolvedIdFromHref(anchor.href),
+				reftext: anchor.text,
+			};
+		},
 	};
+}
+
+function hasRuntimeInlineFactory(value: unknown): value is ReturnType<
+	typeof createAsciidoctor
+> & {
+	Inline: RuntimeInlineFactory;
+} {
+	if (!hasProperties(value) || !hasProperties(value.Inline)) {
+		return false;
+	}
+	return typeof value.Inline.create === "function";
+}
+
+function resolveXrefReftext(
+	document: AsciidoctorBlock,
+	xref: { target: string; label?: string | undefined },
+	href: string | undefined,
+): string {
+	if (xref.label) {
+		return xref.label;
+	}
+	const resolvedId = href?.startsWith("#") ? href.slice(1) : undefined;
+	const ref = resolvedId ? document.getRefs?.()?.[resolvedId] : undefined;
+	if (isAsciidoctorRef(ref)) {
+		const xreftext = ref.$xreftext();
+		if (typeof xreftext === "string") {
+			return xreftext;
+		}
+	}
+	return `[${xref.target}]`;
+}
+
+function unresolvedLocalHref(target: string): string {
+	if (target.includes(".adoc#")) {
+		return target.replace(".adoc#", ".html#");
+	}
+	return `#${target}`;
+}
+
+function resolvedIdFromHref(href: string): string | undefined {
+	return href.startsWith("#") ? href.slice(1) : href.split("#").at(1);
+}
+
+function isAsciidoctorRef(
+	value: unknown,
+): value is { $xreftext: () => unknown } {
+	return isRecord(value) && typeof value.$xreftext === "function";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return value !== null && typeof value === "object";
+}
+
+function hasProperties(value: unknown): value is Record<string, unknown> {
+	return (
+		value !== null && (typeof value === "object" || typeof value === "function")
+	);
 }
 
 function extractAnchorBindings(

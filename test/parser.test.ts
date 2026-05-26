@@ -42,6 +42,18 @@ const paragraphIdAuditPath = join(
 	projectRoot,
 	"test/fixtures/paragraph-id-audit.adoc",
 );
+const linkBeforeXrefAuditPath = join(
+	projectRoot,
+	"test/fixtures/link-before-xref-audit.adoc",
+);
+const localLinkBeforeXrefAuditPath = join(
+	projectRoot,
+	"test/fixtures/local-link-before-xref-audit.adoc",
+);
+const sameHrefLinkBeforeXrefAuditPath = join(
+	projectRoot,
+	"test/fixtures/same-href-link-before-xref-audit.adoc",
+);
 
 describe("parseAbundantTree", () => {
 	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", () => {
@@ -363,9 +375,7 @@ describe("parseAbundantTree", () => {
 		expect(document.targets.map((target) => target.id)).toEqual(
 			expect.arrayContaining(["_before", "t", "after"]),
 		);
-		expect(document.targets.map((target) => target.id)).not.toContain(
-			"before",
-		);
+		expect(document.targets.map((target) => target.id)).not.toContain("before");
 		expect(document.targets.map((target) => target.id)).not.toContain(
 			"_not_a_section",
 		);
@@ -425,6 +435,81 @@ describe("parseAbundantTree", () => {
 				}),
 			}),
 		);
+	});
+
+	it("does not let ordinary links shift official xref bindings", () => {
+		const document = parseAbundantTree({ sourcePath: linkBeforeXrefAuditPath });
+		const xref = document.xrefOccurrences[0];
+
+		expect(document.xrefOccurrences).toHaveLength(1);
+		expect(xref).toEqual(
+			expect.objectContaining({
+				raw: "<<Target>>",
+				target: "Target",
+				scope: "local",
+				sourceSpan: expect.objectContaining({
+					start: { line: 5, column: 39 },
+				}),
+				asciidoctor: expect.objectContaining({
+					href: "#_target",
+					resolvedId: "_target",
+					resolvedType: "section",
+				}),
+			}),
+		);
+		expect(xref?.asciidoctor?.href).not.toBe("https://example.com");
+		expect(xref?.asciidoctor?.reftext).not.toBe("external");
+	});
+
+	it("does not let ordinary local links with matching text shift xref bindings", () => {
+		const document = parseAbundantTree({
+			sourcePath: localLinkBeforeXrefAuditPath,
+		});
+		const xref = document.xrefOccurrences[0];
+
+		expect(document.xrefOccurrences).toHaveLength(1);
+		expect(xref).toEqual(
+			expect.objectContaining({
+				raw: "<<Target>>",
+				target: "Target",
+				scope: "local",
+				sourceSpan: expect.objectContaining({
+					start: { line: 7, column: 30 },
+				}),
+				asciidoctor: expect.objectContaining({
+					href: "#_target",
+					resolvedId: "_target",
+					resolvedType: "section",
+				}),
+			}),
+		);
+		expect(xref?.asciidoctor?.href).not.toBe("#_other");
+	});
+
+	it("does not let ordinary local links with the same href supply xref reftext", () => {
+		const document = parseAbundantTree({
+			sourcePath: sameHrefLinkBeforeXrefAuditPath,
+		});
+		const xref = document.xrefOccurrences[0];
+
+		expect(document.xrefOccurrences).toHaveLength(1);
+		expect(xref).toEqual(
+			expect.objectContaining({
+				raw: "<<Target>>",
+				target: "Target",
+				scope: "local",
+				sourceSpan: expect.objectContaining({
+					start: { line: 5, column: 35 },
+				}),
+				asciidoctor: expect.objectContaining({
+					href: "#_target",
+					resolvedId: "_target",
+					resolvedType: "section",
+					reftext: "Target",
+				}),
+			}),
+		);
+		expect(xref?.asciidoctor?.reftext).not.toBe("wrong text");
 	});
 });
 

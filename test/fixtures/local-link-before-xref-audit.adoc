@@ -1,0 +1,7 @@
+= Doc
+
+== Other
+
+== Target
+
+See link:#_other[Target] and <<Target>>.

@@ -1,0 +1,5 @@
+= Doc
+
+== Target
+
+See https://example.com[external] and <<Target>>.
