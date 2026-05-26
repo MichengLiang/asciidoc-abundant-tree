@@ -39,8 +39,8 @@
 . 计算 source document metadata。
 . 创建 source document entity、projection entity 和 projection activity。
 . 创建 document resource。
-. 遍历 `AbundantDocument.children`，创建结构 resources。
-. 为结构 resources 写入 relative path 和 line span。
+. 遍历 `AbundantDocument.children`，创建结构 resources，并识别 payload block resources。
+. 为结构 resources 和 payload block resources 写入 relative path 和 line span。
 . 从结构 resource、payload resource、title、ID、metadata 和 target catalog 生成 label resources。
 . 建立 label catalog。
 . 从 `children` 关系生成 `aat:containsDirectly`。
@@ -49,7 +49,6 @@
 . 绑定 xref target node。
 . 映射 xref predicate IRI。
 . 对绑定完整的 xref 生成 relation triple 和 reifier。
-. 创建 payload block resources。
 . 创建 surface attribute resources。
 . 绑定 payload selectors。
 . 输出 RDF graph。
@@ -73,7 +72,7 @@
 
 === 结构遍历
 
-投影器递归遍历 `AbundantDocument.children`。每个可识别 node kind 创建对应 resource。
+投影器递归遍历 `AbundantDocument.children`。每个可识别 node kind 创建对应 resource。带有 payload role 的 block 在该阶段同时创建 payload block resource。
 
 遍历时保存 parent-child 关系。该关系用于生成 `aat:containsDirectly`。
 
@@ -117,7 +116,7 @@ source node、target node 和 predicate IRI 都存在时，输出 relation tripl
 
 === Payload 投影
 
-投影器从具有 payload role 的 block 创建 payload resource。
+投影器在结构遍历阶段已经为具有 payload role 的 block 创建 payload resource。本阶段写入 payload 专属字段并执行 selector binding。
 
 步骤：
 

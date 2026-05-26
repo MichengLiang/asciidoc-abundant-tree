@@ -15,7 +15,7 @@ containment 表示 `AbundantDocument` 恢复树中的直接结构包含关系。
 :section-l25-o0 aat:containsDirectly :listing-l29-o0 .
 ----
 
-如果 section A 包含 section B，section B 包含 listing C，则 projection graph 输出 A 到 B、B 到 C 的直接关系。A 到 C 的包含关系可以由查询或推理层推导，不由投影器默认物化。
+如果 section A 包含 section B，section B 包含 listing C，则 projection graph 输出 A 到 B、B 到 C 的直接关系。A 到 C 的包含关系属于查询或推理层的推导结果，不由投影器物化。
 
 === 来源
 

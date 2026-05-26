@@ -70,7 +70,7 @@ projection graph 必须把这些行级事实放在对应 resource 上。查询�
 
 xref relation 不只是 `source predicate target`。一次 xref 写法还包含 raw text、target selector、display label、attributes、source line span 和可能的 payload selector。
 
-projection graph 使用 RDF 1.2 reifier 表达 xref occurrence。主 triple 表达结构关系；reifier resource 表达该关系在源文档中的出现点。编程 agent 查询 reifier 取得源文件位置，并修改对应 xref 写法。
+projection graph 使用 RDF 1.2 reifier 表达 xref occurrence。主 triple 表达结构关系；reifier resource 表达该关系在源文档中的出现点。编程 agent 查询 reifier 取得源文件位置，再修改对应 xref 写法。
 
 === 回源闭环
 

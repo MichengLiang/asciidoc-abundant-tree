@@ -64,6 +64,9 @@
   prov:used :source-doc ;
   prov:used :abundant-document .
 
+:abundant-document a prov:Entity, aat:AbundantDocument ;
+  prov:wasDerivedFrom :source-doc .
+
 :document a aat:AsciiDocDocument ;
   aat:relativePath "docs/policy.adoc" ;
   aat:containsDirectly :section-l1-o0 ;
@@ -167,12 +170,19 @@
   aat:rawRel "depends-on" ;
   aat:raw "xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]" ;
   rdfs:label "运力规则"@zh ;
+  aat:hasLabel :label-xref-l4-display-o0 ;
   aat:relativePath "docs/policy.adoc" ;
   aat:startLine 4 ;
   aat:endLine 4 ;
   aat:hasAttribute :attr-xref-l4-weight-o0 ;
   aat:payloadSelector "rel-delivery-capacity" ;
   aat:hasPayload :payload-l6-o0 .
+
+:label-xref-l4-display-o0 a aat:XrefDisplayLabel ;
+  rdf:value "运力规则" ;
+  aat:relativePath "docs/policy.adoc" ;
+  aat:startLine 4 ;
+  aat:endLine 4 .
 
 :attr-xref-l4-weight-o0 a aat:SurfaceAttribute ;
   aat:name "weight" ;

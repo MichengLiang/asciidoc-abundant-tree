@@ -65,7 +65,7 @@ listing 的完整 line span、metadata line span 和 content line span 必须分
 
 `TableNode` 投影为 `aat:TableBlock` resource。
 
-`ids` 进入 address label。`title` 进入 block title label。`metadata` 进入 surface attribute 和 label。`span` 进入 line span。`rows` 和 `cells` 属于 table content facts；当实现投影 table content 时，cell resource 或 table content literal 必须只来自这两个字段。投影器不手写 raw table parser。
+`ids` 进入 address label。`title` 进入 block title label。`metadata` 进入 surface attribute 和 label。`span` 进入 line span。`rows` 和 `cells` 属于 table content facts。table content projection 使用 cell resource 或 table content literal 时，其事实来源只能是这两个字段。投影器不手写 raw table parser。
 
 === XrefOccurrenceNode 字段
 
@@ -89,9 +89,9 @@ listing 的完整 line span、metadata line span 和 content line span 必须分
 
 === AnchorOccurrenceNode 字段
 
-`AnchorOccurrenceNode` 投影为 anchor target 或 anchor occurrence resource。
+`AnchorOccurrenceNode` 投影为 `aat:AnchorTarget` resource。
 
-`ids` 进入 `aat:AnchorLabel` 或 `aat:AddressLabel`。`reftext` 进入 `aat:ReftextLabel`。`sourceSpan` 进入 line span。`containingSectionId` 用于建立 anchor 与所在 section 之间的结构关系。
+`ids` 进入 `aat:AnchorLabel`。`reftext` 进入 `aat:ReftextLabel`。`sourceSpan` 进入 line span。`containingSectionId` 用于建立 anchor 与所在 section 之间的结构关系。
 
 === MetadataNode 字段
 

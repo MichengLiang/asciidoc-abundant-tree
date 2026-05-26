@@ -10,7 +10,7 @@ projection graph 使用受控 label class：
 [horizontal]
 `aat:TitleLabel`:: document title 或 section title。
 `aat:BlockTitleLabel`:: listing、table 或其它 block 的标题。
-`aat:AddressLabel`:: 作者显式 ID 或可寻址 anchor ID。
+`aat:AddressLabel`:: 作者显式 ID。
 `aat:GeneratedAddressLabel`:: Asciidoctor generated ID。
 `aat:AnchorLabel`:: anchor occurrence 的 ID。
 `aat:ReftextLabel`:: official layer 或 anchor reftext 给出的引用文本。
@@ -85,6 +85,10 @@ catalog 条目的输入来源包括：
 
 `TargetNode` 不生成 target resource。`TargetNode` 补充 label catalog，使 target selector 绑定到已有结构 resource。
 
+`TargetNode.id` 的 label class 由 `targetType` 和 `idOrigin` 决定。`targetType = "inline-anchor"` 时生成 `aat:AnchorLabel`。其它 target type 使用 `idOrigin` 判定：`source` 生成 `aat:AddressLabel`，`asciidoctor-generated` 生成 `aat:GeneratedAddressLabel`。
+
+anchor occurrence 的 ID 使用 `aat:AnchorLabel`。section、listing、table、payload block 和其它带显式 ID 的 block 使用 `aat:AddressLabel`。
+
 === Selector Binding
 
 selector binding 是 selector literal 与 label catalog 中 projection resource 的机械匹配。
@@ -93,7 +97,7 @@ selector binding 是 selector literal 与 label catalog 中 projection resource 
 
 . selector 与 catalog 中一个 label value 唯一匹配时，selector 绑定到该 label 所属 resource。
 . selector 没有匹配时，selector 保留为 literal，不生成 target resource。
-. selector 匹配多个 resource 时，selector 保留为 literal，并可输出 `aat:candidateNode`；投影器不任意选择一个 target node。
+. selector 匹配多个 resource 时，selector 保留为 literal，并输出 `aat:candidateNode`；投影器不任意选择一个 target node。
 
 selector binding 不判断链接好坏。它只表达从当前文档表面能够机械恢复出的绑定关系。
 

@@ -12,7 +12,7 @@ IRI:: projection resource、谓词和词表项使用 IRI。
 literal:: label value、relative path、raw text、source text、attribute value 和 line number 使用 literal。
 triple term:: xref relation 的被 reify triple 使用 triple term。
 
-blank node 不作为 projection resource 的默认身份。projection resource 需要可测试、可缓存、可查询和可回源的确定性 IRI。
+blank node 不作为 projection resource 的身份。projection resource 使用服务测试、缓存、查询和回源的确定性 IRI。
 
 === Resource 与 label
 

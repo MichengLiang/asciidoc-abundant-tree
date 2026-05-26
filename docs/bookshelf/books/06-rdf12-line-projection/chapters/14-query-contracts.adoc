@@ -51,7 +51,7 @@ SELECT ?child ?kind ?path ?start ?end WHERE {
 }
 ----
 
-该查询返回某 section 的直接 child resource。查询者可以用返回的行范围读取 block 原文。
+该查询返回某 section 的直接 child resource。返回的行范围是 block 原文读取范围。
 
 === 查找 Xref Occurrence
 
@@ -103,7 +103,7 @@ SELECT ?xref ?selector ?path ?start ?end WHERE {
 }
 ----
 
-该查询返回没有 target node 的 xref occurrence。projection graph 不把该结果命名为 dead link；后端可以根据该查询结果执行 lint。
+该查询返回没有 target node 的 xref occurrence。projection graph 不把该结果命名为 dead link；dead link 判断属于后端 lint。
 
 === 查找 Relation Reifier
 
@@ -165,4 +165,4 @@ SELECT ?node ?kind ?start ?end WHERE {
 }
 ----
 
-该查询返回覆盖某一行的结构 resource。编程 agent 可以用它从文件位置反查上下文结构。
+该查询返回覆盖某一行的结构 resource。该结果提供从文件位置反查上下文结构的查询面。

@@ -36,7 +36,7 @@ urn:aat:doc:<documentKey>#xref-l10-c100-o1
 urn:aat:doc:<documentKey>#anchor-l56-c27-o0
 ----
 
-`ordinal` 用于解决同 kind、同行、同列仍可能冲突的 resource。普通 block 的 ordinal 通常为 `0`。
+`ordinal` 用于解决同 kind、同行、同列仍可能冲突的 resource。无冲突的 block resource 使用 ordinal `0`。
 
 === 作者字符串不是身份
 
