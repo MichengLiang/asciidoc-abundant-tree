@@ -1,0 +1,23 @@
+= Book Title
+:doctype: book
+:idprefix:
+:idseparator: -
+
+= Part One
+
+[partintro]
+This part introduces the first boundary.
+
+== Chapter One
+
+See <<Chapter Two>>.
+
+=== Section Inside Chapter
+
+Body text.
+
+= Part Two
+
+== Chapter Two
+
+Back to <<Chapter One>>.

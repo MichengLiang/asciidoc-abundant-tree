@@ -54,6 +54,10 @@ const sameHrefLinkBeforeXrefAuditPath = join(
 	projectRoot,
 	"test/fixtures/same-href-link-before-xref-audit.adoc",
 );
+const bookPartAuditPath = join(
+	projectRoot,
+	"test/fixtures/book-part-audit.adoc",
+);
 
 describe("parseAbundantTree", () => {
 	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", () => {
@@ -510,6 +514,73 @@ describe("parseAbundantTree", () => {
 			}),
 		);
 		expect(xref?.asciidoctor?.reftext).not.toBe("wrong text");
+	});
+
+	it("keeps book parts, part introductions, chapters, and chapter xrefs", () => {
+		const document = parseAbundantTree({ sourcePath: bookPartAuditPath });
+		const partOne = document.children[0] as {
+			kind?: string;
+			level?: number;
+			title?: string;
+			children?: Array<{ kind?: string; level?: number; title?: string }>;
+		};
+		const chapterOne = partOne.children?.find(
+			(child) => child.kind === "section" && child.title === "Chapter One",
+		);
+		const partIntro = partOne.children?.find(
+			(child) =>
+				child.kind === "paragraph" &&
+				"text" in child &&
+				child.text === "This part introduces the first boundary.",
+		);
+
+		expect(partOne).toEqual(
+			expect.objectContaining({
+				kind: "section",
+				level: 0,
+				title: "Part One",
+				ids: ["part-one"],
+				idOrigin: "asciidoctor-generated",
+			}),
+		);
+		expect(partIntro).toEqual(
+			expect.objectContaining({
+				kind: "paragraph",
+				text: "This part introduces the first boundary.",
+				asciidoctor: expect.objectContaining({
+					context: "paragraph",
+				}),
+			}),
+		);
+		expect(chapterOne).toEqual(
+			expect.objectContaining({
+				kind: "section",
+				level: 1,
+				title: "Chapter One",
+			}),
+		);
+		expect(
+			document.targets.map((target) => [target.id, target.targetType]),
+		).toEqual(
+			expect.arrayContaining([
+				["part-one", "section"],
+				["chapter-one", "section"],
+				["chapter-two", "section"],
+			]),
+		);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.raw,
+				xref.scope,
+				xref.asciidoctor?.href,
+				xref.asciidoctor?.resolvedType,
+			]),
+		).toEqual(
+			expect.arrayContaining([
+				["<<Chapter Two>>", "local", "#chapter-two", "section"],
+				["<<Chapter One>>", "local", "#chapter-one", "section"],
+			]),
+		);
 	});
 });
 

@@ -23,6 +23,7 @@ import {
 	findClosingDelimiter,
 	groupByLine,
 	type LineTable,
+	lineText,
 	nextBlankLine,
 	sourceLines,
 	sourceSpanFromLineSpan,
@@ -39,6 +40,8 @@ type ProjectContext = {
 	adapter: AsciidoctorAdapter;
 	targets: TargetNode[];
 };
+
+type BuildResult = AbundantNode | AbundantNode[] | undefined;
 
 export function projectOfficialDocument(options: {
 	officialDocument: AsciidoctorBlock;
@@ -75,10 +78,7 @@ function buildChildren(
 	const topLevel: AbundantNode[] = [];
 
 	for (const block of officialDocument.getBlocks?.() ?? []) {
-		const node = buildNode(block, context);
-		if (node) {
-			topLevel.push(node);
-		}
+		topLevel.push(...toNodes(buildNode(block, context)));
 	}
 
 	return topLevel;
@@ -87,33 +87,38 @@ function buildChildren(
 function buildNode(
 	block: AsciidoctorBlock,
 	context: ProjectContext,
-): AbundantNode | undefined {
+	fallbackLine?: number | undefined,
+): BuildResult {
 	const blockContext = block.getContext?.();
-	const line = block.getSourceLocation?.()?.getLineNumber?.();
+	const officialLine = block.getSourceLocation?.()?.getLineNumber?.();
+	const line = officialLine ?? fallbackLine;
 
-	if (blockContext === "section" && line !== undefined) {
-		return buildSection(block, line, context);
+	if (blockContext === "section" && officialLine !== undefined) {
+		return buildSection(block, officialLine, context);
 	}
 	if (blockContext === "paragraph" && line !== undefined) {
 		return buildParagraph(block, line, context);
 	}
-	if (blockContext === "listing" && line !== undefined) {
-		return buildListing(block, line, context);
+	if (blockContext === "listing" && officialLine !== undefined) {
+		return buildListing(block, officialLine, context);
 	}
-	if (blockContext === "table" && line !== undefined) {
-		return buildTable(block, line, context);
+	if (blockContext === "table" && officialLine !== undefined) {
+		return buildTable(block, officialLine, context);
 	}
-	if (line !== undefined) {
+	if (blockContext === "open" && line !== undefined) {
+		return buildOpenChildren(block, line, context);
+	}
+	if (officialLine !== undefined) {
 		registerOfficialBlockTarget(context, block, {
 			targetType: "block",
 			sourceSpan: sourceSpanFromLineSpan(context.lineTable, {
-				startLine: line,
-				endLine: nextBlankLine(context.lineTable, line) - 1,
+				startLine: officialLine,
+				endLine: nextBlankLine(context.lineTable, officialLine) - 1,
 			}),
 		});
-		for (const child of block.getBlocks?.() ?? []) {
-			buildNode(child, context);
-		}
+		return (block.getBlocks?.() ?? []).flatMap((child) =>
+			toNodes(buildNode(child, context)),
+		);
 	}
 	return undefined;
 }
@@ -147,10 +152,70 @@ function buildSection(
 		sourceSpan: sourceSpanFromLineSpan(context.lineTable, section.span),
 		asciidoctor: section.asciidoctor,
 	});
-	section.children = (block.getBlocks?.() ?? [])
-		.map((child) => buildNode(child, context))
-		.filter((node): node is AbundantNode => node !== undefined);
+	section.children = (block.getBlocks?.() ?? []).flatMap((child) =>
+		toNodes(buildNode(child, context)),
+	);
 	return section;
+}
+
+function buildOpenChildren(
+	block: AsciidoctorBlock,
+	line: number,
+	context: ProjectContext,
+): AbundantNode[] {
+	const nodes: AbundantNode[] = [];
+	let cursor = line;
+
+	for (const child of block.getBlocks?.() ?? []) {
+		const childLine =
+			child.getSourceLocation?.()?.getLineNumber?.() ??
+			findBlockSourceLine(context, child, cursor);
+		const built = toNodes(buildNode(child, context, childLine));
+		nodes.push(...built);
+		cursor = Math.max(cursor, ...built.map(nodeEndLine).filter(isNumber)) + 1;
+	}
+
+	return nodes;
+}
+
+function toNodes(result: BuildResult): AbundantNode[] {
+	if (result === undefined) {
+		return [];
+	}
+	return Array.isArray(result) ? result : [result];
+}
+
+function findBlockSourceLine(
+	context: ProjectContext,
+	block: AsciidoctorBlock,
+	startLine: number,
+): number | undefined {
+	const firstSourceLine = block
+		.getSource?.()
+		?.split(/\r?\n/u)
+		.find((line) => line.trim() !== "")
+		?.trim();
+	if (!firstSourceLine) {
+		return undefined;
+	}
+	for (
+		let line = startLine;
+		line <= context.lineTable.lines.length;
+		line += 1
+	) {
+		if (lineText(context.lineTable, line).trim() === firstSourceLine) {
+			return line;
+		}
+	}
+	return undefined;
+}
+
+function nodeEndLine(node: AbundantNode): number | undefined {
+	return node.source?.span?.endLine ?? node.source?.line;
+}
+
+function isNumber(value: unknown): value is number {
+	return typeof value === "number";
 }
 
 function buildParagraph(
