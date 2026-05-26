@@ -12,6 +12,8 @@ v0.1, 2026-05
 
 本目录的基本单位是书。每本书都有自己的 `book.adoc`，根目录提供统一依赖、统一构建和总入口。
 
+公开 HTML 入口：link:https://michengliang.github.io/asciidoc-abundant-tree/[https://michengliang.github.io/asciidoc-abundant-tree/]
+
 == 书目
 
 * xref:books/06-rdf12-line-projection/book.adoc[RDF 1.2 行级结构图投影规约]

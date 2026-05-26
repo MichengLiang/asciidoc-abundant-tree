@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/asciidoc-abundant-tree.svg)](https://www.npmjs.com/package/asciidoc-abundant-tree)
 [![CI](https://github.com/MichengLiang/asciidoc-abundant-tree/actions/workflows/ci.yml/badge.svg)](https://github.com/MichengLiang/asciidoc-abundant-tree/actions/workflows/ci.yml)
+[![Pages](https://github.com/MichengLiang/asciidoc-abundant-tree/actions/workflows/pages.yml/badge.svg)](https://github.com/MichengLiang/asciidoc-abundant-tree/actions/workflows/pages.yml)
 [![License](https://img.shields.io/npm/l/asciidoc-abundant-tree.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/node/v/asciidoc-abundant-tree.svg)](./package.json)
 
@@ -22,6 +23,14 @@ The pretty tree format is designed for terminal reading. Its shape is intentiona
 - Pretty tree output for terminal inspection and JSON output for automation.
 
 The primary artifact is the TypeScript object. Pretty text and JSON are projections of the same parsed document.
+
+## Documentation
+
+- Live bookshelf: <https://michengliang.github.io/asciidoc-abundant-tree/>
+- RDF 1.2 line projection specification: [AsciiDoc `AbundantDocument` 到 RDF 1.2 行级结构图投影规约](https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html)
+- Source: [`docs/bookshelf`](./docs/bookshelf/)
+
+The RDF 1.2 projection book specifies graph projection from the `AbundantDocument` model. It is separate from the npm package runtime API.
 
 ## When To Use It
 

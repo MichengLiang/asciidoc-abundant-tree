@@ -2,6 +2,12 @@
 
 本目录承载 `asciidoc-abundant-tree` 的 AsciiDoc book 书稿。
 
+公开 HTML 入口：
+
+```text
+https://michengliang.github.io/asciidoc-abundant-tree/
+```
+
 ## 目录结构
 
 ```text
@@ -15,6 +21,12 @@ package.json          # 书库构建依赖入口
 ## 当前书目
 
 - `books/06-rdf12-line-projection/`：AsciiDoc `AbundantDocument` 到 RDF 1.2 行级结构图的投影规约。
+
+公开书页：
+
+```text
+https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html
+```
 
 ## 运行
 
@@ -39,6 +51,7 @@ pnpm run build
 输出入口：
 
 ```text
+build/html/index.html
 build/html/catalog.html
 ```
 
