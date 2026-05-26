@@ -14,6 +14,10 @@ const codeSurfaceAuditPath = join(
 	projectRoot,
 	"test/fixtures/code-surface-audit.adoc",
 );
+const generatedIdAuditPath = join(
+	projectRoot,
+	"test/fixtures/generated-id-audit.adoc",
+);
 
 describe("parseAbundantTree", () => {
 	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", () => {
@@ -150,7 +154,7 @@ describe("parseAbundantTree", () => {
 			document.targets.map((target) => [target.id, target.targetType]),
 		).toEqual(
 			expect.arrayContaining([
-				["_Real_Section", "section"],
+				["_real_section", "section"],
 				["code", "listing"],
 				["real-target", "section"],
 			]),
@@ -165,9 +169,39 @@ describe("parseAbundantTree", () => {
 			"<<real-target>>",
 		]);
 		expect(document.xrefOccurrences[0]?.containingSectionId).toBe(
-			"_Real_Section",
+			"_real_section",
 		);
 		expect(document.anchorOccurrences).toEqual([]);
+	});
+
+	it("uses official generated section ids and preserves official xref bindings", () => {
+		const document = parseAbundantTree({ sourcePath: generatedIdAuditPath });
+		const sectionTarget = document.targets.find(
+			(target) => target.targetType === "section",
+		);
+		const xref = document.xrefOccurrences[0];
+
+		expect(sectionTarget).toEqual(
+			expect.objectContaining({
+				id: "_real_section",
+				idOrigin: "asciidoctor-generated",
+				asciidoctor: expect.objectContaining({
+					resolvedId: "_real_section",
+				}),
+			}),
+		);
+		expect(xref).toEqual(
+			expect.objectContaining({
+				raw: "<<Real Section>>",
+				target: "Real Section",
+				scope: "local",
+				asciidoctor: expect.objectContaining({
+					href: "#_real_section",
+					resolvedId: "_real_section",
+					resolvedType: "section",
+				}),
+			}),
+		);
 	});
 });
 

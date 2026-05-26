@@ -10,7 +10,10 @@ import type {
 import { definedObject } from "./object-utils";
 import { projectOfficialDocument } from "./official-projector";
 import { buildLineTable, spanForLineText } from "./source-lines";
-import { scanSourceSurfaces } from "./source-surfaces";
+import {
+	assignContainingSectionIds,
+	scanSourceSurfaces,
+} from "./source-surfaces";
 
 export function parseAbundantTree(
 	options: ParseAbundantTreeOptions,
@@ -30,6 +33,11 @@ export function parseAbundantTree(
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
 		adapter,
 	});
+	assignContainingSectionIds(
+		sourceSurfaces.xrefOccurrences,
+		sourceSurfaces.anchorOccurrences,
+		sourceSurfaces.sectionByLine,
+	);
 
 	addAnchorTargets(
 		officialProjection.targets,

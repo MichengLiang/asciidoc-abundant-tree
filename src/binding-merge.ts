@@ -89,7 +89,7 @@ export function bindXrefs(
 		xref.scope = "local";
 		xref.asciidoctor = definedObject({
 			...xref.asciidoctor,
-			resolvedId: target.id,
+			resolvedId: xref.asciidoctor?.resolvedId ?? target.id,
 			resolvedType: target.targetType,
 			reftext: xref.asciidoctor?.reftext ?? target.title,
 		}) as AsciidoctorLayer;

@@ -59,7 +59,7 @@ export function scanSourceSurfaces(lineTable: LineTable): SourceSurfaces {
 	const xrefOccurrences = scanXrefOccurrences(lineTable, opaqueRanges);
 	const anchorOccurrences = scanAnchorOccurrences(lineTable, opaqueRanges);
 	const sectionByLine = mapSectionScope(sections, lineTable.lines.length);
-	assignOccurrenceScopes(xrefOccurrences, anchorOccurrences, sectionByLine);
+	assignContainingSectionIds(xrefOccurrences, anchorOccurrences, sectionByLine);
 
 	return {
 		opaqueRanges,
@@ -233,12 +233,11 @@ function scanSections(
 			.slice(index + 1)
 			.find((candidate) => candidate.level <= surface.level);
 		const ids = surface.metadata.flatMap((metadata) => metadata.ids);
-		const generatedId = generatedSectionId(surface.title);
 		const idOrigin = ids.length > 0 ? "source" : "asciidoctor-generated";
 		return {
 			kind: "section",
 			level: surface.level,
-			ids: ids.length > 0 ? ids : [generatedId],
+			ids,
 			title: surface.title,
 			line: surface.line,
 			span: {
@@ -254,7 +253,6 @@ function scanSections(
 			asciidoctor: {
 				context: "section",
 				nodeName: "section",
-				resolvedId: ids[0] ?? generatedId,
 				resolvedType: "section",
 				reftext: surface.title,
 			},
@@ -400,7 +398,7 @@ function scanAnchorOccurrences(
 	return anchors;
 }
 
-function assignOccurrenceScopes(
+export function assignContainingSectionIds(
 	xrefs: XrefOccurrenceNode[],
 	anchors: AnchorOccurrenceNode[],
 	sectionByLine: Map<number, SectionNode>,

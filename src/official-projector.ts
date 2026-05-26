@@ -113,11 +113,15 @@ function buildSection(
 		return undefined;
 	}
 
+	const officialId = block.getId?.();
+	if (section.ids.length === 0 && officialId) {
+		section.ids = [officialId];
+	}
 	section.asciidoctor = definedObject({
 		...section.asciidoctor,
 		context: block.getContext?.(),
 		nodeName: block.getNodeName?.(),
-		resolvedId: block.getId?.(),
+		resolvedId: officialId,
 		resolvedType: "section",
 		reftext: block.getTitle?.(),
 	}) as AsciidoctorLayer;
@@ -125,7 +129,7 @@ function buildSection(
 		context.targets,
 		definedObject({
 			kind: "target",
-			id: section.ids[0] ?? block.getId?.() ?? "",
+			id: section.ids[0] ?? officialId ?? "",
 			targetType: "section",
 			title: section.title,
 			idOrigin: section.idOrigin,
