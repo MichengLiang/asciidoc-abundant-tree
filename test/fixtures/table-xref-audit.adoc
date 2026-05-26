@@ -1,0 +1,12 @@
+= Table Xref Audit
+
+[#target-section]
+== Target Section
+
+[#xref-table]
+.Table With Xref
+|===
+| Name | Link
+
+| row | <<target-section, target label>>
+|===

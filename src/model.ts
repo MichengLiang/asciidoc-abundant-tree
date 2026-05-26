@@ -134,6 +134,7 @@ export type AnchorOccurrenceNode = NodeBase & {
 	reftext?: string;
 	sourceSpan?: SourceSpan;
 	containingSectionId?: string;
+	anchorScope?: "inline" | "block";
 };
 
 export type TargetNode = NodeBase & {

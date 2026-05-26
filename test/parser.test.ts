@@ -18,6 +18,18 @@ const generatedIdAuditPath = join(
 	projectRoot,
 	"test/fixtures/generated-id-audit.adoc",
 );
+const tableXrefAuditPath = join(
+	projectRoot,
+	"test/fixtures/table-xref-audit.adoc",
+);
+const blockAnchorAuditPath = join(
+	projectRoot,
+	"test/fixtures/block-anchor-audit.adoc",
+);
+const attrlistComplexAuditPath = join(
+	projectRoot,
+	"test/fixtures/attrlist-complex-audit.adoc",
+);
 
 describe("parseAbundantTree", () => {
 	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", () => {
@@ -200,6 +212,105 @@ describe("parseAbundantTree", () => {
 					resolvedId: "_real_section",
 					resolvedType: "section",
 				}),
+			}),
+		);
+	});
+
+	it("recovers table cell xref occurrences without treating code listings as prose", () => {
+		const document = parseAbundantTree({ sourcePath: tableXrefAuditPath });
+		const xref = document.xrefOccurrences[0];
+
+		expect(document.xrefOccurrences).toHaveLength(1);
+		expect(xref).toEqual(
+			expect.objectContaining({
+				raw: "<<target-section, target label>>",
+				target: "target-section",
+				label: "target label",
+				containingSectionId: "target-section",
+				scope: "local",
+				sourceSpan: expect.objectContaining({
+					start: { line: 11, column: 9 },
+				}),
+				asciidoctor: expect.objectContaining({
+					href: "#target-section",
+					resolvedId: "target-section",
+					resolvedType: "section",
+					reftext: "target label",
+				}),
+			}),
+		);
+	});
+
+	it("keeps block anchors as occurrences and target catalog entries", () => {
+		const document = parseAbundantTree({ sourcePath: blockAnchorAuditPath });
+
+		expect(document.anchorOccurrences).toEqual([
+			expect.objectContaining({
+				raw: "[[block-sec,Block Section Ref]]",
+				ids: ["block-sec"],
+				reftext: "Block Section Ref",
+				containingSectionId: "block-sec",
+				sourceSpan: expect.objectContaining({
+					start: { line: 3, column: 1 },
+				}),
+			}),
+			expect.objectContaining({
+				raw: "[[block-para]]",
+				ids: ["block-para"],
+				containingSectionId: "block-sec",
+				sourceSpan: expect.objectContaining({
+					start: { line: 6, column: 1 },
+				}),
+			}),
+		]);
+		expect(
+			document.targets.map((target) => [target.id, target.targetType]),
+		).toEqual(
+			expect.arrayContaining([
+				["block-sec", "section"],
+				["block-para", "block"],
+			]),
+		);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.scope,
+				xref.asciidoctor?.resolvedType,
+			]),
+		).toEqual(
+			expect.arrayContaining([
+				["block-sec", "local", "section"],
+				["block-para", "local", "block"],
+			]),
+		);
+	});
+
+	it("parses complex attrlist style, id, roles, and attributes separately", () => {
+		const document = parseAbundantTree({
+			sourcePath: attrlistComplexAuditPath,
+		});
+		const listing = findNode(document.children, "listing") as {
+			style?: string;
+			metadata?: Array<{
+				metadataKind: string;
+				ids?: string[];
+				roles?: string[];
+				attributes?: Record<string, string | number | boolean>;
+			}>;
+		};
+		const attrlist = listing.metadata?.find(
+			(metadata) => metadata.metadataKind === "attrlist",
+		);
+
+		expect(listing.style).toBe("sidebar");
+		expect(attrlist).toEqual(
+			expect.objectContaining({
+				ids: ["box-id"],
+				roles: ["role-a", "role-b"],
+				attributes: {
+					style: "sidebar",
+					key: "value",
+				},
 			}),
 		);
 	});

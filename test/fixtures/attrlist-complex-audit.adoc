@@ -1,0 +1,7 @@
+= Attrlist Audit
+
+[sidebar#box-id.role-a.role-b,key=value]
+.Box Title
+----
+content
+----

@@ -3,6 +3,7 @@ import type {
 	AsciidoctorBlock,
 } from "./asciidoctor-adapter";
 import { addTarget, applyOfficialBindings } from "./binding-merge";
+import { collectPrecedingMetadata } from "./metadata-parser";
 import type {
 	AbundantNode,
 	AnchorOccurrenceNode,
@@ -25,7 +26,6 @@ import {
 	sourceLines,
 	sourceSpanFromLineSpan,
 } from "./source-lines";
-import { collectPrecedingMetadata } from "./source-surfaces";
 
 type ProjectContext = {
 	lineTable: LineTable;
@@ -277,6 +277,27 @@ function buildTable(
 		"|===",
 	);
 	const ids = metadata.flatMap((surface) => surface.ids);
+	const tableXrefs = collectOccurrencesInLineRange(
+		context.xrefsByLine,
+		startLine,
+		endLine,
+	);
+	const tableAnchors = collectOccurrencesInLineRange(
+		context.anchorsByLine,
+		startLine,
+		endLine,
+	).filter((anchor) => {
+		const key = anchorKey(anchor);
+		if (context.usedAnchorKeys.has(key)) {
+			return false;
+		}
+		context.usedAnchorKeys.add(key);
+		return true;
+	});
+	applyOfficialBindings(
+		tableXrefs,
+		extractTableAnchorBindings(block, context.adapter),
+	);
 	const table = definedObject({
 		kind: "table",
 		ids,
@@ -299,6 +320,7 @@ function buildTable(
 			resolvedType: "table",
 			reftext: block.getTitle?.(),
 		}) as AsciidoctorLayer,
+		children: [...tableXrefs, ...tableAnchors].sort(compareNodesBySource),
 	}) as TableNode;
 
 	if (table.ids.length > 0) {
@@ -316,6 +338,36 @@ function buildTable(
 		);
 	}
 	return table;
+}
+
+function extractTableAnchorBindings(
+	block: AsciidoctorBlock,
+	adapter: AsciidoctorAdapter,
+): ReturnType<AsciidoctorAdapter["extractAnchorBindings"]> {
+	const rows = block.getRows?.();
+	if (!isRecord(rows)) {
+		return [];
+	}
+	const bindings: ReturnType<AsciidoctorAdapter["extractAnchorBindings"]> = [];
+	for (const groupName of ["head", "body", "foot"]) {
+		const group = rows[groupName];
+		if (!Array.isArray(group)) {
+			continue;
+		}
+		for (const row of group) {
+			if (!Array.isArray(row)) {
+				continue;
+			}
+			for (const cell of row) {
+				const html =
+					isRecord(cell) && typeof cell.getText === "function"
+						? String(cell.getText())
+						: "";
+				bindings.push(...adapter.extractAnchorBindings(html));
+			}
+		}
+	}
+	return bindings;
 }
 
 function rowsFromTable(rows: unknown): unknown[] {

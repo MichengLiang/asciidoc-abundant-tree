@@ -1,0 +1,9 @@
+= Block Anchor Audit
+
+[[block-sec,Block Section Ref]]
+== Block Anchor Section
+
+[[block-para]]
+A paragraph after a block anchor.
+
+Go to <<block-sec>> and <<block-para>>.

@@ -5,7 +5,7 @@ import type {
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
-import { generatedSectionId } from "./source-surfaces";
+import { fallbackGeneratedSectionId } from "./source-surfaces";
 
 type HtmlBinding = {
 	href?: string | undefined;
@@ -25,18 +25,21 @@ export function addAnchorTargets(
 ): void {
 	for (const anchor of anchorOccurrences) {
 		for (const id of anchor.ids) {
+			const existing = targets.find((target) => target.id === id);
+			const targetType =
+				existing || anchor.anchorScope === "block" ? "block" : "inline-anchor";
 			addTarget(
 				targets,
 				definedObject({
 					kind: "target",
 					id,
-					targetType: "inline-anchor",
+					targetType,
 					title: anchor.reftext,
 					idOrigin: "source",
 					sourceSpan: anchor.sourceSpan,
 					asciidoctor: definedObject({
 						resolvedId: id,
-						resolvedType: "inline-anchor",
+						resolvedType: targetType,
 						reftext: anchor.reftext,
 					}) as AsciidoctorLayer,
 				}) as TargetNode,
@@ -80,7 +83,7 @@ export function bindXrefs(
 		const officialId = xref.asciidoctor?.resolvedId;
 		const target =
 			(officialId && targetsById.get(officialId)) ??
-			targetsById.get(generatedSectionId(xref.target)) ??
+			targetsById.get(fallbackGeneratedSectionId(xref.target)) ??
 			targetsById.get(xref.target);
 		if (!target) {
 			xref.scope = xref.scope ?? "unresolved";
