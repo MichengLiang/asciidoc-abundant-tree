@@ -5,7 +5,6 @@ import type {
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
-import { fallbackGeneratedSectionId } from "./source-surfaces";
 
 type HtmlBinding = {
 	href?: string | undefined;
@@ -61,8 +60,9 @@ export function applyOfficialBindings(
 		const resolvedId = binding.href.startsWith("#")
 			? binding.href.slice(1)
 			: binding.href.split("#").at(1);
-		xref.scope =
-			xref.scope ?? (binding.href.startsWith("#") ? "local" : "external");
+		if (!binding.href.startsWith("#")) {
+			xref.scope = "external";
+		}
 		xref.asciidoctor = definedObject({
 			href: binding.href,
 			resolvedId,
@@ -81,12 +81,11 @@ export function bindXrefs(
 			continue;
 		}
 		const officialId = xref.asciidoctor?.resolvedId;
-		const target =
-			(officialId && targetsById.get(officialId)) ??
-			targetsById.get(fallbackGeneratedSectionId(xref.target)) ??
-			targetsById.get(xref.target);
+		const target = officialId
+			? targetsById.get(officialId)
+			: targetsById.get(xref.target);
 		if (!target) {
-			xref.scope = xref.scope ?? "unresolved";
+			xref.scope = "unresolved";
 			continue;
 		}
 		xref.scope = "local";

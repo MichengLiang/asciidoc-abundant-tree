@@ -39,10 +39,6 @@ export function scanSourceSurfaces(lineTable: LineTable): SourceSurfaces {
 	};
 }
 
-export function fallbackGeneratedSectionId(title: string): string {
-	return `_${title.replace(/[^\p{L}\p{N}_]+/gu, "_").replace(/^_+|_+$/gu, "")}`;
-}
-
 function mapSectionScope(
 	sections: SectionNode[],
 	totalLines: number,

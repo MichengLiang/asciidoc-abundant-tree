@@ -1,0 +1,14 @@
+= Table Section Pollution
+
+== Before
+
+[#t]
+.Table
+|===
+| == Not A Section | <<before>>
+|===
+
+After table in before section.
+
+[#after]
+== After

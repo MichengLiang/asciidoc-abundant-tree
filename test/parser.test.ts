@@ -30,6 +30,14 @@ const attrlistComplexAuditPath = join(
 	projectRoot,
 	"test/fixtures/attrlist-complex-audit.adoc",
 );
+const missingLocalXrefAuditPath = join(
+	projectRoot,
+	"test/fixtures/missing-local-xref-audit.adoc",
+);
+const tableSectionPollutionAuditPath = join(
+	projectRoot,
+	"test/fixtures/table-section-pollution-audit.adoc",
+);
 
 describe("parseAbundantTree", () => {
 	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", () => {
@@ -313,6 +321,63 @@ describe("parseAbundantTree", () => {
 				},
 			}),
 		);
+	});
+
+	it("keeps missing local hrefs unresolved when no target catalog entry exists", () => {
+		const document = parseAbundantTree({
+			sourcePath: missingLocalXrefAuditPath,
+		});
+		const xref = document.xrefOccurrences[0];
+
+		expect(document.targets.map((target) => target.id)).not.toContain(
+			"missing-target",
+		);
+		expect(xref).toEqual(
+			expect.objectContaining({
+				raw: "<<missing-target>>",
+				target: "missing-target",
+				scope: "unresolved",
+				sourceSpan: expect.objectContaining({
+					start: { line: 5, column: 5 },
+				}),
+				asciidoctor: expect.objectContaining({
+					href: "#missing-target",
+					resolvedId: "missing-target",
+					reftext: "[missing-target]",
+				}),
+			}),
+		);
+		expect(xref?.asciidoctor?.resolvedType).toBeUndefined();
+	});
+
+	it("does not fallback-bind table cell xrefs to generated section ids", () => {
+		const document = parseAbundantTree({
+			sourcePath: tableSectionPollutionAuditPath,
+		});
+		const xref = document.xrefOccurrences[0];
+
+		expect(document.targets.map((target) => target.id)).toEqual(
+			expect.arrayContaining(["_before", "t", "after"]),
+		);
+		expect(document.targets.map((target) => target.id)).not.toContain(
+			"before",
+		);
+		expect(document.targets.map((target) => target.id)).not.toContain(
+			"_not_a_section",
+		);
+		expect(xref).toEqual(
+			expect.objectContaining({
+				raw: "<<before>>",
+				target: "before",
+				containingSectionId: "_before",
+				scope: "unresolved",
+				asciidoctor: expect.objectContaining({
+					href: "#before",
+					resolvedId: "before",
+				}),
+			}),
+		);
+		expect(xref?.asciidoctor?.resolvedType).toBeUndefined();
 	});
 });
 
