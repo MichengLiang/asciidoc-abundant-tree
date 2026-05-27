@@ -25,6 +25,7 @@ export type SourceSurfaces = {
 	blockSurfaces: OfficialBlockSurface[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	projectableBlocks: WeakSet<AsciidoctorBlock>;
+	containerFallbackBlocks: WeakSet<AsciidoctorBlock>;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	sections: SectionNode[];
 	xrefOccurrences: XrefOccurrenceNode[];
@@ -43,6 +44,7 @@ export function projectSourceSurfaces(options: {
 	const blockSurfaces = walkOfficialBlocks(options.officialDocument);
 	const intervalByBlock = new WeakMap<AsciidoctorBlock, SourceInterval>();
 	const projectableBlocks = new WeakSet<AsciidoctorBlock>();
+	const containerFallbackBlocks = new WeakSet<AsciidoctorBlock>();
 	const toolDiagnostics: ToolDiagnostic[] = [];
 	const mainSourcePath = options.sourcePath
 		? normalize(resolve(options.sourcePath))
@@ -70,6 +72,9 @@ export function projectSourceSurfaces(options: {
 				code: "source-location.missing",
 				message: `Official block source location is missing for context '${surface.context ?? "undefined"}' node '${surface.nodeName ?? "undefined"}'.`,
 			});
+			if (canUseContainerFallbackSurface(surface, policy)) {
+				containerFallbackBlocks.add(surface.block);
+			}
 			continue;
 		}
 		const interval = resolveSourceInterval(surface, options.lineTable);
@@ -107,6 +112,7 @@ export function projectSourceSurfaces(options: {
 		blockSurfaces,
 		intervalByBlock,
 		projectableBlocks,
+		containerFallbackBlocks,
 		sectionByBlock,
 		sections,
 		xrefOccurrences,
@@ -161,6 +167,17 @@ function unknownContextDiagnostic(
 		message: `Unknown official block context '${surface.context ?? "undefined"}' was skipped conservatively.`,
 		source: interval?.sourceSpan,
 	}) as ToolDiagnostic;
+}
+
+function canUseContainerFallbackSurface(
+	surface: OfficialBlockSurface,
+	policy: ReturnType<typeof officialBlockPolicy>,
+): boolean {
+	return (
+		surface.context === "paragraph" &&
+		policy === "scan" &&
+		!hasDiagnosticPolicyAncestor(surface)
+	);
 }
 
 function buildSectionSurfaces(

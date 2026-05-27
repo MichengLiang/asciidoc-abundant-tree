@@ -225,6 +225,112 @@ describe("official-projector helpers", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
+	it("projects missing-source paragraphs only when container fallback explicitly accepts them", () => {
+		const paragraphBlock = {
+			getBlocks: () => [],
+			getContext: () => "paragraph",
+			getId: () => "fallback-paragraph",
+			getNodeName: () => "paragraph",
+			getSource: () => "Fallback paragraph.",
+		} satisfies AsciidoctorBlock;
+		const openBlock = {
+			getBlocks: () => [paragraphBlock],
+			getContext: () => "open",
+			getNodeName: () => "open",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+		} satisfies AsciidoctorBlock;
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [openBlock],
+			},
+			lineTable: buildLineTable("--\nFallback paragraph.\n--\n"),
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap([
+				[
+					openBlock,
+					{
+						blockStartLine: 1,
+						metadata: [],
+						contentSpan: { startLine: 2, endLine: 2 },
+						span: { startLine: 1, endLine: 3 },
+						diagnostics: [],
+					},
+				],
+			]),
+			sectionByBlock: new WeakMap(),
+			projectableBlocks: new WeakSet([openBlock]),
+			containerFallbackBlocks: new WeakSet([paragraphBlock]),
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "paragraph",
+				text: "Fallback paragraph.",
+			}),
+		]);
+		expect(projected.targets).toEqual([
+			expect.objectContaining({
+				id: "fallback-paragraph",
+				targetType: "block",
+			}),
+		]);
+	});
+
+	it("does not project missing-source children without explicit container fallback acceptance", () => {
+		const paragraphBlock = {
+			getBlocks: () => [],
+			getContext: () => "paragraph",
+			getId: () => "fallback-paragraph",
+			getNodeName: () => "paragraph",
+			getSource: () => "Fallback paragraph.",
+		} satisfies AsciidoctorBlock;
+		const openBlock = {
+			getBlocks: () => [paragraphBlock],
+			getContext: () => "open",
+			getNodeName: () => "open",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+		} satisfies AsciidoctorBlock;
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [openBlock],
+			},
+			lineTable: buildLineTable("--\nFallback paragraph.\n--\n"),
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap([
+				[
+					openBlock,
+					{
+						blockStartLine: 1,
+						metadata: [],
+						contentSpan: { startLine: 2, endLine: 2 },
+						span: { startLine: 1, endLine: 3 },
+						diagnostics: [],
+					},
+				],
+			]),
+			sectionByBlock: new WeakMap(),
+			projectableBlocks: new WeakSet([openBlock]),
+			containerFallbackBlocks: new WeakSet(),
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([]);
+		expect(projected.targets).toEqual([]);
+	});
+
 	it("skips top-level official blocks that have neither source location nor projectable children", () => {
 		const projected = projectOfficialDocument({
 			officialDocument: {

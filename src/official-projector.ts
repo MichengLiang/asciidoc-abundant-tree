@@ -38,6 +38,7 @@ type ProjectContext = {
 	usedAnchorKeys: Set<string>;
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
+	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	adapter: AsciidoctorAdapter;
 	targets: TargetNode[];
@@ -54,6 +55,7 @@ export function projectOfficialDocument(options: {
 	anchorOccurrences: AnchorOccurrenceNode[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
+	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	adapter: AsciidoctorAdapter;
 }): { children: AbundantNode[]; targets: TargetNode[] } {
@@ -68,6 +70,7 @@ export function projectOfficialDocument(options: {
 		usedAnchorKeys: new Set(),
 		intervalByBlock: options.intervalByBlock,
 		projectableBlocks: options.projectableBlocks,
+		containerFallbackBlocks: options.containerFallbackBlocks,
 		sectionByBlock: options.sectionByBlock,
 		adapter: options.adapter,
 		targets,
@@ -101,13 +104,7 @@ function buildNode(
 	const officialLine = block.getSourceLocation?.()?.getLineNumber?.();
 	const line = officialLine ?? fallbackLine;
 	const interval = context.intervalByBlock.get(block);
-	const canUseContainerFallback =
-		officialLine === undefined && fallbackLine !== undefined;
-	if (
-		context.projectableBlocks &&
-		!context.projectableBlocks.has(block) &&
-		!canUseContainerFallback
-	) {
+	if (!canProjectBlock(block, context, officialLine, fallbackLine)) {
 		return undefined;
 	}
 
@@ -144,6 +141,25 @@ function buildNode(
 		);
 	}
 	return undefined;
+}
+
+function canProjectBlock(
+	block: AsciidoctorBlock,
+	context: ProjectContext,
+	officialLine: number | undefined,
+	fallbackLine: number | undefined,
+): boolean {
+	if (!context.projectableBlocks) {
+		return true;
+	}
+	if (context.projectableBlocks.has(block)) {
+		return true;
+	}
+	return (
+		officialLine === undefined &&
+		fallbackLine !== undefined &&
+		(context.containerFallbackBlocks?.has(block) ?? false)
+	);
 }
 
 function buildSection(
