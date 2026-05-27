@@ -79,10 +79,10 @@
 
 |10
 |查询契约验收
-|未开始
-|
-|
-|
+|通过
+|`3d923ee99075f9f333c59968ddffd8f4af02cb4f` + `e872aa44d95aae00d28730a5195f2ebd9365582a`
+|通过
+|审核包见 xref:batch-10-review-package[Batch 10 审核包]。查询契约、cross-document xref、payload、CLI parse-back 与 file+line reverse lookup acceptance 已验收。
 
 |11
 |最终门禁与完成证据
