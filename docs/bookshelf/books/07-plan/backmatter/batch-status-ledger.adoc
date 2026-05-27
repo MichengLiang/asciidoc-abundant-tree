@@ -30,10 +30,10 @@
 
 |03
 |provenance 与 document resource
-|未开始
-|
-|
-|
+|通过
+|`bc0133455b6205d03a1ab5286f6f293ce58ce1d0`
+|通过
+|审核包见 xref:batch-03-review-package[Batch 03 审核包]。
 
 |04
 |结构资源与 containment
