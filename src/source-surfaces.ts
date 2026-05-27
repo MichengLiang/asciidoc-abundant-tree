@@ -104,6 +104,9 @@ function buildSectionSurfaces(
 		if (surface.context !== "section") {
 			continue;
 		}
+		if (hasDiagnosticPolicyAncestor(surface)) {
+			continue;
+		}
 		const interval = intervalByBlock.get(surface.block);
 		if (!interval) {
 			continue;
@@ -145,6 +148,17 @@ function buildSectionSurfaces(
 	}
 
 	return { sections, sectionByBlock };
+}
+
+function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
+	let current = surface.parent;
+	while (current) {
+		if (officialBlockPolicy(current.context) === "diagnostic") {
+			return true;
+		}
+		current = current.parent;
+	}
+	return false;
 }
 
 function mapSectionScope(

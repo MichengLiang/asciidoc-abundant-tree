@@ -68,6 +68,44 @@ describe("projectSourceSurfaces", () => {
 		expect(projected.children).toEqual([]);
 		expect(projected.targets).toEqual([]);
 	});
+
+	it("does not expose descendant sections from unknown official block contexts", () => {
+		const hiddenSection = makeBlock("section", 2, {
+			id: "hidden-section",
+			title: "Hidden Section",
+		});
+		const unknown = makeBlock("mystery", 1, {
+			children: [hiddenSection],
+		});
+		const officialDocument = makeDocument([unknown]);
+		const lineTable = buildLineTable(
+			["mystery container", "== Hidden Section", "hidden body"].join("\n"),
+		);
+
+		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const projected = projectOfficialDocument({
+			officialDocument,
+			lineTable,
+			sections: surfaces.sections,
+			sectionByLine: surfaces.sectionByLine,
+			xrefOccurrences: surfaces.xrefOccurrences,
+			anchorOccurrences: surfaces.anchorOccurrences,
+			intervalByBlock: surfaces.intervalByBlock,
+			sectionByBlock: surfaces.sectionByBlock,
+			adapter: fakeAdapter(),
+		});
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "official-block-context.unknown",
+			}),
+		]);
+		expect(surfaces.sections).toEqual([]);
+		expect(surfaces.sectionByLine.get(2)).toBeUndefined();
+		expect(surfaces.sectionByBlock.get(hiddenSection)).toBeUndefined();
+		expect(projected.children).toEqual([]);
+		expect(projected.targets).toEqual([]);
+	});
 });
 
 function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
@@ -83,6 +121,7 @@ function makeBlock(
 		children?: AsciidoctorBlock[];
 		id?: string;
 		source?: string;
+		title?: string;
 	} = {},
 ): AsciidoctorBlock {
 	return {
@@ -91,6 +130,7 @@ function makeBlock(
 		getId: () => options.id,
 		getNodeName: () => context,
 		...(options.source ? { getSource: () => options.source as string } : {}),
+		...(options.title ? { getTitle: () => options.title as string } : {}),
 		getSourceLocation: () => ({
 			getLineNumber: () => line,
 		}),
