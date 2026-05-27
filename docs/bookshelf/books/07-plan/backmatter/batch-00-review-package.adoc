@@ -12,7 +12,7 @@
 [horizontal]
 Batch 00 基线提交 hash:: `95ed433f6dda0b126660974b4b7a08027af26dfd`
 提交信息:: `000`
-状态与证据补交:: 本审核包所在提交；具体 hash 由执行者最终报告给出。
+状态与证据补交:: `6a5d571df5abcada2e8e984bb5c855e6dae3786e`
 
 === Scope
 
@@ -101,3 +101,13 @@ Batch 00 基线提交 hash:: `95ed433f6dda0b126660974b4b7a08027af26dfd`
 [horizontal]
 执行者结论:: `needs-review`
 审核边界:: 本审核包只提交 Batch 00 证据，不宣布通过，不解锁 Batch 01。
+
+=== Reviewer Decision
+
+[horizontal]
+审核结论:: `通过`
+审核者:: `Codex principal coordinator`
+审核时间:: `2026-05-28 00:14:01 +0800`
+打回项:: `none`
+
+审核证据:: 审核者独立运行 `pnpm probe:n3`、`pnpm probe:n3:edges`、`pnpm probe:n3:negative`、`pnpm exec tsc --noEmit -p tsconfig.json`，均为 PASS；审核者检查 `src/rdf12-projection/`、`src/cli.ts`、`src/index.ts`、`src/parser.ts` 无本批差异。

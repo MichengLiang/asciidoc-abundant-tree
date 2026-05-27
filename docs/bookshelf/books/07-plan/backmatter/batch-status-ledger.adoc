@@ -9,10 +9,10 @@
 
 |00
 |基线与 RDF 1.2 spike 归档
-|待审核
-|`95ed433f6dda0b126660974b4b7a08027af26dfd`
-|
-|审核包见 xref:batch-00-review-package[Batch 00 审核包]。状态与证据补交提交由执行者最终报告给出。
+|通过
+|`95ed433f6dda0b126660974b4b7a08027af26dfd` + `6a5d571df5abcada2e8e984bb5c855e6dae3786e`
+|通过
+|审核包见 xref:batch-00-review-package[Batch 00 审核包]。审核者独立重跑 Batch 00 spike 命令并确认禁止路径无修改。
 
 |01
 |RDF 1.2 graph primitives
