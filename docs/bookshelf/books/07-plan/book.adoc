@@ -65,4 +65,7 @@ include::chapters/13-batch-11-final-gates-and-release-evidence.adoc[]
 include::backmatter/review-package-template.adoc[]
 
 [appendix]
+include::backmatter/batch-00-review-package.adoc[]
+
+[appendix]
 include::backmatter/batch-status-ledger.adoc[]
