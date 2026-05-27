@@ -23,10 +23,10 @@
 
 |02
 |identity、path 与 projection options
-|未开始
-|
-|
-|
+|通过
+|`e181e79ba7e1929774e0ec687bf6f61f0527afb1`
+|通过
+|审核包见 xref:batch-02-review-package[Batch 02 审核包]。
 
 |03
 |provenance 与 document resource
