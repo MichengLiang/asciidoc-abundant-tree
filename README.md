@@ -21,6 +21,7 @@ The pretty tree format is designed for terminal reading. Its shape is intentiona
 - Xref occurrence records that keep raw target text, labels, local/external/unresolved scope, containing section, and resolved target kind.
 - Official Asciidoctor binding data for xrefs: `href`, `resolvedId`, `resolvedType`, and `reftext`.
 - Pretty tree output for terminal inspection and JSON output for automation.
+- RDF 1.2 Turtle output through the `rdf12` projection for graph-based source queries.
 
 The primary artifact is the TypeScript object. Pretty text and JSON are projections of the same parsed document.
 
@@ -88,6 +89,7 @@ asciidoc-abundant-tree <file.adoc>
 asciidoc-abundant-tree <file.adoc> --json
 asciidoc-abundant-tree <file.adoc> --format tree
 asciidoc-abundant-tree <file.adoc> --format json
+asciidoc-abundant-tree <file.adoc> --format rdf12
 asciidoc-abundant-tree --help
 ```
 
@@ -111,12 +113,19 @@ JSON output preserves the same object fields and omits `undefined` values:
 asciidoc-abundant-tree docs/index.adoc --json > tree.json
 ```
 
+RDF 1.2 output writes Turtle text directly to stdout:
+
+```bash
+asciidoc-abundant-tree docs/index.adoc --format rdf12 > projection.ttl
+```
+
 ## Library API
 
 ```ts
 import {
 	formatAbundantTree,
 	parseAbundantTree,
+	rdf12,
 	serializeAbundantTreeToJson,
 } from "asciidoc-abundant-tree";
 
@@ -126,6 +135,12 @@ const document = parseAbundantTree({
 
 const prettyText = formatAbundantTree(document);
 const jsonData = serializeAbundantTreeToJson(document);
+const projection = rdf12(document, {
+	documentRoot: process.cwd(),
+});
+
+const graph = projection.graph;
+const ttl = projection.ttl;
 ```
 
 `parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.

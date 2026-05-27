@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { runCli } from "../src/cli";
+import { parseTurtleToRdf12Graph } from "../src/rdf12-projection/n3-adapter";
 
 describe("cli", () => {
 	it("shows help text", () => {
@@ -8,7 +9,7 @@ describe("cli", () => {
 		expect(result.code).toBe(0);
 		expect(result.stdout).toMatch(/asciidoc-abundant-tree <file\.adoc>/);
 		expect(result.stdout).toMatch(/--json/);
-		expect(result.stdout).toMatch(/--format tree\|json/);
+		expect(result.stdout).toMatch(/--format tree\|json\|rdf12/);
 		expect(result.stderr).toBe("");
 	});
 
@@ -71,7 +72,45 @@ describe("cli", () => {
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
-		expect(result.stderr).toMatch(/tree.*json|json.*tree/);
+		expect(result.stderr).toMatch(/tree/);
+		expect(result.stderr).toMatch(/json/);
+		expect(result.stderr).toMatch(/rdf12/);
+	});
+
+	it("does not accept rdf, ttl, or turtle aliases", () => {
+		for (const format of ["rdf", "ttl", "turtle"]) {
+			const result = runCli([
+				"samples/reference-links.adoc",
+				"--format",
+				format,
+			]);
+
+			expect(result.code).toBe(1);
+			expect(result.stderr).toContain(`Unsupported format: ${format}`);
+		}
+	});
+
+	it("prints RDF 1.2 Turtle through rdf12 format", () => {
+		const result = runCli([
+			"samples/reference-links.adoc",
+			"--format",
+			"rdf12",
+		]);
+
+		expect(result.code).toBe(0);
+		expect(result.stderr).toBe("");
+		expect(result.stdout).toContain("@prefix aat:");
+		expect(result.stdout).toContain("rdf:reifies <<(");
+		expect(() => parseTurtleToRdf12Graph(result.stdout)).not.toThrow();
+		expect(result.stdout.trimStart()).not.toMatch(/^\{/);
+	});
+
+	it("rejects rdf12 projection when the source path is outside cwd", () => {
+		const result = runCli(["/etc/hosts", "--format", "rdf12"]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toMatch(/outside document root/);
 	});
 
 	it("rejects missing format values", () => {
