@@ -49,7 +49,7 @@
 |按既有模式 include Batch 11 review package。
 
 |`docs/bookshelf/books/07-plan/backmatter/batch-status-ledger.adoc`
-|将 Batch 11 状态设为 `待审核` 并链接审核包。
+|记录 Batch 11 implementation hash、final approval result 和审核包链接。
 
 |`docs/bookshelf/books/07-plan/backmatter/batch-11-review-package.adoc`
 |记录最终门禁、package/type evidence、批次 completion evidence 和剩余非目标。
