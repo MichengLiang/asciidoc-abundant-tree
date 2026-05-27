@@ -17,6 +17,7 @@ import {
 } from "./resource-identity";
 import { normalizeSourceDigest } from "./source-digest";
 import { projectStructureResources } from "./structure-projector";
+import { projectXrefResources } from "./xref-projector";
 
 export type Rdf12PrefixMap = typeof namespaces;
 
@@ -101,6 +102,15 @@ export function projectAbundantDocumentToRdf12(
 		documentIri,
 		relativePath: coordinate.relativePath,
 		nodeIndex,
+	});
+	projectXrefResources({
+		graph,
+		document,
+		options: normalizedOptions,
+		documentKey: coordinate.documentKey,
+		documentIri,
+		relativePath: coordinate.relativePath,
+		labelCatalog,
 	});
 
 	return {

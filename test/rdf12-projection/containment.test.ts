@@ -36,7 +36,7 @@ describe("rdf12 direct containment", () => {
 		);
 	});
 
-	it("projects direct anchor children for paragraph and table without xref resources", () => {
+	it("keeps xref resources out of direct containment projection", () => {
 		const projection = projectAbundantDocumentToRdf12(nestedDocument(), {
 			documentRoot: projectRoot,
 		});
@@ -52,9 +52,18 @@ describe("rdf12 direct containment", () => {
 		expect(
 			projection.graph.has(rdf12Triple(table, contains, tableAnchor)),
 		).toBe(true);
+		const [xref] = projection.graph.match({
+			object: iriTerm(`${namespaces.aat}XrefOccurrence`),
+		});
+		expect(xref).toBeDefined();
+		if (xref === undefined) {
+			throw new Error("expected xref resource");
+		}
 		expect(
 			projection.graph.match({
-				object: iriTerm(`${namespaces.aat}XrefOccurrence`),
+				subject: paragraph,
+				predicate: contains,
+				object: xref.subject,
 			}),
 		).toHaveLength(0);
 	});

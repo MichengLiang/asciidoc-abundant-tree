@@ -94,7 +94,7 @@ describe("rdf12 label projection", () => {
 		expectLabelHasSourceLocation(projection.graph, match.labels[0] ?? "", 2, 2);
 	});
 
-	it("does not project xref display labels without a legal xref owner", () => {
+	it("projects xref display labels only after xref owner exists", () => {
 		const projection = projectAbundantDocumentToRdf12(xrefDisplayDocument(), {
 			documentRoot: projectRoot,
 		});
@@ -103,14 +103,14 @@ describe("rdf12 label projection", () => {
 			"XrefDisplayLabel",
 			"Display Label",
 		);
+		const [xref] = projection.graph.match({
+			object: iriTerm(`${namespaces.aat}XrefOccurrence`),
+		});
 
-		expect(match.owners).toEqual([]);
-		expect(match.labels).toHaveLength(0);
-		expect(
-			projection.graph.match({
-				object: iriTerm(`${namespaces.aat}XrefOccurrence`),
-			}),
-		).toHaveLength(0);
+		expect(xref).toBeDefined();
+		expect(match.owners).toEqual([xref?.subject.value]);
+		expect(match.labels).toHaveLength(1);
+		expect(match.owners).not.toContain(projection.documentIri);
 		expect(
 			projection.graph.match({
 				predicate: iriTerm(`${namespaces.rdf}reifies`),
