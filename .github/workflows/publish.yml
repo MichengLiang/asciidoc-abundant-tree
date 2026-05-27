@@ -32,4 +32,7 @@ jobs:
           PACKAGE_VERSION="$(node -p "require('./package.json').version")"
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           test "$PACKAGE_VERSION" = "$TAG_VERSION"
-      - run: npm publish
+      - name: Publish to npm
+        run: npm publish --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
