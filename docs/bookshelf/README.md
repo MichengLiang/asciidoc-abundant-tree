@@ -42,7 +42,13 @@ pnpm install
 pnpm run test
 ```
 
-构建 HTML：
+生成单文件 ADOC：
+
+```bash
+pnpm run build:adoc
+```
+
+构建全部产物：
 
 ```bash
 pnpm run build
@@ -51,6 +57,7 @@ pnpm run build
 输出入口：
 
 ```text
+build/adoc/catalog.adoc
 build/html/index.html
 build/html/catalog.html
 ```
@@ -58,5 +65,8 @@ build/html/catalog.html
 当前书稿输出：
 
 ```text
+build/adoc/books/06-rdf12-line-projection.adoc
 build/html/books/06-rdf12-line-projection/book.html
 ```
+
+`build/adoc/` 是纯文本投影。它展开书稿 include，保留图片宏和跨书 xref 的文本语义，不复制图片资源。

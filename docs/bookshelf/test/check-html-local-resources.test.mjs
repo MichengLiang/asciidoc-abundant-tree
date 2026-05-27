@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 
@@ -26,7 +26,11 @@ test("extractLocalTargets skips external links and keeps local resources", () =>
 });
 
 test("findMissingLocalResources reports only missing local files", async () => {
-	const root = path.join(tmpdir(), `html-check-${Date.now()}`);
+	const root = path.resolve(
+		"tmp",
+		"test-fixtures",
+		`html-check-${randomUUID()}`,
+	);
 	const htmlDir = path.join(root, "build", "html");
 	const imageDir = path.join(root, "build", "html", "shared", "images");
 	await mkdir(imageDir, { recursive: true });

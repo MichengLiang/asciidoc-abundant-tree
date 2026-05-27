@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import { mkdir } from "node:fs/promises";
-import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 
 import { assetCopyPlanForWorkspace } from "../scripts/copy-assets.mjs";
 
 test("assetCopyPlanForWorkspace plans shared images and each book asset directory", async () => {
-	const root = path.join(tmpdir(), `multi-book-assets-${Date.now()}`);
+	const root = path.resolve(
+		"tmp",
+		"test-fixtures",
+		`multi-book-assets-${randomUUID()}`,
+	);
 	await mkdir(path.join(root, "shared", "images"), { recursive: true });
 	await mkdir(path.join(root, "books", "alpha-book", "assets"), {
 		recursive: true,
