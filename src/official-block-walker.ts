@@ -8,6 +8,9 @@ export type OfficialBlockSurface = {
 	title: string | undefined;
 	id: string | undefined;
 	sourceLine: number | undefined;
+	sourceFile?: string | undefined;
+	sourcePath?: string | undefined;
+	sourceDirectory?: string | undefined;
 	parent?: OfficialBlockSurface;
 	siblings?: OfficialBlockSurface[];
 	children: OfficialBlockSurface[];
@@ -31,6 +34,7 @@ function walkBlock(
 	parent: OfficialBlockSurface | undefined,
 	indexInParent: number,
 ): OfficialBlockSurface {
+	const sourceLocation = block.getSourceLocation?.();
 	const surface: OfficialBlockSurface = {
 		block,
 		context: block.getContext?.(),
@@ -38,7 +42,10 @@ function walkBlock(
 		level: block.getLevel?.(),
 		title: block.getTitle?.(),
 		id: block.getId?.(),
-		sourceLine: block.getSourceLocation?.()?.getLineNumber?.(),
+		sourceLine: sourceLocation?.getLineNumber?.(),
+		sourceFile: sourceLocation?.getFile?.(),
+		sourcePath: sourceLocation?.getPath?.(),
+		sourceDirectory: sourceLocation?.getDirectory?.(),
 		children: [],
 		indexInParent,
 	};

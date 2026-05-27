@@ -1,3 +1,4 @@
+import { basename, isAbsolute, join, normalize, resolve } from "node:path";
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import {
 	assignContainingSectionIds,
@@ -36,12 +37,24 @@ export { assignContainingSectionIds };
 export function projectSourceSurfaces(options: {
 	officialDocument: AsciidoctorBlock;
 	lineTable: LineTable;
+	sourcePath?: string;
 }): SourceSurfaces {
 	const blockSurfaces = walkOfficialBlocks(options.officialDocument);
 	const intervalByBlock = new WeakMap<AsciidoctorBlock, SourceInterval>();
 	const toolDiagnostics: ToolDiagnostic[] = [];
+	const mainSourcePath = options.sourcePath
+		? normalize(resolve(options.sourcePath))
+		: undefined;
 
 	for (const surface of blockSurfaces) {
+		if (isExternalSourceSurface(surface, mainSourcePath)) {
+			toolDiagnostics.push({
+				level: "warning",
+				code: "source-location.external-file",
+				message: `Official block source location points outside the parsed source file: ${sourceLocationLabel(surface)}.`,
+			});
+			continue;
+		}
 		const interval = resolveSourceInterval(surface, options.lineTable);
 		if (!interval) {
 			continue;
@@ -87,6 +100,41 @@ export function projectSourceSurfaces(options: {
 		sectionByLine,
 		toolDiagnostics,
 	};
+}
+
+function isExternalSourceSurface(
+	surface: OfficialBlockSurface,
+	mainSourcePath: string | undefined,
+): boolean {
+	if (!mainSourcePath) {
+		return false;
+	}
+	const sourceFile = sourceFilePath(surface);
+	return sourceFile !== undefined && normalize(sourceFile) !== mainSourcePath;
+}
+
+function sourceFilePath(surface: OfficialBlockSurface): string | undefined {
+	const sourceFile = surface.sourceFile ?? surface.sourcePath;
+	if (!sourceFile) {
+		return undefined;
+	}
+	if (isAbsolute(sourceFile)) {
+		return sourceFile;
+	}
+	if (surface.sourceDirectory) {
+		return join(surface.sourceDirectory, sourceFile);
+	}
+	return undefined;
+}
+
+function sourceLocationLabel(surface: OfficialBlockSurface): string {
+	return (
+		surface.sourcePath ??
+		surface.sourceFile ??
+		(surface.sourceDirectory
+			? join(surface.sourceDirectory, basename(surface.sourceFile ?? ""))
+			: "unknown source")
+	);
 }
 
 function buildSectionSurfaces(

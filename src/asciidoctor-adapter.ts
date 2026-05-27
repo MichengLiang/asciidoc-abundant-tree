@@ -14,7 +14,10 @@ export type AsciidoctorBlock = {
 	getRows?: () => unknown;
 	getSource?: () => string;
 	getSourceLocation?: () => {
+		getDirectory?: () => string | undefined;
+		getFile?: () => string | undefined;
 		getLineNumber?: () => number;
+		getPath?: () => string | undefined;
 	};
 	getRefs?: () => Record<string, unknown>;
 	getStyle?: () => string;

@@ -23,6 +23,7 @@ export function parseAbundantTree(
 	const sourceSurfaces = projectSourceSurfaces({
 		officialDocument,
 		lineTable,
+		sourcePath,
 	});
 	const officialProjection = projectOfficialDocument({
 		officialDocument,
