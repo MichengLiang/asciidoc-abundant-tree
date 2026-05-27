@@ -68,9 +68,19 @@ class Rdf12GraphSet implements Rdf12Graph {
 
 	toArray(): Rdf12Triple[] {
 		return Array.from(this.#triplesByKey.entries())
-			.sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey))
+			.sort(([leftKey], [rightKey]) => compareCodeUnits(leftKey, rightKey))
 			.map(([, triple]) => triple);
 	}
+}
+
+function compareCodeUnits(left: string, right: string): number {
+	if (left < right) {
+		return -1;
+	}
+	if (left > right) {
+		return 1;
+	}
+	return 0;
 }
 
 function matchesPattern(

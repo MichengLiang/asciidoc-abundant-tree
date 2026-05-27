@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import {
+	type BaseQuad,
 	DataFactory,
 	Parser,
-	Store,
-	Writer,
-	type BaseQuad,
 	type Quad,
+	Store,
 	type Term,
+	Writer,
 } from "n3";
 
 const { literal, namedNode, quad, triple } = DataFactory;
@@ -61,7 +61,10 @@ const start = quad(
 );
 
 assert.equal(reifier.object.termType, "Quad");
-assert.equal(termLabel(reifier.object), "<<(NamedNode:urn:aat:doc:demo#section-l8-o0 NamedNode:https://micheng.dev/ns/asciidoc-abundant-tree#references NamedNode:urn:aat:doc:demo#section-l25-o0)>>");
+assert.equal(
+	termLabel(reifier.object),
+	"<<(NamedNode:urn:aat:doc:demo#section-l8-o0 NamedNode:https://micheng.dev/ns/asciidoc-abundant-tree#references NamedNode:urn:aat:doc:demo#section-l25-o0)>>",
+);
 
 const quads = [assertedRelation, reifier, selector, start];
 const turtle = await writeTurtle(quads);
@@ -106,4 +109,6 @@ console.log(rewritten);
 const reparsed = new Parser({ format: "text/turtle" }).parse(rewritten);
 assert.equal(new Store(reparsed).countQuads(xref, rdfReifies, null, null), 1);
 
-console.log("RESULT: N3 can write, parse, store, and roundtrip RDF 1.2 reifier triple terms for this use case.");
+console.log(
+	"RESULT: N3 can write, parse, store, and roundtrip RDF 1.2 reifier triple terms for this use case.",
+);

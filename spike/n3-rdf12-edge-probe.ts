@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import {
 	DataFactory,
+	type Literal,
 	Parser,
+	type Quad,
 	Store,
 	Writer,
-	type Literal,
-	type Quad,
 } from "n3";
 
 const { literal, namedNode, quad, triple } = DataFactory;
@@ -63,8 +63,9 @@ assert.equal(store.countQuads(null, rdfReifies, relation, null), 2);
 assert.equal(store.countQuads(xrefB, targetNode, null, null), 0);
 assert.equal(store.countQuads(xrefB, candidateNode, target, null), 1);
 
-const lineLiteral = store.getQuads(xrefA, startLine, null, null)[0]
-	?.object as Literal | undefined;
+const lineLiteral = store.getQuads(xrefA, startLine, null, null)[0]?.object as
+	| Literal
+	| undefined;
 assert.equal(lineLiteral?.termType, "Literal");
 assert.equal(lineLiteral?.datatype.value, `${prefixes.xsd}integer`);
 assert.equal(lineLiteral?.value, "4");
@@ -86,4 +87,6 @@ assert.equal(parsedStore.countQuads(null, rdfReifies, relation, null), 2);
 assert.equal(parsedStore.countQuads(xrefB, targetNode, null, null), 0);
 assert.equal(parsedStore.countQuads(xrefB, candidateNode, target, null), 1);
 
-console.log("RESULT: N3 Store deduplicates asserted triples, preserves multiple reifiers, candidate nodes, and xsd integer literals.");
+console.log(
+	"RESULT: N3 Store deduplicates asserted triples, preserves multiple reifiers, candidate nodes, and xsd integer literals.",
+);

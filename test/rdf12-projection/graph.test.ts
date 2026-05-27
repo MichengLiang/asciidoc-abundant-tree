@@ -118,6 +118,24 @@ describe("rdf12 graph primitives", () => {
 		);
 	});
 
+	it("orders keys by explicit code-unit comparison rather than locale collation", () => {
+		const upper = rdf12Triple(iriTerm("urn:aat:test#Z"), predicate, target);
+		const lower = rdf12Triple(iriTerm("urn:aat:test#a"), predicate, target);
+		const underscore = rdf12Triple(
+			iriTerm("urn:aat:test#_"),
+			predicate,
+			target,
+		);
+
+		const graph = createRdf12Graph([lower, underscore, upper]);
+
+		expect(graph.toArray().map((triple) => triple.subject.value)).toEqual([
+			"urn:aat:test#Z",
+			"urn:aat:test#_",
+			"urn:aat:test#a",
+		]);
+	});
+
 	it("keeps string literals that look like triple terms distinct from triple terms", () => {
 		const relation = rdf12Triple(subject, predicate, target);
 		const tripleTerm = rdf12TripleTerm(relation);

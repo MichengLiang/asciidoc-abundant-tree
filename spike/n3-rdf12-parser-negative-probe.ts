@@ -27,4 +27,6 @@ const parsedInvalid = new Parser<Quad>({ format: "text/turtle" }).parse(
 assert.equal(parsedInvalid.length, 1);
 assert.equal(parsedInvalid[0]?.object.termType, "Literal");
 
-console.log("RESULT: The parser distinguishes a real Turtle 1.2 triple term from a string literal that only looks like one.");
+console.log(
+	"RESULT: The parser distinguishes a real Turtle 1.2 triple term from a string literal that only looks like one.",
+);
