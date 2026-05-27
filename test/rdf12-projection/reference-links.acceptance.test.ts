@@ -63,7 +63,11 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		const projection = referenceProjection();
 		const core = resourceIri(projection.documentIri, "section-l25-o0");
 		const listing = resourceIri(projection.documentIri, "listing-l29-o0");
-		const coveringLine35 = resourcesCoveringLine(projection.graph, 35);
+		const coveringLine35 = resourcesCoveringFileLine(
+			projection.graph,
+			"samples/reference-links.adoc",
+			35,
+		);
 
 		expect(
 			projection.graph.has(
@@ -100,6 +104,24 @@ describe("rdf12 reference-links query contract acceptance", () => {
 			"3. 核心引擎设计",
 		);
 		expectLineSpan(projection.graph, xref, 10, 10);
+		expect(
+			projection.graph.has(
+				rdf12Triple(
+					iriTerm(xref),
+					iriTerm(`${namespaces.aat}sourceNode`),
+					intro,
+				),
+			),
+		).toBe(true);
+		expect(
+			projection.graph.has(
+				rdf12Triple(
+					iriTerm(xref),
+					iriTerm(`${namespaces.aat}targetNode`),
+					core,
+				),
+			),
+		).toBe(true);
 		expect(projection.graph.has(relation)).toBe(true);
 		expect(reifier?.object.termType).toBe("triple");
 		expect(reifier?.object.value).toEqual(relation);
@@ -166,16 +188,31 @@ function resourceIri(documentIri: string, localId: string): string {
 	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
 }
 
-function resourcesCoveringLine(graph: Rdf12Graph, line: number): string[] {
+function resourcesCoveringFileLine(
+	graph: Rdf12Graph,
+	relativePath: string,
+	line: number,
+): string[] {
 	return graph
 		.match({ predicate: iriTerm(`${namespaces.aat}startLine`) })
 		.filter((triple) => {
+			const hasRelativePath = graph.has(
+				rdf12Triple(
+					triple.subject,
+					iriTerm(`${namespaces.aat}relativePath`),
+					stringLiteral(relativePath),
+				),
+			);
 			const endLine = graph.match({
 				subject: triple.subject,
 				predicate: iriTerm(`${namespaces.aat}endLine`),
 			})[0]?.object.value;
 
-			return Number(triple.object.value) <= line && Number(endLine) >= line;
+			return (
+				hasRelativePath &&
+				Number(triple.object.value) <= line &&
+				Number(endLine) >= line
+			);
 		})
 		.map((triple) => triple.subject.value);
 }
