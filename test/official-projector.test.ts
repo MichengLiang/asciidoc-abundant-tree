@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
+import { scanInlineOccurrencesInOfficialBlocks } from "../src/inline-occurrence-scanner";
 import type { SectionNode } from "../src/model";
 import {
 	projectOfficialDocument,
@@ -60,6 +61,214 @@ describe("official-projector helpers", () => {
 		expect(projected.targets.map((target) => target.id)).toEqual([
 			"first-id",
 			"second-id",
+		]);
+	});
+});
+
+describe("official table inline scanning", () => {
+	it("skips tables without official row groups or usable cells", () => {
+		const tableBlock = {
+			getContext: () => "table",
+			getRows: () => ({
+				head: "not rows",
+				body: [["not a cell"], "not a row"],
+			}),
+		} satisfies AsciidoctorBlock;
+		const intervalByBlock = new WeakMap([
+			[
+				tableBlock,
+				{
+					blockStartLine: 1,
+					metadata: [],
+					contentSpan: { startLine: 1, endLine: 2 },
+					span: { startLine: 1, endLine: 2 },
+					diagnostics: [],
+				},
+			],
+		]);
+
+		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			lineTable: buildLineTable("<<not-cell>>\n<<also-not-cell>>\n"),
+			blockSurfaces: [
+				{
+					block: tableBlock,
+					context: "table",
+					nodeName: "table",
+					level: undefined,
+					title: undefined,
+					id: undefined,
+					sourceLine: 1,
+					children: [],
+					indexInParent: 0,
+				},
+			],
+			intervalByBlock,
+		});
+
+		expect(xrefOccurrences).toEqual([]);
+	});
+
+	it("scans only official table cell ranges, not delimiter or separator source lines", () => {
+		const tableBlock = {
+			getContext: () => "table",
+			getRows: () => ({
+				head: [],
+				foot: [],
+				body: [
+					[
+						{
+							getLineNumber: () => 4,
+							getLines: () => ["cell <<cell>>"],
+						},
+					],
+				],
+			}),
+		} satisfies AsciidoctorBlock;
+		const intervalByBlock = new WeakMap([
+			[
+				tableBlock,
+				{
+					blockStartLine: 1,
+					metadata: [],
+					contentSpan: { startLine: 2, endLine: 5 },
+					span: { startLine: 1, endLine: 6 },
+					diagnostics: [],
+				},
+			],
+		]);
+
+		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			lineTable: buildLineTable(
+				[
+					"|===",
+					"|=== <<delimiter>>",
+					"| header <<header>>",
+					"cell <<cell>>",
+					"|=== <<separator>>",
+					"|===",
+				].join("\n"),
+			),
+			blockSurfaces: [
+				{
+					block: tableBlock,
+					context: "table",
+					nodeName: "table",
+					level: undefined,
+					title: undefined,
+					id: undefined,
+					sourceLine: 1,
+					children: [],
+					indexInParent: 0,
+				},
+			],
+			intervalByBlock,
+		});
+
+		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual(["<<cell>>"]);
+	});
+
+	it("deduplicates same-line table cells and recurses through asciidoc cell containers", () => {
+		const tableBlock = {
+			getContext: () => "table",
+			getRows: () => ({
+				head: [],
+				foot: [],
+				body: [
+					[
+						{
+							getLineNumber: () => 1,
+							getLines: () => ["left <<same-line>>"],
+						},
+						{
+							getLineNumber: () => 1,
+							getLines: () => ["right"],
+						},
+					],
+					[
+						{
+							getInnerDocument: () => ({
+								getBlocks: () => [
+									{
+										getContext: () => "section",
+										getBlocks: () => [
+											{
+												getContext: () => "paragraph",
+												getSource: () => "section paragraph <<inner-section>>",
+												getSourceLocation: () => ({
+													getLineNumber: () => 3,
+												}),
+											},
+										],
+									},
+									{
+										getContext: () => "open",
+										getBlocks: () => [
+											{
+												getContext: () => "paragraph",
+												getSource: () => "open paragraph <<inner-open>>",
+												getSourceLocation: () => ({
+													getLineNumber: () => 4,
+												}),
+											},
+										],
+									},
+									{
+										getContext: () => "listing",
+										getSource: () => "<<skip-listing>>",
+										getSourceLocation: () => ({
+											getLineNumber: () => 5,
+										}),
+									},
+								],
+							}),
+						},
+					],
+				],
+			}),
+		} satisfies AsciidoctorBlock;
+		const intervalByBlock = new WeakMap([
+			[
+				tableBlock,
+				{
+					blockStartLine: 1,
+					metadata: [],
+					contentSpan: { startLine: 1, endLine: 5 },
+					span: { startLine: 1, endLine: 5 },
+					diagnostics: [],
+				},
+			],
+		]);
+
+		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			lineTable: buildLineTable(
+				[
+					"left <<same-line>> right",
+					"not in any official cell <<outside>>",
+					"section paragraph <<inner-section>>",
+					"open paragraph <<inner-open>>",
+					"<<skip-listing>>",
+				].join("\n"),
+			),
+			blockSurfaces: [
+				{
+					block: tableBlock,
+					context: "table",
+					nodeName: "table",
+					level: undefined,
+					title: undefined,
+					id: undefined,
+					sourceLine: 1,
+					children: [],
+					indexInParent: 0,
+				},
+			],
+			intervalByBlock,
+		});
+
+		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual([
+			"<<same-line>>",
+			"<<inner-section>>",
+			"<<inner-open>>",
 		]);
 	});
 });

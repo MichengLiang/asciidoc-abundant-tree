@@ -1,6 +1,7 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import type {
 	AnchorOccurrenceNode,
+	LineSpan,
 	SectionNode,
 	SourceSpan,
 	XrefOccurrenceNode,
@@ -9,7 +10,7 @@ import { definedObject } from "./object-utils";
 import type { OfficialBlockSurface } from "./official-block-walker";
 import type { SourceInterval } from "./source-interval-resolver";
 import type { LineRange, LineTable, SourceLine } from "./source-lines";
-import { lineText, sourceSpanForRange } from "./source-lines";
+import { sourceSpanForRange } from "./source-lines";
 
 const shorthandXrefPattern = /<<([^>,]+)(?:,\s*([^>]+))?>>/gu;
 const macroXrefPattern = /xref:([^\s[]+)\[([^\]]*)\]/gu;
@@ -220,30 +221,28 @@ function scanInlineRange(
 function scanTableInlineRange(
 	lineTable: LineTable,
 	block: AsciidoctorBlock,
-	startLine: number,
-	endLine: number,
+	_startLine: number,
+	_endLine: number,
 	xrefOccurrences: XrefOccurrenceNode[],
 	anchorOccurrences: AnchorOccurrenceNode[],
 ): void {
-	scanInlineRange(
-		lineTable,
-		startLine,
-		endLine,
-		xrefOccurrences,
-		anchorOccurrences,
-		collectTableInnerSkipRanges(block, lineTable),
-	);
+	for (const range of mergeLineSpans(collectTableScannableRanges(block))) {
+		scanInlineRange(
+			lineTable,
+			range.startLine,
+			range.endLine,
+			xrefOccurrences,
+			anchorOccurrences,
+		);
+	}
 }
 
-function collectTableInnerSkipRanges(
-	block: AsciidoctorBlock,
-	lineTable: LineTable,
-): LineRange[] {
+function collectTableScannableRanges(block: AsciidoctorBlock): LineSpan[] {
 	const rows = block.getRows?.();
 	if (!isRecord(rows)) {
 		return [];
 	}
-	const ranges: LineRange[] = [];
+	const ranges: LineSpan[] = [];
 	for (const groupName of ["head", "body", "foot"]) {
 		const group = rows[groupName];
 		if (!Array.isArray(group)) {
@@ -254,9 +253,7 @@ function collectTableInnerSkipRanges(
 				continue;
 			}
 			for (const cell of row) {
-				for (const innerBlock of innerBlocksFromCell(cell)) {
-					collectNonScannableRanges(innerBlock, lineTable, ranges);
-				}
+				ranges.push(...scannableRangesFromCell(cell));
 			}
 		}
 	}
@@ -271,6 +268,28 @@ type InnerBlock = {
 		getLineNumber?: () => number | undefined;
 	};
 };
+
+type TableCell = {
+	getInnerDocument?: () => { getBlocks?: () => InnerBlock[] } | undefined;
+	getLineNumber?: () => number | undefined;
+	getLines?: () => string[] | undefined;
+	getStyle?: () => string | undefined;
+};
+
+function scannableRangesFromCell(cell: unknown): LineSpan[] {
+	if (!isRecord(cell)) {
+		return [];
+	}
+	const innerBlocks = innerBlocksFromCell(cell);
+	if (innerBlocks.length > 0) {
+		const ranges: LineSpan[] = [];
+		for (const innerBlock of innerBlocks) {
+			collectScannableInnerBlockRanges(innerBlock, ranges);
+		}
+		return ranges;
+	}
+	return ordinaryCellRange(cell);
+}
 
 function innerBlocksFromCell(cell: unknown): InnerBlock[] {
 	if (!isRecord(cell) || typeof cell.getInnerDocument !== "function") {
@@ -287,34 +306,40 @@ function innerBlocksFromCell(cell: unknown): InnerBlock[] {
 	return Array.isArray(blocks) ? (blocks as InnerBlock[]) : [];
 }
 
-function collectNonScannableRanges(
+function ordinaryCellRange(cell: TableCell): LineSpan[] {
+	const startLine = cell.getLineNumber?.();
+	if (startLine === undefined) {
+		return [];
+	}
+	const lines = cell.getLines?.();
+	const lineCount = Array.isArray(lines) ? Math.max(1, lines.length) : 1;
+	return [{ startLine, endLine: startLine + lineCount - 1 }];
+}
+
+function collectScannableInnerBlockRanges(
 	block: InnerBlock,
-	lineTable: LineTable,
-	ranges: LineRange[],
+	ranges: LineSpan[],
 ): void {
 	const context = block.getContext?.();
-	if (!shouldScanInlineContext(context) && context !== "open") {
-		const range = sourceRangeForInnerBlock(block, lineTable);
+	if (context === "paragraph") {
+		const range = sourceRangeForInnerBlock(block);
 		if (range) {
 			ranges.push(range);
 		}
+		return;
+	}
+	if (context !== "open" && context !== "section") {
+		return;
 	}
 	for (const child of block.getBlocks?.() ?? []) {
-		collectNonScannableRanges(child, lineTable, ranges);
+		collectScannableInnerBlockRanges(child, ranges);
 	}
 }
 
-function sourceRangeForInnerBlock(
-	block: InnerBlock,
-	lineTable: LineTable,
-): LineRange | undefined {
+function sourceRangeForInnerBlock(block: InnerBlock): LineSpan | undefined {
 	const startLine = block.getSourceLocation?.()?.getLineNumber?.();
 	if (startLine === undefined) {
 		return undefined;
-	}
-	const delimited = delimitedRangeFromOfficialAnchor(lineTable, startLine);
-	if (delimited) {
-		return delimited;
 	}
 	const source = block.getSource?.();
 	if (source === undefined) {
@@ -326,20 +351,21 @@ function sourceRangeForInnerBlock(
 	};
 }
 
-function delimitedRangeFromOfficialAnchor(
-	lineTable: LineTable,
-	startLine: number,
-): LineRange | undefined {
-	const opening = lineText(lineTable, startLine).trim();
-	if (!["----", "```", "....", "++++", "--"].includes(opening)) {
-		return undefined;
-	}
-	for (let line = startLine + 1; line <= lineTable.lines.length; line += 1) {
-		if (lineText(lineTable, line).trim() === opening) {
-			return { startLine, endLine: line };
+function mergeLineSpans(ranges: LineSpan[]): LineSpan[] {
+	const sorted = [...ranges].sort(
+		(left, right) =>
+			left.startLine - right.startLine || left.endLine - right.endLine,
+	);
+	const merged: LineSpan[] = [];
+	for (const range of sorted) {
+		const previous = merged.at(-1);
+		if (!previous || range.startLine > previous.endLine + 1) {
+			merged.push({ ...range });
+			continue;
 		}
+		previous.endLine = Math.max(previous.endLine, range.endLine);
 	}
-	return { startLine, endLine: startLine };
+	return merged;
 }
 
 function isLineInRanges(line: number, ranges: LineRange[]): boolean {
