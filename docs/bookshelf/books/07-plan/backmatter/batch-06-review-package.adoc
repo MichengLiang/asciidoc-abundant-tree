@@ -1,0 +1,140 @@
+[#batch-06-review-package]
+== Batch 06 审核包
+
+=== Batch
+
+[horizontal]
+批次编号:: `Batch 06`
+批次名称:: `xref relation 与 RDF 1.2 reifier`
+
+=== Commit
+
+[horizontal]
+实现提交 hash:: `af45e34723e122e00c543a8fc44a951b7f6224b6`
+修复提交 hash:: `4b9a885c7a13737ee385915d5d71e4af2a7b8cd5`
+提交信息:: `feat: project rdf12 xref reifiers`；`fix: cover indexed rdf12 xref occurrences`
+
+=== Scope
+
+本批完成对象：
+
+* `aat:XrefOccurrence` resource。
+* xref source selector、target selector、source/target binding 和 candidate nodes。
+* relation predicate mapping。
+* asserted relation triple。
+* RDF 1.2 `rdf:reifies` triple term。
+* xref display label with legal xref owner。
+* `rel` 和 `payload` control field extraction。
+
+本批未处理对象：
+
+* payload block projection 与 payload binding。
+* ordinary surface attribute projection。
+* Batch 07 及后续对象。
+
+=== Files Changed
+
+[cols="1,3", options="header"]
+|===
+|路径 |作用
+
+|`src/rdf12-projection/xref-projector.ts`
+|投影 xref occurrence resources、selector bindings、control fields、relation triples 和 reifiers。
+
+|`src/rdf12-projection/relation-predicate.ts`
+|实现 relation predicate mapping。
+
+|`src/rdf12-projection/reifier.ts`
+|写入 `rdf:reifies` triple term。
+
+|`src/rdf12-projection/projector.ts`
+|在 label catalog 之后接入 xref projection。
+
+|`test/rdf12-projection/xref-projector.test.ts`
+|覆盖 local、external、unresolved、ambiguous、rel/payload control 和 indexed xref cases。
+
+|`test/rdf12-projection/reifier.test.ts`
+|覆盖 triple term reifier 和 duplicate relation dedupe。
+
+|`test/rdf12-projection/relation-predicate.test.ts`
+|覆盖 default、absolute IRI、CURIE、ordinary token 和 invalid rel mapping。
+
+|`test/rdf12-projection/containment.test.ts`
+|维护 Batch 04 containment 测试，使其允许 Batch 06 xref resource 但仍禁止 containment 偷连。
+
+|`test/rdf12-projection/labels.test.ts`
+|维护 Batch 05 display label 测试，使其要求合法 xref owner。
+|===
+
+=== Required Context Read
+
+06 号书原文：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/10-xref-occurrence-and-reification.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/07-label-and-selector-model.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/11-surface-attributes.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/13-projection-algorithm.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/15-invariants-and-acceptance.adoc`
+
+代码入口：
+
+* `src/model.ts`
+* `src/inline-occurrence-scanner.ts`
+* `src/binding-merge.ts`
+* `samples/reference-links.adoc`
+* `samples/interdocument-xref.adoc`
+* `spike/n3-rdf12-reifier-probe.ts`
+* `spike/n3-rdf12-parser-negative-probe.ts`
+
+=== Acceptance Evidence
+
+[cols="2,1,3", options="header"]
+|===
+|命令 |结果 |摘要
+
+|`pnpm test -- test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts`
+|PASS
+|24 个 test files、160 个 tests 通过；包含 Batch 06 xref/reifier/predicate tests。
+
+|`pnpm typecheck`
+|PASS
+|`tsc --noEmit` 通过。
+
+|`pnpm lint`
+|PASS
+|Biome 检查 118 个文件，无需修复。
+
+|`git diff -- src/inline-occurrence-scanner.ts src/binding-merge.ts src/parser.ts`
+|PASS
+|禁止路径无差异。
+|===
+
+=== Contract Checklist
+
+* [x] 每个 indexed `XrefOccurrenceNode` 均可生成 `aat:XrefOccurrence` resource。
+* [x] 同一 xref object 同时出现在 index 和 children 时不会重复投影。
+* [x] xref resource 保留 syntax、raw、target selector、source location 和 columns。
+* [x] `containingSectionId` 保留为 `aat:sourceSelector` 并参与 binding。
+* [x] unique source/target binding 输出 sourceNode/targetNode。
+* [x] unresolved target 不输出 targetNode、relation triple 或 reifier。
+* [x] ambiguous target 输出 candidateNode，不输出 single targetNode 或 reifier。
+* [x] external xref 保留 selector，不创建 local target node。
+* [x] display label owned by xref occurrence, not document/source/target node。
+* [x] `rdf:reifies` object 是 project graph triple term，不是 string literal。
+* [x] duplicate asserted relation triple 去重，同时保留 multiple reifiers。
+* [x] `payload` control field 只输出 selector，不执行 payload binding。
+* [x] 本批没有修改 parser、inline scanner 或 binding merge。
+
+=== Reviewer Decision
+
+[horizontal]
+审核结论:: `通过`
+审核者:: `Codex principal coordinator`
+审核时间:: `2026-05-28 01:47:03 +0800`
+打回项:: `none`
+
+审核证据:: 审核者独立检查 xref projector、relation predicate、reifier、indexed occurrence 修复和全局打回条件；审核者独立运行 Batch 06 tests、typecheck、lint 和禁止路径检查，均为 PASS。
+
+=== Reviewer Notes
+
+* `relation-predicate.ts` currently treats any syntactically scheme-like value such as `foo:bar` as an absolute IRI. This matches the current absolute-IRI branch but should be rechecked if later specs require unknown CURIE suppression distinct from generic IRI schemes.

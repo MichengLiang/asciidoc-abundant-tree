@@ -51,10 +51,10 @@
 
 |06
 |xref relation 与 RDF 1.2 reifier
-|未开始
-|
-|
-|
+|通过
+|`af45e34723e122e00c543a8fc44a951b7f6224b6` + `4b9a885c7a13737ee385915d5d71e4af2a7b8cd5`
+|通过
+|审核包见 xref:batch-06-review-package[Batch 06 审核包]。
 
 |07
 |surface attribute 与 payload block
