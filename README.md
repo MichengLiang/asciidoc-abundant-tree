@@ -21,9 +21,9 @@ The pretty tree format is designed for terminal reading. Its shape is intentiona
 - Xref occurrence records that keep raw target text, labels, local/external/unresolved scope, containing section, and resolved target kind.
 - Official Asciidoctor binding data for xrefs: `href`, `resolvedId`, `resolvedType`, and `reftext`.
 - Pretty tree output for terminal inspection and JSON output for automation.
-- RDF 1.2 Turtle output through the single `rdf12` projection for graph-based source queries.
+- RDF 1.2 graph and Turtle output through the single `rdf12` projection for source-aware graph queries and line-based edit loops.
 
-The primary artifact is the TypeScript object. Pretty text and JSON are projections of the same parsed document.
+The primary artifact is the TypeScript object. Pretty text, JSON, and RDF 1.2 Turtle are projections of the same parsed document.
 
 ## Documentation
 
@@ -31,7 +31,7 @@ The primary artifact is the TypeScript object. Pretty text and JSON are projecti
 - RDF 1.2 line projection specification: [AsciiDoc `AbundantDocument` 到 RDF 1.2 行级结构图投影规约](https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html)
 - Source: [`docs/bookshelf`](./docs/bookshelf/)
 
-The RDF 1.2 projection book specifies graph projection from the `AbundantDocument` model. It is separate from the npm package runtime API.
+The RDF 1.2 projection book specifies the graph vocabulary and query contract used by the package runtime. The public runtime surface exposes that projection through the `rdf12(document, options)` API and CLI `--format rdf12`.
 
 ## When To Use It
 
@@ -51,6 +51,15 @@ It is especially useful when a tool needs to answer questions such as:
 - Which section contains this occurrence?
 - What did Asciidoctor resolve this xref to?
 - What source text produced this block or metadata layer?
+- Which RDF resources and reified relations represent the same source interval, xref occurrence, or authored surface?
+
+## RDF 1.2 Projection
+
+The `rdf12` projection derives an RDF 1.2 graph from an `AbundantDocument`. The source document remains the fact source, `AbundantDocument` is the input contract, and the RDF graph is the queryable projection.
+
+Projection resources use deterministic IRIs generated from the document coordinate system, not author strings. Titles, explicit IDs, generated IDs, anchor IDs, xref display labels, and xref targets are represented as labels or selectors. Query code can use the label catalog to find resources, then read `relativePath`, `startLine`, and `endLine` for source inspection or patching.
+
+The graph includes source document provenance, structural resources, direct containment, label resources, selector binding, xref occurrence resources, RDF 1.2 reifiers for resolved xref relations, surface attributes, and payload block resources. Xref occurrences keep raw selectors and official Asciidoctor evidence separately. Payload blocks keep opaque source text and content line spans; the projection does not interpret JSON, YAML, TOML, XML, or other payload formats.
 
 ## Current Boundaries
 

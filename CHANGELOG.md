@@ -4,6 +4,23 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.1.2 - 2026-05-28
+
+### Added
+
+- Completed the RDF 1.2 projection surface from graph primitives through public runtime access.
+- Projected identity coordinates, source provenance, structural resources, label catalogs, xref relation reifiers, surface attributes, and opaque payload source text.
+- Serialized RDF 1.2 Turtle output with triple-term `rdf:reifies` objects through both the `rdf12(document, options)` API and CLI `--format rdf12`.
+- Added query-contract acceptance coverage for the completed RDF projection.
+
+### Changed
+
+- Updated README documentation to describe RDF 1.2 projection as a runtime package capability rather than only a specification artifact.
+
+### Fixed
+
+- Stabilized RDF 1.2 graph ordering, helper label ownership, payload label identity, and indexed xref occurrence coverage.
+
 ## 0.1.1 - 2026-05-28
 
 ### Added
