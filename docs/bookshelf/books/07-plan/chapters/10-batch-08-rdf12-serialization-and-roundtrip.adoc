@@ -1,0 +1,142 @@
+[#batch-08-rdf12-serialization-and-roundtrip]
+== Batch 08：RDF 1.2 serialization 与 roundtrip
+
+=== 批次目标
+
+本批把项目 graph 序列化为 Turtle 1.2，并建立 parse-back graph 语义测试。
+
+本批引入 N3 作为 Turtle 1.2 serializer 和 parser backend。本批不暴露 N3 Store 作为 public API。
+
+=== 上游门槛
+
+* Batch 07 状态为 `通过`。
+* Batch 07 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+本批执行者必须阅读以下规约原文：
+
+* xref:../06-rdf12-line-projection/book.adoc#rdf-coordinate-system[RDF 坐标]
+* xref:../06-rdf12-line-projection/book.adoc#xref-occurrence-and-reification[Xref Occurrence 与 Reification]
+* xref:../06-rdf12-line-projection/book.adoc#invariants-and-acceptance[不变量与验收]
+
+本批执行者必须阅读以下代码和研究文件：
+
+* `src/rdf12-projection/graph.ts`
+* `src/rdf12-projection/terms.ts`
+* `spike/n3-rdf12-reifier-probe.ts`
+* `spike/n3-rdf12-edge-probe.ts`
+* `spike/n3-rdf12-parser-negative-probe.ts`
+
+=== 输入事实
+
+* Turtle 文本是 RDF graph 的序列化。
+* 验收比较 RDF graph 语义，不比较 Turtle 排版。
+* N3 运行时可以写出、解析和 roundtrip Turtle 1.2 triple term。
+* `@types/n3` 类型表面必须封装在 adapter 边界内。
+
+=== 输出承诺
+
+本批输出：
+
+[source,typescript]
+----
+function serializeRdf12ProjectionToTurtle(
+	projection: Rdf12Projection,
+): string
+----
+
+Turtle output 必须满足以下规则：
+
+* 输出 prefix declarations。
+* 输出 IRI terms。
+* 输出 plain string literals。
+* 输出 xsd integer literals。
+* 输出 triple terms。
+* 使用 `rdf:reifies <<( ... )>>` 表达 reifier。
+* 对同一 graph 输入生成稳定文本。
+
+=== 文件边界
+
+修改：
+
+* `package.json`
+* `pnpm-lock.yaml`
+
+创建：
+
+* `src/rdf12-projection/n3-adapter.ts`
+* `src/rdf12-projection/turtle-serializer.ts`
+* `src/rdf12-projection/graph-canonicalization.ts`
+* `test/rdf12-projection/turtle-serializer.test.ts`
+* `test/rdf12-projection/roundtrip.test.ts`
+
+不得修改：
+
+* `src/cli.ts`
+* `src/index.ts`
+
+=== 实施任务
+
+. 添加 `n3` runtime dependency。
+. 添加 `@types/n3` dev dependency。
+. 实现 project graph 到 N3 term 的转换。
+. 实现测试用 N3 term 到 project graph 的转换。
+. 实现 Turtle serializer。
+. 实现测试用 parse-back helper。
+. 实现 graph semantic comparison helper。
+. 在 serialization 前实现 deterministic graph ordering。
+
+=== 测试任务
+
+. Basic graph 可以序列化为 Turtle。
+. Turtle 可以解析回等价 graph。
+. `rdf:reifies` object parses back as triple term。
+. String literal fake reifier does not satisfy triple term assertion。
+. xsd integer literal roundtrips。
+. Chinese string literal roundtrips。
+. Multiline source text literal roundtrips。
+. Quote and backslash escaping roundtrips。
+. Same graph serializes twice to same text。
+
+=== 验收标准
+
+* `rdf:reifies` parse-back object termType is `Quad` at N3 adapter boundary.
+* Project public graph type 保持项目自有。
+* N3 Store does not appear in `src/index.ts` exported contract.
+* Turtle output 可以由使用 `format: "text/turtle"` 的 N3 parser 解析。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/turtle-serializer.test.ts test/rdf12-projection/roundtrip.test.ts
+pnpm typecheck
+pnpm lint
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add package.json pnpm-lock.yaml src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: serialize rdf12 projections as turtle" -- package.json pnpm-lock.yaml src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查：
+
+* `n3` 是 runtime dependency。
+* `@types/n3` 是 dev dependency。
+* N3 usage confined to adapter/serializer/test boundary。
+* Reifier 语义测试把 Turtle 解析回 triple term。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* Turtle output 无法 parse back。
+* Reifier object is string literal。
+* Serializer output order changes between runs。
+* N3 Store becomes public projection contract。

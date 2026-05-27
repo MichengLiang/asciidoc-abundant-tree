@@ -1,0 +1,147 @@
+[#batch-11-final-gates-and-release-evidence]
+== Batch 11：最终门禁与完成证据
+
+=== 批次目标
+
+本批运行最终工程门禁，更新用户文档，整理完成证据。
+
+本批不新增 RDF projection behavior。本批发现行为缺陷时，缺陷修复必须回到对应批次文件边界并形成独立修复提交。
+
+=== 上游门槛
+
+* Batch 10 状态为 `通过`。
+* Batch 10 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+本批执行者必须阅读以下规约原文：
+
+* xref:../06-rdf12-line-projection/book.adoc#invariants-and-acceptance[不变量与验收]
+
+本批执行者必须阅读以下项目文档：
+
+* `docs/asciidoc-abundant-tree 工程实现规约.md`
+* `docs/asciidoc-abundant-tree 验收标准与黑盒测试.md`
+* `README.md`
+* `CHANGELOG.md`
+* `package.json`
+
+=== 输入事实
+
+* 项目局部门禁定义在工程实现规约和验收标准中。
+* README 是 public usage 文档。
+* npm package exports 必须包含 public API type declarations。
+
+=== 输出承诺
+
+本批必须运行：
+
+[source,bash]
+----
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm pack:check
+pnpm smoke:cli
+----
+
+`smoke:cli` 必须覆盖 `rdf12`。若现有 script 只覆盖 JSON，本批必须修改 smoke script 或新增 smoke script，使 CLI RDF 1.2 输出进入最终门禁。
+
+README 必须说明：
+
+* CLI `--format rdf12`。
+* TypeScript `rdf12` public API。
+* `rdf12` result contains graph and ttl。
+* Turtle 1.2 output contains RDF 1.2 reifier semantics。
+* Projection does not lint, does not validate cross-file targets, does not interpret payload raw。
+
+最终完成证据必须记录：
+
+* 每批 commit hash。
+* 每批审核结论。
+* 最终验证命令。
+* 每个命令结果。
+* 未运行命令及原因。
+* 剩余非目标。
+
+=== 文件边界
+
+修改：
+
+* `README.md`
+* `CHANGELOG.md`，仅当 release entry 必须存在时修改。
+* `package.json`，仅当 smoke script 变化时修改。
+* `docs/bookshelf/books/07-plan/backmatter/batch-status-ledger.adoc`
+
+不得修改：
+
+* `src/rdf12-projection/` behavior files, except through defect-specific commits tied to earlier batch scope.
+
+=== 实施任务
+
+. Update README CLI section.
+. Update README library API section.
+. 在 release entry 必须存在时更新 release notes。
+. Ensure smoke CLI covers `rdf12`.
+. Run final verification commands.
+. Record command results.
+. Fill batch status ledger.
+. Assemble final review package.
+
+=== 测试任务
+
+. `pnpm smoke:cli` executes `rdf12` output path.
+. `pnpm pack:check` confirms exported types.
+. 构建后的 package 暴露 `rdf12`。
+
+=== 验收标准
+
+* 所有 final verification commands 通过。
+* README public surface matches implementation.
+* Batch status ledger contains hash and review result for every batch.
+* Final review package contains actual command results.
+* 计划路径外没有未解释的 untracked implementation files。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm pack:check
+pnpm smoke:cli
+git status --short
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add README.md docs/bookshelf/books/07-plan
+git commit --only -m "docs: document rdf12 projection completion" -- README.md docs/bookshelf/books/07-plan
+----
+
+`CHANGELOG.md` 或 `package.json` 发生修改时，必须加入 `git add` 和 `git commit --only` 的路径列表。未修改的路径不得出现在提交命令中。
+
+=== 审核规则
+
+审核者必须检查：
+
+* 每个 final command 都有 output status 记录。
+* `rdf12` appears in README CLI and library examples.
+* README does not claim JSON-LD output.
+* Package build includes `rdf12` type declarations.
+* `git status --short` has no unexplained files.
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* A final verification command was not run and is recorded as pass.
+* README describes a public format other than `rdf12` for RDF output.
+* `smoke:cli` does not cover `rdf12`.
+* Batch status ledger lacks a commit hash.
+* Final report omits a failed command.

@@ -1,0 +1,179 @@
+[#batch-06-xref-relations-and-reifiers]
+== Batch 06：xref relation 与 RDF 1.2 reifier
+
+=== 批次目标
+
+本批完整投影 xref occurrence、source node、target node、relation predicate、relation triple 和 RDF 1.2 reifier。
+
+本批不投影 payload block。本批只提取 xref `payload` selector 字段，不执行 payload binding。
+
+=== 上游门槛
+
+* Batch 05 状态为 `通过`。
+* Batch 05 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+本批执行者必须阅读以下规约原文：
+
+* xref:../06-rdf12-line-projection/book.adoc#xref-occurrence-and-reification[Xref Occurrence 与 Reification]
+* xref:../06-rdf12-line-projection/book.adoc#label-and-selector-model[Label 与 Selector 模型]
+* xref:../06-rdf12-line-projection/book.adoc#surface-attributes[Surface Attribute]
+* xref:../06-rdf12-line-projection/book.adoc#projection-algorithm[投影算法]
+* xref:../06-rdf12-line-projection/book.adoc#invariants-and-acceptance[不变量与验收]
+
+本批执行者必须阅读以下代码和研究文件：
+
+* `src/model.ts`
+* `src/inline-occurrence-scanner.ts`
+* `src/binding-merge.ts`
+* `samples/reference-links.adoc`
+* `samples/interdocument-xref.adoc`
+* `spike/n3-rdf12-reifier-probe.ts`
+* `spike/n3-rdf12-parser-negative-probe.ts`
+
+=== 输入事实
+
+* 每个 `XrefOccurrenceNode` 必须生成 `aat:XrefOccurrence` resource。
+* Xref occurrence 保留 raw、target selector、display label、attributes、source span 和 official evidence。
+* `containingSectionId` 是 source selector。
+* `target` 是 target selector。
+* Source node、predicate IRI 和 target node 都确定时，projection graph 生成 relation triple 和 reifier。
+
+=== 输出承诺
+
+Xref resource 必须输出：
+
+* `rdf:type aat:XrefOccurrence`
+* `aat:syntax`
+* `aat:raw`
+* `aat:targetSelector`
+* `aat:relativePath`
+* `aat:startLine`
+* `aat:endLine`
+* `sourceSpan` 存在时输出 `aat:startColumn` 和 `aat:endColumn`。
+* `containingSectionId` 存在时输出 `aat:sourceSelector`。
+* source binding 唯一时输出 `aat:sourceNode`。
+* target binding 唯一时输出 `aat:targetNode`。
+* target binding 多义时输出 `aat:candidateNode`。
+* official href 存在时输出 `aat:officialHref`。
+* official resolved id 存在时输出 `aat:officialResolvedId`。
+* official resolved type 存在时输出 `aat:officialResolvedType`。
+* official reftext 存在时输出 `aat:officialReftext`。
+* `rel` 存在时输出 `aat:rawRel`。
+* `payload` 存在时输出 `aat:payloadSelector`。
+
+Display label 必须生成 `aat:XrefDisplayLabel`。
+
+Predicate mapping：
+
+. no `rel` -> `aat:references`。
+. absolute IRI -> that IRI。
+. known CURIE -> expanded IRI。
+. ordinary token -> `rel:` namespace IRI-safe encoding。
+. unmappable value -> preserve `aat:rawRel` and do not generate relation triple。
+
+Relation rule：
+
+. source node、predicate IRI 和 target node 都存在时，assert relation triple。
+. 成功生成 relation triple 的 xref resource 使用 `rdf:reifies` 指向对应 triple term。
+. duplicate asserted relation triple is stored once。
+. multiple xref resources can reify the same triple term。
+
+=== 文件边界
+
+创建：
+
+* `src/rdf12-projection/xref-projector.ts`
+* `src/rdf12-projection/relation-predicate.ts`
+* `src/rdf12-projection/reifier.ts`
+* `test/rdf12-projection/xref-projector.test.ts`
+* `test/rdf12-projection/reifier.test.ts`
+* `test/rdf12-projection/relation-predicate.test.ts`
+
+修改：
+
+* `src/rdf12-projection/projector.ts`
+* `src/rdf12-projection/labels.ts`
+* `src/rdf12-projection/selector-binding.ts`
+
+不得修改：
+
+* `src/inline-occurrence-scanner.ts`
+* `src/binding-merge.ts`
+* `src/parser.ts`
+
+=== 实施任务
+
+. 实现 xref resource identity。
+. 写入 xref source location。
+. 写入 xref raw surface triples。
+. 写入 official evidence triples。
+. 生成 xref display label。
+. 绑定 source selector。
+. 绑定 target selector。
+. 实现 relation predicate mapping。
+. 实现 `rel` control field handling。
+. 实现 `payload` control field extraction。
+. 创建 asserted relation triple。
+. 创建 reifier triple term。
+. 接入 graph 去重。
+
+=== 测试任务
+
+. `<<3. 核心引擎设计>>` 生成 xref occurrence resource。
+. 该 resource 保留 `targetSelector = "3. 核心引擎设计"`。
+. 该 resource 默认使用 `aat:references`。
+. 该 xref 绑定 source section 和 target section。
+. graph 包含 asserted relation triple。
+. xref resource `rdf:reifies` object 是 triple term。
+. interdocument xref 不生成 local target node。
+. unresolved xref 不生成 relation triple。
+. multi-binding xref 输出 candidate nodes，不输出 target node。
+. `rel=depends-on` 映射到 `rel:depends-on`。
+. `payload=...` 输出 `aat:payloadSelector`。
+. `rel` 和 `payload` 不作为 ordinary surface attributes。
+
+=== 验收标准
+
+* 每个 input xref occurrence 都有 xref resource。
+* 所有 xref resource 有 relative path 和 line span。
+* `rdf:reifies` 指向 triple term。
+* official evidence 不覆盖 raw target selector。
+* relation triple 只在 source、predicate、target 全部确定时生成。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts
+pnpm typecheck
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: project rdf12 xref reifiers" -- src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查：
+
+* Reifier object 是 graph triple term。
+* Unbound selector 没有 target node。
+* Multi-binding selector 没有 single target node。
+* `rel` mapping 没有业务语义判断。
+* Xref attribute 控制字段与 ordinary attribute 分离。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* `rdf:reifies` object 是 string literal。
+* target unresolved 时生成 relation triple。
+* source binding 不唯一时生成 relation triple。
+* official evidence 覆盖 raw target。
+* `rel` 被解释成业务 class。

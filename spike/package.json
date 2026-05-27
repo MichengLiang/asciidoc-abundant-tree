@@ -1,0 +1,19 @@
+{
+	"name": "rdf12-projection-spike",
+	"private": true,
+	"type": "module",
+	"dependencies": {
+		"n3": "^2.0.3"
+	},
+	"devDependencies": {
+		"@types/n3": "1.26.1",
+		"@types/node": "^24.12.2",
+		"tsx": "^4.21.0",
+		"typescript": "^6.0.3"
+	},
+	"scripts": {
+		"probe:n3": "tsx n3-rdf12-reifier-probe.ts",
+		"probe:n3:edges": "tsx n3-rdf12-edge-probe.ts",
+		"probe:n3:negative": "tsx n3-rdf12-parser-negative-probe.ts"
+	}
+}

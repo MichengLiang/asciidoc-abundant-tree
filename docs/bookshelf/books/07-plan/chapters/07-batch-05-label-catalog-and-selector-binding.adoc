@@ -1,0 +1,156 @@
+[#batch-05-label-catalog-and-selector-binding]
+== Batch 05：label catalog 与 selector binding
+
+=== 批次目标
+
+本批创建 label resources、label catalog 和 selector binding。
+
+本批不生成 xref relation triple。本批不生成 payload binding。
+
+=== 上游门槛
+
+* Batch 04 状态为 `通过`。
+* Batch 04 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+本批执行者必须阅读以下规约原文：
+
+* xref:../06-rdf12-line-projection/book.adoc#label-and-selector-model[Label 与 Selector 模型]
+* xref:../06-rdf12-line-projection/book.adoc#structural-resources[结构资源]
+* xref:../06-rdf12-line-projection/book.adoc#input-contract[输入契约]
+* xref:../06-rdf12-line-projection/book.adoc#invariants-and-acceptance[不变量与验收]
+
+本批执行者必须阅读以下代码：
+
+* `src/model.ts`
+* `src/metadata-parser.ts`
+* `src/binding-merge.ts`
+* `test/official-projector.test.ts`
+
+=== 输入事实
+
+* Label 是源文档表面中的可显示、可寻址或可查询字符串。
+* Selector 是 occurrence 或 binding 字段中用于寻找 target resource 的字符串。
+* Label 和 selector 都不是 resource identity。
+* `TargetNode` 是 selector binding 的辅助 catalog 条目。
+* `TargetNode` 不生成独立 target resource。
+
+=== 输出承诺
+
+本批输出 label class：
+
+* `aat:TitleLabel`
+* `aat:BlockTitleLabel`
+* `aat:AddressLabel`
+* `aat:GeneratedAddressLabel`
+* `aat:AnchorLabel`
+* `aat:ReftextLabel`
+* `aat:XrefDisplayLabel`
+* `aat:RoleLabel`
+
+每个 label resource 必须输出：
+
+* `rdf:value`
+* `aat:relativePath`
+* `aat:startLine`
+* `aat:endLine`
+
+所属 resource 必须通过 `aat:hasLabel` 指向 label resource。
+
+Selector binding 规则：
+
+. selector 与 label catalog 中一个 label value 唯一匹配时，selector 绑定到该 label 所属 resource。
+. selector 没有匹配时，selector 保留为 literal。
+. selector 匹配多个 resource 时，selector 保留为 literal，并输出 candidate nodes。
+
+=== 文件边界
+
+创建：
+
+* `src/rdf12-projection/labels.ts`
+* `src/rdf12-projection/label-catalog.ts`
+* `src/rdf12-projection/selector-binding.ts`
+* `test/rdf12-projection/labels.test.ts`
+* `test/rdf12-projection/selector-binding.test.ts`
+
+修改：
+
+* `src/rdf12-projection/projector.ts`
+* `src/rdf12-projection/structure-projector.ts`
+* `src/rdf12-projection/node-index.ts`
+
+不得修改：
+
+* `src/metadata-parser.ts`
+* `src/binding-merge.ts`
+* `src/parser.ts`
+
+=== 实施任务
+
+. 实现 label resource identity。
+. 实现 title label projection。
+. 实现 block title label projection。
+. 实现 address label projection。
+. 实现 generated address label projection。
+. 实现 anchor label projection。
+. 实现 reftext label projection。
+. 实现 role label projection。
+. 实现 label catalog。
+. 实现 `TargetNode` catalog supplementation。
+. 实现 selector binding result object。
+. 实现 candidate node emission helper。
+
+=== 测试任务
+
+. `_1_引言` 作为 `GeneratedAddressLabel` 可定位 section resource。
+. `section-basics` 作为 `AddressLabel` 可定位 section resource。
+. `3. 核心引擎设计` 作为 `TitleLabel` 可定位 section resource。
+. `engine-code` 作为 `AddressLabel` 可定位 listing resource。
+. `warning-text` 作为 `AnchorLabel` 可定位 anchor target resource。
+. role token 生成 `RoleLabel`。
+. 多义 selector 产生 candidate nodes。
+. 多义 selector 不产生 single target binding。
+. label resource IRI 不包含 label value。
+
+=== 验收标准
+
+* Label resource 均有 `rdf:value`。
+* 可回源 label resource 均有 line span。
+* `TargetNode` 不成为 projection resource。
+* selector binding 不执行 dead link 判断。
+* selector binding 不读取外部文件。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts
+pnpm typecheck
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: add rdf12 label catalog" -- src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查：
+
+* label 与 resource identity 分离。
+* selector 多匹配路径没有 target node。
+* `TargetNode` 只补充 catalog。
+* label source location 来自输入对象字段。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* label value 出现在 structure resource IRI 中。
+* `TargetNode` 被投影成独立 resource。
+* 多义 selector 选择第一个 candidate。
+* label resource 缺 source location。

@@ -1,0 +1,93 @@
+[#batch-status-ledger]
+== 批次状态台账
+
+本台账记录 RDF 1.2 行级投影器实施批次状态。状态只使用 `未开始`、`执行中`、`待审核`、`打回`、`通过`。
+
+[cols="1,3,1,2,1,3", options="header"]
+|===
+|Batch |对象 |状态 |提交 hash |审核结论 |备注
+
+|00
+|基线与 RDF 1.2 spike 归档
+|未开始
+|
+|
+|
+
+|01
+|RDF 1.2 graph primitives
+|未开始
+|
+|
+|
+
+|02
+|identity、path 与 projection options
+|未开始
+|
+|
+|
+
+|03
+|provenance 与 document resource
+|未开始
+|
+|
+|
+
+|04
+|结构资源与 containment
+|未开始
+|
+|
+|
+
+|05
+|label catalog 与 selector binding
+|未开始
+|
+|
+|
+
+|06
+|xref relation 与 RDF 1.2 reifier
+|未开始
+|
+|
+|
+
+|07
+|surface attribute 与 payload block
+|未开始
+|
+|
+|
+
+|08
+|RDF 1.2 serialization 与 roundtrip
+|未开始
+|
+|
+|
+
+|09
+|public `rdf12` API 与 CLI
+|未开始
+|
+|
+|
+
+|10
+|查询契约验收
+|未开始
+|
+|
+|
+
+|11
+|最终门禁与完成证据
+|未开始
+|
+|
+|
+|===

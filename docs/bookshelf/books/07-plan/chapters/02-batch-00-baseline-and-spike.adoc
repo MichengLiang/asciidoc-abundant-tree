@@ -1,0 +1,127 @@
+[#batch-00-baseline-and-spike]
+== Batch 00：基线与 RDF 1.2 spike 归档
+
+=== 批次目标
+
+本批归档 RDF 1.2 triple term 与 `rdf:reifies` spike 结论，固定正式实现的依赖事实和 public surface。
+
+本批不实现正式投影器。本批不修改 `src/rdf12-projection/`。本批不修改 CLI。
+
+=== 上游门槛
+
+* `spike/` 目录存在。
+* `src/rdf12-projection/` 是正式实现目录。
+* 当前工作树中与本批无关的修改已经排除。
+
+=== 本批上下文包
+
+本批执行者必须阅读以下规约原文：
+
+* xref:../06-rdf12-line-projection/book.adoc#rdf-coordinate-system[RDF 坐标]
+* xref:../06-rdf12-line-projection/book.adoc#xref-occurrence-and-reification[Xref Occurrence 与 Reification]
+* xref:../06-rdf12-line-projection/book.adoc#invariants-and-acceptance[不变量与验收]
+
+本批执行者必须阅读以下代码和研究文件：
+
+* `package.json`
+* `src/index.ts`
+* `src/cli.ts`
+* `spike/package.json`
+* `spike/n3-rdf12-reifier-probe.ts`
+* `spike/n3-rdf12-edge-probe.ts`
+* `spike/n3-rdf12-parser-negative-probe.ts`
+
+=== 输入事实
+
+* `n3@2.0.3` 可以写出 Turtle 1.2 `<<( ... )>>` triple term。
+* `n3@2.0.3` 可以解析 Turtle 1.2 triple term，并把 reifier object 还原为 `Quad`。
+* `N3.Store` 可以对重复 asserted relation triple 去重。
+* `N3.Store` 可以保留多个 xref occurrence reify 同一个 relation triple。
+* `n3@2.0.3` 没有内置 TypeScript declaration。
+* `@types/n3@1.26.1` 可以用于 strict TypeScript，但其类型表面对 RDF 1.2 triple term 不完全自然。
+
+=== 输出承诺
+
+本批必须把以下结论写入工程记录：
+
+* 正式实现使用项目自有 graph wrapper。
+* N3 只作为 Turtle 1.2 serialization 和 parse-back test backend。
+* 正式 public API 不暴露 N3 Store 作为核心 contract。
+* CLI 新 format 名称是 `rdf12`。
+* TypeScript public entry 名称是 `rdf12`。
+* `rdf12` public API 返回 graph object 和 Turtle 1.2 text。
+
+=== 文件边界
+
+创建：
+
+* `docs/bookshelf/books/07-plan/` 下本计划书文件。
+
+允许保留：
+
+* `spike/package.json`
+* `spike/pnpm-lock.yaml`
+* `spike/tsconfig.json`
+* `spike/*.ts`
+
+不得修改：
+
+* `src/rdf12-projection/`
+* `src/cli.ts`
+* `src/index.ts`
+* `src/parser.ts`
+
+=== 实施任务
+
+. 运行 RDF 1.2 reifier spike。
+. 运行 edge spike。
+. 运行 negative parser spike。
+. 运行 spike TypeScript typecheck。
+. 将 spike 结论写入本计划书。
+. 将 `rdf12` 入口规则写入 xref:execution-contract[执行契约]。
+
+=== 验收标准
+
+* `pnpm probe:n3` 成功。
+* `pnpm probe:n3:edges` 成功。
+* `pnpm probe:n3:negative` 成功。
+* `pnpm exec tsc --noEmit -p tsconfig.json` 在 `spike/` 下成功。
+* 本计划书记录 N3 运行能力和 TypeScript 类型风险。
+* 本计划书没有把 `rdf`、`ttl` 或 `turtle` 写成 CLI public format。
+
+=== 验证命令
+
+[source,bash]
+----
+cd spike
+pnpm probe:n3
+pnpm probe:n3:edges
+pnpm probe:n3:negative
+pnpm exec tsc --noEmit -p tsconfig.json
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add docs/bookshelf/books/07-plan spike
+git commit --only -m "docs: add rdf12 projection implementation plan" -- docs/bookshelf/books/07-plan spike
+----
+
+=== 审核规则
+
+审核者必须检查：
+
+* spike 输出证明 `rdf:reifies` object 是 triple term。
+* negative probe 证明 string literal reifier 不满足 graph 语义。
+* 本计划书固定 `rdf12` 作为唯一新 public format。
+* 本批没有正式投影器实现代码。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 没有 spike 命令证据。
+* 没有记录 `@types/n3` 类型风险。
+* 把 N3 Store 定为 public graph contract。
+* 暴露 `rdf`、`ttl` 或 `turtle` public format。

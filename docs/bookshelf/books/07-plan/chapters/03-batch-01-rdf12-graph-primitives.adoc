@@ -1,0 +1,143 @@
+[#batch-01-rdf12-graph-primitives]
+== Batch 01：RDF 1.2 graph primitives
+
+=== 批次目标
+
+本批创建项目自有 RDF 1.2 graph primitives。
+
+本批不读取 `AbundantDocument`。本批不创建 provenance。本批不输出 Turtle。本批不修改 CLI。
+
+=== 上游门槛
+
+* Batch 00 状态为 `通过`。
+* Batch 00 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+本批执行者必须阅读以下规约原文：
+
+* xref:../06-rdf12-line-projection/book.adoc#rdf-coordinate-system[RDF 坐标]
+* xref:../06-rdf12-line-projection/book.adoc#xref-occurrence-and-reification[Xref Occurrence 与 Reification]
+* xref:../06-rdf12-line-projection/book.adoc#invariants-and-acceptance[不变量与验收]
+
+本批执行者必须阅读以下代码和研究文件：
+
+* `spike/n3-rdf12-reifier-probe.ts`
+* `spike/n3-rdf12-edge-probe.ts`
+* `spike/n3-rdf12-parser-negative-probe.ts`
+* `src/model.ts`
+
+=== 输入事实
+
+* RDF projection graph 使用 IRI、literal 和 triple term。
+* Blank node 不作为 projection resource identity。
+* Xref reifier 必须指向 triple term。
+* 验收必须区分 triple term 和 string literal。
+
+=== 输出承诺
+
+本批输出内部 graph model：
+
+[source,typescript]
+----
+type Rdf12Term =
+	| Rdf12IriTerm
+	| Rdf12LiteralTerm
+	| Rdf12TripleTerm;
+
+type Rdf12Triple = {
+	subject: Rdf12IriTerm;
+	predicate: Rdf12IriTerm;
+	object: Rdf12Term;
+};
+----
+
+Graph 必须支持：
+
+* 添加 triple。
+* 查询 triple。
+* 判断 triple 是否存在。
+* 去重。
+* deterministic key。
+* stable ordering。
+
+Triple term key 必须递归包含 subject、predicate 和 object。String literal `<<( ... )>>` 不得与 triple term 共享 key。
+
+=== 文件边界
+
+创建：
+
+* `src/rdf12-projection/namespaces.ts`
+* `src/rdf12-projection/terms.ts`
+* `src/rdf12-projection/graph.ts`
+* `src/rdf12-projection/literals.ts`
+* `test/rdf12-projection/graph.test.ts`
+
+不得修改：
+
+* `src/parser.ts`
+* `src/cli.ts`
+* `src/index.ts`
+
+=== 实施任务
+
+. 定义 namespace constants：`aat`、`rel`、`rdf`、`rdfs`、`prov`、`dcterms`、`xsd`。
+. 定义 IRI term。
+. 定义 literal term。
+. 定义 triple term。
+. 定义 RDF triple。
+. 定义 graph set。
+. 定义 term key 和 triple key。
+. 定义 graph stable ordering。
+. 定义 string literal、integer literal、boolean literal helpers。
+
+=== 测试任务
+
+. ordinary triple 添加和查询。
+. literal triple 添加和查询。
+. triple term 作为 object 添加和查询。
+. 重复 triple 去重。
+. stable ordering 两次运行一致。
+. string literal `<<(s p o)>>` 不等于 triple term。
+
+=== 验收标准
+
+* 所有测试通过。
+* `terms.ts` 中 triple term 是结构对象。
+* `graph.ts` 不依赖对象引用地址判等。
+* `graph.ts` 不导出 N3 Store 作为项目 graph contract。
+* 本批没有 `AbundantDocument` 投影逻辑。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/graph.test.ts
+pnpm typecheck
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: add rdf12 graph primitives" -- src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查：
+
+* triple term 不是字符串。
+* graph 去重基于 canonical key。
+* stable ordering 测试存在。
+* N3 类型没有进入 public graph contract。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* reifier graph 能力只能通过字符串表达。
+* graph primitives 包含 `AbundantDocument` traversal。
+* graph primitives 直接暴露 N3 Store。
+* 没有 negative test 区分 string literal 与 triple term。

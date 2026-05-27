@@ -1,0 +1,70 @@
+[#review-package-template]
+== 阶段审核包模板
+
+每个批次完成后必须提交审核包。审核包使用本章结构。
+
+=== Batch
+
+[horizontal]
+批次编号:: `Batch XX`
+批次名称:: `<name>`
+
+=== Commit
+
+[horizontal]
+提交 hash:: `<hash>`
+提交信息:: `<message>`
+
+=== Scope
+
+本批完成对象：
+
+* `<object>`
+
+本批未处理对象：
+
+* `<object>`
+
+=== Files Changed
+
+[cols="1,3", options="header"]
+|===
+|路径 |作用
+|`<path>` |`<role>`
+|===
+
+=== Required Context Read
+
+06 号书原文：
+
+* `<xref>`
+
+代码入口：
+
+* `<path>`
+
+=== Acceptance Evidence
+
+[cols="2,1,3", options="header"]
+|===
+|命令 |结果 |摘要
+|`<command>` |`PASS/FAIL` |`<summary>`
+|===
+
+=== Contract Checklist
+
+* [ ] 本批没有越过文件边界。
+* [ ] 本批没有修改与批次无关的文件。
+* [ ] 本批没有引入全局打回条件。
+* [ ] 本批新增 public surface 与执行契约一致。
+* [ ] 本批测试覆盖章节验收标准。
+
+=== Reviewer Decision
+
+[horizontal]
+审核结论:: `通过` / `打回`
+审核者:: `<name>`
+审核时间:: `<date-time>`
+打回项:: `<items>`
+
+审核结论为 `打回` 时，下一批不得开始。打回项必须绑定文件、测试、规约条款或命令证据。
