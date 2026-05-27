@@ -11,6 +11,7 @@ import type {
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
+import { officialBlockPolicy } from "./official-block-policy";
 import type { OfficialBlockSurface } from "./official-block-walker";
 import { walkOfficialBlocks } from "./official-block-walker";
 import {
@@ -47,6 +48,16 @@ export function projectSourceSurfaces(options: {
 		}
 		intervalByBlock.set(surface.block, interval);
 		toolDiagnostics.push(...interval.diagnostics);
+		if (officialBlockPolicy(surface.context) === "diagnostic") {
+			toolDiagnostics.push(
+				definedObject({
+					level: "warning",
+					code: "official-block-context.unknown",
+					message: `Unknown official block context '${surface.context ?? "undefined"}' was skipped conservatively.`,
+					source: interval.sourceSpan,
+				}) as ToolDiagnostic,
+			);
+		}
 	}
 
 	const { sections, sectionByBlock } = buildSectionSurfaces(

@@ -7,6 +7,7 @@ import type {
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
+import { officialBlockPolicy } from "./official-block-policy";
 import type { OfficialBlockSurface } from "./official-block-walker";
 import type { SourceInterval } from "./source-interval-resolver";
 import type { LineRange, LineTable, SourceLine } from "./source-lines";
@@ -33,6 +34,9 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 		if (!interval) {
 			continue;
 		}
+		if (hasDiagnosticPolicyAncestor(surface)) {
+			continue;
+		}
 		if (interval.metadataSpan) {
 			scanAnchorRange(
 				options.lineTable,
@@ -42,7 +46,8 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 			);
 		}
 		const span = interval.contentSpan ?? interval.span;
-		if (!shouldScanInlineContext(surface.context)) {
+		const policy = officialBlockPolicy(surface.context);
+		if (policy !== "scan") {
 			continue;
 		}
 		if (surface.context === "table") {
@@ -69,6 +74,17 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 		xrefOccurrences: xrefOccurrences.sort(compareSourceSpans),
 		anchorOccurrences: anchorOccurrences.sort(compareSourceSpans),
 	};
+}
+
+function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
+	let current = surface.parent;
+	while (current) {
+		if (officialBlockPolicy(current.context) === "diagnostic") {
+			return true;
+		}
+		current = current.parent;
+	}
+	return false;
 }
 
 export function assignContainingSectionIds(
@@ -148,10 +164,6 @@ function compareSourceSpans(
 		(left.sourceSpan?.start.line ?? 0) - (right.sourceSpan?.start.line ?? 0) ||
 		(left.sourceSpan?.start.column ?? 0) - (right.sourceSpan?.start.column ?? 0)
 	);
-}
-
-function shouldScanInlineContext(context: string | undefined): boolean {
-	return context === "paragraph" || context === "table";
 }
 
 function scanInlineRange(

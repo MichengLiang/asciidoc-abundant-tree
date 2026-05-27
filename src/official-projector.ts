@@ -16,6 +16,7 @@ import type {
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
+import { officialBlockPolicy } from "./official-block-policy";
 import type { SourceInterval } from "./source-interval-resolver";
 import {
 	collectOccurrencesInLineRange,
@@ -112,6 +113,9 @@ function buildNode(
 	}
 	if (blockContext === "open" && line !== undefined) {
 		return buildOpenChildren(block, line, context);
+	}
+	if (officialBlockPolicy(blockContext) === "diagnostic") {
+		return undefined;
 	}
 	if (officialLine !== undefined) {
 		registerOfficialBlockTarget(context, block, {
