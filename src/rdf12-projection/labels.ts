@@ -8,6 +8,7 @@ import type {
 	SectionNode,
 	TableNode,
 	TargetNode,
+	XrefOccurrenceNode,
 } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
@@ -95,6 +96,9 @@ function projectNodeLabels(
 			break;
 		case "anchor":
 			projectAnchorLabels(context, node);
+			break;
+		case "xref":
+			projectXrefDisplayLabels(context, node);
 			break;
 		default:
 			break;
@@ -234,6 +238,22 @@ function projectAnchorLabels(
 			sourceSpan: node.sourceSpan,
 		});
 	}
+}
+
+function projectXrefDisplayLabels(
+	context: LabelProjectorContext,
+	node: XrefOccurrenceNode,
+): void {
+	if (node.label === undefined || node.sourceSpan === undefined) {
+		return;
+	}
+
+	addLabelResource(context, {
+		owner: context.documentIri,
+		labelClass: "XrefDisplayLabel",
+		value: node.label,
+		sourceSpan: node.sourceSpan,
+	});
 }
 
 function projectMetadataLabels(

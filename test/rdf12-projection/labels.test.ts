@@ -88,6 +88,37 @@ describe("rdf12 label projection", () => {
 		expectLabelHasSourceLocation(projection.graph, match.labels[0] ?? "", 2, 2);
 	});
 
+	it("projects xref display labels without creating xref relation resources", () => {
+		const projection = projectAbundantDocumentToRdf12(xrefDisplayDocument(), {
+			documentRoot: projectRoot,
+		});
+		const match = ownersForLabel(
+			projection.graph,
+			"XrefDisplayLabel",
+			"Display Label",
+		);
+
+		expect(match.owners).toEqual([projection.documentIri]);
+		expect(match.labels).toHaveLength(1);
+		expect(match.labels[0]).not.toContain("Display Label");
+		expectLabelHasSourceLocation(projection.graph, match.labels[0] ?? "", 3, 3);
+		expect(
+			projection.graph.match({
+				object: iriTerm(`${namespaces.aat}XrefOccurrence`),
+			}),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.rdf}reifies`),
+			}),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.aat}references`),
+			}),
+		).toHaveLength(0);
+	});
+
 	it("does not put label values into label or structure resource IRIs", () => {
 		const projection = referenceProjection();
 		const labels = [
@@ -232,6 +263,41 @@ function roleDocument(): AbundantDocument {
 								start: { line: 2, column: 1 },
 								end: { line: 2, column: 17 },
 							},
+						},
+					},
+				],
+			},
+		],
+		targets: [],
+		xrefOccurrences: [],
+		anchorOccurrences: [],
+		toolDiagnostics: [],
+	};
+}
+
+function xrefDisplayDocument(): AbundantDocument {
+	return {
+		kind: "document",
+		sourcePath: join(projectRoot, "samples/reference-links.adoc"),
+		mode: "single-file",
+		parser: { name: "@asciidoctor/core", version: "test" },
+		children: [
+			{
+				kind: "paragraph",
+				text: "See Display Label.",
+				source: {
+					span: { startLine: 3, endLine: 3 },
+				},
+				children: [
+					{
+						kind: "xref",
+						syntax: "shorthand",
+						raw: "<<target,Display Label>>",
+						target: "target",
+						label: "Display Label",
+						sourceSpan: {
+							start: { line: 3, column: 5 },
+							end: { line: 3, column: 28 },
 						},
 					},
 				],
