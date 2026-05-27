@@ -44,10 +44,10 @@
 
 |05
 |label catalog 与 selector binding
-|未开始
-|
-|
-|
+|通过
+|`140eb20c7fe8daffaf0aac813c07896900ebb981` + `fcf922d2793a71618df3c5a6ff6497cba0c4c16e` + `9fc360a429aa654c3d96b8f521a15bdba9752f03`
+|通过
+|审核包见 xref:batch-05-review-package[Batch 05 审核包]。两次修复补齐并收紧 `XrefDisplayLabel` owner 边界。
 
 |06
 |xref relation 与 RDF 1.2 reifier
