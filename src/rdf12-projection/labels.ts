@@ -189,11 +189,17 @@ function addOwnedLabelResource(
 		localId: (startLine, ordinal) =>
 			makeOwnedLabelLocalId({
 				ownerKind: input.ownerKind,
+				ownerLocalId: localIdFromResourceIri(input.owner),
 				labelClass: input.labelClass,
 				startLine,
 				ordinal,
 			}),
 	});
+}
+
+function localIdFromResourceIri(iri: Rdf12IriTerm): string {
+	const hashIndex = iri.value.lastIndexOf("#");
+	return hashIndex === -1 ? iri.value : iri.value.slice(hashIndex + 1);
 }
 
 function projectSectionLabels(

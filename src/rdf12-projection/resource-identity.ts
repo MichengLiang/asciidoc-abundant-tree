@@ -68,11 +68,12 @@ export function makeLabelLocalId(input: {
 
 export function makeOwnedLabelLocalId(input: {
 	readonly ownerKind: ResourceKind;
+	readonly ownerLocalId: string;
 	readonly labelClass: string;
 	readonly startLine: number;
 	readonly ordinal: number;
 }): string {
-	return `label-${input.ownerKind}-l${input.startLine}-${input.labelClass}-o${input.ordinal}`;
+	return `label-${input.ownerKind}-${input.ownerLocalId}-l${input.startLine}-${input.labelClass}-o${input.ordinal}`;
 }
 
 export function makeAttributeLocalId(input: {

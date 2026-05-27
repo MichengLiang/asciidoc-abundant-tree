@@ -129,6 +129,41 @@ describe("rdf12 xref projection", () => {
 		).toBe(false);
 	});
 
+	it("keeps same-line xref display labels distinct per occurrence owner", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			sameLineXrefLabelsDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const firstXref = resourceIri(projection.documentIri, "xref-l3-c1-o0");
+		const secondXref = resourceIri(projection.documentIri, "xref-l3-c12-o0");
+		const [firstLabel] = labelsForValue(
+			projection.graph,
+			"XrefDisplayLabel",
+			"A",
+		);
+		const [secondLabel] = labelsForValue(
+			projection.graph,
+			"XrefDisplayLabel",
+			"B",
+		);
+
+		expect(firstLabel).toBeDefined();
+		expect(secondLabel).toBeDefined();
+		expect(firstLabel).not.toBe(secondLabel);
+		expect(hasLabelOwner(projection.graph, firstXref, firstLabel ?? "")).toBe(
+			true,
+		);
+		expect(hasLabelOwner(projection.graph, secondXref, secondLabel ?? "")).toBe(
+			true,
+		);
+		expect(hasLabelOwner(projection.graph, firstXref, secondLabel ?? "")).toBe(
+			false,
+		);
+		expect(hasLabelOwner(projection.graph, secondXref, firstLabel ?? "")).toBe(
+			false,
+		);
+	});
+
 	it("keeps interdocument xrefs unbound without opening external files", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			parseAbundantTree({ sourcePath: interdocumentPath }),
@@ -306,6 +341,20 @@ function labelsForValue(
 		.map((triple) => triple.subject.value);
 }
 
+function hasLabelOwner(
+	graph: Rdf12Graph,
+	owner: string,
+	label: string,
+): boolean {
+	return graph.has(
+		rdf12Triple(
+			iriTerm(owner),
+			iriTerm(`${namespaces.aat}hasLabel`),
+			iriTerm(label),
+		),
+	);
+}
+
 function hasSelector(
 	graph: Rdf12Graph,
 	subject: string,
@@ -480,6 +529,44 @@ function relPayloadDocument(): AbundantDocument {
 				],
 			},
 		],
+	};
+}
+
+function sameLineXrefLabelsDocument(): AbundantDocument {
+	const firstXref = {
+		kind: "xref" as const,
+		syntax: "shorthand" as const,
+		raw: "<<missing-a,A>>",
+		target: "missing-a",
+		label: "A",
+		sourceSpan: {
+			start: { line: 3, column: 1 },
+			end: { line: 3, column: 14 },
+		},
+	};
+	const secondXref = {
+		kind: "xref" as const,
+		syntax: "shorthand" as const,
+		raw: "<<missing-b,B>>",
+		target: "missing-b",
+		label: "B",
+		sourceSpan: {
+			start: { line: 3, column: 12 },
+			end: { line: 3, column: 25 },
+		},
+	};
+
+	return {
+		...baseDocument(),
+		children: [
+			{
+				kind: "paragraph",
+				text: "two same-line xrefs",
+				source: { span: { startLine: 3, endLine: 3 } },
+				children: [firstXref, secondXref],
+			},
+		],
+		xrefOccurrences: [firstXref, secondXref],
 	};
 }
 
