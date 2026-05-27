@@ -86,8 +86,8 @@
 
 |11
 |最终门禁与完成证据
-|待审核
-|Batch 11 evidence commit 待生成；见本执行者最终报告。
-|待审核
-|审核包见 xref:batch-11-review-package[Batch 11 审核包]。本批只更新 public docs、smoke CLI 和完成证据，不修改 RDF projection behavior files。
+|通过
+|`fe638ace7f1bf03251888c0e79fc2991a5c86d94`
+|通过
+|审核包见 xref:batch-11-review-package[Batch 11 审核包]。最终门禁、package/type declaration、smoke CLI `rdf12` 和完成证据已验收；未修改 RDF projection behavior files。
 |===
