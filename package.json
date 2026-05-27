@@ -59,7 +59,7 @@
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
 		"pack:check": "pnpm build && publint && npm pack --dry-run",
-		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format json >/dev/null",
+		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format rdf12 >/dev/null",
 		"clean": "rm -rf dist coverage"
 	},
 	"dependencies": {

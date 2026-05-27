@@ -21,7 +21,7 @@ The pretty tree format is designed for terminal reading. Its shape is intentiona
 - Xref occurrence records that keep raw target text, labels, local/external/unresolved scope, containing section, and resolved target kind.
 - Official Asciidoctor binding data for xrefs: `href`, `resolvedId`, `resolvedType`, and `reftext`.
 - Pretty tree output for terminal inspection and JSON output for automation.
-- RDF 1.2 Turtle output through the `rdf12` projection for graph-based source queries.
+- RDF 1.2 Turtle output through the single `rdf12` projection for graph-based source queries.
 
 The primary artifact is the TypeScript object. Pretty text and JSON are projections of the same parsed document.
 
@@ -61,6 +61,7 @@ This package is intentionally narrow.
 - It does not validate interdocument xref targets by opening other files.
 - It does not expose a complete inline CST.
 - It does not lint prose style.
+- It does not interpret payload raw text or expand payload data into a business RDF graph.
 - It does not generate HTML, PDF, EPUB, or a static site.
 - It does not replace Asciidoctor; it uses Asciidoctor as the official parser and resolver layer.
 
@@ -119,6 +120,8 @@ RDF 1.2 output writes Turtle text directly to stdout:
 asciidoc-abundant-tree docs/index.adoc --format rdf12 > projection.ttl
 ```
 
+The CLI exposes only `rdf12` for RDF output. It does not accept `rdf`, `ttl`, or `turtle` as public format aliases.
+
 ## Library API
 
 ```ts
@@ -144,6 +147,8 @@ const ttl = projection.ttl;
 ```
 
 `parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.
+
+The public `rdf12(document, options)` call returns one projection result containing both `graph` and `ttl`. The `graph` is the project-owned RDF 1.2 graph model; the Turtle 1.2 text in `ttl` preserves RDF 1.2 reifier semantics by writing `rdf:reifies` objects as triple terms, not string literals. The projection is for source-aware query contracts: it records surface attributes and opaque payload source text, but it does not lint documents, validate cross-file targets, or interpret payload raw content.
 
 ## Object Layers
 
@@ -202,6 +207,7 @@ Run the CLI from source:
 ```bash
 pnpm dev samples/reference-links.adoc
 pnpm dev samples/reference-links.adoc --json
+pnpm dev samples/reference-links.adoc --format rdf12
 ```
 
 ## Release State
