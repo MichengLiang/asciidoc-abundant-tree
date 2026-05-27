@@ -140,6 +140,35 @@ export function addXrefDisplayLabelResource(input: {
 	);
 }
 
+export function addAddressLabelResource(input: {
+	readonly graph: Rdf12Graph;
+	readonly catalog: Rdf12LabelCatalog;
+	readonly baseIri: string;
+	readonly documentKey: string;
+	readonly relativePath: string;
+	readonly owner: Rdf12IriTerm;
+	readonly value: string;
+	readonly span: LineSpan;
+}): void {
+	const ordinalAllocator = createOrdinalAllocator();
+	addLabelResource(
+		{
+			graph: input.graph,
+			catalog: input.catalog,
+			baseIri: input.baseIri,
+			documentKey: input.documentKey,
+			relativePath: input.relativePath,
+			ordinalAllocator,
+		},
+		{
+			owner: input.owner,
+			labelClass: "AddressLabel",
+			value: input.value,
+			span: input.span,
+		},
+	);
+}
+
 function projectSectionLabels(
 	context: LabelProjectorContext,
 	node: SectionNode,

@@ -1,6 +1,6 @@
 import type { AbundantDocument, XrefOccurrenceNode } from "../model";
 import type { Rdf12Graph } from "./graph";
-import { rdf12Triple } from "./graph";
+import { rdf12TermKey, rdf12Triple } from "./graph";
 import type { Rdf12LabelCatalog } from "./label-catalog";
 import { addXrefDisplayLabelResource } from "./labels";
 import { stringLiteral } from "./literals";
@@ -28,19 +28,39 @@ export type ProjectXrefResourcesInput = {
 	readonly labelCatalog: Rdf12LabelCatalog;
 };
 
-type XrefProjectorContext = ProjectXrefResourcesInput & {
-	readonly ordinalAllocator: OrdinalAllocator;
+export type Rdf12XrefIndexEntry = {
+	readonly node: XrefOccurrenceNode;
+	readonly iri: Rdf12IriTerm;
 };
 
-export function projectXrefResources(input: ProjectXrefResourcesInput): void {
+export type Rdf12XrefIndex = {
+	get(node: XrefOccurrenceNode): Rdf12IriTerm | undefined;
+	entries(): readonly Rdf12XrefIndexEntry[];
+};
+
+type XrefProjectorContext = ProjectXrefResourcesInput & {
+	readonly ordinalAllocator: OrdinalAllocator;
+	readonly xrefIndex: MutableRdf12XrefIndex;
+};
+
+type MutableRdf12XrefIndex = Rdf12XrefIndex & {
+	set(entry: Rdf12XrefIndexEntry): void;
+};
+
+export function projectXrefResources(
+	input: ProjectXrefResourcesInput,
+): Rdf12XrefIndex {
 	const context: XrefProjectorContext = {
 		...input,
 		ordinalAllocator: createOrdinalAllocator(),
+		xrefIndex: createRdf12XrefIndex(),
 	};
 
 	for (const xref of collectXrefOccurrences(input.document)) {
 		projectXref(context, xref);
 	}
+
+	return context.xrefIndex;
 }
 
 function collectXrefOccurrences(
@@ -98,6 +118,7 @@ function projectXref(
 	}
 
 	const xrefIri = createXrefResource(context, xref);
+	context.xrefIndex.set({ node: xref, iri: xrefIri });
 	const sourceNode = writeSourceBinding(context, xrefIri, xref);
 	const targetNode = writeTargetBinding(context, xrefIri, xref);
 	const rawRel = stringAttribute(xref.attributes, "rel");
@@ -126,6 +147,31 @@ function projectXref(
 		context.graph.add(relation);
 		addReifierTriple(context.graph, xrefIri, relation);
 	}
+}
+
+function createRdf12XrefIndex(): MutableRdf12XrefIndex {
+	const iriByNode = new WeakMap<XrefOccurrenceNode, Rdf12IriTerm>();
+	const entries: Rdf12XrefIndexEntry[] = [];
+
+	return {
+		get(node) {
+			return iriByNode.get(node);
+		},
+		set(entry) {
+			if (iriByNode.has(entry.node)) {
+				return;
+			}
+			iriByNode.set(entry.node, entry.iri);
+			entries.push(entry);
+		},
+		entries() {
+			const entriesByIri = new Map<string, Rdf12XrefIndexEntry>();
+			for (const entry of entries) {
+				entriesByIri.set(rdf12TermKey(entry.iri), entry);
+			}
+			return [...entriesByIri.values()];
+		},
+	};
 }
 
 function createXrefResource(
