@@ -184,6 +184,33 @@ describe("rdf12 xref projection", () => {
 		).toHaveLength(0);
 	});
 
+	it("projects xref occurrences from the document-level xref index", () => {
+		const projection = projectAbundantDocumentToRdf12(indexedXrefDocument(), {
+			documentRoot: projectRoot,
+		});
+		const xref = onlyXref(projection.graph);
+
+		expectStringTriple(
+			projection.graph,
+			xref,
+			"targetSelector",
+			"indexed-target",
+		);
+		expectNumberTriple(projection.graph, xref, "startLine", 9);
+		expectNumberTriple(projection.graph, xref, "startColumn", 3);
+	});
+
+	it("deduplicates the same xref object appearing in index and children", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			indexedAndNestedSameObjectDocument(),
+			{ documentRoot: projectRoot },
+		);
+
+		expect(
+			resourcesOfType(projection.graph, `${namespaces.aat}XrefOccurrence`),
+		).toHaveLength(1);
+	});
+
 	it("emits candidates but no single target for multi-binding targets", () => {
 		const projection = projectAbundantDocumentToRdf12(ambiguousDocument(), {
 			documentRoot: projectRoot,
@@ -357,6 +384,44 @@ function unresolvedDocument(): AbundantDocument {
 				],
 			},
 		],
+	};
+}
+
+function indexedXrefDocument(): AbundantDocument {
+	return {
+		...baseDocument(),
+		xrefOccurrences: [indexedXref()],
+	};
+}
+
+function indexedAndNestedSameObjectDocument(): AbundantDocument {
+	const xref = indexedXref();
+	return {
+		...baseDocument(),
+		xrefOccurrences: [xref],
+		children: [
+			{
+				kind: "paragraph",
+				text: "Indexed and nested.",
+				source: { span: { startLine: 9, endLine: 9 } },
+				children: [xref],
+			},
+		],
+	};
+}
+
+function indexedXref(): NonNullable<
+	AbundantDocument["xrefOccurrences"][number]
+> {
+	return {
+		kind: "xref",
+		syntax: "shorthand",
+		raw: "<<indexed-target>>",
+		target: "indexed-target",
+		sourceSpan: {
+			start: { line: 9, column: 3 },
+			end: { line: 9, column: 21 },
+		},
 	};
 }
 

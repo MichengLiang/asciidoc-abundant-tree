@@ -38,12 +38,28 @@ export function projectXrefResources(input: ProjectXrefResourcesInput): void {
 		ordinalAllocator: createOrdinalAllocator(),
 	};
 
-	for (const xref of collectXrefOccurrences(input.document.children)) {
+	for (const xref of collectXrefOccurrences(input.document)) {
 		projectXref(context, xref);
 	}
 }
 
 function collectXrefOccurrences(
+	document: AbundantDocument,
+): XrefOccurrenceNode[] {
+	const seen = new Set<XrefOccurrenceNode>();
+	const xrefs: XrefOccurrenceNode[] = [];
+
+	for (const xref of document.xrefOccurrences) {
+		addXref(xrefs, seen, xref);
+	}
+	for (const xref of collectChildXrefOccurrences(document.children)) {
+		addXref(xrefs, seen, xref);
+	}
+
+	return xrefs;
+}
+
+function collectChildXrefOccurrences(
 	nodes: readonly AbundantDocument["children"][number][],
 ): XrefOccurrenceNode[] {
 	const xrefs: XrefOccurrenceNode[] = [];
@@ -53,11 +69,24 @@ function collectXrefOccurrences(
 			xrefs.push(node);
 		}
 		if (node.children !== undefined) {
-			xrefs.push(...collectXrefOccurrences(node.children));
+			xrefs.push(...collectChildXrefOccurrences(node.children));
 		}
 	}
 
 	return xrefs;
+}
+
+function addXref(
+	xrefs: XrefOccurrenceNode[],
+	seen: Set<XrefOccurrenceNode>,
+	xref: XrefOccurrenceNode,
+): void {
+	if (seen.has(xref)) {
+		return;
+	}
+
+	seen.add(xref);
+	xrefs.push(xref);
 }
 
 function projectXref(
