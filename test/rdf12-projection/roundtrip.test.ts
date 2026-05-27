@@ -1,0 +1,146 @@
+import { describe, expect, it } from "vitest";
+import {
+	createRdf12Graph,
+	rdf12Triple,
+	rdf12TripleTerm,
+} from "../../src/rdf12-projection/graph";
+import { assertRdf12GraphsEquivalent } from "../../src/rdf12-projection/graph-canonicalization";
+import {
+	integerLiteral,
+	stringLiteral,
+} from "../../src/rdf12-projection/literals";
+import {
+	parseTurtleToN3Quads,
+	parseTurtleToRdf12Graph,
+} from "../../src/rdf12-projection/n3-adapter";
+import { namespaces } from "../../src/rdf12-projection/namespaces";
+import type { Rdf12Projection } from "../../src/rdf12-projection/projector";
+import { iriTerm } from "../../src/rdf12-projection/terms";
+import { serializeRdf12ProjectionToTurtle } from "../../src/rdf12-projection/turtle-serializer";
+
+describe("rdf12 Turtle roundtrip", () => {
+	it("parses serialized Turtle back to an equivalent project graph", () => {
+		const projection = testProjection();
+		const parsed = parseTurtleToRdf12Graph(
+			serializeRdf12ProjectionToTurtle(projection),
+		);
+
+		expect(() =>
+			assertRdf12GraphsEquivalent(projection.graph, parsed),
+		).not.toThrow();
+	});
+
+	it("parses rdf:reifies objects back as triple terms at the adapter boundary", () => {
+		const [reifier] = parseTurtleToN3Quads(
+			serializeRdf12ProjectionToTurtle(testProjection()),
+		).filter((quad) => quad.predicate.value === `${namespaces.rdf}reifies`);
+
+		expect(reifier?.object.termType).toBe("Quad");
+	});
+
+	it("does not treat string literals that look like triple terms as reifier triple terms", () => {
+		const fake = `
+@prefix rdf: <${namespaces.rdf}> .
+<urn:aat:doc:test#xref-l1-c1-o0> rdf:reifies "<<(<urn:aat:doc:test#s> <${namespaces.aat}references> <urn:aat:doc:test#t>)>>" .
+`;
+		const [reifier] = parseTurtleToN3Quads(fake);
+
+		expect(reifier?.object.termType).toBe("Literal");
+	});
+
+	it("roundtrips xsd integer, Chinese, multiline, quote, and backslash literals", () => {
+		const projection = testProjection();
+		const parsed = parseTurtleToRdf12Graph(
+			serializeRdf12ProjectionToTurtle(projection),
+		);
+
+		expect(
+			parsed.has(
+				rdf12Triple(
+					iriTerm("urn:aat:doc:test#xref-l10-c60-o0"),
+					iriTerm(`${namespaces.aat}startLine`),
+					integerLiteral(10),
+				),
+			),
+		).toBe(true);
+		expect(
+			parsed.has(
+				rdf12Triple(
+					iriTerm("urn:aat:doc:test#label-l10-o0"),
+					iriTerm(`${namespaces.rdf}value`),
+					stringLiteral("3. 核心引擎设计"),
+				),
+			),
+		).toBe(true);
+		expect(
+			parsed.has(
+				rdf12Triple(
+					iriTerm("urn:aat:doc:test#payload-l20-o0"),
+					iriTerm(`${namespaces.aat}sourceText`),
+					stringLiteral('first line\nsecond "quoted" line \\ path'),
+				),
+			),
+		).toBe(true);
+	});
+});
+
+function testProjection(): Rdf12Projection {
+	const graph = createRdf12Graph();
+	const source = iriTerm("urn:aat:doc:test#section-l1-o0");
+	const target = iriTerm("urn:aat:doc:test#section-l3-o0");
+	const references = iriTerm(`${namespaces.aat}references`);
+	const xref = iriTerm("urn:aat:doc:test#xref-l10-c60-o0");
+	const relation = rdf12Triple(source, references, target);
+
+	graph.add(relation);
+	graph.add(
+		rdf12Triple(
+			xref,
+			iriTerm(`${namespaces.rdf}reifies`),
+			rdf12TripleTerm(relation),
+		),
+	);
+	graph.add(
+		rdf12Triple(
+			xref,
+			iriTerm(`${namespaces.aat}startLine`),
+			integerLiteral(10),
+		),
+	);
+	graph.add(
+		rdf12Triple(
+			iriTerm("urn:aat:doc:test#label-l10-o0"),
+			iriTerm(`${namespaces.rdf}value`),
+			stringLiteral("3. 核心引擎设计"),
+		),
+	);
+	graph.add(
+		rdf12Triple(
+			iriTerm("urn:aat:doc:test#payload-l20-o0"),
+			iriTerm(`${namespaces.aat}sourceText`),
+			stringLiteral('first line\nsecond "quoted" line \\ path'),
+		),
+	);
+
+	return {
+		graph,
+		prefixes: namespaces,
+		relativePath: "samples/reference-links.adoc",
+		documentIri: "urn:aat:doc:test#document",
+		sourceDocumentIri: "urn:aat:doc:test#source",
+		projectionIri: "urn:aat:doc:test#projection",
+		projectionActivityIri: "urn:aat:doc:test#activity",
+		abundantDocumentIri: "urn:aat:doc:test#abundant-document",
+		nodeIndex: {
+			get: () => undefined,
+			findByTarget: () => undefined,
+			entries: () => [],
+		},
+		labelCatalog: {
+			add: () => undefined,
+			find: () => [],
+			owners: () => [],
+			entries: () => [],
+		},
+	};
+}
