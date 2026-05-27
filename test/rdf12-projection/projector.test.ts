@@ -40,7 +40,7 @@ describe("rdf12 internal projector", () => {
 		).toBe(true);
 	});
 
-	it("does not project child structure or label resources in Batch 03", () => {
+	it("does not project label resources before the label batch", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			{
 				...emptyDocument(path.join(documentRoot, "docs", "with-child.adoc")),
@@ -64,21 +64,13 @@ describe("rdf12 internal projector", () => {
 
 		expect(
 			projection.graph.match({
-				object: iriTerm(`${namespaces.aat}Section`),
-			}),
-		).toHaveLength(0);
-		expect(
-			projection.graph.match({
 				object: iriTerm(`${namespaces.aat}TitleLabel`),
 			}),
 		).toHaveLength(0);
 		expect(
 			projection.graph.toArray().map((triple) => triple.subject.value),
 		).not.toEqual(
-			expect.arrayContaining([
-				expect.stringContaining("section-l12"),
-				expect.stringContaining("label-l12"),
-			]),
+			expect.arrayContaining([expect.stringContaining("label-l12")]),
 		);
 	});
 });

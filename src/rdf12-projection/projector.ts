@@ -2,6 +2,7 @@ import type { AbundantDocument } from "../model";
 import { addDocumentResourceTriples } from "./document-resource";
 import { createRdf12Graph, type Rdf12Graph } from "./graph";
 import { namespaces } from "./namespaces";
+import type { Rdf12NodeIndex } from "./node-index";
 import { normalizeRdf12Options, type Rdf12Options } from "./options";
 import { computePathCoordinate } from "./path-coordinate";
 import { addProvenanceTriples } from "./provenance";
@@ -13,6 +14,7 @@ import {
 	makeSourceLocalId,
 } from "./resource-identity";
 import { normalizeSourceDigest } from "./source-digest";
+import { projectStructureResources } from "./structure-projector";
 
 export type Rdf12PrefixMap = typeof namespaces;
 
@@ -25,6 +27,7 @@ export type Rdf12Projection = {
 	readonly projectionIri: string;
 	readonly projectionActivityIri: string;
 	readonly abundantDocumentIri: string;
+	readonly nodeIndex: Rdf12NodeIndex;
 };
 
 export function projectAbundantDocumentToRdf12(
@@ -79,6 +82,14 @@ export function projectAbundantDocumentToRdf12(
 		documentIri,
 		relativePath: coordinate.relativePath,
 	});
+	const nodeIndex = projectStructureResources({
+		graph,
+		document,
+		baseIri: normalizedOptions.baseIri,
+		documentKey: coordinate.documentKey,
+		documentIri,
+		relativePath: coordinate.relativePath,
+	});
 
 	return {
 		graph,
@@ -89,5 +100,6 @@ export function projectAbundantDocumentToRdf12(
 		projectionIri: projectionIri.value,
 		projectionActivityIri: projectionActivityIri.value,
 		abundantDocumentIri: abundantDocumentIri.value,
+		nodeIndex,
 	};
 }
