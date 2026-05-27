@@ -23,8 +23,10 @@ import type { Rdf12NodeIndex } from "./node-index";
 import {
 	createOrdinalAllocator,
 	makeLabelLocalId,
+	makeOwnedLabelLocalId,
 	makeResourceIri,
 	type OrdinalAllocator,
+	type ResourceKind,
 } from "./resource-identity";
 import { addLineSpanTriples, addSourceSpanTriples } from "./source-location";
 import { iriTerm, type Rdf12IriTerm } from "./terms";
@@ -122,7 +124,7 @@ export function addXrefDisplayLabelResource(input: {
 	readonly sourceSpan: SourceSpan;
 }): void {
 	const ordinalAllocator = createOrdinalAllocator();
-	addLabelResource(
+	addOwnedLabelResource(
 		{
 			graph: input.graph,
 			catalog: input.catalog,
@@ -133,6 +135,7 @@ export function addXrefDisplayLabelResource(input: {
 		},
 		{
 			owner: input.owner,
+			ownerKind: "xref",
 			labelClass: "XrefDisplayLabel",
 			value: input.value,
 			sourceSpan: input.sourceSpan,
@@ -151,7 +154,7 @@ export function addAddressLabelResource(input: {
 	readonly span: LineSpan;
 }): void {
 	const ordinalAllocator = createOrdinalAllocator();
-	addLabelResource(
+	addOwnedLabelResource(
 		{
 			graph: input.graph,
 			catalog: input.catalog,
@@ -162,11 +165,35 @@ export function addAddressLabelResource(input: {
 		},
 		{
 			owner: input.owner,
+			ownerKind: "payload",
 			labelClass: "AddressLabel",
 			value: input.value,
 			span: input.span,
 		},
 	);
+}
+
+function addOwnedLabelResource(
+	context: LabelWriterContext,
+	input: {
+		readonly owner: Rdf12IriTerm;
+		readonly ownerKind: ResourceKind;
+		readonly labelClass: Rdf12LabelClass;
+		readonly value: string;
+		readonly span?: LineSpan;
+		readonly sourceSpan?: NonNullable<MetadataNode["source"]>["sourceSpan"];
+	},
+): void {
+	addLabelResource(context, {
+		...input,
+		localId: (startLine, ordinal) =>
+			makeOwnedLabelLocalId({
+				ownerKind: input.ownerKind,
+				labelClass: input.labelClass,
+				startLine,
+				ordinal,
+			}),
+	});
 }
 
 function projectSectionLabels(
@@ -412,6 +439,7 @@ function addLabelResource(
 		readonly value: string;
 		readonly span?: LineSpan;
 		readonly sourceSpan?: NonNullable<MetadataNode["source"]>["sourceSpan"];
+		readonly localId?: (startLine: number, ordinal: number) => string;
 	},
 ): void {
 	if (input.span === undefined && input.sourceSpan === undefined) {
@@ -431,7 +459,9 @@ function addLabelResource(
 	const label = makeResourceIri({
 		baseIri: context.baseIri,
 		documentKey: context.documentKey,
-		localId: makeLabelLocalId({ startLine, ordinal }),
+		localId:
+			input.localId?.(startLine, ordinal) ??
+			makeLabelLocalId({ startLine, ordinal }),
 	});
 
 	context.graph.add(

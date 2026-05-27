@@ -44,6 +44,41 @@ describe("rdf12 payload projection", () => {
 		expect(payload ?? "").not.toContain("rel-delivery-capacity");
 	});
 
+	it("keeps payload address labels distinct from listing address labels", () => {
+		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
+			documentRoot: projectRoot,
+		});
+		const payload = payloadBySourceText(
+			projection.graph,
+			'{"reason":"risk-control"}',
+		);
+		const listing = resourceWithLocalId(
+			projection.documentIri,
+			"listing-l8-o0",
+		);
+		const labels = addressLabelsForValue(
+			projection.graph,
+			"rel-delivery-capacity",
+		);
+		const payloadLabels = labels.filter((label) =>
+			hasLabelOwner(projection.graph, payload ?? "", label),
+		);
+		const listingLabels = labels.filter((label) =>
+			hasLabelOwner(projection.graph, listing, label),
+		);
+
+		expect(labels).toHaveLength(2);
+		expect(payloadLabels).toHaveLength(1);
+		expect(listingLabels).toHaveLength(1);
+		expect(payloadLabels[0]).not.toBe(listingLabels[0]);
+		expect(
+			hasLabelOwner(projection.graph, listing, payloadLabels[0] ?? ""),
+		).toBe(false);
+		expect(
+			hasLabelOwner(projection.graph, payload ?? "", listingLabels[0] ?? ""),
+		).toBe(false);
+	});
+
 	it("does not parse payload raw fields into RDF triples", () => {
 		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
 			documentRoot: projectRoot,
@@ -368,7 +403,16 @@ function expectAddressLabel(
 	owner: string,
 	value: string,
 ): void {
-	const [label] = graph
+	const label = addressLabelsForValue(graph, value).find((candidate) =>
+		hasLabelOwner(graph, owner, candidate),
+	);
+
+	expect(label).toBeDefined();
+	expect(hasLabelOwner(graph, owner, label ?? "")).toBe(true);
+}
+
+function addressLabelsForValue(graph: Rdf12Graph, value: string): string[] {
+	return graph
 		.match({
 			predicate: iriTerm(`${namespaces.rdf}value`),
 			object: stringLiteral(value),
@@ -383,17 +427,20 @@ function expectAddressLabel(
 			),
 		)
 		.map((triple) => triple.subject.value);
+}
 
-	expect(label).toBeDefined();
-	expect(
-		graph.has(
-			rdf12Triple(
-				iriTerm(owner),
-				iriTerm(`${namespaces.aat}hasLabel`),
-				iriTerm(label ?? ""),
-			),
+function hasLabelOwner(
+	graph: Rdf12Graph,
+	owner: string,
+	label: string,
+): boolean {
+	return graph.has(
+		rdf12Triple(
+			iriTerm(owner),
+			iriTerm(`${namespaces.aat}hasLabel`),
+			iriTerm(label),
 		),
-	).toBe(true);
+	);
 }
 
 function expectStringTriple(
