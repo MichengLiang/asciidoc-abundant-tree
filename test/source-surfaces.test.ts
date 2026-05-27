@@ -262,6 +262,32 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.xrefOccurrences).toEqual([]);
 	});
 
+	it("joins sourceDirectory and relative sourceFile before external source checks", () => {
+		const paragraph = makeBlock("paragraph", 1, {
+			directory: "/virtual/include",
+			file: "included.adoc",
+			source: "External <<target>> should not be scanned.",
+		});
+		const lineTable = buildLineTable(
+			"External <<target>> should not be scanned.",
+		);
+
+		const surfaces = projectSourceSurfaces({
+			officialDocument: makeDocument([paragraph]),
+			lineTable,
+			sourcePath: "/virtual/main.adoc",
+		});
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "source-location.external-file",
+				message: expect.stringContaining("included.adoc"),
+			}),
+		]);
+		expect(surfaces.projectableBlocks.has(paragraph)).toBe(false);
+		expect(surfaces.xrefOccurrences).toEqual([]);
+	});
+
 	it("does not project unknown official block contexts into document children", () => {
 		const paragraph = makeBlock("paragraph", 2, {
 			source: "Nested paragraph should remain hidden.",

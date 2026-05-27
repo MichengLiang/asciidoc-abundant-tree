@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.1.3 - 2026-05-28
+
+### Added
+
+- Strengthened RDF 1.2 projection audit coverage for adapter rejection paths, language-tagged literal roundtrip, selector ambiguity, source-span boundaries, payload binding, relation predicate fallback, and source-surface diagnostics.
+- Added coverage for serializer edge behavior and source coordinate handling used by downstream RDF projection checks.
+
+### Changed
+
+- Documented coverage verification as part of the development gate for RDF projection releases.
+
 ## 0.1.2 - 2026-05-28
 
 ### Added

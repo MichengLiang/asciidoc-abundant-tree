@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../src/model";
 import {
 	formatAbundantTree,
+	serializeAbundantTree,
 	serializeAbundantTreeToJson,
 } from "../src/serializers";
 
@@ -131,5 +132,55 @@ describe("serializers", () => {
 
 		expect(json.xrefOccurrences[0]?.sourceSpan).toEqual(sourceSpan);
 		expect(json.xrefOccurrences[0]?.source?.sourceSpan).toEqual(sourceSpan);
+	});
+
+	it("serializes json format with a trailing newline", () => {
+		const output = serializeAbundantTree(document, "json");
+
+		expect(output.endsWith("\n")).toBe(true);
+		expect(JSON.parse(output).kind).toBe("document");
+	});
+
+	it("prints undefined scalar values explicitly in the pretty tree", () => {
+		const output = formatAbundantTree({
+			...document,
+			children: [
+				{
+					kind: "section",
+					level: 1,
+					ids: [],
+					title: "No origin",
+					idOrigin: "unknown",
+					line: undefined as unknown as number,
+				},
+			],
+		});
+
+		expect(output).toContain('title="No origin"');
+		expect(output).toContain("line=undefined");
+	});
+
+	it("uses the property label as headline for nested objects without kind", () => {
+		const output = formatAbundantTree({
+			...document,
+			children: [
+				{
+					kind: "paragraph",
+					text: "Bad span.",
+					source: {
+						raw: "Bad span.",
+						line: 1,
+						sourceSpan: {
+							start: { line: 1, column: 1 },
+							end: { line: 1, column: 10 },
+						},
+					},
+				},
+			],
+		});
+
+		expect(output).toContain("<sourceSpan>");
+		expect(output).toContain("<start column=1 line=1>");
+		expect(output).toContain('<source line=1 raw="Bad span.">');
 	});
 });

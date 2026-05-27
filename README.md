@@ -61,6 +61,8 @@ Projection resources use deterministic IRIs generated from the document coordina
 
 The graph includes source document provenance, structural resources, direct containment, label resources, selector binding, xref occurrence resources, RDF 1.2 reifiers for resolved xref relations, surface attributes, and payload block resources. Xref occurrences keep raw selectors and official Asciidoctor evidence separately. Payload blocks keep opaque source text and content line spans; the projection does not interpret JSON, YAML, TOML, XML, or other payload formats.
 
+Release validation covers the RDF projection with semantic graph comparison, Turtle roundtrip checks, selector ambiguity cases, source-span boundary cases, payload binding rules, relation predicate fallback, and CLI `rdf12` smoke output.
+
 ## Current Boundaries
 
 This package is intentionally narrow.
@@ -205,6 +207,7 @@ console.log(Object.fromEntries(byKind));
 ```bash
 pnpm install
 pnpm test
+pnpm test:coverage
 pnpm typecheck
 pnpm lint
 pnpm build
@@ -221,7 +224,7 @@ pnpm dev samples/reference-links.adoc --format rdf12
 
 ## Release State
 
-The package is usable for single-file source analysis and xref/target auditing. The object model is still small and conservative. Prefer pinning a minor version in production workflows and checking the JSON shape against your own fixtures before relying on it for large document systems.
+The package is usable for single-file source analysis, xref/target auditing, and RDF 1.2 line-level projection. The object model and RDF vocabulary are intentionally small and conservative. Prefer pinning a minor version in production workflows and checking the JSON and RDF shapes against your own fixtures before relying on it for large document systems.
 
 ## License
 

@@ -184,6 +184,39 @@ describe("rdf12 label projection", () => {
 				.some((subject) => subject.includes("#target")),
 		).toBe(false);
 	});
+
+	it("ignores target catalog supplementation without source spans", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			targetWithoutSourceSpanDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+
+		expect(projection.labelCatalog.owners("source-free-target")).toEqual([]);
+		expect(
+			ownersForLabel(projection.graph, "AddressLabel", "source-free-target")
+				.owners,
+		).toEqual([]);
+	});
+
+	it("does not invent source locations for generated ids without title spans", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			generatedIdWithoutTitleSpanDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+
+		expect(projection.labelCatalog.owners("_generated")).toEqual([]);
+		expect(
+			ownersForLabel(projection.graph, "GeneratedAddressLabel", "_generated"),
+		).toEqual({
+			value: "_generated",
+			labels: [],
+			owners: [],
+		});
+	});
 });
 
 function referenceProjection() {
@@ -332,6 +365,63 @@ function xrefDisplayDocument(): AbundantDocument {
 						},
 					},
 				],
+			},
+		],
+		targets: [],
+		xrefOccurrences: [],
+		anchorOccurrences: [],
+		toolDiagnostics: [],
+	};
+}
+
+function targetWithoutSourceSpanDocument(): AbundantDocument {
+	return {
+		kind: "document",
+		sourcePath: join(projectRoot, "samples/reference-links.adoc"),
+		mode: "single-file",
+		parser: { name: "@asciidoctor/core", version: "test" },
+		children: [
+			{
+				kind: "section",
+				level: 1,
+				ids: [],
+				title: "Targetless",
+				idOrigin: "unknown",
+				span: { startLine: 10, endLine: 12 },
+				titleSpan: {
+					start: { line: 10, column: 4 },
+					end: { line: 10, column: 14 },
+				},
+			},
+		],
+		targets: [
+			{
+				kind: "target",
+				id: "source-free-target",
+				targetType: "section",
+				idOrigin: "source",
+			},
+		],
+		xrefOccurrences: [],
+		anchorOccurrences: [],
+		toolDiagnostics: [],
+	};
+}
+
+function generatedIdWithoutTitleSpanDocument(): AbundantDocument {
+	return {
+		kind: "document",
+		sourcePath: join(projectRoot, "samples/reference-links.adoc"),
+		mode: "single-file",
+		parser: { name: "@asciidoctor/core", version: "test" },
+		children: [
+			{
+				kind: "section",
+				level: 1,
+				ids: ["_generated"],
+				title: "Generated",
+				idOrigin: "asciidoctor-generated",
+				span: { startLine: 20, endLine: 22 },
 			},
 		],
 		targets: [],

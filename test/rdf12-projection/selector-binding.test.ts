@@ -3,7 +3,10 @@ import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
-import { bindSelector } from "../../src/rdf12-projection/selector-binding";
+import {
+	bindSelector,
+	candidateNodesForSelector,
+} from "../../src/rdf12-projection/selector-binding";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
@@ -46,6 +49,12 @@ describe("rdf12 selector binding", () => {
 			]);
 			expect("target" in result).toBe(false);
 		}
+		expect(
+			candidateNodesForSelector(
+				projection.labelCatalog,
+				"duplicate-target",
+			).map((candidate) => candidate.value),
+		).toHaveLength(2);
 	});
 
 	it("uses TargetNode catalog supplementation without creating TargetNode resources", () => {
@@ -65,6 +74,20 @@ describe("rdf12 selector binding", () => {
 				.map((triple) => triple.subject.value)
 				.some((subject) => subject.includes("#target")),
 		).toBe(false);
+	});
+
+	it("throws when a catalog reports one candidate without an owner term", () => {
+		expect(() =>
+			bindSelector(
+				{
+					add: () => undefined,
+					find: () => [],
+					owners: () => [undefined] as never,
+					entries: () => [],
+				},
+				"broken-selector",
+			),
+		).toThrow(/unexpectedly empty/u);
 	});
 });
 

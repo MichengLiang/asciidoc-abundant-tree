@@ -35,4 +35,17 @@ describe("rdf12 relation predicate mapping", () => {
 			rawRel: "bad value",
 		});
 	});
+
+	it("preserves blank or padded rel values without predicate mapping", () => {
+		expect(mapRelationPredicate("", {})).toEqual({ rawRel: "" });
+		expect(mapRelationPredicate(" depends-on", {})).toEqual({
+			rawRel: " depends-on",
+		});
+	});
+
+	it("falls back from unknown CURIE-shaped rel values to absolute IRI handling", () => {
+		expect(mapRelationPredicate("urn:depends-on", {}).predicate?.value).toBe(
+			"urn:depends-on",
+		);
+	});
 });

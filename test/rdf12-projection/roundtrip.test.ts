@@ -1,3 +1,4 @@
+import { DataFactory, type Quad } from "n3";
 import { describe, expect, it } from "vitest";
 import {
 	createRdf12Graph,
@@ -10,6 +11,7 @@ import {
 	stringLiteral,
 } from "../../src/rdf12-projection/literals";
 import {
+	n3QuadsToRdf12Graph,
 	parseTurtleToN3Quads,
 	parseTurtleToRdf12Graph,
 } from "../../src/rdf12-projection/n3-adapter";
@@ -81,6 +83,80 @@ describe("rdf12 Turtle roundtrip", () => {
 				),
 			),
 		).toBe(true);
+	});
+
+	it("roundtrips language-tagged literals through the adapter boundary", () => {
+		const turtle = `
+@prefix rdf: <${namespaces.rdf}> .
+<urn:aat:doc:test#label-l1-o0> rdf:value "bonjour"@fr .
+`;
+
+		const parsed = parseTurtleToRdf12Graph(turtle);
+
+		expect(
+			parsed.has(
+				rdf12Triple(
+					iriTerm("urn:aat:doc:test#label-l1-o0"),
+					iriTerm(`${namespaces.rdf}value`),
+					{
+						termType: "literal",
+						value: "bonjour",
+						datatype: iriTerm(`${namespaces.rdf}langString`),
+						language: "fr",
+					},
+				),
+			),
+		).toBe(true);
+	});
+
+	it("rejects unsupported subject and predicate terms at the adapter boundary", () => {
+		const blankSubject = DataFactory.quad(
+			DataFactory.blankNode("subject"),
+			DataFactory.namedNode(`${namespaces.rdf}value`),
+			DataFactory.literal("value"),
+		);
+		const blankPredicate = DataFactory.quad(
+			DataFactory.namedNode("urn:aat:doc:test#subject"),
+			DataFactory.blankNode("predicate") as unknown as Quad["predicate"],
+			DataFactory.literal("value"),
+		);
+
+		expect(() => n3QuadsToRdf12Graph([blankSubject])).toThrow(
+			/Unsupported RDF subject term: BlankNode/u,
+		);
+		expect(() => n3QuadsToRdf12Graph([blankPredicate])).toThrow(
+			/Unsupported RDF predicate term: BlankNode/u,
+		);
+	});
+
+	it("rejects unsupported embedded triple subject and predicate terms", () => {
+		const embeddedBlankSubject = DataFactory.quad(
+			DataFactory.namedNode("urn:aat:doc:test#xref-l1-c1-o0"),
+			DataFactory.namedNode(`${namespaces.rdf}reifies`),
+			DataFactory.triple(
+				DataFactory.blankNode("embedded-subject"),
+				DataFactory.namedNode(`${namespaces.aat}references`),
+				DataFactory.namedNode("urn:aat:doc:test#target"),
+			) as unknown as Quad["object"],
+		);
+		const embeddedBlankPredicate = DataFactory.quad(
+			DataFactory.namedNode("urn:aat:doc:test#xref-l1-c1-o0"),
+			DataFactory.namedNode(`${namespaces.rdf}reifies`),
+			DataFactory.triple(
+				DataFactory.namedNode("urn:aat:doc:test#source"),
+				DataFactory.blankNode(
+					"embedded-predicate",
+				) as unknown as Quad["predicate"],
+				DataFactory.namedNode("urn:aat:doc:test#target"),
+			) as unknown as Quad["object"],
+		);
+
+		expect(() => n3QuadsToRdf12Graph([embeddedBlankSubject])).toThrow(
+			/Unsupported embedded subject term: BlankNode/u,
+		);
+		expect(() => n3QuadsToRdf12Graph([embeddedBlankPredicate])).toThrow(
+			/Unsupported embedded predicate term: BlankNode/u,
+		);
 	});
 });
 

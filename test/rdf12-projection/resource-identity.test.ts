@@ -27,6 +27,30 @@ describe("rdf12 resource identity", () => {
 		expect(options.relationPrefixMap).toEqual({});
 	});
 
+	it("rejects blank document roots", () => {
+		expect(() => normalizeRdf12Options({ documentRoot: "   " })).toThrow(
+			/RDF 1\.2 projection requires documentRoot/u,
+		);
+	});
+
+	it("preserves explicit optional projection options", () => {
+		const options = normalizeRdf12Options({
+			documentRoot: "/repo/docs",
+			baseIri: "https://example.test/doc/",
+			relationPrefixMap: { ex: "https://example.test/relation/" },
+			sourceText: "source",
+			sourceDigest: "sha256:manual",
+		});
+
+		expect(options).toEqual({
+			documentRoot: "/repo/docs",
+			baseIri: "https://example.test/doc/",
+			relationPrefixMap: { ex: "https://example.test/relation/" },
+			sourceText: "source",
+			sourceDigest: "sha256:manual",
+		});
+	});
+
 	it("does not create a source digest placeholder when absent", () => {
 		expect(normalizeSourceDigest({})).toBeUndefined();
 	});

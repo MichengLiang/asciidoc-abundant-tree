@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { AbundantDocument } from "../../src/model";
+import type { AbundantDocument, ListingNode } from "../../src/model";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
 	integerLiteral,
@@ -209,6 +209,54 @@ describe("rdf12 payload projection", () => {
 			}),
 		).toHaveLength(0);
 	});
+
+	it("ignores payload-role listings without a source span", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			payloadListingWithoutSpanDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+
+		expect(
+			resourcesOfType(projection.graph, `${namespaces.aat}PayloadBlock`),
+		).toHaveLength(0);
+	});
+
+	it("does not create fake xref payload bindings for ambiguous payload selectors", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			ambiguousXrefPayloadDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+		const xref = resourceOfType(
+			projection.graph,
+			`${namespaces.aat}XrefOccurrence`,
+		);
+
+		expect(
+			projection.graph.match({
+				subject: iriTerm(xref),
+				predicate: iriTerm(`${namespaces.aat}hasPayload`),
+			}),
+		).toHaveLength(0);
+	});
+
+	it("uses listing language as payload data format when no data attribute exists", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			languageFallbackPayloadDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+		const payload = resourceOfType(
+			projection.graph,
+			`${namespaces.aat}PayloadBlock`,
+		);
+
+		expectStringTriple(projection.graph, payload, "dataFormat", "yaml");
+	});
 });
 
 function payloadDocument(): AbundantDocument {
@@ -291,6 +339,65 @@ function unboundPayloadDocument(): AbundantDocument {
 	};
 }
 
+function payloadListingWithoutSpanDocument(): AbundantDocument {
+	const { span: _span, ...listingWithoutSpan } = payloadListing({
+		id: "spanless-payload",
+		role: "payload",
+		startLine: 30,
+		contentLine: 33,
+		sourceText: '{"span":false}',
+		attributes: {
+			forSelector: "delivery-policy",
+		},
+	});
+
+	return {
+		...payloadDocument(),
+		children: [listingWithoutSpan],
+		xrefOccurrences: [],
+	};
+}
+
+function ambiguousXrefPayloadDocument(): AbundantDocument {
+	const base = payloadDocument();
+	return {
+		...base,
+		children: [
+			...(base.children ?? []),
+			payloadListing({
+				id: "rel-delivery-capacity",
+				role: "xref-payload",
+				startLine: 30,
+				contentLine: 33,
+				sourceText: '{"duplicate":true}',
+				attributes: {
+					data: "json",
+				},
+			}),
+		],
+	};
+}
+
+function languageFallbackPayloadDocument(): AbundantDocument {
+	return {
+		...payloadDocument(),
+		children: [
+			{
+				...payloadListing({
+					id: "language-payload",
+					role: "payload",
+					startLine: 40,
+					contentLine: 43,
+					sourceText: "enabled: true",
+					attributes: {},
+				}),
+				language: "yaml",
+			},
+		],
+		xrefOccurrences: [],
+	};
+}
+
 function sectionNode(
 	startLine: number,
 	id: string,
@@ -328,7 +435,7 @@ function payloadListing(input: {
 	readonly contentLine: number;
 	readonly sourceText: string;
 	readonly attributes: Record<string, string>;
-}): AbundantDocument["children"][number] {
+}): ListingNode {
 	return {
 		kind: "listing",
 		ids: [input.id],
@@ -372,6 +479,15 @@ function resourceOfType(graph: Rdf12Graph, typeIri: string): string {
 		throw new Error(`expected resource of type ${typeIri}`);
 	}
 	return resource;
+}
+
+function resourcesOfType(graph: Rdf12Graph, typeIri: string): string[] {
+	return graph
+		.match({
+			predicate: iriTerm(`${namespaces.rdf}type`),
+			object: iriTerm(typeIri),
+		})
+		.map((triple) => triple.subject.value);
 }
 
 function payloadBySourceText(

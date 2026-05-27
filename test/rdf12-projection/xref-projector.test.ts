@@ -246,6 +246,16 @@ describe("rdf12 xref projection", () => {
 		).toHaveLength(1);
 	});
 
+	it("ignores xref occurrences without source spans", () => {
+		const projection = projectAbundantDocumentToRdf12(spanlessXrefDocument(), {
+			documentRoot: projectRoot,
+		});
+
+		expect(
+			resourcesOfType(projection.graph, `${namespaces.aat}XrefOccurrence`),
+		).toHaveLength(0);
+	});
+
 	it("emits candidates but no single target for multi-binding targets", () => {
 		const projection = projectAbundantDocumentToRdf12(ambiguousDocument(), {
 			documentRoot: projectRoot,
@@ -298,6 +308,26 @@ describe("rdf12 xref projection", () => {
 				subject: iriTerm(xref),
 				predicate: iriTerm(`${namespaces.aat}hasAttribute`),
 			}),
+		).toHaveLength(0);
+	});
+
+	it("preserves unmappable rel values without asserting a relation triple", () => {
+		const projection = projectAbundantDocumentToRdf12(invalidRelDocument(), {
+			documentRoot: projectRoot,
+		});
+		const xref = onlyXref(projection.graph);
+
+		expectStringTriple(projection.graph, xref, "rawRel", " bad rel ");
+		expect(
+			projection.graph.match({
+				subject: iriTerm(xref),
+				predicate: iriTerm(`${namespaces.rdf}reifies`),
+			}),
+		).toHaveLength(0);
+		expect(
+			projection.graph
+				.toArray()
+				.filter((triple) => triple.predicate.value.includes("bad rel")),
 		).toHaveLength(0);
 	});
 });
@@ -459,6 +489,20 @@ function indexedAndNestedSameObjectDocument(): AbundantDocument {
 	};
 }
 
+function spanlessXrefDocument(): AbundantDocument {
+	return {
+		...baseDocument(),
+		xrefOccurrences: [
+			{
+				kind: "xref",
+				syntax: "shorthand",
+				raw: "<<target>>",
+				target: "target",
+			},
+		],
+	};
+}
+
 function indexedXref(): NonNullable<
 	AbundantDocument["xrefOccurrences"][number]
 > {
@@ -524,6 +568,36 @@ function relPayloadDocument(): AbundantDocument {
 						sourceSpan: {
 							start: { line: 4, column: 1 },
 							end: { line: 4, column: 56 },
+						},
+					},
+				],
+			},
+		],
+	};
+}
+
+function invalidRelDocument(): AbundantDocument {
+	return {
+		...baseDocument(),
+		children: [
+			sectionNode(1, "target", "Target"),
+			{
+				kind: "paragraph",
+				text: "Invalid rel target.",
+				source: { span: { startLine: 4, endLine: 4 } },
+				children: [
+					{
+						kind: "xref",
+						syntax: "macro",
+						raw: "xref:target[Target, rel= bad rel ]",
+						target: "target",
+						label: "Target",
+						attributes: {
+							rel: " bad rel ",
+						},
+						sourceSpan: {
+							start: { line: 4, column: 1 },
+							end: { line: 4, column: 36 },
 						},
 					},
 				],

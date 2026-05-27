@@ -5,6 +5,7 @@ import {
 	rdf12TripleKey,
 	rdf12TripleTerm,
 } from "../../src/rdf12-projection/graph";
+import { assertRdf12GraphsEquivalent } from "../../src/rdf12-projection/graph-canonicalization";
 import {
 	booleanLiteral,
 	integerLiteral,
@@ -62,6 +63,7 @@ describe("rdf12 graph primitives", () => {
 				),
 			),
 		).toBe(true);
+		expect(booleanLiteral(false).value).toBe("false");
 	});
 
 	it("adds and queries triple terms as objects", () => {
@@ -143,6 +145,23 @@ describe("rdf12 graph primitives", () => {
 
 		expect(rdf12TermKey(tripleTerm)).not.toBe(
 			rdf12TermKey(stringLooksLikeTripleTerm),
+		);
+	});
+
+	it("reports canonical graph differences when semantic comparison fails", () => {
+		const left = createRdf12Graph([rdf12Triple(subject, predicate, target)]);
+		const right = createRdf12Graph([
+			rdf12Triple(subject, predicate, iriTerm("urn:aat:test#other-target")),
+		]);
+
+		expect(() => assertRdf12GraphsEquivalent(left, right)).toThrow(
+			/RDF graphs differ/u,
+		);
+	});
+
+	it("rejects non-integer values for xsd integer literals", () => {
+		expect(() => integerLiteral(1.5)).toThrow(
+			/RDF xsd:integer literal requires an integer/u,
 		);
 	});
 });
