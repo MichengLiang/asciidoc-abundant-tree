@@ -1,0 +1,151 @@
+[#batch-07-review-package]
+== Batch 07 审核包
+
+=== Batch
+
+[horizontal]
+批次编号:: `Batch 07`
+批次名称:: `surface attribute 与 payload block`
+
+=== Commit
+
+[horizontal]
+实现提交 hash:: `27a4e285ea29b5bae61e2b54d2f939cb87bc6d55`
+修复提交 hash:: `e61cfdc7e2cb9dafb59fef32aed54af871881139` + `b2c6804b1baa49c955eaefaf7a1eeb6d784c1ae1`
+提交信息:: `feat: project rdf12 attributes and payloads`；`fix: avoid rdf12 payload label collisions`；`fix: scope rdf12 helper label identity by owner`
+
+=== Scope
+
+本批完成对象：
+
+* metadata attrlist 字段投影为 `aat:SurfaceAttribute`。
+* xref ordinary named attributes 投影为 `aat:SurfaceAttribute`。
+* xref control fields `rel` 和 `payload` 不重复生成为 ordinary surface attributes。
+* 具有 `payload` 或 `xref-payload` role 的 listing 投影为 `aat:PayloadBlock`。
+* payload full line span、content line span、source text、data format 和 address label。
+* node payload `forSelector` unique binding。
+* xref payload selector unique binding，且只挂到 xref occurrence resource。
+* helper-created label resource identity 不与既有 label 或同线 xref display label 碰撞。
+
+本批未处理对象：
+
+* payload raw 内部格式解释。
+* 业务 RDF graph 生成。
+* Turtle 1.2 serialization 与 roundtrip。
+* public `rdf12` API 和 CLI。
+
+=== Files Changed
+
+[cols="1,3", options="header"]
+|===
+|路径 |作用
+
+|`src/rdf12-projection/attributes.ts`
+|投影 metadata attribute 和 xref ordinary attribute，写入 source location 并连接到所属 structure 或 xref occurrence resource。
+
+|`src/rdf12-projection/payload-projector.ts`
+|识别 payload roles，创建 payload resources，写入 payload spans、source text、format、labels 和 selector bindings。
+
+|`src/rdf12-projection/projector.ts`
+|在 xref projection 后接入 surface attribute 和 payload projection。
+
+|`src/rdf12-projection/xref-projector.ts`
+|暴露 xref index entries 供 Batch 07 surface attribute 和 xref payload binding 使用。
+
+|`src/rdf12-projection/labels.ts`
+|复用 label 写入逻辑，并为 helper-created payload address labels 和 xref display labels 使用 owner-scoped identity。
+
+|`src/rdf12-projection/resource-identity.ts`
+|新增 owner-scoped label local ID helper，作为打回修复的受审例外；该修改防止 Batch 07 helper labels 与既有 labels 或同线 xref display labels 合并。
+
+|`test/rdf12-projection/attributes.test.ts`
+|覆盖 metadata surface attributes、xref ordinary attributes、source location 和 control field suppression。
+
+|`test/rdf12-projection/payload-projector.test.ts`
+|覆盖 payload resource、opaque source text、node/xref payload binding、unbound selector 和 payload/listing label identity collision regression。
+
+|`test/rdf12-projection/xref-projector.test.ts`
+|补充同线 xref display label identity collision regression，作为 Batch 07 label helper 修复的受审例外。
+|===
+
+=== Required Context Read
+
+06 号书原文：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/11-surface-attributes.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/12-payload-blocks.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/07-label-and-selector-model.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/13-projection-algorithm.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/16-worked-example.adoc`
+
+代码入口：
+
+* `src/model.ts`
+* `src/metadata-parser.ts`
+* `src/official-projector.ts`
+* `src/source-interval-resolver.ts`
+* `src/rdf12-projection/labels.ts`
+* `src/rdf12-projection/resource-identity.ts`
+* `src/rdf12-projection/xref-projector.ts`
+
+=== Acceptance Evidence
+
+[cols="2,1,3", options="header"]
+|===
+|命令 |结果 |摘要
+
+|`pnpm test -- test/rdf12-projection/attributes.test.ts test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/xref-projector.test.ts`
+|PASS
+|26 个 test files、169 个 tests 通过；包含 Batch 07 attribute/payload tests 和同线 xref display label identity regression。
+
+|`pnpm typecheck`
+|PASS
+|`tsc --noEmit` 通过。
+
+|`pnpm lint`
+|PASS
+|Biome 检查 122 个文件，无需修复。
+
+|`git diff -- src/metadata-parser.ts src/official-projector.ts src/parser.ts`
+|PASS
+|禁止路径无差异。
+
+|`git diff --check f5728f9..HEAD`
+|PASS
+|Batch 07 实现与修复提交无 whitespace errors。
+
+|manual projection probes
+|PASS
+|审核者复现并确认 payload/listing address labels 分离；同一行两个 xref display labels 生成两个 owner-scoped label resources。
+|===
+
+=== Contract Checklist
+
+* [x] Metadata attrlist fields output `aat:SurfaceAttribute` with `aat:name`、`rdf:value`、`aat:relativePath`、`aat:startLine`、`aat:endLine`。
+* [x] Metadata attributes connect to owning structure resource through `aat:hasAttribute`。
+* [x] Xref ordinary attributes connect to xref occurrence resource through `aat:hasAttribute`。
+* [x] Xref `rel` and `payload` remain control fields and are not duplicated as ordinary surface attributes。
+* [x] Payload blocks output `aat:PayloadBlock` with payload kind, full span, content span, source text, data format and address label。
+* [x] Payload resource IRI is generated from projection coordinates; author payload ID remains an address label。
+* [x] Payload raw remains opaque text and does not create business RDF triples。
+* [x] Unique node `forSelector` creates `aat:hasPayload` and `aat:payloadOf` relations。
+* [x] Unbound payload selector does not create fake binding relation。
+* [x] Xref payload binding attaches to xref occurrence resource, not source node or target node。
+* [x] Helper-created payload address labels and xref display labels do not merge distinct source label occurrences。
+* [x] `src/metadata-parser.ts`、`src/official-projector.ts` 和 `src/parser.ts` 未修改。
+* [x] 本批没有引入全局打回条件。
+
+=== Reviewer Decision
+
+[horizontal]
+审核结论:: `通过`
+审核者:: `Codex principal coordinator`
+审核时间:: `2026-05-28 02:14:41 +0800`
+打回项:: `none`
+
+审核证据:: 审核者独立检查 Batch 07 implementation diff、payload projector、surface attribute projector、label helper identity fix 和 xref index exposure；审核者两次打回 label identity collision，复核修复提交后独立运行 Batch 07 tests、typecheck、lint、禁止路径检查和手工投影探针，均为 PASS。
+
+=== Reviewer Notes
+
+* `src/rdf12-projection/resource-identity.ts` 与 `test/rdf12-projection/xref-projector.test.ts` 不在 Batch 07 原始文件边界中。本审核将二者记录为受审例外：它们只服务于 Batch 07 helper-created label identity 修复，并防止 payload labels 与 Batch 06 xref display labels 在同一 resource IRI 上合并。
+* Payload listing 同时保留 `aat:ListingBlock` 结构 resource 和 `aat:PayloadBlock` payload resource。06 号书结构资源章节允许 payload role 的 listing/block 投影为 payload resource；Batch 07 审核接受该双资源表达，但要求二者的 address label resources 不合并。

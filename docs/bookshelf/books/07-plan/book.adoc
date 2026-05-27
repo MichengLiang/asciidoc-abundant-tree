@@ -86,4 +86,7 @@ include::backmatter/batch-05-review-package.adoc[]
 include::backmatter/batch-06-review-package.adoc[]
 
 [appendix]
+include::backmatter/batch-07-review-package.adoc[]
+
+[appendix]
 include::backmatter/batch-status-ledger.adoc[]

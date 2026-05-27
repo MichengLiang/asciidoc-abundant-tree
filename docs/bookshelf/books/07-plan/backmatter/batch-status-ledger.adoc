@@ -58,10 +58,10 @@
 
 |07
 |surface attribute 与 payload block
-|未开始
-|
-|
-|
+|通过
+|`27a4e285ea29b5bae61e2b54d2f939cb87bc6d55` + `e61cfdc7e2cb9dafb59fef32aed54af871881139` + `b2c6804b1baa49c955eaefaf7a1eeb6d784c1ae1`
+|通过
+|审核包见 xref:batch-07-review-package[Batch 07 审核包]。两次修复消除 payload address label 与 xref display label resource identity collision。
 
 |08
 |RDF 1.2 serialization 与 roundtrip
