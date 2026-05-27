@@ -73,4 +73,44 @@ describe("cli", () => {
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toMatch(/tree.*json|json.*tree/);
 	});
+
+	it("rejects missing format values", () => {
+		const result = runCli(["samples/reference-links.adoc", "--format"]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toMatch(/--format requires a value/);
+	});
+
+	it("rejects unknown arguments", () => {
+		const result = runCli(["--unknown"]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toMatch(/Unknown argument: --unknown/);
+	});
+
+	it("rejects extra positional arguments", () => {
+		const result = runCli(["samples/reference-links.adoc", "extra.adoc"]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toMatch(/Unexpected extra argument: extra\.adoc/);
+	});
+
+	it("rejects missing input files when no source path is provided", () => {
+		const result = runCli([]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toMatch(/Missing input file/);
+	});
+
+	it("skips undefined arguments", () => {
+		const result = runCli([undefined as unknown as string, "--help"]);
+
+		expect(result.code).toBe(0);
+		expect(result.stdout).toMatch(/asciidoc-abundant-tree <file\.adoc>/);
+		expect(result.stderr).toBe("");
+	});
 });

@@ -1,42 +1,132 @@
+import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import {
 	assignContainingSectionIds,
-	scanAnchorOccurrences,
-	scanXrefOccurrences,
+	scanInlineOccurrencesInOfficialBlocks,
 } from "./inline-occurrence-scanner";
 import type {
 	AnchorOccurrenceNode,
 	SectionNode,
+	TargetType,
+	ToolDiagnostic,
 	XrefOccurrenceNode,
 } from "./model";
-import { scanSections } from "./section-scanner";
+import { definedObject } from "./object-utils";
+import type { OfficialBlockSurface } from "./official-block-walker";
+import { walkOfficialBlocks } from "./official-block-walker";
+import {
+	resolveSourceInterval,
+	type SourceInterval,
+} from "./source-interval-resolver";
 import type { LineTable } from "./source-lines";
-import { type SourceRanges, scanSourceRanges } from "./source-ranges";
 
-type SourceSurfaces = {
-	ranges: SourceRanges;
+export type SourceSurfaces = {
+	blockSurfaces: OfficialBlockSurface[];
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	sections: SectionNode[];
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
 	sectionByLine: Map<number, SectionNode>;
+	toolDiagnostics: ToolDiagnostic[];
 };
 
 export { assignContainingSectionIds };
 
-export function scanSourceSurfaces(lineTable: LineTable): SourceSurfaces {
-	const ranges = scanSourceRanges(lineTable);
-	const sections = scanSections(lineTable, ranges);
-	const xrefOccurrences = scanXrefOccurrences(lineTable, ranges);
-	const anchorOccurrences = scanAnchorOccurrences(lineTable, ranges);
-	const sectionByLine = mapSectionScope(sections, lineTable.lines.length);
+export function projectSourceSurfaces(options: {
+	officialDocument: AsciidoctorBlock;
+	lineTable: LineTable;
+}): SourceSurfaces {
+	const blockSurfaces = walkOfficialBlocks(options.officialDocument);
+	const intervalByBlock = new WeakMap<AsciidoctorBlock, SourceInterval>();
+	const toolDiagnostics: ToolDiagnostic[] = [];
+
+	for (const surface of blockSurfaces) {
+		const interval = resolveSourceInterval(surface, options.lineTable);
+		if (!interval) {
+			continue;
+		}
+		intervalByBlock.set(surface.block, interval);
+		toolDiagnostics.push(...interval.diagnostics);
+	}
+
+	const sections = buildSectionSurfaces(
+		blockSurfaces,
+		intervalByBlock,
+		toolDiagnostics,
+	);
+	const sectionByLine = mapSectionScope(
+		sections,
+		options.lineTable.lines.length,
+	);
+	const { xrefOccurrences, anchorOccurrences } =
+		scanInlineOccurrencesInOfficialBlocks({
+			lineTable: options.lineTable,
+			blockSurfaces,
+			intervalByBlock,
+		});
 	assignContainingSectionIds(xrefOccurrences, anchorOccurrences, sectionByLine);
 
 	return {
-		ranges,
+		blockSurfaces,
+		intervalByBlock,
 		sections,
 		xrefOccurrences,
 		anchorOccurrences,
 		sectionByLine,
+		toolDiagnostics,
 	};
+}
+
+function buildSectionSurfaces(
+	blockSurfaces: OfficialBlockSurface[],
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
+	_toolDiagnostics: ToolDiagnostic[],
+): SectionNode[] {
+	const sections: SectionNode[] = [];
+
+	for (const surface of blockSurfaces) {
+		if (surface.context !== "section") {
+			continue;
+		}
+		const interval = intervalByBlock.get(surface.block);
+		if (!interval) {
+			continue;
+		}
+		const metadata = interval.metadata;
+		const ids = metadata.flatMap((entry) => entry.ids);
+		const officialId = surface.id;
+		const idOrigin =
+			ids.length > 0
+				? "source"
+				: officialId
+					? "asciidoctor-generated"
+					: "unknown";
+		const section = definedObject({
+			kind: "section",
+			level: surface.level ?? 1,
+			ids: ids.length > 0 ? ids : officialId ? [officialId] : [],
+			title: surface.title ?? "",
+			line: surface.sourceLine,
+			span: interval.span,
+			titleSpan: interval.titleSpan,
+			idOrigin,
+			metadata: metadata.map((entry) => entry.node),
+			source: definedObject({
+				line: surface.sourceLine,
+				sourceSpan: interval.sourceSpan,
+			}),
+			asciidoctor: definedObject({
+				context: surface.context,
+				nodeName: surface.nodeName,
+				resolvedId: officialId,
+				resolvedType: "section" as TargetType,
+				reftext: surface.title,
+			}),
+			children: [],
+		}) as SectionNode;
+		sections.push(section);
+	}
+
+	return sections;
 }
 
 function mapSectionScope(

@@ -142,6 +142,7 @@ function formatError(error: unknown): string {
 	return "Unknown error";
 }
 
+/* c8 ignore start */
 if (import.meta.url === `file://${process.argv[1]}`) {
 	const result = runCli(process.argv.slice(2));
 	if (result.stdout) {
@@ -156,3 +157,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 	}
 	process.exitCode = result.code;
 }
+/* c8 ignore end */

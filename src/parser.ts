@@ -10,10 +10,7 @@ import type {
 import { definedObject } from "./object-utils";
 import { projectOfficialDocument } from "./official-projector";
 import { buildLineTable, spanForLineText } from "./source-lines";
-import {
-	assignContainingSectionIds,
-	scanSourceSurfaces,
-} from "./source-surfaces";
+import { projectSourceSurfaces } from "./source-surfaces";
 
 export function parseAbundantTree(
 	options: ParseAbundantTreeOptions,
@@ -23,7 +20,10 @@ export function parseAbundantTree(
 	const lineTable = buildLineTable(source);
 	const adapter = createAsciidoctorAdapter();
 	const officialDocument = adapter.loadFile(sourcePath);
-	const sourceSurfaces = scanSourceSurfaces(lineTable);
+	const sourceSurfaces = projectSourceSurfaces({
+		officialDocument,
+		lineTable,
+	});
 	const officialProjection = projectOfficialDocument({
 		officialDocument,
 		lineTable,
@@ -31,13 +31,9 @@ export function parseAbundantTree(
 		sectionByLine: sourceSurfaces.sectionByLine,
 		xrefOccurrences: sourceSurfaces.xrefOccurrences,
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
+		intervalByBlock: sourceSurfaces.intervalByBlock,
 		adapter,
 	});
-	assignContainingSectionIds(
-		sourceSurfaces.xrefOccurrences,
-		sourceSurfaces.anchorOccurrences,
-		sourceSurfaces.sectionByLine,
-	);
 
 	addAnchorTargets(
 		officialProjection.targets,
@@ -69,6 +65,6 @@ export function parseAbundantTree(
 		targets: officialProjection.targets,
 		xrefOccurrences: sourceSurfaces.xrefOccurrences,
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
-		toolDiagnostics: [],
+		toolDiagnostics: sourceSurfaces.toolDiagnostics,
 	};
 }

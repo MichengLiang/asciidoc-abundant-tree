@@ -3,7 +3,6 @@ import type {
 	AsciidoctorBlock,
 } from "./asciidoctor-adapter";
 import { addTarget, applyOfficialBindings } from "./binding-merge";
-import { collectPrecedingMetadata } from "./metadata-parser";
 import type {
 	AbundantNode,
 	AnchorOccurrenceNode,
@@ -17,14 +16,13 @@ import type {
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
+import type { SourceInterval } from "./source-interval-resolver";
 import {
 	collectOccurrencesInLineRange,
 	compareNodesBySource,
-	findClosingDelimiter,
 	groupByLine,
 	type LineTable,
 	lineText,
-	nextBlankLine,
 	sourceLines,
 	sourceSpanFromLineSpan,
 } from "./source-lines";
@@ -37,6 +35,7 @@ type ProjectContext = {
 	xrefsByLine: Map<number, XrefOccurrenceNode[]>;
 	anchorsByLine: Map<number, AnchorOccurrenceNode[]>;
 	usedAnchorKeys: Set<string>;
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	adapter: AsciidoctorAdapter;
 	targets: TargetNode[];
 };
@@ -50,6 +49,7 @@ export function projectOfficialDocument(options: {
 	sectionByLine: Map<number, SectionNode>;
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	adapter: AsciidoctorAdapter;
 }): { children: AbundantNode[]; targets: TargetNode[] } {
 	const targets: TargetNode[] = [];
@@ -61,6 +61,7 @@ export function projectOfficialDocument(options: {
 		xrefsByLine: groupByLine(options.xrefOccurrences),
 		anchorsByLine: groupByLine(options.anchorOccurrences),
 		usedAnchorKeys: new Set(),
+		intervalByBlock: options.intervalByBlock,
 		adapter: options.adapter,
 		targets,
 	};
@@ -92,18 +93,19 @@ function buildNode(
 	const blockContext = block.getContext?.();
 	const officialLine = block.getSourceLocation?.()?.getLineNumber?.();
 	const line = officialLine ?? fallbackLine;
+	const interval = context.intervalByBlock.get(block);
 
 	if (blockContext === "section" && officialLine !== undefined) {
 		return buildSection(block, officialLine, context);
 	}
 	if (blockContext === "paragraph" && line !== undefined) {
-		return buildParagraph(block, line, context);
+		return buildParagraph(block, line, context, interval);
 	}
 	if (blockContext === "listing" && officialLine !== undefined) {
-		return buildListing(block, officialLine, context);
+		return buildListing(block, officialLine, context, interval);
 	}
 	if (blockContext === "table" && officialLine !== undefined) {
-		return buildTable(block, officialLine, context);
+		return buildTable(block, officialLine, context, interval);
 	}
 	if (blockContext === "open" && line !== undefined) {
 		return buildOpenChildren(block, line, context);
@@ -111,10 +113,12 @@ function buildNode(
 	if (officialLine !== undefined) {
 		registerOfficialBlockTarget(context, block, {
 			targetType: "block",
-			sourceSpan: sourceSpanFromLineSpan(context.lineTable, {
-				startLine: officialLine,
-				endLine: nextBlankLine(context.lineTable, officialLine) - 1,
-			}),
+			sourceSpan:
+				interval?.sourceSpan ??
+				sourceSpanFromLineSpan(context.lineTable, {
+					startLine: officialLine,
+					endLine: officialLine,
+				}),
 		});
 		return (block.getBlocks?.() ?? []).flatMap((child) =>
 			toNodes(buildNode(child, context)),
@@ -149,7 +153,9 @@ function buildSection(
 		targetType: "section",
 		title: section.title,
 		idOrigin: section.idOrigin,
-		sourceSpan: sourceSpanFromLineSpan(context.lineTable, section.span),
+		sourceSpan:
+			section.source?.sourceSpan ??
+			sourceSpanFromLineSpan(context.lineTable, section.span),
 		asciidoctor: section.asciidoctor,
 	});
 	section.children = (block.getBlocks?.() ?? []).flatMap((child) =>
@@ -222,19 +228,22 @@ function buildParagraph(
 	block: AsciidoctorBlock,
 	line: number,
 	context: ProjectContext,
+	interval: SourceInterval | undefined,
 ): ParagraphNode {
-	const metadata = collectPrecedingMetadata(context.lineTable, line);
-	const startLine = metadata.at(0)?.line ?? line;
-	const blockEnd = nextBlankLine(context.lineTable, line) - 1;
+	const blockSpan = interval?.span ?? {
+		startLine: line,
+		endLine: line,
+	};
+	const contentSpan = interval?.contentSpan ?? blockSpan;
 	const xrefs = collectOccurrencesInLineRange(
 		context.xrefsByLine,
-		line,
-		blockEnd,
+		contentSpan.startLine,
+		contentSpan.endLine,
 	);
 	const anchors = collectOccurrencesInLineRange(
 		context.anchorsByLine,
-		line,
-		blockEnd,
+		contentSpan.startLine,
+		contentSpan.endLine,
 	).filter((anchor) => {
 		const key = anchorKey(anchor);
 		if (context.usedAnchorKeys.has(key)) {
@@ -249,16 +258,15 @@ function buildParagraph(
 			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
 		),
 	);
-	const sourceSpan = sourceSpanFromLineSpan(context.lineTable, {
-		startLine,
-		endLine: blockEnd,
-	});
+	const sourceSpan =
+		interval?.sourceSpan ??
+		sourceSpanFromLineSpan(context.lineTable, blockSpan);
 	const source = sourceSpan
 		? {
-				span: { startLine, endLine: blockEnd },
+				span: blockSpan,
 				sourceSpan,
 			}
-		: { span: { startLine, endLine: blockEnd } };
+		: { span: blockSpan };
 	const asciidoctor = definedObject({
 		context: block.getContext?.(),
 		nodeName: block.getNodeName?.(),
@@ -268,7 +276,11 @@ function buildParagraph(
 	}) as AsciidoctorLayer;
 	const paragraph = {
 		kind: "paragraph",
-		text: sourceLines(context.lineTable, line, blockEnd).join("\n"),
+		text: sourceLines(
+			context.lineTable,
+			contentSpan.startLine,
+			contentSpan.endLine,
+		).join("\n"),
 		source,
 		asciidoctor,
 		children: [...xrefs, ...anchors].sort(compareNodesBySource),
@@ -288,15 +300,14 @@ function buildListing(
 	block: AsciidoctorBlock,
 	delimiterLine: number,
 	context: ProjectContext,
+	interval: SourceInterval | undefined,
 ): ListingNode {
-	const metadata = collectPrecedingMetadata(context.lineTable, delimiterLine);
-	const startLine = metadata.at(0)?.line ?? delimiterLine;
-	const endLine = findClosingDelimiter(
-		context.lineTable,
-		delimiterLine,
-		"----",
-	);
-	const contentSpan = { startLine: delimiterLine + 1, endLine: endLine - 1 };
+	const metadata = interval?.metadata ?? [];
+	const span = interval?.span ?? {
+		startLine: delimiterLine,
+		endLine: delimiterLine,
+	};
+	const contentSpan = interval?.contentSpan;
 	const ids = metadata.flatMap((surface) => surface.ids);
 	const listing = definedObject({
 		kind: "listing",
@@ -311,23 +322,20 @@ function buildListing(
 		metadata: metadata.map((surface) => surface.node),
 		content:
 			block.getSource?.() ??
-			sourceLines(
-				context.lineTable,
-				contentSpan.startLine,
-				contentSpan.endLine,
-			).join("\n"),
-		metadataSpan:
-			metadata.length > 0
-				? { startLine, endLine: delimiterLine - 1 }
-				: undefined,
+			(contentSpan
+				? sourceLines(
+						context.lineTable,
+						contentSpan.startLine,
+						contentSpan.endLine,
+					).join("\n")
+				: undefined),
+		metadataSpan: interval?.metadataSpan,
 		contentSpan,
-		span: { startLine, endLine },
+		span,
 		source: {
-			span: { startLine, endLine },
-			sourceSpan: sourceSpanFromLineSpan(context.lineTable, {
-				startLine,
-				endLine,
-			}),
+			span,
+			sourceSpan:
+				interval?.sourceSpan ?? sourceSpanFromLineSpan(context.lineTable, span),
 		},
 		asciidoctor: definedObject({
 			context: block.getContext?.(),
@@ -355,24 +363,23 @@ function buildTable(
 	block: AsciidoctorBlock,
 	delimiterLine: number,
 	context: ProjectContext,
+	interval: SourceInterval | undefined,
 ): TableNode {
-	const metadata = collectPrecedingMetadata(context.lineTable, delimiterLine);
-	const startLine = metadata.at(0)?.line ?? delimiterLine;
-	const endLine = findClosingDelimiter(
-		context.lineTable,
-		delimiterLine,
-		"|===",
-	);
+	const metadata = interval?.metadata ?? [];
+	const span = interval?.span ?? {
+		startLine: delimiterLine,
+		endLine: delimiterLine,
+	};
 	const ids = metadata.flatMap((surface) => surface.ids);
 	const tableXrefs = collectOccurrencesInLineRange(
 		context.xrefsByLine,
-		startLine,
-		endLine,
+		interval?.contentSpan?.startLine ?? span.startLine,
+		interval?.contentSpan?.endLine ?? span.endLine,
 	);
 	const tableAnchors = collectOccurrencesInLineRange(
 		context.anchorsByLine,
-		startLine,
-		endLine,
+		interval?.contentSpan?.startLine ?? span.startLine,
+		interval?.contentSpan?.endLine ?? span.endLine,
 	).filter((anchor) => {
 		const key = anchorKey(anchor);
 		if (context.usedAnchorKeys.has(key)) {
@@ -394,13 +401,11 @@ function buildTable(
 			metadata.find((surface) => surface.title)?.title ?? block.getTitle?.(),
 		metadata: metadata.map((surface) => surface.node),
 		rows: rowsFromTable(block.getRows?.()),
-		span: { startLine, endLine },
+		span,
 		source: {
-			span: { startLine, endLine },
-			sourceSpan: sourceSpanFromLineSpan(context.lineTable, {
-				startLine,
-				endLine,
-			}),
+			span,
+			sourceSpan:
+				interval?.sourceSpan ?? sourceSpanFromLineSpan(context.lineTable, span),
 		},
 		asciidoctor: definedObject({
 			context: block.getContext?.(),
@@ -465,7 +470,7 @@ function registerOfficialBlockTarget(
 	);
 }
 
-function rowsFromTable(rows: unknown): unknown[] {
+export function rowsFromTable(rows: unknown): unknown[] {
 	if (!isRecord(rows)) {
 		return [];
 	}
