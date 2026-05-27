@@ -1,0 +1,138 @@
+[#batch-09-review-package]
+== Batch 09 审核包
+
+=== Batch
+
+[horizontal]
+批次编号:: `Batch 09`
+批次名称:: `public rdf12 API 与 CLI`
+
+=== Commit
+
+[horizontal]
+提交 hash:: `6736ec23cecb05c41a7e063fc43db985cd81134a`
+提交信息:: `feat: expose rdf12 api and cli format`
+
+=== Scope
+
+本批完成对象：
+
+* public TypeScript entry `rdf12(document, options)`。
+* public `Rdf12Result` type，包含 project graph 和 `ttl`。
+* CLI `--format rdf12`，stdout 输出 Turtle 1.2 text。
+* CLI usage text 更新为 `--format tree|json|rdf12`。
+* CLI `rdf12` document root rule：使用 `process.cwd()`，并拒绝 root 外 source path。
+* README CLI 与 library API 文档更新。
+
+本批未处理对象：
+
+* CLI `rdf`、`ttl` 或 `turtle` aliases。
+* Batch 10 query contract acceptance。
+* Batch 11 final gates。
+
+=== Files Changed
+
+[cols="1,3", options="header"]
+|===
+|路径 |作用
+
+|`src/index.ts`
+|导出 `rdf12` public function 和 `Rdf12Result` public type；单次调用返回 graph 与 Turtle text。
+
+|`src/cli.ts`
+|添加 CLI-local `rdf12` format，接入 Turtle stdout，并拒绝 document root 外 source path。
+
+|`test/cli.test.ts`
+|覆盖 help、unsupported format、禁止 aliases、`--format rdf12` stdout parse-back 和 root 外路径拒绝。
+
+|`test/rdf12-projection/public-api.test.ts`
+|覆盖 `rdf12` public import、graph、ttl 和 TTL parse-back。
+
+|`README.md`
+|记录 RDF 1.2 Turtle CLI output 和 library API 用法。
+|===
+
+=== Required Context Read
+
+06 号书原文：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/02-consumer-actions.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/14-query-contracts.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/13-projection-algorithm.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/15-invariants-and-acceptance.adoc`
+
+代码入口：
+
+* `src/index.ts`
+* `src/cli.ts`
+* `src/serializers.ts`
+* `src/model.ts`
+* `test/cli.test.ts`
+* `README.md`
+
+=== Acceptance Evidence
+
+[cols="2,1,3", options="header"]
+|===
+|命令 |结果 |摘要
+
+|`pnpm test -- test/cli.test.ts test/rdf12-projection/public-api.test.ts`
+|PASS
+|29 个 test files、179 个 tests 通过；包含 CLI 和 public API Batch 09 tests。
+
+|`pnpm typecheck`
+|PASS
+|`tsc --noEmit` 通过。
+
+|`pnpm lint`
+|PASS
+|Biome 检查 128 个文件，无需修复。
+
+|`git diff -- src/parser.ts src/inline-occurrence-scanner.ts src/official-projector.ts`
+|PASS
+|禁止路径无差异。
+
+|`git diff --check 4bebc6a..HEAD`
+|PASS
+|Batch 09 implementation commit 无 whitespace errors。
+
+|public API semantic probe
+|PASS
+|`rdf12(parseAbundantTree(...), { documentRoot })` 返回 438 triples；`ttl` parse-back 后 graph semantic equivalence 成立。
+
+|CLI behavior probe
+|PASS
+|`--format rdf12` stdout 为 Turtle 并可 parse back；`rdf`、`ttl`、`turtle` aliases 均 exit code 1；root 外 source path exit code 1。
+|===
+
+=== Contract Checklist
+
+* [x] `rdf12` 是唯一新增 public TypeScript entry。
+* [x] `rdf12(document, options)` 返回 graph 和 `ttl`，调用方不需要第二个 public function 取得 TTL。
+* [x] `rdf12` normalizes options before projection。
+* [x] CLI `rdf12` stdout 是 Turtle 1.2 text，不是 JSON envelope。
+* [x] CLI help includes `--format tree|json|rdf12`。
+* [x] CLI rejects unsupported formats and lists `rdf12`。
+* [x] CLI rejects `--format rdf`。
+* [x] CLI rejects `--format ttl`。
+* [x] CLI rejects `--format turtle`。
+* [x] CLI uses existing `parseAbundantTree` path and does not add a second AsciiDoc parser path。
+* [x] CLI uses `process.cwd()` as document root for RDF projection。
+* [x] CLI rejects RDF projection for source path outside document root。
+* [x] Existing tree and json CLI behavior remains covered。
+* [x] `src/parser.ts`、`src/inline-occurrence-scanner.ts` 和 `src/official-projector.ts` 未修改。
+
+=== Reviewer Decision
+
+[horizontal]
+审核结论:: `通过`
+审核者:: `Codex principal coordinator`
+审核时间:: `2026-05-28 02:36:43 +0800`
+打回项:: `none`
+
+审核证据:: 审核者独立检查 Batch 09 diff、public API shape、CLI format parsing、README update 和 forbidden-path boundary；审核者独立运行 Batch 09 tests、typecheck、lint、禁止路径检查、whitespace check、public API semantic probe 和 CLI behavior probe，均为 PASS。
+
+=== Reviewer Notes
+
+* `src/model.ts` 未修改；实现采用 CLI-local `CliOutputFormat = OutputFormat | "rdf12"`，避免扩大原有 tree/json model output format。
+* 审核者一次手工 probe 因脚本顶层变量名 `document` 触发 Asciidoctor runtime 环境判断而失败；更名为 `parsedDocument` 后同一 public API semantic probe PASS。该失败不对应 committed code defect。

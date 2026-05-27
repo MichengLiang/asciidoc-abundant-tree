@@ -72,10 +72,10 @@
 
 |09
 |public `rdf12` API 与 CLI
-|未开始
-|
-|
-|
+|通过
+|`6736ec23cecb05c41a7e063fc43db985cd81134a`
+|通过
+|审核包见 xref:batch-09-review-package[Batch 09 审核包]。`rdf12` public API 与 CLI `--format rdf12` 已验收，`rdf`/`ttl`/`turtle` aliases 均不接受。
 
 |10
 |查询契约验收
