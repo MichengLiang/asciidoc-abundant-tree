@@ -150,6 +150,81 @@ describe("official-projector helpers", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
+	it("does not fallback-project official paragraphs rejected by source surfaces", () => {
+		const paragraphBlock = {
+			getBlocks: () => [],
+			getContext: () => "paragraph",
+			getId: () => "external-paragraph",
+			getNodeName: () => "paragraph",
+			getSourceLocation: () => ({
+				getLineNumber: () => 2,
+			}),
+		} satisfies AsciidoctorBlock;
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [paragraphBlock],
+			},
+			lineTable: buildLineTable("= Main\ninclude::included.adoc[]\n"),
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap(),
+			sectionByBlock: new WeakMap(),
+			projectableBlocks: new WeakSet(),
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([]);
+		expect(projected.targets).toEqual([]);
+	});
+
+	it("projects official paragraphs explicitly accepted by source surfaces", () => {
+		const paragraphBlock = {
+			getBlocks: () => [],
+			getContext: () => "paragraph",
+			getNodeName: () => "paragraph",
+			getSourceLocation: () => ({
+				getLineNumber: () => 2,
+			}),
+		} satisfies AsciidoctorBlock;
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [paragraphBlock],
+			},
+			lineTable: buildLineTable("= Main\nAccepted paragraph.\n"),
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap([
+				[
+					paragraphBlock,
+					{
+						blockStartLine: 2,
+						metadata: [],
+						contentSpan: { startLine: 2, endLine: 2 },
+						span: { startLine: 2, endLine: 2 },
+						diagnostics: [],
+					},
+				],
+			]),
+			sectionByBlock: new WeakMap(),
+			projectableBlocks: new WeakSet([paragraphBlock]),
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "paragraph",
+				text: "Accepted paragraph.",
+			}),
+		]);
+		expect(projected.targets).toEqual([]);
+	});
+
 	it("skips top-level official blocks that have neither source location nor projectable children", () => {
 		const projected = projectOfficialDocument({
 			officialDocument: {

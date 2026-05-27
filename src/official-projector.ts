@@ -37,6 +37,7 @@ type ProjectContext = {
 	anchorsByLine: Map<number, AnchorOccurrenceNode[]>;
 	usedAnchorKeys: Set<string>;
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
+	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	adapter: AsciidoctorAdapter;
 	targets: TargetNode[];
@@ -52,6 +53,7 @@ export function projectOfficialDocument(options: {
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
+	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	adapter: AsciidoctorAdapter;
 }): { children: AbundantNode[]; targets: TargetNode[] } {
@@ -65,6 +67,7 @@ export function projectOfficialDocument(options: {
 		anchorsByLine: groupByLine(options.anchorOccurrences),
 		usedAnchorKeys: new Set(),
 		intervalByBlock: options.intervalByBlock,
+		projectableBlocks: options.projectableBlocks,
 		sectionByBlock: options.sectionByBlock,
 		adapter: options.adapter,
 		targets,
@@ -98,6 +101,15 @@ function buildNode(
 	const officialLine = block.getSourceLocation?.()?.getLineNumber?.();
 	const line = officialLine ?? fallbackLine;
 	const interval = context.intervalByBlock.get(block);
+	const canUseContainerFallback =
+		officialLine === undefined && fallbackLine !== undefined;
+	if (
+		context.projectableBlocks &&
+		!context.projectableBlocks.has(block) &&
+		!canUseContainerFallback
+	) {
+		return undefined;
+	}
 
 	if (blockContext === "section" && officialLine !== undefined) {
 		return buildSection(block, context);

@@ -39,6 +39,96 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
+	it("diagnoses recognized official blocks that have no source location", () => {
+		const paragraph = makeBlock("paragraph", undefined, {
+			source: "Missing location <<target>> should not be scanned.",
+		});
+		const section = makeBlock("section", undefined, {
+			id: "missing-section",
+			title: "Missing Section",
+		});
+		const officialDocument = makeDocument([paragraph, section]);
+		const lineTable = buildLineTable(
+			[
+				"Missing location <<target>> should not be scanned.",
+				"== Missing Section",
+			].join("\n"),
+		);
+
+		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "source-location.missing",
+				level: "warning",
+				message: expect.stringContaining("paragraph"),
+			}),
+			expect.objectContaining({
+				code: "source-location.missing",
+				level: "warning",
+				message: expect.stringContaining("section"),
+			}),
+		]);
+		expect(surfaces.sections).toEqual([]);
+		expect(surfaces.sectionByBlock.get(section)).toBeUndefined();
+		expect(surfaces.sectionByLine.get(2)).toBeUndefined();
+		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(surfaces.anchorOccurrences).toEqual([]);
+	});
+
+	it("diagnoses unknown official blocks even when their source location is missing", () => {
+		const unknown = makeBlock("mystery", undefined, {
+			source: "Missing unknown <<target>> should not be scanned.",
+		});
+		const officialDocument = makeDocument([unknown]);
+		const lineTable = buildLineTable(
+			"Missing unknown <<target>> should not be scanned.",
+		);
+
+		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "official-block-context.unknown",
+				message: expect.stringContaining("mystery"),
+			}),
+			expect.objectContaining({
+				code: "source-location.missing",
+				message: expect.stringContaining("mystery"),
+			}),
+		]);
+		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(surfaces.anchorOccurrences).toEqual([]);
+	});
+
+	it("diagnoses missing context and source location without source scanning", () => {
+		const unknown = makeBlock(undefined, undefined, {
+			source: "Missing APIs <<target>> should not be scanned.",
+		});
+		const officialDocument = makeDocument([unknown]);
+		const lineTable = buildLineTable(
+			"Missing APIs <<target>> should not be scanned.",
+		);
+
+		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "official-block-context.unknown",
+				message: expect.stringContaining("undefined"),
+			}),
+			expect.objectContaining({
+				code: "source-location.missing",
+				message: expect.stringContaining(
+					"context 'undefined' node 'undefined'",
+				),
+			}),
+		]);
+		expect(surfaces.projectableBlocks.has(unknown)).toBe(false);
+		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(surfaces.anchorOccurrences).toEqual([]);
+	});
+
 	it("diagnoses missing official block context without projecting hidden inline content", () => {
 		const unknown = makeBlock(undefined, 1, {
 			source: "Unknown <<target>> should not be scanned.",
@@ -231,6 +321,7 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.sections).toEqual([]);
 		expect(surfaces.sectionByLine.get(2)).toBeUndefined();
 		expect(surfaces.sectionByBlock.get(hiddenSection)).toBeUndefined();
+		expect(surfaces.projectableBlocks.has(hiddenSection)).toBe(false);
 		expect(projected.children).toEqual([]);
 		expect(projected.targets).toEqual([]);
 	});
@@ -244,7 +335,7 @@ function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
 
 function makeBlock(
 	context: string | undefined,
-	line: number,
+	line: number | undefined,
 	options: {
 		children?: AsciidoctorBlock[];
 		directory?: string;
@@ -262,18 +353,22 @@ function makeBlock(
 		...(context !== undefined ? { getNodeName: () => context } : {}),
 		...(options.source ? { getSource: () => options.source as string } : {}),
 		...(options.title ? { getTitle: () => options.title as string } : {}),
-		getSourceLocation: () => ({
-			...(options.directory
-				? { getDirectory: () => options.directory as string }
-				: {}),
-			...(options.file !== undefined
-				? { getFile: () => options.file as string }
-				: {}),
-			getLineNumber: () => line,
-			...(options.path !== undefined
-				? { getPath: () => options.path as string }
-				: {}),
-		}),
+		...(line !== undefined
+			? {
+					getSourceLocation: () => ({
+						...(options.directory
+							? { getDirectory: () => options.directory as string }
+							: {}),
+						...(options.file !== undefined
+							? { getFile: () => options.file as string }
+							: {}),
+						getLineNumber: () => line,
+						...(options.path !== undefined
+							? { getPath: () => options.path as string }
+							: {}),
+					}),
+				}
+			: {}),
 	};
 }
 

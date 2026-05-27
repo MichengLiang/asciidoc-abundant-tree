@@ -24,6 +24,7 @@ import type { LineTable } from "./source-lines";
 export type SourceSurfaces = {
 	blockSurfaces: OfficialBlockSurface[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
+	projectableBlocks: WeakSet<AsciidoctorBlock>;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	sections: SectionNode[];
 	xrefOccurrences: XrefOccurrenceNode[];
@@ -41,17 +42,33 @@ export function projectSourceSurfaces(options: {
 }): SourceSurfaces {
 	const blockSurfaces = walkOfficialBlocks(options.officialDocument);
 	const intervalByBlock = new WeakMap<AsciidoctorBlock, SourceInterval>();
+	const projectableBlocks = new WeakSet<AsciidoctorBlock>();
 	const toolDiagnostics: ToolDiagnostic[] = [];
 	const mainSourcePath = options.sourcePath
 		? normalize(resolve(options.sourcePath))
 		: undefined;
 
 	for (const surface of blockSurfaces) {
+		const policy = officialBlockPolicy(surface.context);
 		if (isExternalSourceSurface(surface, mainSourcePath)) {
+			if (policy === "diagnostic") {
+				toolDiagnostics.push(unknownContextDiagnostic(surface));
+			}
 			toolDiagnostics.push({
 				level: "warning",
 				code: "source-location.external-file",
 				message: `Official block source location points outside the parsed source file: ${sourceLocationLabel(surface)}.`,
+			});
+			continue;
+		}
+		if (surface.sourceLine === undefined) {
+			if (policy === "diagnostic") {
+				toolDiagnostics.push(unknownContextDiagnostic(surface));
+			}
+			toolDiagnostics.push({
+				level: "warning",
+				code: "source-location.missing",
+				message: `Official block source location is missing for context '${surface.context ?? "undefined"}' node '${surface.nodeName ?? "undefined"}'.`,
 			});
 			continue;
 		}
@@ -60,16 +77,12 @@ export function projectSourceSurfaces(options: {
 			continue;
 		}
 		intervalByBlock.set(surface.block, interval);
+		if (policy !== "diagnostic" && !hasDiagnosticPolicyAncestor(surface)) {
+			projectableBlocks.add(surface.block);
+		}
 		toolDiagnostics.push(...interval.diagnostics);
-		if (officialBlockPolicy(surface.context) === "diagnostic") {
-			toolDiagnostics.push(
-				definedObject({
-					level: "warning",
-					code: "official-block-context.unknown",
-					message: `Unknown official block context '${surface.context ?? "undefined"}' was skipped conservatively.`,
-					source: interval.sourceSpan,
-				}) as ToolDiagnostic,
-			);
+		if (policy === "diagnostic") {
+			toolDiagnostics.push(unknownContextDiagnostic(surface, interval));
 		}
 	}
 
@@ -93,6 +106,7 @@ export function projectSourceSurfaces(options: {
 	return {
 		blockSurfaces,
 		intervalByBlock,
+		projectableBlocks,
 		sectionByBlock,
 		sections,
 		xrefOccurrences,
@@ -135,6 +149,18 @@ function sourceLocationLabel(surface: OfficialBlockSurface): string {
 			? join(surface.sourceDirectory, basename(surface.sourceFile ?? ""))
 			: "unknown source")
 	);
+}
+
+function unknownContextDiagnostic(
+	surface: OfficialBlockSurface,
+	interval?: SourceInterval | undefined,
+): ToolDiagnostic {
+	return definedObject({
+		level: "warning",
+		code: "official-block-context.unknown",
+		message: `Unknown official block context '${surface.context ?? "undefined"}' was skipped conservatively.`,
+		source: interval?.sourceSpan,
+	}) as ToolDiagnostic;
 }
 
 function buildSectionSurfaces(

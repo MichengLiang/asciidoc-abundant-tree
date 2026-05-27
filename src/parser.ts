@@ -33,6 +33,7 @@ export function parseAbundantTree(
 		xrefOccurrences: sourceSurfaces.xrefOccurrences,
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
 		intervalByBlock: sourceSurfaces.intervalByBlock,
+		projectableBlocks: sourceSurfaces.projectableBlocks,
 		sectionByBlock: sourceSurfaces.sectionByBlock,
 		adapter,
 	});

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
 import { createAsciidoctorAdapter } from "../src/asciidoctor-adapter";
+import { projectOfficialDocument } from "../src/official-projector";
 import { parseAbundantTree } from "../src/parser";
 import { buildLineTable } from "../src/source-lines";
 import { projectSourceSurfaces } from "../src/source-surfaces";
@@ -72,6 +73,44 @@ include::included-secure.adoc[]
 		expect(surfaces.sectionByLine.get(2)).toBeUndefined();
 		expect(surfaces.xrefOccurrences).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
+	});
+
+	it("does not project external source-map blocks after source surface filtering", () => {
+		const includedParagraph = makeBlock("paragraph", 2, {
+			file: "/virtual/include/included.adoc",
+			id: "included-paragraph",
+			source: "Included paragraph",
+		});
+		const officialDocument = makeDocument([includedParagraph]);
+		const lineTable = buildLineTable(
+			["= Main", "include::included.adoc[]"].join("\n"),
+		);
+		const surfaces = projectSourceSurfaces({
+			officialDocument,
+			lineTable,
+			sourcePath: "/virtual/main.adoc",
+		});
+
+		const projected = projectOfficialDocument({
+			officialDocument,
+			lineTable,
+			sections: surfaces.sections,
+			sectionByLine: surfaces.sectionByLine,
+			xrefOccurrences: surfaces.xrefOccurrences,
+			anchorOccurrences: surfaces.anchorOccurrences,
+			intervalByBlock: surfaces.intervalByBlock,
+			sectionByBlock: surfaces.sectionByBlock,
+			projectableBlocks: surfaces.projectableBlocks,
+			adapter: fakeAdapter(),
+		});
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "source-location.external-file",
+			}),
+		]);
+		expect(projected.children).toEqual([]);
+		expect(projected.targets).toEqual([]);
 	});
 
 	it("resolves relative source files against sourceDirectory before comparing to the main file", () => {
@@ -198,5 +237,15 @@ function makeBlock(
 			getLineNumber: () => line,
 			getPath: () => options.path ?? options.file,
 		}),
+	};
+}
+
+function fakeAdapter() {
+	return {
+		parserVersion: "test",
+		loadFile: () => makeDocument([]),
+		extractAnchorBindings: () => [],
+		resolveXrefTarget: () => undefined,
+		resolveXrefBinding: () => undefined,
 	};
 }
