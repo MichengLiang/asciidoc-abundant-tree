@@ -114,7 +114,7 @@ function isExternalSourceSurface(
 }
 
 function sourceFilePath(surface: OfficialBlockSurface): string | undefined {
-	const sourceFile = surface.sourceFile ?? surface.sourcePath;
+	const sourceFile = surface.sourcePath ?? surface.sourceFile;
 	if (!sourceFile) {
 		return undefined;
 	}

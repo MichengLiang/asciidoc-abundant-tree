@@ -73,6 +73,98 @@ include::included-secure.adoc[]
 		expect(surfaces.xrefOccurrences).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
+
+	it("resolves relative source files against sourceDirectory before comparing to the main file", () => {
+		const includedParagraph = makeBlock("paragraph", 2, {
+			directory: "/virtual/include",
+			file: "included.adoc",
+			source: "Included <<target>>",
+		});
+		const officialDocument = makeDocument([includedParagraph]);
+
+		const external = projectSourceSurfaces({
+			officialDocument,
+			lineTable: buildLineTable("= Main\n\ninclude::included.adoc[]\n"),
+			sourcePath: "/virtual/main.adoc",
+		});
+		const sameFile = projectSourceSurfaces({
+			officialDocument,
+			lineTable: buildLineTable("= Included\nIncluded <<target>>\n"),
+			sourcePath: "/virtual/include/included.adoc",
+		});
+		const noMainPath = projectSourceSurfaces({
+			officialDocument,
+			lineTable: buildLineTable("= Included\nIncluded <<target>>\n"),
+		});
+
+		expect(external.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "source-location.external-file",
+				message: expect.stringContaining("included.adoc"),
+			}),
+		]);
+		expect(external.xrefOccurrences).toEqual([]);
+		expect(sameFile.toolDiagnostics).toEqual([]);
+		expect(sameFile.xrefOccurrences.map((xref) => xref.raw)).toEqual([
+			"<<target>>",
+		]);
+		expect(noMainPath.toolDiagnostics).toEqual([]);
+		expect(noMainPath.xrefOccurrences.map((xref) => xref.raw)).toEqual([
+			"<<target>>",
+		]);
+	});
+
+	it("uses sourcePath before sourceFile and tolerates missing source file identity", () => {
+		const pathPreferredParagraph = makeBlock("paragraph", 2, {
+			file: "/virtual/other-name.adoc",
+			path: "/virtual/main.adoc",
+			source: "Path-preferred <<target>>",
+		});
+		const missingFileParagraph = makeBlock("paragraph", 3, {
+			file: undefined,
+			path: undefined,
+			source: "Missing file identity <<target>>",
+		});
+		const officialDocument = makeDocument([
+			pathPreferredParagraph,
+			missingFileParagraph,
+		]);
+
+		const surfaces = projectSourceSurfaces({
+			officialDocument,
+			lineTable: buildLineTable(
+				[
+					"= Main",
+					"Path-preferred <<target>>",
+					"Missing file identity <<target>>",
+				].join("\n"),
+			),
+			sourcePath: "/virtual/main.adoc",
+		});
+
+		expect(surfaces.toolDiagnostics).toEqual([]);
+		expect(surfaces.xrefOccurrences.map((xref) => xref.raw)).toEqual([
+			"<<target>>",
+			"<<target>>",
+		]);
+	});
+
+	it("does not diagnose relative source files when no sourceDirectory is available", () => {
+		const relativeOnlyParagraph = makeBlock("paragraph", 2, {
+			file: "included.adoc",
+			source: "Relative-only <<target>>",
+		});
+		const surfaces = projectSourceSurfaces({
+			officialDocument: makeDocument([relativeOnlyParagraph]),
+			lineTable: buildLineTable("= Main\nRelative-only <<target>>\n"),
+			sourcePath: "/virtual/main.adoc",
+		});
+
+		expect(surfaces.toolDiagnostics).toEqual([]);
+		expect(surfaces.xrefOccurrences.map((xref) => xref.raw)).toEqual([
+			"<<target>>",
+		]);
+	});
 });
 
 function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
@@ -85,8 +177,10 @@ function makeBlock(
 	context: string,
 	line: number,
 	options: {
-		file: string;
+		directory?: string;
+		file: string | undefined;
 		id?: string;
+		path?: string | undefined;
 		source?: string;
 		title?: string;
 	},
@@ -99,9 +193,10 @@ function makeBlock(
 		...(options.source ? { getSource: () => options.source as string } : {}),
 		...(options.title ? { getTitle: () => options.title as string } : {}),
 		getSourceLocation: () => ({
+			getDirectory: () => options.directory,
 			getFile: () => options.file,
 			getLineNumber: () => line,
-			getPath: () => options.file,
+			getPath: () => options.path ?? options.file,
 		}),
 	};
 }
