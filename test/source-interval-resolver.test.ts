@@ -272,6 +272,85 @@ content
 			1,
 		);
 	});
+
+	it("falls back to file bounds for nonparagraph blocks without child or sibling anchors", () => {
+		const lineTable = buildLineTable("= Probe\n\nordinary block\n");
+		const block = {
+			block: {},
+			context: "admonition",
+			nodeName: "admonition",
+			level: undefined,
+			title: undefined,
+			id: undefined,
+			sourceLine: 3,
+			children: [],
+			indexInParent: 0,
+			siblings: [],
+		} satisfies OfficialBlockSurface;
+
+		expect(resolveSourceInterval(block, lineTable)).toEqual(
+			expect.objectContaining({
+				blockStartLine: 3,
+				span: { startLine: 3, endLine: 4 },
+				sourceSpan: expect.objectContaining({
+					start: { line: 3, column: 1 },
+				}),
+			}),
+		);
+		expect(resolveSourceInterval(block, lineTable)).not.toHaveProperty(
+			"contentSpan",
+		);
+	});
+
+	it("keeps intervals source-addressable when official source lines exceed the file", () => {
+		const lineTable = buildLineTable("= Probe\n");
+		const paragraph = {
+			block: {
+				getSource: () => "external paragraph",
+			},
+			context: "paragraph",
+			nodeName: "paragraph",
+			level: undefined,
+			title: undefined,
+			id: undefined,
+			sourceLine: 5,
+			children: [],
+			indexInParent: 0,
+		} satisfies OfficialBlockSurface;
+		const listing = {
+			block: {},
+			context: "listing",
+			nodeName: "listing",
+			level: undefined,
+			title: undefined,
+			id: undefined,
+			sourceLine: 5,
+			children: [],
+			indexInParent: 0,
+		} satisfies OfficialBlockSurface;
+
+		expect(resolveSourceInterval(paragraph, lineTable)).toEqual(
+			expect.objectContaining({
+				span: { startLine: 5, endLine: 5 },
+				contentSpan: { startLine: 5, endLine: 5 },
+				sourceSpan: {
+					start: { line: 5, column: 1 },
+					end: { line: 5, column: 1 },
+				},
+				diagnostics: [],
+			}),
+		);
+		expect(resolveSourceInterval(listing, lineTable)).toEqual(
+			expect.objectContaining({
+				span: { startLine: 5, endLine: 5 },
+				sourceSpan: {
+					start: { line: 5, column: 1 },
+					end: { line: 5, column: 1 },
+				},
+				diagnostics: [],
+			}),
+		);
+	});
 });
 
 function parseFixture(name: string, source: string) {

@@ -150,6 +150,70 @@ describe("official-projector helpers", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
+	it("skips top-level official blocks that have neither source location nor projectable children", () => {
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [
+					{
+						getContext: () => "open",
+						getNodeName: () => "open",
+					},
+				],
+			},
+			lineTable: buildLineTable("--\n--\n"),
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap(),
+			sectionByBlock: new WeakMap(),
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([]);
+		expect(projected.targets).toEqual([]);
+	});
+
+	it("recurses through known fallback block contexts without registering anonymous targets", () => {
+		const paragraph = {
+			getContext: () => "paragraph",
+			getNodeName: () => "paragraph",
+			getSourceLocation: () => ({
+				getLineNumber: () => 2,
+			}),
+		} satisfies AsciidoctorBlock;
+		const fallbackContainer = {
+			getBlocks: () => [paragraph],
+			getContext: () => "literal",
+			getNodeName: () => "literal",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+		} satisfies AsciidoctorBlock;
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [fallbackContainer],
+			},
+			lineTable: buildLineTable("NOTE: wrapper\nprojectable child\n"),
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap(),
+			sectionByBlock: new WeakMap(),
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "paragraph",
+				text: "projectable child",
+			}),
+		]);
+		expect(projected.targets).toEqual([]);
+	});
+
 	it("uses official ids as listing and table targets when source metadata is absent", () => {
 		const listingBlock = {
 			getBlocks: () => [],
@@ -209,6 +273,46 @@ describe("official-projector helpers", () => {
 			["official-listing", "listing"],
 			["official-table", "table"],
 		]);
+	});
+
+	it("uses official listing attributes when source metadata omits language", () => {
+		const listingBlock = {
+			getAttributes: () => ({
+				language: "ruby",
+				linenums: true,
+			}),
+			getBlocks: () => [],
+			getContext: () => "listing",
+			getNodeName: () => "listing",
+			getSource: () => "puts 'hi'",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+			getStyle: () => "source",
+		} satisfies AsciidoctorBlock;
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [listingBlock],
+			},
+			lineTable: buildLineTable("----\nputs 'hi'\n----\n"),
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap(),
+			sectionByBlock: new WeakMap(),
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "listing",
+				style: "source",
+				language: "ruby",
+			}),
+		]);
+		expect(projected.targets).toEqual([]);
 	});
 
 	it("deduplicates table anchors and resolves table xref bindings", () => {
@@ -623,6 +727,222 @@ describe("official table inline scanning", () => {
 				reftext: "Cell Anchor",
 				anchorScope: "inline",
 			}),
+		]);
+	});
+
+	it("keeps macro xref labels and attributes faithful at paragraph boundaries", () => {
+		const paragraphBlock = {
+			getContext: () => "paragraph",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+		} satisfies AsciidoctorBlock;
+		const intervalByBlock = new WeakMap([
+			[
+				paragraphBlock,
+				{
+					blockStartLine: 1,
+					metadata: [],
+					contentSpan: { startLine: 1, endLine: 3 },
+					span: { startLine: 1, endLine: 3 },
+					diagnostics: [],
+				},
+			],
+		]);
+
+		const { xrefOccurrences, anchorOccurrences } =
+			scanInlineOccurrencesInOfficialBlocks({
+				lineTable: buildLineTable(
+					[
+						"xref:empty[] and xref:target[Label,,flag,empty=]",
+						"<<short, Trimmed Label >>",
+						"anchor:inline-empty[]",
+					].join("\n"),
+				),
+				blockSurfaces: [
+					{
+						block: paragraphBlock,
+						context: "paragraph",
+						nodeName: "paragraph",
+						level: undefined,
+						title: undefined,
+						id: undefined,
+						sourceLine: 1,
+						children: [],
+						indexInParent: 0,
+					},
+				],
+				intervalByBlock,
+			});
+
+		expect(xrefOccurrences).toEqual([
+			expect.objectContaining({
+				raw: "xref:empty[]",
+				target: "empty",
+			}),
+			expect.objectContaining({
+				raw: "xref:target[Label,,flag,empty=]",
+				target: "target",
+				label: "Label",
+				attributes: {
+					flag: true,
+					empty: true,
+				},
+			}),
+			expect.objectContaining({
+				raw: "<<short, Trimmed Label >>",
+				target: "short",
+				label: "Trimmed Label",
+			}),
+		]);
+		expect(xrefOccurrences[0]).not.toHaveProperty("label");
+		expect(xrefOccurrences[0]).not.toHaveProperty("attributes");
+		expect(anchorOccurrences).toEqual([
+			expect.objectContaining({
+				raw: "anchor:inline-empty[]",
+				ids: ["inline-empty"],
+				reftext: "",
+			}),
+		]);
+	});
+
+	it("ignores table cells and inner documents that do not expose source ranges", () => {
+		const tableBlock = {
+			getContext: () => "table",
+			getRows: () => ({
+				head: [],
+				foot: [],
+				body: [
+					[
+						null,
+						{
+							getInnerDocument: () => undefined,
+						},
+						{
+							getInnerDocument: () => ({
+								getBlocks: () => "not blocks",
+							}),
+						},
+						{
+							getLineNumber: () => undefined,
+							getLines: () => ["<<missing-line>>"],
+						},
+						{
+							getLineNumber: () => 5,
+						},
+					],
+				],
+			}),
+		} satisfies AsciidoctorBlock;
+		const intervalByBlock = new WeakMap([
+			[
+				tableBlock,
+				{
+					blockStartLine: 1,
+					metadata: [],
+					contentSpan: { startLine: 1, endLine: 5 },
+					span: { startLine: 1, endLine: 5 },
+					diagnostics: [],
+				},
+			],
+		]);
+
+		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			lineTable: buildLineTable(
+				[
+					"<<outside-1>>",
+					"<<outside-2>>",
+					"<<outside-3>>",
+					"<<missing-line>>",
+					"<<fallback-line>>",
+				].join("\n"),
+			),
+			blockSurfaces: [
+				{
+					block: tableBlock,
+					context: "table",
+					nodeName: "table",
+					level: undefined,
+					title: undefined,
+					id: undefined,
+					sourceLine: 1,
+					children: [],
+					indexInParent: 0,
+				},
+			],
+			intervalByBlock,
+		});
+
+		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual([
+			"<<fallback-line>>",
+		]);
+	});
+
+	it("uses inner paragraph source lines conservatively when source text is partial or absent", () => {
+		const tableBlock = {
+			getContext: () => "table",
+			getRows: () => ({
+				body: [
+					[
+						{
+							getInnerDocument: () => ({
+								getBlocks: () => [
+									{
+										getContext: () => "paragraph",
+										getSource: () => undefined,
+										getSourceLocation: () => ({
+											getLineNumber: () => 2,
+										}),
+									},
+									{
+										getContext: () => "paragraph",
+										getSource: () => "<<missing-location>>",
+									},
+									{
+										getContext: () => "open",
+									},
+								],
+							}),
+						},
+					],
+				],
+			}),
+		} satisfies AsciidoctorBlock;
+		const intervalByBlock = new WeakMap([
+			[
+				tableBlock,
+				{
+					blockStartLine: 1,
+					metadata: [],
+					contentSpan: { startLine: 1, endLine: 3 },
+					span: { startLine: 1, endLine: 3 },
+					diagnostics: [],
+				},
+			],
+		]);
+
+		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			lineTable: buildLineTable(
+				["|===", "<<single-line-only>>", "<<missing-location>>"].join("\n"),
+			),
+			blockSurfaces: [
+				{
+					block: tableBlock,
+					context: "table",
+					nodeName: "table",
+					level: undefined,
+					title: undefined,
+					id: undefined,
+					sourceLine: 1,
+					children: [],
+					indexInParent: 0,
+				},
+			],
+			intervalByBlock,
+		});
+
+		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual([
+			"<<single-line-only>>",
 		]);
 	});
 });

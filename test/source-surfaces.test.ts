@@ -39,6 +39,134 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
+	it("diagnoses missing official block context without projecting hidden inline content", () => {
+		const unknown = makeBlock(undefined, 1, {
+			source: "Unknown <<target>> should not be scanned.",
+		});
+		const officialDocument = makeDocument([unknown]);
+		const lineTable = buildLineTable(
+			"Unknown <<target>> should not be scanned.",
+		);
+
+		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "official-block-context.unknown",
+				message: expect.stringContaining("undefined"),
+			}),
+		]);
+		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(surfaces.anchorOccurrences).toEqual([]);
+	});
+
+	it("keeps sections without official ids visible while leaving them out of the target catalog", () => {
+		const section = makeBlock("section", 1, {
+			title: "Untargeted",
+		});
+		const officialDocument = makeDocument([section]);
+		const lineTable = buildLineTable("== Untargeted\nbody");
+
+		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const projected = projectOfficialDocument({
+			officialDocument,
+			lineTable,
+			sections: surfaces.sections,
+			sectionByLine: surfaces.sectionByLine,
+			xrefOccurrences: surfaces.xrefOccurrences,
+			anchorOccurrences: surfaces.anchorOccurrences,
+			intervalByBlock: surfaces.intervalByBlock,
+			sectionByBlock: surfaces.sectionByBlock,
+			adapter: fakeAdapter(),
+		});
+
+		expect(surfaces.sections).toEqual([
+			expect.objectContaining({
+				ids: [],
+				idOrigin: "unknown",
+				level: 1,
+				title: "Untargeted",
+			}),
+		]);
+		expect(surfaces.sectionByLine.get(1)).toBe(surfaces.sections[0]);
+		expect(surfaces.sectionByBlock.get(section)).toBe(surfaces.sections[0]);
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "section",
+				ids: [],
+				title: "Untargeted",
+			}),
+		]);
+		expect(projected.targets).toEqual([]);
+	});
+
+	it("preserves untitled section surfaces without inventing ids or titles", () => {
+		const section = makeBlock("section", 1);
+		const lineTable = buildLineTable("==\nbody");
+
+		const surfaces = projectSourceSurfaces({
+			officialDocument: makeDocument([section]),
+			lineTable,
+		});
+
+		expect(surfaces.sections).toEqual([
+			expect.objectContaining({
+				ids: [],
+				idOrigin: "unknown",
+				level: 1,
+				title: "",
+			}),
+		]);
+		expect(surfaces.sectionByBlock.get(section)).toBe(surfaces.sections[0]);
+		expect(surfaces.sectionByLine.get(1)).toBe(surfaces.sections[0]);
+	});
+
+	it("does not diagnose sourceDirectory-only locations without a comparable file identity", () => {
+		const paragraph = makeBlock("paragraph", 1, {
+			directory: "/virtual/include",
+			source: "External <<target>> should not be scanned.",
+		});
+		const lineTable = buildLineTable(
+			"External <<target>> should not be scanned.",
+		);
+
+		const surfaces = projectSourceSurfaces({
+			officialDocument: makeDocument([paragraph]),
+			lineTable,
+			sourcePath: "/virtual/main.adoc",
+		});
+
+		expect(surfaces.toolDiagnostics).toEqual([]);
+		expect(surfaces.xrefOccurrences.map((xref) => xref.raw)).toEqual([
+			"<<target>>",
+		]);
+	});
+
+	it("uses sourceFile in external source diagnostics when sourcePath is unavailable", () => {
+		const paragraph = makeBlock("paragraph", 1, {
+			file: "/virtual/include/included.adoc",
+			path: undefined,
+			source: "External <<target>> should not be scanned.",
+		});
+		const lineTable = buildLineTable(
+			"External <<target>> should not be scanned.",
+		);
+
+		const surfaces = projectSourceSurfaces({
+			officialDocument: makeDocument([paragraph]),
+			lineTable,
+			sourcePath: "/virtual/main.adoc",
+		});
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "source-location.external-file",
+				message: expect.stringContaining("/virtual/include/included.adoc"),
+			}),
+		]);
+		expect(surfaces.xrefOccurrences).toEqual([]);
+	});
+
 	it("does not project unknown official block contexts into document children", () => {
 		const paragraph = makeBlock("paragraph", 2, {
 			source: "Nested paragraph should remain hidden.",
@@ -115,24 +243,36 @@ function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
 }
 
 function makeBlock(
-	context: string,
+	context: string | undefined,
 	line: number,
 	options: {
 		children?: AsciidoctorBlock[];
+		directory?: string;
+		file?: string;
 		id?: string;
+		path?: string | undefined;
 		source?: string;
 		title?: string;
 	} = {},
 ): AsciidoctorBlock {
 	return {
 		getBlocks: () => options.children ?? [],
-		getContext: () => context,
+		...(context !== undefined ? { getContext: () => context } : {}),
 		getId: () => options.id,
-		getNodeName: () => context,
+		...(context !== undefined ? { getNodeName: () => context } : {}),
 		...(options.source ? { getSource: () => options.source as string } : {}),
 		...(options.title ? { getTitle: () => options.title as string } : {}),
 		getSourceLocation: () => ({
+			...(options.directory
+				? { getDirectory: () => options.directory as string }
+				: {}),
+			...(options.file !== undefined
+				? { getFile: () => options.file as string }
+				: {}),
 			getLineNumber: () => line,
+			...(options.path !== undefined
+				? { getPath: () => options.path as string }
+				: {}),
 		}),
 	};
 }

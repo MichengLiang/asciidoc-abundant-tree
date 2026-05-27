@@ -150,6 +150,130 @@ describe("parser input edges", () => {
 		expect(document.xrefOccurrences).toEqual([]);
 		expect(document.anchorOccurrences).toEqual([]);
 	});
+
+	it("parses an empty document without manufacturing a title or structure", () => {
+		const path = writeFixture("empty-document.adoc", "");
+
+		const document = parseAbundantTree({ sourcePath: path });
+
+		expect(document.title).toEqual(
+			expect.objectContaining({
+				text: "",
+				source: expect.objectContaining({
+					line: 1,
+					sourceSpan: {
+						start: { line: 1, column: 1 },
+						end: { line: 1, column: 1 },
+					},
+				}),
+			}),
+		);
+		expect(document.children).toEqual([]);
+		expect(document.targets).toEqual([]);
+		expect(document.xrefOccurrences).toEqual([]);
+		expect(document.anchorOccurrences).toEqual([]);
+	});
+
+	it("preserves attrlist edge metadata on blocks without inventing structure", () => {
+		const path = writeFixture(
+			"metadata-attrlist-edges.adoc",
+			`= Probe
+
+[source,ts,#late-id,.late-role,flag=,key=value=with=equals]
+----
+const value = 1;
+----
+
+[[anchored-listing,Anchored Listing]]
+[quote]
+----
+quoted
+----
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const listings = collectNodes(
+			document.children,
+			"listing",
+		) as ListingNode[];
+
+		expect(listings[0]).toEqual(
+			expect.objectContaining({
+				ids: ["late-id"],
+				style: "source",
+				language: "ts",
+				metadata: [
+					expect.objectContaining({
+						metadataKind: "attrlist",
+						ids: ["late-id"],
+						roles: ["late-role"],
+						attributes: {
+							style: "source",
+							language: "ts",
+							flag: "",
+							key: "value=with=equals",
+						},
+					}),
+				],
+			}),
+		);
+		expect(listings[1]).toEqual(
+			expect.objectContaining({
+				ids: ["anchored-listing"],
+				style: "quote",
+				metadata: [
+					expect.objectContaining({
+						metadataKind: "anchor",
+						ids: ["anchored-listing"],
+					}),
+					expect.objectContaining({
+						metadataKind: "attrlist",
+						attributes: {
+							style: "quote",
+						},
+					}),
+				],
+			}),
+		);
+	});
+
+	it("preserves id and role attrlists that intentionally omit style and language", () => {
+		const path = writeFixture(
+			"metadata-id-role-only.adoc",
+			`= Probe
+
+[.role-only]
+----
+content
+----
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const listing = findNode(document.children, "listing") as ListingNode;
+		const attrlist = listing.metadata?.find(
+			(metadata) => metadata.metadataKind === "attrlist",
+		);
+
+		expect(listing).toEqual(
+			expect.objectContaining({
+				ids: [],
+				style: "listing",
+			}),
+		);
+		expect(listing).not.toHaveProperty("language");
+		expect(attrlist).toEqual(
+			expect.objectContaining({
+				ids: [],
+				roles: ["role-only"],
+				attributes: {},
+			}),
+		);
+		expect(attrlist).not.toHaveProperty("style");
+		expect(attrlist?.attributes).not.toHaveProperty("style");
+		expect(attrlist?.attributes).not.toHaveProperty("language");
+	});
 });
 
 function findNode(
@@ -171,4 +295,15 @@ function findNode(
 		}
 	}
 	return undefined;
+}
+
+function collectNodes(nodes: unknown[], kind: string): unknown[] {
+	const result: unknown[] = [];
+	for (const node of nodes as Array<{ kind?: string; children?: unknown[] }>) {
+		if (node.kind === kind) {
+			result.push(node);
+		}
+		result.push(...collectNodes(node.children ?? [], kind));
+	}
+	return result;
 }
