@@ -1,4 +1,4 @@
-import type { AbundantNode } from "../model";
+import type { AbundantNode, TargetType } from "../model";
 import type { Rdf12IriTerm } from "./terms";
 
 export type Rdf12NodeIndexEntry = {
@@ -7,11 +7,18 @@ export type Rdf12NodeIndexEntry = {
 	readonly localId: string;
 	readonly kind: AbundantNode["kind"];
 	readonly startLine: number;
+	readonly endLine: number;
 	readonly startColumn?: number;
+	readonly targetType?: TargetType;
 };
 
 export type Rdf12NodeIndex = {
 	get(node: AbundantNode): Rdf12IriTerm | undefined;
+	findByTarget(input: {
+		readonly targetType: TargetType;
+		readonly startLine: number;
+		readonly endLine?: number;
+	}): Rdf12IriTerm | undefined;
 	entries(): readonly Rdf12NodeIndexEntry[];
 };
 
@@ -29,6 +36,19 @@ class Rdf12NodeIndexMap implements MutableRdf12NodeIndex {
 
 	get(node: AbundantNode): Rdf12IriTerm | undefined {
 		return this.#entryByNode.get(node)?.iri;
+	}
+
+	findByTarget(input: {
+		readonly targetType: TargetType;
+		readonly startLine: number;
+		readonly endLine?: number;
+	}): Rdf12IriTerm | undefined {
+		return this.#entries.find(
+			(entry) =>
+				entry.targetType === input.targetType &&
+				entry.startLine === input.startLine &&
+				(input.endLine === undefined || entry.endLine === input.endLine),
+		)?.iri;
 	}
 
 	set(entry: Rdf12NodeIndexEntry): void {

@@ -1,6 +1,8 @@
 import type { AbundantDocument } from "../model";
 import { addDocumentResourceTriples } from "./document-resource";
 import { createRdf12Graph, type Rdf12Graph } from "./graph";
+import type { Rdf12LabelCatalog } from "./label-catalog";
+import { projectLabels } from "./labels";
 import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
 import { normalizeRdf12Options, type Rdf12Options } from "./options";
@@ -28,6 +30,7 @@ export type Rdf12Projection = {
 	readonly projectionActivityIri: string;
 	readonly abundantDocumentIri: string;
 	readonly nodeIndex: Rdf12NodeIndex;
+	readonly labelCatalog: Rdf12LabelCatalog;
 };
 
 export function projectAbundantDocumentToRdf12(
@@ -90,6 +93,15 @@ export function projectAbundantDocumentToRdf12(
 		documentIri,
 		relativePath: coordinate.relativePath,
 	});
+	const labelCatalog = projectLabels({
+		graph,
+		document,
+		baseIri: normalizedOptions.baseIri,
+		documentKey: coordinate.documentKey,
+		documentIri,
+		relativePath: coordinate.relativePath,
+		nodeIndex,
+	});
 
 	return {
 		graph,
@@ -101,5 +113,6 @@ export function projectAbundantDocumentToRdf12(
 		projectionActivityIri: projectionActivityIri.value,
 		abundantDocumentIri: abundantDocumentIri.value,
 		nodeIndex,
+		labelCatalog,
 	};
 }

@@ -7,6 +7,7 @@ import type {
 	ParagraphNode,
 	SectionNode,
 	TableNode,
+	TargetType,
 } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
@@ -230,7 +231,9 @@ function projectAnchor(
 		localId,
 		kind: node.kind,
 		startLine: node.sourceSpan.start.line,
+		endLine: node.sourceSpan.end.line,
 		startColumn: node.sourceSpan.start.column,
+		targetType: "inline-anchor",
 	});
 
 	return iri;
@@ -279,9 +282,30 @@ function createBlockResource(
 		localId,
 		kind: node.kind,
 		startLine: input.span.startLine,
+		endLine: input.span.endLine,
+		...definedTargetType(targetTypeForNode(node)),
 	});
 
 	return iri;
+}
+
+function definedTargetType(
+	targetType: TargetType | undefined,
+): { readonly targetType: TargetType } | Record<string, never> {
+	return targetType === undefined ? {} : { targetType };
+}
+
+function targetTypeForNode(node: AbundantNode): TargetType | undefined {
+	switch (node.kind) {
+		case "section":
+		case "listing":
+		case "table":
+			return node.kind;
+		case "anchor":
+			return "inline-anchor";
+		default:
+			return undefined;
+	}
 }
 
 function addContainsDirectlyTriple(
