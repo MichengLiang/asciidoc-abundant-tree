@@ -37,10 +37,10 @@
 
 |04
 |结构资源与 containment
-|未开始
-|
-|
-|
+|通过
+|`e587a7ef3cdd6355124b8b67e59d6d02648803a4`
+|通过
+|审核包见 xref:batch-04-review-package[Batch 04 审核包]。
 
 |05
 |label catalog 与 selector binding
