@@ -36,6 +36,7 @@ type ProjectContext = {
 	anchorsByLine: Map<number, AnchorOccurrenceNode[]>;
 	usedAnchorKeys: Set<string>;
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
+	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	adapter: AsciidoctorAdapter;
 	targets: TargetNode[];
 };
@@ -50,6 +51,7 @@ export function projectOfficialDocument(options: {
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
+	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	adapter: AsciidoctorAdapter;
 }): { children: AbundantNode[]; targets: TargetNode[] } {
 	const targets: TargetNode[] = [];
@@ -62,6 +64,7 @@ export function projectOfficialDocument(options: {
 		anchorsByLine: groupByLine(options.anchorOccurrences),
 		usedAnchorKeys: new Set(),
 		intervalByBlock: options.intervalByBlock,
+		sectionByBlock: options.sectionByBlock,
 		adapter: options.adapter,
 		targets,
 	};
@@ -96,7 +99,7 @@ function buildNode(
 	const interval = context.intervalByBlock.get(block);
 
 	if (blockContext === "section" && officialLine !== undefined) {
-		return buildSection(block, officialLine, context);
+		return buildSection(block, context);
 	}
 	if (blockContext === "paragraph" && line !== undefined) {
 		return buildParagraph(block, line, context, interval);
@@ -129,10 +132,9 @@ function buildNode(
 
 function buildSection(
 	block: AsciidoctorBlock,
-	line: number,
 	context: ProjectContext,
 ): SectionNode | undefined {
-	const section = context.sections.find((candidate) => candidate.line === line);
+	const section = context.sectionByBlock.get(block);
 	if (!section) {
 		return undefined;
 	}

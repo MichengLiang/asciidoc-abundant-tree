@@ -22,6 +22,7 @@ import type { LineTable } from "./source-lines";
 export type SourceSurfaces = {
 	blockSurfaces: OfficialBlockSurface[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
+	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	sections: SectionNode[];
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
@@ -48,7 +49,7 @@ export function projectSourceSurfaces(options: {
 		toolDiagnostics.push(...interval.diagnostics);
 	}
 
-	const sections = buildSectionSurfaces(
+	const { sections, sectionByBlock } = buildSectionSurfaces(
 		blockSurfaces,
 		intervalByBlock,
 		toolDiagnostics,
@@ -68,6 +69,7 @@ export function projectSourceSurfaces(options: {
 	return {
 		blockSurfaces,
 		intervalByBlock,
+		sectionByBlock,
 		sections,
 		xrefOccurrences,
 		anchorOccurrences,
@@ -80,8 +82,12 @@ function buildSectionSurfaces(
 	blockSurfaces: OfficialBlockSurface[],
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
 	_toolDiagnostics: ToolDiagnostic[],
-): SectionNode[] {
+): {
+	sections: SectionNode[];
+	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
+} {
 	const sections: SectionNode[] = [];
+	const sectionByBlock = new WeakMap<AsciidoctorBlock, SectionNode>();
 
 	for (const surface of blockSurfaces) {
 		if (surface.context !== "section") {
@@ -124,9 +130,10 @@ function buildSectionSurfaces(
 			children: [],
 		}) as SectionNode;
 		sections.push(section);
+		sectionByBlock.set(surface.block, section);
 	}
 
-	return sections;
+	return { sections, sectionByBlock };
 }
 
 function mapSectionScope(
