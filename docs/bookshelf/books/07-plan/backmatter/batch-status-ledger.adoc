@@ -65,10 +65,10 @@
 
 |08
 |RDF 1.2 serialization 与 roundtrip
-|未开始
-|
-|
-|
+|通过
+|`f76bcb90f37a91f5b15620753584a5716d63bbbc`
+|通过
+|审核包见 xref:batch-08-review-package[Batch 08 审核包]。Turtle 1.2 serializer、parse-back graph equivalence 和 `rdf:reifies` triple term roundtrip 已验收。
 
 |09
 |public `rdf12` API 与 CLI
