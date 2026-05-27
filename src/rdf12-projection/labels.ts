@@ -6,9 +6,9 @@ import type {
 	ListingNode,
 	MetadataNode,
 	SectionNode,
+	SourceSpan,
 	TableNode,
 	TargetNode,
-	XrefOccurrenceNode,
 } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
@@ -41,6 +41,15 @@ export type ProjectLabelsInput = {
 
 type LabelProjectorContext = ProjectLabelsInput & {
 	readonly catalog: Rdf12LabelCatalog;
+	readonly ordinalAllocator: OrdinalAllocator;
+};
+
+type LabelWriterContext = {
+	readonly graph: Rdf12Graph;
+	readonly catalog: Rdf12LabelCatalog;
+	readonly baseIri: string;
+	readonly documentKey: string;
+	readonly relativePath: string;
 	readonly ordinalAllocator: OrdinalAllocator;
 };
 
@@ -97,12 +106,38 @@ function projectNodeLabels(
 		case "anchor":
 			projectAnchorLabels(context, node);
 			break;
-		case "xref":
-			projectXrefDisplayLabels(context, node);
-			break;
 		default:
 			break;
 	}
+}
+
+export function addXrefDisplayLabelResource(input: {
+	readonly graph: Rdf12Graph;
+	readonly catalog: Rdf12LabelCatalog;
+	readonly baseIri: string;
+	readonly documentKey: string;
+	readonly relativePath: string;
+	readonly owner: Rdf12IriTerm;
+	readonly value: string;
+	readonly sourceSpan: SourceSpan;
+}): void {
+	const ordinalAllocator = createOrdinalAllocator();
+	addLabelResource(
+		{
+			graph: input.graph,
+			catalog: input.catalog,
+			baseIri: input.baseIri,
+			documentKey: input.documentKey,
+			relativePath: input.relativePath,
+			ordinalAllocator,
+		},
+		{
+			owner: input.owner,
+			labelClass: "XrefDisplayLabel",
+			value: input.value,
+			sourceSpan: input.sourceSpan,
+		},
+	);
 }
 
 function projectSectionLabels(
@@ -240,22 +275,6 @@ function projectAnchorLabels(
 	}
 }
 
-function projectXrefDisplayLabels(
-	context: LabelProjectorContext,
-	node: XrefOccurrenceNode,
-): void {
-	if (node.label === undefined || node.sourceSpan === undefined) {
-		return;
-	}
-
-	addLabelResource(context, {
-		owner: context.documentIri,
-		labelClass: "XrefDisplayLabel",
-		value: node.label,
-		sourceSpan: node.sourceSpan,
-	});
-}
-
 function projectMetadataLabels(
 	context: LabelProjectorContext,
 	owner: Rdf12IriTerm,
@@ -336,7 +355,7 @@ function ownerForTarget(
 }
 
 function addLineBackedLabel(
-	context: LabelProjectorContext,
+	context: LabelWriterContext,
 	input: {
 		readonly owner: Rdf12IriTerm;
 		readonly labelClass: Rdf12LabelClass;
@@ -357,7 +376,7 @@ function addLineBackedLabel(
 }
 
 function addLabelResource(
-	context: LabelProjectorContext,
+	context: LabelWriterContext,
 	input: {
 		readonly owner: Rdf12IriTerm;
 		readonly labelClass: Rdf12LabelClass;

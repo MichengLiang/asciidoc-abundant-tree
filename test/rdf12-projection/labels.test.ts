@@ -2,7 +2,13 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
-import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
+import {
+	createRdf12Graph,
+	type Rdf12Graph,
+	rdf12Triple,
+} from "../../src/rdf12-projection/graph";
+import { createRdf12LabelCatalog } from "../../src/rdf12-projection/label-catalog";
+import { addXrefDisplayLabelResource } from "../../src/rdf12-projection/labels";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
@@ -88,7 +94,7 @@ describe("rdf12 label projection", () => {
 		expectLabelHasSourceLocation(projection.graph, match.labels[0] ?? "", 2, 2);
 	});
 
-	it("projects xref display labels without creating xref relation resources", () => {
+	it("does not project xref display labels without a legal xref owner", () => {
 		const projection = projectAbundantDocumentToRdf12(xrefDisplayDocument(), {
 			documentRoot: projectRoot,
 		});
@@ -98,10 +104,8 @@ describe("rdf12 label projection", () => {
 			"Display Label",
 		);
 
-		expect(match.owners).toEqual([projection.documentIri]);
-		expect(match.labels).toHaveLength(1);
-		expect(match.labels[0]).not.toContain("Display Label");
-		expectLabelHasSourceLocation(projection.graph, match.labels[0] ?? "", 3, 3);
+		expect(match.owners).toEqual([]);
+		expect(match.labels).toHaveLength(0);
 		expect(
 			projection.graph.match({
 				object: iriTerm(`${namespaces.aat}XrefOccurrence`),
@@ -117,6 +121,33 @@ describe("rdf12 label projection", () => {
 				predicate: iriTerm(`${namespaces.aat}references`),
 			}),
 		).toHaveLength(0);
+	});
+
+	it("can create xref display labels when a legal owner is provided", () => {
+		const graph = createRdf12Graph();
+		const catalog = createRdf12LabelCatalog();
+		const owner = iriTerm("urn:aat:doc:test#xref-l3-c5-o0");
+
+		addXrefDisplayLabelResource({
+			graph,
+			catalog,
+			baseIri: "urn:aat:doc:",
+			documentKey: "test",
+			relativePath: "samples/reference-links.adoc",
+			owner,
+			value: "Display Label",
+			sourceSpan: {
+				start: { line: 3, column: 5 },
+				end: { line: 3, column: 28 },
+			},
+		});
+
+		const match = ownersForLabel(graph, "XrefDisplayLabel", "Display Label");
+		expect(match.owners).toEqual([owner.value]);
+		expect(match.labels).toHaveLength(1);
+		expect(match.labels[0]).not.toContain("Display Label");
+		expectLabelHasSourceLocation(graph, match.labels[0] ?? "", 3, 3);
+		expect(catalog.owners("Display Label")).toEqual([owner]);
 	});
 
 	it("does not put label values into label or structure resource IRIs", () => {
