@@ -16,10 +16,10 @@
 
 |01
 |RDF 1.2 graph primitives
-|未开始
-|
-|
-|
+|通过
+|`d1580a25189e70f8714b870add9073b269d29c6f` + `d3bd13d1ee8be1c9b7c991a5beace5e64d2f63dc`
+|通过
+|审核包见 xref:batch-01-review-package[Batch 01 审核包]。修复提交移除 locale ordering 依赖并修复 spike lint 门禁。
 
 |02
 |identity、path 与 projection options
