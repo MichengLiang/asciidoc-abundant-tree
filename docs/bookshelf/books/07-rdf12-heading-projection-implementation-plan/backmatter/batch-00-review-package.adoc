@@ -6,7 +6,7 @@
 [horizontal]
 批次编号:: `Batch 00`
 批次名称:: `基线与迁移护栏`
-提交 hash:: `4b11efb8950714371a2b95937750d67a0dd3fc1c`
+提交 hash:: `8458ebeb81666b82a2b48c481fabc9426fd3c3d0`
 执行者:: `Codex`
 审核者:: `待审核者填写`
 审核状态:: `待审核`
@@ -32,6 +32,7 @@ docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/
 - query-contracts.test.ts 继续锁定当前旧输出基线，并通过解析后的 graph 事实检查公共 rdf12 和 CLI 输出，不比较 Turtle 排版。
 - 记录当前旧输出快照命令和目标差距。
 - 返工 payload opaque 负验收作用域，只禁止 payload raw 内部字段在 payload subject 上展开为业务 RDF graph，不禁止标题或 xref 边上的合法直接字段谓词。
+- 返工 migration allowed failure case 粒度，按 Batch 01、Batch 02、Batch 04、Batch 05、Batch 06 和 Batch 07 拆分目标测试单元，后续批次可逐项解除顶部允许失败标记。
 ----
 
 === 当前旧输出快照
@@ -121,13 +122,13 @@ pnpm exec biome check test/rdf12-projection/heading-projection.acceptance.test.t
 
 [source,text]
 ----
-pnpm test -- test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, Vitest reported 36 passed test files, 227 passed tests, 5 expected fail tests.
-pnpm test -- test/rdf12-projection/query-contracts.test.ts: PASS, Vitest reported 36 passed test files, 227 passed tests, 5 expected fail tests.
+pnpm test -- test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, Vitest reported 36 passed test files, 227 passed tests, 7 expected fail tests.
+pnpm test -- test/rdf12-projection/query-contracts.test.ts: PASS, Vitest reported 36 passed test files, 227 passed tests, 7 expected fail tests.
 pnpm typecheck: PASS.
 pnpm exec biome check test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/helpers/graph-matchers.ts test/rdf12-projection/query-contracts.test.ts: PASS, Biome checked 3 files with no fixes applied.
 ----
 
-5 个 expected fail tests 是 Batch 00 集中登记的迁移期目标断言失败集合。失败对象与当前旧输出差距一致：heading 节点、heading 结构边、XrefEdge、payload 复杂属性和旧类型退出尚未由 Batch 01-06 实现。
+7 个 expected fail tests 是 Batch 00 集中登记的迁移期目标断言失败集合。失败对象按移除批次拆分：Batch 01 heading node/slice 两项、Batch 02 structure edge、Batch 04 xref edge evidence、Batch 05 direct field predicates、Batch 06 payload complex properties、Batch 07 old public resource type removal。
 
 === 规约检查清单
 
