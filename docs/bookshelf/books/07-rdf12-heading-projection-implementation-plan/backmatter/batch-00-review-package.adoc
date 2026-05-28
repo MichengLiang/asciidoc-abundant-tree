@@ -6,7 +6,7 @@
 [horizontal]
 批次编号:: `Batch 00`
 批次名称:: `基线与迁移护栏`
-提交 hash:: `PENDING_COMMIT_HASH`
+提交 hash:: `249cf5e11d16c71f6dc17cd690caad94b0e9c6ca`
 执行者:: `Codex`
 审核者:: `待审核者填写`
 审核状态:: `待审核`
