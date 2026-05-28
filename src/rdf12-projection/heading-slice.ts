@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import type {
 	AbundantDocument,
 	AbundantNode,
@@ -46,6 +45,7 @@ export function resolveHeadingSlice(
 
 export function resolveDocumentTitleHeadingSlice(
 	document: AbundantDocument,
+	input: { readonly sourceText?: string },
 ): HeadingSlice | undefined {
 	const title = document.title;
 	const headingLine = title?.source?.line;
@@ -54,7 +54,15 @@ export function resolveDocumentTitleHeadingSlice(
 		return undefined;
 	}
 
-	const lineTable = buildLineTable(readFileSync(document.sourcePath, "utf8"));
+	if (input.sourceText === undefined) {
+		return {
+			span: { startLine: headingLine, endLine: headingLine },
+			headingLine,
+			raw: `${"=".repeat(1)} ${title.text}\n`,
+		};
+	}
+
+	const lineTable = buildLineTable(input.sourceText);
 	const firstSectionStart = firstSectionHeadingStartLine(document.children);
 	const endLine = Math.max(
 		headingLine,

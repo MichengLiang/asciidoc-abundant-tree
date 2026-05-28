@@ -95,6 +95,9 @@ export function projectAbundantDocumentToRdf12(
 		documentKey: coordinate.documentKey,
 		documentIri,
 		relativePath: coordinate.relativePath,
+		...(normalizedOptions.sourceText !== undefined
+			? { sourceText: normalizedOptions.sourceText }
+			: {}),
 	});
 	const labelCatalog = projectLabels({
 		graph,

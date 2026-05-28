@@ -1,5 +1,7 @@
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
@@ -154,13 +156,46 @@ describe("rdf12 structure projection", () => {
 			targetType: "section",
 		});
 	});
+
+	it("does not read a virtual sourcePath when document title raw must degrade without sourceText", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			virtualDocumentWithTitle(),
+			{ documentRoot: "/virtual" },
+		);
+		const root = resourceIri(projection.documentIri, "heading-l1-o0");
+
+		expectStringTriple(projection.graph, root, "raw", "= root\n");
+		expectNumberTriple(projection.graph, root, "startLine", 1);
+		expectNumberTriple(projection.graph, root, "endLine", 1);
+		expectNumberTriple(projection.graph, root, "headingLine", 1);
+		expectNoTriple(projection.graph, root, "contentStartLine");
+		expectNoTriple(projection.graph, root, "contentEndLine");
+	});
 });
 
 function structuralPayloadProjection() {
 	return projectAbundantDocumentToRdf12(
 		parseAbundantTree({ sourcePath: structuralPayloadPath }),
-		{ documentRoot: projectRoot },
+		{
+			documentRoot: projectRoot,
+			sourceText: readFileSync(structuralPayloadPath, "utf8"),
+		},
 	);
+}
+
+function virtualDocumentWithTitle(): AbundantDocument {
+	return {
+		kind: "document",
+		sourcePath: "/virtual/missing.adoc",
+		mode: "single-file",
+		parser: { name: "@asciidoctor/core", version: "test" },
+		title: { kind: "title", text: "root", source: { line: 1 } },
+		children: [],
+		targets: [],
+		xrefOccurrences: [],
+		anchorOccurrences: [],
+		toolDiagnostics: [],
+	};
 }
 
 function resourcesOfType(graph: Rdf12Graph, typeIri: string): string[] {

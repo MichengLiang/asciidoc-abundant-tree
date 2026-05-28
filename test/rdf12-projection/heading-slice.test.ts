@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseAbundantTree } from "../../src/parser";
@@ -118,7 +119,10 @@ describe("rdf12 heading slices", () => {
 function structuralPayloadProjection() {
 	return projectAbundantDocumentToRdf12(
 		parseAbundantTree({ sourcePath: structuralPayloadPath }),
-		{ documentRoot: projectRoot },
+		{
+			documentRoot: projectRoot,
+			sourceText: readFileSync(structuralPayloadPath, "utf8"),
+		},
 	);
 }
 

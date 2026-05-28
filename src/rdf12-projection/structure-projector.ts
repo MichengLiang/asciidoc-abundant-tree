@@ -32,6 +32,7 @@ export type ProjectStructureResourcesInput = {
 	readonly documentKey: string;
 	readonly documentIri: Rdf12IriTerm;
 	readonly relativePath: string;
+	readonly sourceText?: string;
 };
 
 type StructureProjectorContext = ProjectStructureResourcesInput & {
@@ -58,7 +59,11 @@ export function projectStructureResources(
 
 function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 	const title = context.document.title;
-	const slice = resolveDocumentTitleHeadingSlice(context.document);
+	const slice = resolveDocumentTitleHeadingSlice(context.document, {
+		...(context.sourceText !== undefined
+			? { sourceText: context.sourceText }
+			: {}),
+	});
 
 	if (title === undefined || slice === undefined) {
 		return;
