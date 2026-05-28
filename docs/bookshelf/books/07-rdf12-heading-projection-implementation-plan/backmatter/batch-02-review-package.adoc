@@ -1,0 +1,103 @@
+[#batch-02-review-package]
+== Batch 02 审核包：标题结构边
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 02`
+批次名称:: `标题结构边`
+提交 hash:: `ac811e44ad81ca9f9119f4f7e3730b0d7f25eb98`
+执行者:: `Codex`
+审核者:: `待审核者填写`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/rdf12-projection/structure-projector.ts
+test/rdf12-projection/containment.test.ts
+test/rdf12-projection/query-contracts.test.ts
+test/rdf12-projection/heading-projection.acceptance.test.ts
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-02-review-package.adoc
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- structure-projector.ts 在全部 heading node 创建后，从 node-index entries() 建立 heading-to-heading 结构边。
+- 生成 root aat:containsDirectly 配送策略。
+- 生成 root aat:containsDirectly 运力规则。
+- 生成 运力规则 aat:containsDirectly 我是3级标题。
+- 不生成 root aat:containsDirectly 我是3级标题。
+- 生成 运力规则 aat:previousSibling 配送策略。
+- 不生成 我是3级标题 aat:previousSibling 运力规则。
+- containment.test.ts 覆盖 containsDirectly 两端均为 aat:Heading，且旧 Paragraph/ListingBlock/TableBlock/AnchorTarget 类型不作为结构边对象出现。
+- query-contracts.test.ts 覆盖 public rdf12 roundtrip 后的直接子标题查询和 CLI Turtle 中递归子树查询。
+- heading-projection.acceptance.test.ts 中 Batch 02 结构边断言解除 expected-fail；Batch 04、Batch 05、Batch 06 和 Batch 07 仍保持 expected-fail。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- 标题 label 空间与 selector binding：归属 Batch 03。
+- rel:* xref relation、aat:XrefEdge 和 RDF 1.2 reifier 目标形态：归属 Batch 04。
+- kind/status/owner/weight 等直接字段谓词：归属 Batch 05。
+- 节点 payload 和边 payload complex property：归属 Batch 06。
+- public 契约最终清理和旧测试整体迁移：归属 Batch 07。
+----
+
+=== TDD 证据
+
+[source,text]
+----
+RED:
+pnpm exec vitest run test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：FAIL。3 test files failed；6 tests failed。失败点为缺少 containsDirectly、previousSibling、直接子标题查询和递归子树查询结果。
+
+GREEN:
+pnpm exec vitest run test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：PASS。3 test files passed，9 passed tests，4 expected fail tests。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm exec vitest run test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/structure-projector.ts test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm test -- test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm exec vitest run test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, 3 test files passed, 9 passed tests, 4 expected fail tests.
+pnpm typecheck: PASS.
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/structure-projector.ts test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, Biome checked 4 files with no fixes applied.
+pnpm test -- test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL. 该 package script 实际运行整个 test/rdf12-projection suite；结果为 7 failed files、30 passed files、20 failed tests、217 passed tests、4 expected fail tests。失败集中在 Batch 03+ 未迁移旧契约：labels、attributes、payload、selector-binding、xref、reference-links 等旧 Section/Listing/Anchor/payload/xref 预期。
+----
+
+=== 规约检查清单
+
+* 本批没有修改批次边界外 runtime 文件。
+* 本批没有修改 `xref-projector.ts`、`payload-projector.ts`、`attributes.ts` 或 parser 行为。
+* 本批只生成 heading-to-heading `aat:containsDirectly` 和 `aat:previousSibling`。
+* 本批没有物化传递包含关系。
+* 本批没有生成 xref relation、payload、direct field predicates 或 selector binding。
+* 本批测试覆盖了正向结构边事实。
+* 本批测试覆盖了 `root` 不直接 contains `我是3级标题`。
+* 本批测试覆盖了 `我是3级标题` 不以 `运力规则` 为 previousSibling。
+* 本批 public graph 与 06 号书标题结构对象语言一致。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: `执行者已提交 Batch 02 标题结构边实现，审核者尚未确认通过。`
+后续动作:: `审核者检查 containsDirectly 两端均为 heading、previousSibling 不跨父级、root 不直接包含嵌套三级标题。`

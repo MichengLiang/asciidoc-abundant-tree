@@ -21,9 +21,9 @@
 
 |Batch 02
 |标题结构边
-|未开始
-|
-|
+|待审核
+|ac811e44ad81ca9f9119f4f7e3730b0d7f25eb98
+|xref:batch-02-review-package[Batch 02 审核包]
 
 |Batch 03
 |标题 Label 空间与 Selector Binding
