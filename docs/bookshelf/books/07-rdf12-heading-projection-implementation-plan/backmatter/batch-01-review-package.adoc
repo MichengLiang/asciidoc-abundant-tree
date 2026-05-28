@@ -1,0 +1,102 @@
+[#batch-01-review-package]
+== Batch 01 审核包：标题节点与标题切片
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 01`
+批次名称:: `标题节点与标题切片`
+提交 hash:: `PENDING_COMMIT_HASH`
+执行者:: `Codex`
+审核者:: `待审核者填写`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/rdf12-projection/heading-slice.ts
+src/rdf12-projection/node-index.ts
+src/rdf12-projection/resource-identity.ts
+src/rdf12-projection/structure-projector.ts
+test/rdf12-projection/heading-projection.acceptance.test.ts
+test/rdf12-projection/heading-slice.test.ts
+test/rdf12-projection/structure-projector.test.ts
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-01-review-package.adoc
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- structure-projector.ts 的 public 结构输出收敛为 aat:Heading，不再输出 Paragraph、ListingBlock、TableBlock 或 AnchorTarget 结构 resource。
+- heading local id 使用 heading-l<startLine>-o<ordinal>，不使用 headline、address label 或 generated label。
+- 标题节点写入 aat:headline、aat:headingLevel、aat:addressLabel 或 aat:generatedAddressLabel。
+- 标题节点写入 aat:relativePath、aat:startLine、aat:endLine、aat:headingLine、aat:metadataStartLine/EndLine、aat:contentStartLine/EndLine。
+- heading-slice.ts 基于 AbundantDocument 中已有 source surface 字段生成标题自身 aat:raw，不读取源文件，不重新解析 AsciiDoc。
+- heading-projection.acceptance.test.ts 中 Batch 01 两个目标测试解除 expected-fail；Batch 02、Batch 04、Batch 05、Batch 06 和 Batch 07 仍保持 expected-fail。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- aat:containsDirectly 和 aat:previousSibling 标题结构边：归属 Batch 02。
+- 标题 label 空间与 selector binding 的最终形态：归属 Batch 03。
+- rel:* xref relation、aat:XrefEdge 和 RDF 1.2 reifier 目标形态：归属 Batch 04。
+- kind/status/owner/weight 等直接字段谓词：归属 Batch 05。
+- 节点 payload 和边 payload complex property：归属 Batch 06。
+- query-contracts、reference-links、labels、attributes、payload、xref 等旧契约测试整体迁移：归属后续批次和 Batch 07。
+----
+
+=== TDD 证据
+
+[source,text]
+----
+RED:
+pnpm exec vitest run test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：FAIL。structure-projector.test.ts 与 heading-slice.test.ts 共 6 个 Batch 01 断言失败；失败原因是旧实现没有 aat:Heading、heading-l* IRI、aat:raw、aat:headingLevel，并且仍输出旧 block resource。
+
+GREEN:
+pnpm exec vitest run test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：PASS。3 test files passed，9 passed tests，5 expected fail tests。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+pnpm exec vitest run test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/structure-projector.ts src/rdf12-projection/node-index.ts src/rdf12-projection/resource-identity.ts src/rdf12-projection/heading-slice.ts test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL. 该 package script 实际运行整个 test/rdf12-projection suite，失败集中在 Batch 02+ 未迁移旧契约：containment、labels、attributes、payload、selector-binding、xref、reference-links、query-contracts 等旧 Section/Listing/Anchor/containment/payload/xref 预期。
+pnpm typecheck: PASS.
+pnpm exec vitest run test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, 3 test files passed, 9 passed tests, 5 expected fail tests.
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/structure-projector.ts src/rdf12-projection/node-index.ts src/rdf12-projection/resource-identity.ts src/rdf12-projection/heading-slice.ts test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, Biome checked 7 files with no fixes applied.
+----
+
+=== 规约检查清单
+
+* 本批没有修改批次边界外文件。
+* 本批没有修改 `src/parser.ts`、`src/asciidoctor-adapter.ts` 或 `src/metadata-parser.ts`。
+* 本批没有修改 `xref-projector.ts`、`attributes.ts` 或 `payload-projector.ts`。
+* 本批没有引入投影层重新解析 AsciiDoc 源结构。
+* 本批没有让 headline、address label 或 generated label 进入 heading resource IRI。
+* 本批测试覆盖了正向标题节点事实。
+* 本批测试覆盖了标题 raw 不吞并子标题切片。
+* 本批测试覆盖了旧 block structure resource 退出 structure-projector public 输出。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: `执行者已提交 Batch 01 标题节点与标题切片实现，审核者尚未确认通过。`
+后续动作:: `审核者检查 heading raw 行范围、heading IRI 输入、node-index 语义和旧 block resource 退出范围。`

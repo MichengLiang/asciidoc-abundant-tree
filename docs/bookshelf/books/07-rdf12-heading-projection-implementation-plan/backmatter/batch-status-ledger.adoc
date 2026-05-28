@@ -15,9 +15,9 @@
 
 |Batch 01
 |标题节点与标题切片
-|未开始
-|
-|
+|待审核
+|PENDING_COMMIT_HASH
+|xref:batch-01-review-package[Batch 01 审核包]
 
 |Batch 02
 |标题结构边

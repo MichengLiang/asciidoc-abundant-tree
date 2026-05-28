@@ -1,15 +1,14 @@
-import type { AbundantNode, TargetType } from "../model";
+import type { AbundantNode, SectionNode, TargetType } from "../model";
 import type { Rdf12IriTerm } from "./terms";
 
 export type Rdf12NodeIndexEntry = {
-	readonly node: AbundantNode;
+	readonly node: SectionNode;
 	readonly iri: Rdf12IriTerm;
 	readonly localId: string;
-	readonly kind: AbundantNode["kind"];
+	readonly kind: "section";
 	readonly startLine: number;
 	readonly endLine: number;
-	readonly startColumn?: number;
-	readonly targetType?: TargetType;
+	readonly targetType: "section";
 };
 
 export type Rdf12NodeIndex = {
@@ -43,6 +42,10 @@ class Rdf12NodeIndexMap implements MutableRdf12NodeIndex {
 		readonly startLine: number;
 		readonly endLine?: number;
 	}): Rdf12IriTerm | undefined {
+		if (input.targetType !== "section") {
+			return undefined;
+		}
+
 		return this.#entries.find(
 			(entry) =>
 				entry.targetType === input.targetType &&

@@ -2,6 +2,7 @@ import { iriTerm, type Rdf12IriTerm } from "./terms";
 
 export type ResourceKind =
 	| "document"
+	| "heading"
 	| "section"
 	| "paragraph"
 	| "listing"
@@ -47,6 +48,13 @@ export function makeResourceIri(input: ResourceIriInput): Rdf12IriTerm {
 
 export function makeBlockResourceLocalId(input: BlockLocalIdInput): string {
 	return `${input.kind}-l${input.startLine}-o${input.ordinal}`;
+}
+
+export function makeHeadingResourceLocalId(input: {
+	readonly startLine: number;
+	readonly ordinal: number;
+}): string {
+	return `heading-l${input.startLine}-o${input.ordinal}`;
 }
 
 export function makeOccurrenceResourceLocalId(

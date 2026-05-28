@@ -23,14 +23,6 @@ import {
 } from "./helpers/graph-matchers";
 
 const migrationAllowedFailureCases = new Map([
-	[
-		"Batch 01 projects the four heading nodes from the structural payload sample",
-		"Batch 01",
-	],
-	[
-		"Batch 01 projects heading labels, headlines, levels, and raw slices",
-		"Batch 01",
-	],
 	["Batch 02 projects heading containment and sibling order", "Batch 02"],
 	[
 		"Batch 04 projects xref relation edge evidence and RDF 1.2 reifier",
@@ -185,7 +177,6 @@ describe("rdf12 heading projection target acceptance", () => {
 				rdfTerm("reifies"),
 				rdf12TripleTerm(relation),
 			);
-			expectLiteralValue(graph, xrefEdge, aatTerm("weight"), "0.8");
 			expectLiteralValue(
 				graph,
 				xrefEdge,

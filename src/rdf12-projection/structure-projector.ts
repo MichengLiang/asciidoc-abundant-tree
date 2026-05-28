@@ -1,16 +1,11 @@
 import type {
 	AbundantDocument,
 	AbundantNode,
-	AnchorOccurrenceNode,
 	LineSpan,
-	ListingNode,
-	ParagraphNode,
 	SectionNode,
-	TableNode,
-	TargetType,
 } from "../model";
-import type { Rdf12Graph } from "./graph";
-import { rdf12Triple } from "./graph";
+import { type Rdf12Graph, rdf12Triple } from "./graph";
+import { resolveHeadingSlice } from "./heading-slice";
 import { integerLiteral, stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
 import {
@@ -20,13 +15,11 @@ import {
 } from "./node-index";
 import {
 	createOrdinalAllocator,
-	makeBlockResourceLocalId,
-	makeOccurrenceResourceLocalId,
+	makeHeadingResourceLocalId,
 	makeResourceIri,
 	type OrdinalAllocator,
-	type ResourceKind,
 } from "./resource-identity";
-import { addLineSpanTriples, addSourceSpanTriples } from "./source-location";
+import { addLineSpanTriples } from "./source-location";
 import { iriTerm, type Rdf12IriTerm } from "./terms";
 
 export type ProjectStructureResourcesInput = {
@@ -52,278 +45,154 @@ export function projectStructureResources(
 		ordinalAllocator: createOrdinalAllocator(),
 	};
 
-	projectDirectChildren(context, input.documentIri, input.document.children);
+	projectDocumentTitleHeading(context);
+	for (const section of collectSections(input.document.children)) {
+		projectHeading(context, section);
+	}
 
 	return context.nodeIndex;
 }
 
-function projectDirectChildren(
-	context: StructureProjectorContext,
-	parentIri: Rdf12IriTerm,
-	children: readonly AbundantNode[] | undefined,
-): void {
-	for (const child of children ?? []) {
-		const childIri = projectNode(context, child);
+function projectDocumentTitleHeading(context: StructureProjectorContext): void {
+	const title = context.document.title;
+	const headingLine = title?.source?.line;
 
-		if (childIri !== undefined) {
-			addContainsDirectlyTriple(context.graph, parentIri, childIri);
+	if (title === undefined || headingLine === undefined) {
+		return;
+	}
+
+	const span = {
+		startLine: headingLine,
+		endLine: Math.max(headingLine, firstSectionStartLine(context.document) - 1),
+	};
+	const iri = createHeadingResource(context, {
+		startLine: span.startLine,
+		span,
+	});
+
+	addTypeAndSourceTriples(context.graph, iri, context.relativePath, span);
+	addStringTriple(context.graph, iri, "headline", title.text);
+	addIntegerTriple(context.graph, iri, "headingLevel", 0);
+	addIntegerTriple(context.graph, iri, "headingLine", headingLine);
+}
+
+function firstSectionStartLine(document: AbundantDocument): number {
+	const sectionStart = collectSections(document.children)
+		.map((section) => sectionStartLine(section))
+		.filter((line): line is number => line !== undefined)
+		.sort((left, right) => left - right)[0];
+
+	return sectionStart ?? Number.MAX_SAFE_INTEGER;
+}
+
+function collectSections(
+	nodes: readonly AbundantNode[] | undefined,
+): SectionNode[] {
+	const sections: SectionNode[] = [];
+
+	for (const node of nodes ?? []) {
+		if (node.kind !== "section") {
+			continue;
 		}
+		sections.push(node);
+		sections.push(...collectSections(node.children));
 	}
+
+	return sections;
 }
 
-function projectNode(
-	context: StructureProjectorContext,
-	node: AbundantNode,
-): Rdf12IriTerm | undefined {
-	switch (node.kind) {
-		case "section":
-			return projectSection(context, node);
-		case "paragraph":
-			return projectParagraph(context, node);
-		case "listing":
-			return projectListing(context, node);
-		case "table":
-			return projectTable(context, node);
-		case "anchor":
-			return projectAnchor(context, node);
-		default:
-			return undefined;
-	}
-}
-
-function projectSection(
+function projectHeading(
 	context: StructureProjectorContext,
 	node: SectionNode,
-): Rdf12IriTerm | undefined {
-	if (node.span === undefined) {
-		return undefined;
+): void {
+	const slice = resolveHeadingSlice(node);
+
+	if (slice === undefined) {
+		return;
 	}
 
-	const iri = createBlockResource(context, node, {
-		kind: "section",
-		span: node.span,
-		typeLocalName: "Section",
-	});
-	context.graph.add(
-		rdf12Triple(
-			iri,
-			iriTerm(`${namespaces.aat}sectionLevel`),
-			integerLiteral(node.level),
-		),
-	);
-	projectDirectChildren(context, iri, node.children);
-
-	return iri;
-}
-
-function projectParagraph(
-	context: StructureProjectorContext,
-	node: ParagraphNode,
-): Rdf12IriTerm | undefined {
-	const span = node.source?.span;
-
-	if (span === undefined) {
-		return undefined;
-	}
-
-	const iri = createBlockResource(context, node, {
-		kind: "paragraph",
-		span,
-		typeLocalName: "Paragraph",
+	const iri = createHeadingResource(context, {
+		startLine: slice.span.startLine,
+		span: slice.span,
 	});
 
-	if (node.text !== undefined) {
-		context.graph.add(
-			rdf12Triple(
-				iri,
-				iriTerm(`${namespaces.aat}sourceText`),
-				stringLiteral(node.text),
-			),
-		);
-	}
-
-	projectDirectChildren(context, iri, node.children);
-
-	return iri;
-}
-
-function projectListing(
-	context: StructureProjectorContext,
-	node: ListingNode,
-): Rdf12IriTerm | undefined {
-	if (node.span === undefined) {
-		return undefined;
-	}
-
-	const iri = createBlockResource(context, node, {
-		kind: "listing",
-		span: node.span,
-		typeLocalName: "ListingBlock",
-	});
-	addOptionalLineSpan(context, iri, "metadata", node.metadataSpan);
-	addOptionalLineSpan(context, iri, "content", node.contentSpan);
-	addOptionalString(context, iri, "listingStyle", node.style);
-	addOptionalString(context, iri, "language", node.language);
-	addOptionalString(context, iri, "sourceText", node.content);
-
-	return iri;
-}
-
-function projectTable(
-	context: StructureProjectorContext,
-	node: TableNode,
-): Rdf12IriTerm | undefined {
-	if (node.span === undefined) {
-		return undefined;
-	}
-
-	const iri = createBlockResource(context, node, {
-		kind: "table",
-		span: node.span,
-		typeLocalName: "TableBlock",
-	});
-	projectDirectChildren(context, iri, node.children);
-
-	return iri;
-}
-
-function projectAnchor(
-	context: StructureProjectorContext,
-	node: AnchorOccurrenceNode,
-): Rdf12IriTerm | undefined {
-	if (node.sourceSpan === undefined) {
-		return undefined;
-	}
-
-	const ordinal = context.ordinalAllocator.next({
-		kind: "anchor",
-		startLine: node.sourceSpan.start.line,
-		startColumn: node.sourceSpan.start.column,
-	});
-	const localId = makeOccurrenceResourceLocalId({
-		kind: "anchor",
-		startLine: node.sourceSpan.start.line,
-		startColumn: node.sourceSpan.start.column,
-		ordinal,
-	});
-	const iri = makeResourceIri({
-		baseIri: context.baseIri,
-		documentKey: context.documentKey,
-		localId,
-	});
-
-	context.graph.add(
-		rdf12Triple(
-			iri,
-			iriTerm(`${namespaces.rdf}type`),
-			iriTerm(`${namespaces.aat}AnchorTarget`),
-		),
-	);
-	addSourceSpanTriples({
-		graph: context.graph,
-		subject: iri,
-		relativePath: context.relativePath,
-		sourceSpan: node.sourceSpan,
-	});
+	addTypeAndSourceTriples(context.graph, iri, context.relativePath, slice.span);
+	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
+	addIntegerTriple(context.graph, iri, "headingLevel", node.level);
+	addStringTriple(context.graph, iri, "headline", node.title);
+	addStringTriple(context.graph, iri, "raw", slice.raw);
+	addOptionalLineSpan(context.graph, iri, "metadata", slice.metadataSpan);
+	addOptionalLineSpan(context.graph, iri, "content", slice.contentSpan);
+	addHeadingLabels(context.graph, iri, node);
 	context.nodeIndex.set({
 		node,
 		iri,
-		localId,
-		kind: node.kind,
-		startLine: node.sourceSpan.start.line,
-		endLine: node.sourceSpan.end.line,
-		startColumn: node.sourceSpan.start.column,
-		targetType: "inline-anchor",
+		localId: localIdFromIri(iri),
+		kind: "section",
+		startLine: slice.span.startLine,
+		endLine: slice.span.endLine,
+		targetType: "section",
 	});
-
-	return iri;
 }
 
-function createBlockResource(
+function createHeadingResource(
 	context: StructureProjectorContext,
-	node: AbundantNode,
-	input: {
-		readonly kind: ResourceKind;
-		readonly span: LineSpan;
-		readonly typeLocalName: string;
-	},
+	input: { readonly startLine: number; readonly span: LineSpan },
 ): Rdf12IriTerm {
 	const ordinal = context.ordinalAllocator.next({
-		kind: input.kind,
-		startLine: input.span.startLine,
+		kind: "heading",
+		startLine: input.startLine,
 	});
-	const localId = makeBlockResourceLocalId({
-		kind: input.kind,
-		startLine: input.span.startLine,
+	const localId = makeHeadingResourceLocalId({
+		startLine: input.startLine,
 		ordinal,
 	});
-	const iri = makeResourceIri({
+
+	return makeResourceIri({
 		baseIri: context.baseIri,
 		documentKey: context.documentKey,
 		localId,
 	});
-
-	context.graph.add(
-		rdf12Triple(
-			iri,
-			iriTerm(`${namespaces.rdf}type`),
-			iriTerm(`${namespaces.aat}${input.typeLocalName}`),
-		),
-	);
-	addLineSpanTriples({
-		graph: context.graph,
-		subject: iri,
-		relativePath: context.relativePath,
-		span: input.span,
-	});
-	context.nodeIndex.set({
-		node,
-		iri,
-		localId,
-		kind: node.kind,
-		startLine: input.span.startLine,
-		endLine: input.span.endLine,
-		...definedTargetType(targetTypeForNode(node)),
-	});
-
-	return iri;
 }
 
-function definedTargetType(
-	targetType: TargetType | undefined,
-): { readonly targetType: TargetType } | Record<string, never> {
-	return targetType === undefined ? {} : { targetType };
-}
-
-function targetTypeForNode(node: AbundantNode): TargetType | undefined {
-	switch (node.kind) {
-		case "section":
-		case "listing":
-		case "table":
-			return node.kind;
-		case "anchor":
-			return "inline-anchor";
-		default:
-			return undefined;
-	}
-}
-
-function addContainsDirectlyTriple(
+function addTypeAndSourceTriples(
 	graph: Rdf12Graph,
-	parentIri: Rdf12IriTerm,
-	childIri: Rdf12IriTerm,
+	iri: Rdf12IriTerm,
+	relativePath: string,
+	span: LineSpan,
 ): void {
 	graph.add(
 		rdf12Triple(
-			parentIri,
-			iriTerm(`${namespaces.aat}containsDirectly`),
-			childIri,
+			iri,
+			iriTerm(`${namespaces.rdf}type`),
+			iriTerm(`${namespaces.aat}Heading`),
 		),
 	);
+	addLineSpanTriples({
+		graph,
+		subject: iri,
+		relativePath,
+		span,
+	});
+}
+
+function addHeadingLabels(
+	graph: Rdf12Graph,
+	iri: Rdf12IriTerm,
+	node: SectionNode,
+): void {
+	const predicate =
+		node.idOrigin === "asciidoctor-generated"
+			? "generatedAddressLabel"
+			: "addressLabel";
+
+	for (const id of node.ids) {
+		addStringTriple(graph, iri, predicate, id);
+	}
 }
 
 function addOptionalLineSpan(
-	context: StructureProjectorContext,
+	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
 	prefix: "metadata" | "content",
 	span: LineSpan | undefined,
@@ -332,24 +201,12 @@ function addOptionalLineSpan(
 		return;
 	}
 
-	context.graph.add(
-		rdf12Triple(
-			subject,
-			iriTerm(`${namespaces.aat}${prefix}StartLine`),
-			integerLiteral(span.startLine),
-		),
-	);
-	context.graph.add(
-		rdf12Triple(
-			subject,
-			iriTerm(`${namespaces.aat}${prefix}EndLine`),
-			integerLiteral(span.endLine),
-		),
-	);
+	addIntegerTriple(graph, subject, `${prefix}StartLine`, span.startLine);
+	addIntegerTriple(graph, subject, `${prefix}EndLine`, span.endLine);
 }
 
-function addOptionalString(
-	context: StructureProjectorContext,
+function addStringTriple(
+	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
 	predicateLocalName: string,
 	value: string | undefined,
@@ -358,11 +215,41 @@ function addOptionalString(
 		return;
 	}
 
-	context.graph.add(
+	graph.add(
 		rdf12Triple(
 			subject,
 			iriTerm(`${namespaces.aat}${predicateLocalName}`),
 			stringLiteral(value),
 		),
 	);
+}
+
+function addIntegerTriple(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	value: number,
+): void {
+	graph.add(
+		rdf12Triple(
+			subject,
+			iriTerm(`${namespaces.aat}${predicateLocalName}`),
+			integerLiteral(value),
+		),
+	);
+}
+
+function sectionStartLine(section: SectionNode): number | undefined {
+	return (
+		section.metadata
+			?.map((item) => item.line)
+			.find((line) => line !== undefined) ??
+		section.line ??
+		section.span?.startLine
+	);
+}
+
+function localIdFromIri(iri: Rdf12IriTerm): string {
+	const hashIndex = iri.value.lastIndexOf("#");
+	return hashIndex === -1 ? iri.value : iri.value.slice(hashIndex + 1);
 }
