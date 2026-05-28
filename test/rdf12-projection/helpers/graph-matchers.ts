@@ -5,7 +5,10 @@ import {
 	type Rdf12Term,
 	rdf12Triple,
 } from "../../../src/rdf12-projection/graph";
-import { stringLiteral } from "../../../src/rdf12-projection/literals";
+import {
+	integerLiteral,
+	stringLiteral,
+} from "../../../src/rdf12-projection/literals";
 import { namespaces } from "../../../src/rdf12-projection/namespaces";
 import { iriTerm } from "../../../src/rdf12-projection/terms";
 
@@ -70,6 +73,15 @@ export function expectLiteralValue(
 	value: string,
 ): void {
 	expectTriple(graph, subject, predicate, stringLiteral(value));
+}
+
+export function expectIntegerValue(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicate: Rdf12IriTerm,
+	value: number,
+): void {
+	expectTriple(graph, subject, predicate, integerLiteral(value));
 }
 
 export function literalValues(

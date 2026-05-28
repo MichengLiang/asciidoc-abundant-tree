@@ -10,6 +10,7 @@ import {
 } from "../../src/rdf12-projection/terms";
 import {
 	aatTerm,
+	expectIntegerValue,
 	expectLiteralValue,
 	expectNoTriple,
 	expectResourceTypeCount,
@@ -21,16 +22,30 @@ import {
 	termIri,
 } from "./helpers/graph-matchers";
 
-const migrationAllowedFailureCases = new Set([
-	"projects the four heading nodes from the structural payload sample",
-	"projects heading labels, direct attributes, raw slices, containment, and sibling order",
-	"projects xref relation edge evidence and binds edge payload",
-	"binds node payload as a heading complex property",
-	"removes old structural resource types from the heading projection public graph",
+const migrationAllowedFailureCases = new Map([
+	[
+		"Batch 01 projects the four heading nodes from the structural payload sample",
+		"Batch 01",
+	],
+	[
+		"Batch 01 projects heading labels, headlines, levels, and raw slices",
+		"Batch 01",
+	],
+	["Batch 02 projects heading containment and sibling order", "Batch 02"],
+	[
+		"Batch 04 projects xref relation edge evidence and RDF 1.2 reifier",
+		"Batch 04",
+	],
+	["Batch 05 projects heading and xref direct field predicates", "Batch 05"],
+	["Batch 06 binds node and edge payload complex properties", "Batch 06"],
+	[
+		"Batch 07 removes old structural resource types from the heading projection public graph",
+		"Batch 07",
+	],
 ]);
 
 // Batch 00 records target assertions before runtime migration. Remove this
-// expected-failure registry in Batch 07 after Batch 01-06 unlock these facts.
+// expected-failure registry entry-by-entry in the removal batch named above.
 function migrationIt(name: string, fn: () => void): void {
 	const runner = migrationAllowedFailureCases.has(name) ? it.fails : it;
 	runner(name, fn);
@@ -44,7 +59,7 @@ const structuralPayloadPath = join(
 
 describe("rdf12 heading projection target acceptance", () => {
 	migrationIt(
-		"projects the four heading nodes from the structural payload sample",
+		"Batch 01 projects the four heading nodes from the structural payload sample",
 		() => {
 			const { graph, heading } = structuralPayloadProjection();
 
@@ -77,7 +92,7 @@ describe("rdf12 heading projection target acceptance", () => {
 	);
 
 	migrationIt(
-		"projects heading labels, direct attributes, raw slices, containment, and sibling order",
+		"Batch 01 projects heading labels, headlines, levels, and raw slices",
 		() => {
 			const { graph, heading } = structuralPayloadProjection();
 			const root = heading("heading-l1-o0");
@@ -85,37 +100,73 @@ describe("rdf12 heading projection target acceptance", () => {
 			const capacityRule = heading("heading-l41-o0");
 			const nestedHeading = heading("heading-l46-o0");
 
+			expectLiteralValue(graph, root, aatTerm("headline"), "root");
+			expectLiteralValue(
+				graph,
+				deliveryPolicy,
+				aatTerm("headline"),
+				"配送策略",
+			);
+			expectLiteralValue(graph, capacityRule, aatTerm("headline"), "运力规则");
+			expectLiteralValue(
+				graph,
+				nestedHeading,
+				aatTerm("headline"),
+				"我是3级标题",
+			);
 			expectLiteralValue(
 				graph,
 				deliveryPolicy,
 				aatTerm("addressLabel"),
 				"delivery-policy",
 			);
-			expectLiteralValue(graph, deliveryPolicy, aatTerm("kind"), "policy");
-			expectLiteralValue(graph, deliveryPolicy, aatTerm("status"), "active");
-			expectLiteralValue(graph, deliveryPolicy, aatTerm("owner"), "ops");
-			for (const raw of literalValues(graph, capacityRule, aatTerm("raw"))) {
+			expectLiteralValue(
+				graph,
+				capacityRule,
+				aatTerm("addressLabel"),
+				"capacity-rule",
+			);
+			expectIntegerValue(graph, root, aatTerm("headingLevel"), 0);
+			expectIntegerValue(graph, deliveryPolicy, aatTerm("headingLevel"), 1);
+			expectIntegerValue(graph, capacityRule, aatTerm("headingLevel"), 1);
+			expectIntegerValue(graph, nestedHeading, aatTerm("headingLevel"), 2);
+			const capacityRuleRaw = literalValues(
+				graph,
+				capacityRule,
+				aatTerm("raw"),
+			);
+			expect(capacityRuleRaw.length).toBeGreaterThan(0);
+			for (const raw of capacityRuleRaw) {
 				expect(raw).not.toContain("=== 我是3级标题");
 			}
-			expectTriple(graph, root, aatTerm("containsDirectly"), deliveryPolicy);
-			expectTriple(graph, root, aatTerm("containsDirectly"), capacityRule);
-			expectTriple(
-				graph,
-				capacityRule,
-				aatTerm("containsDirectly"),
-				nestedHeading,
-			);
-			expectTriple(
-				graph,
-				capacityRule,
-				aatTerm("previousSibling"),
-				deliveryPolicy,
-			);
 		},
 	);
 
+	migrationIt("Batch 02 projects heading containment and sibling order", () => {
+		const { graph, heading } = structuralPayloadProjection();
+		const root = heading("heading-l1-o0");
+		const deliveryPolicy = heading("heading-l5-o0");
+		const capacityRule = heading("heading-l41-o0");
+		const nestedHeading = heading("heading-l46-o0");
+
+		expectTriple(graph, root, aatTerm("containsDirectly"), deliveryPolicy);
+		expectTriple(graph, root, aatTerm("containsDirectly"), capacityRule);
+		expectTriple(
+			graph,
+			capacityRule,
+			aatTerm("containsDirectly"),
+			nestedHeading,
+		);
+		expectTriple(
+			graph,
+			capacityRule,
+			aatTerm("previousSibling"),
+			deliveryPolicy,
+		);
+	});
+
 	migrationIt(
-		"projects xref relation edge evidence and binds edge payload",
+		"Batch 04 projects xref relation edge evidence and RDF 1.2 reifier",
 		() => {
 			const { graph, heading } = structuralPayloadProjection();
 			const deliveryPolicy = heading("heading-l5-o0");
@@ -126,7 +177,6 @@ describe("rdf12 heading projection target acceptance", () => {
 				capacityRule,
 			);
 			const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
-			const edgePayload = onlyPayloadById(graph, "rel-delivery-capacity");
 
 			expectTriple(graph, deliveryPolicy, relTerm("depends-on"), capacityRule);
 			expectTriple(
@@ -142,21 +192,29 @@ describe("rdf12 heading projection target acceptance", () => {
 				aatTerm("payloadSelector"),
 				"rel-delivery-capacity",
 			);
-			expectTriple(graph, xrefEdge, aatTerm("payload"), edgePayload);
-			expectLiteralValue(graph, edgePayload, aatTerm("payloadKind"), "edge");
-			expectLiteralValue(
-				graph,
-				edgePayload,
-				aatTerm("payloadId"),
-				"rel-delivery-capacity",
-			);
 		},
 	);
 
-	migrationIt("binds node payload as a heading complex property", () => {
+	migrationIt(
+		"Batch 05 projects heading and xref direct field predicates",
+		() => {
+			const { graph, heading } = structuralPayloadProjection();
+			const deliveryPolicy = heading("heading-l5-o0");
+			const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
+
+			expectLiteralValue(graph, deliveryPolicy, aatTerm("kind"), "policy");
+			expectLiteralValue(graph, deliveryPolicy, aatTerm("status"), "active");
+			expectLiteralValue(graph, deliveryPolicy, aatTerm("owner"), "ops");
+			expectLiteralValue(graph, xrefEdge, aatTerm("weight"), "0.8");
+		},
+	);
+
+	migrationIt("Batch 06 binds node and edge payload complex properties", () => {
 		const { graph, heading } = structuralPayloadProjection();
 		const deliveryPolicy = heading("heading-l5-o0");
+		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
 		const nodePayload = onlyPayloadById(graph, "delivery-policy-payload");
+		const edgePayload = onlyPayloadById(graph, "rel-delivery-capacity");
 
 		expectTriple(graph, deliveryPolicy, aatTerm("payload"), nodePayload);
 		expectLiteralValue(graph, nodePayload, aatTerm("payloadKind"), "node");
@@ -182,6 +240,14 @@ describe("rdf12 heading projection target acceptance", () => {
   }
 }`,
 		);
+		expectTriple(graph, xrefEdge, aatTerm("payload"), edgePayload);
+		expectLiteralValue(graph, edgePayload, aatTerm("payloadKind"), "edge");
+		expectLiteralValue(
+			graph,
+			edgePayload,
+			aatTerm("payloadId"),
+			"rel-delivery-capacity",
+		);
 	});
 
 	it("keeps payload raw opaque instead of expanding it into business graph facts", () => {
@@ -200,7 +266,7 @@ describe("rdf12 heading projection target acceptance", () => {
 	});
 
 	migrationIt(
-		"removes old structural resource types from the heading projection public graph",
+		"Batch 07 removes old structural resource types from the heading projection public graph",
 		() => {
 			const { graph } = structuralPayloadProjection();
 
