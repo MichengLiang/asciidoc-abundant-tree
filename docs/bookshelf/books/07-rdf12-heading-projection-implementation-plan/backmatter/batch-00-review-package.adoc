@@ -1,0 +1,144 @@
+[#batch-00-review-package]
+== Batch 00 审核包：基线与迁移护栏
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 00`
+批次名称:: `基线与迁移护栏`
+提交 hash:: `PENDING_COMMIT_HASH`
+执行者:: `Codex`
+审核者:: `待审核者填写`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+test/rdf12-projection/heading-projection.acceptance.test.ts
+test/rdf12-projection/helpers/graph-matchers.ts
+test/rdf12-projection/query-contracts.test.ts
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-00-review-package.adoc
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- 建立 graph matcher helper，按 RDF term 检查 triple 存在、triple 不存在、resource type 数量和 literal 值。
+- 为 samples/structural-payload.adoc 建立 06 号书目标验收测试，覆盖标题节点、标题结构、直接属性、xref 边证据、节点 payload、边 payload 和旧类型退出。
+- 在目标验收测试顶部集中登记 Batch 00 迁移期允许失败集合，并标明 Batch 07 删除全部允许失败标记。
+- query-contracts.test.ts 继续锁定当前旧输出基线，并通过解析后的 graph 事实检查公共 rdf12 和 CLI 输出，不比较 Turtle 排版。
+- 记录当前旧输出快照命令和目标差距。
+----
+
+=== 当前旧输出快照
+
+[source,bash]
+----
+pnpm exec tsx <<'EOF'
+import { join } from 'node:path';
+import { parseAbundantTree } from './src/parser.ts';
+import { projectAbundantDocumentToRdf12 } from './src/rdf12-projection/projector.ts';
+import { namespaces } from './src/rdf12-projection/namespaces.ts';
+import { iriTerm } from './src/rdf12-projection/terms.ts';
+const projectRoot = process.cwd();
+const projection = projectAbundantDocumentToRdf12(parseAbundantTree({ sourcePath: join(projectRoot, 'samples/structural-payload.adoc') }), { documentRoot: projectRoot });
+for (const type of ['Heading','Section','Paragraph','ListingBlock','TableBlock','AnchorTarget','SurfaceAttribute','PayloadBlock','XrefEdge','XrefOccurrence']) {
+  const count = projection.graph.match({ predicate: iriTerm(`${namespaces.rdf}type`), object: iriTerm(`${namespaces.aat}${type}`) }).length;
+  console.log(`${type}: ${count}`);
+}
+for (const predicate of ['containsDirectly','previousSibling','payload','hasPayload','payloadSelector','raw','sourceText']) {
+  const count = projection.graph.match({ predicate: iriTerm(`${namespaces.aat}${predicate}`) }).length;
+  console.log(`aat:${predicate}: ${count}`);
+}
+console.log(`rel:depends-on: ${projection.graph.match({ predicate: iriTerm(`${namespaces.rel}depends-on`) }).length}`);
+console.log(`rdf:reifies: ${projection.graph.match({ predicate: iriTerm(`${namespaces.rdf}reifies`) }).length}`);
+EOF
+----
+
+[source,text]
+----
+Heading: 0
+Section: 3
+Paragraph: 3
+ListingBlock: 2
+TableBlock: 0
+AnchorTarget: 0
+SurfaceAttribute: 13
+PayloadBlock: 2
+XrefEdge: 0
+XrefOccurrence: 1
+aat:containsDirectly: 8
+aat:previousSibling: 0
+aat:payload: 0
+aat:hasPayload: 2
+aat:payloadSelector: 1
+aat:raw: 1
+aat:sourceText: 7
+rel:depends-on: 1
+rdf:reifies: 1
+----
+
+=== 目标差距说明
+
+[source,text]
+----
+- 当前旧输出没有 aat:Heading 和 aat:XrefEdge，仍输出 aat:Section、aat:Paragraph、aat:ListingBlock、aat:SurfaceAttribute、aat:PayloadBlock 和 aat:XrefOccurrence。
+- 当前 containsDirectly 仍连接 document、section、paragraph、listing 等旧结构资源；目标只允许标题节点之间的直接包含。
+- 当前没有 aat:previousSibling，目标要求同父同级标题顺序。
+- 当前 kind/status/owner/weight 通过 SurfaceAttribute 资源表达；目标要求直接 aat:kind、aat:status、aat:owner、aat:weight literal 谓词。
+- 当前 payload 使用 PayloadBlock、aat:hasPayload、aat:payloadOf、aat:sourceText 和 aat:dataFormat；目标要求 heading 或 XrefEdge 上的 aat:payload 复杂属性对象，并使用 aat:raw、aat:format 和 aat:payloadKind。
+- 当前 xref 边存在 rel:depends-on 和 rdf:reifies triple term，但 reifier 主体是 XrefOccurrence；目标 reifier 主体必须是 XrefEdge 边证据。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- 标题节点、headline、headingLevel、addressLabel、generatedAddressLabel 和标题切片：归属 Batch 01。
+- containsDirectly 标题边和 previousSibling 同级边：归属 Batch 02。
+- 标题 label 空间和 selector binding：归属 Batch 03。
+- rel:* 关系边、aat:XrefEdge 和 RDF 1.2 reifier 目标形态：归属 Batch 04。
+- kind/status/owner/weight 等直接字段谓词：归属 Batch 05。
+- 节点 payload 和边 payload 复杂属性对象：归属 Batch 06。
+- 删除迁移期允许失败标记、最终 query contract、public API/CLI 出口验收：归属 Batch 07。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm test -- test/rdf12-projection/query-contracts.test.ts
+pnpm typecheck
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, Vitest reported 36 passed test files, 227 passed tests, 5 expected fail tests.
+pnpm test -- test/rdf12-projection/query-contracts.test.ts: PASS, Vitest reported 36 passed test files, 227 passed tests, 5 expected fail tests.
+pnpm typecheck: PASS.
+----
+
+5 个 expected fail tests 是 Batch 00 集中登记的迁移期目标断言失败集合。失败对象与当前旧输出差距一致：heading 节点、heading 结构边、XrefEdge、payload 复杂属性和旧类型退出尚未由 Batch 01-06 实现。
+
+=== 规约检查清单
+
+* 本批没有修改批次边界外文件。
+* 本批没有修改 `src/rdf12-projection/**`、`src/model.ts` 或 `src/parser.ts`。
+* 本批没有引入全局打回条件。
+* 本批测试覆盖了正向事实。
+* 本批测试覆盖了必要负向事实。
+* 本批 public graph 检查使用 RDF graph 语义，不使用 Turtle 排版比较。
+* 本批目标测试来自 xref:../../06-rdf12-line-projection/chapters/08-worked-example.adoc[06 号书完整样例]，不是来自当前旧输出。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: `执行者已提交 Batch 00 迁移护栏，审核者尚未确认通过。`
+后续动作:: `审核者检查本审核包、提交 diff、目标测试来源和允许失败集合。`

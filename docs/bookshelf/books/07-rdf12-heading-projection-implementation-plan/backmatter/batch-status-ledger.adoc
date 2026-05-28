@@ -9,9 +9,9 @@
 
 |Batch 00
 |基线与迁移护栏
-|未开始
-|
-|
+|待审核
+|PENDING_COMMIT_HASH
+|xref:batch-00-review-package[Batch 00 审核包]
 
 |Batch 01
 |标题节点与标题切片
