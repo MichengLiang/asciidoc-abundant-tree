@@ -966,8 +966,7 @@ describe("official table inline scanning", () => {
 				target: "target",
 				label: "Label",
 				attributes: {
-					flag: true,
-					empty: true,
+					empty: "",
 				},
 			}),
 			expect.objectContaining({
@@ -985,6 +984,60 @@ describe("official table inline scanning", () => {
 				reftext: "",
 			}),
 		]);
+	});
+
+	it("treats leading macro xref named fields as attributes instead of display labels", () => {
+		const paragraphBlock = {
+			getContext: () => "paragraph",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+		} satisfies AsciidoctorBlock;
+		const intervalByBlock = new WeakMap([
+			[
+				paragraphBlock,
+				{
+					blockStartLine: 1,
+					metadata: [],
+					contentSpan: { startLine: 1, endLine: 1 },
+					span: { startLine: 1, endLine: 1 },
+					diagnostics: [],
+				},
+			],
+		]);
+
+		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			lineTable: buildLineTable(
+				"他应该是xref:水果[rel=is, weight=0.8, payload=rel-delivery-capacity]",
+			),
+			blockSurfaces: [
+				{
+					block: paragraphBlock,
+					context: "paragraph",
+					nodeName: "paragraph",
+					level: undefined,
+					title: undefined,
+					id: undefined,
+					sourceLine: 1,
+					children: [],
+					indexInParent: 0,
+				},
+			],
+			intervalByBlock,
+		});
+
+		expect(xrefOccurrences).toEqual([
+			expect.objectContaining({
+				raw: "xref:水果[rel=is, weight=0.8, payload=rel-delivery-capacity]",
+				target: "水果",
+				attributes: {
+					rel: "is",
+					weight: "0.8",
+					payload: "rel-delivery-capacity",
+				},
+			}),
+		]);
+		expect(xrefOccurrences[0]).not.toHaveProperty("label");
 	});
 
 	it("ignores table cells and inner documents that do not expose source ranges", () => {

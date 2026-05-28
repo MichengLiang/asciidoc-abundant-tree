@@ -1,4 +1,5 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
+import { parseMacroArguments } from "./macro-argument-parser";
 import type {
 	AnchorOccurrenceNode,
 	LineSpan,
@@ -138,18 +139,11 @@ function parseMacroLabel(raw: string): {
 	label?: string;
 	attributes?: Record<string, string | number | boolean>;
 } {
-	const parts = raw.split(",").map((part) => part.trim());
-	const label = parts.shift();
-	const attributes: Record<string, string | number | boolean> = {};
-	for (const part of parts) {
-		const [key, ...value] = part.split("=");
-		if (key) {
-			attributes[key.trim()] = value.join("=").trim() || true;
-		}
-	}
+	const parsed = parseMacroArguments(raw);
+	const label = parsed.positional[0];
 	return definedObject({
 		label: label || undefined,
-		attributes: Object.keys(attributes).length > 0 ? attributes : undefined,
+		attributes: Object.keys(parsed.named).length > 0 ? parsed.named : undefined,
 	}) as {
 		label?: string;
 		attributes?: Record<string, string | number | boolean>;

@@ -10,6 +10,7 @@ import {
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm, rdf12TripleTerm } from "../../src/rdf12-projection/terms";
+import { writeFixture } from "../helpers";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
@@ -329,6 +330,66 @@ describe("rdf12 xref projection", () => {
 				.toArray()
 				.filter((triple) => triple.predicate.value.includes("bad rel")),
 		).toHaveLength(0);
+	});
+
+	it("uses leading macro rel attributes as relation predicates", () => {
+		const sourcePath = writeFixture(
+			"leading-macro-rel.adoc",
+			`= 我的笔记本
+
+== 水果
+
+=== 苹果
+
+他应该是xref:水果[rel=is, weight=0.8, payload=rel-delivery-capacity]
+`,
+		);
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({
+				sourcePath,
+			}),
+			{ documentRoot: projectRoot },
+		);
+		const expectedRelation = projection.graph
+			.toArray()
+			.find((triple) => triple.predicate.value === `${namespaces.rel}is`);
+
+		expect(expectedRelation).toBeDefined();
+		expect(expectedRelation?.object.termType).toBe("iri");
+		expect(
+			projection.graph.has(
+				rdf12Triple(
+					expectedRelation?.subject ?? iriTerm("urn:missing"),
+					iriTerm(`${namespaces.aat}references`),
+					expectedRelation?.object ?? iriTerm("urn:missing"),
+				),
+			),
+		).toBe(false);
+		const xref = onlyXref(projection.graph);
+
+		expect(
+			projection.graph.has(
+				rdf12Triple(
+					iriTerm(xref),
+					iriTerm(`${namespaces.rdf}reifies`),
+					rdf12TripleTerm(
+						expectedRelation ??
+							rdf12Triple(
+								iriTerm("urn:missing-source"),
+								iriTerm("urn:missing-predicate"),
+								iriTerm("urn:missing-target"),
+							),
+					),
+				),
+			),
+		).toBe(true);
+		expectStringTriple(projection.graph, xref, "rawRel", "is");
+		expectStringTriple(
+			projection.graph,
+			xref,
+			"payloadSelector",
+			"rel-delivery-capacity",
+		);
 	});
 });
 

@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.1.5 - 2026-05-28
+
+### Fixed
+
+- Reworked inline macro argument binding so `xref:target[rel=is]` treats `rel` as a named attribute instead of a display label.
+- Preserved RDF relation predicate selection for leading `rel` macro attributes, so explicit relations use `rel:*` predicates and only missing `rel` falls back to `aat:references`.
+
+### Changed
+
+- Added a dedicated macro argument parser with positional and named argument separation for xref macro parsing.
+
 ## 0.1.4 - 2026-05-28
 
 ### Added
