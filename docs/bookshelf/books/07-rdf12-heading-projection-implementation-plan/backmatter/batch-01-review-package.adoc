@@ -6,7 +6,7 @@
 [horizontal]
 批次编号:: `Batch 01`
 批次名称:: `标题节点与标题切片`
-提交 hash:: `PENDING_COMMIT_HASH`
+提交 hash:: `18f21f191cc8e11cab21af230718e592f21a32ba`
 执行者:: `Codex`
 审核者:: `待审核者填写`
 审核状态:: `待审核`
