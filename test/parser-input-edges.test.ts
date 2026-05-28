@@ -274,6 +274,46 @@ content
 		expect(attrlist?.attributes).not.toHaveProperty("style");
 		expect(attrlist?.attributes).not.toHaveProperty("language");
 	});
+
+	it("parses section shorthand id roles and named attributes as one attrlist", () => {
+		const path = writeFixture(
+			"metadata-section-id-role-attributes.adoc",
+			`= Probe
+
+[#abc.section, kind=policy, status=active, owner=ops]
+== 西红柿
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = findNode(
+			document.children,
+			"section",
+			"西红柿",
+		) as SectionNode;
+		const attrlist = section.metadata?.find(
+			(metadata) => metadata.metadataKind === "attrlist",
+		);
+
+		expect(section).toEqual(
+			expect.objectContaining({
+				ids: ["abc"],
+				title: "西红柿",
+			}),
+		);
+		expect(attrlist).toEqual(
+			expect.objectContaining({
+				metadataKind: "attrlist",
+				ids: ["abc"],
+				roles: ["section"],
+				attributes: {
+					kind: "policy",
+					status: "active",
+					owner: "ops",
+				},
+			}),
+		);
+	});
 });
 
 function findNode(

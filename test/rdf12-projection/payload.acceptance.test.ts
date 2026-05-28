@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { AbundantDocument, AbundantNode } from "../../src/model";
+import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
 	integerLiteral,
@@ -12,6 +13,10 @@ import { iriTerm } from "../../src/rdf12-projection/terms";
 
 const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
+const structuralPayloadPath = join(
+	projectRoot,
+	"samples/structural-payload.adoc",
+);
 
 describe("rdf12 payload query contract acceptance", () => {
 	it("answers payload block queries with opaque source text and complete spans", () => {
@@ -120,6 +125,86 @@ describe("rdf12 payload query contract acceptance", () => {
 			projection.graph.match({
 				subject: iriTerm(payload),
 				predicate: iriTerm(`${namespaces.aat}payloadOf`),
+			}),
+		).toHaveLength(0);
+	});
+
+	it("projects the structural payload sample according to the line projection contract", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			{ documentRoot: projectRoot },
+		);
+		const deliveryPolicy = ownerForAddressLabel(
+			projection.graph,
+			"delivery-policy",
+		);
+		const capacityRule = ownerForAddressLabel(
+			projection.graph,
+			"capacity-rule",
+		);
+		const nodePayload = payloadBySourceText(
+			projection.graph,
+			'{\n  "owner": {\n    "team": "ops",\n    "fallback": "manual-review"\n  },\n  "risk": {\n    "level": "high",\n    "signals": ["weather", "capacity"]\n  }\n}',
+		);
+		const xrefPayload = payloadBySourceText(
+			projection.graph,
+			'{\n  "reason": {\n    "type": "risk-control",\n    "signals": ["weather", "capacity"],\n    "description": "配送策略需要读取运力规则来决定是否降级。"\n  },\n  "edge": {\n    "direction": "outbound",\n    "required": true\n  }\n}',
+		);
+		const xref = resourceOfType(
+			projection.graph,
+			`${namespaces.aat}XrefOccurrence`,
+		);
+
+		expect(deliveryPolicy).toBeDefined();
+		expect(capacityRule).toBeDefined();
+		expect(nodePayload).toBeDefined();
+		expect(xrefPayload).toBeDefined();
+		expectHasAddressLabel(
+			projection.graph,
+			deliveryPolicy ?? "",
+			"delivery-policy",
+		);
+		expectHasAddressLabel(
+			projection.graph,
+			capacityRule ?? "",
+			"capacity-rule",
+		);
+		expectAttribute(projection.graph, deliveryPolicy ?? "", "kind", "policy");
+		expectAttribute(projection.graph, deliveryPolicy ?? "", "status", "active");
+		expectAttribute(projection.graph, deliveryPolicy ?? "", "owner", "ops");
+		expectAttribute(projection.graph, capacityRule ?? "", "kind", "rule");
+		expectAttribute(projection.graph, xref, "weight", "0.8");
+		expectStringTriple(projection.graph, xref, "rawRel", "depends-on");
+		expectStringTriple(
+			projection.graph,
+			xref,
+			"payloadSelector",
+			"rel-delivery-capacity",
+		);
+		expectHasPayload(projection.graph, deliveryPolicy ?? "", nodePayload ?? "");
+		expectPayloadOf(projection.graph, nodePayload ?? "", deliveryPolicy ?? "");
+		expectHasPayload(projection.graph, xref, xrefPayload ?? "");
+		expectNoPayload(projection.graph, deliveryPolicy ?? "", xrefPayload ?? "");
+		expectNoPayload(projection.graph, capacityRule ?? "", xrefPayload ?? "");
+		expect(
+			projection.graph.has(
+				rdf12Triple(
+					iriTerm(deliveryPolicy ?? ""),
+					iriTerm(`${namespaces.rel}depends-on`),
+					iriTerm(capacityRule ?? ""),
+				),
+			),
+		).toBe(true);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.aat}name`),
+				object: stringLiteral("rel"),
+			}),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.aat}name`),
+				object: stringLiteral("payload"),
 			}),
 		).toHaveLength(0);
 	});
@@ -312,6 +397,81 @@ function resourceIri(documentIri: string, localId: string): string {
 	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
 }
 
+function ownerForAddressLabel(
+	graph: Rdf12Graph,
+	value: string,
+): string | undefined {
+	const label = graph
+		.match({
+			predicate: iriTerm(`${namespaces.rdf}value`),
+			object: stringLiteral(value),
+		})
+		.find((triple) =>
+			graph.has(
+				rdf12Triple(
+					triple.subject,
+					iriTerm(`${namespaces.rdf}type`),
+					iriTerm(`${namespaces.aat}AddressLabel`),
+				),
+			),
+		)?.subject;
+	if (label === undefined) {
+		return undefined;
+	}
+	return graph
+		.match({
+			predicate: iriTerm(`${namespaces.aat}hasLabel`),
+			object: label,
+		})
+		.map((triple) => triple.subject.value)[0];
+}
+
+function expectHasAddressLabel(
+	graph: Rdf12Graph,
+	owner: string,
+	value: string,
+): void {
+	expect(ownerForAddressLabel(graph, value)).toBe(owner);
+}
+
+function expectAttribute(
+	graph: Rdf12Graph,
+	owner: string,
+	name: string,
+	value: string,
+): void {
+	const attribute = graph
+		.match({
+			predicate: iriTerm(`${namespaces.aat}name`),
+			object: stringLiteral(name),
+		})
+		.find((triple) =>
+			graph.has(
+				rdf12Triple(
+					ownerTerm(owner),
+					iriTerm(`${namespaces.aat}hasAttribute`),
+					triple.subject,
+				),
+			),
+		)?.subject.value;
+
+	expect(attribute).toBeDefined();
+	expectStringTriple(graph, attribute ?? "", "name", name);
+	expect(
+		graph.has(
+			rdf12Triple(
+				iriTerm(attribute ?? ""),
+				iriTerm(`${namespaces.rdf}value`),
+				stringLiteral(value),
+			),
+		),
+	).toBe(true);
+}
+
+function ownerTerm(owner: string) {
+	return iriTerm(owner);
+}
+
 function expectLineSpan(
 	graph: Rdf12Graph,
 	subject: string,
@@ -376,6 +536,22 @@ function expectHasPayload(
 			),
 		),
 	).toBe(true);
+}
+
+function expectNoPayload(
+	graph: Rdf12Graph,
+	owner: string,
+	payload: string,
+): void {
+	expect(
+		graph.has(
+			rdf12Triple(
+				iriTerm(owner),
+				iriTerm(`${namespaces.aat}hasPayload`),
+				iriTerm(payload),
+			),
+		),
+	).toBe(false);
 }
 
 function expectPayloadOf(

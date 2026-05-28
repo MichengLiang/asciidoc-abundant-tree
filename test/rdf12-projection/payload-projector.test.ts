@@ -79,6 +79,27 @@ describe("rdf12 payload projection", () => {
 		).toBe(false);
 	});
 
+	it("uses the payload attrlist shorthand id line for payload address labels", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			attrlistShorthandPayloadDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const payload = payloadBySourceText(
+			projection.graph,
+			'{"policy":"active"}',
+		);
+		const label = addressLabelsForValue(
+			projection.graph,
+			"delivery-policy-payload",
+		).find((candidate) =>
+			hasLabelOwner(projection.graph, payload ?? "", candidate),
+		);
+
+		expect(label).toBeDefined();
+		expectNumberTriple(projection.graph, label ?? "", "startLine", 6);
+		expectNumberTriple(projection.graph, label ?? "", "endLine", 6);
+	});
+
 	it("does not parse payload raw fields into RDF triples", () => {
 		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
 			documentRoot: projectRoot,
@@ -354,6 +375,52 @@ function payloadListingWithoutSpanDocument(): AbundantDocument {
 	return {
 		...payloadDocument(),
 		children: [listingWithoutSpan],
+		xrefOccurrences: [],
+	};
+}
+
+function attrlistShorthandPayloadDocument(): AbundantDocument {
+	return {
+		...payloadDocument(),
+		children: [
+			{
+				...payloadListing({
+					id: "delivery-policy-payload",
+					role: "payload",
+					startLine: 6,
+					contentLine: 9,
+					sourceText: '{"policy":"active"}',
+					attributes: {
+						forSelector: "delivery-policy",
+						data: "json",
+					},
+				}),
+				metadata: [
+					{
+						kind: "metadata",
+						metadataKind: "attrlist",
+						raw: "[#delivery-policy-payload.payload, for=delivery-policy, data=json]",
+						line: 6,
+						ids: ["delivery-policy-payload"],
+						roles: ["payload"],
+						attributes: {
+							for: "delivery-policy",
+							data: "json",
+						},
+					},
+					{
+						kind: "metadata",
+						metadataKind: "attrlist",
+						raw: "[source,json]",
+						line: 7,
+						attributes: {
+							style: "source",
+							language: "json",
+						},
+					},
+				],
+			},
+		],
 		xrefOccurrences: [],
 	};
 }

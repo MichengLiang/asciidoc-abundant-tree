@@ -13,6 +13,7 @@ import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm } from "../../src/rdf12-projection/terms";
+import { writeFixture } from "../helpers";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
@@ -50,6 +51,35 @@ describe("rdf12 label projection", () => {
 		expect(listing.owners).toEqual([
 			expect.stringContaining("#listing-l29-o0"),
 		]);
+	});
+
+	it("uses address labels from attrlist shorthand ids with roles", () => {
+		const path = writeFixture(
+			"rdf12-label-attrlist-id-role.adoc",
+			`= Probe
+
+[#delivery-policy.section, kind=policy]
+== 配送策略
+`,
+		);
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({ sourcePath: path }),
+			{ documentRoot: projectRoot },
+		);
+		const match = ownersForLabel(
+			projection.graph,
+			"AddressLabel",
+			"delivery-policy",
+		);
+
+		expect(match.owners).toEqual([expect.stringContaining("#section-l3-o0")]);
+		expectLabelHasLocation(
+			projection.graph,
+			match.labels[0] ?? "",
+			"tmp/test-fixtures/rdf12-label-attrlist-id-role.adoc",
+			3,
+			3,
+		);
 	});
 
 	it("uses title labels to locate sections", () => {
@@ -266,12 +296,28 @@ function expectLabelHasSourceLocation(
 	startLine: number,
 	endLine: number,
 ): void {
+	expectLabelHasLocation(
+		graph,
+		label,
+		"samples/reference-links.adoc",
+		startLine,
+		endLine,
+	);
+}
+
+function expectLabelHasLocation(
+	graph: Rdf12Graph,
+	label: string,
+	relativePath: string,
+	startLine: number,
+	endLine: number,
+): void {
 	expect(
 		graph.has(
 			rdf12Triple(
 				iriTerm(label),
 				iriTerm(`${namespaces.aat}relativePath`),
-				stringLiteral("samples/reference-links.adoc"),
+				stringLiteral(relativePath),
 			),
 		),
 	).toBe(true);

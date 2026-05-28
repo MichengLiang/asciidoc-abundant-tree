@@ -4,6 +4,18 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.1.6 - 2026-05-28
+
+### Fixed
+
+- Parsed shorthand attribute lists such as `[#delivery-policy.section, kind=policy]` as structured attrlists, preserving the explicit ID, role token, and named attributes separately.
+- Restored RDF `AddressLabel` projection for explicit IDs carried by attrlist shorthand metadata, including section resources and payload block resources.
+- Preserved node surface attributes and payload bindings for the structural payload sample, including node payload `for` binding and xref `payload` selector binding.
+
+### Added
+
+- Added regression coverage for section attrlist attributes, attrlist-derived address labels, payload address label source lines, and the `samples/structural-payload.adoc` RDF projection contract.
+
 ## 0.1.5 - 2026-05-28
 
 ### Fixed

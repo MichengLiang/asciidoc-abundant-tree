@@ -223,7 +223,7 @@ function projectSectionLabels(
 
 	for (const id of node.ids) {
 		const idSpan =
-			labelSpanFromMetadata(node.metadata, "id") ??
+			labelSpanFromIdMetadata(node.metadata, id) ??
 			(node.idOrigin === "asciidoctor-generated" && node.titleSpan !== undefined
 				? lineSpanFromSourceSpan(node.titleSpan)
 				: undefined);
@@ -258,7 +258,7 @@ function projectListingLabels(
 			owner,
 			labelClass: "AddressLabel",
 			value: id,
-			span: labelSpanFromMetadata(node.metadata, "id") ?? node.span,
+			span: labelSpanFromIdMetadata(node.metadata, id) ?? node.span,
 		});
 	}
 
@@ -289,7 +289,7 @@ function projectTableLabels(
 			owner,
 			labelClass: "AddressLabel",
 			value: id,
-			span: labelSpanFromMetadata(node.metadata, "id") ?? node.span,
+			span: labelSpanFromIdMetadata(node.metadata, id) ?? node.span,
 		});
 	}
 
@@ -531,6 +531,18 @@ function labelSpanFromMetadata(
 	metadataKind: MetadataNode["metadataKind"],
 ): LineSpan | undefined {
 	const item = metadata?.find((entry) => entry.metadataKind === metadataKind);
+	return item ? lineSpanForMetadata(item) : undefined;
+}
+
+function labelSpanFromIdMetadata(
+	metadata: readonly MetadataNode[] | undefined,
+	id: string,
+): LineSpan | undefined {
+	const item = metadata?.find(
+		(entry) =>
+			(entry.metadataKind === "id" || entry.metadataKind === "attrlist") &&
+			(entry.ids ?? []).includes(id),
+	);
 	return item ? lineSpanForMetadata(item) : undefined;
 }
 

@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
+import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
 	integerLiteral,
@@ -9,6 +10,7 @@ import {
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm } from "../../src/rdf12-projection/terms";
+import { writeFixture } from "../helpers";
 
 const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
@@ -79,6 +81,53 @@ describe("rdf12 surface attribute projection", () => {
 		expect(
 			surfaceAttributeForName(projection.graph, "payload"),
 		).toBeUndefined();
+	});
+
+	it("projects parsed section attrlist fields onto the section resource", () => {
+		const path = writeFixture(
+			"rdf12-section-attrlist.adoc",
+			`= Probe
+
+[#abc.section, kind=policy, status=active, owner=ops]
+== 西红柿
+`,
+		);
+		const document = parseAbundantTree({ sourcePath: path });
+		const projection = projectAbundantDocumentToRdf12(document, {
+			documentRoot: projectRoot,
+		});
+		const section = resourceOfType(
+			projection.graph,
+			`${namespaces.aat}Section`,
+		);
+		const kind = surfaceAttributeForName(projection.graph, "kind");
+		const status = surfaceAttributeForName(projection.graph, "status");
+		const owner = surfaceAttributeForName(projection.graph, "owner");
+
+		expect(kind).toBeDefined();
+		expect(status).toBeDefined();
+		expect(owner).toBeDefined();
+		expectRdfValue(projection.graph, kind ?? "", "policy");
+		expectRdfValue(projection.graph, status ?? "", "active");
+		expectRdfValue(projection.graph, owner ?? "", "ops");
+		expectLineLocationWithPath(
+			projection.graph,
+			kind ?? "",
+			"tmp/test-fixtures/rdf12-section-attrlist.adoc",
+			3,
+			3,
+		);
+		for (const attribute of [kind, status, owner]) {
+			expect(
+				projection.graph.has(
+					rdf12Triple(
+						iriTerm(section),
+						iriTerm(`${namespaces.aat}hasAttribute`),
+						iriTerm(attribute ?? ""),
+					),
+				),
+			).toBe(true);
+		}
 	});
 });
 
@@ -240,12 +289,23 @@ function expectLineLocation(
 	startLine: number,
 	endLine: number,
 ): void {
-	expectStringTriple(
+	expectLineLocationWithPath(
 		graph,
 		subject,
-		"relativePath",
 		"samples/reference-links.adoc",
+		startLine,
+		endLine,
 	);
+}
+
+function expectLineLocationWithPath(
+	graph: Rdf12Graph,
+	subject: string,
+	relativePath: string,
+	startLine: number,
+	endLine: number,
+): void {
+	expectStringTriple(graph, subject, "relativePath", relativePath);
 	expect(
 		graph.has(
 			rdf12Triple(

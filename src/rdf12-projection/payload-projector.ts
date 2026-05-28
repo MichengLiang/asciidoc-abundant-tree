@@ -227,7 +227,11 @@ function labelSpanFor(node: ListingNode): NonNullable<ListingNode["span"]> {
 		throw new Error("payload label requires listing span");
 	}
 
-	const idMetadata = node.metadata?.find((item) => item.metadataKind === "id");
+	const idMetadata = node.metadata?.find(
+		(item) =>
+			(item.metadataKind === "id" || item.metadataKind === "attrlist") &&
+			node.ids.some((id) => (item.ids ?? []).includes(id)),
+	);
 	return idMetadata?.line === undefined
 		? node.span
 		: { startLine: idMetadata.line, endLine: idMetadata.line };

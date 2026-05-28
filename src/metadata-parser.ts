@@ -11,8 +11,8 @@ export type MetadataSurface = {
 	language?: string;
 };
 
-const idAttrPattern = /^\[#([^\]]+)\]$/;
-const idLongAttrPattern = /^\[id=([^\]]+)\]$/;
+const idAttrPattern = /^\[#([^,.\]]+)\]$/;
+const idLongAttrPattern = /^\[id=([^,\]]+)\]$/;
 const blockAnchorPattern = /^\[\[([^,\]]+)(?:,([^\]]+))?\]\]$/;
 const titlePattern = /^\.(.+)$/;
 const attrListPattern = /^\[([^\]]+)\]$/;
