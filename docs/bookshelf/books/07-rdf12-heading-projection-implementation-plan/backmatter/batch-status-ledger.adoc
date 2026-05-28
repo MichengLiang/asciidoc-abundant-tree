@@ -10,7 +10,7 @@
 |Batch 00
 |基线与迁移护栏
 |待审核
-|249cf5e11d16c71f6dc17cd690caad94b0e9c6ca
+|4b11efb8950714371a2b95937750d67a0dd3fc1c
 |xref:batch-00-review-package[Batch 00 审核包]
 
 |Batch 01
