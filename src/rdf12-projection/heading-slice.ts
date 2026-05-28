@@ -1,10 +1,13 @@
+import { readFileSync } from "node:fs";
 import type {
+	AbundantDocument,
 	AbundantNode,
 	LineSpan,
 	MetadataNode,
 	ParagraphNode,
 	SectionNode,
 } from "../model";
+import { buildLineTable, sourceLines } from "../source-lines";
 
 export type HeadingSlice = {
 	readonly span: LineSpan;
@@ -41,8 +44,82 @@ export function resolveHeadingSlice(
 	};
 }
 
+export function resolveDocumentTitleHeadingSlice(
+	document: AbundantDocument,
+): HeadingSlice | undefined {
+	const title = document.title;
+	const headingLine = title?.source?.line;
+
+	if (title === undefined || headingLine === undefined) {
+		return undefined;
+	}
+
+	const lineTable = buildLineTable(readFileSync(document.sourcePath, "utf8"));
+	const firstSectionStart = firstSectionHeadingStartLine(document.children);
+	const endLine = Math.max(
+		headingLine,
+		firstSectionStart !== undefined
+			? firstSectionStart - 1
+			: lineTable.lines.length,
+	);
+	const span = { startLine: headingLine, endLine };
+	const contentSpan = documentTitleContentSpan({
+		headingLine,
+		endLine,
+		rawLines: sourceLines(lineTable, span.startLine, span.endLine),
+	});
+
+	return {
+		span,
+		headingLine,
+		raw: `${sourceLines(lineTable, span.startLine, span.endLine).join("\n")}\n`,
+		...(contentSpan !== undefined ? { contentSpan } : {}),
+	};
+}
+
 function headingStartLine(node: SectionNode, headingLine: number): number {
 	return metadataLineSpan(node.metadata)?.startLine ?? headingLine;
+}
+
+function firstSectionHeadingStartLine(
+	nodes: readonly AbundantNode[] | undefined,
+): number | undefined {
+	return (nodes ?? [])
+		.filter((node): node is SectionNode => node.kind === "section")
+		.map((section) =>
+			headingStartLine(
+				section,
+				section.line ??
+					section.titleSpan?.start.line ??
+					section.span?.startLine ??
+					1,
+			),
+		)
+		.sort((left, right) => left - right)[0];
+}
+
+function documentTitleContentSpan(input: {
+	readonly headingLine: number;
+	readonly endLine: number;
+	readonly rawLines: readonly string[];
+}): LineSpan | undefined {
+	const contentLines = input.rawLines
+		.map((text, index) => ({
+			line: input.headingLine + index,
+			text,
+		}))
+		.filter(
+			(line) => line.line > input.headingLine && line.text.trim().length > 0,
+		);
+
+	if (contentLines.length === 0) {
+		return undefined;
+	}
+
+	return {
+		startLine: contentLines[0]?.line ?? input.headingLine + 1,
+		endLine: contentLines.at(-1)?.line ?? input.endLine,
+	};
 }
 
 function headingEndLine(node: SectionNode, startLine: number): number {

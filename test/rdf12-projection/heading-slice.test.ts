@@ -17,6 +17,29 @@ const structuralPayloadPath = join(
 );
 
 describe("rdf12 heading slices", () => {
+	it("projects document title raw as lines 1 through 4 with preamble content span", () => {
+		const projection = structuralPayloadProjection();
+		const root = resourceIri(projection.documentIri, "heading-l1-o0");
+
+		expectStringTriple(
+			projection.graph,
+			root,
+			"raw",
+			`= root
+
+一段摘要
+
+`,
+		);
+		expectNumberTriple(projection.graph, root, "startLine", 1);
+		expectNumberTriple(projection.graph, root, "endLine", 4);
+		expectNumberTriple(projection.graph, root, "headingLine", 1);
+		expectNumberTriple(projection.graph, root, "contentStartLine", 3);
+		expectNumberTriple(projection.graph, root, "contentEndLine", 3);
+		expectNoNumberTriple(projection.graph, root, "metadataStartLine");
+		expectNoNumberTriple(projection.graph, root, "metadataEndLine");
+	});
+
 	it("projects delivery policy raw as lines 5 through 40", () => {
 		const projection = structuralPayloadProjection();
 		const deliveryPolicy = resourceIri(projection.documentIri, "heading-l5-o0");
@@ -153,4 +176,17 @@ function expectNumberTriple(
 			),
 		),
 	).toBe(true);
+}
+
+function expectNoNumberTriple(
+	graph: Rdf12Graph,
+	subject: string,
+	predicateLocalName: string,
+): void {
+	expect(
+		graph.match({
+			subject: iriTerm(subject),
+			predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+		}),
+	).toHaveLength(0);
 }

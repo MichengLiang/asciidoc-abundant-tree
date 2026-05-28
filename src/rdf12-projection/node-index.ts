@@ -1,7 +1,12 @@
-import type { AbundantNode, SectionNode, TargetType } from "../model";
+import type {
+	AbundantNode,
+	SectionNode,
+	TargetType,
+	TitleNode,
+} from "../model";
 import type { Rdf12IriTerm } from "./terms";
 
-export type Rdf12NodeIndexEntry = {
+type Rdf12HeadingIndexBase = {
 	readonly node: SectionNode;
 	readonly iri: Rdf12IriTerm;
 	readonly localId: string;
@@ -10,6 +15,18 @@ export type Rdf12NodeIndexEntry = {
 	readonly endLine: number;
 	readonly targetType: "section";
 };
+
+export type Rdf12NodeIndexEntry =
+	| Rdf12HeadingIndexBase
+	| {
+			readonly node: TitleNode;
+			readonly iri: Rdf12IriTerm;
+			readonly localId: string;
+			readonly kind: "document-title";
+			readonly startLine: number;
+			readonly endLine: number;
+			readonly targetType: "section";
+	  };
 
 export type Rdf12NodeIndex = {
 	get(node: AbundantNode): Rdf12IriTerm | undefined;

@@ -122,6 +122,19 @@ describe("rdf12 heading projection target acceptance", () => {
 			expectIntegerValue(graph, deliveryPolicy, aatTerm("headingLevel"), 1);
 			expectIntegerValue(graph, capacityRule, aatTerm("headingLevel"), 1);
 			expectIntegerValue(graph, nestedHeading, aatTerm("headingLevel"), 2);
+			expectLiteralValue(
+				graph,
+				root,
+				aatTerm("raw"),
+				`= root
+
+一段摘要
+
+`,
+			);
+			expect(literalValues(graph, deliveryPolicy, aatTerm("raw"))).toHaveLength(
+				1,
+			);
 			const capacityRuleRaw = literalValues(
 				graph,
 				capacityRule,
@@ -131,6 +144,9 @@ describe("rdf12 heading projection target acceptance", () => {
 			for (const raw of capacityRuleRaw) {
 				expect(raw).not.toContain("=== 我是3级标题");
 			}
+			expect(literalValues(graph, nestedHeading, aatTerm("raw"))).toHaveLength(
+				1,
+			);
 		},
 	);
 

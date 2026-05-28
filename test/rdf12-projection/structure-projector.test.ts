@@ -69,6 +69,20 @@ describe("rdf12 structure projection", () => {
 		expectNumberTriple(projection.graph, root, "startLine", 1);
 		expectNumberTriple(projection.graph, root, "endLine", 4);
 		expectNumberTriple(projection.graph, root, "headingLine", 1);
+		expectStringTriple(
+			projection.graph,
+			root,
+			"raw",
+			`= root
+
+一段摘要
+
+`,
+		);
+		expectNumberTriple(projection.graph, root, "contentStartLine", 3);
+		expectNumberTriple(projection.graph, root, "contentEndLine", 3);
+		expectNoTriple(projection.graph, root, "metadataStartLine");
+		expectNoTriple(projection.graph, root, "metadataEndLine");
 
 		expectStringTriple(
 			projection.graph,
@@ -126,6 +140,20 @@ describe("rdf12 structure projection", () => {
 		);
 		expectNumberTriple(projection.graph, nestedHeading, "headingLevel", 2);
 	});
+
+	it("indexes the document title heading through the shared heading index", () => {
+		const projection = structuralPayloadProjection();
+		const rootEntry = projection.nodeIndex
+			.entries()
+			.find((entry) => entry.localId === "heading-l1-o0");
+
+		expect(rootEntry).toMatchObject({
+			kind: "document-title",
+			startLine: 1,
+			endLine: 4,
+			targetType: "section",
+		});
+	});
 });
 
 function structuralPayloadProjection() {
@@ -180,4 +208,17 @@ function expectNumberTriple(
 			),
 		),
 	).toBe(true);
+}
+
+function expectNoTriple(
+	graph: Rdf12Graph,
+	subject: string,
+	predicateLocalName: string,
+): void {
+	expect(
+		graph.match({
+			subject: iriTerm(subject),
+			predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+		}),
+	).toHaveLength(0);
 }

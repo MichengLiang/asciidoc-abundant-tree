@@ -5,7 +5,10 @@ import type {
 	SectionNode,
 } from "../model";
 import { type Rdf12Graph, rdf12Triple } from "./graph";
-import { resolveHeadingSlice } from "./heading-slice";
+import {
+	resolveDocumentTitleHeadingSlice,
+	resolveHeadingSlice,
+} from "./heading-slice";
 import { integerLiteral, stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
 import {
@@ -55,34 +58,32 @@ export function projectStructureResources(
 
 function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 	const title = context.document.title;
-	const headingLine = title?.source?.line;
+	const slice = resolveDocumentTitleHeadingSlice(context.document);
 
-	if (title === undefined || headingLine === undefined) {
+	if (title === undefined || slice === undefined) {
 		return;
 	}
 
-	const span = {
-		startLine: headingLine,
-		endLine: Math.max(headingLine, firstSectionStartLine(context.document) - 1),
-	};
 	const iri = createHeadingResource(context, {
-		startLine: span.startLine,
-		span,
+		startLine: slice.span.startLine,
+		span: slice.span,
 	});
 
-	addTypeAndSourceTriples(context.graph, iri, context.relativePath, span);
+	addTypeAndSourceTriples(context.graph, iri, context.relativePath, slice.span);
 	addStringTriple(context.graph, iri, "headline", title.text);
 	addIntegerTriple(context.graph, iri, "headingLevel", 0);
-	addIntegerTriple(context.graph, iri, "headingLine", headingLine);
-}
-
-function firstSectionStartLine(document: AbundantDocument): number {
-	const sectionStart = collectSections(document.children)
-		.map((section) => sectionStartLine(section))
-		.filter((line): line is number => line !== undefined)
-		.sort((left, right) => left - right)[0];
-
-	return sectionStart ?? Number.MAX_SAFE_INTEGER;
+	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
+	addStringTriple(context.graph, iri, "raw", slice.raw);
+	addOptionalLineSpan(context.graph, iri, "content", slice.contentSpan);
+	context.nodeIndex.set({
+		node: title,
+		iri,
+		localId: localIdFromIri(iri),
+		kind: "document-title",
+		startLine: slice.span.startLine,
+		endLine: slice.span.endLine,
+		targetType: "section",
+	});
 }
 
 function collectSections(
@@ -236,16 +237,6 @@ function addIntegerTriple(
 			iriTerm(`${namespaces.aat}${predicateLocalName}`),
 			integerLiteral(value),
 		),
-	);
-}
-
-function sectionStartLine(section: SectionNode): number | undefined {
-	return (
-		section.metadata
-			?.map((item) => item.line)
-			.find((line) => line !== undefined) ??
-		section.line ??
-		section.span?.startLine
 	);
 }
 
