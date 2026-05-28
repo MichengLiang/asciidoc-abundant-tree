@@ -20,7 +20,7 @@ package.json          # 书库构建依赖入口
 
 ## 当前书目
 
-- `books/06-rdf12-line-projection/`：AsciiDoc `AbundantDocument` 到 RDF 1.2 行级结构图的投影规约。
+- `books/06-rdf12-line-projection/`：AsciiDoc 标题切片到 RDF 1.2 标题投影图的规约。
 
 公开书页：
 

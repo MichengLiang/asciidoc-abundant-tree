@@ -1,0 +1,187 @@
+[#query-contract]
+== 查询契约
+
+查询契约定义标题投影图的公共查询面。查询结果应返回可继续回源的 resource、relative path 和 line span。
+
+=== 按手动 ID 查找标题
+
+[source,sparql]
+----
+SELECT ?heading ?headline ?path ?start ?end WHERE {
+  ?heading a aat:Heading ;
+           aat:addressLabel "delivery-policy" ;
+           aat:headline ?headline ;
+           aat:relativePath ?path ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+}
+----
+
+=== 按 headline 查找标题
+
+[source,sparql]
+----
+SELECT ?heading ?path ?start ?end WHERE {
+  ?heading a aat:Heading ;
+           aat:headline "运力规则" ;
+           aat:relativePath ?path ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+}
+----
+
+headline 可以重复。该查询可以返回多个标题节点。
+
+=== 读取标题自身 Raw
+
+[source,sparql]
+----
+SELECT ?raw WHERE {
+  ?heading aat:addressLabel "capacity-rule" ;
+           aat:raw ?raw .
+}
+----
+
+该查询返回 `capacity-rule` 标题节点自身切片 raw。子标题 raw 通过递归结构查询取得。
+
+=== 读取直接子标题
+
+[source,sparql]
+----
+SELECT ?child ?headline ?start ?end WHERE {
+  ?parent aat:addressLabel "capacity-rule" .
+  ?parent aat:containsDirectly ?child .
+  ?child aat:headline ?headline ;
+         aat:startLine ?start ;
+         aat:endLine ?end .
+}
+----
+
+=== 读取标题子树
+
+[source,sparql]
+----
+SELECT ?descendant ?headline ?raw WHERE {
+  ?root aat:addressLabel "capacity-rule" .
+  ?root aat:containsDirectly+ ?descendant .
+  ?descendant aat:headline ?headline ;
+              aat:raw ?raw .
+}
+----
+
+`aat:containsDirectly+` 是查询层递归。投影图不物化传递闭包。
+
+=== 查找上一个兄弟标题
+
+[source,sparql]
+----
+SELECT ?previous ?headline WHERE {
+  ?heading aat:addressLabel "capacity-rule" ;
+           aat:previousSibling ?previous .
+  ?previous aat:headline ?headline .
+}
+----
+
+=== 查找标题发出的交叉引用边
+
+[source,sparql]
+----
+SELECT ?edge ?predicate ?target ?targetHeadline ?weight WHERE {
+  ?source aat:addressLabel "delivery-policy" .
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetHeading ?target ;
+        rdf:reifies <<( ?source ?predicate ?target )>> ;
+        aat:weight ?weight .
+  ?target aat:headline ?targetHeadline .
+}
+----
+
+=== 查找未绑定交叉引用边
+
+[source,sparql]
+----
+SELECT ?edge ?selector ?path ?start ?end WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:targetSelector ?selector ;
+        aat:relativePath ?path ;
+        aat:startLine ?start ;
+        aat:endLine ?end .
+  FILTER NOT EXISTS { ?edge aat:targetHeading ?target . }
+  FILTER NOT EXISTS { ?edge aat:candidateHeading ?candidate . }
+}
+----
+
+该查询返回 selector 没有绑定到标题节点的 xref edge evidence。该结果不自动表示 dead link；dead link 判断属于下游 lint。
+
+=== 查找多义交叉引用边
+
+[source,sparql]
+----
+SELECT ?edge ?selector ?candidate WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:targetSelector ?selector ;
+        aat:candidateHeading ?candidate .
+}
+----
+
+多义边不生成主 relation triple。
+
+=== 查找边 Payload
+
+[source,sparql]
+----
+SELECT ?payloadRaw ?format ?start ?end WHERE {
+  ?source aat:addressLabel "delivery-policy" .
+  ?target aat:addressLabel "capacity-rule" .
+  ?edge a aat:XrefEdge ;
+        rdf:reifies <<( ?source rel:depends-on ?target )>> ;
+        aat:payload ?payload .
+  ?payload aat:format ?format ;
+           aat:raw ?payloadRaw ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+}
+----
+
+=== 按直接字段查找标题
+
+[source,sparql]
+----
+SELECT ?heading ?headline ?start ?end WHERE {
+  ?heading a aat:Heading ;
+           aat:kind "policy" ;
+           aat:status "active" ;
+           aat:headline ?headline ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+}
+----
+
+直接字段谓词表达源文档表面字段。该查询不要求投影器解释 `policy` 或 `active` 的业务含义。
+
+=== 查找节点 Payload
+
+[source,sparql]
+----
+SELECT ?payloadRaw ?format ?start ?end WHERE {
+  ?heading aat:addressLabel "delivery-policy" ;
+           aat:payload ?payload .
+  ?payload aat:payloadKind "node" ;
+           aat:format ?format ;
+           aat:raw ?payloadRaw ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+}
+----
+
+=== 查找来源快照
+
+[source,sparql]
+----
+SELECT ?path ?digest WHERE {
+  ?sourceDoc a aat:AsciiDocSourceDocument ;
+             aat:relativePath ?path .
+  OPTIONAL { ?sourceDoc aat:sourceDigest ?digest . }
+}
+----

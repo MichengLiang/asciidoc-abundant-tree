@@ -1,40 +1,40 @@
 [#glossary]
 == 术语表
 
-AbundantDocument:: `asciidoc-abundant-tree` 从单个 AsciiDoc 源文件恢复出的 TypeScript 结构对象。
-
-projection graph:: 从 `AbundantDocument` 派生出的 RDF 1.2 图。
-
-projection resource:: RDF 图中表示源文档结构单位、出现点、表面属性、label 或 payload block 的 IRI resource。
-
 source document:: 作为事实来源的 AsciiDoc 源文件。
+
+heading projection graph:: 从 source document 派生出的 RDF 1.2 标题投影图。
+
+heading node:: 由等号标题创建的 RDF resource。标题节点是标题投影图的唯一节点类型。
+
+headline:: 标题文本，不包含标题等号标记。
+
+heading slice:: 标题节点对应的连续源文本区域。该区域从标题头部 metadata 或标题行开始，到下一个标题切片起点之前结束。
+
+heading raw:: 标题切片的源文本原文。
+
+structure edge:: 标题节点之间的结构边，包括 `aat:containsDirectly` 和 `aat:previousSibling`。
+
+xref edge:: 由标题切片中的交叉引用创建的非层级关系边。
+
+xref edge evidence:: 保存 xref raw、source heading、target heading、target selector、属性、payload 和回源坐标的边证据 resource。
+
+payload:: 归属于标题节点或 xref edge evidence 的复杂属性。payload 保存格式、raw 和回源坐标，不展开内部结构。
+
+direct attribute predicate:: 由源文档 named attribute 映射得到的 `aat:<name>` 谓词。该谓词表达源文档表面字段，不触发业务解释。
+
+selector:: xref target、payload `for` 字段或 payload attribute 中用于绑定目标的字符串。
+
+address label:: 作者在标题或 payload 表面声明的手动 ID。
+
+generated address label:: 解析器为没有手动 ID 的标题恢复出的可寻址 label。
 
 relative path:: 相对于投影调用方指定文档根目录的文件路径。
 
-line span:: 使用 1-based line number 表示的源文件连续行范围。
-
-label:: 文档表面中可显示、可寻址或可作为查询入口的字符串。
-
-selector:: occurrence 或绑定字段中用于寻找目标 resource 的字符串。
-
-label catalog:: 由 projection resource 的 label 组成的查询和绑定索引。
-
-selector binding:: selector 字符串与 label catalog 中目标 projection resource 之间的机械匹配关系。
-
-source node:: xref occurrence 所在结构作用域对应的 projection resource。
-
-target node:: xref target selector 绑定到的 projection resource。
-
-xref occurrence:: 源文档中一次交叉引用写法的出现点。
+line span:: 使用 1-based line number 表示的源文件连续行范围。line span 是闭区间。
 
 triple term:: RDF 1.2 中作为 RDF term 使用的 triple。
 
 reifier:: 使用 `rdf:reifies` 指向 triple term 的 resource。
-
-surface attribute:: 从 AsciiDoc attribute list 或 xref named attribute 恢复出的表面字段。
-
-payload block:: 以 block 形式保存复杂载荷原文的源文档结构单位。
-
-containment:: 从 `AbundantDocument.children` 派生出的直接结构包含关系。
 
 provenance:: 描述投影图、投影活动和源文档之间来源关系的信息。

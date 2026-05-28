@@ -1,0 +1,79 @@
+[#heading-slice]
+== 标题切片
+
+标题切片是标题节点对应的连续源文本区域。每个标题节点有一个标题切片。
+
+=== 起点
+
+标题切片的起点是该标题头部 metadata 的第一行。没有 metadata 时，起点是标题行。
+
+[source,asciidoc]
+----
+[#capacity-rule.section, kind=rule, status=active]
+== 运力规则
+----
+
+该标题切片从 attrlist 行开始。
+
+标题头部 metadata 是紧邻标题行、并归属于该标题的连续 metadata 表面。空行会结束 metadata 归属。属于前一个 block 的 metadata 不进入下一个标题切片起点。
+
+=== 终点
+
+标题切片的终点是下一个标题切片起点的前一行。没有下一个标题时，终点是源文件末尾。
+
+标题切片不因标题层级嵌套而包含子标题切片。父子关系由结构边表达，标题节点自身 raw 只保存自身切片。
+
+=== Raw
+
+标题节点必须保存 `aat:raw`。`aat:raw` 是标题切片的原文。
+
+示例：
+
+[source,turtle]
+----
+:heading-l41-o0 aat:raw """[#capacity-rule.section, kind=rule, status=active]
+== 运力规则
+
+运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
+""" .
+----
+
+该 raw 不包含子标题：
+
+[source,asciidoc]
+----
+=== 我是3级标题
+
+123
+----
+
+读取子标题内容使用标题层级边递归完成。
+
+=== 自身 Raw 与子树 Raw
+
+`aat:raw` 只表示标题节点自身切片。它不表示该标题统摄的完整子树文本。
+
+子树文本是查询结果，不是节点字段。消费者需要完整子树时，先取得当前标题节点的 `aat:raw`，再沿 `aat:containsDirectly` 递归取得后代标题节点的 `aat:raw`，并按文档顺序组合。
+
+=== 行级坐标
+
+标题节点必须保存：
+
+[horizontal]
+`aat:relativePath`:: 源文档相对路径。
+`aat:startLine`:: 标题切片起始行。
+`aat:endLine`:: 标题切片结束行。
+`aat:headingLine`:: 标题行。
+`aat:raw`:: 标题切片原文。
+
+标题节点具有 metadata 或正文内容时，必须保存对应的专用行范围：
+
+[horizontal]
+`aat:metadataStartLine`:: 标题头部 metadata 起始行。
+`aat:metadataEndLine`:: 标题头部 metadata 结束行。
+`aat:contentStartLine`:: 标题行之后内容的起始行。
+`aat:contentEndLine`:: 标题切片内容的结束行。
+
+标题没有 metadata 时，不输出 `aat:metadataStartLine` 和 `aat:metadataEndLine`。标题行之后没有正文内容时，不输出 `aat:contentStartLine` 和 `aat:contentEndLine`。
+
+所有 line number 使用 1-based line number。line span 是闭区间。

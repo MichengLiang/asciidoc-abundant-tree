@@ -1,0 +1,44 @@
+[#structure-edges]
+== 标题结构边
+
+标题结构边表达标题节点之间的直接结构关系。结构边只连接标题节点。
+
+=== 直接包含
+
+`aat:containsDirectly` 表达父标题到直接子标题的关系。
+
+示例：
+
+[source,turtle]
+----
+:heading-l1-o0 aat:containsDirectly :heading-l5-o0 .
+:heading-l1-o0 aat:containsDirectly :heading-l41-o0 .
+:heading-l41-o0 aat:containsDirectly :heading-l46-o0 .
+----
+
+直接包含不表达传递闭包。若 `root` 直接包含 `运力规则`，且 `运力规则` 直接包含 `我是3级标题`，则 `root` 不直接包含 `我是3级标题`。
+
+直接包含只连接标题节点。标题节点不通过 `aat:containsDirectly` 指向段落、listing、table、payload、label 或普通属性。
+
+顶层标题没有父标题。若源文档存在一个等号 document title，该标题可以作为其它顶层 section 的父标题。若源文档没有可作为父级的等号标题，多个顶层标题之间不生成虚构 document heading；它们只通过各自的 line span 和 sibling relation 保持文档顺序。
+
+=== 递归读取
+
+消费者通过 `aat:containsDirectly` 的递归查询取得标题子树。读取当前标题自身时只使用该标题节点的 `aat:raw`。读取标题统摄的完整子树时，递归读取子标题节点的 `aat:raw`。
+
+=== 兄弟顺序
+
+`aat:previousSibling` 表达同一父标题下的前一个兄弟标题。
+
+示例：
+
+[source,turtle]
+----
+:heading-l41-o0 aat:previousSibling :heading-l5-o0 .
+----
+
+该 triple 表示 `运力规则` 与 `配送策略` 具有同一父标题，且 `运力规则` 排在 `配送策略` 之后。
+
+第一个兄弟标题没有 `aat:previousSibling`。顶层第一个标题没有 `aat:previousSibling`。
+
+`aat:previousSibling` 不跨父标题。子标题的前一个文档标题若不是同父兄弟，不得作为该子标题的 `aat:previousSibling`。

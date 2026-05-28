@@ -1,0 +1,106 @@
+[#xref-edge]
+== 交叉引用边
+
+交叉引用边由标题切片中的 xref 创建。行内解析只需要识别交叉引用，因为交叉引用是非层级边的来源。
+
+=== Source Heading
+
+xref 所在的标题切片决定边的 source heading。
+
+[source,asciidoc]
+----
+配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+----
+
+该 xref 位于 `配送策略` 标题切片中，因此 source heading 是 `配送策略`。
+
+=== Target Heading
+
+xref target 是 selector。selector 只在标题节点 label 空间中绑定。
+
+`capacity-rule` 绑定到 address label 为 `capacity-rule` 的标题节点。因此上例的 target heading 是 `运力规则`。
+
+selector 未绑定时，边证据保留 `aat:targetSelector` 和回源坐标，不生成虚构 target heading，不生成主 relation triple。
+
+selector 多义绑定时，边证据保留候选目标，不任意选择一个 target heading，不生成主 relation triple。
+
+[source,turtle]
+----
+:xref-edge-l12-c4-o0 a aat:XrefEdge ;
+  aat:sourceHeading :heading-l5-o0 ;
+  aat:targetSelector "重复标题" ;
+  aat:candidateHeading :heading-l20-o0 ;
+  aat:candidateHeading :heading-l44-o0 ;
+  aat:relativePath "samples/ambiguous.adoc" ;
+  aat:startLine 12 ;
+  aat:endLine 12 .
+----
+
+=== Predicate
+
+predicate 由 xref attribute `rel` 决定。没有 `rel` 时，predicate 是 `aat:references`。有 `rel` 时，predicate 使用该字段映射出的关系 IRI。
+
+示例：
+
+[source,asciidoc]
+----
+xref:capacity-rule[运力规则]
+----
+
+投影为：
+
+[source,turtle]
+----
+:source-heading aat:references :target-heading .
+----
+
+示例：
+
+[source,asciidoc]
+----
+xref:capacity-rule[运力规则, rel=depends-on]
+----
+
+投影为：
+
+[source,turtle]
+----
+:source-heading rel:depends-on :target-heading .
+----
+
+`rel` 只选择谓词。投影器不解释该谓词的业务语义。
+
+`rel` 字段是绝对 IRI 时，predicate 使用该 IRI。`rel` 字段是已知 CURIE 时，predicate 使用展开后的 IRI。`rel` 字段是普通 token 时，predicate 使用 `rel:` 命名空间下的稳定 IRI-safe 映射。`rel` 不能映射为合法 IRI 时，边证据保留 `aat:rel`，不生成主 relation triple。
+
+=== 边证据
+
+交叉引用边证据保存该边在源文档中的出现点、属性和 payload。边证据不是标题节点。
+
+边证据 IRI 使用 `xref-edge-l<startLine>-c<startColumn>-o<ordinal>` local id。`startLine` 和 `startColumn` 来自 xref occurrence 的起点。相同行列出现多个 xref 时，`ordinal` 按源文档顺序从 `0` 递增；无冲突时使用 `0`。
+
+示例：
+
+[source,turtle]
+----
+:heading-l5-o0 rel:depends-on :heading-l41-o0 .
+
+:xref-edge-l8-c8-o0 a aat:XrefEdge ;
+  rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l41-o0 )>> ;
+  aat:sourceHeading :heading-l5-o0 ;
+  aat:targetHeading :heading-l41-o0 ;
+  aat:targetSelector "capacity-rule" ;
+  aat:displayLabel "运力规则" ;
+  aat:rel "depends-on" ;
+  aat:weight "0.8" ;
+  aat:payloadSelector "rel-delivery-capacity" ;
+  aat:raw "xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]" ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 8 ;
+  aat:endLine 8 ;
+  aat:startColumn 8 ;
+  aat:endColumn 91 .
+----
+
+普通 xref named attributes 直接使用 `aat:` 命名空间下同名谓词。示例中的 `weight=0.8` 投影为 `aat:weight "0.8"`。
+
+`payload` 是控制字段，用于绑定边 payload。它不重复作为普通属性。边证据使用 `aat:payloadSelector` 保存该 selector 字符串，使用 `aat:payload` 连接已绑定的复杂 payload 对象。

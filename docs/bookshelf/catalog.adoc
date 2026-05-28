@@ -16,8 +16,7 @@ v0.1, 2026-05
 
 == 书目
 
-* xref:books/06-rdf12-line-projection/book.adoc[RDF 1.2 行级结构图投影规约]
-* xref:books/07-plan/book.adoc[RDF 1.2 行级投影器实施计划书]
+* xref:books/06-rdf12-line-projection/book.adoc[AsciiDoc 标题切片到 RDF 1.2 投影规约]
 
 == 书库范围
 

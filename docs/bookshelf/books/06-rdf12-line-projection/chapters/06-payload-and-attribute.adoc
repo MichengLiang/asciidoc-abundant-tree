@@ -1,0 +1,127 @@
+[#payload-and-attribute]
+== Payload 与属性
+
+属性是节点或边上的直接谓词。payload 是节点或边上的复杂属性。
+
+=== 直接属性谓词
+
+标题 attrlist named attributes 直接投影为标题节点谓词。
+
+[source,asciidoc]
+----
+[#delivery-policy.section, kind=policy, status=active, owner=ops]
+== 配送策略
+----
+
+投影为：
+
+[source,turtle]
+----
+:heading-l5-o0
+  aat:kind "policy" ;
+  aat:status "active" ;
+  aat:owner "ops" .
+----
+
+xref 普通 named attributes 直接投影为边证据谓词。
+
+[source,asciidoc]
+----
+xref:capacity-rule[运力规则, rel=depends-on, weight=0.8]
+----
+
+投影为：
+
+[source,turtle]
+----
+:xref-edge-l8-c8-o0
+  aat:rel "depends-on" ;
+  aat:weight "0.8" .
+----
+
+属性谓词不触发业务解释。`aat:kind`、`aat:status`、`aat:owner`、`aat:weight` 只是源文档表面字段的 RDF 表达。下游消费者可以解释这些字段，也可以忽略这些字段。
+
+字段名映射规则与标题节点属性一致。字段名进入 `aat:` 命名空间下的表面字段谓词。字段值保存为 string literal。`rel` 和 `payload` 是 xref 控制字段；`rel` 可作为 `aat:rel` 保留，`payload` 保存为 `aat:payloadSelector`，不占用 `aat:payload`。
+
+=== 节点 Payload
+
+`.payload` block 通过 `for` 字段绑定标题节点。绑定成功时，payload 作为该标题节点的 `aat:payload` 值。
+
+节点 payload 的 `for` 字段只在标题节点 label 空间中绑定。绑定目标可以来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload 对象保留 `aat:forSelector` 和回源坐标，不连接到任何标题节点。
+
+payload format 来自 payload attrlist 的 `data` 字段。缺少 `data` 字段时，format 来自 source block 的 language。二者都缺失时，不输出 `aat:format`。
+
+[source,asciidoc]
+------
+[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[source,json]
+----
+{
+  "owner": {
+    "team": "ops"
+  }
+}
+----
+------
+
+投影为：
+
+[source,turtle]
+----
+:heading-l5-o0 aat:payload [
+  aat:payloadId "delivery-policy-payload" ;
+  aat:payloadKind "node" ;
+  aat:forSelector "delivery-policy" ;
+  aat:format "json" ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 10 ;
+  aat:endLine 23 ;
+  aat:contentStartLine 13 ;
+  aat:contentEndLine 22 ;
+  aat:raw "{\n  \"owner\": {\n    \"team\": \"ops\"\n  }\n}"
+] .
+----
+
+=== 边 Payload
+
+`.xref-payload` block 通过 xref 的 `payload` 字段绑定交叉引用边。
+
+边 payload 的绑定分两步。`.xref-payload` block 先用自己的 address label 建立 payload selector。xref edge evidence 再用 `aat:payloadSelector` 匹配该 payload selector。唯一匹配时，xref edge evidence 通过 `aat:payload` 连接该 payload 对象。未匹配或多义匹配时，边证据保留 `aat:payloadSelector`，不连接 payload 对象。
+
+[source,asciidoc]
+------
+xref:capacity-rule[运力规则, rel=depends-on, payload=rel-delivery-capacity]
+
+[#rel-delivery-capacity.xref-payload, data=json]
+[source,json]
+----
+{"reason":"risk-control"}
+----
+------
+
+投影为：
+
+[source,turtle]
+----
+:xref-edge-l8-c8-o0 aat:payload [
+  aat:payloadId "rel-delivery-capacity" ;
+  aat:payloadKind "edge" ;
+  aat:format "json" ;
+  aat:raw "{\"reason\":\"risk-control\"}" ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 25 ;
+  aat:endLine 39 ;
+  aat:contentStartLine 28 ;
+  aat:contentEndLine 38
+] .
+----
+
+边 payload 归属于交叉引用边证据。它不归属于 source heading，也不归属于 target heading。
+
+=== Opaque Raw
+
+payload raw 不展开为 RDF 图。JSON、YAML、TOML、XML 或其它 payload 格式内部字段不进入标题投影图。
+
+payload 字段必须保存 payload id、payload kind、raw、relative path、完整 line span 和 content line span。payload format 按本章 format 规则输出。
+
+payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`，不参与 `aat:previousSibling`，不作为 xref target heading。

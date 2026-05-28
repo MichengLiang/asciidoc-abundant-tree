@@ -1,0 +1,299 @@
+[#worked-example]
+== 完整样例
+
+本章使用 `samples/structural-payload.adoc` 展示标题投影图。
+
+=== Source Document
+
+[source,asciidoc]
+------
+= root
+
+一段摘要
+
+[#delivery-policy.section, kind=policy, status=active, owner=ops]
+== 配送策略
+
+配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+
+[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[source,json]
+----
+{
+  "owner": {
+    "team": "ops",
+    "fallback": "manual-review"
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["weather", "capacity"]
+  }
+}
+----
+
+[#rel-delivery-capacity.xref-payload, data=json]
+[source,json]
+----
+{
+  "reason": {
+    "type": "risk-control",
+    "signals": ["weather", "capacity"],
+    "description": "配送策略需要读取运力规则来决定是否降级。"
+  },
+  "edge": {
+    "direction": "outbound",
+    "required": true
+  }
+}
+----
+
+[#capacity-rule.section, kind=rule, status=active]
+== 运力规则
+
+运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
+
+=== 我是3级标题
+
+123
+------
+
+=== 标题节点
+
+该文档产生四个标题节点：
+
+[cols="1,1,1,1,1", options="header"]
+|===
+|节点 |headline |label |level |切片
+
+|`:heading-l1-o0`
+|`root`
+|
+|`0`
+|line 1 到 line 4
+
+|`:heading-l5-o0`
+|`配送策略`
+|`delivery-policy`
+|`1`
+|line 5 到 line 40
+
+|`:heading-l41-o0`
+|`运力规则`
+|`capacity-rule`
+|`1`
+|line 41 到 line 45
+
+|`:heading-l46-o0`
+|`我是3级标题`
+|`_我是3级标题`
+|`2`
+|line 46 到 line 48
+|===
+
+=== 标题结构
+
+[source,turtle]
+----
+:heading-l1-o0 aat:containsDirectly :heading-l5-o0 .
+:heading-l1-o0 aat:containsDirectly :heading-l41-o0 .
+:heading-l41-o0 aat:containsDirectly :heading-l46-o0 .
+
+:heading-l41-o0 aat:previousSibling :heading-l5-o0 .
+----
+
+`root` 不直接包含 `我是3级标题`。该关系由递归查询推出。
+
+=== 来源事实
+
+[source,turtle]
+----
+:source-doc a prov:Entity, aat:AsciiDocSourceDocument ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:sourceDigest "sha256:..." .
+
+:projection a prov:Entity, aat:HeadingProjection ;
+  prov:wasDerivedFrom :source-doc ;
+  prov:hadPrimarySource :source-doc ;
+  prov:wasGeneratedBy :projection-activity .
+
+:projection-activity a prov:Activity, aat:ProjectionActivity ;
+  prov:used :source-doc .
+----
+
+=== 节点事实
+
+[source,turtle]
+------
+:heading-l5-o0 a aat:Heading ;
+  aat:headline "配送策略" ;
+  aat:addressLabel "delivery-policy" ;
+  aat:role "section" ;
+  aat:kind "policy" ;
+  aat:status "active" ;
+  aat:owner "ops" ;
+  aat:headingLevel 1 ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 5 ;
+  aat:endLine 40 ;
+  aat:headingLine 6 ;
+  aat:metadataStartLine 5 ;
+  aat:metadataEndLine 5 ;
+  aat:contentStartLine 8 ;
+  aat:contentEndLine 39 ;
+  aat:raw """[#delivery-policy.section, kind=policy, status=active, owner=ops]
+== 配送策略
+
+配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+
+[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[source,json]
+----
+{
+  "owner": {
+    "team": "ops",
+    "fallback": "manual-review"
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["weather", "capacity"]
+  }
+}
+----
+
+[#rel-delivery-capacity.xref-payload, data=json]
+[source,json]
+----
+{
+  "reason": {
+    "type": "risk-control",
+    "signals": ["weather", "capacity"],
+    "description": "配送策略需要读取运力规则来决定是否降级。"
+  },
+  "edge": {
+    "direction": "outbound",
+    "required": true
+  }
+}
+----
+""" .
+
+:heading-l41-o0 a aat:Heading ;
+  aat:headline "运力规则" ;
+  aat:addressLabel "capacity-rule" ;
+  aat:role "section" ;
+  aat:kind "rule" ;
+  aat:status "active" ;
+  aat:headingLevel 1 ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 41 ;
+  aat:endLine 45 ;
+  aat:headingLine 42 ;
+  aat:metadataStartLine 41 ;
+  aat:metadataEndLine 41 ;
+  aat:contentStartLine 44 ;
+  aat:contentEndLine 44 ;
+  aat:raw """[#capacity-rule.section, kind=rule, status=active]
+== 运力规则
+
+运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
+""" .
+------
+
+=== 节点 Payload
+
+[source,turtle]
+----
+:heading-l5-o0 aat:payload [
+  aat:payloadId "delivery-policy-payload" ;
+  aat:payloadKind "node" ;
+  aat:forSelector "delivery-policy" ;
+  aat:format "json" ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 10 ;
+  aat:endLine 23 ;
+  aat:contentStartLine 13 ;
+  aat:contentEndLine 22 ;
+  aat:raw """{
+  "owner": {
+    "team": "ops",
+    "fallback": "manual-review"
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["weather", "capacity"]
+  }
+}"""
+] .
+----
+
+=== 交叉引用边
+
+[source,turtle]
+----
+:heading-l5-o0 rel:depends-on :heading-l41-o0 .
+
+:xref-edge-l8-c8-o0 a aat:XrefEdge ;
+  rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l41-o0 )>> ;
+  aat:sourceHeading :heading-l5-o0 ;
+  aat:targetHeading :heading-l41-o0 ;
+  aat:targetSelector "capacity-rule" ;
+  aat:displayLabel "运力规则" ;
+  aat:rel "depends-on" ;
+  aat:weight "0.8" ;
+  aat:payloadSelector "rel-delivery-capacity" ;
+  aat:raw "xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]" ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 8 ;
+  aat:endLine 8 ;
+  aat:startColumn 8 ;
+  aat:endColumn 91 .
+----
+
+=== 边 Payload
+
+[source,turtle]
+----
+:xref-edge-l8-c8-o0 aat:payload [
+  aat:payloadId "rel-delivery-capacity" ;
+  aat:payloadKind "edge" ;
+  aat:format "json" ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 25 ;
+  aat:endLine 39 ;
+  aat:contentStartLine 28 ;
+  aat:contentEndLine 38 ;
+  aat:raw """{
+  "reason": {
+    "type": "risk-control",
+    "signals": ["weather", "capacity"],
+    "description": "配送策略需要读取运力规则来决定是否降级。"
+  },
+  "edge": {
+    "direction": "outbound",
+    "required": true
+  }
+}"""
+] .
+----
+
+=== 验收事实
+
+该样例的投影必须满足：
+
+* 标题节点数量为四个。
+* `= root` 创建标题节点。
+* `配送策略` 节点有 `aat:addressLabel "delivery-policy"`、`aat:kind "policy"`、`aat:status "active"` 和 `aat:owner "ops"`。
+* `运力规则` 节点自身 raw 不包含 `=== 我是3级标题`。
+* `root` 直接包含 `配送策略` 和 `运力规则`。
+* `运力规则` 直接包含 `我是3级标题`。
+* `运力规则` 的 previous sibling 是 `配送策略`。
+* `配送策略` 到 `运力规则` 生成 `rel:depends-on` 边。
+* xref `weight=0.8` 投影为边证据上的 `aat:weight "0.8"`。
+* xref `payload=rel-delivery-capacity` 投影为边证据上的 `aat:payloadSelector "rel-delivery-capacity"`。
+* `delivery-policy-payload` 绑定为 `配送策略` 节点 payload。
+* `rel-delivery-capacity` 绑定为 `depends-on` 边 payload。
+* payload raw 不展开为业务 RDF 图。
+* 第 8 行 paragraph 不创建标题节点。
+* 第 10 到 23 行 payload listing 不创建标题节点。
+* 第 25 到 39 行 xref payload listing 不创建标题节点。
+* `kind`、`status`、`owner` 和 `weight` 使用直接 `aat:` 谓词，不生成属性资源。

@@ -1,0 +1,97 @@
+[#heading-node]
+== 标题节点
+
+标题节点由 AsciiDoc 等号标题创建。一个标题节点对应源文档中的一个标题表面。
+
+=== 标题表面
+
+以下表面都创建标题节点：
+
+[source,asciidoc]
+----
+= root
+
+== 配送策略
+
+=== 我是3级标题
+----
+
+一个等号标题、两个等号标题、三个等号标题直到六个等号标题均为标题。投影不因 Asciidoctor 将一个等号标题归入 document title 而取消该标题节点。
+
+=== Headline
+
+`headline` 是标题文本，不包含标题等号标记。
+
+[source,asciidoc]
+----
+== 配送策略
+----
+
+该标题节点的 `aat:headline` 是 `配送策略`。
+
+=== Level
+
+`aat:headingLevel` 使用解析器恢复出的标题层级坐标。该坐标是 0-based section level 时，源文本中的 `=` 对应 `0`，`==` 对应 `1`，`===` 对应 `2`。
+
+在 `structural-payload.adoc` 中，`== 配送策略` 和 `== 运力规则` 的解析层级是 `1`，`=== 我是3级标题` 的解析层级是 `2`。该数值正确表达标题嵌套层级。
+
+=== 身份
+
+标题节点的 IRI 由投影器生成。手动 ID、generated ID 和 headline 不构成节点 IRI。
+
+节点 IRI 的输入是 `baseIri`、`documentKey` 和 heading local id。`documentKey` 是 relative path 的 sha256 十六进制摘要。heading local id 使用 `heading-l<startLine>-o<ordinal>`。同一 relative path、同一 startLine 下出现多个 heading 时，`ordinal` 按源文档顺序从 `0` 递增；无冲突时使用 `0`。
+
+规范形式：
+
+[source,text]
+----
+documentKey = sha256(relativePath)
+localId     = heading-l<startLine>-o<ordinal>
+resourceIRI = <baseIri><documentKey>#<localId>
+----
+
+源文档中的作者字符串只作为查询 label 或 selector 使用。
+
+示例：
+
+[source,turtle]
+----
+:heading-l5-o0 a aat:Heading ;
+  aat:headline "配送策略" ;
+  aat:addressLabel "delivery-policy" .
+----
+
+`delivery-policy` 是手动声明的 address label。`配送策略` 是 headline。二者都不构成 `:heading-l5-o0` 的身份。
+
+=== 标题头部属性
+
+标题头部 attrlist 的 ID、role 和 named attributes 均投影到标题节点。
+
+[source,asciidoc]
+----
+[#delivery-policy.section, kind=policy, status=active, owner=ops]
+== 配送策略
+----
+
+投影为：
+
+[source,turtle]
+----
+:heading-l5-o0 a aat:Heading ;
+  aat:headline "配送策略" ;
+  aat:addressLabel "delivery-policy" ;
+  aat:role "section" ;
+  aat:kind "policy" ;
+  aat:status "active" ;
+  aat:owner "ops" .
+----
+
+named attributes 直接使用 `aat:` 命名空间下同名谓词。字段值作为 literal 保存。投影器不解释 `kind`、`status`、`owner` 的业务语义。
+
+字段名映射必须确定。字段名是合法 IRI local name 时，谓词 IRI 为 `aat:<fieldName>`。字段名包含不能直接进入 prefixed name 的字符时，投影器必须使用稳定的 IRI-safe 编码；同一字段名在同一投影配置下必须得到同一谓词 IRI。字段值统一按源文档表面值保存为 string literal。
+
+`#id` 不投影为 `aat:id`。它投影为 `aat:addressLabel`。点号 role token 不投影为字段名谓词。它投影为 `aat:role`。named attribute 才进入 `aat:<fieldName>` 谓词。
+
+=== 重复 label
+
+重复 headline 合法。重复 address label 按源文档事实保留。按重复 label 查询时，结果可以包含多个标题节点。投影器不为重复 label 虚构唯一绑定。
