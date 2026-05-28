@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
-import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import {
 	type Rdf12IriTerm,
@@ -12,6 +11,7 @@ import {
 import {
 	aatTerm,
 	expectLiteralValue,
+	expectNoTriple,
 	expectResourceTypeCount,
 	expectTriple,
 	literalValues,
@@ -186,10 +186,16 @@ describe("rdf12 heading projection target acceptance", () => {
 
 	it("keeps payload raw opaque instead of expanding it into business graph facts", () => {
 		const { graph } = structuralPayloadProjection();
+		const payloadSubjects = payloadRawScopeSubjects(graph);
 
-		for (const triple of graph.toArray()) {
-			expectNoBusinessPayloadExpansion(triple.predicate);
-			expectNoBusinessPayloadExpansion(triple.object);
+		expect(payloadSubjects.length).toBeGreaterThan(0);
+		for (const subject of payloadSubjects) {
+			for (const predicate of payloadInternalFieldPredicates) {
+				expect(graph.match({ subject, predicate })).toHaveLength(0);
+				for (const value of payloadInternalLiteralValues) {
+					expectNoTriple(graph, subject, predicate, stringLiteral(value));
+				}
+			}
 		}
 	});
 
@@ -254,13 +260,69 @@ function onlyPayloadById(graph: Rdf12Graph, payloadId: string): Rdf12IriTerm {
 	return payloads[0] ?? termIri("");
 }
 
-function expectNoBusinessPayloadExpansion(
-	term: Rdf12IriTerm | { value: unknown },
-): void {
-	const value = typeof term.value === "string" ? term.value : "";
+const payloadInternalFieldPredicates = [
+	"owner",
+	"team",
+	"fallback",
+	"risk",
+	"level",
+	"signals",
+	"reason",
+	"type",
+	"description",
+	"edge",
+	"direction",
+	"required",
+].map(aatTerm);
 
-	expect(value).not.toContain(`${namespaces.aat}owner`);
-	expect(value).not.toContain(`${namespaces.aat}risk`);
-	expect(value).not.toContain(`${namespaces.aat}reason`);
-	expect(value).not.toContain(`${namespaces.aat}edge`);
+const payloadInternalLiteralValues = [
+	"ops",
+	"manual-review",
+	"high",
+	"weather",
+	"capacity",
+	"risk-control",
+	"配送策略需要读取运力规则来决定是否降级。",
+	"outbound",
+	"true",
+];
+
+function payloadRawScopeSubjects(graph: Rdf12Graph): Rdf12IriTerm[] {
+	const subjects = new Map<string, Rdf12IriTerm>();
+
+	for (const payload of resourcesOfType(graph, aatTerm("PayloadBlock"))) {
+		subjects.set(payload.value, payload);
+	}
+	for (const triple of graph.match({ predicate: aatTerm("payloadId") })) {
+		subjects.set(triple.subject.value, triple.subject);
+	}
+	for (const triple of graph.match({
+		predicate: aatTerm("relativePath"),
+		object: stringLiteral("samples/structural-payload.adoc"),
+	})) {
+		if (isInsidePayloadSourceRange(graph, triple.subject)) {
+			subjects.set(triple.subject.value, triple.subject);
+		}
+	}
+
+	return [...subjects.values()];
+}
+
+function isInsidePayloadSourceRange(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+): boolean {
+	const [startLine] = literalValues(graph, subject, aatTerm("startLine"));
+
+	if (startLine === undefined) {
+		return false;
+	}
+
+	return [
+		{ start: 10, end: 23 },
+		{ start: 25, end: 39 },
+	].some(
+		(range) =>
+			Number(startLine) >= range.start && Number(startLine) <= range.end,
+	);
 }
