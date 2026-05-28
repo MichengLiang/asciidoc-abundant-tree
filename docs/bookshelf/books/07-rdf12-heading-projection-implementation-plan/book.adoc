@@ -1,0 +1,62 @@
+= RDF 1.2 标题投影图实现计划书
+弥澄亮 <MichengLiang>
+v0.1, 2026-05
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:experimental:
+:idprefix:
+:idseparator: -
+
+include::../../shared/attributes.adoc[]
+
+[preface]
+include::frontmatter/preface.adoc[]
+
+= 第一部：执行契约
+
+[partintro]
+这一部定义实现计划书的对象边界、源码基线、批次门槛、提交规则和全局验收。
+
+include::chapters/01-execution-contract.adoc[]
+
+include::chapters/02-current-source-state.adoc[]
+
+= 第二部：标题结构批次
+
+[partintro]
+这一部把当前结构资源投影迁移为标题节点、标题切片、标题层级边和兄弟顺序。
+
+include::chapters/03-batch-00-baseline-and-migration-guardrails.adoc[]
+
+include::chapters/04-batch-01-heading-nodes-and-slices.adoc[]
+
+include::chapters/05-batch-02-heading-structure-edges.adoc[]
+
+= 第三部：关系、属性与载荷批次
+
+[partintro]
+这一部实现标题 label 空间、selector binding、xref 边证据、直接字段谓词和 payload 复杂属性。
+
+include::chapters/06-batch-03-label-space-and-selector-binding.adoc[]
+
+include::chapters/07-batch-04-xref-edges-and-reifiers.adoc[]
+
+include::chapters/08-batch-05-direct-field-predicates.adoc[]
+
+include::chapters/09-batch-06-payload-complex-properties.adoc[]
+
+= 第四部：公共出口与最终门禁
+
+[partintro]
+这一部锁定 `rdf12` 公共出口、查询契约、书稿一致性和最终验收。
+
+include::chapters/10-batch-07-public-contract-and-final-gates.adoc[]
+
+[appendix]
+include::backmatter/review-package-template.adoc[]
+
+[appendix]
+include::backmatter/batch-status-ledger.adoc[]

@@ -1,0 +1,143 @@
+[#batch-07-public-contract-and-final-gates]
+== Batch 07：公共契约与最终门禁
+
+=== 批次目标
+
+本批锁定 `rdf12` 公共出口、查询契约、序列化行为和最终验收。本批删除迁移期间允许失败标记，并确认旧 RDF12 对象不再出现在公共图中。
+
+=== 上游门槛
+
+* Batch 06 状态为 `通过`。
+* Batch 06 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+执行者必须阅读：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/07-query-contract.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/08-worked-example.adoc`
+* `src/index.ts`
+* `src/cli.ts`
+* `src/rdf12-projection/turtle-serializer.ts`
+* `src/rdf12-projection/json-ld-serializer.ts`
+* `test/rdf12-projection/public-api.test.ts`
+* `test/rdf12-projection/roundtrip.test.ts`
+* `test/rdf12-projection/query-contracts.test.ts`
+
+=== 输入事实
+
+公共入口已经存在。最终批次的对象不是增加入口，而是证明现有入口输出 06 号书定义的标题投影图。
+
+=== 文件边界
+
+修改：
+
+* `src/index.ts`
+* `src/cli.ts`
+* `src/rdf12-projection/turtle-serializer.ts`
+* `src/rdf12-projection/json-ld-serializer.ts`
+* `test/rdf12-projection/public-api.test.ts`
+* `test/rdf12-projection/roundtrip.test.ts`
+* `test/rdf12-projection/query-contracts.test.ts`
+* `test/rdf12-projection/heading-projection.acceptance.test.ts`
+* `test/cli.test.ts`
+
+允许修改：
+
+* `README.md`
+* `CHANGELOG.md`
+
+不得修改：
+
+* `src/parser.ts`
+* `src/asciidoctor-adapter.ts`
+
+=== 实施任务
+
+. 删除 Batch 00 中设置的允许失败标记。
+. 确认 `rdf12(document, options)` 返回 graph、prefixes、relativePath、document/source/projection/projectionActivity IRI、ttl 和 jsonLd。
+. 确认 CLI `--format rdf12` 输出 Turtle。
+. 确认 CLI `--format rdf12-json-ld` 输出 JSON-LD。
+. 确认 CLI 不新增 `rdf`、`ttl` 或 `turtle` 公共 format。
+. 确认 Turtle serialization 能表达 RDF 1.2 triple term reifier。
+. 确认 JSON-LD serialization 保留 triple term 结构。
+. 更新 query contract tests，使它们覆盖 06 号书查询表面。
+. 更新 README 中 RDF12 描述，使它不承诺旧结构资源。
+. 更新 CHANGELOG，记录 RDF12 public graph 对象收敛为标题投影图。
+
+=== 查询契约验收
+
+`query-contracts.test.ts` 必须覆盖：
+
+* 按 `aat:addressLabel` 查标题。
+* 按 `aat:headline` 查标题。
+* 读取标题自身 `aat:raw`。
+* 查询直接子标题。
+* 使用 property path 查询标题子树。
+* 查询 `aat:previousSibling`。
+* 查询标题发出的 xref edge。
+* 查询边 payload。
+* 查询节点 payload。
+* 按直接字段谓词查询标题。
+
+=== 负验收
+
+最终图不得包含以下类型：
+
+* `aat:Paragraph`
+* `aat:ListingBlock`
+* `aat:TableBlock`
+* `aat:AnchorTarget`
+* `aat:PayloadBlock`
+* `aat:SurfaceAttribute`
+* label resource 类型
+* `aat:XrefOccurrence`
+
+最终图不得包含以下旧谓词作为公共契约：
+
+* `aat:hasAttribute`
+* `aat:hasLabel`
+* `aat:hasPayload`
+* `aat:payloadOf`
+* `aat:sourceNode`
+* `aat:targetNode`
+* `aat:rawRel`
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection
+pnpm test -- test/cli.test.ts
+pnpm typecheck
+pnpm lint
+pnpm build
+pnpm pack:check
+pnpm smoke:cli
+pnpm --dir docs/bookshelf test
+pnpm --dir docs/bookshelf run build
+----
+
+`pnpm check` 可以作为最终聚合命令执行。审核包必须列出实际运行的完整命令和结果。
+
+=== 提交规则
+
+[source,bash]
+----
+git add src test README.md CHANGELOG.md docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan
+git commit --only -m "feat: finalize rdf12 heading projection contract" -- src test README.md CHANGELOG.md docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan
+----
+
+=== 审核规则
+
+审核者必须从 public API、CLI、Turtle、JSON-LD 和 graph tests 五个表面检查同一对象。任一表面仍暴露旧结构资源时，本批不得通过。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 任一允许失败标记仍存在。
+* 旧 RDF12 类型或旧谓词出现在公共契约测试中。
+* CLI 输出与 public API 输出不是同一 projection。
+* Turtle roundtrip 丢失 reifier triple term。
+* README 或 CHANGELOG 描述旧结构图为当前 RDF12 对象。

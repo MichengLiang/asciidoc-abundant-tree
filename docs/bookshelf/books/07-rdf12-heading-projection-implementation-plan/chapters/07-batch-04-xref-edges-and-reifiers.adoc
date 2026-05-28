@@ -1,0 +1,118 @@
+[#batch-04-xref-edges-and-reifiers]
+== Batch 04：Xref 边与 Reifier
+
+=== 批次目标
+
+本批把 xref occurrence 投影迁移为标题之间的关系边和边证据。本批输出主 relation triple、`aat:XrefEdge`、`rdf:reifies`、source heading、target heading、target selector、display label、rel、raw 和回源坐标。
+
+本批不处理 xref 普通字段谓词。本批不绑定 payload。
+
+=== 上游门槛
+
+* Batch 03 状态为 `通过`。
+* Batch 03 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+执行者必须阅读：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/05-xref-edge.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/07-query-contract.adoc`
+* `src/rdf12-projection/xref-projector.ts`
+* `src/rdf12-projection/reifier.ts`
+* `src/rdf12-projection/relation-predicate.ts`
+* `src/rdf12-projection/selector-binding.ts`
+* `test/rdf12-projection/xref-projector.test.ts`
+* `test/rdf12-projection/reifier.test.ts`
+* `test/rdf12-projection/relation-predicate.test.ts`
+
+=== 输入事实
+
+xref 所在标题切片决定 source heading。xref target selector 绑定到唯一标题节点时决定 target heading。`rel` 决定关系谓词；没有 `rel` 时谓词是 `aat:references`。
+
+边证据是关系边的属性承载面和回源证据。边证据不是标题节点。
+
+=== 文件边界
+
+修改：
+
+* `src/rdf12-projection/xref-projector.ts`
+* `src/rdf12-projection/relation-predicate.ts`
+* `src/rdf12-projection/resource-identity.ts`
+* `src/rdf12-projection/terms.ts`
+* `test/rdf12-projection/xref-projector.test.ts`
+* `test/rdf12-projection/reifier.test.ts`
+* `test/rdf12-projection/relation-predicate.test.ts`
+* `test/rdf12-projection/query-contracts.test.ts`
+* `test/rdf12-projection/heading-projection.acceptance.test.ts`
+
+不得修改：
+
+* `src/inline-occurrence-scanner.ts`
+* `src/macro-argument-parser.ts`
+* `src/parser.ts`
+
+=== 实施任务
+
+. 将 xref resource type 从 `aat:XrefOccurrence` 改为 `aat:XrefEdge`。
+. 将 local id 从 `xref-l<line>-c<column>-o<ordinal>` 保持或迁移为 `xref-edge-l<line>-c<column>-o<ordinal>`；若迁移，测试必须锁定新 local id。
+. 将 `aat:sourceNode` 改为 `aat:sourceHeading`。
+. 将 `aat:targetNode` 改为 `aat:targetHeading`。
+. 将 `aat:rawRel` 改为 `aat:rel`。
+. 保留 `aat:targetSelector`。
+. 将 xref display text 写为 `aat:displayLabel` literal。
+. 在 source、target、predicate 均确定时生成主 relation triple。
+. 用 `rdf:reifies` 连接边证据到主 relation triple 的 triple term。
+. 未绑定 target selector 时只保留边证据和 selector，不生成主 relation triple。
+. 多义 target selector 时输出候选 heading，不生成主 relation triple。
+. `rel` 无法映射合法 IRI 时保留 `aat:rel`，不生成主 relation triple。
+
+=== 测试任务
+
+. `xref-projector.test.ts` 断言 `xref:capacity-rule[运力规则, rel=depends-on]` 生成 `rel:depends-on` triple。
+. `xref-projector.test.ts` 断言无 `rel` 时生成 `aat:references` triple。
+. `xref-projector.test.ts` 断言边证据类型为 `aat:XrefEdge`。
+. `xref-projector.test.ts` 断言边证据有 `aat:sourceHeading` 和 `aat:targetHeading`。
+. `xref-projector.test.ts` 断言边证据有 `aat:targetSelector`、`aat:displayLabel`、`aat:rel` 和 `aat:raw`。
+. `reifier.test.ts` 断言 `rdf:reifies` object 是 triple term。
+. `xref-projector.test.ts` 断言未绑定 selector 不生成主 relation triple。
+. `xref-projector.test.ts` 断言多义 selector 不生成主 relation triple。
+. `query-contracts.test.ts` 覆盖“查标题发出的边”查询。
+. `heading-projection.acceptance.test.ts` 中 xref 边断言解除允许失败标记。
+
+=== 验收标准
+
+* 公共图中不出现 `aat:XrefOccurrence`。
+* relation triple 的 subject 和 object 均为 heading node。
+* `rdf:reifies` 指向主 relation triple。
+* `rel` 字段只选择谓词，不触发业务解释。
+* display label 不是 target heading identity。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: project rdf12 xref edges" -- src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查边证据与标题节点集合分离。审核者必须检查未绑定和多义 selector 路径没有主 relation triple。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* `aat:XrefOccurrence` 仍作为公共类型输出。
+* relation triple 的端点不是 heading node。
+* `rdf:reifies` object 是 string literal。
+* display label 参与 selector binding 或 resource identity。

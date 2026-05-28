@@ -63,6 +63,12 @@ resourceIRI = <baseIri><documentKey>#<localId>
 
 `delivery-policy` 是手动声明的 address label。`配送策略` 是 headline。二者都不构成 `:heading-l5-o0` 的身份。
 
+=== Label 空间
+
+标题节点 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成。selector 绑定标题节点时只查询这三类 label，不查询标题节点 IRI、payload id、role、普通字段谓词或 raw 文本。
+
+同一 selector 可以命中多个标题节点。多义命中是源文档事实，投影器必须保留多义结果，不得任意选择一个标题节点作为唯一目标。
+
 === 标题头部属性
 
 标题头部 attrlist 的 ID、role 和 named attributes 均投影到标题节点。

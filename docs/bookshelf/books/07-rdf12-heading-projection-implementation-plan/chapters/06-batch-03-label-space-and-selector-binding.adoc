@@ -1,0 +1,115 @@
+[#batch-03-label-space-and-selector-binding]
+== Batch 03：标题 Label 空间与 Selector Binding
+
+=== 批次目标
+
+本批把 selector binding 收敛到标题节点 label 空间。本批不创建 label resource。本批输出标题节点上的 label 字段，并让 selector 只绑定 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline`。
+
+本批不生成 xref relation triple。本批不生成 payload binding。
+
+=== 上游门槛
+
+* Batch 02 状态为 `通过`。
+* Batch 02 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+执行者必须阅读：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/02-heading-node.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/05-xref-edge.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/06-payload-and-attribute.adoc`
+* `src/rdf12-projection/labels.ts`
+* `src/rdf12-projection/label-catalog.ts`
+* `src/rdf12-projection/selector-binding.ts`
+* `test/rdf12-projection/labels.test.ts`
+* `test/rdf12-projection/selector-binding.test.ts`
+
+=== 输入事实
+
+标题节点 label 空间由三类字段构成：
+
+* `aat:addressLabel`
+* `aat:generatedAddressLabel`
+* `aat:headline`
+
+Selector binding 只查询这三类字段。selector 不绑定到标题节点 IRI、payload id、role、普通字段谓词、raw 文本、listing ID、table ID 或 inline anchor ID。
+
+=== 文件边界
+
+修改：
+
+* `src/rdf12-projection/labels.ts`
+* `src/rdf12-projection/label-catalog.ts`
+* `src/rdf12-projection/selector-binding.ts`
+* `src/rdf12-projection/projector.ts`
+* `test/rdf12-projection/labels.test.ts`
+* `test/rdf12-projection/selector-binding.test.ts`
+* `test/rdf12-projection/interdocument.acceptance.test.ts`
+* `test/rdf12-projection/heading-projection.acceptance.test.ts`
+
+不得修改：
+
+* `src/metadata-parser.ts`
+* `src/binding-merge.ts`
+* `src/parser.ts`
+
+=== 实施任务
+
+. 删除或隔离 label resource 写入路径。
+. 将 `TitleLabel`、`AddressLabel` 和 `GeneratedAddressLabel` 的运行时语义迁移为 heading node 字段与 catalog entry。
+. 删除 `BlockTitleLabel`、`AnchorLabel`、`ReftextLabel`、`RoleLabel` 对 selector binding 的影响。
+. 让 label catalog entry 只记录 heading owner、label kind 和 label value。
+. 让 `bindSelector` 返回标题节点 IRI。
+. 多义 selector 返回所有候选 heading。
+. 未绑定 selector 保留 selector literal，不生成 target heading。
+. 删除 `rdf:value` label resource 相关输出。
+
+=== 测试任务
+
+. `labels.test.ts` 断言 heading node 直接具有 `aat:headline`。
+. `labels.test.ts` 断言手动 ID 直接成为 `aat:addressLabel`。
+. `labels.test.ts` 断言 generated ID 直接成为 `aat:generatedAddressLabel`。
+. `labels.test.ts` 断言没有 `aat:TitleLabel`、`aat:AddressLabel`、`aat:GeneratedAddressLabel` resource。
+. `selector-binding.test.ts` 断言 xref target selector 只绑定标题 label。
+. `selector-binding.test.ts` 断言 listing ID、table ID、inline anchor ID 不成为 xref target heading。
+. `selector-binding.test.ts` 断言重复 headline 返回多义候选。
+. `interdocument.acceptance.test.ts` 断言外部 xref 不打开外部文件。
+. `heading-projection.acceptance.test.ts` 中 label 与 selector 相关断言解除允许失败标记。
+
+=== 验收标准
+
+* 公共图中不出现 label resource type。
+* `rdf:value` 不再用于 label 表达。
+* selector binding 不读取外部文件。
+* selector 多义时不生成单一 target heading。
+* selector 未绑定时不生成虚构 target heading。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: bind rdf12 selectors to heading labels" -- src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查 catalog 的 owner 集合只包含 heading。审核者必须检查 label value 没有进入 resource IRI。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* label resource 仍出现在公共 RDF12 图中。
+* listing、table、anchor 或 payload label 参与 xref target binding。
+* 多义 selector 选择第一个候选。
+* 未绑定 selector 生成虚构 heading。

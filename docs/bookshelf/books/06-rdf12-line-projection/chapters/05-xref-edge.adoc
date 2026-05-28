@@ -16,7 +16,7 @@ xref 所在的标题切片决定边的 source heading。
 
 === Target Heading
 
-xref target 是 selector。selector 只在标题节点 label 空间中绑定。
+xref target 是 selector。selector 只在标题节点 label 空间中绑定。标题节点 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成；xref target 不绑定到 payload id、role、普通字段谓词或标题节点 IRI。
 
 `capacity-rule` 绑定到 address label 为 `capacity-rule` 的标题节点。因此上例的 target heading 是 `运力规则`。
 
@@ -101,6 +101,6 @@ xref:capacity-rule[运力规则, rel=depends-on]
   aat:endColumn 91 .
 ----
 
-普通 xref named attributes 直接使用 `aat:` 命名空间下同名谓词。示例中的 `weight=0.8` 投影为 `aat:weight "0.8"`。
+普通 xref named attributes 直接使用 `aat:` 命名空间下同名谓词。示例中的 `weight=0.8` 投影为 `aat:weight "0.8"`。字段值按源文档表面值保存为 string literal。
 
 `payload` 是控制字段，用于绑定边 payload。它不重复作为普通属性。边证据使用 `aat:payloadSelector` 保存该 selector 字符串，使用 `aat:payload` 连接已绑定的复杂 payload 对象。

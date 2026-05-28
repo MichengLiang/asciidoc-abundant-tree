@@ -1,0 +1,117 @@
+[#batch-06-payload-complex-properties]
+== Batch 06：Payload 复杂属性
+
+=== 批次目标
+
+本批把 PayloadBlock resource 投影迁移为 payload 复杂属性对象。节点 payload 归属于标题节点。边 payload 归属于 xref edge evidence。
+
+本批不展开 payload raw 内部结构。本批不把 payload block 作为标题节点、结构边端点或 xref target heading。
+
+=== 上游门槛
+
+* Batch 05 状态为 `通过`。
+* Batch 05 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+执行者必须阅读：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/06-payload-and-attribute.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/08-worked-example.adoc`
+* `src/rdf12-projection/payload-projector.ts`
+* `src/rdf12-projection/xref-projector.ts`
+* `src/rdf12-projection/selector-binding.ts`
+* `test/rdf12-projection/payload-projector.test.ts`
+* `test/rdf12-projection/payload.acceptance.test.ts`
+
+=== 输入事实
+
+`.payload` block 通过 `for` 字段绑定标题节点。`for` 只在标题节点 label 空间中绑定。绑定失败或多义绑定时，payload 对象保留 selector 和回源坐标，不连接到标题节点。
+
+`.xref-payload` block 通过 xref 的 `payload` 字段绑定边证据。xref edge evidence 使用 `aat:payloadSelector` 保存 selector 字符串，使用 `aat:payload` 连接复杂 payload 对象。
+
+=== 文件边界
+
+修改：
+
+* `src/rdf12-projection/payload-projector.ts`
+* `src/rdf12-projection/labels.ts`
+* `src/rdf12-projection/label-catalog.ts`
+* `src/rdf12-projection/resource-identity.ts`
+* `test/rdf12-projection/payload-projector.test.ts`
+* `test/rdf12-projection/payload.acceptance.test.ts`
+* `test/rdf12-projection/query-contracts.test.ts`
+* `test/rdf12-projection/heading-projection.acceptance.test.ts`
+
+不得修改：
+
+* `src/metadata-parser.ts`
+* `src/parser.ts`
+
+=== 实施任务
+
+. 删除 `aat:PayloadBlock` 公共类型输出。
+. 删除 `aat:hasPayload` 和 `aat:payloadOf` 作为公共 payload 关系。
+. 使用 `aat:payload` 从 heading node 连接节点 payload 对象。
+. 使用 `aat:payload` 从 xref edge evidence 连接边 payload 对象。
+. payload 对象写入 `aat:payloadId`。
+. payload 对象写入 `aat:payloadKind`，节点 payload 使用 `"node"`，边 payload 使用 `"edge"`。
+. payload 对象写入 `aat:format`。
+. payload 对象写入 `aat:raw`。
+. payload 对象写入 `aat:relativePath`、`aat:startLine`、`aat:endLine`。
+. payload 对象写入 `aat:contentStartLine` 和 `aat:contentEndLine`。
+. 节点 payload 保留 `aat:forSelector`。
+. 边 payload 不挂到 source heading 或 target heading。
+. payload id 不进入 payload object identity。
+. payload raw 内部 JSON、YAML、TOML、XML 字段不生成 RDF triple。
+
+=== 测试任务
+
+. `payload-projector.test.ts` 断言 `.payload` block 绑定到 heading node 的 `aat:payload`。
+. `payload-projector.test.ts` 断言 `.xref-payload` block 绑定到 xref edge evidence 的 `aat:payload`。
+. `payload-projector.test.ts` 断言 payload 对象包含 payloadId、payloadKind、format、raw、relativePath、line span 和 content line span。
+. `payload-projector.test.ts` 断言 unbound `for` 不连接 heading node。
+. `payload-projector.test.ts` 断言 ambiguous `for` 不连接 heading node。
+. `payload-projector.test.ts` 断言 missing xref payload selector 不连接 payload 对象。
+. `payload.acceptance.test.ts` 断言 `delivery-policy-payload` 是节点 payload。
+. `payload.acceptance.test.ts` 断言 `rel-delivery-capacity` 是边 payload。
+. `payload.acceptance.test.ts` 断言 payload raw 中的 JSON key 不成为 RDF predicate。
+. `heading-projection.acceptance.test.ts` 中 payload 断言解除允许失败标记。
+
+=== 验收标准
+
+* payload 是复杂属性对象，不是标题节点。
+* payload 不参与 `aat:containsDirectly`。
+* payload 不参与 `aat:previousSibling`。
+* payload 不作为 xref target heading。
+* xref `payload` selector 和 `aat:payload` 对象谓词不混用。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: project rdf12 payload complex properties" -- src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查 payload raw 没有被解析为业务图。审核者必须检查边 payload 没有挂到 source heading 或 target heading。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 公共图中出现 `aat:PayloadBlock`。
+* payload 使用 `aat:hasPayload` 或 `aat:payloadOf` 作为公共契约。
+* payload JSON 字段进入 RDF graph。
+* xref payload 连接到 relation endpoint。
+* payload id 进入 payload resource IRI。

@@ -1,0 +1,67 @@
+[#current-source-state]
+== 当前源码状态
+
+本章记录实现计划的源码基线。该基线描述当前事实，不定义目标对象。
+
+=== 可复用基础设施
+
+`src/rdf12-projection/terms.ts` 定义 RDF 1.2 term、literal、triple term 和 triple。`src/rdf12-projection/graph.ts` 提供 graph 去重和稳定输出基础。`src/rdf12-projection/n3-adapter.ts`、`turtle-serializer.ts` 和 `json-ld-serializer.ts` 提供序列化出口。
+
+`src/rdf12-projection/path-coordinate.ts`、`source-digest.ts`、`options.ts` 和 `provenance.ts` 提供 document root、relative path、document key、source digest 和 PROV-O 来源事实。标题投影图继续需要这些事实。
+
+`src/index.ts` 已暴露 `rdf12(document, options)`。`src/cli.ts` 已暴露 `--format rdf12` 和 `--format rdf12-json-ld`。公共入口可以保留；入口背后的图对象必须迁移。
+
+=== 当前投影对象
+
+`src/rdf12-projection/structure-projector.ts` 当前投影多类结构 resource：
+
+* `aat:Section`
+* `aat:Paragraph`
+* `aat:ListingBlock`
+* `aat:TableBlock`
+* `aat:AnchorTarget`
+
+该文件还把 document resource 到普通 block 的 `aat:containsDirectly` 作为结构树边输出。06 号书要求 `aat:containsDirectly` 只连接标题节点。
+
+`src/rdf12-projection/labels.ts` 当前创建 label resource，并把 label resource 通过 `aat:hasLabel` 挂到 owner。label catalog 的 owner 包含 section、listing、table、anchor、payload 和 document。06 号书要求 label 是标题节点上的查询字段或边证据上的 display label，不作为核心结构资源。
+
+`src/rdf12-projection/attributes.ts` 当前创建 `aat:SurfaceAttribute` resource，并使用 `aat:name`、`rdf:value` 和 `aat:hasAttribute` 表达字段。06 号书要求 named attribute 直接投影为 owner 上的 `aat:<name>` literal 谓词。
+
+`src/rdf12-projection/payload-projector.ts` 当前创建 `aat:PayloadBlock` resource，并使用 `aat:hasPayload`、`aat:payloadOf`、`aat:sourceText` 和 `aat:dataFormat`。06 号书要求 payload 是标题节点或 xref edge evidence 上的复杂属性对象，字段名为 `aat:payload`、`aat:raw`、`aat:format`、`aat:payloadKind` 等。
+
+`src/rdf12-projection/xref-projector.ts` 当前创建 `aat:XrefOccurrence` resource，并使用 `aat:sourceNode`、`aat:targetNode`、`aat:rawRel` 和 `aat:payloadSelector`。06 号书要求 xref 形成关系边和 `aat:XrefEdge` 边证据，边证据使用 `aat:sourceHeading`、`aat:targetHeading`、`aat:rel`、`aat:targetSelector`、`aat:displayLabel` 和 `aat:payloadSelector`。
+
+=== 当前测试状态
+
+`test/rdf12-projection/` 中的测试覆盖当前旧投影对象。以下断言属于迁移对象，而不是目标验收：
+
+* `structure-projector.test.ts` 断言 `Section`、`Paragraph`、`ListingBlock`、`TableBlock` 和 `AnchorTarget`。
+* `labels.test.ts` 断言 label resource、`rdf:value` 和 `aat:hasLabel`。
+* `attributes.test.ts` 断言 `SurfaceAttribute`、`aat:name`、`rdf:value` 和 `aat:hasAttribute`。
+* `payload-projector.test.ts` 和 `payload.acceptance.test.ts` 断言 `PayloadBlock`、`hasPayload` 和 `payloadOf`。
+* `xref-projector.test.ts` 断言 `XrefOccurrence`、`sourceNode`、`targetNode` 和 `rawRel`。
+
+这些测试不能直接删除。实现批次必须先写出 06 号书目标测试，再把旧测试迁移、替换或删除。测试删除必须由同批目标测试覆盖，不得留下未验收行为。
+
+=== 迁移原则
+
+实现层继续消费 `AbundantDocument`。解析器、metadata parser、inline occurrence scanner 和 source interval resolver 不是本计划的目标对象。只有当标题自身 raw 无法由现有字段稳定恢复时，才允许在专门批次中补充源区间辅助函数。
+
+投影层可以保留 RDF term、graph、路径、PROV、序列化和 public entry。投影层必须重写资源集合、label catalog、selector binding、attribute projection、payload projection 和 xref edge projection。
+
+=== 文件职责目标
+
+[horizontal]
+`projector.ts`:: 编排标题投影图生成顺序，不承载具体规则。
+`structure-projector.ts`:: 生成 heading node、heading slice raw、heading containment 和 sibling order。
+`node-index.ts`:: 只索引 heading node，并支持 xref source heading 和 target heading 绑定。
+`label-catalog.ts`:: 只维护标题节点 label 空间。
+`labels.ts`:: 写入 `aat:addressLabel`、`aat:generatedAddressLabel`、`aat:headline` 等标题查询字段；不创建 label resource。
+`xref-projector.ts`:: 生成 relation triple、`aat:XrefEdge` 和 RDF 1.2 reifier。
+`attributes.ts`:: 将 named attributes 写为 owner 上的直接 `aat:<name>` literal。
+`payload-projector.ts`:: 生成节点 payload 和边 payload 的复杂属性对象。
+`resource-identity.ts`:: 移除或隔离 paragraph、listing、table、anchor、attribute、label 等旧 public resource kind。
+
+=== 目标样例
+
+`samples/structural-payload.adoc` 是本计划的核心验收样例。实现完成后，该样例的 RDF12 图必须满足 06 号书完整样例中的正向事实和负向事实。负向事实与正向事实同等重要，因为它们定义标题投影图的对象边界。

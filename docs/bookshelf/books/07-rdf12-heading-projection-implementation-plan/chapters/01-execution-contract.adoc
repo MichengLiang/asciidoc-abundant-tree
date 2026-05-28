@@ -1,0 +1,183 @@
+[#execution-contract]
+== 执行契约
+
+本章定义本计划书的执行契约。所有批次章节均受本章约束。
+
+=== 对象边界
+
+本计划书的对象是 RDF 1.2 标题投影图的实现序列。
+
+标题投影图对象由 xref:../06-rdf12-line-projection/book.adoc[AsciiDoc 标题切片到 RDF 1.2 投影规约] 定义。本计划书不重新定义标题投影图。本计划书只定义如何从当前源码状态到达该对象：哪些文件承担哪些职责，哪些测试证明行为成立，哪些旧对象必须退出公共图表面。
+
+=== 公共入口
+
+公共入口保持 `rdf12`。
+
+CLI 公共表面：
+
+[source,bash]
+----
+asciidoc-abundant-tree <file.adoc> --format rdf12
+----
+
+TypeScript public API 公共表面：
+
+[source,typescript]
+----
+const projection = rdf12(document, {
+	documentRoot: process.cwd(),
+});
+
+const graph = projection.graph;
+const ttl = projection.ttl;
+const jsonLd = projection.jsonLd;
+----
+
+`rdf12` 输出必须描述标题投影图。Turtle 文本是图的序列化表面；测试不得只比较 Turtle 排版。涉及 RDF 1.2 reifier 的验收必须检查 `rdf:reifies` 的 object 是 triple term。
+
+=== 批次状态
+
+批次状态使用受控集合：
+
+[horizontal]
+`未开始`:: 批次没有实现提交。
+`执行中`:: 批次存在实现活动，尚未提交审核包。
+`待审核`:: 批次提交 hash 和审核包已经产生。
+`打回`:: 审核者拒绝通过该批次。
+`通过`:: 审核者确认该批次满足本书验收条件。
+
+批次状态记录在 xref:batch-status-ledger[批次状态台账]。状态台账只记录事实，不记录愿望、估计或口头进度。
+
+=== 批次门槛
+
+每个批次开始前必须满足以下门槛：
+
+* 前一批次状态为 `通过`。
+* 前一批次提交 hash 已写入状态台账。
+* 当前工作树中不存在与本批无关的未提交修改。
+* 执行者已经阅读本批列出的 06 号书章节、源码入口和测试入口。
+
+Batch 00 没有前置批次。Batch 00 开始前必须确认 `src/rdf12-projection/` 是正式实现目录，`docs/bookshelf/books/06-rdf12-line-projection/` 是目标规约来源。
+
+=== 语言规则
+
+批次章节使用规约语言。任务授权不得使用以下表达：
+
+* 建议。
+* 可以考虑。
+* 最好。
+* 尽量。
+* 后续再说。
+* 视情况。
+* 基本完成。
+* 差不多。
+
+未确定对象不得进入实施任务。未确定对象必须登记为风险、相邻人工制品或打回项。
+
+=== 文件提交规则
+
+提交在内部 Git 仓库 `micheng-ts/projects/asciidoc-abundant-tree` 中执行。
+
+新文件必须先进入 Git index：
+
+[source,bash]
+----
+git add <new-files>
+----
+
+每批提交使用 `git commit --only` 限定路径：
+
+[source,bash]
+----
+git commit --only -m "<message>" -- <paths>
+----
+
+每批提交只包含本批文件。跨批文件、其它项目文件、构建产物和无关格式化不得进入本批提交。
+
+=== 审核包
+
+每批完成后必须提交审核包。审核包格式见 xref:review-package-template[阶段审核包模板]。
+
+审核包必须包含：
+
+* 批次编号。
+* 提交 hash。
+* 修改文件列表。
+* 本批完成范围。
+* 本批未处理对象。
+* 已运行命令。
+* 命令结果。
+* 规约检查清单。
+* 审核结论。
+
+没有提交 hash 的批次不得进入审核。没有审核通过结论的批次不得解锁下一批。
+
+=== 全局打回条件
+
+出现以下任一情况，当前批次必须打回：
+
+* 投影层重新解析 AsciiDoc 源结构，而不是消费 `AbundantDocument`。
+* 投影层打开跨文件 xref 指向的外部 `.adoc` 文件。
+* 作者显式 ID、headline、generated ID、xref display label 或 payload selector 进入 resource IRI。
+* 可回源 resource 或复杂属性缺少 `aat:relativePath`、`aat:startLine` 或 `aat:endLine`。
+* 标题节点自身 `aat:raw` 吞并子标题切片。
+* `aat:containsDirectly` 连接标题节点到 paragraph、listing、table、payload、label 或普通属性。
+* `aat:previousSibling` 跨父标题或跨层级连接。
+* 未绑定 selector 生成虚构 target heading。
+* 多义 selector 生成单一 target heading。
+* xref `payload` selector 字符串占用 `aat:payload`。
+* payload raw 被展开为业务 RDF graph。
+* named attribute 生成 `aat:SurfaceAttribute` 或 `rdf:value` 属性资源。
+* 公共图中保留 `aat:Paragraph`、`aat:ListingBlock`、`aat:TableBlock`、`aat:AnchorTarget`、`aat:PayloadBlock` 作为标题投影图节点。
+* 验收只比较 Turtle 字符串排版，不比较 graph 语义。
+
+=== 覆盖矩阵
+
+[cols="3,2,2", options="header"]
+|===
+|06 号书承诺 |实现批次 |验收批次
+
+|当前旧 RDF12 输出被锁定为迁移基线
+|Batch 00
+|Batch 00、Batch 07
+
+|`aat:Heading`、headline、headingLevel、address label、generated address label
+|Batch 01
+|Batch 01、Batch 07
+
+|标题自身 raw、metadata span、content span、line span
+|Batch 01
+|Batch 01、Batch 07
+
+|`aat:containsDirectly` 只连接标题节点
+|Batch 02
+|Batch 02、Batch 07
+
+|`aat:previousSibling` 表达同父同级顺序
+|Batch 02
+|Batch 02、Batch 07
+
+|标题 label 空间与 selector binding
+|Batch 03
+|Batch 03、Batch 04、Batch 06、Batch 07
+
+|xref relation triple 与 RDF 1.2 reifier
+|Batch 04
+|Batch 04、Batch 07
+
+|`aat:XrefEdge` 边证据
+|Batch 04
+|Batch 04、Batch 07
+
+|直接字段谓词
+|Batch 05
+|Batch 05、Batch 07
+
+|节点 payload 与边 payload
+|Batch 06
+|Batch 06、Batch 07
+
+|Turtle、JSON-LD、CLI、public API
+|Batch 07
+|Batch 07
+|===

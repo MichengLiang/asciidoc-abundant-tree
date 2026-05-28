@@ -1,0 +1,109 @@
+[#batch-00-baseline-and-migration-guardrails]
+== Batch 00：基线与迁移护栏
+
+=== 批次目标
+
+本批建立迁移基线和目标护栏。本批不改变 RDF12 运行时输出。
+
+本批输出三类证据：当前旧输出快照、06 号书目标验收清单、迁移期间允许失败的目标测试集合。
+
+=== 上游门槛
+
+Batch 00 没有上游批次。开始前必须确认 06 号书位于 `docs/bookshelf/books/06-rdf12-line-projection/`，当前实现位于 `src/rdf12-projection/`。
+
+=== 本批上下文包
+
+执行者必须阅读：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/book.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/08-worked-example.adoc`
+* `src/rdf12-projection/projector.ts`
+* `src/rdf12-projection/structure-projector.ts`
+* `src/rdf12-projection/xref-projector.ts`
+* `src/rdf12-projection/attributes.ts`
+* `src/rdf12-projection/payload-projector.ts`
+* `test/rdf12-projection/*.test.ts`
+
+=== 输入事实
+
+当前 RDF12 输出包含旧结构资源。目标 RDF12 输出只包含标题投影图资源。迁移必须以测试表达目标对象，不能只删除旧断言。
+
+=== 文件边界
+
+创建：
+
+* `test/rdf12-projection/heading-projection.acceptance.test.ts`
+* `test/rdf12-projection/helpers/graph-matchers.ts`
+* `docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-00-review-package.adoc`
+
+修改：
+
+* `test/rdf12-projection/query-contracts.test.ts`
+* `docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-status-ledger.adoc`
+
+不得修改：
+
+* `src/rdf12-projection/**`
+* `src/model.ts`
+* `src/parser.ts`
+
+=== 实施任务
+
+. 建立 graph matcher 辅助函数，用于按 RDF term 检查 triple 存在、triple 不存在、resource type 数量和 literal 值。
+. 为 `samples/structural-payload.adoc` 写目标验收测试。
+. 将目标验收测试标记为迁移期间允许失败的显式集合，标记必须集中在测试文件顶部，不得散落在断言旁。
+. 写出当前旧输出快照命令和目标差距说明。
+. 创建 Batch 00 审核包。
+
+=== 目标验收断言
+
+`heading-projection.acceptance.test.ts` 必须覆盖：
+
+* 标题节点数量为四个。
+* `= root` 产生 `aat:Heading`。
+* `配送策略` 节点具有 `aat:addressLabel "delivery-policy"`。
+* `配送策略` 节点具有 `aat:kind "policy"`、`aat:status "active"` 和 `aat:owner "ops"`。
+* `运力规则` 节点自身 `aat:raw` 不包含 `=== 我是3级标题`。
+* `root` 直接包含 `配送策略` 和 `运力规则`。
+* `运力规则` 直接包含 `我是3级标题`。
+* `运力规则` 的 `aat:previousSibling` 是 `配送策略`。
+* `配送策略` 到 `运力规则` 生成 `rel:depends-on`。
+* xref 边证据类型为 `aat:XrefEdge`。
+* xref `weight=0.8` 投影为 `aat:weight "0.8"`。
+* xref `payload=rel-delivery-capacity` 投影为 `aat:payloadSelector "rel-delivery-capacity"`。
+* `delivery-policy-payload` 绑定为 `配送策略` 节点 payload。
+* `rel-delivery-capacity` 绑定为 xref edge payload。
+* payload raw 不展开为业务 RDF graph。
+* `Paragraph`、`ListingBlock`、`TableBlock`、`AnchorTarget`、`SurfaceAttribute`、`PayloadBlock` 不作为目标图类型出现。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm test -- test/rdf12-projection/query-contracts.test.ts
+pnpm typecheck
+----
+
+目标验收测试在 Batch 00 可以失败。失败必须与旧实现差距一致。`pnpm typecheck` 必须通过。
+
+=== 提交规则
+
+[source,bash]
+----
+git add test/rdf12-projection docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter
+git commit --only -m "test: add rdf12 heading projection migration guardrails" -- test/rdf12-projection docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter
+----
+
+=== 审核规则
+
+审核者必须确认目标测试直接来自 06 号书完整样例，而不是来自当前旧输出。审核者必须确认允许失败的测试集合有明确移除批次。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 目标测试只比较 Turtle 字符串。
+* 目标测试缺少负验收事实。
+* 目标测试把旧资源类型当作目标。
+* 本批修改 `src/rdf12-projection/**`。

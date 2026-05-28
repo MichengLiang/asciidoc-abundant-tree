@@ -22,7 +22,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 ----
 
-`aat:` 承载标题投影词表。`rel:` 承载由 xref `rel` 字段映射出的关系谓词。`rdf:` 承载 `rdf:type`、`rdf:value` 和 `rdf:reifies`。`prov:` 承载来源关系。`xsd:` 承载 typed literal。
+`aat:` 承载标题投影词表。`rel:` 承载由 xref `rel` 字段映射出的关系谓词。`rdf:` 承载 `rdf:type` 和 `rdf:reifies`。`prov:` 承载来源关系。`xsd:` 承载 typed literal。
 
 === 构成性对象
 
@@ -36,7 +36,7 @@
 
 source document、projection 和 projection activity 是 provenance 资源。它们描述图从哪份源文件派生、由哪次投影活动生成。它们不属于标题节点集合，也不参与标题层级边。
 
-payload 对象是复杂属性值。payload 对象保存 payload id、kind、format、raw 和回源坐标；它不属于结构查询资源集合。
+payload 对象是复杂属性值。payload 对象保存 payload id、kind、format、raw 和回源坐标；它必须通过所属标题节点或交叉引用边证据进入查询，不作为独立的文档结构资源参与标题层级、兄弟顺序或 xref target 绑定。
 
 === 消费者动作
 
@@ -56,7 +56,7 @@ payload 对象是复杂属性值。payload 对象保存 payload id、kind、form
 
 标题节点提供阅读单位。标题层级边提供递归阅读路径。交叉引用边提供作者显式写出的非层级关系。payload 提供复杂属性承载面。回源坐标提供读取和修改闭环。
 
-这些对象共同构成标题投影图。该图不是细粒度结构树的裁剪结果；它是以标题为结构单位的完整投影对象。
+这些对象共同构成标题投影图。标题投影图以标题为结构单位，并以标题切片、标题层级、交叉引用、payload 和回源坐标满足阅读、遍历、关系查询和源文件修改动作。
 
 === 排除边界
 

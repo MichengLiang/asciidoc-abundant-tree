@@ -41,13 +41,13 @@ xref:capacity-rule[运力规则, rel=depends-on, weight=0.8]
 
 属性谓词不触发业务解释。`aat:kind`、`aat:status`、`aat:owner`、`aat:weight` 只是源文档表面字段的 RDF 表达。下游消费者可以解释这些字段，也可以忽略这些字段。
 
-字段名映射规则与标题节点属性一致。字段名进入 `aat:` 命名空间下的表面字段谓词。字段值保存为 string literal。`rel` 和 `payload` 是 xref 控制字段；`rel` 可作为 `aat:rel` 保留，`payload` 保存为 `aat:payloadSelector`，不占用 `aat:payload`。
+字段名映射规则与标题节点属性一致。字段名进入 `aat:` 命名空间下的表面字段谓词。字段值保存为 string literal。`rel` 和 `payload` 是 xref 控制字段；`rel` 决定主 relation triple 的谓词，并可作为 `aat:rel` 保留；`payload` 选择边 payload，并保存为 `aat:payloadSelector`，不占用 `aat:payload`。
 
 === 节点 Payload
 
 `.payload` block 通过 `for` 字段绑定标题节点。绑定成功时，payload 作为该标题节点的 `aat:payload` 值。
 
-节点 payload 的 `for` 字段只在标题节点 label 空间中绑定。绑定目标可以来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload 对象保留 `aat:forSelector` 和回源坐标，不连接到任何标题节点。
+节点 payload 的 `for` 字段只在标题节点 label 空间中绑定。绑定目标可以来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload 对象保留 `aat:forSelector` 和回源坐标，不连接到任何标题节点。`for` 字段不绑定到 payload id、role、普通字段谓词或标题节点 IRI。
 
 payload format 来自 payload attrlist 的 `data` 字段。缺少 `data` 字段时，format 来自 source block 的 language。二者都缺失时，不输出 `aat:format`。
 
@@ -124,4 +124,4 @@ payload raw 不展开为 RDF 图。JSON、YAML、TOML、XML 或其它 payload �
 
 payload 字段必须保存 payload id、payload kind、raw、relative path、完整 line span 和 content line span。payload format 按本章 format 规则输出。
 
-payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`，不参与 `aat:previousSibling`，不作为 xref target heading。
+payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`，不参与 `aat:previousSibling`，不作为 xref target heading。公共查询应通过所属标题节点或 xref edge evidence 取得 payload，而不是把 payload 当作独立文档节点遍历。

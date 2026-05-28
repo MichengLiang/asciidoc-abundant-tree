@@ -1,0 +1,116 @@
+[#batch-01-heading-nodes-and-slices]
+== Batch 01：标题节点与标题切片
+
+=== 批次目标
+
+本批把结构 resource 投影收敛为标题节点投影。本批生成 `aat:Heading`、headline、heading level、address label、generated address label、标题自身 raw 和回源坐标。
+
+本批不生成 xref edge。本批不生成 payload。本批不处理直接字段谓词。
+
+=== 上游门槛
+
+* Batch 00 状态为 `通过`。
+* Batch 00 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+执行者必须阅读：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/02-heading-node.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/03-heading-slice.adoc`
+* `src/model.ts`
+* `src/source-lines.ts`
+* `src/source-surfaces.ts`
+* `src/source-interval-resolver.ts`
+* `src/rdf12-projection/structure-projector.ts`
+* `src/rdf12-projection/node-index.ts`
+* `test/rdf12-projection/structure-projector.test.ts`
+
+=== 输入事实
+
+标题节点由 `SectionNode` 和 document title 对应的等号标题产生。标题节点不是 paragraph、listing、table 或 inline anchor 的父类。
+
+标题切片是连续源文本区域。切片起点是标题头部 metadata 第一行；没有 metadata 时起点是标题行。切片终点是下一个标题切片起点之前。父标题自身 raw 不包含子标题切片。
+
+=== 文件边界
+
+修改：
+
+* `src/rdf12-projection/structure-projector.ts`
+* `src/rdf12-projection/node-index.ts`
+* `src/rdf12-projection/resource-identity.ts`
+* `test/rdf12-projection/structure-projector.test.ts`
+* `test/rdf12-projection/heading-projection.acceptance.test.ts`
+
+允许创建：
+
+* `src/rdf12-projection/heading-slice.ts`
+* `test/rdf12-projection/heading-slice.test.ts`
+
+不得修改：
+
+* `src/parser.ts`
+* `src/asciidoctor-adapter.ts`
+* `src/metadata-parser.ts`
+
+=== 实施任务
+
+. 将 `structure-projector.ts` 的 public 行为改为只投影 heading node。
+. 将 section resource type 从 `aat:Section` 改为 `aat:Heading`。
+. 将 `aat:sectionLevel` 改为 `aat:headingLevel`。
+. 将 section title 写为 `aat:headline`。
+. 将手动 ID 写为 `aat:addressLabel`。
+. 将 Asciidoctor generated ID 写为 `aat:generatedAddressLabel`。
+. 实现 heading local id：`heading-l<startLine>-o<ordinal>`。
+. 实现标题自身 raw 计算。
+. 写入 `aat:relativePath`、`aat:startLine`、`aat:endLine`、`aat:headingLine`。
+. 有 metadata 时写入 `aat:metadataStartLine` 和 `aat:metadataEndLine`。
+. 有标题正文内容时写入 `aat:contentStartLine` 和 `aat:contentEndLine`。
+. 删除 paragraph、listing、table、anchor resource 创建路径，或把它们隔离到不被 `rdf12` 调用的旧实现分支。
+. 更新 `node-index.ts`，使 index entry 的公共语义为 heading index entry。
+
+=== 测试任务
+
+. `structure-projector.test.ts` 断言 `samples/structural-payload.adoc` 产生四个 `aat:Heading`。
+. `structure-projector.test.ts` 断言没有 `aat:Paragraph`、`aat:ListingBlock`、`aat:TableBlock` 和 `aat:AnchorTarget`。
+. `heading-slice.test.ts` 断言 `配送策略` raw 是 line 5 到 line 40。
+. `heading-slice.test.ts` 断言 `运力规则` raw 是 line 41 到 line 45，不包含 line 46 到 line 48。
+. `heading-slice.test.ts` 断言 `我是3级标题` headingLevel 是 `2`。
+. `heading-projection.acceptance.test.ts` 中标题节点与 raw 相关断言解除允许失败标记。
+
+=== 验收标准
+
+* `aat:Heading` 是标题节点唯一结构类型。
+* 标题节点 IRI 不包含 headline、address label 或 generated address label。
+* `aat:raw` 是标题自身切片，不是递归子树文本。
+* 所有 heading node 都有 relative path 和 closed line span。
+* 本批后不再有旧 block 类型从 `structure-projector.ts` 输出。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/heading-slice.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: project rdf12 heading nodes and slices" -- src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查标题 raw 的行范围。审核者必须检查旧 block resource 没有以新名称保留下来。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* paragraph、listing、table 或 anchor 仍作为 RDF12 结构 resource 输出。
+* `aat:raw` 包含子标题切片。
+* generated ID 被当作 resource identity。
+* 缺少 heading line 或 line span。

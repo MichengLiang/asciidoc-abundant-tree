@@ -17,6 +17,7 @@ v0.1, 2026-05
 == 书目
 
 * xref:books/06-rdf12-line-projection/book.adoc[AsciiDoc 标题切片到 RDF 1.2 投影规约]
+* xref:books/07-rdf12-heading-projection-implementation-plan/book.adoc[RDF 1.2 标题投影图实现计划书]
 
 == 书库范围
 

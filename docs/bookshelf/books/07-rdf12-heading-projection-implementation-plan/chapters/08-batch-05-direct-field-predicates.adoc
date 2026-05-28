@@ -1,0 +1,115 @@
+[#batch-05-direct-field-predicates]
+== Batch 05：直接字段谓词
+
+=== 批次目标
+
+本批把 SurfaceAttribute resource 投影迁移为直接字段谓词。标题 attrlist named attributes 写为标题节点上的 `aat:<name>` literal。xref 普通 named attributes 写为 xref edge evidence 上的 `aat:<name>` literal。
+
+本批不改变 payload raw。本批不解释字段名或字段值的业务语义。
+
+=== 上游门槛
+
+* Batch 04 状态为 `通过`。
+* Batch 04 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文包
+
+执行者必须阅读：
+
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/02-heading-node.adoc`
+* `docs/bookshelf/books/06-rdf12-line-projection/chapters/06-payload-and-attribute.adoc`
+* `src/rdf12-projection/attributes.ts`
+* `src/rdf12-projection/namespaces.ts`
+* `src/rdf12-projection/literals.ts`
+* `test/rdf12-projection/attributes.test.ts`
+* `test/rdf12-projection/reference-links.acceptance.test.ts`
+
+=== 输入事实
+
+标题 `#id` 是 address label。点号 role token 是 role。named attributes 才进入 `aat:<fieldName>` 谓词。
+
+xref `rel` 和 `payload` 是控制字段。`rel` 可作为 `aat:rel` 保留。`payload` 必须保存为 `aat:payloadSelector`，不得占用 `aat:payload`。
+
+=== 文件边界
+
+修改：
+
+* `src/rdf12-projection/attributes.ts`
+* `src/rdf12-projection/resource-identity.ts`
+* `src/rdf12-projection/xref-projector.ts`
+* `test/rdf12-projection/attributes.test.ts`
+* `test/rdf12-projection/reference-links.acceptance.test.ts`
+* `test/rdf12-projection/heading-projection.acceptance.test.ts`
+
+允许创建：
+
+* `src/rdf12-projection/field-predicate.ts`
+* `test/rdf12-projection/field-predicate.test.ts`
+
+不得修改：
+
+* `src/metadata-parser.ts`
+* `src/macro-argument-parser.ts`
+
+=== 实施任务
+
+. 删除 `aat:SurfaceAttribute` resource 创建路径。
+. 删除 `aat:hasAttribute` 输出。
+. 删除属性表达中的 `rdf:value`。
+. 将标题 attrlist named attributes 写到 heading node。
+. 将 xref 普通 named attributes 写到 xref edge evidence。
+. 保证字段值统一写为 string literal。
+. 保证 `rel` 不作为普通 xref attribute 重复处理。
+. 保证 `payload` 不作为普通 xref attribute 重复处理。
+. 实现字段名到 `aat:` IRI 的稳定映射。
+. 对不能直接作为 Turtle prefixed local name 的字段名使用 IRI-safe 编码。
+. 在测试中覆盖简单字段名和需要编码的字段名。
+
+=== 测试任务
+
+. `attributes.test.ts` 断言 `kind=policy` 生成 `aat:kind "policy"`。
+. `attributes.test.ts` 断言 `status=active` 生成 `aat:status "active"`。
+. `attributes.test.ts` 断言 `owner=ops` 生成 `aat:owner "ops"`。
+. `attributes.test.ts` 断言 xref `weight=0.8` 生成 `aat:weight "0.8"`。
+. `attributes.test.ts` 断言 `rel=depends-on` 不生成第二个普通属性资源。
+. `attributes.test.ts` 断言 `payload=rel-delivery-capacity` 只生成 `aat:payloadSelector`。
+. `attributes.test.ts` 断言公共图中没有 `aat:SurfaceAttribute`。
+. `field-predicate.test.ts` 断言字段名映射稳定。
+. `heading-projection.acceptance.test.ts` 中直接字段谓词断言解除允许失败标记。
+
+=== 验收标准
+
+* `aat:<name>` 是源字段谓词，不是业务谓词。
+* 字段值是源文档表面字符串 literal。
+* 字段名映射确定且可重复。
+* 属性不生成属性资源。
+* `aat:payload` 不保存 selector 字符串。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection
+git commit --only -m "feat: project rdf12 direct field predicates" -- src/rdf12-projection test/rdf12-projection
+----
+
+=== 审核规则
+
+审核者必须检查字段谓词没有被写成业务 class、业务 relation 或校验结论。审核者必须检查 `payloadSelector` 和 `payload` 谓词未混用。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 公共图中出现 `aat:SurfaceAttribute`。
+* 公共图中出现 `aat:hasAttribute`。
+* named attribute 仍通过 `rdf:value` 表达。
+* xref `payload` selector 被写入 `aat:payload`。

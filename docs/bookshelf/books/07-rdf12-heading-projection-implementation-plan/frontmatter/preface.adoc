@@ -1,0 +1,12 @@
+[#preface]
+== 前言
+
+本书定义 `asciidoc-abundant-tree` 中 RDF 1.2 标题投影图的实现计划。
+
+`06-rdf12-line-projection` 定义标题投影图的对象规约。本书定义从当前 `src/rdf12-projection/` 实现迁移到该规约的工程批次、文件边界、测试要求、审核门槛和打回条件。
+
+当前源码已经具备 RDF term、graph、路径坐标、PROV、Turtle 输出、JSON-LD 输出、CLI 和 public API 基础。当前源码的投影对象仍然包含 paragraph、listing、table、anchor、label resource、SurfaceAttribute resource 和 PayloadBlock resource。本书把这些源码事实作为实现基线，而不是把它们作为目标对象。
+
+本书的核心断言是：实现批次必须让公共 `rdf12` 输出收敛到 06 号书定义的标题投影图。每个批次必须产生可验证的源码变化、测试变化和审核证据。没有验收证据的批次不得解锁下一批。
+
+本书使用中文叙事。RDF、Turtle、IRI、literal、triple term、reifier、selector、headline、payload、provenance、graph、batch、review package 等术语在正文中保留英文形式或中英并列形式，以保持与 06 号书、源码和测试之间的术语连续性。
