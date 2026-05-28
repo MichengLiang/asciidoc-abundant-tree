@@ -23,7 +23,6 @@ import {
 } from "./helpers/graph-matchers";
 
 const migrationAllowedFailureCases = new Map([
-	["Batch 02 projects heading containment and sibling order", "Batch 02"],
 	[
 		"Batch 04 projects xref relation edge evidence and RDF 1.2 reifier",
 		"Batch 04",

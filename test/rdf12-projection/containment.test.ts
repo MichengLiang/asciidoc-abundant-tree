@@ -1,153 +1,108 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { AbundantDocument } from "../../src/model";
-import { rdf12Triple } from "../../src/rdf12-projection/graph";
-import { namespaces } from "../../src/rdf12-projection/namespaces";
+import { parseAbundantTree } from "../../src/parser";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
-import { iriTerm } from "../../src/rdf12-projection/terms";
+import {
+	aatTerm,
+	expectNoTriple,
+	expectTriple,
+	resourcesOfType,
+	termIri,
+} from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
+const structuralPayloadPath = join(
+	projectRoot,
+	"samples/structural-payload.adoc",
+);
 
-describe("rdf12 direct containment", () => {
-	it("uses only direct children for document and section containment", () => {
-		const projection = projectAbundantDocumentToRdf12(nestedDocument(), {
-			documentRoot: projectRoot,
-		});
-		const contains = iriTerm(`${namespaces.aat}containsDirectly`);
-		const document = iriTerm(projection.documentIri);
-		const section = iriTerm(resourceIri(projection, "section-l1-o0"));
-		const paragraph = iriTerm(resourceIri(projection, "paragraph-l2-o0"));
-		const listing = iriTerm(resourceIri(projection, "listing-l3-o0"));
+describe("rdf12 heading structure edges", () => {
+	it("projects only direct heading containment edges", () => {
+		const { graph, heading } = structuralPayloadProjection();
+		const root = heading("heading-l1-o0");
+		const deliveryPolicy = heading("heading-l5-o0");
+		const capacityRule = heading("heading-l41-o0");
+		const nestedHeading = heading("heading-l46-o0");
 
-		expect(projection.graph.has(rdf12Triple(document, contains, section))).toBe(
-			true,
+		expectTriple(graph, root, aatTerm("containsDirectly"), deliveryPolicy);
+		expectTriple(graph, root, aatTerm("containsDirectly"), capacityRule);
+		expectTriple(
+			graph,
+			capacityRule,
+			aatTerm("containsDirectly"),
+			nestedHeading,
 		);
-		expect(
-			projection.graph.has(rdf12Triple(section, contains, paragraph)),
-		).toBe(true);
-		expect(projection.graph.has(rdf12Triple(section, contains, listing))).toBe(
-			true,
-		);
-		expect(
-			projection.graph.has(rdf12Triple(document, contains, paragraph)),
-		).toBe(false);
-		expect(projection.graph.has(rdf12Triple(document, contains, listing))).toBe(
-			false,
-		);
+		expectNoTriple(graph, root, aatTerm("containsDirectly"), nestedHeading);
 	});
 
-	it("keeps xref resources out of direct containment projection", () => {
-		const projection = projectAbundantDocumentToRdf12(nestedDocument(), {
-			documentRoot: projectRoot,
+	it("does not contain paragraphs, listings, tables, or anchors from headings", () => {
+		const { graph } = structuralPayloadProjection();
+		const containsEdges = graph.match({
+			predicate: aatTerm("containsDirectly"),
 		});
-		const contains = iriTerm(`${namespaces.aat}containsDirectly`);
-		const paragraph = iriTerm(resourceIri(projection, "paragraph-l2-o0"));
-		const table = iriTerm(resourceIri(projection, "table-l5-o0"));
-		const paragraphAnchor = iriTerm(resourceIri(projection, "anchor-l2-c5-o0"));
-		const tableAnchor = iriTerm(resourceIri(projection, "anchor-l6-c3-o0"));
+		const headingValues = new Set(
+			resourcesOfType(graph, aatTerm("Heading")).map((term) => term.value),
+		);
 
-		expect(
-			projection.graph.has(rdf12Triple(paragraph, contains, paragraphAnchor)),
-		).toBe(true);
-		expect(
-			projection.graph.has(rdf12Triple(table, contains, tableAnchor)),
-		).toBe(true);
-		const [xref] = projection.graph.match({
-			object: iriTerm(`${namespaces.aat}XrefOccurrence`),
-		});
-		expect(xref).toBeDefined();
-		if (xref === undefined) {
-			throw new Error("expected xref resource");
+		expect(containsEdges.length).toBeGreaterThan(0);
+		for (const edge of containsEdges) {
+			expect(headingValues.has(edge.subject.value)).toBe(true);
+			expect(edge.object.termType).toBe("iri");
+			if (edge.object.termType !== "iri") {
+				throw new Error("expected heading containment object to be an IRI");
+			}
+			expect(headingValues.has(edge.object.value)).toBe(true);
 		}
+		for (const oldType of [
+			"Paragraph",
+			"ListingBlock",
+			"TableBlock",
+			"AnchorTarget",
+		]) {
+			expect(resourcesOfType(graph, aatTerm(oldType))).toHaveLength(0);
+		}
+	});
+
+	it("projects previousSibling only between same-parent sibling headings", () => {
+		const { graph, heading } = structuralPayloadProjection();
+		const root = heading("heading-l1-o0");
+		const deliveryPolicy = heading("heading-l5-o0");
+		const capacityRule = heading("heading-l41-o0");
+		const nestedHeading = heading("heading-l46-o0");
+
+		expectTriple(
+			graph,
+			capacityRule,
+			aatTerm("previousSibling"),
+			deliveryPolicy,
+		);
+		expectNoTriple(graph, deliveryPolicy, aatTerm("previousSibling"), root);
+		expectNoTriple(
+			graph,
+			nestedHeading,
+			aatTerm("previousSibling"),
+			capacityRule,
+		);
 		expect(
-			projection.graph.match({
-				subject: paragraph,
-				predicate: contains,
-				object: xref.subject,
-			}),
+			graph.match({ subject: root, predicate: aatTerm("previousSibling") }),
 		).toHaveLength(0);
 	});
 });
 
-function nestedDocument(): AbundantDocument {
+function structuralPayloadProjection() {
+	const projection = projectAbundantDocumentToRdf12(
+		parseAbundantTree({ sourcePath: structuralPayloadPath }),
+		{ documentRoot: projectRoot },
+	);
+
 	return {
-		kind: "document",
-		sourcePath: join(projectRoot, "samples/reference-links.adoc"),
-		mode: "single-file",
-		parser: { name: "@asciidoctor/core", version: "test" },
-		children: [
-			{
-				kind: "section",
-				level: 1,
-				ids: ["manual-section-id"],
-				title: "Manual Section",
-				idOrigin: "source",
-				span: { startLine: 1, endLine: 8 },
-				children: [
-					{
-						kind: "paragraph",
-						text: "Paragraph with direct children.",
-						source: {
-							span: { startLine: 2, endLine: 2 },
-						},
-						children: [
-							{
-								kind: "anchor",
-								syntax: "double-bracket",
-								raw: "[[p-anchor]]",
-								ids: ["p-anchor"],
-								sourceSpan: {
-									start: { line: 2, column: 5 },
-									end: { line: 2, column: 17 },
-								},
-							},
-							{
-								kind: "xref",
-								syntax: "shorthand",
-								raw: "<<target>>",
-								target: "target",
-								sourceSpan: {
-									start: { line: 2, column: 20 },
-									end: { line: 2, column: 30 },
-								},
-							},
-						],
-					},
-					{
-						kind: "listing",
-						ids: [],
-						span: { startLine: 3, endLine: 4 },
-					},
-					{
-						kind: "table",
-						ids: [],
-						span: { startLine: 5, endLine: 7 },
-						children: [
-							{
-								kind: "anchor",
-								syntax: "double-bracket",
-								raw: "[[table-anchor]]",
-								ids: ["table-anchor"],
-								sourceSpan: {
-									start: { line: 6, column: 3 },
-									end: { line: 6, column: 19 },
-								},
-							},
-						],
-					},
-				],
-			},
-		],
-		targets: [],
-		xrefOccurrences: [],
-		anchorOccurrences: [],
-		toolDiagnostics: [],
+		graph: projection.graph,
+		heading(localId: string) {
+			return termIri(resourceIri(projection.documentIri, localId));
+		},
 	};
 }
 
-function resourceIri(
-	projection: ReturnType<typeof projectAbundantDocumentToRdf12>,
-	localId: string,
-): string {
-	return `${projection.documentIri.slice(0, projection.documentIri.indexOf("#"))}#${localId}`;
+function resourceIri(documentIri: string, localId: string): string {
+	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
 }

@@ -15,6 +15,7 @@ import {
 	createRdf12NodeIndex,
 	type MutableRdf12NodeIndex,
 	type Rdf12NodeIndex,
+	type Rdf12NodeIndexEntry,
 } from "./node-index";
 import {
 	createOrdinalAllocator,
@@ -53,6 +54,7 @@ export function projectStructureResources(
 	for (const section of collectSections(input.document.children)) {
 		projectHeading(context, section);
 	}
+	projectHeadingStructureEdges(context);
 
 	return context.nodeIndex;
 }
@@ -138,6 +140,78 @@ function projectHeading(
 		endLine: slice.span.endLine,
 		targetType: "section",
 	});
+}
+
+function projectHeadingStructureEdges(
+	context: StructureProjectorContext,
+): void {
+	const entries = context.nodeIndex
+		.entries()
+		.toSorted((left, right) => left.startLine - right.startLine);
+	const root = entries.find((entry) => entry.kind === "document-title");
+	const topLevelParent = root?.iri;
+	const childrenByParent = new Map<string, Rdf12NodeIndexEntry[]>();
+	const stack: Rdf12NodeIndexEntry[] = [];
+
+	for (const entry of entries) {
+		if (entry.kind === "document-title") {
+			stack.length = 0;
+			stack.push(entry);
+			continue;
+		}
+
+		while (
+			stack.length > 0 &&
+			headingLevel(stack.at(-1) ?? entry) >= headingLevel(entry)
+		) {
+			stack.pop();
+		}
+
+		const parent = stack.at(-1)?.iri ?? topLevelParent;
+		if (parent !== undefined) {
+			appendChild(childrenByParent, parent, entry);
+		}
+		stack.push(entry);
+	}
+
+	for (const [parentValue, children] of childrenByParent) {
+		const parent = iriTerm(parentValue);
+		for (const [index, child] of children.entries()) {
+			context.graph.add(
+				rdf12Triple(
+					parent,
+					iriTerm(`${namespaces.aat}containsDirectly`),
+					child.iri,
+				),
+			);
+
+			const previous = children[index - 1];
+			if (previous !== undefined) {
+				context.graph.add(
+					rdf12Triple(
+						child.iri,
+						iriTerm(`${namespaces.aat}previousSibling`),
+						previous.iri,
+					),
+				);
+			}
+		}
+	}
+}
+
+function appendChild(
+	childrenByParent: Map<string, Rdf12NodeIndexEntry[]>,
+	parent: Rdf12IriTerm,
+	child: Rdf12NodeIndexEntry,
+): void {
+	childrenByParent.set(parent.value, [
+		...(childrenByParent.get(parent.value) ?? []),
+		child,
+	]);
+}
+
+function headingLevel(entry: Rdf12NodeIndexEntry): number {
+	return entry.kind === "document-title" ? 0 : entry.node.level;
 }
 
 function createHeadingResource(

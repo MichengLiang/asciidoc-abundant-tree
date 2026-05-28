@@ -2,68 +2,133 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { runCli } from "../../src/cli";
 import { parseAbundantTree, rdf12 } from "../../src/index";
+import type { Rdf12Graph } from "../../src/rdf12-projection/graph";
 import { assertRdf12GraphsEquivalent } from "../../src/rdf12-projection/graph-canonicalization";
+import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { parseTurtleToRdf12Graph } from "../../src/rdf12-projection/n3-adapter";
-import { namespaces } from "../../src/rdf12-projection/namespaces";
-import { iriTerm } from "../../src/rdf12-projection/terms";
+import type { Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import {
 	aatTerm,
 	expectResourceTypeCount,
-	rdfTerm,
+	expectTriple,
+	termIri,
 } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
-const referencePath = join(projectRoot, "samples/reference-links.adoc");
+const structuralPayloadPath = join(
+	projectRoot,
+	"samples/structural-payload.adoc",
+);
 
 describe("rdf12 query contract end-to-end acceptance", () => {
-	it("roundtrips the public rdf12 result through the parser as graph facts and locks the Batch 00 legacy baseline", () => {
-		const result = rdf12(parseAbundantTree({ sourcePath: referencePath }), {
-			documentRoot: projectRoot,
-		});
+	it("roundtrips the public rdf12 result and exposes direct heading children", () => {
+		const result = rdf12(
+			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			{
+				documentRoot: projectRoot,
+			},
+		);
 		const parsed = parseTurtleToRdf12Graph(result.ttl);
+		const heading = headingLookup(result.documentIri);
 
 		expect(() =>
 			assertRdf12GraphsEquivalent(result.graph, parsed),
 		).not.toThrow();
-		expectResourceTypeCount(parsed, aatTerm("Section"), 5);
-		expectResourceTypeCount(parsed, aatTerm("Paragraph"), 11);
-		expectResourceTypeCount(parsed, aatTerm("ListingBlock"), 1);
-		expectResourceTypeCount(parsed, aatTerm("TableBlock"), 1);
-		expectResourceTypeCount(parsed, aatTerm("AnchorTarget"), 1);
-		expectResourceTypeCount(parsed, aatTerm("XrefOccurrence"), 8);
-		expectResourceTypeCount(parsed, aatTerm("SurfaceAttribute"), 2);
-		expectResourceTypeCount(parsed, aatTerm("PayloadBlock"), 0);
-		expect(
-			parsed.match({
-				predicate: iriTerm(`${namespaces.rdf}reifies`),
-			})[0]?.object.termType,
-		).toBe("triple");
+		expectResourceTypeCount(parsed, aatTerm("Heading"), 4);
+		expectDirectChildren(parsed, heading("heading-l1-o0"), [
+			heading("heading-l5-o0"),
+			heading("heading-l41-o0"),
+		]);
 	});
 
-	it("parses CLI rdf12 stdout and asserts graph facts rather than Turtle formatting", () => {
+	it("parses CLI rdf12 stdout and supports recursive heading subtree queries", () => {
 		const result = runCli([
-			"samples/reference-links.adoc",
+			"samples/structural-payload.adoc",
 			"--format",
 			"rdf12",
 		]);
 
 		expect(result.code).toBe(0);
 		expect(result.stderr).toBe("");
-		expect(result.stdout.trim().length).toBeGreaterThan(0);
 
 		const graph = parseTurtleToRdf12Graph(result.stdout);
+		const heading = headingLookupFromGraph(graph);
+		const root = heading("root");
+		const capacityRule = heading("运力规则");
+		const nestedHeading = heading("我是3级标题");
 
-		expectResourceTypeCount(graph, aatTerm("Section"), 5);
-		expectResourceTypeCount(graph, aatTerm("XrefOccurrence"), 8);
-		expect(
-			graph.match({
-				predicate: aatTerm("containsDirectly"),
-			}).length,
-		).toBe(19);
-		expect(
-			graph.match({
-				predicate: rdfTerm("reifies"),
-			})[0]?.object.termType,
-		).toBe("triple");
+		expect(transitiveHeadingChildren(graph, root)).toEqual(
+			new Set([
+				heading("配送策略").value,
+				capacityRule.value,
+				nestedHeading.value,
+			]),
+		);
+		expectDirectChildren(graph, capacityRule, [nestedHeading]);
+		expectTriple(
+			graph,
+			capacityRule,
+			aatTerm("previousSibling"),
+			heading("配送策略"),
+		);
 	});
 });
+
+function headingLookup(documentIri: string): (localId: string) => Rdf12IriTerm {
+	const base = documentIri.slice(0, documentIri.indexOf("#"));
+	return (localId) => termIri(`${base}#${localId}`);
+}
+
+function headingLookupFromGraph(
+	graph: Rdf12Graph,
+): (headline: string) => Rdf12IriTerm {
+	return (headline) => {
+		const [match] = graph.match({
+			predicate: aatTerm("headline"),
+			object: stringLiteral(headline),
+		});
+		if (match?.subject.termType !== "iri") {
+			throw new Error(`expected heading with headline ${headline}`);
+		}
+		return match.subject;
+	};
+}
+
+function expectDirectChildren(
+	graph: Rdf12Graph,
+	parent: Rdf12IriTerm,
+	children: readonly Rdf12IriTerm[],
+): void {
+	expect(
+		graph
+			.match({
+				subject: parent,
+				predicate: aatTerm("containsDirectly"),
+			})
+			.map((triple) => triple.object.value)
+			.sort(),
+	).toEqual(children.map((child) => child.value).sort());
+}
+
+function transitiveHeadingChildren(
+	graph: Rdf12Graph,
+	root: Rdf12IriTerm,
+): Set<string> {
+	const result = new Set<string>();
+	const pending = [root];
+
+	for (const current of pending) {
+		for (const edge of graph.match({
+			subject: current,
+			predicate: aatTerm("containsDirectly"),
+		})) {
+			if (edge.object.termType !== "iri" || result.has(edge.object.value)) {
+				continue;
+			}
+			result.add(edge.object.value);
+			pending.push(edge.object);
+		}
+	}
+
+	return result;
+}
