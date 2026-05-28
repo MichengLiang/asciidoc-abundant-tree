@@ -9,7 +9,7 @@ describe("cli", () => {
 		expect(result.code).toBe(0);
 		expect(result.stdout).toMatch(/asciidoc-abundant-tree <file\.adoc>/);
 		expect(result.stdout).toMatch(/--json/);
-		expect(result.stdout).toMatch(/--format tree\|json\|rdf12/);
+		expect(result.stdout).toMatch(/--format tree\|json\|rdf12\|rdf12-json-ld/);
 		expect(result.stderr).toBe("");
 	});
 
@@ -105,12 +105,44 @@ describe("cli", () => {
 		expect(result.stdout.trimStart()).not.toMatch(/^\{/);
 	});
 
-	it("rejects rdf12 projection when the source path is outside cwd", () => {
-		const result = runCli(["/etc/hosts", "--format", "rdf12"]);
+	it("prints RDF 1.2 JSON-LD through rdf12-json-ld format", () => {
+		const result = runCli([
+			"samples/reference-links.adoc",
+			"--format",
+			"rdf12-json-ld",
+		]);
 
-		expect(result.code).toBe(1);
-		expect(result.stdout).toBe("");
-		expect(result.stderr).toMatch(/outside document root/);
+		const jsonLd = JSON.parse(result.stdout);
+
+		expect(result.code).toBe(0);
+		expect(result.stderr).toBe("");
+		expect(jsonLd["@context"].aat).toBe(
+			"https://micheng.dev/ns/asciidoc-abundant-tree#",
+		);
+		expect(jsonLd["@graph"]).toEqual(expect.any(Array));
+		expect(jsonLd["@graph"].length).toBeGreaterThan(0);
+		expect(jsonLd["@graph"]).toContainEqual(
+			expect.objectContaining({
+				"@type": "rdf12:Triple",
+				predicate: expect.objectContaining({
+					"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				}),
+				object: expect.objectContaining({
+					"@type": "rdf12:TripleTerm",
+					triple: expect.any(Object),
+				}),
+			}),
+		);
+	});
+
+	it("rejects rdf12 projections when the source path is outside cwd", () => {
+		for (const format of ["rdf12", "rdf12-json-ld"]) {
+			const result = runCli(["/etc/hosts", "--format", format]);
+
+			expect(result.code).toBe(1);
+			expect(result.stdout).toBe("");
+			expect(result.stderr).toMatch(/outside document root/);
+		}
 	});
 
 	it("rejects missing format values", () => {

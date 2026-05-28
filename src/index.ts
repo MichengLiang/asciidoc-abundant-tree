@@ -1,4 +1,5 @@
 import type { AbundantDocument } from "./model";
+import { serializeRdf12ProjectionToJsonLd } from "./rdf12-projection/json-ld-serializer";
 import {
 	normalizeRdf12Options,
 	type Rdf12Options,
@@ -42,6 +43,7 @@ export {
 
 export type Rdf12Result = Rdf12Projection & {
 	readonly ttl: string;
+	readonly jsonLd: string;
 };
 
 export function rdf12(
@@ -57,5 +59,6 @@ export function rdf12(
 	return {
 		...projection,
 		ttl: serializeRdf12ProjectionToTurtle(projection),
+		jsonLd: serializeRdf12ProjectionToJsonLd(projection),
 	};
 }

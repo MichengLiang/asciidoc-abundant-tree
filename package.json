@@ -1,6 +1,6 @@
 {
 	"name": "asciidoc-abundant-tree",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"description": "Recover a source-aware, analysis-ready tree from a single AsciiDoc file.",
 	"license": "Apache-2.0",
 	"author": {
@@ -59,7 +59,7 @@
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
 		"pack:check": "pnpm build && publint && npm pack --dry-run",
-		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format rdf12 >/dev/null",
+		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format rdf12 >/dev/null && node dist/cli.mjs samples/reference-links.adoc --format rdf12-json-ld >/dev/null",
 		"clean": "rm -rf dist coverage"
 	},
 	"dependencies": {

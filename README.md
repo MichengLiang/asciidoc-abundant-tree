@@ -21,9 +21,9 @@ The pretty tree format is designed for terminal reading. Its shape is intentiona
 - Xref occurrence records that keep raw target text, labels, local/external/unresolved scope, containing section, and resolved target kind.
 - Official Asciidoctor binding data for xrefs: `href`, `resolvedId`, `resolvedType`, and `reftext`.
 - Pretty tree output for terminal inspection and JSON output for automation.
-- RDF 1.2 graph and Turtle output through the single `rdf12` projection for source-aware graph queries and line-based edit loops.
+- RDF 1.2 graph, Turtle, and JSON-LD output through the single `rdf12` projection for source-aware graph queries, frontend consumption, and line-based edit loops.
 
-The primary artifact is the TypeScript object. Pretty text, JSON, and RDF 1.2 Turtle are projections of the same parsed document.
+The primary artifact is the TypeScript object. Pretty text, JSON, RDF 1.2 Turtle, and RDF 1.2 JSON-LD are projections of the same parsed document.
 
 ## Documentation
 
@@ -31,7 +31,7 @@ The primary artifact is the TypeScript object. Pretty text, JSON, and RDF 1.2 Tu
 - RDF 1.2 line projection specification: [AsciiDoc `AbundantDocument` 到 RDF 1.2 行级结构图投影规约](https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html)
 - Source: [`docs/bookshelf`](./docs/bookshelf/)
 
-The RDF 1.2 projection book specifies the graph vocabulary and query contract used by the package runtime. The public runtime surface exposes that projection through the `rdf12(document, options)` API and CLI `--format rdf12`.
+The RDF 1.2 projection book specifies the graph vocabulary and query contract used by the package runtime. The public runtime surface exposes that projection through the `rdf12(document, options)` API and CLI `--format rdf12` / `--format rdf12-json-ld`.
 
 ## When To Use It
 
@@ -61,7 +61,9 @@ Projection resources use deterministic IRIs generated from the document coordina
 
 The graph includes source document provenance, structural resources, direct containment, label resources, selector binding, xref occurrence resources, RDF 1.2 reifiers for resolved xref relations, surface attributes, and payload block resources. Xref occurrences keep raw selectors and official Asciidoctor evidence separately. Payload blocks keep opaque source text and content line spans; the projection does not interpret JSON, YAML, TOML, XML, or other payload formats.
 
-Release validation covers the RDF projection with semantic graph comparison, Turtle roundtrip checks, selector ambiguity cases, source-span boundary cases, payload binding rules, relation predicate fallback, and CLI `rdf12` smoke output.
+JSON-LD output is a frontend-friendly projection of the same RDF graph. RDF 1.2 triple terms are represented as structured `rdf12:TripleTerm` objects rather than flattened strings.
+
+Release validation covers the RDF projection with semantic graph comparison, Turtle roundtrip checks, JSON-LD shape checks, selector ambiguity cases, source-span boundary cases, payload binding rules, relation predicate fallback, and CLI `rdf12` / `rdf12-json-ld` smoke output.
 
 ## Current Boundaries
 
@@ -102,6 +104,7 @@ asciidoc-abundant-tree <file.adoc> --json
 asciidoc-abundant-tree <file.adoc> --format tree
 asciidoc-abundant-tree <file.adoc> --format json
 asciidoc-abundant-tree <file.adoc> --format rdf12
+asciidoc-abundant-tree <file.adoc> --format rdf12-json-ld
 asciidoc-abundant-tree --help
 ```
 
@@ -131,7 +134,13 @@ RDF 1.2 output writes Turtle text directly to stdout:
 asciidoc-abundant-tree docs/index.adoc --format rdf12 > projection.ttl
 ```
 
-The CLI exposes only `rdf12` for RDF output. It does not accept `rdf`, `ttl`, or `turtle` as public format aliases.
+RDF 1.2 JSON-LD output writes the same graph as a JSON document for frontend consumers:
+
+```bash
+asciidoc-abundant-tree docs/index.adoc --format rdf12-json-ld > projection.jsonld
+```
+
+The CLI exposes only `rdf12` and `rdf12-json-ld` for RDF output. It does not accept `rdf`, `ttl`, or `turtle` as public format aliases.
 
 ## Library API
 
@@ -155,11 +164,12 @@ const projection = rdf12(document, {
 
 const graph = projection.graph;
 const ttl = projection.ttl;
+const jsonLd = projection.jsonLd;
 ```
 
 `parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.
 
-The public `rdf12(document, options)` call returns one projection result containing both `graph` and `ttl`. The `graph` is the project-owned RDF 1.2 graph model; the Turtle 1.2 text in `ttl` preserves RDF 1.2 reifier semantics by writing `rdf:reifies` objects as triple terms, not string literals. The projection is for source-aware query contracts: it records surface attributes and opaque payload source text, but it does not lint documents, validate cross-file targets, or interpret payload raw content.
+The public `rdf12(document, options)` call returns one projection result containing `graph`, `ttl`, and `jsonLd`. The `graph` is the project-owned RDF 1.2 graph model; the Turtle 1.2 text in `ttl` preserves RDF 1.2 reifier semantics by writing `rdf:reifies` objects as triple terms, not string literals. The JSON-LD text in `jsonLd` preserves the same triple-term structure with explicit `rdf12:TripleTerm` objects. The projection is for source-aware query contracts: it records surface attributes and opaque payload source text, but it does not lint documents, validate cross-file targets, or interpret payload raw content.
 
 ## Object Layers
 

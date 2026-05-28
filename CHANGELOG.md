@@ -4,6 +4,18 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.1.4 - 2026-05-28
+
+### Added
+
+- Added RDF 1.2 JSON-LD output for frontend consumption through CLI `--format rdf12-json-ld`.
+- Added `jsonLd` to the public `rdf12(document, options)` TypeScript API result.
+- Added JSON-LD serializer coverage for IRI, literal, language-tagged literal, and RDF 1.2 triple-term objects.
+
+### Changed
+
+- Extended the CLI smoke gate to cover both Turtle `rdf12` and JSON-LD `rdf12-json-ld` output.
+
 ## 0.1.3 - 2026-05-28
 
 ### Added

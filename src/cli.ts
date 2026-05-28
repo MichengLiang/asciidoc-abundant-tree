@@ -8,7 +8,7 @@ import type { OutputFormat } from "./model";
 import { parseAbundantTree } from "./parser";
 import { formatAbundantTree, serializeAbundantTreeToJson } from "./serializers";
 
-type CliOutputFormat = OutputFormat | "rdf12";
+type CliOutputFormat = OutputFormat | "rdf12" | "rdf12-json-ld";
 
 export type CliResult = {
 	code: number;
@@ -18,10 +18,10 @@ export type CliResult = {
 
 const USAGE = `Usage:
   asciidoc-abundant-tree <file.adoc> [--json]
-  asciidoc-abundant-tree <file.adoc> [--format tree|json|rdf12]
+  asciidoc-abundant-tree <file.adoc> [--format tree|json|rdf12|rdf12-json-ld]
   asciidoc-abundant-tree --help
 
-Default output is pretty text. JSON is a machine-friendly projection of the same TypeScript document model. RDF 1.2 output is Turtle text.`;
+Default output is pretty text. JSON is a machine-friendly projection of the same TypeScript document model. RDF 1.2 output is available as Turtle text or JSON-LD.`;
 
 export function runCli(args: string[]): CliResult {
 	let parsed: ReturnType<typeof parseArgs>;
@@ -64,7 +64,10 @@ export function runCli(args: string[]): CliResult {
 	}
 
 	try {
-		if (parsed.format === "rdf12" && isOutsideRoot(documentRoot, inputPath)) {
+		if (
+			isRdf12Format(parsed.format) &&
+			isOutsideRoot(documentRoot, inputPath)
+		) {
 			return {
 				code: 1,
 				stdout: "",
@@ -75,9 +78,18 @@ export function runCli(args: string[]): CliResult {
 			sourcePath: inputPath,
 		});
 		if (parsed.format === "rdf12") {
+			const projection = rdf12(document, { documentRoot });
 			return {
 				code: 0,
-				stdout: rdf12(document, { documentRoot }).ttl,
+				stdout: projection.ttl,
+				stderr: "",
+			};
+		}
+		if (parsed.format === "rdf12-json-ld") {
+			const projection = rdf12(document, { documentRoot });
+			return {
+				code: 0,
+				stdout: projection.jsonLd,
 				stderr: "",
 			};
 		}
@@ -129,9 +141,14 @@ function parseArgs(args: string[]): {
 			if (!next) {
 				throw new Error("--format requires a value");
 			}
-			if (next !== "tree" && next !== "json" && next !== "rdf12") {
+			if (
+				next !== "tree" &&
+				next !== "json" &&
+				next !== "rdf12" &&
+				next !== "rdf12-json-ld"
+			) {
 				throw new Error(
-					`Unsupported format: ${next}. Expected tree, json, or rdf12.`,
+					`Unsupported format: ${next}. Expected tree, json, rdf12, or rdf12-json-ld.`,
 				);
 			}
 			format = next;
@@ -152,6 +169,10 @@ function parseArgs(args: string[]): {
 	}
 
 	return { help, sourcePath, format };
+}
+
+function isRdf12Format(format: CliOutputFormat): boolean {
+	return format === "rdf12" || format === "rdf12-json-ld";
 }
 
 function isOutsideRoot(documentRoot: string, sourcePath: string): boolean {
