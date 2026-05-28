@@ -8,8 +8,8 @@
 批次名称:: `基线与迁移护栏`
 提交 hash:: `8458ebeb81666b82a2b48c481fabc9426fd3c3d0`
 执行者:: `Codex`
-审核者:: `待审核者填写`
-审核状态:: `待审核`
+审核者:: `Codex`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -143,6 +143,6 @@ pnpm exec biome check test/rdf12-projection/heading-projection.acceptance.test.t
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: `执行者已提交 Batch 00 迁移护栏，审核者尚未确认通过。`
-后续动作:: `审核者检查本审核包、提交 diff、目标测试来源和允许失败集合。`
+结论:: `通过`
+理由:: `Batch 00 只修改允许边界内的测试与计划书状态文件；目标验收来自 06 号书完整样例；允许失败集合集中登记并按后续批次拆分；payload opaque 负验收不阻塞合法 direct field predicates；验证命令通过。`
+后续动作:: `Batch 01 可以在本台账状态和提交 hash 基础上启动。`
