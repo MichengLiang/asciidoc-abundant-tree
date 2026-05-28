@@ -59,10 +59,9 @@ export function projectStructureResources(
 
 function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 	const title = context.document.title;
+	const sourceText = context.sourceText ?? context.document.sourceText;
 	const slice = resolveDocumentTitleHeadingSlice(context.document, {
-		...(context.sourceText !== undefined
-			? { sourceText: context.sourceText }
-			: {}),
+		...(sourceText !== undefined ? { sourceText } : {}),
 	});
 
 	if (title === undefined || slice === undefined) {

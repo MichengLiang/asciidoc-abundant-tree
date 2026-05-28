@@ -172,6 +172,7 @@ export type AbundantNode =
 export type AbundantDocument = {
 	kind: "document";
 	sourcePath: string;
+	sourceText?: string;
 	mode: "single-file";
 	parser: ParserInfo;
 	title?: TitleNode;

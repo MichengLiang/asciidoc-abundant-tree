@@ -48,6 +48,7 @@ export function parseAbundantTree(
 	return {
 		kind: "document",
 		sourcePath,
+		sourceText: source,
 		mode: "single-file",
 		parser: {
 			name: "@asciidoctor/core",

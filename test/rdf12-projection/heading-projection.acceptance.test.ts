@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseAbundantTree } from "../../src/parser";
@@ -298,10 +297,7 @@ function structuralPayloadProjection(): {
 } {
 	const projection = projectAbundantDocumentToRdf12(
 		parseAbundantTree({ sourcePath: structuralPayloadPath }),
-		{
-			documentRoot: projectRoot,
-			sourceText: readFileSync(structuralPayloadPath, "utf8"),
-		},
+		{ documentRoot: projectRoot },
 	);
 
 	return {

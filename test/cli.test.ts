@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { runCli } from "../src/cli";
+import { rdf12Triple } from "../src/rdf12-projection/graph";
+import {
+	integerLiteral,
+	stringLiteral,
+} from "../src/rdf12-projection/literals";
 import { parseTurtleToRdf12Graph } from "../src/rdf12-projection/n3-adapter";
+import { namespaces } from "../src/rdf12-projection/namespaces";
+import { iriTerm } from "../src/rdf12-projection/terms";
 
 describe("cli", () => {
 	it("shows help text", () => {
@@ -103,6 +110,55 @@ describe("cli", () => {
 		expect(result.stdout).toContain("rdf:reifies <<(");
 		expect(() => parseTurtleToRdf12Graph(result.stdout)).not.toThrow();
 		expect(result.stdout.trimStart()).not.toMatch(/^\{/);
+	});
+
+	it("prints full document title raw in RDF 1.2 Turtle for the parsed source path", () => {
+		const result = runCli([
+			"samples/structural-payload.adoc",
+			"--format",
+			"rdf12",
+		]);
+		const graph = parseTurtleToRdf12Graph(result.stdout);
+		const root = graph
+			.match({
+				predicate: iriTerm(`${namespaces.aat}headline`),
+				object: stringLiteral("root"),
+			})
+			.map((triple) => triple.subject)[0];
+
+		expect(result.code).toBe(0);
+		expect(root).toBeDefined();
+		expect(
+			graph.has(
+				rdf12Triple(
+					root ?? iriTerm("urn:missing"),
+					iriTerm(`${namespaces.aat}raw`),
+					stringLiteral(`= root
+
+一段摘要
+
+`),
+				),
+			),
+		).toBe(true);
+		expect(
+			graph.has(
+				rdf12Triple(
+					root ?? iriTerm("urn:missing"),
+					iriTerm(`${namespaces.aat}contentStartLine`),
+					integerLiteral(3),
+				),
+			),
+		).toBe(true);
+		expect(
+			graph.has(
+				rdf12Triple(
+					root ?? iriTerm("urn:missing"),
+					iriTerm(`${namespaces.aat}contentEndLine`),
+					integerLiteral(3),
+				),
+			),
+		).toBe(true);
 	});
 
 	it("prints RDF 1.2 JSON-LD through rdf12-json-ld format", () => {
