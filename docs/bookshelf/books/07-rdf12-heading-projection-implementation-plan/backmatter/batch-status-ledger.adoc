@@ -15,7 +15,7 @@
 
 |Batch 01
 |标题节点与标题切片
-|待审核
+|通过
 |2645741c6f3422cb271b150739f73ad2f8739a5b
 |xref:batch-01-review-package[Batch 01 审核包]
 
