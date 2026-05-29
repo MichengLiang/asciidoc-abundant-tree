@@ -27,7 +27,7 @@
 
 |Batch 03
 |标题 Label 空间与 Selector Binding
-|待审核
+|通过
 |69ed418645dda07d00c6286601f506dcdf613c12
 |xref:batch-03-review-package[Batch 03 审核包]
 

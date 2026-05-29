@@ -8,8 +8,8 @@
 批次名称:: `标题 Label 空间与 Selector Binding`
 提交 hash:: `69ed418645dda07d00c6286601f506dcdf613c12`
 执行者:: `Codex`
-审核者:: `待定`
-审核状态:: `待审核`
+审核者:: `Codex`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -106,6 +106,6 @@ pnpm test -- test/rdf12-projection/labels.test.ts test/rdf12-projection/selector
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: `执行者提交 Batch 03 实现与测试，等待审核者确认 catalog owner 集合只包含 heading，且 label value 没有进入 resource IRI。`
-后续动作:: `审核通过后进入 Batch 04；若审核打回，则返工 Batch 03。`
+结论:: `通过`
+理由:: `审核确认 label catalog owner 集合只来自 node-index heading entries，catalog entry 仅保留 heading owner、labelKind 与 value；公共 RDF12 图不再输出 label resource、aat:hasLabel 或 label 表达用 rdf:value。测试覆盖了 addressLabel、generatedAddressLabel、headline 的正向绑定，以及 listing/table/anchor/role/payload/raw/IRI/xref display text 不参与 selector binding 的负向事实。`
+后续动作:: `进入 Batch 04，仅实现 xref relation edge evidence 与 RDF 1.2 reifier。`
