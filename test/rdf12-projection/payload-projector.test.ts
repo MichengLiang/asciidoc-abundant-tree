@@ -78,6 +78,18 @@ describe("rdf12 payload projection", () => {
 		expectNoTriple(projection.graph, targetHeading, "payload", payload);
 	});
 
+	it("binds xref payload selectors through secondary payload ids", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			secondaryIdXrefPayloadDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
+		const payload = onlyPayloadById(projection.graph, "primary-payload");
+
+		expectTriple(projection.graph, edge, "payload", payload);
+		expectLiteral(projection.graph, payload, "payloadId", "primary-payload");
+	});
+
 	it("does not create fake bindings for unbound payload selectors", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			unboundPayloadDocument(),
@@ -251,6 +263,50 @@ function payloadDocument(): AbundantDocument {
 		xrefOccurrences: [xref],
 		anchorOccurrences: [],
 		toolDiagnostics: [],
+	};
+}
+
+function secondaryIdXrefPayloadDocument(): AbundantDocument {
+	const xref = {
+		kind: "xref" as const,
+		syntax: "macro" as const,
+		raw: "xref:delivery-capacity[Delivery, payload=alias-payload]",
+		target: "delivery-capacity",
+		label: "Delivery",
+		attributes: {
+			payload: "alias-payload",
+		},
+		containingSectionId: "delivery-policy",
+		sourceSpan: {
+			start: { line: 4, column: 1 },
+			end: { line: 4, column: 55 },
+		},
+	};
+
+	return {
+		...payloadDocument(),
+		children: [
+			sectionNode(1, "delivery-policy", "Delivery Policy", [
+				{
+					kind: "paragraph",
+					text: "See delivery capacity.",
+					source: { span: { startLine: 4, endLine: 4 } },
+					children: [xref],
+				},
+			]),
+			sectionNode(5, "delivery-capacity", "Delivery Capacity"),
+			payloadListing({
+				id: ["primary-payload", "alias-payload"],
+				role: "xref-payload",
+				startLine: 8,
+				contentLine: 11,
+				sourceText: '{"reason":"risk-control"}',
+				attributes: {
+					data: "json",
+				},
+			}),
+		],
+		xrefOccurrences: [xref],
 	};
 }
 
@@ -430,16 +486,22 @@ function sectionNode(
 }
 
 function payloadListing(input: {
-	readonly id?: string;
+	readonly id?: string | readonly string[];
 	readonly role: "payload" | "xref-payload";
 	readonly startLine: number;
 	readonly contentLine: number;
 	readonly sourceText: string;
 	readonly attributes: Record<string, string>;
 }): ListingNode {
+	const ids =
+		input.id === undefined
+			? []
+			: typeof input.id === "string"
+				? [input.id]
+				: [...input.id];
 	return {
 		kind: "listing",
-		ids: input.id === undefined ? [] : [input.id],
+		ids,
 		style: "source",
 		language: "json",
 		span: { startLine: input.startLine, endLine: input.startLine + 4 },
@@ -456,9 +518,9 @@ function payloadListing(input: {
 						{
 							kind: "metadata" as const,
 							metadataKind: "id" as const,
-							raw: `[#${input.id}]`,
+							raw: `[#${ids.join(".")}]`,
 							line: input.startLine,
-							ids: [input.id],
+							ids,
 						},
 					]),
 			{

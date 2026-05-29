@@ -119,12 +119,14 @@ function projectPayloadListing(
 		forSelectorFor(node),
 	);
 
-	addPayloadSelector(context, payloadId, {
-		iri: payload,
-		kind: payloadKind,
-		selector: payloadId,
-		...definedString("forSelector", forSelectorFor(node)),
-	});
+	for (const id of node.ids) {
+		addPayloadSelector(context, id, {
+			iri: payload,
+			kind: payloadKind,
+			selector: id,
+			...definedString("forSelector", forSelectorFor(node)),
+		});
+	}
 }
 
 function bindNodePayloads(context: PayloadProjectorContext): void {
