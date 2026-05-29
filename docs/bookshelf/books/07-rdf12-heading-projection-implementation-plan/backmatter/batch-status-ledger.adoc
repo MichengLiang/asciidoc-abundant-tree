@@ -45,9 +45,9 @@
 
 |Batch 06
 |Payload 复杂属性
-|未开始
-|
-|
+|待审核
+|42c19fc4c86b7194c7e9ac637d09f3041ebd0a29
+|xref:batch-06-review-package[Batch 06 审核包]
 
 |Batch 07
 |公共契约与最终门禁

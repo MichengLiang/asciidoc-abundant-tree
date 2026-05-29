@@ -1,0 +1,110 @@
+[#batch-06-review-package]
+== Batch 06 审核包：Payload 复杂属性
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 06`
+批次名称:: `Payload 复杂属性`
+提交 hash:: `42c19fc4c86b7194c7e9ac637d09f3041ebd0a29`
+执行者:: `Codex`
+审核者:: `待定`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/rdf12-projection/payload-projector.ts
+test/rdf12-projection/payload-projector.test.ts
+test/rdf12-projection/payload.acceptance.test.ts
+test/rdf12-projection/query-contracts.test.ts
+test/rdf12-projection/heading-projection.acceptance.test.ts
+test/rdf12-projection/reference-links.acceptance.test.ts
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-06-review-package.adoc
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- payload listing 投影为 complex property object，不输出 aat:PayloadBlock public type。
+- payload object 使用 source-coordinate resource identity，payload id 不进入 IRI。
+- payload object 写入 aat:payloadId。
+- node payload object 写入 aat:payloadKind "node"。
+- xref payload object 写入 aat:payloadKind "edge"。
+- payload object 写入 aat:format、aat:raw、aat:relativePath、aat:startLine、aat:endLine、aat:contentStartLine、aat:contentEndLine。
+- node payload 保留 aat:forSelector。
+- node payload 通过 heading node 的 aat:payload 连接。
+- edge payload 通过 xref edge evidence 的 aat:payload 连接。
+- edge payload 不连接 source heading 或 target heading。
+- unbound 和 ambiguous node payload selector 保留 payload object，不连接 heading。
+- missing 或 ambiguous xref payload selector 不连接 xref edge evidence。
+- payload raw 保持 opaque，不展开 JSON 字段为 RDF predicate。
+- public graph 不输出 aat:hasPayload 或 aat:payloadOf。
+- payload object 不作为 heading，不参与 containsDirectly/previousSibling，不作为 xref targetHeading。
+- heading-projection.acceptance.test.ts 中 Batch 06 payload assertion 解除 expected-fail。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- interdocument acceptance 旧 XrefOccurrence 查询面清理：归属 Batch 07。
+- 公共契约最终清理、全量旧 contract sweep 和最终门禁：归属 Batch 07。
+----
+
+=== TDD 证据
+
+[source,text]
+----
+RED:
+pnpm exec vitest run test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：FAIL。4 test files failed，12 failed tests。失败点为 payloadId 缺失、payload object facts 缺失、aat:payload binding 缺失，旧实现仍输出 PayloadBlock/hasPayload/payloadOf/sourceText/dataFormat。
+
+GREEN:
+pnpm exec vitest run test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：PASS。4 test files passed，25 passed tests。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm exec vitest run test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/payload-projector.ts test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/reference-links.acceptance.test.ts
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL。package script 实际运行 vitest run -- <files> 后仍收集 38 test files；37 passed，1 failed，243 passed tests，3 failed tests。失败文件为 test/rdf12-projection/interdocument.acceptance.test.ts，仍使用旧 XrefOccurrence 查询面，归属 Batch 07。
+pnpm exec vitest run test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS。4 test files passed，25 passed tests。
+pnpm typecheck: PASS。
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/payload-projector.ts test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/reference-links.acceptance.test.ts: PASS，Biome checked 6 files with no fixes applied。
+----
+
+=== 规约检查清单
+
+* 本批没有修改 `src/metadata-parser.ts` 或 parser behavior。
+* 本批没有实现 interdocument/final public contract cleanup。
+* 本批 public graph 不输出 `aat:PayloadBlock`。
+* 本批 public graph 不输出 `aat:hasPayload` 或 `aat:payloadOf`。
+* 本批 node payload 通过 heading `aat:payload` 连接。
+* 本批 edge payload 通过 xref edge evidence `aat:payload` 连接。
+* 本批 xref `payload` selector 和 `aat:payload` object predicate 未混用。
+* 本批 payload id 不进入 payload object IRI。
+* 本批 payload raw 不展开为 RDF graph。
+* 本批 payload object 不作为 heading、结构边端点或 xref target heading。
+* 本批测试覆盖了 bound、unbound、ambiguous 和 missing selector 路径。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: `执行者提交 Batch 06 实现与测试，等待审核者确认 payload complex property object 替代 PayloadBlock/hasPayload/payloadOf，且 payload raw 保持 opaque。`
+后续动作:: `审核通过后进入 Batch 07；若审核打回，则返工 Batch 06。`
