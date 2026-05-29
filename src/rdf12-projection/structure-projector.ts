@@ -150,7 +150,7 @@ function projectHeadingStructureEdges(
 		.toSorted((left, right) => left.startLine - right.startLine);
 	const root = entries.find((entry) => entry.kind === "document-title");
 	const topLevelParent = root?.iri;
-	const childrenByParent = new Map<string, Rdf12NodeIndexEntry[]>();
+	const childrenByParent = new Map<string, HeadingSiblingGroup>();
 	const stack: Rdf12NodeIndexEntry[] = [];
 
 	for (const entry of entries) {
@@ -168,24 +168,23 @@ function projectHeadingStructureEdges(
 		}
 
 		const parent = stack.at(-1)?.iri ?? topLevelParent;
-		if (parent !== undefined) {
-			appendChild(childrenByParent, parent, entry);
-		}
+		appendChild(childrenByParent, parent, entry);
 		stack.push(entry);
 	}
 
-	for (const [parentValue, children] of childrenByParent) {
-		const parent = iriTerm(parentValue);
-		for (const [index, child] of children.entries()) {
-			context.graph.add(
-				rdf12Triple(
-					parent,
-					iriTerm(`${namespaces.aat}containsDirectly`),
-					child.iri,
-				),
-			);
+	for (const group of childrenByParent.values()) {
+		for (const [index, child] of group.children.entries()) {
+			if (group.parent !== undefined) {
+				context.graph.add(
+					rdf12Triple(
+						group.parent,
+						iriTerm(`${namespaces.aat}containsDirectly`),
+						child.iri,
+					),
+				);
+			}
 
-			const previous = children[index - 1];
+			const previous = group.children[index - 1];
 			if (previous !== undefined) {
 				context.graph.add(
 					rdf12Triple(
@@ -199,15 +198,23 @@ function projectHeadingStructureEdges(
 	}
 }
 
+type HeadingSiblingGroup = {
+	readonly parent?: Rdf12IriTerm;
+	readonly children: Rdf12NodeIndexEntry[];
+};
+
 function appendChild(
-	childrenByParent: Map<string, Rdf12NodeIndexEntry[]>,
-	parent: Rdf12IriTerm,
+	childrenByParent: Map<string, HeadingSiblingGroup>,
+	parent: Rdf12IriTerm | undefined,
 	child: Rdf12NodeIndexEntry,
 ): void {
-	childrenByParent.set(parent.value, [
-		...(childrenByParent.get(parent.value) ?? []),
-		child,
-	]);
+	const key = parent?.value ?? "__top-level-headings__";
+	const group = childrenByParent.get(key) ?? {
+		...(parent !== undefined ? { parent } : {}),
+		children: [],
+	};
+	group.children.push(child);
+	childrenByParent.set(key, group);
 }
 
 function headingLevel(entry: Rdf12NodeIndexEntry): number {
