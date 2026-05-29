@@ -39,9 +39,9 @@
 
 |Batch 05
 |直接字段谓词
-|未开始
-|
-|
+|待审核
+|fb712b3992e4316bded427ed0f97558ded43b996
+|xref:batch-05-review-package[Batch 05 审核包]
 
 |Batch 06
 |Payload 复杂属性

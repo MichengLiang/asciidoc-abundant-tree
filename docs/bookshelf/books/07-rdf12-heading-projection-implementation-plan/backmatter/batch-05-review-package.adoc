@@ -1,0 +1,113 @@
+[#batch-05-review-package]
+== Batch 05 审核包：直接字段谓词
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 05`
+批次名称:: `直接字段谓词`
+提交 hash:: `fb712b3992e4316bded427ed0f97558ded43b996`
+执行者:: `Codex`
+审核者:: `待定`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/rdf12-projection/attributes.ts
+src/rdf12-projection/field-predicate.ts
+test/rdf12-projection/attributes.test.ts
+test/rdf12-projection/field-predicate.test.ts
+test/rdf12-projection/reference-links.acceptance.test.ts
+test/rdf12-projection/heading-projection.acceptance.test.ts
+test/rdf12-projection/query-contracts.test.ts
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-05-review-package.adoc
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- heading attrlist named attributes 投影为 heading node 上的直接 string literal 谓词。
+- heading attrlist role tokens 投影为 heading node 上的 aat:role string literal。
+- heading #id 继续投影为 aat:addressLabel，不投影为 aat:id。
+- xref ordinary named attributes 投影为 xref edge evidence 上的直接 string literal 谓词。
+- xref rel 控制字段继续只作为 aat:rel 和 relation predicate 选择输入，不生成普通属性资源。
+- xref payload 控制字段继续只作为 aat:payloadSelector，不把 selector 字符串写入 aat:payload。
+- public graph 不再创建 aat:SurfaceAttribute resource。
+- public graph 不再输出 aat:hasAttribute。
+- public graph 不再用 rdf:value 表达 field attributes。
+- field-predicate 映射对简单合法字段名使用 aat:<fieldName>。
+- field-predicate 映射对不安全字段名使用稳定 IRI-safe encoded local name。
+- heading-projection.acceptance.test.ts 中 Batch 05 direct field assertion 解除 expected-fail；Batch 06 和 Batch 07 仍保持 expected-fail。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- 节点 payload 和边 payload complex property binding：归属 Batch 06。
+- payload projector 旧测试契约迁移：归属 Batch 06。
+- public 契约最终清理和旧类型退出最终门禁：归属 Batch 07。
+- interdocument acceptance 旧 XrefOccurrence 查询面清理：归属 Batch 07。
+----
+
+=== TDD 证据
+
+[source,text]
+----
+RED:
+pnpm exec vitest run test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：FAIL。field-predicate module 缺失；heading kind/status/owner、xref weight direct predicates 缺失；旧属性资源路径仍存在。
+
+GREEN:
+pnpm exec vitest run test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：PASS。4 test files passed，17 passed tests，2 expected fail tests。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm exec vitest run test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm exec vitest run test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts
+pnpm typecheck
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/attributes.ts src/rdf12-projection/field-predicate.ts test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL。package script 实际运行 vitest run -- <files> 后仍收集 38 test files；35 passed，3 failed，234 passed tests，11 failed tests，2 expected fail tests。失败集中在 payload-projector.test.ts、payload.acceptance.test.ts、interdocument.acceptance.test.ts 的旧 XrefOccurrence/label-resource/payload 契约，归属 Batch 06/Batch 07。
+pnpm exec vitest run test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS。4 test files passed，17 passed tests，2 expected fail tests。
+pnpm exec vitest run test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts: PASS。5 test files passed，20 passed tests，2 expected fail tests。
+pnpm typecheck: PASS。
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/attributes.ts src/rdf12-projection/field-predicate.ts test/rdf12-projection/attributes.test.ts test/rdf12-projection/field-predicate.test.ts test/rdf12-projection/reference-links.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts: PASS，Biome checked 7 files with no fixes applied。
+----
+
+=== 规约检查清单
+
+* 本批没有修改 `src/metadata-parser.ts` 或 `src/macro-argument-parser.ts`。
+* 本批没有修改 payload projector。
+* 本批没有实现 Batch 06 payload complex property binding。
+* 本批 heading attrlist named attributes 使用直接 `aat:` field predicates。
+* 本批 xref ordinary named attributes 使用直接 `aat:` field predicates。
+* 本批 xref `rel` 和 `payload` 控制字段没有作为普通 attributes 二次输出。
+* 本批 public graph 不输出 `aat:SurfaceAttribute`。
+* 本批 public graph 不输出 `aat:hasAttribute`。
+* 本批属性表达不使用 `rdf:value`。
+* 本批字段值按 string literal 保存。
+* 本批测试覆盖了简单字段名和 encoded 字段名映射。
+* 本批测试覆盖了 direct predicate 正向事实。
+* 本批测试覆盖了 attribute resource 退出负向事实。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: `执行者提交 Batch 05 实现与测试，等待审核者确认 direct field predicates 替代 SurfaceAttribute resource path，且 payloadSelector 和 payload 谓词未混用。`
+后续动作:: `审核通过后进入 Batch 06；若审核打回，则返工 Batch 05。`
