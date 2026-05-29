@@ -1,0 +1,10 @@
+[#bibliography]
+== 参考资料
+
+* [[[rdf12-concepts]]] W3C, _RDF 1.2 Concepts and Abstract Data Model_. https://www.w3.org/TR/rdf12-concepts/
+* [[[rdf12-turtle]]] W3C, _RDF 1.2 Turtle_. https://www.w3.org/TR/rdf12-turtle/
+* [[[sparql12-query]]] W3C, _SPARQL 1.2 Query Language_. https://www.w3.org/TR/sparql12-query/
+* [[[apache-jena-arq]]] Apache Jena, _ARQ - A SPARQL Processor for Jena_. https://jena.apache.org/documentation/query/
+* [[[apache-jena-riot]]] Apache Jena, _RIOT RDF Parser_. https://jena.apache.org/documentation/io/
+* [[[asciidoctor]]] Asciidoctor Documentation. https://docs.asciidoctor.org/
+* [[[ripgrep]]] BurntSushi, _ripgrep_. https://github.com/BurntSushi/ripgrep

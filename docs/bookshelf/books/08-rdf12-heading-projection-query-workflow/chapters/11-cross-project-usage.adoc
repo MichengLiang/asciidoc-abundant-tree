@@ -1,0 +1,61 @@
+[#cross-project-usage]
+== 跨项目用法
+
+每个书架项目负责自己的 AsciiDoc 构建。`asciidoc-abundant-tree` 命令负责读取聚合 adoc 并输出标题投影图。
+
+=== 项目内构建
+
+在目标项目的 docs 工作区运行构建：
+
+[source,bash]
+----
+cd /home/t103o/workbench/projects/ExampleProject/docs
+pnpm build
+----
+
+构建产物位于目标项目自己的 build 目录：
+
+[source,text]
+----
+/home/t103o/workbench/projects/ExampleProject/docs/build/adoc/books/<book-id>.adoc
+----
+
+=== 投影命令
+
+在当前工作区中，`asciidoc-abundant-tree` 命令可以直接使用：
+
+[source,bash]
+----
+cd /home/t103o/workbench
+asciidoc-abundant-tree \
+  projects/ExampleProject/docs/build/adoc/books/<book-id>.adoc \
+  --format rdf12 \
+  > projects/ExampleProject/docs/build/adoc/books/<book-id>.adoc.ttl
+----
+
+该命令让 TTL 留在目标项目自己的 build 目录下。
+
+=== TTL 放置规则
+
+TTL 放在目标项目的 build 目录下：
+
+[source,text]
+----
+docs/build/adoc/books/<book-id>.adoc.ttl
+----
+
+该位置表达 TTL 与聚合 adoc 的派生关系。TTL 不放入源书稿目录，不放入仓库根目录，不作为手写文档维护。
+
+=== 查询语句复用
+
+查询语句可以从本书复制到目标项目的终端会话中执行。
+
+通用查询语句使用 `<heading-label>` 等占位符。项目执行查询时，把占位符替换为当前书稿的 label、headline 或文本片段。
+
+查询语句复用不改变 TTL 所属项目。ARQ 查询时，`--data` 指向目标项目 TTL，`--query` 接收当前命令中的 SPARQL 文本。
+
+=== 跨项目路径边界
+
+投影器的 document root 由运行目录和 CLI 约束共同决定。跨项目投影时，从共同工作区根目录运行可以让目标聚合 adoc 处于当前目录之下。
+
+该规则避免把投影输入放到工作区外部。TTL 中的 `aat:relativePath` 也会保持相对于运行根的路径。

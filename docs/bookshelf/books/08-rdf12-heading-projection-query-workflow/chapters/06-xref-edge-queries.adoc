@@ -1,0 +1,160 @@
+[#xref-edge-queries]
+== 交叉引用边查询
+
+交叉引用边来自标题切片中的 xref。投影图使用 `aat:XrefEdge` 保存边证据。边证据记录 source heading、target selector、target heading、raw、行号和列号。
+
+交叉引用查询比全文搜索多出两个结构事实：xref 属于哪个标题切片，selector 是否绑定到目标标题。
+
+交叉引用边查询提供单跳事实。引用数量统计见 xref:xref-degree-queries[引用入度与出度查询]。多跳局部脉络见 xref:xref-neighborhood-queries[交叉引用邻域查询]。
+
+=== 发出的交叉引用
+
+发出查询读取某个标题切片中的 xref：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?edge ?selector ?target ?targetHeadline ?raw ?start ?col WHERE {
+  ?source aat:addressLabel "<heading-label>" .
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetSelector ?selector ;
+        aat:raw ?raw ;
+        aat:startLine ?start ;
+        aat:startColumn ?col .
+  OPTIONAL {
+    ?edge aat:targetHeading ?target .
+    ?target aat:headline ?targetHeadline .
+  }
+}
+ORDER BY ?start ?col
+----
+
+该查询保留 `?selector` 和 `?raw`。目标绑定结果不能替代源文本事实。
+
+=== 指向当前标题的交叉引用
+
+反向查询读取哪些标题引用了目标标题：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?source ?sourceHeadline ?raw ?path ?start ?col WHERE {
+  ?target aat:addressLabel "<heading-label>" .
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetHeading ?target ;
+        aat:raw ?raw ;
+        aat:relativePath ?path ;
+        aat:startLine ?start ;
+        aat:startColumn ?col .
+  ?source aat:headline ?sourceHeadline .
+}
+ORDER BY ?start ?col
+----
+
+该查询回答“谁引用了这个标题”。它适合检查核心概念、公共契约或术语入口是否被书稿实际使用。
+
+=== 全书交叉引用表
+
+全书引用表按出现顺序列出所有 xref：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?selector ?targetHeadline ?path ?start ?col ?raw WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetSelector ?selector ;
+        aat:relativePath ?path ;
+        aat:startLine ?start ;
+        aat:startColumn ?col ;
+        aat:raw ?raw .
+  ?source aat:headline ?sourceHeadline .
+  OPTIONAL {
+    ?edge aat:targetHeading ?target .
+    ?target aat:headline ?targetHeadline .
+  }
+}
+ORDER BY ?path ?start ?col
+----
+
+该查询是引用网络的基本审阅表。它不评价引用质量，只暴露 source、selector、target 和回源坐标。
+
+=== 未绑定交叉引用
+
+未绑定查询返回没有 target heading、也没有 candidate heading 的 xref：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?selector ?raw ?path ?start ?col WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetSelector ?selector ;
+        aat:raw ?raw ;
+        aat:relativePath ?path ;
+        aat:startLine ?start ;
+        aat:startColumn ?col .
+  ?source aat:headline ?sourceHeadline .
+  FILTER NOT EXISTS { ?edge aat:targetHeading ?target . }
+  FILTER NOT EXISTS { ?edge aat:candidateHeading ?candidate . }
+}
+ORDER BY ?path ?start ?col
+----
+
+未绑定结果不自动等于 dead link。它表示 selector 没有在当前标题 label 空间中绑定。作者需要根据源书稿、外部链接规则和构建语义判断是否修改。
+
+=== 多义交叉引用
+
+多义查询返回 selector 的候选标题：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?selector ?candidateHeadline ?candidateStart ?raw ?path ?start WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetSelector ?selector ;
+        aat:candidateHeading ?candidate ;
+        aat:raw ?raw ;
+        aat:relativePath ?path ;
+        aat:startLine ?start .
+  ?source aat:headline ?sourceHeadline .
+  ?candidate aat:headline ?candidateHeadline ;
+             aat:startLine ?candidateStart .
+}
+ORDER BY ?path ?start ?selector ?candidateStart
+----
+
+多义结果是源书稿事实。投影图不替作者任意选择唯一目标。
+
+=== 子树内部引用
+
+子树内部引用查询要求 source heading 和 target heading 都在同一个结构范围内：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?targetHeadline ?start WHERE {
+  ?root aat:addressLabel "<heading-label>" .
+  ?root aat:containsDirectly* ?source .
+  ?root aat:containsDirectly* ?target .
+
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetHeading ?target ;
+        aat:startLine ?start .
+  ?source aat:headline ?sourceHeadline .
+  ?target aat:headline ?targetHeadline .
+}
+ORDER BY ?start
+----
+
+该查询观察一个章节范围内部的引用关系。结构范围提供边界，xref 提供脉络。

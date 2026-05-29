@@ -1,0 +1,66 @@
+= AsciiDoc 书稿 RDF 投影与 ARQ 查询教程
+弥澄亮 <MichengLiang>
+v0.1, 2026-05
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:experimental:
+:idprefix:
+:idseparator: -
+
+include::../../shared/attributes.adoc[]
+
+[preface]
+include::frontmatter/preface.adoc[]
+
+= 第一部：工作流对象
+
+[partintro]
+这一部定义书稿 RDF 投影查询工作流、聚合 adoc、TTL 生成物和查询边界。
+
+include::chapters/01-workflow-object.adoc[]
+
+include::chapters/02-build-and-projection.adoc[]
+
+include::chapters/03-query-environment.adoc[]
+
+= 第二部：标题阅读查询
+
+[partintro]
+这一部定义标题定位、标题切片读取、结构范围和递归子树查询。
+
+include::chapters/04-heading-location-and-slices.adoc[]
+
+include::chapters/05-structural-scope-queries.adoc[]
+
+= 第三部：交叉引用网络查询
+
+[partintro]
+这一部定义 xref 边查询、引用入度、引用出度和交叉引用邻域查询。
+
+include::chapters/06-xref-edge-queries.adoc[]
+
+include::chapters/07-xref-degree-queries.adoc[]
+
+include::chapters/08-xref-neighborhood-queries.adoc[]
+
+= 第四部：审计与写作闭环
+
+[partintro]
+这一部定义质量审计、聚合文件回源限制、原始书稿搜索回退、跨项目用法和查询语句集。
+
+include::chapters/09-quality-audit-queries.adoc[]
+
+include::chapters/10-reading-and-editing-loop.adoc[]
+
+include::chapters/11-cross-project-usage.adoc[]
+
+include::chapters/12-query-library.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]
+
+[bibliography]
+include::backmatter/bibliography.adoc[]

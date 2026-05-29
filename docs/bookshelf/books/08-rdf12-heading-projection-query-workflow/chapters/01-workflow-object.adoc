@@ -1,0 +1,56 @@
+[#workflow-object]
+== 工作流对象
+
+书稿 RDF 投影查询工作流是从 AsciiDoc 书架到 ARQ 查询结果的生成和观察链条。
+
+该工作流的输入是书架项目中的 AsciiDoc 源书稿。源书稿可以拆分为 `book.adoc`、frontmatter、chapters、backmatter 和 shared attributes。源书稿不是投影器的直接查询对象。
+
+该工作流的第一产物是聚合 adoc。聚合 adoc 是 include 展开后的单文件书稿，位于 `build/adoc/` 下。投影器读取聚合 adoc，并以该文件为 source document。
+
+该工作流的第二产物是 TTL。TTL 是 RDF 1.2 标题投影图的 Turtle 序列化表面。TTL 位于 `build/` 目录下，是可丢弃、可重新生成的 build artifact。
+
+该工作流的查询执行器是 Apache Jena ARQ。ARQ 读取 TTL 和 SPARQL 查询，返回标题、层级、交叉引用、引用入度、引用出度、payload 和审计事实。
+
+=== 消费者动作
+
+该工作流服务以下作者动作：
+
+* 查看全书标题骨架。
+* 按 address label 或 headline 定位标题。
+* 读取标题自身 raw 和聚合文件 line span。
+* 读取标题直接子标题和递归子树。
+* 查询标题发出的交叉引用。
+* 查询指向标题的交叉引用。
+* 计算标题在 xref 网络中的入度和出度。
+* 沿 xref 网络查看局部脉络。
+* 查找未绑定、多义或重复 label 相关事实。
+* 使用查询结果回到聚合 adoc，再用文本搜索定位原始拆分书稿。
+
+这些动作共同构成书稿结构观察面。不能服务这些动作的对象不进入本工作流的核心说明。
+
+=== 对象边界
+
+本工作流不执行 AsciiDoc 写作。源书稿仍由作者维护。
+
+本工作流不替代 HTML 发布。HTML 是面向人工阅读的发布表面，TTL 是面向结构查询的观察表面。
+
+本工作流不直接回到原始拆分章节文件。当前投影的 `aat:relativePath`、`aat:startLine` 和 `aat:endLine` 指向聚合 adoc。原始文件定位需要结合 `rg` 或编辑器搜索完成。
+
+本工作流不解释 payload 内部 JSON、YAML、TOML、XML 或其它格式。payload raw 作为复杂属性保留。
+
+本工作流不把 TTL 当作源文件。TTL 与聚合 adoc 都位于 build 区域，源书稿变化后必须重新生成。
+
+=== 工作流闭环
+
+工作流闭环由五个动作构成：
+
+[source,text]
+----
+source books -> build adoc -> project ttl -> query ttl -> edit source books
+----
+
+作者修改源书稿后，闭环重新开始。旧 TTL 不再代表当前书稿事实。
+
+该闭环的价值不在于一次性生成文件，而在于让作者能够反复提出结构问题，并把查询结果带回写作行动。
+
+构建和投影阶段由 xref:build-and-projection[构建与投影] 定义。查询执行表面由 xref:query-environment[ARQ 查询环境] 定义。查询结果进入修改动作时遵守 xref:reading-and-editing-loop[阅读与修改闭环] 的回源边界。

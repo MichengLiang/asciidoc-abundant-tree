@@ -1,0 +1,40 @@
+[#glossary]
+== 术语表
+
+bookshelf:: 保存 AsciiDoc 书稿、共享属性、构建脚本和构建产物的书架工作区。
+
+source book files:: 作者维护的原始拆分书稿文件，包括 `book.adoc`、frontmatter、chapters、backmatter 和 shared attributes。
+
+aggregated adoc:: include 展开后的单文件书稿。该文件位于 `build/adoc/` 下，是 RDF 投影器的输入。
+
+RDF 1.2 heading projection graph:: 从聚合 adoc 生成的 RDF 1.2 标题投影图。它描述 heading node、标题结构边、xref edge evidence、payload 和回源坐标。
+
+TTL projection artifact:: RDF 1.2 标题投影图的 Turtle 文件。它位于 build 目录下，是可重新生成的 build artifact。
+
+ARQ query:: 使用 Apache Jena ARQ 执行的 SPARQL 查询。
+
+heading node:: 由 AsciiDoc 等号标题创建的 RDF resource。
+
+heading slice:: heading node 对应的聚合 adoc 连续文本区域。
+
+xref edge evidence:: 保存 xref raw、source heading、target selector、target heading、候选 heading 和回源坐标的 RDF resource。
+
+target selector:: xref 中用于绑定目标标题的 selector 字符串。
+
+address label:: 作者在标题表面显式声明的 ID。
+
+generated address label:: 解析器为没有显式 ID 的标题恢复出的可寻址 label。
+
+recursive query:: 使用 SPARQL property path 或显式多段模式读取多跳关系的查询。
+
+xref in-degree:: 指向某个 heading node 的已绑定 xref edge 数量。
+
+xref out-degree:: 从某个 heading node 发出的 xref edge 数量。
+
+xref neighborhood:: 围绕一个 heading node 的局部交叉引用网络，包括入边、出边和多跳邻居。
+
+build artifact:: 由构建或投影命令生成、可以删除并重新生成的文件。
+
+stale projection:: 源书稿或聚合 adoc 已改变，但 TTL 尚未重新生成的过期投影。
+
+source lookup fallback:: 使用 ARQ 查询结果中的 headline、selector、raw 片段或 line span，再用 `rg` 定位原始拆分书稿的回退方法。

@@ -1,0 +1,131 @@
+[#structural-scope-queries]
+== 结构范围查询
+
+标题结构边定义阅读范围。`aat:containsDirectly` 表达直接父子标题关系，`aat:previousSibling` 表达同父标题下的前一个兄弟标题。
+
+结构范围查询的主要作用是确定章节边界。交叉引用网络查询可以使用这些边界限制 source heading 或 target heading。
+
+结构范围不是交叉引用脉络本身。交叉引用脉络由 xref:xref-edge-queries[交叉引用边查询] 和 xref:xref-neighborhood-queries[交叉引用邻域查询] 读取。
+
+=== 直接子标题
+
+直接子标题查询读取当前标题的下一层标题：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?child ?childHeadline ?start ?end WHERE {
+  ?parent aat:addressLabel "<heading-label>" .
+  ?parent aat:containsDirectly ?child .
+  ?child aat:headline ?childHeadline ;
+         aat:startLine ?start ;
+         aat:endLine ?end .
+}
+ORDER BY ?start
+----
+
+该查询不递归。它回答当前标题直接分成哪些子节。
+
+=== 递归子树
+
+递归子树查询读取当前标题的所有后代标题：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?descendant ?level ?headline ?start ?end WHERE {
+  ?root aat:addressLabel "<heading-label>" .
+  ?root aat:containsDirectly+ ?descendant .
+  ?descendant aat:headingLevel ?level ;
+              aat:headline ?headline ;
+              aat:startLine ?start ;
+              aat:endLine ?end .
+}
+ORDER BY ?start
+----
+
+`aat:containsDirectly+` 表示一跳或多跳后代。该查询不返回根标题自身。
+
+=== 包含根节点的子树
+
+需要把根标题自身纳入范围时，使用 `*`：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?node ?level ?headline ?start ?end WHERE {
+  ?root aat:addressLabel "<heading-label>" .
+  ?root aat:containsDirectly* ?node .
+  ?node aat:headingLevel ?level ;
+        aat:headline ?headline ;
+        aat:startLine ?start ;
+        aat:endLine ?end .
+}
+ORDER BY ?start
+----
+
+该查询生成章节范围集合。后续 xref 查询可以用该集合判断引用发生在子树内部还是指向子树外部。
+
+=== 父标题反查
+
+父标题反查用于定位一个标题所属范围：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?parent ?parentHeadline ?parentStart WHERE {
+  ?child aat:addressLabel "<heading-label>" .
+  ?parent aat:containsDirectly ?child ;
+          aat:headline ?parentHeadline ;
+          aat:startLine ?parentStart .
+}
+----
+
+标题最多有一个直接父标题。没有父标题的标题是当前聚合 adoc 中的顶层标题。
+
+=== 兄弟顺序
+
+`aat:previousSibling` 查询当前标题的前一个同父兄弟：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?headingHeadline ?previousHeadline ?start WHERE {
+  ?heading aat:addressLabel "<heading-label>" ;
+           aat:headline ?headingHeadline ;
+           aat:startLine ?start ;
+           aat:previousSibling ?previous .
+  ?previous aat:headline ?previousHeadline .
+}
+----
+
+兄弟顺序不跨父标题。该查询适合检查章节排列，不适合分析交叉引用脉络。
+
+=== 结构范围与 xref 查询
+
+结构范围的高价值用法是限制 xref 查询。下列模式先取得一个章节子树，再把该子树作为 source heading 集合：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?targetHeadline ?start WHERE {
+  ?root aat:addressLabel "<heading-label>" .
+  ?root aat:containsDirectly* ?inside .
+
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?inside ;
+        aat:targetHeading ?target ;
+        aat:startLine ?start .
+  ?inside aat:headline ?sourceHeadline .
+  ?target aat:headline ?targetHeadline .
+}
+ORDER BY ?start
+----
+
+该查询回答某个章节范围内的标题引用了哪些目标标题。父子结构在这里承担范围边界，xref 承担脉络关系。

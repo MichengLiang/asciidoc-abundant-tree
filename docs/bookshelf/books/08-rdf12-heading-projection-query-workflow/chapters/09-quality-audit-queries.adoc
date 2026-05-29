@@ -1,0 +1,174 @@
+[#quality-audit-queries]
+== 质量审计查询
+
+质量审计查询暴露书稿结构事实。审计结果不自动构成错误；它们提供作者判断和修改的入口。
+
+审计查询通常在 xref:reading-and-editing-loop[阅读与修改闭环] 的修改前后运行。交叉引用审计依赖 xref:xref-edge-queries[交叉引用边查询] 中的 source、selector、target 和 raw 事实。
+
+=== 来源文件确认
+
+来源查询确认 TTL 来自哪个聚合 adoc：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?path ?digest WHERE {
+  ?sourceDoc a aat:AsciiDocSourceDocument ;
+             aat:relativePath ?path .
+  OPTIONAL { ?sourceDoc aat:sourceDigest ?digest . }
+}
+----
+
+该查询应在跨项目查询前运行。它防止作者拿错 TTL。
+
+=== 重复 address label
+
+重复 address label 会影响 selector 绑定稳定性：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?label (COUNT(?h) AS ?count) WHERE {
+  ?h a aat:Heading ;
+     aat:addressLabel ?label .
+}
+GROUP BY ?label
+HAVING (COUNT(?h) > 1)
+ORDER BY DESC(?count) ?label
+----
+
+手动 ID 通常表达作者的稳定引用意图。重复 address label 应进入作者审查。
+
+=== 重复 headline
+
+重复 headline 是合法书稿事实：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?headline (COUNT(?h) AS ?count) WHERE {
+  ?h a aat:Heading ;
+     aat:headline ?headline .
+}
+GROUP BY ?headline
+HAVING (COUNT(?h) > 1)
+ORDER BY DESC(?count) ?headline
+----
+
+重复 headline 不自动表示问题。它提示作者在引用这些标题时优先使用显式 address label。
+
+=== 未绑定引用审计
+
+未绑定引用查询是交叉引用质量审计的第一入口：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?selector ?raw ?path ?start ?col WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetSelector ?selector ;
+        aat:raw ?raw ;
+        aat:relativePath ?path ;
+        aat:startLine ?start ;
+        aat:startColumn ?col .
+  ?source aat:headline ?sourceHeadline .
+  FILTER NOT EXISTS { ?edge aat:targetHeading ?target . }
+  FILTER NOT EXISTS { ?edge aat:candidateHeading ?candidate . }
+}
+ORDER BY ?path ?start ?col
+----
+
+该结果应由作者审查。外部链接、特殊 anchor、生成 label 差异和真实拼写错误都可能产生未绑定结果。
+
+=== 多义引用审计
+
+多义引用查询暴露 selector 命中多个候选标题：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?selector ?candidateHeadline ?candidateStart ?path ?start WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetSelector ?selector ;
+        aat:candidateHeading ?candidate ;
+        aat:relativePath ?path ;
+        aat:startLine ?start .
+  ?source aat:headline ?sourceHeadline .
+  ?candidate aat:headline ?candidateHeadline ;
+             aat:startLine ?candidateStart .
+}
+ORDER BY ?path ?start ?selector ?candidateStart
+----
+
+作者可以通过增加显式 ID、修改引用 selector 或重命名标题消除多义。
+
+=== payload 绑定审计
+
+节点 payload 查询：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?headingHeadline ?payloadId ?format ?payloadStart ?payloadEnd WHERE {
+  ?heading a aat:Heading ;
+           aat:headline ?headingHeadline ;
+           aat:payload ?payload .
+  ?payload aat:payloadKind "node" ;
+           aat:payloadId ?payloadId ;
+           aat:startLine ?payloadStart ;
+           aat:endLine ?payloadEnd .
+  OPTIONAL { ?payload aat:format ?format . }
+}
+ORDER BY ?payloadStart
+----
+
+边 payload 查询：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?targetHeadline ?payloadId ?format ?payloadStart ?payloadEnd WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetHeading ?target ;
+        aat:payload ?payload .
+  ?source aat:headline ?sourceHeadline .
+  ?target aat:headline ?targetHeadline .
+  ?payload aat:payloadKind "edge" ;
+           aat:payloadId ?payloadId ;
+           aat:startLine ?payloadStart ;
+           aat:endLine ?payloadEnd .
+  OPTIONAL { ?payload aat:format ?format . }
+}
+ORDER BY ?payloadStart
+----
+
+payload raw 不展开为业务图。审计查询只检查 payload 是否绑定到预期 heading 或 xref edge。
+
+=== raw 抽查
+
+raw 抽查用于确认关键标题切片包含预期文本：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?headline ?start ?containsExpected WHERE {
+  ?h aat:headline "<heading-headline>" ;
+     aat:headline ?headline ;
+     aat:startLine ?start ;
+     aat:raw ?raw .
+  BIND(CONTAINS(?raw, "<expected-fragment>") AS ?containsExpected)
+}
+----
+
+`<heading-headline>` 和 `<expected-fragment>` 是教程占位符。该查询适合做针对性回归。它不替代完整测试，但能快速暴露关键切片 raw 是否符合作者预期。

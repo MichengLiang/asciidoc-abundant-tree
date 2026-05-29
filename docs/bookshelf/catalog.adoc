@@ -18,6 +18,7 @@ v0.1, 2026-05
 
 * xref:books/06-rdf12-line-projection/book.adoc[AsciiDoc 标题切片到 RDF 1.2 投影规约]
 * xref:books/07-rdf12-heading-projection-implementation-plan/book.adoc[RDF 1.2 标题投影图实现计划书]
+* xref:books/08-rdf12-heading-projection-query-workflow/book.adoc[AsciiDoc 书稿 RDF 投影与 ARQ 查询教程]
 
 == 书库范围
 

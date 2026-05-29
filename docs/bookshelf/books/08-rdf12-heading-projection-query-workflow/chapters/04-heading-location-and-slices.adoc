@@ -1,0 +1,108 @@
+[#heading-location-and-slices]
+== 标题定位与切片查询
+
+标题定位查询用于从 TTL 中找到 heading node、headline、label 和聚合文件 line span。标题切片查询用于读取该 heading 自身 raw。
+
+=== 全书骨架
+
+全书骨架查询返回一级和二级阅读结构：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?level ?headline ?start ?end WHERE {
+  ?h a aat:Heading ;
+     aat:headingLevel ?level ;
+     aat:headline ?headline ;
+     aat:startLine ?start ;
+     aat:endLine ?end .
+  FILTER(?level <= 1)
+}
+ORDER BY ?start
+----
+
+该查询是投影 sanity check。作者通过它确认 TTL 覆盖的书稿、标题层级和行号范围。
+
+=== 按 address label 定位
+
+address label 来自作者显式声明的标题 ID。按 address label 查询适合定位稳定引用点。
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?heading ?headline ?path ?start ?end WHERE {
+  ?heading a aat:Heading ;
+           aat:addressLabel "<heading-label>" ;
+           aat:headline ?headline ;
+           aat:relativePath ?path ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+}
+----
+
+`<heading-label>` 替换为当前书稿中的 address label。查询结果中的 `?path` 指向聚合 adoc。`?start` 和 `?end` 是该聚合文件中的闭区间行号。
+
+=== 按 headline 定位
+
+headline 是标题文本。headline 可以重复，查询必须保留多结果。
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?heading ?headline ?path ?start ?end ?label ?generated WHERE {
+  ?heading a aat:Heading ;
+           aat:headline "边 Payload" ;
+           aat:headline ?headline ;
+           aat:relativePath ?path ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+  OPTIONAL { ?heading aat:addressLabel ?label . }
+  OPTIONAL { ?heading aat:generatedAddressLabel ?generated . }
+}
+ORDER BY ?start
+----
+
+重复 headline 是源书稿事实。作者根据 line span、label 和上下文选择目标标题。
+
+=== 读取标题自身 raw
+
+`aat:raw` 是标题节点自身切片的文本表面。它不包含子标题切片。
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?headline ?path ?start ?end ?raw WHERE {
+  ?heading aat:addressLabel "<heading-label>" ;
+           aat:headline ?headline ;
+           aat:relativePath ?path ;
+           aat:startLine ?start ;
+           aat:endLine ?end ;
+           aat:raw ?raw .
+}
+----
+
+该查询适合快速读取一个标题自身内容。需要读取完整章节时，作者应结合递归子树查询取得后代标题。
+
+=== label 空间检查
+
+标题可被 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 查询。selector 绑定也在该 label 空间中进行。
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?heading ?headline ?label ?generated ?start WHERE {
+  ?heading a aat:Heading ;
+           aat:headline ?headline ;
+           aat:startLine ?start .
+  OPTIONAL { ?heading aat:addressLabel ?label . }
+  OPTIONAL { ?heading aat:generatedAddressLabel ?generated . }
+}
+ORDER BY ?start
+----
+
+该查询用于观察书稿的可寻址表面。作者需要稳定引用时，应优先使用显式 address label。

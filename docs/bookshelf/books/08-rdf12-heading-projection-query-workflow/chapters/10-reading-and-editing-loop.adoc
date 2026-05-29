@@ -1,0 +1,114 @@
+[#reading-and-editing-loop]
+== 阅读与修改闭环
+
+ARQ 查询结果进入作者行动时，必须经过聚合文件阅读和原始书稿定位两个步骤。
+
+修改前的结构观察来自 xref:heading-location-and-slices[标题定位与切片查询]、xref:xref-edge-queries[交叉引用边查询] 和 xref:xref-neighborhood-queries[交叉引用邻域查询]。修改后的质量检查来自 xref:quality-audit-queries[质量审计查询]。
+
+=== 直接回源边界
+
+TTL 中的 `aat:relativePath`、`aat:startLine` 和 `aat:endLine` 指向聚合 adoc。该路径通常位于：
+
+[source,text]
+----
+build/adoc/books/<book-id>.adoc
+----
+
+聚合 adoc 是构建产物。它可以打开阅读，但不应手写修改。
+
+当前工作流不直接返回原始拆分文件路径。原始文件定位需要使用查询结果提供的 headline、selector、raw 片段或附近文本，再到源书稿目录搜索。
+
+=== 查询后阅读
+
+作者拿到查询结果后，先打开聚合 adoc 对应行范围：
+
+[source,text]
+----
+path:  build/adoc/books/<book-id>.adoc
+start: 191
+end:   193
+----
+
+聚合 adoc 提供全书线性上下文。作者可以在该文件中确认标题、段落、引用和附近文本。
+
+=== 原始书稿搜索回退
+
+原始书稿搜索使用 `rg`。搜索范围应限制在当前书籍目录或当前项目 docs 目录内。
+
+按 headline 搜索：
+
+[source,bash]
+----
+rg -n "引用坐标" docs/books/<book-id>
+----
+
+按 raw 片段搜索：
+
+[source,bash]
+----
+rg -n "参考坐标列于" docs/books/<book-id>
+----
+
+按 selector 或 xref raw 搜索：
+
+[source,bash]
+----
+rg -n "<<target-selector>>|target-selector" docs/books/<book-id>
+----
+
+搜索结果定位到原始拆分文件后，作者修改源文件，而不是修改 `build/adoc/` 下的聚合文件。
+
+=== 修改后刷新
+
+修改源书稿后，工作流必须刷新：
+
+[source,bash]
+----
+cd docs/bookshelf
+pnpm build
+
+asciidoc-abundant-tree \
+  build/adoc/books/<book-id>.adoc \
+  --format rdf12 \
+  > build/adoc/books/<book-id>.adoc.ttl
+
+riot --validate build/adoc/books/<book-id>.adoc.ttl
+arq --data build/adoc/books/<book-id>.adoc.ttl --query <(cat <<'SPARQL'
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?sourceHeadline ?selector ?raw ?path ?start ?col WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetSelector ?selector ;
+        aat:raw ?raw ;
+        aat:relativePath ?path ;
+        aat:startLine ?start ;
+        aat:startColumn ?col .
+  ?source aat:headline ?sourceHeadline .
+  FILTER NOT EXISTS { ?edge aat:targetHeading ?target . }
+  FILTER NOT EXISTS { ?edge aat:candidateHeading ?candidate . }
+}
+ORDER BY ?path ?start ?col
+SPARQL
+)
+----
+
+刷新后的查询结果才代表当前书稿事实。
+
+=== 修改前邻域检查
+
+修改一个被大量引用的标题前，应先查询它的反向邻域和入度。
+
+反向邻域说明哪些标题引用它。入度说明它在交叉引用网络中的汇聚程度。入度高的标题修改 headline、address label 或章节位置时，应检查引用 selector 是否仍然成立。
+
+=== 修改后审计
+
+修改后至少运行以下查询：
+
+* 来源文件确认。
+* 全书骨架。
+* 未绑定引用。
+* 多义引用。
+* 目标标题的反向引用。
+
+这些查询构成轻量审计闭环。它们不证明书稿内容正确，但能发现结构和引用层面的常见破坏。
