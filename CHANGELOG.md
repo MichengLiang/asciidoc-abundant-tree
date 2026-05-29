@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.1.7 - 2026-05-29
+
+### Fixed
+
+- Aligned the RDF 1.2 provenance projection entity with the heading projection contract by emitting `aat:HeadingProjection`.
+- Removed `aat:AsciiDocDocument` and `aat:AbundantDocument` from the public RDF graph while keeping the runtime projection result fields for compatibility.
+- Synchronized the provenance, query-contract, serializer, and README coverage with the current heading projection contract.
+
 ## 0.1.6 - 2026-05-28
 
 ### Fixed
