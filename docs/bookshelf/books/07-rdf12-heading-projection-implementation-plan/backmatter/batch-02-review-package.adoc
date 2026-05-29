@@ -6,7 +6,7 @@
 [horizontal]
 批次编号:: `Batch 02`
 批次名称:: `标题结构边`
-提交 hash:: `ac811e44ad81ca9f9119f4f7e3730b0d7f25eb98`
+提交 hash:: `d10a0a712fd023a0bf6b9a44d4e00fb1fa97c989`
 执行者:: `Codex`
 审核者:: `待审核者填写`
 审核状态:: `待审核`
@@ -34,6 +34,7 @@ docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/
 - 不生成 root aat:containsDirectly 我是3级标题。
 - 生成 运力规则 aat:previousSibling 配送策略。
 - 不生成 我是3级标题 aat:previousSibling 运力规则。
+- 无 document title heading 时，不生成虚拟 parent containsDirectly；顶层同级标题仍生成 previousSibling。
 - containment.test.ts 覆盖 containsDirectly 两端均为 aat:Heading，且旧 Paragraph/ListingBlock/TableBlock/AnchorTarget 类型不作为结构边对象出现。
 - query-contracts.test.ts 覆盖 public rdf12 roundtrip 后的直接子标题查询和 CLI Turtle 中递归子树查询。
 - heading-projection.acceptance.test.ts 中 Batch 02 结构边断言解除 expected-fail；Batch 04、Batch 05、Batch 06 和 Batch 07 仍保持 expected-fail。
@@ -56,11 +57,11 @@ docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/
 ----
 RED:
 pnpm exec vitest run test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
-结果：FAIL。3 test files failed；6 tests failed。失败点为缺少 containsDirectly、previousSibling、直接子标题查询和递归子树查询结果。
+结果：FAIL。初始 Batch 02 RED 为 3 test files failed、6 tests failed，失败点为缺少 containsDirectly、previousSibling、直接子标题查询和递归子树查询结果。打回返工 RED 为 containment.test.ts 中 no-document-title 顶层 sibling case 失败，第二个顶层 heading 缺少 previousSibling。
 
 GREEN:
 pnpm exec vitest run test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
-结果：PASS。3 test files passed，9 passed tests，4 expected fail tests。
+结果：PASS。3 test files passed，10 passed tests，4 expected fail tests。
 ----
 
 === 已运行命令
@@ -77,7 +78,7 @@ pnpm test -- test/rdf12-projection/containment.test.ts test/rdf12-projection/que
 
 [source,text]
 ----
-pnpm exec vitest run test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, 3 test files passed, 9 passed tests, 4 expected fail tests.
+pnpm exec vitest run test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, 3 test files passed, 10 passed tests, 4 expected fail tests.
 pnpm typecheck: PASS.
 pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/structure-projector.ts test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, Biome checked 4 files with no fixes applied.
 pnpm test -- test/rdf12-projection/containment.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL. 该 package script 实际运行整个 test/rdf12-projection suite；结果为 7 failed files、30 passed files、20 failed tests、217 passed tests、4 expected fail tests。失败集中在 Batch 03+ 未迁移旧契约：labels、attributes、payload、selector-binding、xref、reference-links 等旧 Section/Listing/Anchor/payload/xref 预期。
@@ -93,6 +94,7 @@ pnpm test -- test/rdf12-projection/containment.test.ts test/rdf12-projection/que
 * 本批测试覆盖了正向结构边事实。
 * 本批测试覆盖了 `root` 不直接 contains `我是3级标题`。
 * 本批测试覆盖了 `我是3级标题` 不以 `运力规则` 为 previousSibling。
+* 本批测试覆盖了无 document title heading 时顶层 siblings 生成 previousSibling，且不生成虚拟 containsDirectly。
 * 本批 public graph 与 06 号书标题结构对象语言一致。
 
 === 审核结论
@@ -100,4 +102,4 @@ pnpm test -- test/rdf12-projection/containment.test.ts test/rdf12-projection/que
 [horizontal]
 结论:: `待审核`
 理由:: `执行者已提交 Batch 02 标题结构边实现，审核者尚未确认通过。`
-后续动作:: `审核者检查 containsDirectly 两端均为 heading、previousSibling 不跨父级、root 不直接包含嵌套三级标题。`
+后续动作:: `审核者检查 containsDirectly 两端均为 heading、previousSibling 不跨父级、root 不直接包含嵌套三级标题、无 document title 时顶层 sibling 不引入虚拟 parent contains。`
