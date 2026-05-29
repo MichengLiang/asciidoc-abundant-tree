@@ -1,0 +1,111 @@
+[#batch-03-review-package]
+== Batch 03 审核包：标题 Label 空间与 Selector Binding
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 03`
+批次名称:: `标题 Label 空间与 Selector Binding`
+提交 hash:: `69ed418645dda07d00c6286601f506dcdf613c12`
+执行者:: `Codex`
+审核者:: `待定`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/rdf12-projection/label-catalog.ts
+src/rdf12-projection/labels.ts
+test/rdf12-projection/labels.test.ts
+test/rdf12-projection/selector-binding.test.ts
+test/rdf12-projection/interdocument.acceptance.test.ts
+test/rdf12-projection/heading-projection.acceptance.test.ts
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-03-review-package.adoc
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- label catalog entry 收敛为 heading owner、labelKind 和 value。
+- projectLabels 从 node-index entries() 建立 heading-only label catalog。
+- document title headline 绑定到 document title heading IRI。
+- section headline 绑定到对应 heading IRI。
+- source ID 绑定为 addressLabel selector。
+- Asciidoctor generated ID 绑定为 generatedAddressLabel selector。
+- public graph 不再输出 TitleLabel、AddressLabel、GeneratedAddressLabel、BlockTitleLabel、AnchorLabel、ReftextLabel、XrefDisplayLabel 或 RoleLabel resource。
+- public graph 不再输出 aat:hasLabel。
+- selector binding 只通过 heading label catalog 返回 heading IRI。
+- duplicate selector 返回全部 candidate headings，不选择第一个 candidate。
+- unbound selector 保留 unresolved literal，不生成虚构 target。
+- listing ID、table ID、inline anchor ID、xref display text、role、payload ID、raw text 和 heading IRI 不进入 selector label catalog。
+- external xref selector 不触发外部文件读取。
+- heading-projection.acceptance.test.ts 中 Batch 03 label/selector 断言为普通 passing test；Batch 04、Batch 05、Batch 06 和 Batch 07 仍保持 expected-fail。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- rel:* xref relation、aat:XrefEdge 和 RDF 1.2 reifier 目标形态：归属 Batch 04。
+- sourceHeading/targetHeading/candidateHeading 等 xref edge evidence 目标谓词迁移：归属 Batch 04。
+- kind/status/owner/weight 等直接字段谓词：归属 Batch 05。
+- 节点 payload 和边 payload complex property：归属 Batch 06。
+- public 契约最终清理和旧测试整体迁移：归属 Batch 07。
+----
+
+=== TDD 证据
+
+[source,text]
+----
+RED:
+pnpm exec vitest run test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：FAIL。4 test files 中 3 failed，9 tests failed，失败点为 document title label 仍绑定 document IRI、label resource/rdf:value/hasLabel 仍存在、catalog 仍包含 xref display/role/TargetNode/listing/table/anchor/payload 等非 heading owner、duplicate headline 未返回 ambiguous。
+
+GREEN:
+pnpm exec vitest run test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：PASS。4 test files passed，22 passed tests，4 expected fail tests。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm exec vitest run test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/label-catalog.ts src/rdf12-projection/labels.ts test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm test -- test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm exec vitest run test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, 4 test files passed, 22 passed tests, 4 expected fail tests.
+pnpm typecheck: PASS.
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/label-catalog.ts src/rdf12-projection/labels.ts test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, Biome checked 6 files with no fixes applied.
+pnpm test -- test/rdf12-projection/labels.test.ts test/rdf12-projection/selector-binding.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL. 该 package script 实际运行整个 test/rdf12-projection suite；结果为 5 failed files、32 passed files、16 failed tests、221 passed tests、4 expected fail tests。失败集中在 Batch 04+ 和旧 contract 测试：attributes、payload-projector、payload.acceptance、xref-projector、reference-links.acceptance 仍期待旧 Section/Listing/Anchor/payload/xref label resource 或旧 xref contract。
+----
+
+=== 规约检查清单
+
+* 本批没有修改批次边界外 runtime 文件。
+* 本批没有修改 `src/metadata-parser.ts`、`src/binding-merge.ts` 或 `src/parser.ts`。
+* 本批没有修改 `src/rdf12-projection/xref-projector.ts` 或 `src/rdf12-projection/payload-projector.ts`。
+* 本批没有生成 Batch 04 xref relation triple、`aat:XrefEdge` 或 reifier。
+* 本批没有生成 Batch 05 direct field predicates。
+* 本批没有生成 Batch 06 payload complex property binding。
+* 本批 public graph 不包含 label resource type。
+* 本批 selector binding 只查询 heading label catalog。
+* 本批测试覆盖了正向 heading label 绑定事实。
+* 本批测试覆盖了 listing/table/anchor/role/payload/raw/IRI 不参与 selector binding 的负向事实。
+* 本批 public graph 与 06 号书 Batch 03 对象语言一致。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: `执行者提交 Batch 03 实现与测试，等待审核者确认 catalog owner 集合只包含 heading，且 label value 没有进入 resource IRI。`
+后续动作:: `审核通过后进入 Batch 04；若审核打回，则返工 Batch 03。`
