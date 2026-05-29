@@ -4,7 +4,10 @@ import { runCli } from "../../src/cli";
 import { parseAbundantTree, rdf12 } from "../../src/index";
 import type { Rdf12Graph } from "../../src/rdf12-projection/graph";
 import { assertRdf12GraphsEquivalent } from "../../src/rdf12-projection/graph-canonicalization";
-import { stringLiteral } from "../../src/rdf12-projection/literals";
+import {
+	integerLiteral,
+	stringLiteral,
+} from "../../src/rdf12-projection/literals";
 import { parseTurtleToRdf12Graph } from "../../src/rdf12-projection/n3-adapter";
 import {
 	type Rdf12IriTerm,
@@ -13,6 +16,7 @@ import {
 } from "../../src/rdf12-projection/terms";
 import {
 	aatTerm,
+	expectLiteralValue,
 	expectResourceTypeCount,
 	expectTriple,
 	rdfTerm,
@@ -41,6 +45,18 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			assertRdf12GraphsEquivalent(result.graph, parsed),
 		).not.toThrow();
 		expectResourceTypeCount(parsed, aatTerm("Heading"), 4);
+		expectHeadingByAddressLabel(parsed, "delivery-policy", "配送策略", 5, 40);
+		expectHeadingByHeadline(parsed, "运力规则", 41, 45);
+		expectHeadingRaw(
+			parsed,
+			"capacity-rule",
+			`[#capacity-rule.section, kind=rule, status=active]
+== 运力规则
+
+运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
+
+`,
+		);
 		expectDirectChildren(parsed, heading("heading-l1-o0"), [
 			heading("heading-l5-o0"),
 			heading("heading-l41-o0"),
@@ -144,6 +160,79 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			aatTerm("payloadKind"),
 			stringLiteral("edge"),
 		);
+		expectTriple(
+			graph,
+			edgePayload,
+			aatTerm("payloadId"),
+			stringLiteral("rel-delivery-capacity"),
+		);
+	});
+
+	it("supports direct field predicate queries on headings", () => {
+		const result = rdf12(
+			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+		const graph = parseTurtleToRdf12Graph(result.ttl);
+		const heading = headingLookupFromGraph(graph);
+		const deliveryPolicy = heading("配送策略");
+
+		expectTriple(
+			graph,
+			deliveryPolicy,
+			aatTerm("kind"),
+			stringLiteral("policy"),
+		);
+		expectTriple(
+			graph,
+			deliveryPolicy,
+			aatTerm("status"),
+			stringLiteral("active"),
+		);
+		expectTriple(graph, deliveryPolicy, aatTerm("owner"), stringLiteral("ops"));
+	});
+
+	it("does not expose old RDF12 public contract types or predicates", () => {
+		const result = rdf12(
+			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+		const graph = parseTurtleToRdf12Graph(result.ttl);
+
+		for (const oldType of [
+			"Paragraph",
+			"ListingBlock",
+			"TableBlock",
+			"AnchorTarget",
+			"PayloadBlock",
+			"SurfaceAttribute",
+			"TitleLabel",
+			"AddressLabel",
+			"GeneratedAddressLabel",
+			"BlockTitleLabel",
+			"AnchorLabel",
+			"ReftextLabel",
+			"XrefDisplayLabel",
+			"RoleLabel",
+			"XrefOccurrence",
+		]) {
+			expectResourceTypeCount(graph, aatTerm(oldType), 0);
+		}
+		for (const oldPredicate of [
+			"hasAttribute",
+			"hasLabel",
+			"hasPayload",
+			"payloadOf",
+			"sourceNode",
+			"targetNode",
+			"rawRel",
+		]) {
+			expect(graph.match({ predicate: aatTerm(oldPredicate) })).toHaveLength(0);
+		}
 		expect(
 			graph.match({
 				predicate: rdfTerm("type"),
@@ -152,6 +241,71 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		).toHaveLength(0);
 	});
 });
+
+function expectHeadingByAddressLabel(
+	graph: Rdf12Graph,
+	addressLabel: string,
+	headline: string,
+	startLine: number,
+	endLine: number,
+): void {
+	const heading = onlySubjectWithLiteral(
+		graph,
+		aatTerm("addressLabel"),
+		addressLabel,
+	);
+
+	expectTriple(graph, heading, rdfTerm("type"), aatTerm("Heading"));
+	expectLiteralValue(graph, heading, aatTerm("headline"), headline);
+	expectLiteralValue(
+		graph,
+		heading,
+		aatTerm("relativePath"),
+		"samples/structural-payload.adoc",
+	);
+	expectTriple(graph, heading, aatTerm("startLine"), integerLiteral(startLine));
+	expectTriple(graph, heading, aatTerm("endLine"), integerLiteral(endLine));
+}
+
+function expectHeadingByHeadline(
+	graph: Rdf12Graph,
+	headline: string,
+	startLine: number,
+	endLine: number,
+): void {
+	const heading = headingLookupFromGraph(graph)(headline);
+
+	expectTriple(graph, heading, rdfTerm("type"), aatTerm("Heading"));
+	expectTriple(graph, heading, aatTerm("startLine"), integerLiteral(startLine));
+	expectTriple(graph, heading, aatTerm("endLine"), integerLiteral(endLine));
+}
+
+function expectHeadingRaw(
+	graph: Rdf12Graph,
+	addressLabel: string,
+	raw: string,
+): void {
+	const heading = onlySubjectWithLiteral(
+		graph,
+		aatTerm("addressLabel"),
+		addressLabel,
+	);
+
+	expectTriple(graph, heading, aatTerm("raw"), stringLiteral(raw));
+}
+
+function onlySubjectWithLiteral(
+	graph: Rdf12Graph,
+	predicate: Rdf12IriTerm,
+	value: string,
+): Rdf12IriTerm {
+	const subjects = graph
+		.match({ predicate, object: stringLiteral(value) })
+		.map((triple) => triple.subject);
+
+	expect(subjects).toHaveLength(1);
+	return subjects[0] ?? termIri("");
+}
 
 function headingLookup(documentIri: string): (localId: string) => Rdf12IriTerm {
 	const base = documentIri.slice(0, documentIri.indexOf("#"));

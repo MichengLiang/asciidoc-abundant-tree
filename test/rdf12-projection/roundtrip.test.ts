@@ -59,7 +59,7 @@ describe("rdf12 Turtle roundtrip", () => {
 		expect(
 			parsed.has(
 				rdf12Triple(
-					iriTerm("urn:aat:doc:test#xref-l10-c60-o0"),
+					iriTerm("urn:aat:doc:test#xref-edge-l10-c60-o0"),
 					iriTerm(`${namespaces.aat}startLine`),
 					integerLiteral(10),
 				),
@@ -68,8 +68,8 @@ describe("rdf12 Turtle roundtrip", () => {
 		expect(
 			parsed.has(
 				rdf12Triple(
-					iriTerm("urn:aat:doc:test#label-l10-o0"),
-					iriTerm(`${namespaces.rdf}value`),
+					iriTerm("urn:aat:doc:test#heading-l10-o0"),
+					iriTerm(`${namespaces.aat}headline`),
 					stringLiteral("3. 核心引擎设计"),
 				),
 			),
@@ -78,7 +78,7 @@ describe("rdf12 Turtle roundtrip", () => {
 			parsed.has(
 				rdf12Triple(
 					iriTerm("urn:aat:doc:test#payload-l20-o0"),
-					iriTerm(`${namespaces.aat}sourceText`),
+					iriTerm(`${namespaces.aat}raw`),
 					stringLiteral('first line\nsecond "quoted" line \\ path'),
 				),
 			),
@@ -88,7 +88,7 @@ describe("rdf12 Turtle roundtrip", () => {
 	it("roundtrips language-tagged literals through the adapter boundary", () => {
 		const turtle = `
 @prefix rdf: <${namespaces.rdf}> .
-<urn:aat:doc:test#label-l1-o0> rdf:value "bonjour"@fr .
+<urn:aat:doc:test#heading-l1-o0> <${namespaces.aat}headline> "bonjour"@fr .
 `;
 
 		const parsed = parseTurtleToRdf12Graph(turtle);
@@ -96,8 +96,8 @@ describe("rdf12 Turtle roundtrip", () => {
 		expect(
 			parsed.has(
 				rdf12Triple(
-					iriTerm("urn:aat:doc:test#label-l1-o0"),
-					iriTerm(`${namespaces.rdf}value`),
+					iriTerm("urn:aat:doc:test#heading-l1-o0"),
+					iriTerm(`${namespaces.aat}headline`),
 					{
 						termType: "literal",
 						value: "bonjour",
@@ -162,10 +162,10 @@ describe("rdf12 Turtle roundtrip", () => {
 
 function testProjection(): Rdf12Projection {
 	const graph = createRdf12Graph();
-	const source = iriTerm("urn:aat:doc:test#section-l1-o0");
-	const target = iriTerm("urn:aat:doc:test#section-l3-o0");
+	const source = iriTerm("urn:aat:doc:test#heading-l1-o0");
+	const target = iriTerm("urn:aat:doc:test#heading-l3-o0");
 	const references = iriTerm(`${namespaces.aat}references`);
-	const xref = iriTerm("urn:aat:doc:test#xref-l10-c60-o0");
+	const xref = iriTerm("urn:aat:doc:test#xref-edge-l10-c60-o0");
 	const relation = rdf12Triple(source, references, target);
 
 	graph.add(relation);
@@ -185,15 +185,15 @@ function testProjection(): Rdf12Projection {
 	);
 	graph.add(
 		rdf12Triple(
-			iriTerm("urn:aat:doc:test#label-l10-o0"),
-			iriTerm(`${namespaces.rdf}value`),
+			iriTerm("urn:aat:doc:test#heading-l10-o0"),
+			iriTerm(`${namespaces.aat}headline`),
 			stringLiteral("3. 核心引擎设计"),
 		),
 	);
 	graph.add(
 		rdf12Triple(
 			iriTerm("urn:aat:doc:test#payload-l20-o0"),
-			iriTerm(`${namespaces.aat}sourceText`),
+			iriTerm(`${namespaces.aat}raw`),
 			stringLiteral('first line\nsecond "quoted" line \\ path'),
 		),
 	);

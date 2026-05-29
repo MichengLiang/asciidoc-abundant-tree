@@ -9,8 +9,9 @@ This project uses semantic versioning after `0.1.0`.
 ### Fixed
 
 - Parsed shorthand attribute lists such as `[#delivery-policy.section, kind=policy]` as structured attrlists, preserving the explicit ID, role token, and named attributes separately.
-- Restored RDF `AddressLabel` projection for explicit IDs carried by attrlist shorthand metadata, including section resources and payload block resources.
-- Preserved node surface attributes and payload bindings for the structural payload sample, including node payload `for` binding and xref `payload` selector binding.
+- Finalized the RDF 1.2 public graph as a heading projection: heading nodes now carry direct label fields, line slices, containment, sibling order, xref edge evidence, RDF 1.2 reifiers, direct field predicates, and payload complex property objects.
+- Removed legacy RDF 1.2 public contract surfaces for structural block resources, label resources, surface attribute resources, xref occurrence resources, and payload block resources.
+- Preserved node payload `for` binding and xref `payload` selector binding through `aat:payload` complex property objects while keeping payload raw text opaque.
 
 ### Added
 

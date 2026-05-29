@@ -39,7 +39,7 @@ describe("rdf12 interdocument xref acceptance", () => {
 			expect(
 				projection.graph.match({
 					subject: iriTerm(xref),
-					predicate: iriTerm(`${namespaces.aat}targetNode`),
+					predicate: iriTerm(`${namespaces.aat}targetHeading`),
 				}),
 			).toHaveLength(0);
 			expect(
@@ -69,7 +69,7 @@ describe("rdf12 interdocument xref acceptance", () => {
 				(xref) =>
 					projection.graph.match({
 						subject: iriTerm(xref),
-						predicate: iriTerm(`${namespaces.aat}targetNode`),
+						predicate: iriTerm(`${namespaces.aat}targetHeading`),
 					}),
 			),
 		).toHaveLength(0);
@@ -98,7 +98,7 @@ function xrefsWithSelector(graph: Rdf12Graph, selector: string): string[] {
 				rdf12Triple(
 					triple.subject,
 					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}XrefOccurrence`),
+					iriTerm(`${namespaces.aat}XrefEdge`),
 				),
 			),
 		)
