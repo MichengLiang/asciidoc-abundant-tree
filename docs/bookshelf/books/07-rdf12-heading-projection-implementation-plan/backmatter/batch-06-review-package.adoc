@@ -8,8 +8,8 @@
 批次名称:: `Payload 复杂属性`
 提交 hash:: `c1b3ecac0b1d40238439af5dada49517ce312e72`
 执行者:: `Codex`
-审核者:: `待定`
-审核状态:: `待审核`
+审核者:: `Codex`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -67,7 +67,7 @@ pnpm exec vitest run test/rdf12-projection/payload-projector.test.ts test/rdf12-
 
 GREEN:
 pnpm exec vitest run test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
-结果：PASS。4 test files passed，25 passed tests。
+结果：PASS。4 test files passed，28 passed tests。初始实现通过 25 tests；两轮返工新增无 id payload 与 secondary declared id selector 回归覆盖后通过 28 tests。
 ----
 
 === 已运行命令
@@ -84,8 +84,8 @@ pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/payload-p
 
 [source,text]
 ----
-pnpm test -- test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL。package script 实际运行 vitest run -- <files> 后仍收集 38 test files；37 passed，1 failed，243 passed tests，3 failed tests。失败文件为 test/rdf12-projection/interdocument.acceptance.test.ts，仍使用旧 XrefOccurrence 查询面，归属 Batch 07。
-pnpm exec vitest run test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS。4 test files passed，25 passed tests。
+pnpm test -- test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL。package script 实际运行 vitest run -- <files> 后仍收集 38 test files；37 passed，1 failed，246 passed tests，3 failed tests。失败文件为 test/rdf12-projection/interdocument.acceptance.test.ts，仍使用旧 XrefOccurrence 查询面，归属 Batch 07。
+pnpm exec vitest run test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS。4 test files passed，28 passed tests。
 pnpm typecheck: PASS。
 pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/payload-projector.ts test/rdf12-projection/payload-projector.test.ts test/rdf12-projection/payload.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/reference-links.acceptance.test.ts: PASS，Biome checked 6 files with no fixes applied。
 ----
@@ -109,6 +109,6 @@ pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/payload-p
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: `执行者提交 Batch 06 实现与返工测试，等待审核者确认 payload complex property object 替代 PayloadBlock/hasPayload/payloadOf，payload raw 保持 opaque，public payload object 必有 payloadId，且 secondary declared ids 可作为 payload selectors。`
-后续动作:: `审核通过后进入 Batch 07；若审核打回，则返工 Batch 06。`
+结论:: `通过`
+理由:: `已确认 payload 投影为 heading 或 xref edge evidence 上的 aat:payload complex property object；公共图不输出 PayloadBlock、hasPayload 或 payloadOf；node payload 只连接 heading，edge payload 只连接 xref edge evidence；payload raw 保持 opaque；payload id 不进入 payload object IRI；无 id payload 不生成 public payload object；unbound、ambiguous 与 secondary declared id selector 路径均有覆盖。`
+后续动作:: `进入 Batch 07，处理 interdocument acceptance 旧 XrefOccurrence 查询面、公共契约最终清理和最终门禁。`
