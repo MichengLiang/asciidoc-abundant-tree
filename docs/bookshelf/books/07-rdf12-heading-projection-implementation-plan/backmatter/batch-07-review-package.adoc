@@ -8,8 +8,8 @@
 批次名称:: `公共契约与最终门禁`
 提交 hash:: `49a7c602997f35aabcad493ecb792064ef599edd`
 执行者:: `Codex`
-审核者:: `待定`
-审核状态:: `待审核`
+审核者:: `Codex`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -93,13 +93,13 @@ pnpm test -- test/rdf12-projection: PASS。package script 实际收集 38 test f
 pnpm test -- test/cli.test.ts: PASS。package script 实际收集 38 test files；38 passed，251 tests passed。
 pnpm typecheck: PASS。
 pnpm exec biome check --vcs-use-ignore-file=false test/rdf12-projection/heading-projection.acceptance.test.ts test/rdf12-projection/interdocument.acceptance.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/roundtrip.test.ts: PASS，Biome checked 4 files with no fixes applied。
-pnpm lint: PASS。首次运行因 ignored tmp/structural-payload-current.json 格式失败；该 tmp 文件按工作区规则为 disposable，已机械格式化且未纳入提交。重跑 PASS，Biome checked 160 files with no fixes applied。
+pnpm lint: PASS。执行者首次运行因 ignored tmp/structural-payload-current.json 格式失败；该 tmp 文件按工作区规则为 disposable，已机械格式化且未纳入提交。审核者重跑 PASS，Biome checked 164 files with no fixes applied；聚合 pnpm check 中 lint PASS，Biome checked 166 files with no fixes applied。
 pnpm build: PASS。
 pnpm pack:check: PASS。publint all good；npm pack --dry-run 仅输出 npm config warnings。
 pnpm smoke:cli: PASS。
 pnpm --dir docs/bookshelf test: PASS。11 tests passed。
 pnpm --dir docs/bookshelf run build: PASS。
-pnpm check: PASS。lint、typecheck、test、pack:check、smoke:cli 全部通过。
+pnpm check: PASS。lint、typecheck、test、pack:check、smoke:cli 全部通过；其中 test 收集 38 test files，251 tests passed。
 ----
 
 === 规约检查清单
@@ -117,6 +117,6 @@ pnpm check: PASS。lint、typecheck、test、pack:check、smoke:cli 全部通过
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: `执行者提交 Batch 07 公共契约清理、查询契约更新、文档更新与最终门禁结果，等待审核者从 public API、CLI、Turtle、JSON-LD 和 graph tests 五个表面确认同一标题投影对象。`
-后续动作:: `审核者通过后，本计划完成；若审核打回，则返工 Batch 07。`
+结论:: `通过`
+理由:: `已从 public API、CLI、Turtle roundtrip、JSON-LD shape 和 graph/query contract tests 五个表面确认同一标题投影对象；迁移期 expected-fail wrapper 已删除；interdocument xref 查询面已迁移到 XrefEdge；最终负门禁覆盖旧结构类型、label resource、SurfaceAttribute、PayloadBlock、XrefOccurrence 和旧谓词；README 与 CHANGELOG 不再把旧结构图描述为当前 RDF12 public graph。`
+后续动作:: `07 号 RDF12 heading projection implementation plan 完成。`

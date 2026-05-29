@@ -51,7 +51,7 @@
 
 |Batch 07
 |公共契约与最终门禁
-|待审核
+|通过
 |49a7c602997f35aabcad493ecb792064ef599edd
 |xref:batch-07-review-package[Batch 07 审核包]
 |===
