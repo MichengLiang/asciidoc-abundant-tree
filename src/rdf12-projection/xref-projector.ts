@@ -4,6 +4,7 @@ import { rdf12TermKey, rdf12Triple } from "./graph";
 import type { Rdf12LabelCatalog } from "./label-catalog";
 import { stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
+import type { Rdf12NodeIndex, Rdf12NodeIndexEntry } from "./node-index";
 import type { NormalizedRdf12Options } from "./options";
 import { addReifierTriple } from "./reifier";
 import { mapRelationPredicate } from "./relation-predicate";
@@ -25,6 +26,7 @@ export type ProjectXrefResourcesInput = {
 	readonly documentIri: Rdf12IriTerm;
 	readonly relativePath: string;
 	readonly labelCatalog: Rdf12LabelCatalog;
+	readonly nodeIndex: Rdf12NodeIndex;
 };
 
 export type Rdf12XrefIndexEntry = {
@@ -259,8 +261,8 @@ function writeSourceBinding(
 		"sourceSelector",
 		xref.containingSectionId,
 	);
-	const result = bindSelector(context.labelCatalog, xref.containingSectionId);
-	if (result.status !== "bound") {
+	const sourceHeading = sourceHeadingForXref(context.nodeIndex, xref);
+	if (sourceHeading === undefined) {
 		return undefined;
 	}
 
@@ -268,10 +270,44 @@ function writeSourceBinding(
 		rdf12Triple(
 			xrefIri,
 			iriTerm(`${namespaces.aat}sourceHeading`),
-			result.target,
+			sourceHeading,
 		),
 	);
-	return result.target;
+	return sourceHeading;
+}
+
+function sourceHeadingForXref(
+	nodeIndex: Rdf12NodeIndex,
+	xref: XrefOccurrenceNode,
+): Rdf12IriTerm | undefined {
+	if (xref.sourceSpan === undefined) {
+		return undefined;
+	}
+
+	const line = xref.sourceSpan.start.line;
+	const candidates = nodeIndex
+		.entries()
+		.filter((entry) => containsLine(entry, line))
+		.toSorted(compareInnermostHeading);
+
+	return candidates[0]?.iri;
+}
+
+function containsLine(entry: Rdf12NodeIndexEntry, line: number): boolean {
+	return entry.startLine <= line && line <= entry.endLine;
+}
+
+function compareInnermostHeading(
+	left: Rdf12NodeIndexEntry,
+	right: Rdf12NodeIndexEntry,
+): number {
+	const leftSpan = left.endLine - left.startLine;
+	const rightSpan = right.endLine - right.startLine;
+	if (leftSpan !== rightSpan) {
+		return leftSpan - rightSpan;
+	}
+
+	return right.startLine - left.startLine;
 }
 
 function writeTargetBinding(

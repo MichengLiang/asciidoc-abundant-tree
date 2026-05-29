@@ -240,6 +240,34 @@ describe("rdf12 xref edge projection", () => {
 		).toHaveLength(0);
 	});
 
+	it("resolves source heading from containing slice when source labels are ambiguous", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			duplicateSourceLabelDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const edge = onlyXrefEdge(projection.graph);
+		const actualSource = heading(projection.documentIri, "heading-l4-o0");
+		const otherDuplicate = heading(projection.documentIri, "heading-l1-o0");
+		const target = heading(projection.documentIri, "heading-l8-o0");
+		const relation = rdf12Triple(
+			actualSource,
+			iriTerm(`${namespaces.aat}references`),
+			target,
+		);
+
+		expectTriple(projection.graph, edge, "sourceHeading", actualSource);
+		expectTriple(projection.graph, edge, "targetHeading", target);
+		expect(
+			projection.graph.match({
+				subject: iriTerm(edge),
+				predicate: iriTerm(`${namespaces.aat}sourceHeading`),
+				object: otherDuplicate,
+			}),
+		).toHaveLength(0);
+		expect(projection.graph.has(relation)).toBe(true);
+		expectTripleTerm(projection.graph, edge, relation);
+	});
+
 	it("maps rel control fields and preserves payload selectors", () => {
 		const projection = projectAbundantDocumentToRdf12(relPayloadDocument(), {
 			documentRoot: projectRoot,
@@ -589,35 +617,77 @@ function ambiguousDocument(): AbundantDocument {
 	};
 }
 
+function duplicateSourceLabelDocument(): AbundantDocument {
+	return {
+		...baseDocument(),
+		children: [
+			sectionNode(1, "dup", "First"),
+			sectionNode(
+				4,
+				"dup",
+				"Second",
+				[
+					{
+						kind: "paragraph",
+						text: "Second points to target.",
+						source: { span: { startLine: 6, endLine: 6 } },
+						children: [
+							{
+								kind: "xref",
+								syntax: "shorthand",
+								raw: "<<target>>",
+								target: "target",
+								containingSectionId: "dup",
+								sourceSpan: {
+									start: { line: 6, column: 1 },
+									end: { line: 6, column: 11 },
+								},
+							},
+						],
+					},
+				],
+				7,
+			),
+			sectionNode(8, "target", "Target"),
+		],
+	};
+}
+
 function relPayloadDocument(): AbundantDocument {
 	return {
 		...baseDocument(),
 		children: [
-			sectionNode(1, "target", "Target", [
-				{
-					kind: "paragraph",
-					text: "Rel target.",
-					source: { span: { startLine: 4, endLine: 4 } },
-					children: [
-						{
-							kind: "xref",
-							syntax: "macro",
-							raw: "xref:target[Target, rel=depends-on, payload=payload-one]",
-							target: "target",
-							label: "Target",
-							containingSectionId: "target",
-							attributes: {
-								rel: "depends-on",
-								payload: "payload-one",
+			sectionNode(
+				1,
+				"target",
+				"Target",
+				[
+					{
+						kind: "paragraph",
+						text: "Rel target.",
+						source: { span: { startLine: 4, endLine: 4 } },
+						children: [
+							{
+								kind: "xref",
+								syntax: "macro",
+								raw: "xref:target[Target, rel=depends-on, payload=payload-one]",
+								target: "target",
+								label: "Target",
+								containingSectionId: "target",
+								attributes: {
+									rel: "depends-on",
+									payload: "payload-one",
+								},
+								sourceSpan: {
+									start: { line: 4, column: 1 },
+									end: { line: 4, column: 56 },
+								},
 							},
-							sourceSpan: {
-								start: { line: 4, column: 1 },
-								end: { line: 4, column: 56 },
-							},
-						},
-					],
-				},
-			]),
+						],
+					},
+				],
+				4,
+			),
 		],
 	};
 }
@@ -626,30 +696,36 @@ function invalidRelDocument(): AbundantDocument {
 	return {
 		...baseDocument(),
 		children: [
-			sectionNode(1, "target", "Target", [
-				{
-					kind: "paragraph",
-					text: "Invalid rel target.",
-					source: { span: { startLine: 4, endLine: 4 } },
-					children: [
-						{
-							kind: "xref",
-							syntax: "macro",
-							raw: "xref:target[Target, rel= bad rel ]",
-							target: "target",
-							label: "Target",
-							containingSectionId: "target",
-							attributes: {
-								rel: " bad rel ",
+			sectionNode(
+				1,
+				"target",
+				"Target",
+				[
+					{
+						kind: "paragraph",
+						text: "Invalid rel target.",
+						source: { span: { startLine: 4, endLine: 4 } },
+						children: [
+							{
+								kind: "xref",
+								syntax: "macro",
+								raw: "xref:target[Target, rel= bad rel ]",
+								target: "target",
+								label: "Target",
+								containingSectionId: "target",
+								attributes: {
+									rel: " bad rel ",
+								},
+								sourceSpan: {
+									start: { line: 4, column: 1 },
+									end: { line: 4, column: 36 },
+								},
 							},
-							sourceSpan: {
-								start: { line: 4, column: 1 },
-								end: { line: 4, column: 36 },
-							},
-						},
-					],
-				},
-			]),
+						],
+					},
+				],
+				4,
+			),
 		],
 	};
 }
@@ -697,6 +773,7 @@ function sectionNode(
 	id: string,
 	title: string,
 	children: AbundantDocument["children"] = [],
+	endLine = startLine + 1,
 ): NonNullable<AbundantDocument["children"][number]> {
 	return {
 		kind: "section",
@@ -704,7 +781,7 @@ function sectionNode(
 		ids: [id],
 		title,
 		idOrigin: "source",
-		span: { startLine, endLine: startLine + 1 },
+		span: { startLine, endLine },
 		metadata: [
 			{
 				kind: "metadata",

@@ -116,6 +116,7 @@ export function projectAbundantDocumentToRdf12(
 		documentIri,
 		relativePath: coordinate.relativePath,
 		labelCatalog,
+		nodeIndex,
 	});
 	projectSurfaceAttributes({
 		graph,
