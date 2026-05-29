@@ -22,13 +22,7 @@ import {
 	termIri,
 } from "./helpers/graph-matchers";
 
-const migrationAllowedFailureCases = new Map([
-	["Batch 06 binds node and edge payload complex properties", "Batch 06"],
-	[
-		"Batch 07 removes old structural resource types from the heading projection public graph",
-		"Batch 07",
-	],
-]);
+const migrationAllowedFailureCases = new Map<string, string>();
 
 // Batch 00 records target assertions before runtime migration. Remove this
 // expected-failure registry entry-by-entry in the removal batch named above.

@@ -157,6 +157,7 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		expect(
 			projection.graph.match({
 				predicate: iriTerm(`${namespaces.aat}payload`),
+				object: stringLiteral("rel-delivery-capacity"),
 			}),
 		).toHaveLength(0);
 		expect(

@@ -8,111 +8,46 @@ import {
 } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
-import { iriTerm } from "../../src/rdf12-projection/terms";
+import { iriTerm, type Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 
 const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
 
 describe("rdf12 payload projection", () => {
-	it("projects payload blocks as opaque resources with address labels", () => {
+	it("projects payload blocks as opaque complex property objects", () => {
 		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
 			documentRoot: projectRoot,
 		});
-		const payload = payloadBySourceText(
+		const payload = onlyPayloadById(projection.graph, "rel-delivery-capacity");
+
+		expectLiteral(projection.graph, payload, "payloadKind", "edge");
+		expectLiteral(projection.graph, payload, "format", "json");
+		expectLiteral(
 			projection.graph,
+			payload,
+			"raw",
 			'{"reason":"risk-control"}',
 		);
-
-		expect(payload).toBeDefined();
-		expectStringTriple(projection.graph, payload ?? "", "payloadKind", "xref");
-		expectStringTriple(projection.graph, payload ?? "", "dataFormat", "json");
-		expectStringTriple(
-			projection.graph,
-			payload ?? "",
-			"sourceText",
-			'{"reason":"risk-control"}',
-		);
-		expectNumberTriple(projection.graph, payload ?? "", "startLine", 8);
-		expectNumberTriple(projection.graph, payload ?? "", "endLine", 12);
-		expectNumberTriple(projection.graph, payload ?? "", "contentStartLine", 11);
-		expectNumberTriple(projection.graph, payload ?? "", "contentEndLine", 11);
-		expectAddressLabel(
-			projection.graph,
-			payload ?? "",
-			"rel-delivery-capacity",
-		);
-		expect(payload ?? "").not.toContain("rel-delivery-capacity");
-	});
-
-	it("keeps payload address labels distinct from listing address labels", () => {
-		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
-			documentRoot: projectRoot,
-		});
-		const payload = payloadBySourceText(
-			projection.graph,
-			'{"reason":"risk-control"}',
-		);
-		const listing = resourceWithLocalId(
-			projection.documentIri,
-			"listing-l8-o0",
-		);
-		const labels = addressLabelsForValue(
-			projection.graph,
-			"rel-delivery-capacity",
-		);
-		const payloadLabels = labels.filter((label) =>
-			hasLabelOwner(projection.graph, payload ?? "", label),
-		);
-		const listingLabels = labels.filter((label) =>
-			hasLabelOwner(projection.graph, listing, label),
-		);
-
-		expect(labels).toHaveLength(2);
-		expect(payloadLabels).toHaveLength(1);
-		expect(listingLabels).toHaveLength(1);
-		expect(payloadLabels[0]).not.toBe(listingLabels[0]);
-		expect(
-			hasLabelOwner(projection.graph, listing, payloadLabels[0] ?? ""),
-		).toBe(false);
-		expect(
-			hasLabelOwner(projection.graph, payload ?? "", listingLabels[0] ?? ""),
-		).toBe(false);
-	});
-
-	it("uses the payload attrlist shorthand id line for payload address labels", () => {
-		const projection = projectAbundantDocumentToRdf12(
-			attrlistShorthandPayloadDocument(),
-			{ documentRoot: projectRoot },
-		);
-		const payload = payloadBySourceText(
-			projection.graph,
-			'{"policy":"active"}',
-		);
-		const label = addressLabelsForValue(
-			projection.graph,
-			"delivery-policy-payload",
-		).find((candidate) =>
-			hasLabelOwner(projection.graph, payload ?? "", candidate),
-		);
-
-		expect(label).toBeDefined();
-		expectNumberTriple(projection.graph, label ?? "", "startLine", 6);
-		expectNumberTriple(projection.graph, label ?? "", "endLine", 6);
+		expectLineSpan(projection.graph, payload, 8, 12);
+		expectInteger(projection.graph, payload, "contentStartLine", 11);
+		expectInteger(projection.graph, payload, "contentEndLine", 11);
+		expect(payload.value).not.toContain("rel-delivery-capacity");
+		expectNoLegacyPayloadContract(projection.graph);
 	});
 
 	it("does not parse payload raw fields into RDF triples", () => {
 		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
 			documentRoot: projectRoot,
 		});
+		const payload = onlyPayloadById(projection.graph, "rel-delivery-capacity");
 
+		expect(projection.graph.match({ predicate: aat("reason") })).toHaveLength(
+			0,
+		);
 		expect(
-			projection.graph
-				.toArray()
-				.some(
-					(triple) =>
-						triple.predicate.value.includes("reason") ||
-						triple.object.value === "risk-control",
-				),
+			projection.graph.has(
+				rdf12Triple(payload, aat("reason"), stringLiteral("risk-control")),
+			),
 		).toBe(false);
 	});
 
@@ -120,113 +55,58 @@ describe("rdf12 payload projection", () => {
 		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
 			documentRoot: projectRoot,
 		});
-		const payload = payloadBySourceText(
-			projection.graph,
-			'{"policy":"active"}',
-		);
-		const section = resourceWithLocalId(
-			projection.documentIri,
-			"section-l1-o0",
-		);
+		const payload = onlyPayloadById(projection.graph, "policy-payload");
+		const sourceHeading = heading(projection.documentIri, "heading-l1-o0");
 
-		expectStringTriple(
-			projection.graph,
-			payload ?? "",
-			"forSelector",
-			"delivery-policy",
-		);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(section),
-					iriTerm(`${namespaces.aat}hasPayload`),
-					iriTerm(payload ?? ""),
-				),
-			),
-		).toBe(true);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(payload ?? ""),
-					iriTerm(`${namespaces.aat}payloadOf`),
-					iriTerm(section),
-				),
-			),
-		).toBe(true);
+		expectLiteral(projection.graph, payload, "payloadKind", "node");
+		expectLiteral(projection.graph, payload, "forSelector", "delivery-policy");
+		expectTriple(projection.graph, sourceHeading, "payload", payload);
+		expectNoLegacyPayloadContract(projection.graph);
 	});
 
-	it("binds xref payload selectors only to xref occurrence resources", () => {
+	it("binds xref payload selectors only to xref edge evidence", () => {
 		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
 			documentRoot: projectRoot,
 		});
-		const xref = resourceOfType(
-			projection.graph,
-			`${namespaces.aat}XrefOccurrence`,
-		);
-		const payload = payloadBySourceText(
-			projection.graph,
-			'{"reason":"risk-control"}',
-		);
-		const sourceSection = resourceWithLocalId(
-			projection.documentIri,
-			"section-l1-o0",
-		);
-		const targetSection = resourceWithLocalId(
-			projection.documentIri,
-			"section-l5-o0",
-		);
+		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
+		const payload = onlyPayloadById(projection.graph, "rel-delivery-capacity");
+		const sourceHeading = heading(projection.documentIri, "heading-l1-o0");
+		const targetHeading = heading(projection.documentIri, "heading-l5-o0");
 
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(xref),
-					iriTerm(`${namespaces.aat}hasPayload`),
-					iriTerm(payload ?? ""),
-				),
-			),
-		).toBe(true);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(sourceSection),
-					iriTerm(`${namespaces.aat}hasPayload`),
-					iriTerm(payload ?? ""),
-				),
-			),
-		).toBe(false);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(targetSection),
-					iriTerm(`${namespaces.aat}hasPayload`),
-					iriTerm(payload ?? ""),
-				),
-			),
-		).toBe(false);
+		expectTriple(projection.graph, edge, "payload", payload);
+		expectNoTriple(projection.graph, sourceHeading, "payload", payload);
+		expectNoTriple(projection.graph, targetHeading, "payload", payload);
 	});
 
 	it("does not create fake bindings for unbound payload selectors", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			unboundPayloadDocument(),
-			{
-				documentRoot: projectRoot,
-			},
+			{ documentRoot: projectRoot },
 		);
-		const payload = resourceOfType(
-			projection.graph,
-			`${namespaces.aat}PayloadBlock`,
-		);
+		const payload = onlyPayloadById(projection.graph, "orphan-payload");
 
+		expectLiteral(projection.graph, payload, "forSelector", "missing-node");
 		expect(
 			projection.graph.match({
-				predicate: iriTerm(`${namespaces.aat}hasPayload`),
-				object: iriTerm(payload),
+				predicate: aat("payload"),
+				object: payload,
 			}),
 		).toHaveLength(0);
+		expectNoLegacyPayloadContract(projection.graph);
+	});
+
+	it("does not create fake bindings for ambiguous node payload selectors", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			ambiguousNodePayloadDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const payload = onlyPayloadById(projection.graph, "ambiguous-payload");
+
+		expectLiteral(projection.graph, payload, "forSelector", "duplicate");
 		expect(
 			projection.graph.match({
-				subject: iriTerm(payload),
-				predicate: iriTerm(`${namespaces.aat}payloadOf`),
+				predicate: aat("payload"),
+				object: payload,
 			}),
 		).toHaveLength(0);
 	});
@@ -234,49 +114,38 @@ describe("rdf12 payload projection", () => {
 	it("ignores payload-role listings without a source span", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			payloadListingWithoutSpanDocument(),
-			{
-				documentRoot: projectRoot,
-			},
+			{ documentRoot: projectRoot },
 		);
 
 		expect(
-			resourcesOfType(projection.graph, `${namespaces.aat}PayloadBlock`),
+			projection.graph.match({ predicate: aat("payloadId") }),
 		).toHaveLength(0);
+		expectNoLegacyPayloadContract(projection.graph);
 	});
 
 	it("does not create fake xref payload bindings for ambiguous payload selectors", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			ambiguousXrefPayloadDocument(),
-			{
-				documentRoot: projectRoot,
-			},
+			{ documentRoot: projectRoot },
 		);
-		const xref = resourceOfType(
-			projection.graph,
-			`${namespaces.aat}XrefOccurrence`,
-		);
+		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
 
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref),
-				predicate: iriTerm(`${namespaces.aat}hasPayload`),
+				subject: edge,
+				predicate: aat("payload"),
 			}),
 		).toHaveLength(0);
 	});
 
-	it("uses listing language as payload data format when no data attribute exists", () => {
+	it("uses listing language as payload format when no data attribute exists", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			languageFallbackPayloadDocument(),
-			{
-				documentRoot: projectRoot,
-			},
+			{ documentRoot: projectRoot },
 		);
-		const payload = resourceOfType(
-			projection.graph,
-			`${namespaces.aat}PayloadBlock`,
-		);
+		const payload = onlyPayloadById(projection.graph, "language-payload");
 
-		expectStringTriple(projection.graph, payload, "dataFormat", "yaml");
+		expectLiteral(projection.graph, payload, "format", "yaml");
 	});
 });
 
@@ -360,6 +229,27 @@ function unboundPayloadDocument(): AbundantDocument {
 	};
 }
 
+function ambiguousNodePayloadDocument(): AbundantDocument {
+	return {
+		...payloadDocument(),
+		children: [
+			sectionNode(1, "duplicate", "First"),
+			sectionNode(4, "duplicate", "Second"),
+			payloadListing({
+				id: "ambiguous-payload",
+				role: "payload",
+				startLine: 8,
+				contentLine: 11,
+				sourceText: '{"ambiguous":true}',
+				attributes: {
+					forSelector: "duplicate",
+				},
+			}),
+		],
+		xrefOccurrences: [],
+	};
+}
+
 function payloadListingWithoutSpanDocument(): AbundantDocument {
 	const { span: _span, ...listingWithoutSpan } = payloadListing({
 		id: "spanless-payload",
@@ -379,58 +269,12 @@ function payloadListingWithoutSpanDocument(): AbundantDocument {
 	};
 }
 
-function attrlistShorthandPayloadDocument(): AbundantDocument {
-	return {
-		...payloadDocument(),
-		children: [
-			{
-				...payloadListing({
-					id: "delivery-policy-payload",
-					role: "payload",
-					startLine: 6,
-					contentLine: 9,
-					sourceText: '{"policy":"active"}',
-					attributes: {
-						forSelector: "delivery-policy",
-						data: "json",
-					},
-				}),
-				metadata: [
-					{
-						kind: "metadata",
-						metadataKind: "attrlist",
-						raw: "[#delivery-policy-payload.payload, for=delivery-policy, data=json]",
-						line: 6,
-						ids: ["delivery-policy-payload"],
-						roles: ["payload"],
-						attributes: {
-							for: "delivery-policy",
-							data: "json",
-						},
-					},
-					{
-						kind: "metadata",
-						metadataKind: "attrlist",
-						raw: "[source,json]",
-						line: 7,
-						attributes: {
-							style: "source",
-							language: "json",
-						},
-					},
-				],
-			},
-		],
-		xrefOccurrences: [],
-	};
-}
-
 function ambiguousXrefPayloadDocument(): AbundantDocument {
 	const base = payloadDocument();
 	return {
 		...base,
 		children: [
-			...(base.children ?? []),
+			...base.children,
 			payloadListing({
 				id: "rel-delivery-capacity",
 				role: "xref-payload",
@@ -535,127 +379,114 @@ function payloadListing(input: {
 	};
 }
 
-function resourceOfType(graph: Rdf12Graph, typeIri: string): string {
+function heading(documentIri: string, localId: string): Rdf12IriTerm {
+	return iriTerm(
+		`${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`,
+	);
+}
+
+function onlyResourceOfType(
+	graph: Rdf12Graph,
+	typeLocalName: string,
+): Rdf12IriTerm {
 	const [resource] = graph
 		.match({
-			predicate: iriTerm(`${namespaces.rdf}type`),
-			object: iriTerm(typeIri),
+			predicate: rdf("type"),
+			object: aat(typeLocalName),
 		})
-		.map((triple) => triple.subject.value);
+		.map((triple) => triple.subject);
 	if (resource === undefined) {
-		throw new Error(`expected resource of type ${typeIri}`);
+		throw new Error(`expected resource of type ${typeLocalName}`);
 	}
 	return resource;
 }
 
-function resourcesOfType(graph: Rdf12Graph, typeIri: string): string[] {
-	return graph
+function onlyPayloadById(graph: Rdf12Graph, payloadId: string): Rdf12IriTerm {
+	const payloads = graph
 		.match({
-			predicate: iriTerm(`${namespaces.rdf}type`),
-			object: iriTerm(typeIri),
+			predicate: aat("payloadId"),
+			object: stringLiteral(payloadId),
 		})
-		.map((triple) => triple.subject.value);
+		.map((triple) => triple.subject);
+
+	expect(payloads).toHaveLength(1);
+	return payloads[0] ?? iriTerm("urn:missing-payload");
 }
 
-function payloadBySourceText(
+function expectNoLegacyPayloadContract(graph: Rdf12Graph): void {
+	expect(
+		graph.match({
+			predicate: rdf("type"),
+			object: aat("PayloadBlock"),
+		}),
+	).toHaveLength(0);
+	expect(graph.match({ predicate: aat("hasPayload") })).toHaveLength(0);
+	expect(graph.match({ predicate: aat("payloadOf") })).toHaveLength(0);
+}
+
+function expectTriple(
 	graph: Rdf12Graph,
-	sourceText: string,
-): string | undefined {
-	return graph
-		.match({
-			predicate: iriTerm(`${namespaces.aat}sourceText`),
-			object: stringLiteral(sourceText),
-		})
-		.find((triple) =>
-			graph.has(
-				rdf12Triple(
-					triple.subject,
-					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}PayloadBlock`),
-				),
-			),
-		)?.subject.value;
-}
-
-function resourceWithLocalId(documentIri: string, localId: string): string {
-	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
-}
-
-function expectAddressLabel(
-	graph: Rdf12Graph,
-	owner: string,
-	value: string,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	object: Rdf12IriTerm,
 ): void {
-	const label = addressLabelsForValue(graph, value).find((candidate) =>
-		hasLabelOwner(graph, owner, candidate),
-	);
-
-	expect(label).toBeDefined();
-	expect(hasLabelOwner(graph, owner, label ?? "")).toBe(true);
-}
-
-function addressLabelsForValue(graph: Rdf12Graph, value: string): string[] {
-	return graph
-		.match({
-			predicate: iriTerm(`${namespaces.rdf}value`),
-			object: stringLiteral(value),
-		})
-		.filter((triple) =>
-			graph.has(
-				rdf12Triple(
-					triple.subject,
-					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}AddressLabel`),
-				),
-			),
-		)
-		.map((triple) => triple.subject.value);
-}
-
-function hasLabelOwner(
-	graph: Rdf12Graph,
-	owner: string,
-	label: string,
-): boolean {
-	return graph.has(
-		rdf12Triple(
-			iriTerm(owner),
-			iriTerm(`${namespaces.aat}hasLabel`),
-			iriTerm(label),
-		),
+	expect(graph.has(rdf12Triple(subject, aat(predicateLocalName), object))).toBe(
+		true,
 	);
 }
 
-function expectStringTriple(
+function expectNoTriple(
 	graph: Rdf12Graph,
-	subject: string,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	object: Rdf12IriTerm,
+): void {
+	expect(graph.has(rdf12Triple(subject, aat(predicateLocalName), object))).toBe(
+		false,
+	);
+}
+
+function expectLiteral(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
 	predicateLocalName: string,
 	value: string,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(
-				iriTerm(subject),
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
-				stringLiteral(value),
-			),
+			rdf12Triple(subject, aat(predicateLocalName), stringLiteral(value)),
 		),
 	).toBe(true);
 }
 
-function expectNumberTriple(
+function expectLineSpan(
 	graph: Rdf12Graph,
-	subject: string,
+	subject: Rdf12IriTerm,
+	startLine: number,
+	endLine: number,
+): void {
+	expectInteger(graph, subject, "startLine", startLine);
+	expectInteger(graph, subject, "endLine", endLine);
+	expectLiteral(graph, subject, "relativePath", "samples/reference-links.adoc");
+}
+
+function expectInteger(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
 	predicateLocalName: string,
 	value: number,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(
-				iriTerm(subject),
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
-				integerLiteral(value),
-			),
+			rdf12Triple(subject, aat(predicateLocalName), integerLiteral(value)),
 		),
 	).toBe(true);
+}
+
+function aat(localName: string): Rdf12IriTerm {
+	return iriTerm(`${namespaces.aat}${localName}`);
+}
+
+function rdf(localName: string): Rdf12IriTerm {
+	return iriTerm(`${namespaces.rdf}${localName}`);
 }

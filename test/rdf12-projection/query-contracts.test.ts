@@ -105,6 +105,52 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectTriple(graph, edge, rdfTerm("reifies"), rdf12TripleTerm(relation));
 		expectTriple(graph, edge, aatTerm("weight"), stringLiteral("0.8"));
 	});
+
+	it("exposes node and edge payload complex properties", () => {
+		const result = rdf12(
+			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+		const graph = parseTurtleToRdf12Graph(result.ttl);
+		const heading = headingLookupFromGraph(graph);
+		const deliveryPolicy = heading("配送策略");
+		const capacityRule = heading("运力规则");
+		const edge = graph.match({
+			predicate: aatTerm("sourceHeading"),
+			object: deliveryPolicy,
+		})[0]?.subject;
+		if (edge === undefined) {
+			throw new Error("expected delivery policy xref edge");
+		}
+		const nodePayload = onlyPayloadById(graph, "delivery-policy-payload");
+		const edgePayload = onlyPayloadById(graph, "rel-delivery-capacity");
+
+		expectTriple(graph, deliveryPolicy, aatTerm("payload"), nodePayload);
+		expectTriple(graph, edge, aatTerm("payload"), edgePayload);
+		expect(
+			graph.has(rdf12Triple(capacityRule, aatTerm("payload"), edgePayload)),
+		).toBe(false);
+		expectTriple(
+			graph,
+			nodePayload,
+			aatTerm("payloadKind"),
+			stringLiteral("node"),
+		);
+		expectTriple(
+			graph,
+			edgePayload,
+			aatTerm("payloadKind"),
+			stringLiteral("edge"),
+		);
+		expect(
+			graph.match({
+				predicate: rdfTerm("type"),
+				object: aatTerm("PayloadBlock"),
+			}),
+		).toHaveLength(0);
+	});
 });
 
 function headingLookup(documentIri: string): (localId: string) => Rdf12IriTerm {
@@ -164,4 +210,16 @@ function transitiveHeadingChildren(
 	}
 
 	return result;
+}
+
+function onlyPayloadById(graph: Rdf12Graph, payloadId: string): Rdf12IriTerm {
+	const payloads = graph
+		.match({
+			predicate: aatTerm("payloadId"),
+			object: stringLiteral(payloadId),
+		})
+		.map((triple) => triple.subject);
+
+	expect(payloads).toHaveLength(1);
+	return payloads[0] ?? termIri("");
 }

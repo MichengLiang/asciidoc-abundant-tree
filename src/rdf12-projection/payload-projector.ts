@@ -2,7 +2,6 @@ import type { AbundantDocument, AbundantNode, ListingNode } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
 import type { Rdf12LabelCatalog } from "./label-catalog";
-import { addAddressLabelResource } from "./labels";
 import { integerLiteral, stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
@@ -38,6 +37,7 @@ type PayloadKind = "node" | "xref";
 type PayloadRecord = {
 	readonly iri: Rdf12IriTerm;
 	readonly kind: PayloadKind;
+	readonly selector: string;
 	readonly forSelector?: string;
 };
 
@@ -94,17 +94,11 @@ function projectPayloadListing(
 	context.graph.add(
 		rdf12Triple(
 			payload,
-			iriTerm(`${namespaces.rdf}type`),
-			iriTerm(`${namespaces.aat}PayloadBlock`),
-		),
-	);
-	context.graph.add(
-		rdf12Triple(
-			payload,
 			iriTerm(`${namespaces.aat}payloadKind`),
-			stringLiteral(payloadKind),
+			stringLiteral(payloadKind === "xref" ? "edge" : "node"),
 		),
 	);
+	addOptionalString(context.graph, payload, "payloadId", node.ids[0]);
 	addLineSpanTriples({
 		graph: context.graph,
 		subject: payload,
@@ -112,8 +106,8 @@ function projectPayloadListing(
 		span: node.span,
 	});
 	addOptionalLineSpan(context.graph, payload, "content", node.contentSpan);
-	addOptionalString(context.graph, payload, "sourceText", node.content);
-	addOptionalString(context.graph, payload, "dataFormat", dataFormatFor(node));
+	addOptionalString(context.graph, payload, "raw", node.content);
+	addOptionalString(context.graph, payload, "format", dataFormatFor(node));
 	addOptionalString(
 		context.graph,
 		payload,
@@ -122,19 +116,10 @@ function projectPayloadListing(
 	);
 
 	for (const id of node.ids) {
-		addAddressLabelResource({
-			graph: context.graph,
-			catalog: context.labelCatalog,
-			baseIri: context.baseIri,
-			documentKey: context.documentKey,
-			relativePath: context.relativePath,
-			owner: payload,
-			value: id,
-			span: labelSpanFor(node),
-		});
 		addPayloadSelector(context, id, {
 			iri: payload,
 			kind: payloadKind,
+			selector: id,
 			...definedString("forSelector", forSelectorFor(node)),
 		});
 	}
@@ -153,15 +138,8 @@ function bindNodePayloads(context: PayloadProjectorContext): void {
 			context.graph.add(
 				rdf12Triple(
 					result.target,
-					iriTerm(`${namespaces.aat}hasPayload`),
+					iriTerm(`${namespaces.aat}payload`),
 					payload.iri,
-				),
-			);
-			context.graph.add(
-				rdf12Triple(
-					payload.iri,
-					iriTerm(`${namespaces.aat}payloadOf`),
-					result.target,
 				),
 			);
 		}
@@ -179,7 +157,7 @@ function bindXrefPayloads(context: PayloadProjectorContext): void {
 			continue;
 		}
 		context.graph.add(
-			rdf12Triple(entry.iri, iriTerm(`${namespaces.aat}hasPayload`), payload),
+			rdf12Triple(entry.iri, iriTerm(`${namespaces.aat}payload`), payload),
 		);
 	}
 }
@@ -220,21 +198,6 @@ function forSelectorFor(node: ListingNode): string | undefined {
 		}
 	}
 	return undefined;
-}
-
-function labelSpanFor(node: ListingNode): NonNullable<ListingNode["span"]> {
-	if (node.span === undefined) {
-		throw new Error("payload label requires listing span");
-	}
-
-	const idMetadata = node.metadata?.find(
-		(item) =>
-			(item.metadataKind === "id" || item.metadataKind === "attrlist") &&
-			node.ids.some((id) => (item.ids ?? []).includes(id)),
-	);
-	return idMetadata?.line === undefined
-		? node.span
-		: { startLine: idMetadata.line, endLine: idMetadata.line };
 }
 
 function addPayloadSelector(
