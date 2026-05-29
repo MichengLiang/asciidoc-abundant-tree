@@ -27,7 +27,9 @@ export function resolveHeadingSlice(
 	const startLine = headingStartLine(node, headingLine);
 	const endLine = headingEndLine(node, startLine);
 	const metadataSpan = metadataLineSpan(node.metadata);
-	const contentSpan = contentLineSpan(node.children, headingLine, endLine);
+	const contentSpan =
+		contentLineSpanFromSourceRaw(node, headingLine, endLine) ??
+		contentLineSpan(node.children, headingLine, endLine);
 	const raw = headingRaw(node, {
 		startLine,
 		endLine,
@@ -198,6 +200,37 @@ function contentLineSpan(
 	};
 }
 
+function contentLineSpanFromSourceRaw(
+	node: SectionNode,
+	headingLine: number,
+	endLine: number,
+): LineSpan | undefined {
+	const source = node.source;
+	if (source?.raw === undefined || source.span === undefined) {
+		return undefined;
+	}
+	const span = source.span;
+
+	const contentLines = source.raw
+		.split(/\r?\n/u)
+		.slice(0, span.endLine - span.startLine + 1)
+		.map((text, index) => ({
+			line: span.startLine + index,
+			text,
+		}))
+		.filter((line) => line.line > headingLine && line.line <= endLine)
+		.filter((line) => line.text.trim().length > 0);
+
+	if (contentLines.length === 0) {
+		return undefined;
+	}
+
+	return {
+		startLine: contentLines[0]?.line ?? headingLine + 1,
+		endLine: contentLines.at(-1)?.line ?? endLine,
+	};
+}
+
 function nodeLineSpan(node: AbundantNode): LineSpan[] {
 	switch (node.kind) {
 		case "paragraph":
@@ -218,6 +251,15 @@ function headingRaw(
 		readonly headingLine: number;
 	},
 ): string {
+	if (node.source?.raw !== undefined && node.source.span !== undefined) {
+		const offsetStart = input.startLine - node.source.span.startLine;
+		const offsetEnd = input.endLine - node.source.span.startLine;
+		const lines = node.source.raw
+			.split(/\r?\n/u)
+			.slice(offsetStart, offsetEnd + 1);
+		return `${lines.join("\n")}\n`;
+	}
+
 	const lineByNumber = new Map<number, string>();
 
 	for (const metadata of node.metadata ?? []) {
@@ -253,9 +295,14 @@ function headingLineText(node: SectionNode): string {
 function childRawLines(
 	node: AbundantNode,
 ): ReadonlyArray<readonly [number, string]> {
+	const sourceRawLines = sourceLayerRawLines(node);
+	if (sourceRawLines.length > 0) {
+		return sourceRawLines;
+	}
+
 	switch (node.kind) {
 		case "paragraph":
-			return paragraphRawLines(node);
+			return paragraphTextRawLines(node);
 		case "listing":
 			return listingRawLines(node);
 		default:
@@ -263,7 +310,22 @@ function childRawLines(
 	}
 }
 
-function paragraphRawLines(
+function sourceLayerRawLines(
+	node: AbundantNode,
+): ReadonlyArray<readonly [number, string]> {
+	const span = node.source?.span;
+	const raw = node.source?.raw;
+	if (span === undefined || raw === undefined) {
+		return [];
+	}
+
+	return raw
+		.split(/\r?\n/u)
+		.slice(0, span.endLine - span.startLine + 1)
+		.map((line, index) => [span.startLine + index, line] as const);
+}
+
+function paragraphTextRawLines(
 	node: ParagraphNode,
 ): ReadonlyArray<readonly [number, string]> {
 	const span = node.source?.span;

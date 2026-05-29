@@ -9,6 +9,7 @@ import {
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm } from "../../src/rdf12-projection/terms";
+import { writeFixture } from "../helpers";
 
 const projectRoot = process.cwd();
 const structuralPayloadPath = join(
@@ -113,12 +114,115 @@ describe("rdf12 heading slices", () => {
 
 		expectNumberTriple(projection.graph, nestedHeading, "headingLevel", 2);
 	});
+
+	it("preserves rich block source text in heading raw slices", () => {
+		const source = `= Probe
+
+== Rich Raw
+
+Lead paragraph.
+
+* first item
+* second item
+
+[horizontal]
+term:: definition
+
+[#sample-table]
+.Table Title
+|===
+|A |B
+
+|1 |2
+|===
+
+--
+open block paragraph
+--
+
+NOTE: Admonition paragraph.
+
+== Next
+`;
+		const projection = projectFixture("heading-rich-raw.adoc", source);
+		const rich = resourceIri(projection.documentIri, "heading-l3-o0");
+
+		expectStringTriple(
+			projection.graph,
+			rich,
+			"raw",
+			`== Rich Raw
+
+Lead paragraph.
+
+* first item
+* second item
+
+[horizontal]
+term:: definition
+
+[#sample-table]
+.Table Title
+|===
+|A |B
+
+|1 |2
+|===
+
+--
+open block paragraph
+--
+
+NOTE: Admonition paragraph.
+
+`,
+		);
+		expectNumberTriple(projection.graph, rich, "contentStartLine", 5);
+		expectNumberTriple(projection.graph, rich, "contentEndLine", 25);
+	});
+
+	it("preserves table-only heading raw instead of replacing table rows with blanks", () => {
+		const source = `= Probe
+
+== Table Section
+
+[cols="1,1", options="header"]
+|===
+|Name |Value
+
+|alpha |1
+|beta |2
+|===
+
+== Next
+`;
+		const projection = projectFixture("heading-table-raw.adoc", source);
+		const tableSection = resourceIri(projection.documentIri, "heading-l3-o0");
+		const raw = onlyLiteralValue(projection.graph, tableSection, "raw");
+
+		expect(raw).toContain("|Name |Value");
+		expect(raw).toContain("|alpha |1");
+		expect(raw).toContain("|beta |2");
+		expect(raw).not.toMatch(/\|===\n\n\n\n\n\|===/u);
+		expectNumberTriple(projection.graph, tableSection, "contentStartLine", 5);
+		expectNumberTriple(projection.graph, tableSection, "contentEndLine", 11);
+	});
 });
 
 function structuralPayloadProjection() {
 	return projectAbundantDocumentToRdf12(
 		parseAbundantTree({ sourcePath: structuralPayloadPath }),
 		{ documentRoot: projectRoot },
+	);
+}
+
+function projectFixture(name: string, source: string) {
+	const path = writeFixture(name, source);
+	return projectAbundantDocumentToRdf12(
+		parseAbundantTree({ sourcePath: path }),
+		{
+			documentRoot: projectRoot,
+		},
 	);
 }
 

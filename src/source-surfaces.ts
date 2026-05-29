@@ -19,7 +19,7 @@ import {
 	resolveSourceInterval,
 	type SourceInterval,
 } from "./source-interval-resolver";
-import type { LineTable } from "./source-lines";
+import { type LineTable, sourceLines } from "./source-lines";
 
 export type SourceSurfaces = {
 	blockSurfaces: OfficialBlockSurface[];
@@ -94,6 +94,7 @@ export function projectSourceSurfaces(options: {
 	const { sections, sectionByBlock } = buildSectionSurfaces(
 		blockSurfaces,
 		intervalByBlock,
+		options.lineTable,
 		toolDiagnostics,
 	);
 	const sectionByLine = mapSectionScope(
@@ -183,6 +184,7 @@ function canUseContainerFallbackSurface(
 function buildSectionSurfaces(
 	blockSurfaces: OfficialBlockSurface[],
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
+	lineTable: LineTable,
 	_toolDiagnostics: ToolDiagnostic[],
 ): {
 	sections: SectionNode[];
@@ -223,7 +225,13 @@ function buildSectionSurfaces(
 			metadata: metadata.map((entry) => entry.node),
 			source: definedObject({
 				line: surface.sourceLine,
+				span: interval.span,
 				sourceSpan: interval.sourceSpan,
+				raw: `${sourceLines(
+					lineTable,
+					interval.span.startLine,
+					interval.span.endLine,
+				).join("\n")}\n`,
 			}),
 			asciidoctor: definedObject({
 				context: surface.context,

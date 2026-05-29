@@ -202,6 +202,71 @@ Open block prose links to <<after>>.
 			"<<after>>",
 		]);
 	});
+
+	it("stores rich section raw on the AST instead of requiring downstream file slicing", () => {
+		const path = writeFixture(
+			"section-rich-source-raw.adoc",
+			`= Probe
+
+== Rich Raw
+
+Lead paragraph.
+
+* first item
+* second item
+
+[horizontal]
+term:: definition
+
+[#sample-table]
+.Table Title
+|===
+|A |B
+
+|1 |2
+|===
+
+--
+open block paragraph
+--
+
+NOTE: Admonition paragraph.
+
+== Next
+`,
+		);
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = document.children.find(
+			(node) => node.kind === "section" && node.title === "Rich Raw",
+		) as SectionNode | undefined;
+
+		expect(section?.source?.span).toEqual({ startLine: 3, endLine: 26 });
+		expect(section?.source?.raw).toBe(`== Rich Raw
+
+Lead paragraph.
+
+* first item
+* second item
+
+[horizontal]
+term:: definition
+
+[#sample-table]
+.Table Title
+|===
+|A |B
+
+|1 |2
+|===
+
+--
+open block paragraph
+--
+
+NOTE: Admonition paragraph.
+
+`);
+	});
 });
 
 function findNode(nodes: unknown[], kind: string): unknown {
