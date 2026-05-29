@@ -268,6 +268,27 @@ describe("rdf12 xref edge projection", () => {
 		expectTripleTerm(projection.graph, edge, relation);
 	});
 
+	it("resolves document-title preamble xrefs to the document title heading", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			documentTitlePreambleXrefDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const edge = onlyXrefEdge(projection.graph);
+		const source = heading(projection.documentIri, "heading-l1-o0");
+		const target = heading(projection.documentIri, "heading-l5-o0");
+		const relation = rdf12Triple(
+			source,
+			iriTerm(`${namespaces.aat}references`),
+			target,
+		);
+
+		expectStringTriple(projection.graph, edge, "sourceSelector", undefined);
+		expectTriple(projection.graph, edge, "sourceHeading", source);
+		expectTriple(projection.graph, edge, "targetHeading", target);
+		expect(projection.graph.has(relation)).toBe(true);
+		expectTripleTerm(projection.graph, edge, relation);
+	});
+
 	it("maps rel control fields and preserves payload selectors", () => {
 		const projection = projectAbundantDocumentToRdf12(relPayloadDocument(), {
 			documentRoot: projectRoot,
@@ -649,6 +670,44 @@ function duplicateSourceLabelDocument(): AbundantDocument {
 				7,
 			),
 			sectionNode(8, "target", "Target"),
+		],
+	};
+}
+
+function documentTitlePreambleXrefDocument(): AbundantDocument {
+	return {
+		...baseDocument(),
+		sourceText: "= Root\n\nSee <<target>>.\n\n== Target\n",
+		title: {
+			kind: "title",
+			text: "Root",
+			source: {
+				line: 1,
+				sourceSpan: {
+					start: { line: 1, column: 1 },
+					end: { line: 1, column: 7 },
+				},
+			},
+		},
+		children: [
+			{
+				kind: "paragraph",
+				text: "See target.",
+				source: { span: { startLine: 3, endLine: 3 } },
+				children: [
+					{
+						kind: "xref",
+						syntax: "shorthand",
+						raw: "<<target>>",
+						target: "target",
+						sourceSpan: {
+							start: { line: 3, column: 5 },
+							end: { line: 3, column: 15 },
+						},
+					},
+				],
+			},
+			sectionNode(5, "target", "Target"),
 		],
 	};
 }

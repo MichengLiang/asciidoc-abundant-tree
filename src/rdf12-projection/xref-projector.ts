@@ -251,16 +251,15 @@ function writeSourceBinding(
 	xrefIri: Rdf12IriTerm,
 	xref: XrefOccurrenceNode,
 ): Rdf12IriTerm | undefined {
-	if (xref.containingSectionId === undefined) {
-		return undefined;
+	if (xref.containingSectionId !== undefined) {
+		addStringTriple(
+			context.graph,
+			xrefIri,
+			"sourceSelector",
+			xref.containingSectionId,
+		);
 	}
 
-	addStringTriple(
-		context.graph,
-		xrefIri,
-		"sourceSelector",
-		xref.containingSectionId,
-	);
 	const sourceHeading = sourceHeadingForXref(context.nodeIndex, xref);
 	if (sourceHeading === undefined) {
 		return undefined;
