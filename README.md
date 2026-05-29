@@ -29,6 +29,8 @@ The primary artifact is the TypeScript object. Pretty text, JSON, RDF 1.2 Turtle
 
 - Live bookshelf: <https://michengliang.github.io/asciidoc-abundant-tree/>
 - RDF 1.2 heading projection specification: [AsciiDoc `AbundantDocument` 到 RDF 1.2 标题投影图规约](https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html)
+- Generated book source: [`docs/bookshelf/build/adoc/books/06-rdf12-line-projection.adoc`](./docs/bookshelf/build/adoc/books/06-rdf12-line-projection.adoc)
+- Compact preview sample: [`samples/rdf12-projection-preview.adoc`](./samples/rdf12-projection-preview.adoc)
 - Source: [`docs/bookshelf`](./docs/bookshelf/)
 
 The RDF 1.2 projection book specifies the graph vocabulary and query contract used by the package runtime. The public runtime surface exposes that projection through the `rdf12(document, options)` API and CLI `--format rdf12` / `--format rdf12-json-ld`.
@@ -64,6 +66,52 @@ The graph includes source document provenance, heading nodes, heading containmen
 Node payloads use `for=<heading-label>` to bind an opaque payload object to the selected heading through `aat:payload`. Xref payloads use the xref control field `payload=<payload-label>` to bind an `xref-payload` object to the xref edge evidence through `aat:payload`. Payload objects keep `aat:payloadId`, `aat:payloadKind`, `aat:format`, `aat:raw`, and source line spans; the projection does not interpret JSON, YAML, TOML, XML, or other payload formats. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and `payload` is retained as `aat:payloadSelector`; neither is emitted as a legacy surface-attribute resource.
 
 JSON-LD output is a frontend-friendly projection of the same RDF graph. RDF 1.2 triple terms are represented as structured `rdf12:TripleTerm` objects rather than flattened strings.
+
+The preview sample below keeps the source small enough to skim while still showing the main projection surfaces. It is trimmed from the actual CLI output of [`samples/rdf12-projection-preview.adoc`](./samples/rdf12-projection-preview.adoc).
+
+Source AsciiDoc:
+
+```adoc
+= 投影预览
+
+[#delivery-policy.section, kind=policy, status=active]
+== 配送策略
+
+配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, payload=rel-delivery-capacity]。
+
+[#rel-delivery-capacity.xref-payload, data=json]
+[source,json]
+----
+{"reason":"risk-control","signals":["capacity"]}
+----
+
+[#capacity-rule.section, kind=rule, status=active]
+== 运力规则
+
+运力规则决定是否降级。
+```
+
+Projected Turtle:
+
+```turtle
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+<urn:aat:doc:...#heading-l3-o0> a aat:Heading;
+    aat:addressLabel "delivery-policy";
+    aat:headline "配送策略";
+    aat:payload <urn:aat:doc:...#payload-l8-o0>;
+    rel:depends-on <urn:aat:doc:...#heading-l14-o0>.
+
+<urn:aat:doc:...#xref-edge-l6-c8-o0> rdf:reifies <<(<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l14-o0>)>>;
+    a aat:XrefEdge;
+    aat:sourceHeading <urn:aat:doc:...#heading-l3-o0>;
+    aat:targetHeading <urn:aat:doc:...#heading-l14-o0>;
+    aat:payloadSelector "rel-delivery-capacity";
+    aat:payload <urn:aat:doc:...#payload-l8-o0>;
+    aat:rel "depends-on".
+```
 
 Release validation covers the RDF projection with semantic graph comparison, Turtle roundtrip checks, JSON-LD shape checks, selector ambiguity cases, source-span boundary cases, payload binding rules, relation predicate fallback, and CLI `rdf12` / `rdf12-json-ld` smoke output.
 
@@ -237,6 +285,8 @@ pnpm dev samples/reference-links.adoc --format rdf12
 ## Release State
 
 The package is usable for single-file source analysis, xref/target auditing, and RDF 1.2 heading projection. The object model and RDF vocabulary are intentionally small and conservative. Prefer pinning a minor version in production workflows and checking the JSON and RDF shapes against your own fixtures before relying on it for large document systems.
+
+The GitHub Actions publish workflow runs on `v*` tag pushes, publishes to npm with provenance, and creates a GitHub Release from `CHANGELOG.md` when the release does not already exist.
 
 ## License
 
