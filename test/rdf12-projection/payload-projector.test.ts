@@ -123,6 +123,50 @@ describe("rdf12 payload projection", () => {
 		expectNoLegacyPayloadContract(projection.graph);
 	});
 
+	it("requires a payload id before projecting node payload objects", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			noIdNodePayloadDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const sourceHeading = heading(projection.documentIri, "heading-l1-o0");
+
+		expect(
+			projection.graph.match({ predicate: aat("payloadId") }),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({ predicate: aat("payloadKind") }),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({
+				subject: sourceHeading,
+				predicate: aat("payload"),
+			}),
+		).toHaveLength(0);
+		expectNoLegacyPayloadContract(projection.graph);
+	});
+
+	it("requires a payload id before projecting xref payload objects", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			noIdXrefPayloadDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
+
+		expect(
+			projection.graph.match({ predicate: aat("payloadId") }),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({ predicate: aat("payloadKind") }),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({
+				subject: edge,
+				predicate: aat("payload"),
+			}),
+		).toHaveLength(0);
+		expectNoLegacyPayloadContract(projection.graph);
+	});
+
 	it("does not create fake xref payload bindings for ambiguous payload selectors", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			ambiguousXrefPayloadDocument(),
@@ -269,6 +313,52 @@ function payloadListingWithoutSpanDocument(): AbundantDocument {
 	};
 }
 
+function noIdNodePayloadDocument(): AbundantDocument {
+	return {
+		...payloadDocument(),
+		children: [
+			sectionNode(1, "delivery-policy", "Delivery Policy"),
+			payloadListing({
+				role: "payload",
+				startLine: 20,
+				contentLine: 23,
+				sourceText: '{"node":true}',
+				attributes: {
+					forSelector: "delivery-policy",
+				},
+			}),
+		],
+		xrefOccurrences: [],
+	};
+}
+
+function noIdXrefPayloadDocument(): AbundantDocument {
+	const base = payloadDocument();
+	return {
+		...base,
+		children: [
+			sectionNode(1, "delivery-policy", "Delivery Policy", [
+				{
+					kind: "paragraph",
+					text: "See delivery capacity.",
+					source: { span: { startLine: 4, endLine: 4 } },
+					children: base.xrefOccurrences,
+				},
+			]),
+			sectionNode(5, "delivery-capacity", "Delivery Capacity"),
+			payloadListing({
+				role: "xref-payload",
+				startLine: 30,
+				contentLine: 33,
+				sourceText: '{"edge":true}',
+				attributes: {
+					data: "json",
+				},
+			}),
+		],
+	};
+}
+
 function ambiguousXrefPayloadDocument(): AbundantDocument {
 	const base = payloadDocument();
 	return {
@@ -340,7 +430,7 @@ function sectionNode(
 }
 
 function payloadListing(input: {
-	readonly id: string;
+	readonly id?: string;
 	readonly role: "payload" | "xref-payload";
 	readonly startLine: number;
 	readonly contentLine: number;
@@ -349,7 +439,7 @@ function payloadListing(input: {
 }): ListingNode {
 	return {
 		kind: "listing",
-		ids: [input.id],
+		ids: input.id === undefined ? [] : [input.id],
 		style: "source",
 		language: "json",
 		span: { startLine: input.startLine, endLine: input.startLine + 4 },
@@ -360,13 +450,17 @@ function payloadListing(input: {
 		},
 		content: input.sourceText,
 		metadata: [
-			{
-				kind: "metadata",
-				metadataKind: "id",
-				raw: `[#${input.id}]`,
-				line: input.startLine,
-				ids: [input.id],
-			},
+			...(input.id === undefined
+				? []
+				: [
+						{
+							kind: "metadata" as const,
+							metadataKind: "id" as const,
+							raw: `[#${input.id}]`,
+							line: input.startLine,
+							ids: [input.id],
+						},
+					]),
 			{
 				kind: "metadata",
 				metadataKind: "attrlist",

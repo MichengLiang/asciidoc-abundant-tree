@@ -76,6 +76,10 @@ function projectPayloadListing(
 	if (payloadKind === undefined || node.span === undefined) {
 		return;
 	}
+	const payloadId = node.ids[0];
+	if (payloadId === undefined) {
+		return;
+	}
 
 	const ordinal = context.ordinalAllocator.next({
 		kind: "payload",
@@ -98,7 +102,7 @@ function projectPayloadListing(
 			stringLiteral(payloadKind === "xref" ? "edge" : "node"),
 		),
 	);
-	addOptionalString(context.graph, payload, "payloadId", node.ids[0]);
+	addString(context.graph, payload, "payloadId", payloadId);
 	addLineSpanTriples({
 		graph: context.graph,
 		subject: payload,
@@ -115,14 +119,12 @@ function projectPayloadListing(
 		forSelectorFor(node),
 	);
 
-	for (const id of node.ids) {
-		addPayloadSelector(context, id, {
-			iri: payload,
-			kind: payloadKind,
-			selector: id,
-			...definedString("forSelector", forSelectorFor(node)),
-		});
-	}
+	addPayloadSelector(context, payloadId, {
+		iri: payload,
+		kind: payloadKind,
+		selector: payloadId,
+		...definedString("forSelector", forSelectorFor(node)),
+	});
 }
 
 function bindNodePayloads(context: PayloadProjectorContext): void {
@@ -272,6 +274,15 @@ function addOptionalString(
 		return;
 	}
 
+	addString(graph, subject, predicateLocalName, value);
+}
+
+function addString(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	value: string,
+): void {
 	graph.add(
 		rdf12Triple(
 			subject,
