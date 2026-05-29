@@ -21,7 +21,7 @@
 
 |Batch 02
 |标题结构边
-|待审核
+|通过
 |d10a0a712fd023a0bf6b9a44d4e00fb1fa97c989
 |xref:batch-02-review-package[Batch 02 审核包]
 
