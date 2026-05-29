@@ -45,15 +45,17 @@ xref:capacity-rule[运力规则, rel=depends-on, weight=0.8]
 
 === 节点 Payload
 
-`.payload` block 通过 `for` 字段绑定标题节点。绑定成功时，payload 作为该标题节点的 `aat:payload` 值。
+带有手动 ID 且声明 `for` 或 `forSelector` 字段的 listing block 表达节点 payload。绑定成功时，payload 作为该标题节点的 `aat:payload` 值。
 
 节点 payload 的 `for` 字段只在标题节点 label 空间中绑定。绑定目标可以来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload 对象保留 `aat:forSelector` 和回源坐标，不连接到任何标题节点。`for` 字段不绑定到 payload id、role、普通字段谓词或标题节点 IRI。
+
+`.payload` role 不是节点 payload 的识别条件。role token 可以作为源文档表面语义投影为 `aat:role`，但节点 payload 绑定由 `for` 或 `forSelector` 字段决定。
 
 payload format 来自 payload attrlist 的 `data` 字段。缺少 `data` 字段时，format 来自 source block 的 language。二者都缺失时，不输出 `aat:format`。
 
 [source,asciidoc]
 ------
-[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[#delivery-policy-payload, for=delivery-policy, data=json]
 [source,json]
 ----
 {
@@ -84,15 +86,17 @@ payload format 来自 payload attrlist 的 `data` 字段。缺少 `data` 字段�
 
 === 边 Payload
 
-`.xref-payload` block 通过 xref 的 `payload` 字段绑定交叉引用边。
+xref 的 `payload` 字段表达边 payload selector。带有匹配 ID 的 listing block 表达该边 payload。
 
-边 payload 的绑定分两步。`.xref-payload` block 先用自己的 address label 建立 payload selector。xref edge evidence 再用 `aat:payloadSelector` 匹配该 payload selector。唯一匹配时，xref edge evidence 通过 `aat:payload` 连接该 payload 对象。未匹配或多义匹配时，边证据保留 `aat:payloadSelector`，不连接 payload 对象。
+边 payload 的绑定分两步。xref edge evidence 先用 `payload` 字段保存 `aat:payloadSelector`。投影器再用该 selector 匹配 listing block 的手动 ID。唯一匹配时，xref edge evidence 通过 `aat:payload` 连接该 payload 对象。未匹配或多义匹配时，边证据保留 `aat:payloadSelector`，不连接 payload 对象。
+
+`.xref-payload` role 不是边 payload 的识别条件。role token 可以作为源文档表面语义投影为 `aat:role`，但边 payload 绑定由 xref 的 `payload` selector 和 listing block 的 ID 决定。
 
 [source,asciidoc]
 ------
 xref:capacity-rule[运力规则, rel=depends-on, payload=rel-delivery-capacity]
 
-[#rel-delivery-capacity.xref-payload, data=json]
+[#rel-delivery-capacity, data=json]
 [source,json]
 ----
 {"reason":"risk-control"}

@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.1.8 - 2026-05-29
+
+### Fixed
+
+- Allowed node payload blocks to bind from `for` or `forSelector` attributes without requiring a `.payload` role token.
+- Allowed xref edge payloads to bind from xref `payload` selectors and matching listing IDs without requiring a `.xref-payload` role token.
+- Updated the RDF 1.2 line projection book to document payload binding as attribute-driven behavior, with role tokens treated as source surface fields rather than binding gates.
+
 ## 0.1.7 - 2026-05-29
 
 ### Fixed

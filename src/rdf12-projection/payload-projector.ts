@@ -29,6 +29,7 @@ export type ProjectPayloadBlocksInput = {
 
 type PayloadProjectorContext = ProjectPayloadBlocksInput & {
 	readonly ordinalAllocator: OrdinalAllocator;
+	readonly xrefPayloadSelectors: ReadonlySet<string>;
 	readonly payloadsBySelector: Map<string, PayloadRecord[]>;
 };
 
@@ -45,6 +46,7 @@ export function projectPayloadBlocks(input: ProjectPayloadBlocksInput): void {
 	const context: PayloadProjectorContext = {
 		...input,
 		ordinalAllocator: createOrdinalAllocator(),
+		xrefPayloadSelectors: collectXrefPayloadSelectors(input.xrefIndex),
 		payloadsBySelector: new Map(),
 	};
 
@@ -72,7 +74,7 @@ function projectPayloadListing(
 	context: PayloadProjectorContext,
 	node: ListingNode,
 ): void {
-	const payloadKind = payloadKindForListing(node);
+	const payloadKind = payloadKindForListing(context, node);
 	if (payloadKind === undefined || node.span === undefined) {
 		return;
 	}
@@ -166,7 +168,10 @@ function bindXrefPayloads(context: PayloadProjectorContext): void {
 	}
 }
 
-function payloadKindForListing(node: ListingNode): PayloadKind | undefined {
+function payloadKindForListing(
+	context: PayloadProjectorContext,
+	node: ListingNode,
+): PayloadKind | undefined {
 	const roles = node.metadata?.flatMap((item) => item.roles ?? []) ?? [];
 	if (roles.includes("xref-payload")) {
 		return "xref";
@@ -174,7 +179,26 @@ function payloadKindForListing(node: ListingNode): PayloadKind | undefined {
 	if (roles.includes("payload")) {
 		return "node";
 	}
+	if (forSelectorFor(node) !== undefined) {
+		return "node";
+	}
+	if (node.ids.some((id) => context.xrefPayloadSelectors.has(id))) {
+		return "xref";
+	}
 	return undefined;
+}
+
+function collectXrefPayloadSelectors(
+	xrefIndex: Rdf12XrefIndex,
+): ReadonlySet<string> {
+	const selectors = new Set<string>();
+	for (const entry of xrefIndex.entries()) {
+		const selector = stringAttribute(entry.node.attributes, "payload");
+		if (selector !== undefined) {
+			selectors.add(selector);
+		}
+	}
+	return selectors;
 }
 
 function dataFormatFor(node: ListingNode): string | undefined {

@@ -5,6 +5,8 @@
 
 === Source Document
 
+样例中的 `.section`、`.payload` 和 `.xref-payload` 是源文档 role token。它们可以投影为 `aat:role` 字段；标题节点身份来自等号标题，节点 payload 绑定来自 `for=delivery-policy`，边 payload 绑定来自 xref 的 `payload=rel-delivery-capacity`。
+
 [source,asciidoc]
 ------
 = root
@@ -290,8 +292,8 @@
 * `配送策略` 到 `运力规则` 生成 `rel:depends-on` 边。
 * xref `weight=0.8` 投影为边证据上的 `aat:weight "0.8"`。
 * xref `payload=rel-delivery-capacity` 投影为边证据上的 `aat:payloadSelector "rel-delivery-capacity"`。
-* `delivery-policy-payload` 绑定为 `配送策略` 节点 payload。
-* `rel-delivery-capacity` 绑定为 `depends-on` 边 payload。
+* `delivery-policy-payload` 通过 `for=delivery-policy` 绑定为 `配送策略` 节点 payload。
+* `rel-delivery-capacity` 通过 xref 的 `payload=rel-delivery-capacity` 绑定为 `depends-on` 边 payload。
 * payload raw 不展开为业务 RDF 图。
 * 第 8 行 paragraph 不创建标题节点。
 * 第 10 到 23 行 payload listing 不创建标题节点。

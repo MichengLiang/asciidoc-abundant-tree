@@ -64,6 +64,19 @@ describe("rdf12 payload projection", () => {
 		expectNoLegacyPayloadContract(projection.graph);
 	});
 
+	it("binds node payloads from for attributes without requiring a payload role", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			nodePayloadWithoutRoleDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const payload = onlyPayloadById(projection.graph, "policy-payload");
+		const sourceHeading = heading(projection.documentIri, "heading-l1-o0");
+
+		expectLiteral(projection.graph, payload, "payloadKind", "node");
+		expectLiteral(projection.graph, payload, "forSelector", "delivery-policy");
+		expectTriple(projection.graph, sourceHeading, "payload", payload);
+	});
+
 	it("binds xref payload selectors only to xref edge evidence", () => {
 		const projection = projectAbundantDocumentToRdf12(payloadDocument(), {
 			documentRoot: projectRoot,
@@ -76,6 +89,18 @@ describe("rdf12 payload projection", () => {
 		expectTriple(projection.graph, edge, "payload", payload);
 		expectNoTriple(projection.graph, sourceHeading, "payload", payload);
 		expectNoTriple(projection.graph, targetHeading, "payload", payload);
+	});
+
+	it("binds xref payload selectors to matching payload ids without requiring an xref-payload role", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			xrefPayloadWithoutRoleDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
+		const payload = onlyPayloadById(projection.graph, "rel-delivery-capacity");
+
+		expectLiteral(projection.graph, payload, "payloadKind", "edge");
+		expectTriple(projection.graph, edge, "payload", payload);
 	});
 
 	it("binds xref payload selectors through secondary payload ids", () => {
@@ -310,6 +335,53 @@ function secondaryIdXrefPayloadDocument(): AbundantDocument {
 	};
 }
 
+function nodePayloadWithoutRoleDocument(): AbundantDocument {
+	return {
+		...payloadDocument(),
+		children: [
+			sectionNode(1, "delivery-policy", "Delivery Policy"),
+			payloadListing({
+				id: "policy-payload",
+				startLine: 8,
+				contentLine: 11,
+				sourceText: '{"policy":"active"}',
+				attributes: {
+					forSelector: "delivery-policy",
+					data: "json",
+				},
+			}),
+		],
+		xrefOccurrences: [],
+	};
+}
+
+function xrefPayloadWithoutRoleDocument(): AbundantDocument {
+	const base = payloadDocument();
+	return {
+		...base,
+		children: [
+			sectionNode(1, "delivery-policy", "Delivery Policy", [
+				{
+					kind: "paragraph",
+					text: "See delivery capacity.",
+					source: { span: { startLine: 4, endLine: 4 } },
+					children: base.xrefOccurrences,
+				},
+			]),
+			sectionNode(5, "delivery-capacity", "Delivery Capacity"),
+			payloadListing({
+				id: "rel-delivery-capacity",
+				startLine: 8,
+				contentLine: 11,
+				sourceText: '{"reason":"risk-control"}',
+				attributes: {
+					data: "json",
+				},
+			}),
+		],
+	};
+}
+
 function unboundPayloadDocument(): AbundantDocument {
 	return {
 		...payloadDocument(),
@@ -487,7 +559,7 @@ function sectionNode(
 
 function payloadListing(input: {
 	readonly id?: string | readonly string[];
-	readonly role: "payload" | "xref-payload";
+	readonly role?: "payload" | "xref-payload";
 	readonly startLine: number;
 	readonly contentLine: number;
 	readonly sourceText: string;
@@ -526,9 +598,10 @@ function payloadListing(input: {
 			{
 				kind: "metadata",
 				metadataKind: "attrlist",
-				raw: `[source.${input.role}]`,
+				raw:
+					input.role === undefined ? "[source,json]" : `[source.${input.role}]`,
 				line: input.startLine + 1,
-				roles: [input.role],
+				roles: input.role === undefined ? [] : [input.role],
 				attributes: input.attributes,
 			},
 		],

@@ -23,7 +23,7 @@ payload:: 归属于标题节点或 xref edge evidence 的复杂属性。payload 
 
 direct attribute predicate:: 由源文档 named attribute 映射得到的 `aat:<name>` 谓词。该谓词表达源文档表面字段，不触发业务解释。标题 `#id`、role token、xref `rel` 和 xref `payload` 是专门字段，不按普通字段谓词处理。
 
-selector:: xref target、节点 payload `for` 字段或 xref `payload` 字段中用于绑定目标的字符串。xref target 和节点 payload `for` 只绑定标题节点 label；xref `payload` 只绑定 `.xref-payload` block 的 address label。
+selector:: xref target、节点 payload `for` 字段或 xref `payload` 字段中用于绑定目标的字符串。xref target 和节点 payload `for` 只绑定标题节点 label；xref `payload` 只绑定 listing block 的手动 ID。
 
 address label:: 作者在标题或 payload 表面声明的手动 ID。
 
