@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { AbundantDocument } from "../../src/model";
+import type { AbundantDocument, XrefOccurrenceNode } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
@@ -9,160 +9,113 @@ import {
 } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
-import { iriTerm, rdf12TripleTerm } from "../../src/rdf12-projection/terms";
+import {
+	iriTerm,
+	type Rdf12IriTerm,
+	rdf12TripleTerm,
+} from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
 const interdocumentPath = join(projectRoot, "samples/interdocument-xref.adoc");
 
-describe("rdf12 xref projection", () => {
-	it("projects local xref occurrence, binding, relation triple, and reifier", () => {
+describe("rdf12 xref edge projection", () => {
+	it("projects local xref edge evidence, default relation triple, and reifier", () => {
 		const projection = projectAbundantDocumentToRdf12(referenceDocument(), {
 			documentRoot: projectRoot,
 		});
-		const xref = resourcesOfType(
+		const edge = resourcesOfType(
 			projection.graph,
-			`${namespaces.aat}XrefOccurrence`,
-		).find((iri) => iri.includes("#xref-l10-c60-o0"));
-		const source = iriTerm(
-			resourceIri(projection.documentIri, "section-l8-o0"),
-		);
-		const target = iriTerm(
-			resourceIri(projection.documentIri, "section-l25-o0"),
-		);
+			`${namespaces.aat}XrefEdge`,
+		).find((iri) => iri.includes("#xref-edge-l10-c60-o0"));
+		const source = heading(projection.documentIri, "heading-l8-o0");
+		const target = heading(projection.documentIri, "heading-l25-o0");
 		const predicate = iriTerm(`${namespaces.aat}references`);
 		const relation = rdf12Triple(source, predicate, target);
 
-		expect(xref).toBeDefined();
-		expectStringTriple(
+		expect(edge).toBeDefined();
+		expectResourceTypeCount(
 			projection.graph,
-			xref ?? "",
-			"targetSelector",
-			"3. 核心引擎设计",
+			`${namespaces.aat}XrefOccurrence`,
+			0,
 		);
 		expectStringTriple(
 			projection.graph,
-			xref ?? "",
+			edge ?? "",
+			"targetSelector",
+			"3. 核心引擎设计",
+		);
+		expectStringTriple(projection.graph, edge ?? "", "displayLabel", undefined);
+		expectStringTriple(
+			projection.graph,
+			edge ?? "",
 			"sourceSelector",
 			"_1_引言",
 		);
 		expectStringTriple(
 			projection.graph,
-			xref ?? "",
+			edge ?? "",
 			"raw",
 			"<<3. 核心引擎设计>>",
 		);
-		expectStringTriple(projection.graph, xref ?? "", "syntax", "shorthand");
-		expectNumberTriple(projection.graph, xref ?? "", "startLine", 10);
-		expectNumberTriple(projection.graph, xref ?? "", "endLine", 10);
-		expectNumberTriple(projection.graph, xref ?? "", "startColumn", 60);
-		expectNumberTriple(projection.graph, xref ?? "", "endColumn", 73);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(xref ?? ""),
-					iriTerm(`${namespaces.aat}sourceNode`),
-					source,
-				),
-			),
-		).toBe(true);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(xref ?? ""),
-					iriTerm(`${namespaces.aat}targetNode`),
-					target,
-				),
-			),
-		).toBe(true);
+		expectStringTriple(projection.graph, edge ?? "", "syntax", "shorthand");
+		expectNumberTriple(projection.graph, edge ?? "", "startLine", 10);
+		expectNumberTriple(projection.graph, edge ?? "", "endLine", 10);
+		expectNumberTriple(projection.graph, edge ?? "", "startColumn", 60);
+		expectNumberTriple(projection.graph, edge ?? "", "endColumn", 73);
+		expectTriple(projection.graph, edge ?? "", "sourceHeading", source);
+		expectTriple(projection.graph, edge ?? "", "targetHeading", target);
 		expect(projection.graph.has(relation)).toBe(true);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(xref ?? ""),
-					iriTerm(`${namespaces.rdf}reifies`),
-					rdf12TripleTerm(relation),
-				),
-			),
-		).toBe(true);
-		expect(
-			projection.graph.match({
-				subject: iriTerm(xref ?? ""),
-				predicate: iriTerm(`${namespaces.rdf}reifies`),
-			})[0]?.object.termType,
-		).toBe("triple");
+		expectTripleTerm(projection.graph, edge ?? "", relation);
 	});
 
-	it("attaches xref display labels to xref occurrence resources only", () => {
+	it("writes xref display text as a literal field on the edge evidence", () => {
 		const projection = projectAbundantDocumentToRdf12(referenceDocument(), {
 			documentRoot: projectRoot,
 		});
-		const xref = resourcesOfType(
+		const edge = resourcesOfType(
 			projection.graph,
-			`${namespaces.aat}XrefOccurrence`,
-		).find((iri) => iri.includes("#xref-l10-c100-o0"));
-		const labels = labelsForValue(
+			`${namespaces.aat}XrefEdge`,
+		).find((iri) => iri.includes("#xref-edge-l10-c100-o0"));
+
+		expect(edge).toBeDefined();
+		expectStringTriple(
 			projection.graph,
-			"XrefDisplayLabel",
+			edge ?? "",
+			"displayLabel",
 			"最终结论",
 		);
-
-		expect(xref).toBeDefined();
-		expect(labels).toHaveLength(1);
 		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(xref ?? ""),
-					iriTerm(`${namespaces.aat}hasLabel`),
-					iriTerm(labels[0] ?? ""),
-				),
-			),
-		).toBe(true);
+			projection.graph.match({
+				subject: iriTerm(edge ?? ""),
+				predicate: iriTerm(`${namespaces.aat}hasLabel`),
+			}),
+		).toHaveLength(0);
 		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(projection.documentIri),
-					iriTerm(`${namespaces.aat}hasLabel`),
-					iriTerm(labels[0] ?? ""),
-				),
-			),
-		).toBe(false);
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.rdf}value`),
+				object: stringLiteral("最终结论"),
+			}),
+		).toHaveLength(0);
 	});
 
-	it("keeps same-line xref display labels distinct per occurrence owner", () => {
+	it("keeps same-line xref display labels as separate edge literals", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			sameLineXrefLabelsDocument(),
 			{ documentRoot: projectRoot },
 		);
-		const firstXref = resourceIri(projection.documentIri, "xref-l3-c1-o0");
-		const secondXref = resourceIri(projection.documentIri, "xref-l3-c12-o0");
-		const [firstLabel] = labelsForValue(
-			projection.graph,
-			"XrefDisplayLabel",
-			"A",
-		);
-		const [secondLabel] = labelsForValue(
-			projection.graph,
-			"XrefDisplayLabel",
-			"B",
+		const firstEdge = resourceIri(projection.documentIri, "xref-edge-l3-c1-o0");
+		const secondEdge = resourceIri(
+			projection.documentIri,
+			"xref-edge-l3-c12-o0",
 		);
 
-		expect(firstLabel).toBeDefined();
-		expect(secondLabel).toBeDefined();
-		expect(firstLabel).not.toBe(secondLabel);
-		expect(hasLabelOwner(projection.graph, firstXref, firstLabel ?? "")).toBe(
-			true,
-		);
-		expect(hasLabelOwner(projection.graph, secondXref, secondLabel ?? "")).toBe(
-			true,
-		);
-		expect(hasLabelOwner(projection.graph, firstXref, secondLabel ?? "")).toBe(
-			false,
-		);
-		expect(hasLabelOwner(projection.graph, secondXref, firstLabel ?? "")).toBe(
-			false,
-		);
+		expectStringTriple(projection.graph, firstEdge, "displayLabel", "A");
+		expectStringTriple(projection.graph, secondEdge, "displayLabel", "B");
+		expect(
+			resourcesOfType(projection.graph, `${namespaces.aat}XrefEdge`),
+		).toEqual([firstEdge, secondEdge]);
 	});
 
 	it("keeps interdocument xrefs unbound without opening external files", () => {
@@ -170,70 +123,69 @@ describe("rdf12 xref projection", () => {
 			parseAbundantTree({ sourcePath: interdocumentPath }),
 			{ documentRoot: projectRoot },
 		);
-		const xref = resourcesOfType(
+		const edge = resourcesOfType(
 			projection.graph,
-			`${namespaces.aat}XrefOccurrence`,
-		).find(
-			(iri) =>
-				iri.includes("other.adoc") === false &&
-				hasSelector(projection.graph, iri, "other.adoc#remote-target"),
+			`${namespaces.aat}XrefEdge`,
+		).find((iri) =>
+			hasSelector(projection.graph, iri, "other.adoc#remote-target"),
 		);
 
-		expect(xref).toBeDefined();
+		expect(edge).toBeDefined();
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref ?? ""),
-				predicate: iriTerm(`${namespaces.aat}targetNode`),
+				subject: iriTerm(edge ?? ""),
+				predicate: iriTerm(`${namespaces.aat}targetHeading`),
 			}),
 		).toHaveLength(0);
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref ?? ""),
+				subject: iriTerm(edge ?? ""),
 				predicate: iriTerm(`${namespaces.rdf}reifies`),
 			}),
 		).toHaveLength(0);
 	});
 
-	it("does not create relation triples for unresolved targets", () => {
+	it("keeps unresolved selectors as edge evidence without relation triples", () => {
 		const projection = projectAbundantDocumentToRdf12(unresolvedDocument(), {
 			documentRoot: projectRoot,
 		});
-		const xref = onlyXref(projection.graph);
+		const edge = onlyXrefEdge(projection.graph);
 
 		expectStringTriple(
 			projection.graph,
-			xref,
+			edge,
 			"targetSelector",
 			"missing-target",
 		);
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref),
-				predicate: iriTerm(`${namespaces.aat}targetNode`),
+				subject: iriTerm(edge),
+				predicate: iriTerm(`${namespaces.aat}targetHeading`),
 			}),
 		).toHaveLength(0);
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref),
+				subject: iriTerm(edge),
 				predicate: iriTerm(`${namespaces.rdf}reifies`),
 			}),
 		).toHaveLength(0);
 	});
 
-	it("projects xref occurrences from the document-level xref index", () => {
+	it("projects xref edges from the document-level xref index", () => {
 		const projection = projectAbundantDocumentToRdf12(indexedXrefDocument(), {
 			documentRoot: projectRoot,
 		});
-		const xref = onlyXref(projection.graph);
+		const edge = onlyXrefEdge(projection.graph);
 
+		expect(edge).toContain("#xref-edge-l9-c3-o0");
 		expectStringTriple(
 			projection.graph,
-			xref,
+			edge,
 			"targetSelector",
 			"indexed-target",
 		);
-		expectNumberTriple(projection.graph, xref, "startLine", 9);
-		expectNumberTriple(projection.graph, xref, "startColumn", 3);
+		expectNumberTriple(projection.graph, edge, "startLine", 9);
+		expectNumberTriple(projection.graph, edge, "startColumn", 3);
 	});
 
 	it("deduplicates the same xref object appearing in index and children", () => {
@@ -243,7 +195,7 @@ describe("rdf12 xref projection", () => {
 		);
 
 		expect(
-			resourcesOfType(projection.graph, `${namespaces.aat}XrefOccurrence`),
+			resourcesOfType(projection.graph, `${namespaces.aat}XrefEdge`),
 		).toHaveLength(1);
 	});
 
@@ -253,31 +205,36 @@ describe("rdf12 xref projection", () => {
 		});
 
 		expect(
-			resourcesOfType(projection.graph, `${namespaces.aat}XrefOccurrence`),
+			resourcesOfType(projection.graph, `${namespaces.aat}XrefEdge`),
 		).toHaveLength(0);
 	});
 
-	it("emits candidates but no single target for multi-binding targets", () => {
+	it("emits candidate headings but no single target or relation for multi-binding targets", () => {
 		const projection = projectAbundantDocumentToRdf12(ambiguousDocument(), {
 			documentRoot: projectRoot,
 		});
-		const xref = onlyXref(projection.graph);
+		const edge = onlyXrefEdge(projection.graph);
 
 		expect(
-			projection.graph.match({
-				subject: iriTerm(xref),
-				predicate: iriTerm(`${namespaces.aat}candidateNode`),
-			}),
-		).toHaveLength(2);
+			projection.graph
+				.match({
+					subject: iriTerm(edge),
+					predicate: iriTerm(`${namespaces.aat}candidateHeading`),
+				})
+				.map((triple) => triple.object.value),
+		).toEqual([
+			heading(projection.documentIri, "heading-l1-o0").value,
+			heading(projection.documentIri, "heading-l4-o0").value,
+		]);
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref),
-				predicate: iriTerm(`${namespaces.aat}targetNode`),
+				subject: iriTerm(edge),
+				predicate: iriTerm(`${namespaces.aat}targetHeading`),
 			}),
 		).toHaveLength(0);
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref),
+				subject: iriTerm(edge),
 				predicate: iriTerm(`${namespaces.rdf}reifies`),
 			}),
 		).toHaveLength(0);
@@ -287,26 +244,25 @@ describe("rdf12 xref projection", () => {
 		const projection = projectAbundantDocumentToRdf12(relPayloadDocument(), {
 			documentRoot: projectRoot,
 		});
-		const xref = onlyXref(projection.graph);
-		const source = iriTerm(resourceIri(projection.documentIri, "document"));
-		const target = iriTerm(
-			resourceIri(projection.documentIri, "section-l1-o0"),
-		);
+		const edge = onlyXrefEdge(projection.graph);
+		const source = heading(projection.documentIri, "heading-l1-o0");
+		const target = heading(projection.documentIri, "heading-l1-o0");
 		const predicate = iriTerm(`${namespaces.rel}depends-on`);
+		const relation = rdf12Triple(source, predicate, target);
 
-		expectStringTriple(projection.graph, xref, "rawRel", "depends-on");
+		expectStringTriple(projection.graph, edge, "rel", "depends-on");
+		expectStringTriple(projection.graph, edge, "displayLabel", "Target");
 		expectStringTriple(
 			projection.graph,
-			xref,
+			edge,
 			"payloadSelector",
 			"payload-one",
 		);
-		expect(projection.graph.has(rdf12Triple(source, predicate, target))).toBe(
-			true,
-		);
+		expect(projection.graph.has(relation)).toBe(true);
+		expectTripleTerm(projection.graph, edge, relation);
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref),
+				subject: iriTerm(edge),
 				predicate: iriTerm(`${namespaces.aat}hasAttribute`),
 			}),
 		).toHaveLength(0);
@@ -316,12 +272,12 @@ describe("rdf12 xref projection", () => {
 		const projection = projectAbundantDocumentToRdf12(invalidRelDocument(), {
 			documentRoot: projectRoot,
 		});
-		const xref = onlyXref(projection.graph);
+		const edge = onlyXrefEdge(projection.graph);
 
-		expectStringTriple(projection.graph, xref, "rawRel", " bad rel ");
+		expectStringTriple(projection.graph, edge, "rel", " bad rel ");
 		expect(
 			projection.graph.match({
-				subject: iriTerm(xref),
+				subject: iriTerm(edge),
 				predicate: iriTerm(`${namespaces.rdf}reifies`),
 			}),
 		).toHaveLength(0);
@@ -355,7 +311,8 @@ describe("rdf12 xref projection", () => {
 			.find((triple) => triple.predicate.value === `${namespaces.rel}is`);
 
 		expect(expectedRelation).toBeDefined();
-		expect(expectedRelation?.object.termType).toBe("iri");
+		expect(expectedRelation?.subject.value).toContain("#heading-l5-o0");
+		expect(expectedRelation?.object.value).toContain("#heading-l3-o0");
 		expect(
 			projection.graph.has(
 				rdf12Triple(
@@ -365,28 +322,25 @@ describe("rdf12 xref projection", () => {
 				),
 			),
 		).toBe(false);
-		const xref = onlyXref(projection.graph);
-
-		expect(
-			projection.graph.has(
+		expectTripleTerm(
+			projection.graph,
+			onlyXrefEdge(projection.graph),
+			expectedRelation ??
 				rdf12Triple(
-					iriTerm(xref),
-					iriTerm(`${namespaces.rdf}reifies`),
-					rdf12TripleTerm(
-						expectedRelation ??
-							rdf12Triple(
-								iriTerm("urn:missing-source"),
-								iriTerm("urn:missing-predicate"),
-								iriTerm("urn:missing-target"),
-							),
-					),
+					iriTerm("urn:missing-source"),
+					iriTerm("urn:missing-predicate"),
+					iriTerm("urn:missing-target"),
 				),
-			),
-		).toBe(true);
-		expectStringTriple(projection.graph, xref, "rawRel", "is");
+		);
 		expectStringTriple(
 			projection.graph,
-			xref,
+			onlyXrefEdge(projection.graph),
+			"rel",
+			"is",
+		);
+		expectStringTriple(
+			projection.graph,
+			onlyXrefEdge(projection.graph),
 			"payloadSelector",
 			"rel-delivery-capacity",
 		);
@@ -401,6 +355,10 @@ function resourceIri(documentIri: string, localId: string): string {
 	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
 }
 
+function heading(documentIri: string, localId: string): Rdf12IriTerm {
+	return iriTerm(resourceIri(documentIri, localId));
+}
+
 function resourcesOfType(graph: Rdf12Graph, typeIri: string): string[] {
 	return graph
 		.match({
@@ -410,40 +368,12 @@ function resourcesOfType(graph: Rdf12Graph, typeIri: string): string[] {
 		.map((triple) => triple.subject.value);
 }
 
-function labelsForValue(
+function expectResourceTypeCount(
 	graph: Rdf12Graph,
-	classLocalName: string,
-	value: string,
-): string[] {
-	return graph
-		.match({
-			predicate: iriTerm(`${namespaces.rdf}value`),
-			object: stringLiteral(value),
-		})
-		.filter((triple) =>
-			graph.has(
-				rdf12Triple(
-					triple.subject,
-					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}${classLocalName}`),
-				),
-			),
-		)
-		.map((triple) => triple.subject.value);
-}
-
-function hasLabelOwner(
-	graph: Rdf12Graph,
-	owner: string,
-	label: string,
-): boolean {
-	return graph.has(
-		rdf12Triple(
-			iriTerm(owner),
-			iriTerm(`${namespaces.aat}hasLabel`),
-			iriTerm(label),
-		),
-	);
+	typeIri: string,
+	count: number,
+): void {
+	expect(resourcesOfType(graph, typeIri)).toHaveLength(count);
 }
 
 function hasSelector(
@@ -460,20 +390,69 @@ function hasSelector(
 	);
 }
 
-function onlyXref(graph: Rdf12Graph): string {
-	const [xref] = resourcesOfType(graph, `${namespaces.aat}XrefOccurrence`);
-	if (xref === undefined) {
-		throw new Error("expected one xref occurrence");
+function onlyXrefEdge(graph: Rdf12Graph): string {
+	const [edge] = resourcesOfType(graph, `${namespaces.aat}XrefEdge`);
+	if (edge === undefined) {
+		throw new Error("expected one xref edge");
 	}
-	return xref;
+	return edge;
+}
+
+function expectTriple(
+	graph: Rdf12Graph,
+	subject: string,
+	predicateLocalName: string,
+	object: Rdf12IriTerm,
+): void {
+	expect(
+		graph.has(
+			rdf12Triple(
+				iriTerm(subject),
+				iriTerm(`${namespaces.aat}${predicateLocalName}`),
+				object,
+			),
+		),
+	).toBe(true);
+}
+
+function expectTripleTerm(
+	graph: Rdf12Graph,
+	subject: string,
+	relation: ReturnType<typeof rdf12Triple>,
+): void {
+	expect(
+		graph.has(
+			rdf12Triple(
+				iriTerm(subject),
+				iriTerm(`${namespaces.rdf}reifies`),
+				rdf12TripleTerm(relation),
+			),
+		),
+	).toBe(true);
+	expect(
+		graph.match({
+			subject: iriTerm(subject),
+			predicate: iriTerm(`${namespaces.rdf}reifies`),
+		})[0]?.object.termType,
+	).toBe("triple");
 }
 
 function expectStringTriple(
 	graph: Rdf12Graph,
 	subject: string,
 	predicateLocalName: string,
-	value: string,
+	value: string | undefined,
 ): void {
+	if (value === undefined) {
+		expect(
+			graph.match({
+				subject: iriTerm(subject),
+				predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+			}),
+		).toHaveLength(0);
+		return;
+	}
+
 	expect(
 		graph.has(
 			rdf12Triple(
@@ -506,23 +485,26 @@ function unresolvedDocument(): AbundantDocument {
 	return {
 		...baseDocument(),
 		children: [
-			{
-				kind: "paragraph",
-				text: "Missing target.",
-				source: { span: { startLine: 1, endLine: 1 } },
-				children: [
-					{
-						kind: "xref",
-						syntax: "shorthand",
-						raw: "<<missing-target>>",
-						target: "missing-target",
-						sourceSpan: {
-							start: { line: 1, column: 1 },
-							end: { line: 1, column: 19 },
+			sectionNode(1, "source", "Source", [
+				{
+					kind: "paragraph",
+					text: "Missing target.",
+					source: { span: { startLine: 3, endLine: 3 } },
+					children: [
+						{
+							kind: "xref",
+							syntax: "shorthand",
+							raw: "<<missing-target>>",
+							target: "missing-target",
+							containingSectionId: "source",
+							sourceSpan: {
+								start: { line: 3, column: 1 },
+								end: { line: 3, column: 19 },
+							},
 						},
-					},
-				],
-			},
+					],
+				},
+			]),
 		],
 	};
 }
@@ -564,9 +546,7 @@ function spanlessXrefDocument(): AbundantDocument {
 	};
 }
 
-function indexedXref(): NonNullable<
-	AbundantDocument["xrefOccurrences"][number]
-> {
+function indexedXref(): XrefOccurrenceNode {
 	return {
 		kind: "xref",
 		syntax: "shorthand",
@@ -585,23 +565,26 @@ function ambiguousDocument(): AbundantDocument {
 		children: [
 			sectionNode(1, "duplicate-target", "First"),
 			sectionNode(4, "duplicate-target", "Second"),
-			{
-				kind: "paragraph",
-				text: "Ambiguous target.",
-				source: { span: { startLine: 7, endLine: 7 } },
-				children: [
-					{
-						kind: "xref",
-						syntax: "shorthand",
-						raw: "<<duplicate-target>>",
-						target: "duplicate-target",
-						sourceSpan: {
-							start: { line: 7, column: 1 },
-							end: { line: 7, column: 21 },
+			sectionNode(7, "source", "Source", [
+				{
+					kind: "paragraph",
+					text: "Ambiguous target.",
+					source: { span: { startLine: 9, endLine: 9 } },
+					children: [
+						{
+							kind: "xref",
+							syntax: "shorthand",
+							raw: "<<duplicate-target>>",
+							target: "duplicate-target",
+							containingSectionId: "source",
+							sourceSpan: {
+								start: { line: 9, column: 1 },
+								end: { line: 9, column: 21 },
+							},
 						},
-					},
-				],
-			},
+					],
+				},
+			]),
 		],
 	};
 }
@@ -610,29 +593,31 @@ function relPayloadDocument(): AbundantDocument {
 	return {
 		...baseDocument(),
 		children: [
-			sectionNode(1, "target", "Target"),
-			{
-				kind: "paragraph",
-				text: "Rel target.",
-				source: { span: { startLine: 4, endLine: 4 } },
-				children: [
-					{
-						kind: "xref",
-						syntax: "macro",
-						raw: "xref:target[Target, rel=depends-on, payload=payload-one]",
-						target: "target",
-						label: "Target",
-						attributes: {
-							rel: "depends-on",
-							payload: "payload-one",
+			sectionNode(1, "target", "Target", [
+				{
+					kind: "paragraph",
+					text: "Rel target.",
+					source: { span: { startLine: 4, endLine: 4 } },
+					children: [
+						{
+							kind: "xref",
+							syntax: "macro",
+							raw: "xref:target[Target, rel=depends-on, payload=payload-one]",
+							target: "target",
+							label: "Target",
+							containingSectionId: "target",
+							attributes: {
+								rel: "depends-on",
+								payload: "payload-one",
+							},
+							sourceSpan: {
+								start: { line: 4, column: 1 },
+								end: { line: 4, column: 56 },
+							},
 						},
-						sourceSpan: {
-							start: { line: 4, column: 1 },
-							end: { line: 4, column: 56 },
-						},
-					},
-				],
-			},
+					],
+				},
+			]),
 		],
 	};
 }
@@ -641,36 +626,38 @@ function invalidRelDocument(): AbundantDocument {
 	return {
 		...baseDocument(),
 		children: [
-			sectionNode(1, "target", "Target"),
-			{
-				kind: "paragraph",
-				text: "Invalid rel target.",
-				source: { span: { startLine: 4, endLine: 4 } },
-				children: [
-					{
-						kind: "xref",
-						syntax: "macro",
-						raw: "xref:target[Target, rel= bad rel ]",
-						target: "target",
-						label: "Target",
-						attributes: {
-							rel: " bad rel ",
+			sectionNode(1, "target", "Target", [
+				{
+					kind: "paragraph",
+					text: "Invalid rel target.",
+					source: { span: { startLine: 4, endLine: 4 } },
+					children: [
+						{
+							kind: "xref",
+							syntax: "macro",
+							raw: "xref:target[Target, rel= bad rel ]",
+							target: "target",
+							label: "Target",
+							containingSectionId: "target",
+							attributes: {
+								rel: " bad rel ",
+							},
+							sourceSpan: {
+								start: { line: 4, column: 1 },
+								end: { line: 4, column: 36 },
+							},
 						},
-						sourceSpan: {
-							start: { line: 4, column: 1 },
-							end: { line: 4, column: 36 },
-						},
-					},
-				],
-			},
+					],
+				},
+			]),
 		],
 	};
 }
 
 function sameLineXrefLabelsDocument(): AbundantDocument {
-	const firstXref = {
-		kind: "xref" as const,
-		syntax: "shorthand" as const,
+	const firstXref: XrefOccurrenceNode = {
+		kind: "xref",
+		syntax: "shorthand",
 		raw: "<<missing-a,A>>",
 		target: "missing-a",
 		label: "A",
@@ -679,9 +666,9 @@ function sameLineXrefLabelsDocument(): AbundantDocument {
 			end: { line: 3, column: 14 },
 		},
 	};
-	const secondXref = {
-		kind: "xref" as const,
-		syntax: "shorthand" as const,
+	const secondXref: XrefOccurrenceNode = {
+		kind: "xref",
+		syntax: "shorthand",
 		raw: "<<missing-b,B>>",
 		target: "missing-b",
 		label: "B",
@@ -709,6 +696,7 @@ function sectionNode(
 	startLine: number,
 	id: string,
 	title: string,
+	children: AbundantDocument["children"] = [],
 ): NonNullable<AbundantDocument["children"][number]> {
 	return {
 		kind: "section",
@@ -730,6 +718,7 @@ function sectionNode(
 			start: { line: startLine, column: 4 },
 			end: { line: startLine, column: 4 + title.length },
 		},
+		children,
 	};
 }
 

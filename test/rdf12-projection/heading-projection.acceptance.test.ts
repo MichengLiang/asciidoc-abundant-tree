@@ -23,10 +23,6 @@ import {
 } from "./helpers/graph-matchers";
 
 const migrationAllowedFailureCases = new Map([
-	[
-		"Batch 04 projects xref relation edge evidence and RDF 1.2 reifier",
-		"Batch 04",
-	],
 	["Batch 05 projects heading and xref direct field predicates", "Batch 05"],
 	["Batch 06 binds node and edge payload complex properties", "Batch 06"],
 	[
@@ -217,34 +213,48 @@ describe("rdf12 heading projection target acceptance", () => {
 		expect(graph.match({ predicate: aatTerm("hasLabel") })).toHaveLength(0);
 	});
 
-	migrationIt(
-		"Batch 04 projects xref relation edge evidence and RDF 1.2 reifier",
-		() => {
-			const { graph, heading } = structuralPayloadProjection();
-			const deliveryPolicy = heading("heading-l5-o0");
-			const capacityRule = heading("heading-l41-o0");
-			const relation = rdf12Triple(
-				deliveryPolicy,
-				relTerm("depends-on"),
-				capacityRule,
-			);
-			const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
+	it("Batch 04 projects xref relation edge evidence and RDF 1.2 reifier", () => {
+		const { graph, heading } = structuralPayloadProjection();
+		const deliveryPolicy = heading("heading-l5-o0");
+		const capacityRule = heading("heading-l41-o0");
+		const relation = rdf12Triple(
+			deliveryPolicy,
+			relTerm("depends-on"),
+			capacityRule,
+		);
+		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
 
-			expectTriple(graph, deliveryPolicy, relTerm("depends-on"), capacityRule);
-			expectTriple(
-				graph,
-				xrefEdge,
-				rdfTerm("reifies"),
-				rdf12TripleTerm(relation),
-			);
-			expectLiteralValue(
-				graph,
-				xrefEdge,
-				aatTerm("payloadSelector"),
-				"rel-delivery-capacity",
-			);
-		},
-	);
+		expectResourceTypeCount(graph, aatTerm("XrefOccurrence"), 0);
+		expectTriple(graph, deliveryPolicy, relTerm("depends-on"), capacityRule);
+		expectTriple(
+			graph,
+			xrefEdge,
+			rdfTerm("reifies"),
+			rdf12TripleTerm(relation),
+		);
+		expectTriple(graph, xrefEdge, aatTerm("sourceHeading"), deliveryPolicy);
+		expectTriple(graph, xrefEdge, aatTerm("targetHeading"), capacityRule);
+		expectLiteralValue(
+			graph,
+			xrefEdge,
+			aatTerm("targetSelector"),
+			"capacity-rule",
+		);
+		expectLiteralValue(graph, xrefEdge, aatTerm("displayLabel"), "运力规则");
+		expectLiteralValue(graph, xrefEdge, aatTerm("rel"), "depends-on");
+		expectLiteralValue(
+			graph,
+			xrefEdge,
+			aatTerm("payloadSelector"),
+			"rel-delivery-capacity",
+		);
+		expectLiteralValue(
+			graph,
+			xrefEdge,
+			aatTerm("raw"),
+			"xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]",
+		);
+	});
 
 	migrationIt(
 		"Batch 05 projects heading and xref direct field predicates",

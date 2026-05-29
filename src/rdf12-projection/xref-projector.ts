@@ -2,7 +2,6 @@ import type { AbundantDocument, XrefOccurrenceNode } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12TermKey, rdf12Triple } from "./graph";
 import type { Rdf12LabelCatalog } from "./label-catalog";
-import { addXrefDisplayLabelResource } from "./labels";
 import { stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
 import type { NormalizedRdf12Options } from "./options";
@@ -10,8 +9,8 @@ import { addReifierTriple } from "./reifier";
 import { mapRelationPredicate } from "./relation-predicate";
 import {
 	createOrdinalAllocator,
-	makeOccurrenceResourceLocalId,
 	makeResourceIri,
+	makeXrefEdgeResourceLocalId,
 	type OrdinalAllocator,
 } from "./resource-identity";
 import { bindSelector } from "./selector-binding";
@@ -119,8 +118,8 @@ function projectXref(
 
 	const xrefIri = createXrefResource(context, xref);
 	context.xrefIndex.set({ node: xref, iri: xrefIri });
-	const sourceNode = writeSourceBinding(context, xrefIri, xref);
-	const targetNode = writeTargetBinding(context, xrefIri, xref);
+	const sourceHeading = writeSourceBinding(context, xrefIri, xref);
+	const targetHeading = writeTargetBinding(context, xrefIri, xref);
 	const rawRel = stringAttribute(xref.attributes, "rel");
 	const payloadSelector = stringAttribute(xref.attributes, "payload");
 	const predicateMapping = mapRelationPredicate(
@@ -129,20 +128,20 @@ function projectXref(
 	);
 
 	if (predicateMapping.rawRel !== undefined) {
-		addStringTriple(context.graph, xrefIri, "rawRel", predicateMapping.rawRel);
+		addStringTriple(context.graph, xrefIri, "rel", predicateMapping.rawRel);
 	}
 	if (payloadSelector !== undefined) {
 		addStringTriple(context.graph, xrefIri, "payloadSelector", payloadSelector);
 	}
 	if (
-		sourceNode !== undefined &&
-		targetNode !== undefined &&
+		sourceHeading !== undefined &&
+		targetHeading !== undefined &&
 		predicateMapping.predicate !== undefined
 	) {
 		const relation = rdf12Triple(
-			sourceNode,
+			sourceHeading,
 			predicateMapping.predicate,
-			targetNode,
+			targetHeading,
 		);
 		context.graph.add(relation);
 		addReifierTriple(context.graph, xrefIri, relation);
@@ -190,8 +189,7 @@ function createXrefResource(
 	const xrefIri = makeResourceIri({
 		baseIri: context.options.baseIri,
 		documentKey: context.documentKey,
-		localId: makeOccurrenceResourceLocalId({
-			kind: "xref",
+		localId: makeXrefEdgeResourceLocalId({
 			startLine: xref.sourceSpan.start.line,
 			startColumn: xref.sourceSpan.start.column,
 			ordinal,
@@ -202,7 +200,7 @@ function createXrefResource(
 		rdf12Triple(
 			xrefIri,
 			iriTerm(`${namespaces.rdf}type`),
-			iriTerm(`${namespaces.aat}XrefOccurrence`),
+			iriTerm(`${namespaces.aat}XrefEdge`),
 		),
 	);
 	addSourceSpanTriples({
@@ -240,16 +238,7 @@ function createXrefResource(
 	);
 
 	if (xref.label !== undefined) {
-		addXrefDisplayLabelResource({
-			graph: context.graph,
-			catalog: context.labelCatalog,
-			baseIri: context.options.baseIri,
-			documentKey: context.documentKey,
-			relativePath: context.relativePath,
-			owner: xrefIri,
-			value: xref.label,
-			sourceSpan: xref.sourceSpan,
-		});
+		addStringTriple(context.graph, xrefIri, "displayLabel", xref.label);
 	}
 
 	return xrefIri;
@@ -261,14 +250,7 @@ function writeSourceBinding(
 	xref: XrefOccurrenceNode,
 ): Rdf12IriTerm | undefined {
 	if (xref.containingSectionId === undefined) {
-		context.graph.add(
-			rdf12Triple(
-				xrefIri,
-				iriTerm(`${namespaces.aat}sourceNode`),
-				context.documentIri,
-			),
-		);
-		return context.documentIri;
+		return undefined;
 	}
 
 	addStringTriple(
@@ -283,7 +265,11 @@ function writeSourceBinding(
 	}
 
 	context.graph.add(
-		rdf12Triple(xrefIri, iriTerm(`${namespaces.aat}sourceNode`), result.target),
+		rdf12Triple(
+			xrefIri,
+			iriTerm(`${namespaces.aat}sourceHeading`),
+			result.target,
+		),
 	);
 	return result.target;
 }
@@ -299,7 +285,7 @@ function writeTargetBinding(
 		context.graph.add(
 			rdf12Triple(
 				xrefIri,
-				iriTerm(`${namespaces.aat}targetNode`),
+				iriTerm(`${namespaces.aat}targetHeading`),
 				result.target,
 			),
 		);
@@ -311,7 +297,7 @@ function writeTargetBinding(
 			context.graph.add(
 				rdf12Triple(
 					xrefIri,
-					iriTerm(`${namespaces.aat}candidateNode`),
+					iriTerm(`${namespaces.aat}candidateHeading`),
 					candidate,
 				),
 			);

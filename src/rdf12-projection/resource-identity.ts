@@ -63,6 +63,14 @@ export function makeOccurrenceResourceLocalId(
 	return `${input.kind}-l${input.startLine}-c${input.startColumn}-o${input.ordinal}`;
 }
 
+export function makeXrefEdgeResourceLocalId(input: {
+	readonly startLine: number;
+	readonly startColumn: number;
+	readonly ordinal: number;
+}): string {
+	return `xref-edge-l${input.startLine}-c${input.startColumn}-o${input.ordinal}`;
+}
+
 export function documentResourceLocalId(): string {
 	return "document";
 }

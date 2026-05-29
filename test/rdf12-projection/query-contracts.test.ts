@@ -6,11 +6,17 @@ import type { Rdf12Graph } from "../../src/rdf12-projection/graph";
 import { assertRdf12GraphsEquivalent } from "../../src/rdf12-projection/graph-canonicalization";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { parseTurtleToRdf12Graph } from "../../src/rdf12-projection/n3-adapter";
-import type { Rdf12IriTerm } from "../../src/rdf12-projection/terms";
+import {
+	type Rdf12IriTerm,
+	rdf12Triple,
+	rdf12TripleTerm,
+} from "../../src/rdf12-projection/terms";
 import {
 	aatTerm,
 	expectResourceTypeCount,
 	expectTriple,
+	rdfTerm,
+	relTerm,
 	termIri,
 } from "./helpers/graph-matchers";
 
@@ -71,6 +77,38 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			aatTerm("previousSibling"),
 			heading("配送策略"),
 		);
+	});
+
+	it("exposes xref edge evidence for outgoing heading relations", () => {
+		const result = rdf12(
+			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+		const graph = parseTurtleToRdf12Graph(result.ttl);
+		const heading = headingLookupFromGraph(graph);
+		const source = heading("配送策略");
+		const target = heading("运力规则");
+		const relation = rdf12Triple(source, relTerm("depends-on"), target);
+		const edges = graph
+			.match({
+				predicate: aatTerm("sourceHeading"),
+				object: source,
+			})
+			.map((triple) => triple.subject);
+
+		expect(edges).toHaveLength(1);
+		const edge = edges[0] ?? termIri("");
+		expectTriple(graph, source, relTerm("depends-on"), target);
+		expectTriple(graph, edge, aatTerm("targetHeading"), target);
+		expectTriple(graph, edge, rdfTerm("reifies"), rdf12TripleTerm(relation));
+		expect(
+			graph.match({
+				subject: edge,
+				predicate: aatTerm("weight"),
+			}),
+		).toHaveLength(0);
 	});
 });
 
