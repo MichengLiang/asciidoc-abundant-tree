@@ -46,7 +46,7 @@
 |Batch 06
 |Payload 复杂属性
 |待审核
-|fed28de71bd359b498a431d019f6b5ea16d11329
+|c1b3ecac0b1d40238439af5dada49517ce312e72
 |xref:batch-06-review-package[Batch 06 审核包]
 
 |Batch 07

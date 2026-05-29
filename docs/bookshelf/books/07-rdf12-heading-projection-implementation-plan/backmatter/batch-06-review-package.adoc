@@ -6,7 +6,7 @@
 [horizontal]
 批次编号:: `Batch 06`
 批次名称:: `Payload 复杂属性`
-提交 hash:: `fed28de71bd359b498a431d019f6b5ea16d11329`
+提交 hash:: `c1b3ecac0b1d40238439af5dada49517ce312e72`
 执行者:: `Codex`
 审核者:: `待定`
 审核状态:: `待审核`
@@ -32,6 +32,7 @@ docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/
 - payload listing 投影为 complex property object，不输出 aat:PayloadBlock public type。
 - payload object 使用 source-coordinate resource identity，payload id 不进入 IRI。
 - payload object 写入 aat:payloadId。
+- payload object 的 `aat:payloadId` 使用 first declared id，同时所有 declared ids 都注册为 payload selectors。
 - 无 payload id 的 `.payload` / `.xref-payload` listing 不投影为 public payload object，也不参与 payload binding。
 - node payload object 写入 aat:payloadKind "node"。
 - xref payload object 写入 aat:payloadKind "edge"。
@@ -103,10 +104,11 @@ pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/payload-p
 * 本批 payload object 不作为 heading、结构边端点或 xref target heading。
 * 本批测试覆盖了 bound、unbound、ambiguous 和 missing selector 路径。
 * 本批返工测试覆盖了无 id `.payload` 与无 id `.xref-payload` 路径，保证 public payload object 必有 `aat:payloadId`。
+* 本批返工测试覆盖了 `.xref-payload` secondary declared id selector，保证 xref `payload=<alias>` 可绑定到同一 payload object。
 
 === 审核结论
 
 [horizontal]
 结论:: `待审核`
-理由:: `执行者提交 Batch 06 实现与返工测试，等待审核者确认 payload complex property object 替代 PayloadBlock/hasPayload/payloadOf，payload raw 保持 opaque，且 public payload object 必有 payloadId。`
+理由:: `执行者提交 Batch 06 实现与返工测试，等待审核者确认 payload complex property object 替代 PayloadBlock/hasPayload/payloadOf，payload raw 保持 opaque，public payload object 必有 payloadId，且 secondary declared ids 可作为 payload selectors。`
 后续动作:: `审核通过后进入 Batch 07；若审核打回，则返工 Batch 06。`
