@@ -43,7 +43,7 @@ describe("rdf12 Turtle roundtrip", () => {
 	it("does not treat string literals that look like triple terms as reifier triple terms", () => {
 		const fake = `
 @prefix rdf: <${namespaces.rdf}> .
-<urn:aat:doc:test#xref-l1-c1-o0> rdf:reifies "<<(<urn:aat:doc:test#s> <${namespaces.aat}references> <urn:aat:doc:test#t>)>>" .
+<urn:aat:doc:test#xref-edge-l1-c1-o0> rdf:reifies "<<(<urn:aat:doc:test#s> <${namespaces.aat}references> <urn:aat:doc:test#t>)>>" .
 `;
 		const [reifier] = parseTurtleToN3Quads(fake);
 
@@ -131,7 +131,7 @@ describe("rdf12 Turtle roundtrip", () => {
 
 	it("rejects unsupported embedded triple subject and predicate terms", () => {
 		const embeddedBlankSubject = DataFactory.quad(
-			DataFactory.namedNode("urn:aat:doc:test#xref-l1-c1-o0"),
+			DataFactory.namedNode("urn:aat:doc:test#xref-edge-l1-c1-o0"),
 			DataFactory.namedNode(`${namespaces.rdf}reifies`),
 			DataFactory.triple(
 				DataFactory.blankNode("embedded-subject"),
@@ -140,7 +140,7 @@ describe("rdf12 Turtle roundtrip", () => {
 			) as unknown as Quad["object"],
 		);
 		const embeddedBlankPredicate = DataFactory.quad(
-			DataFactory.namedNode("urn:aat:doc:test#xref-l1-c1-o0"),
+			DataFactory.namedNode("urn:aat:doc:test#xref-edge-l1-c1-o0"),
 			DataFactory.namedNode(`${namespaces.rdf}reifies`),
 			DataFactory.triple(
 				DataFactory.namedNode("urn:aat:doc:test#source"),

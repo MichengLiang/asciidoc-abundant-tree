@@ -19,7 +19,6 @@ describe("rdf12 provenance resources", () => {
 		const sourceDocument = iriTerm(projection.sourceDocumentIri);
 		const projectionEntity = iriTerm(projection.projectionIri);
 		const projectionActivity = iriTerm(projection.projectionActivityIri);
-		const abundantDocument = iriTerm(projection.abundantDocumentIri);
 
 		expect(
 			graph.has(
@@ -53,10 +52,19 @@ describe("rdf12 provenance resources", () => {
 				rdf12Triple(
 					projectionEntity,
 					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}RdfProjection`),
+					iriTerm(`${namespaces.aat}HeadingProjection`),
 				),
 			),
 		).toBe(true);
+		expect(
+			graph.has(
+				rdf12Triple(
+					projectionEntity,
+					iriTerm(`${namespaces.rdf}type`),
+					iriTerm(`${namespaces.aat}RdfProjection`),
+				),
+			),
+		).toBe(false);
 		expect(
 			graph.has(
 				rdf12Triple(
@@ -72,15 +80,6 @@ describe("rdf12 provenance resources", () => {
 					projectionEntity,
 					iriTerm(`${namespaces.prov}wasGeneratedBy`),
 					projectionActivity,
-				),
-			),
-		).toBe(true);
-		expect(
-			graph.has(
-				rdf12Triple(
-					projectionEntity,
-					iriTerm(`${namespaces.dcterms}source`),
-					sourceDocument,
 				),
 			),
 		).toBe(true);
@@ -107,19 +106,17 @@ describe("rdf12 provenance resources", () => {
 				rdf12Triple(
 					projectionActivity,
 					iriTerm(`${namespaces.prov}used`),
-					abundantDocument,
-				),
-			),
-		).toBe(true);
-		expect(
-			graph.has(
-				rdf12Triple(
-					abundantDocument,
-					iriTerm(`${namespaces.prov}wasDerivedFrom`),
 					sourceDocument,
 				),
 			),
 		).toBe(true);
+		expectPublicTypeAbsent(graph, "AsciiDocDocument");
+		expectPublicTypeAbsent(graph, "AbundantDocument");
+		expect(
+			graph.match({
+				object: iriTerm(projection.abundantDocumentIri),
+			}),
+		).toHaveLength(0);
 	});
 
 	it("omits sourceDigest when no source digest is available", () => {
@@ -151,6 +148,18 @@ describe("rdf12 provenance resources", () => {
 		).toBe(true);
 	});
 });
+
+function expectPublicTypeAbsent(
+	graph: ReturnType<typeof projectAbundantDocumentToRdf12>["graph"],
+	typeLocalName: string,
+): void {
+	expect(
+		graph.match({
+			predicate: iriTerm(`${namespaces.rdf}type`),
+			object: iriTerm(`${namespaces.aat}${typeLocalName}`),
+		}),
+	).toHaveLength(0);
+}
 
 function emptyDocument(sourcePath: string): AbundantDocument {
 	return {

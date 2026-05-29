@@ -219,9 +219,13 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			"XrefDisplayLabel",
 			"RoleLabel",
 			"XrefOccurrence",
+			"AsciiDocDocument",
+			"AbundantDocument",
+			"RdfProjection",
 		]) {
 			expectResourceTypeCount(graph, aatTerm(oldType), 0);
 		}
+		expectResourceTypeCount(graph, aatTerm("HeadingProjection"), 1);
 		for (const oldPredicate of [
 			"hasAttribute",
 			"hasLabel",

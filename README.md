@@ -28,7 +28,7 @@ The primary artifact is the TypeScript object. Pretty text, JSON, RDF 1.2 Turtle
 ## Documentation
 
 - Live bookshelf: <https://michengliang.github.io/asciidoc-abundant-tree/>
-- RDF 1.2 line projection specification: [AsciiDoc `AbundantDocument` 到 RDF 1.2 行级结构图投影规约](https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html)
+- RDF 1.2 heading projection specification: [AsciiDoc `AbundantDocument` 到 RDF 1.2 标题投影图规约](https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html)
 - Source: [`docs/bookshelf`](./docs/bookshelf/)
 
 The RDF 1.2 projection book specifies the graph vocabulary and query contract used by the package runtime. The public runtime surface exposes that projection through the `rdf12(document, options)` API and CLI `--format rdf12` / `--format rdf12-json-ld`.
@@ -236,7 +236,7 @@ pnpm dev samples/reference-links.adoc --format rdf12
 
 ## Release State
 
-The package is usable for single-file source analysis, xref/target auditing, and RDF 1.2 line-level projection. The object model and RDF vocabulary are intentionally small and conservative. Prefer pinning a minor version in production workflows and checking the JSON and RDF shapes against your own fixtures before relying on it for large document systems.
+The package is usable for single-file source analysis, xref/target auditing, and RDF 1.2 heading projection. The object model and RDF vocabulary are intentionally small and conservative. Prefer pinning a minor version in production workflows and checking the JSON and RDF shapes against your own fixtures before relying on it for large document systems.
 
 ## License
 

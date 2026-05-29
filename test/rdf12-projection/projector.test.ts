@@ -1,8 +1,6 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
-import { rdf12Triple } from "../../src/rdf12-projection/graph";
-import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm } from "../../src/rdf12-projection/terms";
@@ -10,7 +8,7 @@ import { iriTerm } from "../../src/rdf12-projection/terms";
 describe("rdf12 internal projector", () => {
 	const documentRoot = path.resolve("/repo");
 
-	it("projects an empty document to a provenance and document-resource graph", () => {
+	it("projects an empty document to a provenance graph without public document resources", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			emptyDocument(path.join(documentRoot, "docs", "empty.adoc")),
 			{ documentRoot },
@@ -21,23 +19,16 @@ describe("rdf12 internal projector", () => {
 		expect(projection.documentIri).not.toBe(projection.sourceDocumentIri);
 		expect(projection.graph.size).toBeGreaterThan(0);
 		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(projection.documentIri),
-					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}AsciiDocDocument`),
-				),
-			),
-		).toBe(true);
+			projection.graph.match({
+				subject: iriTerm(projection.documentIri),
+			}),
+		).toHaveLength(0);
 		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(projection.documentIri),
-					iriTerm(`${namespaces.aat}relativePath`),
-					stringLiteral("docs/empty.adoc"),
-				),
-			),
-		).toBe(true);
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.rdf}type`),
+				object: iriTerm(`${namespaces.aat}AsciiDocDocument`),
+			}),
+		).toHaveLength(0);
 	});
 
 	it("does not project label resources before the label batch", () => {

@@ -10,10 +10,10 @@ import { iriTerm, rdf12TripleTerm } from "../../src/rdf12-projection/terms";
 describe("rdf12 relation reifier", () => {
 	it("uses an RDF 1.2 triple term object, not a string literal", () => {
 		const graph = createRdf12Graph();
-		const source = iriTerm("urn:aat:doc:test#section-l1-o0");
+		const source = iriTerm("urn:aat:doc:test#heading-l1-o0");
 		const predicate = iriTerm(`${namespaces.aat}references`);
-		const target = iriTerm("urn:aat:doc:test#section-l5-o0");
-		const xref = iriTerm("urn:aat:doc:test#xref-l2-c3-o0");
+		const target = iriTerm("urn:aat:doc:test#heading-l5-o0");
+		const xref = iriTerm("urn:aat:doc:test#xref-edge-l2-c3-o0");
 		const relation = rdf12Triple(source, predicate, target);
 
 		addReifierTriple(graph, xref, relation);
@@ -36,21 +36,21 @@ describe("rdf12 relation reifier", () => {
 
 	it("stores duplicate asserted relation triples once while allowing multiple reifiers", () => {
 		const graph = createRdf12Graph();
-		const source = iriTerm("urn:aat:doc:test#section-l1-o0");
+		const source = iriTerm("urn:aat:doc:test#heading-l1-o0");
 		const predicate = iriTerm(`${namespaces.aat}references`);
-		const target = iriTerm("urn:aat:doc:test#section-l5-o0");
+		const target = iriTerm("urn:aat:doc:test#heading-l5-o0");
 		const relation = rdf12Triple(source, predicate, target);
 
 		graph.add(relation);
 		graph.add(relation);
 		addReifierTriple(
 			graph,
-			iriTerm("urn:aat:doc:test#xref-l2-c3-o0"),
+			iriTerm("urn:aat:doc:test#xref-edge-l2-c3-o0"),
 			relation,
 		);
 		addReifierTriple(
 			graph,
-			iriTerm("urn:aat:doc:test#xref-l3-c3-o0"),
+			iriTerm("urn:aat:doc:test#xref-edge-l3-c3-o0"),
 			relation,
 		);
 

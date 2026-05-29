@@ -1,6 +1,5 @@
 import type { AbundantDocument } from "../model";
 import { projectSurfaceAttributes } from "./attributes";
-import { addDocumentResourceTriples } from "./document-resource";
 import { createRdf12Graph, type Rdf12Graph } from "./graph";
 import type { Rdf12LabelCatalog } from "./label-catalog";
 import { projectLabels } from "./labels";
@@ -11,7 +10,6 @@ import { computePathCoordinate } from "./path-coordinate";
 import { projectPayloadBlocks } from "./payload-projector";
 import { addProvenanceTriples } from "./provenance";
 import {
-	documentResourceLocalId,
 	makeActivityLocalId,
 	makeProjectionLocalId,
 	makeResourceIri,
@@ -51,7 +49,7 @@ export function projectAbundantDocumentToRdf12(
 	const documentIri = makeResourceIri({
 		baseIri: normalizedOptions.baseIri,
 		documentKey: coordinate.documentKey,
-		localId: documentResourceLocalId(),
+		localId: "document",
 	});
 	const sourceDocumentIri = makeResourceIri({
 		baseIri: normalizedOptions.baseIri,
@@ -79,14 +77,8 @@ export function projectAbundantDocumentToRdf12(
 		sourceDocumentIri,
 		projectionIri,
 		projectionActivityIri,
-		abundantDocumentIri,
 		relativePath: coordinate.relativePath,
 		...(sourceDigest !== undefined ? { sourceDigest } : {}),
-	});
-	addDocumentResourceTriples({
-		graph,
-		documentIri,
-		relativePath: coordinate.relativePath,
 	});
 	const nodeIndex = projectStructureResources({
 		graph,

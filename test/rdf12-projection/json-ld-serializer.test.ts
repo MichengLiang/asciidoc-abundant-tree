@@ -29,7 +29,7 @@ describe("rdf12 JSON-LD serialization", () => {
 			"@id": "urn:aat:doc:test#statement-0",
 			"@type": "rdf12:Triple",
 			subject: {
-				"@id": "urn:aat:doc:test#section-l1-o0",
+				"@id": "urn:aat:doc:test#heading-l1-o0",
 				"@type": "rdf12:IriTerm",
 			},
 			predicate: {
@@ -37,7 +37,7 @@ describe("rdf12 JSON-LD serialization", () => {
 				"@type": "rdf12:IriTerm",
 			},
 			object: {
-				"@id": "urn:aat:doc:test#section-l3-o0",
+				"@id": "urn:aat:doc:test#heading-l3-o0",
 				"@type": "rdf12:IriTerm",
 			},
 		});
@@ -45,7 +45,7 @@ describe("rdf12 JSON-LD serialization", () => {
 			"@id": "urn:aat:doc:test#statement-1",
 			"@type": "rdf12:Triple",
 			subject: {
-				"@id": "urn:aat:doc:test#xref-l10-c60-o0",
+				"@id": "urn:aat:doc:test#xref-edge-l10-c60-o0",
 				"@type": "rdf12:IriTerm",
 			},
 			predicate: {
@@ -56,7 +56,7 @@ describe("rdf12 JSON-LD serialization", () => {
 				"@type": "rdf12:TripleTerm",
 				triple: {
 					subject: {
-						"@id": "urn:aat:doc:test#section-l1-o0",
+						"@id": "urn:aat:doc:test#heading-l1-o0",
 						"@type": "rdf12:IriTerm",
 					},
 					predicate: {
@@ -64,7 +64,7 @@ describe("rdf12 JSON-LD serialization", () => {
 						"@type": "rdf12:IriTerm",
 					},
 					object: {
-						"@id": "urn:aat:doc:test#section-l3-o0",
+						"@id": "urn:aat:doc:test#heading-l3-o0",
 						"@type": "rdf12:IriTerm",
 					},
 				},
@@ -95,10 +95,10 @@ describe("rdf12 JSON-LD serialization", () => {
 
 function testProjection(): Rdf12Projection {
 	const graph = createRdf12Graph();
-	const source = iriTerm("urn:aat:doc:test#section-l1-o0");
-	const target = iriTerm("urn:aat:doc:test#section-l3-o0");
+	const source = iriTerm("urn:aat:doc:test#heading-l1-o0");
+	const target = iriTerm("urn:aat:doc:test#heading-l3-o0");
 	const references = iriTerm(`${namespaces.aat}references`);
-	const xref = iriTerm("urn:aat:doc:test#xref-l10-c60-o0");
+	const xref = iriTerm("urn:aat:doc:test#xref-edge-l10-c60-o0");
 	const relation = rdf12Triple(source, references, target);
 
 	graph.add(relation);

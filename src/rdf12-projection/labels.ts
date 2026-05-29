@@ -1,4 +1,4 @@
-import type { AbundantDocument, SourceSpan } from "../model";
+import type { AbundantDocument } from "../model";
 import type { Rdf12Graph } from "./graph";
 import {
 	createRdf12LabelCatalog,
@@ -26,32 +26,6 @@ export function projectLabels(input: ProjectLabelsInput): Rdf12LabelCatalog {
 	}
 
 	return catalog;
-}
-
-export function addXrefDisplayLabelResource(_input: {
-	readonly graph: Rdf12Graph;
-	readonly catalog: Rdf12LabelCatalog;
-	readonly baseIri: string;
-	readonly documentKey: string;
-	readonly relativePath: string;
-	readonly owner: Rdf12IriTerm;
-	readonly value: string;
-	readonly sourceSpan: SourceSpan;
-}): void {
-	// Xref display text is not part of the Batch 03 heading selector label space.
-}
-
-export function addAddressLabelResource(_input: {
-	readonly graph: Rdf12Graph;
-	readonly catalog: Rdf12LabelCatalog;
-	readonly baseIri: string;
-	readonly documentKey: string;
-	readonly relativePath: string;
-	readonly owner: Rdf12IriTerm;
-	readonly value: string;
-	readonly span: { readonly startLine: number; readonly endLine: number };
-}): void {
-	// Payload and block ids are not part of the Batch 03 heading selector label space.
 }
 
 function addHeadingLabels(
