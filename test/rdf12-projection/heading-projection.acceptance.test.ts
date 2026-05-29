@@ -172,6 +172,51 @@ describe("rdf12 heading projection target acceptance", () => {
 		);
 	});
 
+	it("Batch 03 binds selectors only to heading label fields", () => {
+		const { graph, labelCatalog, heading } = structuralPayloadProjection();
+		const root = heading("heading-l1-o0");
+		const deliveryPolicy = heading("heading-l5-o0");
+		const capacityRule = heading("heading-l41-o0");
+		const nestedHeading = heading("heading-l46-o0");
+
+		expect(labelCatalog.owners("root")).toEqual([root]);
+		expect(labelCatalog.owners("delivery-policy")).toEqual([deliveryPolicy]);
+		expect(labelCatalog.owners("配送策略")).toEqual([deliveryPolicy]);
+		expect(labelCatalog.owners("capacity-rule")).toEqual([capacityRule]);
+		expect(labelCatalog.owners("运力规则")).toEqual([capacityRule]);
+		expect(labelCatalog.owners("_我是3级标题")).toEqual([nestedHeading]);
+		expect(labelCatalog.owners("我是3级标题")).toEqual([nestedHeading]);
+
+		for (const selector of [
+			"section",
+			"policy",
+			"active",
+			"ops",
+			"payload",
+			"xref-payload",
+			"delivery-policy-payload",
+			"rel-delivery-capacity",
+			deliveryPolicy.value,
+			`配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。`,
+		]) {
+			expect(labelCatalog.owners(selector)).toEqual([]);
+		}
+
+		for (const labelType of [
+			"TitleLabel",
+			"AddressLabel",
+			"GeneratedAddressLabel",
+			"BlockTitleLabel",
+			"AnchorLabel",
+			"ReftextLabel",
+			"XrefDisplayLabel",
+			"RoleLabel",
+		]) {
+			expectResourceTypeCount(graph, aatTerm(labelType), 0);
+		}
+		expect(graph.match({ predicate: aatTerm("hasLabel") })).toHaveLength(0);
+	});
+
 	migrationIt(
 		"Batch 04 projects xref relation edge evidence and RDF 1.2 reifier",
 		() => {
@@ -292,6 +337,9 @@ describe("rdf12 heading projection target acceptance", () => {
 
 function structuralPayloadProjection(): {
 	readonly graph: Rdf12Graph;
+	readonly labelCatalog: ReturnType<
+		typeof projectAbundantDocumentToRdf12
+	>["labelCatalog"];
 	readonly heading: (localId: string) => Rdf12IriTerm;
 } {
 	const projection = projectAbundantDocumentToRdf12(
@@ -301,6 +349,7 @@ function structuralPayloadProjection(): {
 
 	return {
 		graph: projection.graph,
+		labelCatalog: projection.labelCatalog,
 		heading(localId: string) {
 			return termIri(resourceIri(projection.documentIri, localId));
 		},

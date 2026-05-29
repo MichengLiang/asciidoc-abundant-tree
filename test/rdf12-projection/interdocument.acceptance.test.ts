@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
@@ -73,6 +74,17 @@ describe("rdf12 interdocument xref acceptance", () => {
 			),
 		).toHaveLength(0);
 	});
+
+	it("does not read external documents while binding external xref selectors", () => {
+		const projection = projectAbundantDocumentToRdf12(externalOnlyDocument(), {
+			documentRoot: "/virtual",
+		});
+
+		expect(
+			xrefsWithSelector(projection.graph, "missing.adoc#remote"),
+		).toHaveLength(1);
+		expect(projection.labelCatalog.owners("missing.adoc#remote")).toEqual([]);
+	});
 });
 
 function xrefsWithSelector(graph: Rdf12Graph, selector: string): string[] {
@@ -108,4 +120,60 @@ function expectStringTriple(
 			),
 		),
 	).toBe(true);
+}
+
+function externalOnlyDocument(): AbundantDocument {
+	return {
+		kind: "document",
+		sourcePath: "/virtual/local.adoc",
+		mode: "single-file",
+		parser: { name: "@asciidoctor/core", version: "test" },
+		children: [
+			{
+				kind: "section",
+				level: 1,
+				ids: ["local"],
+				title: "Local",
+				idOrigin: "source",
+				span: { startLine: 1, endLine: 3 },
+				titleSpan: {
+					start: { line: 1, column: 4 },
+					end: { line: 1, column: 8 },
+				},
+				children: [
+					{
+						kind: "paragraph",
+						text: "See remote.",
+						source: {
+							span: { startLine: 3, endLine: 3 },
+						},
+						children: [
+							{
+								kind: "xref",
+								syntax: "macro",
+								raw: "xref:missing.adoc#remote[Remote]",
+								target: "missing.adoc#remote",
+								label: "Remote",
+								scope: "external",
+								sourceSpan: {
+									start: { line: 3, column: 5 },
+									end: { line: 3, column: 36 },
+								},
+								containingSectionId: "local",
+								asciidoctor: {
+									href: "missing.html#remote",
+									resolvedId: "remote",
+									resolvedType: "unknown",
+								},
+							},
+						],
+					},
+				],
+			},
+		],
+		targets: [],
+		xrefOccurrences: [],
+		anchorOccurrences: [],
+		toolDiagnostics: [],
+	};
 }

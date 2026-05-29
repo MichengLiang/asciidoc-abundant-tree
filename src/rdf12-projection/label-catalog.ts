@@ -1,21 +1,15 @@
 import { rdf12TermKey } from "./graph";
 import type { Rdf12IriTerm } from "./terms";
 
-export type Rdf12LabelClass =
-	| "TitleLabel"
-	| "BlockTitleLabel"
-	| "AddressLabel"
-	| "GeneratedAddressLabel"
-	| "AnchorLabel"
-	| "ReftextLabel"
-	| "XrefDisplayLabel"
-	| "RoleLabel";
+export type Rdf12HeadingLabelKind =
+	| "headline"
+	| "addressLabel"
+	| "generatedAddressLabel";
 
 export type Rdf12LabelCatalogEntry = {
 	readonly value: string;
 	readonly owner: Rdf12IriTerm;
-	readonly labelClass: Rdf12LabelClass;
-	readonly label?: Rdf12IriTerm;
+	readonly labelKind: Rdf12HeadingLabelKind;
 };
 
 export type Rdf12LabelCatalog = {
