@@ -33,9 +33,9 @@
 
 |Batch 04
 |Xref 边与 Reifier
-|未开始
-|
-|
+|待审核
+|6af14f54cf8055ee180991359023579a65acaf75
+|xref:batch-04-review-package[Batch 04 审核包]
 
 |Batch 05
 |直接字段谓词

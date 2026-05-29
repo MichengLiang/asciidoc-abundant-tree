@@ -1,0 +1,116 @@
+[#batch-04-review-package]
+== Batch 04 审核包：Xref 边与 Reifier
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 04`
+批次名称:: `Xref 边与 Reifier`
+提交 hash:: `6af14f54cf8055ee180991359023579a65acaf75`
+执行者:: `Codex`
+审核者:: `待定`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/rdf12-projection/xref-projector.ts
+src/rdf12-projection/resource-identity.ts
+test/rdf12-projection/xref-projector.test.ts
+test/rdf12-projection/reifier.test.ts
+test/rdf12-projection/relation-predicate.test.ts
+test/rdf12-projection/query-contracts.test.ts
+test/rdf12-projection/heading-projection.acceptance.test.ts
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-04-review-package.adoc
+docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- xref evidence resource type 从 aat:XrefOccurrence 迁移为 aat:XrefEdge。
+- xref evidence local id 使用 xref-edge-l<line>-c<column>-o<ordinal>。
+- xref edge evidence 使用 aat:sourceHeading、aat:targetHeading 和 aat:candidateHeading。
+- xref rel control field 使用 aat:rel 保存原始 rel 字符串。
+- xref display text 使用 aat:displayLabel literal，不创建 label resource 或 catalog entry。
+- xref edge evidence 保留 aat:targetSelector、aat:raw、source span、syntax、official href/resolution evidence。
+- source heading、target heading 和 predicate 均确定时生成主 relation triple。
+- 主 relation triple 使用 rdf:reifies triple term 连接到 edge evidence。
+- 缺省 rel 映射为 aat:references。
+- token、CURIE 和 absolute IRI rel 继续通过 relation-predicate 语义映射。
+- invalid rel 保留 aat:rel，不生成主 relation triple 或 reifier。
+- unresolved target selector 保留 edge evidence 和 targetSelector，不生成 targetHeading 或主 relation triple。
+- ambiguous target selector 输出全部 candidateHeading，不生成 targetHeading 或主 relation triple。
+- relation triple subject/object 均为 heading node。
+- heading-projection.acceptance.test.ts 中 Batch 04 xref edge/reifier 断言解除 expected-fail；Batch 05、Batch 06 和 Batch 07 仍保持 expected-fail。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- kind/status/owner/weight 等 direct field predicates：归属 Batch 05。
+- xref weight 作为 edge evidence direct predicate：归属 Batch 05。
+- 节点 payload 和边 payload complex property binding：归属 Batch 06。
+- payload projector、attributes projector 和旧 acceptance/query contract 全面清理：归属 Batch 05 到 Batch 07。
+- public 契约最终清理和旧类型退出最终门禁：归属 Batch 07。
+----
+
+=== TDD 证据
+
+[source,text]
+----
+RED:
+pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：FAIL。5 test files 中 3 failed，13 tests failed，失败点为缺少 aat:XrefEdge、xref-edge local id、sourceHeading/targetHeading/candidateHeading、aat:rel、aat:displayLabel、Batch 04 acceptance 和 query contract 的 outgoing edge evidence。
+
+GREEN:
+pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+结果：PASS。5 test files passed，30 passed tests，3 expected fail tests。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+pnpm typecheck
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/xref-projector.ts src/rdf12-projection/resource-identity.ts test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: FAIL. 该 package script 实际运行整个 test/rdf12-projection suite；结果为 5 failed files、32 passed files、18 failed tests、221 passed tests、3 expected fail tests。失败集中在 Batch 05+ 和未迁移旧测试：attributes、payload-projector、interdocument.acceptance、payload.acceptance、reference-links.acceptance 仍期待旧 Section/Listing/XrefOccurrence/payload label resource 或后续 direct field/payload contract。
+pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, 5 test files passed, 30 passed tests, 3 expected fail tests.
+pnpm typecheck: PASS.
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/xref-projector.ts src/rdf12-projection/resource-identity.ts test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, Biome checked 5 files with no fixes applied.
+----
+
+=== 规约检查清单
+
+* 本批没有修改 `src/inline-occurrence-scanner.ts`、`src/macro-argument-parser.ts` 或 `src/parser.ts`。
+* 本批没有修改 payload projector 或 attributes projector。
+* 本批 public graph 不输出 `aat:XrefOccurrence`。
+* 本批 relation triple 的 subject 和 object 均为 heading node。
+* 本批 `rdf:reifies` object 是 RDF 1.2 triple term。
+* 本批 display label 不参与 selector binding 或 resource identity。
+* 本批 unresolved target selector 不生成 targetHeading、relation triple 或 reifier。
+* 本批 ambiguous target selector 输出 candidateHeading，且不生成 targetHeading、relation triple 或 reifier。
+* 本批 invalid rel 保留 aat:rel，且不生成 relation triple 或 reifier。
+* 本批没有实现 Batch 05 direct field predicates。
+* 本批没有实现 Batch 06 payload binding。
+* 本批测试覆盖了正向 xref relation edge/reifier 事实。
+* 本批测试覆盖了必要负向事实。
+* 本批 public graph 与 06 号书 Batch 04 对象语言一致。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: `执行者提交 Batch 04 实现与测试，等待审核者确认 edge evidence 与 heading node 分离，且未绑定和多义 selector 路径没有主 relation triple。`
+后续动作:: `审核通过后进入 Batch 05；若审核打回，则返工 Batch 04。`
