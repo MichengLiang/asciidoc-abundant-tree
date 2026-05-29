@@ -33,7 +33,7 @@
 
 |Batch 04
 |Xref 边与 Reifier
-|待审核
+|通过
 |0deadc878cd20f3c1ff08cb548a3e04172f9d63f
 |xref:batch-04-review-package[Batch 04 审核包]
 

@@ -8,8 +8,8 @@
 批次名称:: `Xref 边与 Reifier`
 提交 hash:: `0deadc878cd20f3c1ff08cb548a3e04172f9d63f`
 执行者:: `Codex`
-审核者:: `待定`
-审核状态:: `待审核`
+审核者:: `Codex`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -134,6 +134,6 @@ pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/xref-proj
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: `执行者提交 Batch 04 第二次打回返工实现与测试，等待审核者确认 document title/preamble xref 的 source heading 由 xref 所在 heading slice 决定，且 target selector 的未绑定和多义路径仍没有主 relation triple。`
-后续动作:: `审核通过后进入 Batch 05；若审核打回，则返工 Batch 04。`
+结论:: `通过`
+理由:: `审核确认 xref evidence 与 heading node 分离，公共图使用 aat:XrefEdge 与 xref-edge local id，不再输出 aat:XrefOccurrence；rdf:reifies object 为 triple term。两次返工后，sourceHeading 已由 xref 所在 heading slice 决定，覆盖 duplicate source label 与 document-title/preamble xref 两类边界；target selector 的未绑定、多义和 invalid rel 路径仍不生成主 relation triple 或 reifier。`
+后续动作:: `进入 Batch 05，仅实现 heading 与 xref edge 的直接字段谓词。`
