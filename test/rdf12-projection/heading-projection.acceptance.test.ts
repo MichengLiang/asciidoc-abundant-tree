@@ -23,7 +23,6 @@ import {
 } from "./helpers/graph-matchers";
 
 const migrationAllowedFailureCases = new Map([
-	["Batch 05 projects heading and xref direct field predicates", "Batch 05"],
 	["Batch 06 binds node and edge payload complex properties", "Batch 06"],
 	[
 		"Batch 07 removes old structural resource types from the heading projection public graph",

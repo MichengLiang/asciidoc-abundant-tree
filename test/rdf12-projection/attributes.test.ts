@@ -3,87 +3,17 @@ import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
-import {
-	integerLiteral,
-	stringLiteral,
-} from "../../src/rdf12-projection/literals";
+import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
-import { iriTerm } from "../../src/rdf12-projection/terms";
+import { iriTerm, type Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
 
 const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
 
-describe("rdf12 surface attribute projection", () => {
-	it("projects metadata attrlist fields as surface attributes on structure resources", () => {
-		const projection = projectAbundantDocumentToRdf12(attributeDocument(), {
-			documentRoot: projectRoot,
-		});
-		const listing = resourceOfType(
-			projection.graph,
-			`${namespaces.aat}ListingBlock`,
-		);
-		const kind = surfaceAttributeForName(projection.graph, "kind");
-		const status = surfaceAttributeForName(projection.graph, "status");
-
-		expect(kind).toBeDefined();
-		expect(status).toBeDefined();
-		expectStringTriple(projection.graph, kind ?? "", "name", "kind");
-		expectRdfValue(projection.graph, kind ?? "", "policy");
-		expectStringTriple(projection.graph, status ?? "", "name", "status");
-		expectRdfValue(projection.graph, status ?? "", "active");
-		expectLineLocation(projection.graph, kind ?? "", 2, 2);
-		expectLineLocation(projection.graph, status ?? "", 2, 2);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(listing),
-					iriTerm(`${namespaces.aat}hasAttribute`),
-					iriTerm(kind ?? ""),
-				),
-			),
-		).toBe(true);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(listing),
-					iriTerm(`${namespaces.aat}hasAttribute`),
-					iriTerm(status ?? ""),
-				),
-			),
-		).toBe(true);
-	});
-
-	it("projects only ordinary named xref attributes onto xref occurrence resources", () => {
-		const projection = projectAbundantDocumentToRdf12(attributeDocument(), {
-			documentRoot: projectRoot,
-		});
-		const xref = resourceOfType(
-			projection.graph,
-			`${namespaces.aat}XrefOccurrence`,
-		);
-		const weight = surfaceAttributeForName(projection.graph, "weight");
-
-		expect(weight).toBeDefined();
-		expectRdfValue(projection.graph, weight ?? "", "0.8");
-		expectLineLocation(projection.graph, weight ?? "", 6, 6);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(xref),
-					iriTerm(`${namespaces.aat}hasAttribute`),
-					iriTerm(weight ?? ""),
-				),
-			),
-		).toBe(true);
-		expect(surfaceAttributeForName(projection.graph, "rel")).toBeUndefined();
-		expect(
-			surfaceAttributeForName(projection.graph, "payload"),
-		).toBeUndefined();
-	});
-
-	it("projects parsed section attrlist fields onto the section resource", () => {
+describe("rdf12 direct field predicate projection", () => {
+	it("projects parsed heading attrlist named fields as direct predicates", () => {
 		const path = writeFixture(
 			"rdf12-section-attrlist.adoc",
 			`= Probe
@@ -92,42 +22,62 @@ describe("rdf12 surface attribute projection", () => {
 == 西红柿
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
-		const projection = projectAbundantDocumentToRdf12(document, {
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({ sourcePath: path }),
+			{ documentRoot: projectRoot },
+		);
+		const heading = onlyHeadingWithLiteral(
+			projection.graph,
+			"headline",
+			"西红柿",
+		);
+
+		expectStringTriple(projection.graph, heading, "addressLabel", "abc");
+		expectStringTriple(projection.graph, heading, "role", "section");
+		expectStringTriple(projection.graph, heading, "kind", "policy");
+		expectStringTriple(projection.graph, heading, "status", "active");
+		expectStringTriple(projection.graph, heading, "owner", "ops");
+		expectNoPublicAttributeResources(projection.graph);
+		expectPredicateAbsent(projection.graph, `${namespaces.aat}id`);
+	});
+
+	it("projects xref ordinary named attributes as direct predicates on xref edges", () => {
+		const projection = projectAbundantDocumentToRdf12(attributeDocument(), {
 			documentRoot: projectRoot,
 		});
-		const section = resourceOfType(
-			projection.graph,
-			`${namespaces.aat}Section`,
-		);
-		const kind = surfaceAttributeForName(projection.graph, "kind");
-		const status = surfaceAttributeForName(projection.graph, "status");
-		const owner = surfaceAttributeForName(projection.graph, "owner");
+		const edge = resourceOfType(projection.graph, `${namespaces.aat}XrefEdge`);
 
-		expect(kind).toBeDefined();
-		expect(status).toBeDefined();
-		expect(owner).toBeDefined();
-		expectRdfValue(projection.graph, kind ?? "", "policy");
-		expectRdfValue(projection.graph, status ?? "", "active");
-		expectRdfValue(projection.graph, owner ?? "", "ops");
-		expectLineLocationWithPath(
+		expectStringTriple(projection.graph, edge, "rel", "depends-on");
+		expectStringTriple(
 			projection.graph,
-			kind ?? "",
-			"tmp/test-fixtures/rdf12-section-attrlist.adoc",
-			3,
-			3,
+			edge,
+			"payloadSelector",
+			"rel-delivery-capacity",
 		);
-		for (const attribute of [kind, status, owner]) {
-			expect(
-				projection.graph.has(
-					rdf12Triple(
-						iriTerm(section),
-						iriTerm(`${namespaces.aat}hasAttribute`),
-						iriTerm(attribute ?? ""),
-					),
-				),
-			).toBe(true);
-		}
+		expectStringTriple(projection.graph, edge, "weight", "0.8");
+		expectNoPublicAttributeResources(projection.graph);
+		expectPredicateAbsent(projection.graph, `${namespaces.aat}payload`);
+	});
+
+	it("maps encoded field names to deterministic direct predicates", () => {
+		const projection = projectAbundantDocumentToRdf12(encodedFieldsDocument(), {
+			documentRoot: projectRoot,
+		});
+		const edge = resourceOfType(projection.graph, `${namespaces.aat}XrefEdge`);
+
+		expectTripleWithPredicateIri(
+			projection.graph,
+			edge,
+			`${namespaces.aat}field-%C3%BCber%20score`,
+			"high",
+		);
+		expectTripleWithPredicateIri(
+			projection.graph,
+			edge,
+			`${namespaces.aat}field-9priority`,
+			"urgent",
+		);
+		expectNoPublicAttributeResources(projection.graph);
 	});
 });
 
@@ -138,190 +88,191 @@ function attributeDocument(): AbundantDocument {
 		raw: "xref:target[Target, rel=depends-on, payload=rel-delivery-capacity, weight=0.8]",
 		target: "target",
 		label: "Target",
+		containingSectionId: "source",
 		attributes: {
 			rel: "depends-on",
 			payload: "rel-delivery-capacity",
 			weight: "0.8",
 		},
 		sourceSpan: {
-			start: { line: 6, column: 3 },
-			end: { line: 6, column: 80 },
+			start: { line: 4, column: 3 },
+			end: { line: 4, column: 80 },
 		},
 	};
 
+	return {
+		...baseDocument(),
+		children: [
+			sectionNode(1, "source", "Source", [
+				{
+					kind: "paragraph",
+					text: "xref with direct fields",
+					source: { span: { startLine: 4, endLine: 4 } },
+					children: [xref],
+				},
+			]),
+			sectionNode(6, "target", "Target"),
+		],
+		xrefOccurrences: [xref],
+	};
+}
+
+function encodedFieldsDocument(): AbundantDocument {
+	const xref = {
+		kind: "xref" as const,
+		syntax: "macro" as const,
+		raw: "xref:target[Target]",
+		target: "target",
+		label: "Target",
+		containingSectionId: "source",
+		attributes: {
+			"über score": "high",
+			"9priority": "urgent",
+		},
+		sourceSpan: {
+			start: { line: 4, column: 3 },
+			end: { line: 4, column: 22 },
+		},
+	};
+
+	return {
+		...baseDocument(),
+		children: [
+			sectionNode(1, "source", "Source", [
+				{
+					kind: "paragraph",
+					text: "xref with encoded fields",
+					source: { span: { startLine: 4, endLine: 4 } },
+					children: [xref],
+				},
+			]),
+			sectionNode(6, "target", "Target"),
+		],
+		xrefOccurrences: [xref],
+	};
+}
+
+function sectionNode(
+	startLine: number,
+	id: string,
+	title: string,
+	children: AbundantDocument["children"] = [],
+): NonNullable<AbundantDocument["children"][number]> {
+	return {
+		kind: "section",
+		level: 1,
+		ids: [id],
+		title,
+		idOrigin: "source",
+		span: { startLine, endLine: startLine + 3 },
+		titleSpan: {
+			start: { line: startLine, column: 4 },
+			end: { line: startLine, column: 4 + title.length },
+		},
+		metadata: [
+			{
+				kind: "metadata",
+				metadataKind: "id",
+				raw: `[#${id}]`,
+				line: startLine,
+				ids: [id],
+			},
+		],
+		children,
+	};
+}
+
+function baseDocument(): AbundantDocument {
 	return {
 		kind: "document",
 		sourcePath,
 		mode: "single-file",
 		parser: { name: "@asciidoctor/core", version: "test" },
-		children: [
-			{
-				kind: "listing",
-				ids: ["policy-listing"],
-				span: { startLine: 2, endLine: 4 },
-				metadata: [
-					{
-						kind: "metadata",
-						metadataKind: "attrlist",
-						raw: "[source,kind=policy,status=active]",
-						line: 2,
-						attributes: {
-							kind: "policy",
-							status: "active",
-						},
-						source: {
-							raw: "[source,kind=policy,status=active]",
-							line: 2,
-							sourceSpan: {
-								start: { line: 2, column: 1 },
-								end: { line: 2, column: 35 },
-							},
-						},
-					},
-				],
-				content: "policy body",
-				contentSpan: { startLine: 3, endLine: 3 },
-			},
-			{
-				kind: "section",
-				level: 1,
-				ids: ["target"],
-				title: "Target",
-				idOrigin: "source",
-				span: { startLine: 5, endLine: 5 },
-				titleSpan: {
-					start: { line: 5, column: 4 },
-					end: { line: 5, column: 10 },
-				},
-				metadata: [
-					{
-						kind: "metadata",
-						metadataKind: "id",
-						raw: "[#target]",
-						line: 5,
-						ids: ["target"],
-					},
-				],
-			},
-			{
-				kind: "paragraph",
-				text: "xref with surface attrs",
-				source: { span: { startLine: 6, endLine: 6 } },
-				children: [xref],
-			},
-		],
+		children: [],
 		targets: [],
-		xrefOccurrences: [xref],
+		xrefOccurrences: [],
 		anchorOccurrences: [],
 		toolDiagnostics: [],
 	};
 }
 
-function resourceOfType(graph: Rdf12Graph, typeIri: string): string {
+function resourceOfType(graph: Rdf12Graph, typeIri: string): Rdf12IriTerm {
 	const [resource] = graph
 		.match({
 			predicate: iriTerm(`${namespaces.rdf}type`),
 			object: iriTerm(typeIri),
 		})
-		.map((triple) => triple.subject.value);
+		.map((triple) => triple.subject);
 	if (resource === undefined) {
 		throw new Error(`expected resource of type ${typeIri}`);
 	}
 	return resource;
 }
 
-function surfaceAttributeForName(
+function onlyHeadingWithLiteral(
 	graph: Rdf12Graph,
-	name: string,
-): string | undefined {
-	return graph
+	predicateLocalName: string,
+	value: string,
+): Rdf12IriTerm {
+	const headings = graph
 		.match({
-			predicate: iriTerm(`${namespaces.aat}name`),
-			object: stringLiteral(name),
+			predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+			object: stringLiteral(value),
 		})
-		.find((triple) =>
+		.map((triple) => triple.subject)
+		.filter((subject) =>
 			graph.has(
 				rdf12Triple(
-					triple.subject,
+					subject,
 					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}SurfaceAttribute`),
+					iriTerm(`${namespaces.aat}Heading`),
 				),
 			),
-		)?.subject.value;
+		);
+
+	expect(headings).toHaveLength(1);
+	return headings[0] ?? iriTerm("urn:missing-heading");
 }
 
 function expectStringTriple(
 	graph: Rdf12Graph,
-	subject: string,
+	subject: Rdf12IriTerm,
 	predicateLocalName: string,
 	value: string,
 ): void {
-	expect(
-		graph.has(
-			rdf12Triple(
-				iriTerm(subject),
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
-				stringLiteral(value),
-			),
-		),
-	).toBe(true);
+	expectTripleWithPredicateIri(
+		graph,
+		subject,
+		`${namespaces.aat}${predicateLocalName}`,
+		value,
+	);
 }
 
-function expectRdfValue(
+function expectTripleWithPredicateIri(
 	graph: Rdf12Graph,
-	subject: string,
+	subject: Rdf12IriTerm,
+	predicateIri: string,
 	value: string,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(
-				iriTerm(subject),
-				iriTerm(`${namespaces.rdf}value`),
-				stringLiteral(value),
-			),
+			rdf12Triple(subject, iriTerm(predicateIri), stringLiteral(value)),
 		),
 	).toBe(true);
 }
 
-function expectLineLocation(
-	graph: Rdf12Graph,
-	subject: string,
-	startLine: number,
-	endLine: number,
-): void {
-	expectLineLocationWithPath(
-		graph,
-		subject,
-		"samples/reference-links.adoc",
-		startLine,
-		endLine,
-	);
+function expectNoPublicAttributeResources(graph: Rdf12Graph): void {
+	expect(
+		graph.match({
+			predicate: iriTerm(`${namespaces.rdf}type`),
+			object: iriTerm(`${namespaces.aat}SurfaceAttribute`),
+		}),
+	).toHaveLength(0);
+	expectPredicateAbsent(graph, `${namespaces.aat}hasAttribute`);
+	expectPredicateAbsent(graph, `${namespaces.aat}name`);
+	expectPredicateAbsent(graph, `${namespaces.rdf}value`);
 }
 
-function expectLineLocationWithPath(
-	graph: Rdf12Graph,
-	subject: string,
-	relativePath: string,
-	startLine: number,
-	endLine: number,
-): void {
-	expectStringTriple(graph, subject, "relativePath", relativePath);
-	expect(
-		graph.has(
-			rdf12Triple(
-				iriTerm(subject),
-				iriTerm(`${namespaces.aat}startLine`),
-				integerLiteral(startLine),
-			),
-		),
-	).toBe(true);
-	expect(
-		graph.has(
-			rdf12Triple(
-				iriTerm(subject),
-				iriTerm(`${namespaces.aat}endLine`),
-				integerLiteral(endLine),
-			),
-		),
-	).toBe(true);
+function expectPredicateAbsent(graph: Rdf12Graph, predicateIri: string): void {
+	expect(graph.match({ predicate: iriTerm(predicateIri) })).toHaveLength(0);
 }

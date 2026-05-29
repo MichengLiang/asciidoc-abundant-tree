@@ -8,139 +8,171 @@ import {
 } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
-import { iriTerm } from "../../src/rdf12-projection/terms";
+import {
+	iriTerm,
+	type Rdf12IriTerm,
+	rdf12TripleTerm,
+} from "../../src/rdf12-projection/terms";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
 
 describe("rdf12 reference-links query contract acceptance", () => {
-	it("answers label lookup queries for sections, listings, and anchors", () => {
+	it("answers heading label lookup queries", () => {
 		const projection = referenceProjection();
 
-		const intro = onlyOwnerForLabel(
+		const intro = onlyHeadingForLabel(
 			projection.graph,
-			"GeneratedAddressLabel",
+			"generatedAddressLabel",
 			"_1_引言",
 		);
-		const basics = onlyOwnerForLabel(
+		const basics = onlyHeadingForLabel(
 			projection.graph,
-			"AddressLabel",
+			"addressLabel",
 			"section-basics",
 		);
-		const core = onlyOwnerForLabel(
+		const core = onlyHeadingForLabel(
 			projection.graph,
-			"TitleLabel",
+			"headline",
 			"3. 核心引擎设计",
 		);
-		const listing = onlyOwnerForLabel(
-			projection.graph,
-			"AddressLabel",
-			"engine-code",
-		);
-		const warning = onlyOwnerForLabel(
-			projection.graph,
-			"AnchorLabel",
-			"warning-text",
-		);
-
-		expect(intro).toBe(resourceIri(projection.documentIri, "section-l8-o0"));
+		expect(intro.value).toContain("#heading-l8-o0");
 		expectLineSpan(projection.graph, intro, 8, 11);
-		expect(basics).toBe(resourceIri(projection.documentIri, "section-l12-o0"));
+		expect(basics.value).toContain("#heading-l12-o0");
 		expectLineSpan(projection.graph, basics, 12, 24);
-		expect(core).toBe(resourceIri(projection.documentIri, "section-l25-o0"));
+		expect(core.value).toContain("#heading-l25-o0");
 		expectLineSpan(projection.graph, core, 25, 39);
-		expect(listing).toBe(resourceIri(projection.documentIri, "listing-l29-o0"));
-		expectLineSpan(projection.graph, listing, 29, 36);
-		expectIntegerTriple(projection.graph, listing, "contentStartLine", 33);
-		expectIntegerTriple(projection.graph, listing, "contentEndLine", 35);
-		expect(warning).toBe(
-			resourceIri(projection.documentIri, "anchor-l56-c27-o0"),
-		);
-		expectLineSpan(projection.graph, warning, 56, 56);
 	});
 
 	it("answers direct containment and file-line reverse lookup queries", () => {
 		const projection = referenceProjection();
-		const core = resourceIri(projection.documentIri, "section-l25-o0");
-		const listing = resourceIri(projection.documentIri, "listing-l29-o0");
+		const root = onlyHeadingForLabel(
+			projection.graph,
+			"headline",
+			"宇宙探索器：AsciiDoc 交叉引用演示指南",
+		);
+		const intro = onlyHeadingForLabel(
+			projection.graph,
+			"generatedAddressLabel",
+			"_1_引言",
+		);
+		const basics = onlyHeadingForLabel(
+			projection.graph,
+			"addressLabel",
+			"section-basics",
+		);
+		const core = onlyHeadingForLabel(
+			projection.graph,
+			"headline",
+			"3. 核心引擎设计",
+		);
+		const troubleshooting = onlyHeadingForLabel(
+			projection.graph,
+			"addressLabel",
+			"troubleshooting",
+		);
+		const conclusion = onlyHeadingForLabel(
+			projection.graph,
+			"addressLabel",
+			"conclusion-section",
+		);
 		const coveringLine35 = resourcesCoveringFileLine(
 			projection.graph,
 			"samples/reference-links.adoc",
 			35,
 		);
 
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(core),
-					iriTerm(`${namespaces.aat}containsDirectly`),
-					iriTerm(listing),
-				),
-			),
-		).toBe(true);
-		expect(coveringLine35).toEqual(expect.arrayContaining([core, listing]));
+		expectDirectChildren(projection.graph, root, [
+			intro,
+			basics,
+			core,
+			troubleshooting,
+			conclusion,
+		]);
+		expect(coveringLine35).toContain(core.value);
 		expect(coveringLine35).not.toContain(projection.documentIri);
 	});
 
-	it("answers xref occurrence, outgoing relation, and reifier queries", () => {
+	it("answers xref edge, outgoing relation, and reifier queries", () => {
 		const projection = referenceProjection();
-		const intro = iriTerm(resourceIri(projection.documentIri, "section-l8-o0"));
-		const core = iriTerm(resourceIri(projection.documentIri, "section-l25-o0"));
-		const xref = resourceIri(projection.documentIri, "xref-l10-c60-o0");
+		const intro = onlyHeadingForLabel(
+			projection.graph,
+			"generatedAddressLabel",
+			"_1_引言",
+		);
+		const core = onlyHeadingForLabel(
+			projection.graph,
+			"headline",
+			"3. 核心引擎设计",
+		);
 		const relation = rdf12Triple(
 			intro,
 			iriTerm(`${namespaces.aat}references`),
 			core,
 		);
+		const edge = onlyXrefEdgeForSelector(projection.graph, "3. 核心引擎设计");
 		const [reifier] = projection.graph.match({
-			subject: iriTerm(xref),
+			subject: edge,
 			predicate: iriTerm(`${namespaces.rdf}reifies`),
 		});
 
 		expectStringTriple(
 			projection.graph,
-			xref,
+			edge,
 			"targetSelector",
 			"3. 核心引擎设计",
 		);
-		expectLineSpan(projection.graph, xref, 10, 10);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(xref),
-					iriTerm(`${namespaces.aat}sourceNode`),
-					intro,
-				),
-			),
-		).toBe(true);
-		expect(
-			projection.graph.has(
-				rdf12Triple(
-					iriTerm(xref),
-					iriTerm(`${namespaces.aat}targetNode`),
-					core,
-				),
-			),
-		).toBe(true);
+		expectLineSpan(projection.graph, edge, 10, 10);
+		expectTriple(projection.graph, edge, "sourceHeading", intro);
+		expectTriple(projection.graph, edge, "targetHeading", core);
 		expect(projection.graph.has(relation)).toBe(true);
 		expect(reifier?.object.termType).toBe("triple");
-		expect(reifier?.object.value).toEqual(relation);
+		expect(reifier?.object).toEqual(rdf12TripleTerm(relation));
 	});
 
-	it("answers surface attribute queries without treating control fields as attributes", () => {
-		const projection = referenceProjection();
-		const listing = resourceIri(projection.documentIri, "listing-l29-o0");
-		const style = onlySurfaceAttribute(projection.graph, "style");
-		const language = onlySurfaceAttribute(projection.graph, "language");
+	it("answers direct field predicate queries without attribute resources", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({
+				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
+			}),
+			{ documentRoot: projectRoot },
+		);
+		const deliveryPolicy = onlyHeadingForLabel(
+			projection.graph,
+			"addressLabel",
+			"delivery-policy",
+		);
+		const edge = onlyXrefEdgeForSelector(projection.graph, "capacity-rule");
 
-		expectRdfValue(projection.graph, style, "source");
-		expectRdfValue(projection.graph, language, "python");
-		expectLineSpan(projection.graph, style, 31, 31);
-		expectLineSpan(projection.graph, language, 31, 31);
-		expectHasAttribute(projection.graph, listing, style);
-		expectHasAttribute(projection.graph, listing, language);
-		expect(surfaceAttributesNamed(projection.graph, "rel")).toHaveLength(0);
-		expect(surfaceAttributesNamed(projection.graph, "payload")).toHaveLength(0);
+		expectStringTriple(projection.graph, deliveryPolicy, "kind", "policy");
+		expectStringTriple(projection.graph, deliveryPolicy, "status", "active");
+		expectStringTriple(projection.graph, deliveryPolicy, "owner", "ops");
+		expectStringTriple(projection.graph, edge, "weight", "0.8");
+		expectStringTriple(
+			projection.graph,
+			edge,
+			"payloadSelector",
+			"rel-delivery-capacity",
+		);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.aat}payload`),
+			}),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.rdf}type`),
+				object: iriTerm(`${namespaces.aat}SurfaceAttribute`),
+			}),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.aat}hasAttribute`),
+			}),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({ predicate: iriTerm(`${namespaces.rdf}value`) }),
+		).toHaveLength(0);
 	});
 });
 
@@ -153,39 +185,53 @@ function referenceProjection() {
 	);
 }
 
-function onlyOwnerForLabel(
+function onlyHeadingForLabel(
 	graph: Rdf12Graph,
-	classLocalName: string,
+	predicateLocalName: "addressLabel" | "generatedAddressLabel" | "headline",
 	value: string,
-): string {
-	const owners = graph
+): Rdf12IriTerm {
+	const headings = graph
 		.match({
-			predicate: iriTerm(`${namespaces.rdf}value`),
+			predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
 			object: stringLiteral(value),
 		})
-		.filter((triple) =>
+		.map((triple) => triple.subject)
+		.filter((subject) =>
 			graph.has(
 				rdf12Triple(
-					triple.subject,
+					subject,
 					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}${classLocalName}`),
+					iriTerm(`${namespaces.aat}Heading`),
 				),
 			),
-		)
-		.flatMap((triple) =>
-			graph.match({
-				predicate: iriTerm(`${namespaces.aat}hasLabel`),
-				object: triple.subject,
-			}),
-		)
-		.map((triple) => triple.subject.value);
+		);
 
-	expect(owners).toHaveLength(1);
-	return owners[0] ?? "";
+	expect(headings).toHaveLength(1);
+	return headings[0] ?? iriTerm("urn:missing-heading");
 }
 
-function resourceIri(documentIri: string, localId: string): string {
-	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
+function onlyXrefEdgeForSelector(
+	graph: Rdf12Graph,
+	selector: string,
+): Rdf12IriTerm {
+	const edges = graph
+		.match({
+			predicate: iriTerm(`${namespaces.aat}targetSelector`),
+			object: stringLiteral(selector),
+		})
+		.map((triple) => triple.subject)
+		.filter((subject) =>
+			graph.has(
+				rdf12Triple(
+					subject,
+					iriTerm(`${namespaces.rdf}type`),
+					iriTerm(`${namespaces.aat}XrefEdge`),
+				),
+			),
+		);
+
+	expect(edges).toHaveLength(1);
+	return edges[0] ?? iriTerm("urn:missing-xref-edge");
 }
 
 function resourcesCoveringFileLine(
@@ -217,33 +263,25 @@ function resourcesCoveringFileLine(
 		.map((triple) => triple.subject.value);
 }
 
-function onlySurfaceAttribute(graph: Rdf12Graph, name: string): string {
-	const attributes = surfaceAttributesNamed(graph, name);
-	expect(attributes).toHaveLength(1);
-	return attributes[0] ?? "";
-}
-
-function surfaceAttributesNamed(graph: Rdf12Graph, name: string): string[] {
-	return graph
-		.match({
-			predicate: iriTerm(`${namespaces.aat}name`),
-			object: stringLiteral(name),
-		})
-		.filter((triple) =>
-			graph.has(
-				rdf12Triple(
-					triple.subject,
-					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}SurfaceAttribute`),
-				),
-			),
-		)
-		.map((triple) => triple.subject.value);
+function expectDirectChildren(
+	graph: Rdf12Graph,
+	parent: Rdf12IriTerm,
+	children: readonly Rdf12IriTerm[],
+): void {
+	expect(
+		graph
+			.match({
+				subject: parent,
+				predicate: iriTerm(`${namespaces.aat}containsDirectly`),
+			})
+			.map((triple) => triple.object.value)
+			.sort(),
+	).toEqual(children.map((child) => child.value).sort());
 }
 
 function expectLineSpan(
 	graph: Rdf12Graph,
-	subject: string,
+	subject: Rdf12IriTerm,
 	startLine: number,
 	endLine: number,
 ): void {
@@ -257,16 +295,33 @@ function expectLineSpan(
 	);
 }
 
+function expectTriple(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	object: Rdf12IriTerm,
+): void {
+	expect(
+		graph.has(
+			rdf12Triple(
+				subject,
+				iriTerm(`${namespaces.aat}${predicateLocalName}`),
+				object,
+			),
+		),
+	).toBe(true);
+}
+
 function expectStringTriple(
 	graph: Rdf12Graph,
-	subject: string,
+	subject: Rdf12IriTerm,
 	predicateLocalName: string,
 	value: string,
 ): void {
 	expect(
 		graph.has(
 			rdf12Triple(
-				iriTerm(subject),
+				subject,
 				iriTerm(`${namespaces.aat}${predicateLocalName}`),
 				stringLiteral(value),
 			),
@@ -276,48 +331,16 @@ function expectStringTriple(
 
 function expectIntegerTriple(
 	graph: Rdf12Graph,
-	subject: string,
+	subject: Rdf12IriTerm,
 	predicateLocalName: string,
 	value: number,
 ): void {
 	expect(
 		graph.has(
 			rdf12Triple(
-				iriTerm(subject),
+				subject,
 				iriTerm(`${namespaces.aat}${predicateLocalName}`),
 				integerLiteral(value),
-			),
-		),
-	).toBe(true);
-}
-
-function expectRdfValue(
-	graph: Rdf12Graph,
-	subject: string,
-	value: string,
-): void {
-	expect(
-		graph.has(
-			rdf12Triple(
-				iriTerm(subject),
-				iriTerm(`${namespaces.rdf}value`),
-				stringLiteral(value),
-			),
-		),
-	).toBe(true);
-}
-
-function expectHasAttribute(
-	graph: Rdf12Graph,
-	owner: string,
-	attribute: string,
-): void {
-	expect(
-		graph.has(
-			rdf12Triple(
-				iriTerm(owner),
-				iriTerm(`${namespaces.aat}hasAttribute`),
-				iriTerm(attribute),
 			),
 		),
 	).toBe(true);

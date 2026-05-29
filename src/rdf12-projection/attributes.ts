@@ -1,23 +1,15 @@
 import type {
 	AbundantDocument,
 	AbundantNode,
-	LineSpan,
 	MetadataNode,
 	XrefOccurrenceNode,
 } from "../model";
+import { fieldPredicate } from "./field-predicate";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
 import { stringLiteral } from "./literals";
-import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
-import {
-	createOrdinalAllocator,
-	makeAttributeLocalId,
-	makeResourceIri,
-	type OrdinalAllocator,
-} from "./resource-identity";
-import { addLineSpanTriples } from "./source-location";
-import { iriTerm, type Rdf12IriTerm } from "./terms";
+import type { Rdf12IriTerm } from "./terms";
 import type { Rdf12XrefIndex } from "./xref-projector";
 
 export type ProjectSurfaceAttributesInput = {
@@ -30,162 +22,81 @@ export type ProjectSurfaceAttributesInput = {
 	readonly xrefIndex: Rdf12XrefIndex;
 };
 
-type AttributeProjectorContext = ProjectSurfaceAttributesInput & {
-	readonly ordinalAllocator: OrdinalAllocator;
-};
-
 const xrefControlAttributes = new Set(["rel", "payload"]);
 
 export function projectSurfaceAttributes(
 	input: ProjectSurfaceAttributesInput,
 ): void {
-	const context: AttributeProjectorContext = {
-		...input,
-		ordinalAllocator: createOrdinalAllocator(),
-	};
-
 	for (const node of input.document.children) {
-		projectNodeAttributes(context, node);
+		projectNodeAttributes(input.graph, input.nodeIndex, node);
 	}
 	for (const entry of input.xrefIndex.entries()) {
-		projectXrefAttributes(context, entry.iri, entry.node);
+		projectXrefAttributes(input.graph, entry.iri, entry.node);
 	}
 }
 
 function projectNodeAttributes(
-	context: AttributeProjectorContext,
+	graph: Rdf12Graph,
+	nodeIndex: Rdf12NodeIndex,
 	node: AbundantNode,
 ): void {
-	switch (node.kind) {
-		case "section":
-		case "listing":
-		case "table":
-			projectMetadataAttributes(context, node, node.metadata);
-			break;
-		default:
-			break;
+	if (node.kind === "section") {
+		projectHeadingMetadataAttributes(graph, nodeIndex, node, node.metadata);
 	}
 
 	for (const child of node.children ?? []) {
-		projectNodeAttributes(context, child);
+		projectNodeAttributes(graph, nodeIndex, child);
 	}
 }
 
-function projectMetadataAttributes(
-	context: AttributeProjectorContext,
+function projectHeadingMetadataAttributes(
+	graph: Rdf12Graph,
+	nodeIndex: Rdf12NodeIndex,
 	node: AbundantNode,
 	metadata: readonly MetadataNode[] | undefined,
 ): void {
-	const owner = context.nodeIndex.get(node);
+	const owner = nodeIndex.get(node);
 	if (owner === undefined) {
 		return;
 	}
 
 	for (const item of metadata ?? []) {
+		for (const role of item.roles ?? []) {
+			addFieldTriple(graph, owner, "role", role);
+		}
 		if (item.metadataKind !== "attrlist" || item.attributes === undefined) {
 			continue;
 		}
-		const span = lineSpanForMetadata(item);
-		if (span === undefined) {
-			continue;
-		}
 		for (const [name, value] of Object.entries(item.attributes)) {
-			addSurfaceAttribute(context, {
-				owner,
-				name,
-				value: String(value),
-				span,
-			});
+			addFieldTriple(graph, owner, name, String(value));
 		}
 	}
 }
 
 function projectXrefAttributes(
-	context: AttributeProjectorContext,
+	graph: Rdf12Graph,
 	owner: Rdf12IriTerm,
 	xref: XrefOccurrenceNode,
 ): void {
-	if (xref.attributes === undefined || xref.sourceSpan === undefined) {
+	if (xref.attributes === undefined) {
 		return;
 	}
 
-	const span = {
-		startLine: xref.sourceSpan.start.line,
-		endLine: xref.sourceSpan.end.line,
-	};
 	for (const [name, value] of Object.entries(xref.attributes)) {
 		if (xrefControlAttributes.has(name)) {
 			continue;
 		}
-		addSurfaceAttribute(context, {
-			owner,
-			name,
-			value: String(value),
-			span,
-		});
+		addFieldTriple(graph, owner, name, String(value));
 	}
 }
 
-function addSurfaceAttribute(
-	context: AttributeProjectorContext,
-	input: {
-		readonly owner: Rdf12IriTerm;
-		readonly name: string;
-		readonly value: string;
-		readonly span: LineSpan;
-	},
+function addFieldTriple(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	fieldName: string,
+	value: string,
 ): void {
-	const ordinal = context.ordinalAllocator.next({
-		kind: "attribute",
-		startLine: input.span.startLine,
-	});
-	const attribute = makeResourceIri({
-		baseIri: context.baseIri,
-		documentKey: context.documentKey,
-		localId: makeAttributeLocalId({
-			startLine: input.span.startLine,
-			ordinal,
-		}),
-	});
-
-	context.graph.add(
-		rdf12Triple(
-			attribute,
-			iriTerm(`${namespaces.rdf}type`),
-			iriTerm(`${namespaces.aat}SurfaceAttribute`),
-		),
+	graph.add(
+		rdf12Triple(subject, fieldPredicate(fieldName), stringLiteral(value)),
 	);
-	context.graph.add(
-		rdf12Triple(
-			attribute,
-			iriTerm(`${namespaces.aat}name`),
-			stringLiteral(input.name),
-		),
-	);
-	context.graph.add(
-		rdf12Triple(
-			attribute,
-			iriTerm(`${namespaces.rdf}value`),
-			stringLiteral(input.value),
-		),
-	);
-	addLineSpanTriples({
-		graph: context.graph,
-		subject: attribute,
-		relativePath: context.relativePath,
-		span: input.span,
-	});
-	context.graph.add(
-		rdf12Triple(
-			input.owner,
-			iriTerm(`${namespaces.aat}hasAttribute`),
-			attribute,
-		),
-	);
-}
-
-function lineSpanForMetadata(metadata: MetadataNode): LineSpan | undefined {
-	return metadata.line === undefined
-		? undefined
-		: { startLine: metadata.line, endLine: metadata.line };
 }

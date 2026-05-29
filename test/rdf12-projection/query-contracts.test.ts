@@ -103,12 +103,7 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectTriple(graph, source, relTerm("depends-on"), target);
 		expectTriple(graph, edge, aatTerm("targetHeading"), target);
 		expectTriple(graph, edge, rdfTerm("reifies"), rdf12TripleTerm(relation));
-		expect(
-			graph.match({
-				subject: edge,
-				predicate: aatTerm("weight"),
-			}),
-		).toHaveLength(0);
+		expectTriple(graph, edge, aatTerm("weight"), stringLiteral("0.8"));
 	});
 });
 
