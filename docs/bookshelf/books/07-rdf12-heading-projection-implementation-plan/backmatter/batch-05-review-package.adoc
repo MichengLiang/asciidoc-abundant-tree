@@ -8,8 +8,8 @@
 批次名称:: `直接字段谓词`
 提交 hash:: `fb712b3992e4316bded427ed0f97558ded43b996`
 执行者:: `Codex`
-审核者:: `待定`
-审核状态:: `待审核`
+审核者:: `Codex`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -108,6 +108,6 @@ pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/attribute
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: `执行者提交 Batch 05 实现与测试，等待审核者确认 direct field predicates 替代 SurfaceAttribute resource path，且 payloadSelector 和 payload 谓词未混用。`
-后续动作:: `审核通过后进入 Batch 06；若审核打回，则返工 Batch 05。`
+结论:: `通过`
+理由:: `审核确认 direct field predicates 已替代 SurfaceAttribute resource path，公共图不再输出 aat:SurfaceAttribute、aat:hasAttribute 或字段属性用 rdf:value。heading named attributes 和 role token 写入 heading node；xref ordinary named attributes 写入 xref edge evidence；rel 与 payload 控制字段没有作为普通 attribute 二次输出，payload selector 仍使用 aat:payloadSelector，未混用 aat:payload。字段名映射对简单名直接使用 aat:<name>，对不安全名使用稳定 encoded IRI，并已验证 Turtle roundtrip。`
+后续动作:: `进入 Batch 06，仅实现节点 payload 与边 payload complex property binding。`
