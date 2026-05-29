@@ -6,7 +6,7 @@
 [horizontal]
 批次编号:: `Batch 04`
 批次名称:: `Xref 边与 Reifier`
-提交 hash:: `d7986b1935b324dd58fba29e6ef5e938733bf2ef`
+提交 hash:: `0deadc878cd20f3c1ff08cb548a3e04172f9d63f`
 执行者:: `Codex`
 审核者:: `待定`
 审核状态:: `待审核`
@@ -47,6 +47,8 @@ docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/backmatter/
 - relation triple subject/object 均为 heading node。
 - source heading 由 xref.sourceSpan 所在 heading slice 决定，不通过 public selector binding 决定。
 - duplicate source label 时，xref 仍绑定到实际包含该 xref 的 heading，并生成 relation triple 与 reifier。
+- xref 位于 document title/preamble heading slice 且没有 containingSectionId 时，仍按 sourceSpan 所在 heading slice 绑定 sourceHeading，并生成 relation triple 与 reifier。
+- containingSectionId 只控制 aat:sourceSelector evidence 是否写入，不阻断 sourceHeading slice resolution。
 - heading-projection.acceptance.test.ts 中 Batch 04 xref edge/reifier 断言解除 expected-fail；Batch 05、Batch 06 和 Batch 07 仍保持 expected-fail。
 ----
 
@@ -80,6 +82,14 @@ pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts
 打回返工 GREEN:
 pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
 结果：PASS。5 test files passed，31 passed tests，3 expected fail tests。
+
+第二次打回返工 RED:
+pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts
+结果：FAIL。新增 document title/preamble xref regression 后，xref 没有 containingSectionId 但 sourceSpan 位于 document-title heading slice 内时缺少 sourceHeading、relation triple 和 reifier。
+
+第二次打回返工 GREEN:
+pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts
+结果：PASS。1 test file passed，14 passed tests。
 ----
 
 === 已运行命令
@@ -88,16 +98,16 @@ pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-pro
 ----
 pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts
 pnpm typecheck
-pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/projector.ts src/rdf12-projection/xref-projector.ts test/rdf12-projection/xref-projector.test.ts
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/xref-projector.ts test/rdf12-projection/xref-projector.test.ts
 ----
 
 === 命令结果
 
 [source,text]
 ----
-pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, 5 test files passed, 31 passed tests, 3 expected fail tests.
+pnpm exec vitest run test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/reifier.test.ts test/rdf12-projection/relation-predicate.test.ts test/rdf12-projection/query-contracts.test.ts test/rdf12-projection/heading-projection.acceptance.test.ts: PASS, 5 test files passed, 32 passed tests, 3 expected fail tests.
 pnpm typecheck: PASS.
-pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/projector.ts src/rdf12-projection/xref-projector.ts test/rdf12-projection/xref-projector.test.ts: PASS, Biome checked 3 files with no fixes applied.
+pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/xref-projector.ts test/rdf12-projection/xref-projector.test.ts: PASS, Biome checked 2 files with no fixes applied.
 ----
 
 === 规约检查清单
@@ -110,6 +120,8 @@ pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/projector
 * 本批 display label 不参与 selector binding 或 resource identity。
 * 本批 source heading 不通过 public selector binding 决定。
 * 本批 duplicate source label 时按 xref 所在 heading slice 选择实际 source heading。
+* 本批 document title/preamble xref 即使没有 containingSectionId，也按 xref 所在 heading slice 选择 document-title source heading。
+* 本批 sourceSelector evidence 只在 containingSectionId 存在时输出。
 * 本批 unresolved target selector 不生成 targetHeading、relation triple 或 reifier。
 * 本批 ambiguous target selector 输出 candidateHeading，且不生成 targetHeading、relation triple 或 reifier。
 * 本批 invalid rel 保留 aat:rel，且不生成 relation triple 或 reifier。
@@ -123,5 +135,5 @@ pnpm exec biome check --vcs-use-ignore-file=false src/rdf12-projection/projector
 
 [horizontal]
 结论:: `待审核`
-理由:: `执行者提交 Batch 04 打回返工实现与测试，等待审核者确认 source heading 由 xref 所在 heading slice 决定，且 target selector 的未绑定和多义路径仍没有主 relation triple。`
+理由:: `执行者提交 Batch 04 第二次打回返工实现与测试，等待审核者确认 document title/preamble xref 的 source heading 由 xref 所在 heading slice 决定，且 target selector 的未绑定和多义路径仍没有主 relation triple。`
 后续动作:: `审核通过后进入 Batch 05；若审核打回，则返工 Batch 04。`
