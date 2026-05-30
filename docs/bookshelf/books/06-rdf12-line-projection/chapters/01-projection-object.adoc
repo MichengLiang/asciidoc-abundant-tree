@@ -3,7 +3,7 @@
 
 标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。该图描述标题节点、标题之间的结构边、标题切片中的交叉引用边，以及归属于节点或边的属性与 payload。
 
-标题投影图的输入事实来自 source document 以及解析器恢复出的标题、标题层级、标题 metadata、xref occurrence、payload block 和 source location。投影器不重新解释 payload 内部结构，不执行业务 lint，不把普通段落或 block 提升为节点。
+标题投影图的输入事实来自 source document 以及解析器恢复出的标题、标题层级、标题 metadata、本地 target catalog、xref occurrence、payload block 和 source location。投影器不重新解释 payload 内部结构，不执行业务 lint，不把普通段落或 block 提升为节点。
 
 === RDF 坐标
 
@@ -36,13 +36,15 @@
 
 source document、projection 和 projection activity 是 provenance 资源。它们描述图从哪份源文件派生、由哪次投影活动生成。它们不属于标题节点集合，也不参与标题层级边。
 
-payload 对象是复杂属性值。payload 对象保存 payload id、kind、format、raw 和回源坐标；它必须通过所属标题节点或交叉引用边证据进入查询，不作为独立的文档结构资源参与标题层级、兄弟顺序或 xref target 绑定。
+payload 对象是复杂属性值。payload 对象保存 payload id、kind、format、raw 和回源坐标；它必须通过所属标题节点或交叉引用边证据进入查询，不作为独立的文档结构资源参与标题层级、兄弟顺序或 relation triple 的端点。payload listing 的本地 target ID 按本地非标题 target 规则归属为所属标题的 address label。
+
+本地非标题 target 的 ID 是标题节点的地址事实。该 ID 归属为覆盖 target source span 的标题节点的 `aat:addressLabel`，不创建结构节点，不参与标题层级边，也不作为 relation triple 的端点。
 
 === 消费者动作
 
 标题投影图服务以下动作：
 
-* 按手动 ID 查找标题节点。
+* 按 address label 查找标题节点。address label 来自标题自身手动 ID，或来自归属到该标题的本地非标题 target ID。
 * 按 headline 查找标题节点。
 * 读取标题节点自身的 raw 切片。
 * 沿标题层级边递归读取子标题。
@@ -60,7 +62,9 @@ payload 对象是复杂属性值。payload 对象保存 payload id、kind、form
 
 === 排除边界
 
-段落、listing、table、inline anchor、label、surface attribute 和 payload block 不创建标题节点。它们可以作为标题 raw、属性来源、payload 来源、绑定证据或回源事实出现。
+段落、listing、table、inline anchor、label、surface attribute 和 payload block 不创建结构节点。它们可以作为标题 raw、属性来源、payload 来源、绑定证据、address label 来源或回源事实出现。
+
+本地非标题 target 的 ID 投影为所属标题节点的 `aat:addressLabel`。该投影不表示源文档标题表面声明了该 ID，只表示该 ID 在标题投影图中寻址到该标题节点。
 
 payload 内部 JSON、YAML、TOML、XML 或其它格式不在标题投影图中展开。payload raw 的内部解释属于读取 payload 的下游消费者。
 

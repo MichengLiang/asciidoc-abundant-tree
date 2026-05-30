@@ -3,13 +3,27 @@
 
 查询契约定义标题投影图的公共查询面。查询结果应返回可继续回源的 resource、relative path 和 line span。
 
-=== 按手动 ID 查找标题
+=== 按 Address Label 查找标题
 
 [source,sparql]
 ----
 SELECT ?heading ?headline ?path ?start ?end WHERE {
   ?heading a aat:Heading ;
            aat:addressLabel "delivery-policy" ;
+           aat:headline ?headline ;
+           aat:relativePath ?path ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+}
+----
+
+`aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。`engine-code` 是 `核心引擎设计` 标题切片内 listing block 的本地 target ID 时，以下查询返回 `核心引擎设计` 标题节点：
+
+[source,sparql]
+----
+SELECT ?heading ?headline ?path ?start ?end WHERE {
+  ?heading a aat:Heading ;
+           aat:addressLabel "engine-code" ;
            aat:headline ?headline ;
            aat:relativePath ?path ;
            aat:startLine ?start ;
@@ -96,6 +110,8 @@ SELECT ?edge ?predicate ?target ?targetHeadline ?weight WHERE {
   ?target aat:headline ?targetHeadline .
 }
 ----
+
+xref target selector 指向本地非标题 target ID 时，`?target` 仍返回该 target 所属的标题节点。edge evidence 的 `aat:targetSelector` 和 `aat:officialResolvedType` 表达源文档中被引用的具体 AsciiDoc target 表面。
 
 === 查找未绑定交叉引用边
 

@@ -16,13 +16,19 @@ xref 所在的标题切片决定边的 source heading。
 
 === Target Heading
 
-xref target 是 selector。selector 只在标题节点 label 空间中绑定。标题节点 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成；xref target 不绑定到 payload id、role、普通字段谓词或标题节点 IRI。
+xref target 是 selector。selector 在标题投影 label 空间中绑定。标题投影 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成；xref target 不绑定到 role、普通字段谓词、xref display label、raw 文本或标题节点 IRI。
+
+`aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。selector 指向 listing、table、block、inline anchor 或 payload listing 的本地 target ID 时，target heading 是该 target ID 所属的标题节点。
 
 `capacity-rule` 绑定到 address label 为 `capacity-rule` 的标题节点。因此上例的 target heading 是 `运力规则`。
+
+`engine-code` 是 `核心引擎设计` 标题切片内 listing block 的本地 target ID 时，xref target selector `engine-code` 绑定到 `核心引擎设计` 标题节点。relation triple 的 object 是标题节点，不是 listing block。
 
 selector 未绑定时，边证据保留 `aat:targetSelector` 和回源坐标，不生成虚构 target heading，不生成主 relation triple。
 
 selector 多义绑定时，边证据保留候选目标，不任意选择一个 target heading，不生成主 relation triple。
+
+xref edge evidence 保留原始 selector 和官方解析事实。`aat:targetSelector` 保存作者写出的 selector；`aat:officialResolvedId`、`aat:officialResolvedType` 和 `aat:officialHref` 保存 Asciidoctor 解析出的 target id、target type 和 href。官方解析事实不改变 relation triple 的 heading endpoint。
 
 [source,turtle]
 ----

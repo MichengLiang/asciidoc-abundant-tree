@@ -47,7 +47,9 @@ xref:capacity-rule[运力规则, rel=depends-on, weight=0.8]
 
 带有手动 ID 且声明 `for` 或 `forSelector` 字段的 listing block 表达节点 payload。绑定成功时，payload 作为该标题节点的 `aat:payload` 值。
 
-节点 payload 的 `for` 字段只在标题节点 label 空间中绑定。绑定目标可以来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload 对象保留 `aat:forSelector` 和回源坐标，不连接到任何标题节点。`for` 字段不绑定到 payload id、role、普通字段谓词或标题节点 IRI。
+节点 payload 的 `for` 字段只在标题投影 label 空间中绑定。绑定目标可以来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload 对象保留 `aat:forSelector` 和回源坐标，不连接到任何标题节点。`for` 字段不绑定到 payload 对象自身的 payload id、role、普通字段谓词或标题节点 IRI。
+
+节点 payload 的 `for` 字段使用标题投影 label 空间。该空间中的 `aat:addressLabel` 包含归属到标题的本地非标题 target ID。`for` 字段仍不绑定到 payload 对象自身的 `aat:payloadId`，也不把 payload listing 提升为标题节点。
 
 `.payload` role 不是节点 payload 的识别条件。role token 可以作为源文档表面语义投影为 `aat:role`，但节点 payload 绑定由 `for` 或 `forSelector` 字段决定。
 
@@ -122,10 +124,14 @@ xref:capacity-rule[运力规则, rel=depends-on, payload=rel-delivery-capacity]
 
 边 payload 归属于交叉引用边证据。它不归属于 source heading，也不归属于 target heading。
 
+边 payload 的 selector 语境与普通 xref target selector 语境不同。xref 的 `payload` 字段只选择边 payload；普通 xref target 指向同一个 listing block ID 时，该 ID 按本地非标题 target 规则归属为所属标题的 `aat:addressLabel`。payload 对象仍然是复杂属性值，不作为 relation triple 的端点。
+
 === Opaque Raw
 
 payload raw 不展开为 RDF 图。JSON、YAML、TOML、XML 或其它 payload 格式内部字段不进入标题投影图。
 
 payload 字段必须保存 payload id、payload kind、raw、relative path、完整 line span 和 content line span。payload format 按本章 format 规则输出。
 
-payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`，不参与 `aat:previousSibling`，不作为 xref target heading。公共查询应通过所属标题节点或 xref edge evidence 取得 payload，而不是把 payload 当作独立文档节点遍历。
+payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`，不参与 `aat:previousSibling`，不作为 relation triple 的端点。公共查询应通过所属标题节点或 xref edge evidence 取得 payload，而不是把 payload 当作独立文档节点遍历。
+
+payload listing 的本地 target ID 成为所属标题节点的 address label。该 address label 只用于寻址标题节点，不改变 payload 对象的复杂属性身份。

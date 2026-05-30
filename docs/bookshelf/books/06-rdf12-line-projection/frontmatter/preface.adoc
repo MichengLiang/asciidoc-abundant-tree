@@ -5,8 +5,10 @@
 
 标题投影图以等号标题为节点，以标题层级和交叉引用为边。标题节点保存标题自身切片 raw、标题头部属性、payload 和回源坐标。交叉引用边保存 xref raw、target selector、关系谓词、边属性、payload 和回源坐标。
 
-本书的核心断言是：标题是唯一节点来源，标题切片是阅读和回源单位，交叉引用是非层级边来源，payload 是节点或边的复杂属性。段落、listing、table、label、surface attribute 和 payload block 不作为核心节点进入标题投影图。
+本书的核心断言是：标题是唯一节点来源，标题切片是阅读和回源单位，交叉引用是非层级边来源，payload 是节点或边的复杂属性。段落、listing、table、label、surface attribute 和 payload block 不作为结构节点进入标题投影图。
 
-标题投影图的消费者通过 headline、手动 ID、标题层级边、交叉引用边和 payload 查询源文档结构。查询结果必须能回到源文件行范围，使阅读、判断和修改循环成立。
+AsciiDoc 的本地可寻址 target 可以位于标题内部的 listing、table、paragraph、inline anchor 或其它 block 上。标题投影图不把这些 target 提升为节点；这些 target 的 ID 在投影中归属为所属标题节点的 address label。消费者通过该 label 仍然查询标题节点、标题切片和标题之间的关系边。
+
+标题投影图的消费者通过 headline、address label、标题层级边、交叉引用边和 payload 查询源文档结构。查询结果必须能回到源文件行范围，使阅读、判断和修改循环成立。
 
 本书使用中文叙事。RDF、IRI、literal、triple term、reifier、selector、headline、payload、provenance 等术语在正文中保留英文形式或中英并列形式，以保持与 W3C 文档和工程实现之间的术语连续性。

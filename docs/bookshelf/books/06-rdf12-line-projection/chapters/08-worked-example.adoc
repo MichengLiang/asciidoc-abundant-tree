@@ -75,7 +75,7 @@
 
 |`:heading-l5-o0`
 |`配送策略`
-|`delivery-policy`
+|`delivery-policy`, `delivery-policy-payload`, `rel-delivery-capacity`
 |`1`
 |line 5 到 line 40
 
@@ -129,6 +129,8 @@
 :heading-l5-o0 a aat:Heading ;
   aat:headline "配送策略" ;
   aat:addressLabel "delivery-policy" ;
+  aat:addressLabel "delivery-policy-payload" ;
+  aat:addressLabel "rel-delivery-capacity" ;
   aat:role "section" ;
   aat:kind "policy" ;
   aat:status "active" ;
@@ -278,13 +280,59 @@
 ] .
 ----
 
+=== 本地 Target Address Label 补充样例
+
+本地非标题 target 的 ID 成为所属标题的 address label。以下补充样例中，`capacity-evidence` 是 listing block 的本地 target ID；该 listing 位于 `运力规则` 标题切片内。
+
+[source,asciidoc]
+------
+[#capacity-rule.section, kind=rule, status=active]
+== 运力规则
+
+运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
+
+[#capacity-evidence]
+[source,json]
+----
+{"threshold": 80}
+----
+
+[#delivery-policy.section, kind=policy]
+== 配送策略
+
+配送策略读取 xref:capacity-evidence[运力证据, rel=depends-on]。
+------
+
+补充样例的投影把 `capacity-evidence` 写为 `运力规则` 标题节点的 address label，并把 xref 关系投影为标题之间的关系边。
+
+[source,turtle]
+----
+:heading-capacity a aat:Heading ;
+  aat:headline "运力规则" ;
+  aat:addressLabel "capacity-rule" ;
+  aat:addressLabel "capacity-evidence" .
+
+:heading-delivery rel:depends-on :heading-capacity .
+
+:xref-edge-capacity-evidence a aat:XrefEdge ;
+  rdf:reifies <<( :heading-delivery rel:depends-on :heading-capacity )>> ;
+  aat:sourceHeading :heading-delivery ;
+  aat:targetHeading :heading-capacity ;
+  aat:targetSelector "capacity-evidence" ;
+  aat:displayLabel "运力证据" ;
+  aat:officialResolvedId "capacity-evidence" ;
+  aat:officialResolvedType "listing" .
+----
+
+该投影不创建 listing block 结构节点。消费者通过 `aat:addressLabel "capacity-evidence"` 查到 `运力规则` 标题节点，并读取该标题节点的 `aat:raw` 或标题子树。
+
 === 验收事实
 
-该样例的投影必须满足：
+`samples/structural-payload.adoc` 的投影必须满足：
 
 * 标题节点数量为四个。
 * `= root` 创建标题节点。
-* `配送策略` 节点有 `aat:addressLabel "delivery-policy"`、`aat:kind "policy"`、`aat:status "active"` 和 `aat:owner "ops"`。
+* `配送策略` 节点有 `aat:addressLabel "delivery-policy"`、`aat:addressLabel "delivery-policy-payload"`、`aat:addressLabel "rel-delivery-capacity"`、`aat:kind "policy"`、`aat:status "active"` 和 `aat:owner "ops"`。
 * `运力规则` 节点自身 raw 不包含 `=== 我是3级标题`。
 * `root` 直接包含 `配送策略` 和 `运力规则`。
 * `运力规则` 直接包含 `我是3级标题`。
@@ -295,7 +343,8 @@
 * `delivery-policy-payload` 通过 `for=delivery-policy` 绑定为 `配送策略` 节点 payload。
 * `rel-delivery-capacity` 通过 xref 的 `payload=rel-delivery-capacity` 绑定为 `depends-on` 边 payload。
 * payload raw 不展开为业务 RDF 图。
-* 第 8 行 paragraph 不创建标题节点。
-* 第 10 到 23 行 payload listing 不创建标题节点。
-* 第 25 到 39 行 xref payload listing 不创建标题节点。
+* 第 8 行 paragraph 不创建结构节点。
+* 第 10 到 23 行 payload listing 不创建结构节点。
+* 第 25 到 39 行 xref payload listing 不创建结构节点。
+* 本地非标题 target ID 作为所属标题的 `aat:addressLabel`，但该 target 不创建 listing、table、block 或 inline anchor 结构节点。
 * `kind`、`status`、`owner` 和 `weight` 使用直接 `aat:` 谓词，不生成属性资源。

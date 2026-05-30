@@ -5,7 +5,7 @@ source document:: 作为事实来源的 AsciiDoc 源文件。
 
 heading projection graph:: 从 source document 派生出的 RDF 1.2 标题投影图。
 
-heading node:: 由等号标题创建的 RDF resource。标题节点是标题投影图的唯一节点类型。
+heading node:: 由等号标题创建的 RDF resource。标题节点是标题投影图的唯一结构节点类型。
 
 headline:: 标题文本，不包含标题等号标记。
 
@@ -23,11 +23,15 @@ payload:: 归属于标题节点或 xref edge evidence 的复杂属性。payload 
 
 direct attribute predicate:: 由源文档 named attribute 映射得到的 `aat:<name>` 谓词。该谓词表达源文档表面字段，不触发业务解释。标题 `#id`、role token、xref `rel` 和 xref `payload` 是专门字段，不按普通字段谓词处理。
 
-selector:: xref target、节点 payload `for` 字段或 xref `payload` 字段中用于绑定目标的字符串。xref target 和节点 payload `for` 只绑定标题节点 label；xref `payload` 只绑定 listing block 的手动 ID。
+local target:: source document 内可由 AsciiDoc xref 寻址的 target catalog entry。local target 可以是 section、listing、table、block、inline anchor 或未知类型 target。
 
-address label:: 作者在标题或 payload 表面声明的手动 ID。
+selector:: xref target、节点 payload `for` 字段或 xref `payload` 字段中用于绑定目标的字符串。xref target 和节点 payload `for` 绑定标题投影 label 空间；xref `payload` 绑定 listing block 的手动 ID 以选择边 payload。
+
+address label:: 标题投影图中可寻址到 heading node 的作者声明 label。address label 来自标题自身手动 ID，或来自归属到该标题切片的本地非标题 target ID。
 
 generated address label:: 解析器为没有手动 ID 的标题恢复出的可寻址 label。
+
+heading projection label space:: selector 绑定 heading node 时查询的 label 空间。该空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成。
 
 relative path:: 相对于投影调用方指定文档根目录的文件路径。
 
