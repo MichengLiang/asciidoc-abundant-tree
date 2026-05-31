@@ -262,6 +262,12 @@ open xref:target[Open, rel=open]
 .Block title xref:target[Block Title, rel=title]
 block title body xref:target[Block Body, rel=body]
 
+[subs=]
+suppressed xref:target[Suppressed, rel=suppressed]
+
+[subs=]
+NOTE: suppressed note xref:target[Suppressed Note, rel=suppressed-note]
+
 ----
 listing xref:target[Listing, rel=listing]
 ----
@@ -307,11 +313,18 @@ stem xref:target[Stem, rel=stem]
 			"title",
 			"body",
 		]);
-		expect(
-			document.xrefOccurrences.map((xref) => xref.attributes?.rel),
-		).not.toEqual(
-			expect.arrayContaining(["listing", "source", "literal", "pass", "stem"]),
-		);
+		const rels = document.xrefOccurrences.map((xref) => xref.attributes?.rel);
+		for (const forbiddenRel of [
+			"suppressed",
+			"suppressed-note",
+			"listing",
+			"source",
+			"literal",
+			"pass",
+			"stem",
+		]) {
+			expect(rels).not.toContain(forbiddenRel);
+		}
 		expect(
 			document.xrefOccurrences.every(
 				(xref) => xref.containingSectionId === "_links",

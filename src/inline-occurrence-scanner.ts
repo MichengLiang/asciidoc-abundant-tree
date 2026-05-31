@@ -52,6 +52,9 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 		if (policy !== "scan") {
 			continue;
 		}
+		if (!scansMacroSubstitutedContent(surface)) {
+			continue;
+		}
 		if (surface.context === "table") {
 			scanTableInlineRange(
 				options.lineTable,
@@ -90,6 +93,16 @@ function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
 		current = current.parent;
 	}
 	return false;
+}
+
+function scansMacroSubstitutedContent(surface: OfficialBlockSurface): boolean {
+	// Asciidoctor exposes term/cell inline substitutions below these containers,
+	// not as a useful "macros" entry on the container block itself.
+	if (surface.context === "dlist" || surface.context === "table") {
+		return true;
+	}
+	const substitutions = surface.block.getSubstitutions?.();
+	return !Array.isArray(substitutions) || substitutions.includes("macros");
 }
 
 export function assignContainingSectionIds(

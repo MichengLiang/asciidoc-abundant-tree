@@ -19,6 +19,7 @@ export type AsciidoctorBlock = {
 		getLineNumber?: () => number;
 		getPath?: () => string | undefined;
 	};
+	getSubstitutions?: () => string[];
 	getRefs?: () => Record<string, unknown>;
 	getStyle?: () => string;
 	getTitle?: () => string;
