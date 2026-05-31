@@ -123,6 +123,8 @@ function resolveContextDelimitedSpan(
 	context: string | undefined,
 ): { span: LineSpan; contentSpan: LineSpan } | undefined {
 	switch (context) {
+		case "example":
+			return resolveDelimitedBlockSpan(lineTable, startLine, ["===="]);
 		case "listing":
 			return resolveDelimitedBlockSpan(lineTable, startLine, ["----", "```"]);
 		case "literal":
@@ -131,6 +133,13 @@ function resolveContextDelimitedSpan(
 			return resolveDelimitedBlockSpan(lineTable, startLine, ["++++"]);
 		case "open":
 			return resolveDelimitedBlockSpan(lineTable, startLine, ["--"]);
+		case "quote":
+		case "verse":
+			return resolveDelimitedBlockSpan(lineTable, startLine, ["____"]);
+		case "sidebar":
+			return resolveDelimitedBlockSpan(lineTable, startLine, ["****"]);
+		case "stem":
+			return resolveDelimitedBlockSpan(lineTable, startLine, ["++++"]);
 		case "table":
 			return resolveDelimitedBlockSpan(lineTable, startLine, ["|==="]);
 		default:
@@ -173,6 +182,13 @@ function contentSpanForContext(
 			endLine: span.endLine,
 		};
 	}
+	if (surface.context === "list_item") {
+		const line = surface.sourceLine ?? span.startLine;
+		return {
+			startLine: line,
+			endLine: line,
+		};
+	}
 	return undefined;
 }
 
@@ -180,7 +196,7 @@ function sourceContentSpanForContext(
 	surface: OfficialBlockSurface,
 	startLine: number,
 ): LineSpan | undefined {
-	if (surface.context !== "paragraph") {
+	if (surface.context !== "paragraph" && surface.context !== "admonition") {
 		return undefined;
 	}
 	const source = surface.block.getSource?.();
@@ -210,9 +226,18 @@ function titleSpanForSurface(
 }
 
 function isDelimitedContext(context: string | undefined): boolean {
-	return ["listing", "literal", "pass", "open", "table"].includes(
-		context ?? "",
-	);
+	return [
+		"example",
+		"listing",
+		"literal",
+		"open",
+		"pass",
+		"quote",
+		"sidebar",
+		"stem",
+		"table",
+		"verse",
+	].includes(context ?? "");
 }
 
 function normalizeLineSpan(span: LineSpan): LineSpan {

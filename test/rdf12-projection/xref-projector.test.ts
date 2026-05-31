@@ -394,6 +394,60 @@ describe("rdf12 xref edge projection", () => {
 			"rel-delivery-capacity",
 		);
 	});
+
+	it("projects xrefs found in non-paragraph inline-substituted contexts", () => {
+		const sourcePath = writeFixture(
+			"rdf-xref-inline-contexts.adoc",
+			`= Probe
+
+[#source]
+== Source
+
+* List item points to xref:target-list[List Target, rel=precedes].
+
+NOTE: Note points to xref:target-note[Note Target, rel=warns].
+
+[#target-list]
+== List Target
+
+[#target-note]
+== Note Target
+`,
+		);
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({ sourcePath }),
+			{ documentRoot: projectRoot },
+		);
+		const source = heading(projection.documentIri, "heading-l3-o0");
+		const listTarget = heading(projection.documentIri, "heading-l10-o0");
+		const noteTarget = heading(projection.documentIri, "heading-l13-o0");
+		const listRelation = rdf12Triple(
+			source,
+			iriTerm(`${namespaces.rel}precedes`),
+			listTarget,
+		);
+		const noteRelation = rdf12Triple(
+			source,
+			iriTerm(`${namespaces.rel}warns`),
+			noteTarget,
+		);
+		const edges = resourcesOfType(
+			projection.graph,
+			`${namespaces.aat}XrefEdge`,
+		);
+
+		expect(edges).toHaveLength(2);
+		expect(projection.graph.has(listRelation)).toBe(true);
+		expect(projection.graph.has(noteRelation)).toBe(true);
+		for (const relation of [listRelation, noteRelation]) {
+			const reifier = projection.graph.match({
+				predicate: iriTerm(`${namespaces.rdf}reifies`),
+				object: rdf12TripleTerm(relation),
+			});
+			expect(reifier).toHaveLength(1);
+			expect(edges).toContain(reifier[0]?.subject.value);
+		}
+	});
 });
 
 function referenceDocument(): AbundantDocument {

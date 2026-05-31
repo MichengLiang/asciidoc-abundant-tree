@@ -39,10 +39,11 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 			continue;
 		}
 		if (interval.metadataSpan) {
-			scanAnchorRange(
+			scanMetadataRange(
 				options.lineTable,
 				interval.metadataSpan.startLine,
 				interval.metadataSpan.endLine,
+				xrefOccurrences,
 				anchorOccurrences,
 			);
 		}
@@ -67,13 +68,16 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 				span.endLine,
 				xrefOccurrences,
 				anchorOccurrences,
+				descendantUnscannableRanges(surface, options.intervalByBlock),
 			);
 		}
 	}
 
 	return {
-		xrefOccurrences: xrefOccurrences.sort(compareSourceSpans),
-		anchorOccurrences: anchorOccurrences.sort(compareSourceSpans),
+		xrefOccurrences:
+			dedupeOccurrences(xrefOccurrences).sort(compareSourceSpans),
+		anchorOccurrences:
+			dedupeOccurrences(anchorOccurrences).sort(compareSourceSpans),
 	};
 }
 
@@ -176,51 +180,59 @@ function scanInlineRange(
 		if (!line) {
 			continue;
 		}
-		for (const match of line.text.matchAll(shorthandXrefPattern)) {
-			if (match.index === undefined || !match[1]) {
-				continue;
-			}
-			const label = match[2]?.trim();
-			xrefOccurrences.push(
-				makeXref(
-					lineTable,
-					line,
-					match.index,
-					match[0],
-					label
-						? {
-								syntax: "shorthand",
-								target: match[1].trim(),
-								label,
-							}
-						: {
-								syntax: "shorthand",
-								target: match[1].trim(),
-							},
-				),
-			);
-		}
-		for (const match of line.text.matchAll(macroXrefPattern)) {
-			if (match.index === undefined || !match[1]) {
-				continue;
-			}
-			const parsed = parseMacroLabel(match[2] ?? "");
-			const parts = definedObject({
-				syntax: "macro",
-				target: match[1].trim(),
-				label: parsed.label,
-				attributes: parsed.attributes,
-			}) as {
-				syntax: "macro";
-				target: string;
-				label?: string;
-				attributes?: Record<string, string | number | boolean>;
-			};
-			xrefOccurrences.push(
-				makeXref(lineTable, line, match.index, match[0], parts),
-			);
-		}
+		scanXrefMatches(lineTable, line, xrefOccurrences);
 		scanAnchorMatches(lineTable, line, anchorOccurrences);
+	}
+}
+
+function scanXrefMatches(
+	lineTable: LineTable,
+	line: SourceLine,
+	xrefOccurrences: XrefOccurrenceNode[],
+): void {
+	for (const match of line.text.matchAll(shorthandXrefPattern)) {
+		if (match.index === undefined || !match[1]) {
+			continue;
+		}
+		const label = match[2]?.trim();
+		xrefOccurrences.push(
+			makeXref(
+				lineTable,
+				line,
+				match.index,
+				match[0],
+				label
+					? {
+							syntax: "shorthand",
+							target: match[1].trim(),
+							label,
+						}
+					: {
+							syntax: "shorthand",
+							target: match[1].trim(),
+						},
+			),
+		);
+	}
+	for (const match of line.text.matchAll(macroXrefPattern)) {
+		if (match.index === undefined || !match[1]) {
+			continue;
+		}
+		const parsed = parseMacroLabel(match[2] ?? "");
+		const parts = definedObject({
+			syntax: "macro",
+			target: match[1].trim(),
+			label: parsed.label,
+			attributes: parsed.attributes,
+		}) as {
+			syntax: "macro";
+			target: string;
+			label?: string;
+			attributes?: Record<string, string | number | boolean>;
+		};
+		xrefOccurrences.push(
+			makeXref(lineTable, line, match.index, match[0], parts),
+		);
 	}
 }
 
@@ -374,22 +386,55 @@ function mergeLineSpans(ranges: LineSpan[]): LineSpan[] {
 	return merged;
 }
 
+function descendantUnscannableRanges(
+	surface: OfficialBlockSurface,
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
+): LineRange[] {
+	const ranges: LineRange[] = [];
+	for (const child of surface.children) {
+		collectUnscannableRanges(child, intervalByBlock, ranges);
+	}
+	return mergeLineSpans(ranges);
+}
+
+function collectUnscannableRanges(
+	surface: OfficialBlockSurface,
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
+	ranges: LineRange[],
+): void {
+	const policy = officialBlockPolicy(surface.context);
+	const interval = intervalByBlock.get(surface.block);
+	if (policy === "skip" || policy === "diagnostic") {
+		if (interval) {
+			ranges.push(interval.span);
+		}
+		return;
+	}
+	for (const child of surface.children) {
+		collectUnscannableRanges(child, intervalByBlock, ranges);
+	}
+}
+
 function isLineInRanges(line: number, ranges: LineRange[]): boolean {
 	return ranges.some(
 		(range) => line >= range.startLine && line <= range.endLine,
 	);
 }
 
-function scanAnchorRange(
+function scanMetadataRange(
 	lineTable: LineTable,
 	startLine: number,
 	endLine: number,
+	xrefOccurrences: XrefOccurrenceNode[],
 	anchorOccurrences: AnchorOccurrenceNode[],
 ): void {
 	for (let lineNumber = startLine; lineNumber <= endLine; lineNumber += 1) {
 		const line = lineTable.lines[lineNumber - 1];
 		if (!line) {
 			continue;
+		}
+		if (line.text.startsWith(".")) {
+			scanXrefMatches(lineTable, line, xrefOccurrences);
 		}
 		scanAnchorMatches(lineTable, line, anchorOccurrences);
 	}
@@ -439,4 +484,33 @@ function scanAnchorMatches(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return value !== null && typeof value === "object";
+}
+
+function dedupeOccurrences<T extends { raw: string; sourceSpan?: SourceSpan }>(
+	occurrences: T[],
+): T[] {
+	const seen = new Set<string>();
+	const result: T[] = [];
+	for (const occurrence of occurrences) {
+		const key = occurrenceKey(occurrence);
+		if (seen.has(key)) {
+			continue;
+		}
+		seen.add(key);
+		result.push(occurrence);
+	}
+	return result;
+}
+
+function occurrenceKey(occurrence: {
+	raw: string;
+	sourceSpan?: SourceSpan;
+}): string {
+	return [
+		occurrence.sourceSpan?.start.line ?? 0,
+		occurrence.sourceSpan?.start.column ?? 0,
+		occurrence.sourceSpan?.end.line ?? 0,
+		occurrence.sourceSpan?.end.column ?? 0,
+		occurrence.raw,
+	].join(":");
 }

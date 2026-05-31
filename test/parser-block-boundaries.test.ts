@@ -203,6 +203,122 @@ Open block prose links to <<after>>.
 		]);
 	});
 
+	it("extracts xrefs from Asciidoctor inline-substituted prose contexts only", () => {
+		const path = writeFixture(
+			"xref-inline-substitution-contexts.adoc",
+			`= Probe
+
+[#target]
+== Target
+
+== Links
+
+Paragraph xref:target[Paragraph, rel=paragraph].
+
+Unordered:
+* unordered xref:target[Unordered, rel=unordered]
+
+Ordered:
+. ordered xref:target[Ordered, rel=ordered]
+
+Nested:
+* parent
+** nested unordered xref:target[Nested Unordered, rel=nested-unordered]
+. parent
+.. nested ordered xref:target[Nested Ordered, rel=nested-ordered]
+
+Description:
+term xref:target[Term, rel=term]:: desc xref:target[Desc, rel=desc]
++
+continued xref:target[Continued, rel=continued]
+
+[quote]
+____
+quote xref:target[Quote, rel=quote]
+____
+
+NOTE: note xref:target[Note, rel=note]
+
+[example]
+====
+example xref:target[Example, rel=example]
+====
+
+[sidebar]
+****
+sidebar xref:target[Sidebar, rel=sidebar]
+****
+
+[verse]
+____
+verse xref:target[Verse, rel=verse]
+____
+
+[open]
+--
+open xref:target[Open, rel=open]
+--
+
+.Block title xref:target[Block Title, rel=title]
+block title body xref:target[Block Body, rel=body]
+
+----
+listing xref:target[Listing, rel=listing]
+----
+
+[source]
+----
+source xref:target[Source, rel=source]
+----
+
+....
+literal xref:target[Literal, rel=literal]
+....
+
+++++
+pass xref:target[Pass, rel=pass]
+++++
+
+[stem]
+++++
+stem xref:target[Stem, rel=stem]
+++++
+`,
+		);
+		const document = parseAbundantTree({ sourcePath: path });
+
+		expect(
+			document.xrefOccurrences.map((xref) => xref.attributes?.rel),
+		).toEqual([
+			"paragraph",
+			"unordered",
+			"ordered",
+			"nested-unordered",
+			"nested-ordered",
+			"term",
+			"desc",
+			"continued",
+			"quote",
+			"note",
+			"example",
+			"sidebar",
+			"verse",
+			"open",
+			"title",
+			"body",
+		]);
+		expect(
+			document.xrefOccurrences.map((xref) => xref.attributes?.rel),
+		).not.toEqual(
+			expect.arrayContaining(["listing", "source", "literal", "pass", "stem"]),
+		);
+		expect(
+			document.xrefOccurrences.every(
+				(xref) => xref.containingSectionId === "_links",
+			),
+		).toBe(true);
+	});
+
 	it("stores rich section raw on the AST instead of requiring downstream file slicing", () => {
 		const path = writeFixture(
 			"section-rich-source-raw.adoc",
