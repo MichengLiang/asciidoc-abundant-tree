@@ -1,3 +1,4 @@
+import type { LogicalSource } from "./book-entry/model";
 import type { LineSpan, SourceSpan } from "./model";
 
 export type SourceLine = {
@@ -15,14 +16,41 @@ export type LineRange = {
 	endLine: number;
 };
 
+const logicalSourceByLineTable = new WeakMap<LineTable, LogicalSource>();
+const pendingLogicalSourcesByText = new Map<string, LogicalSource[]>();
+
+export function registerPendingLogicalSourceForLineTable(
+	logicalSource: LogicalSource,
+): void {
+	const pending =
+		pendingLogicalSourcesByText.get(logicalSource.logicalText) ?? [];
+	pending.push(logicalSource);
+	pendingLogicalSourcesByText.set(logicalSource.logicalText, pending);
+}
+
+export function logicalSourceForLineTable(
+	lineTable: LineTable,
+): LogicalSource | undefined {
+	return logicalSourceByLineTable.get(lineTable);
+}
+
 export function buildLineTable(source: string): LineTable {
-	return {
+	const lineTable = {
 		source,
 		lines: source.split(/\r?\n/).map((text, index) => ({
 			number: index + 1,
 			text,
 		})),
 	};
+	const pending = pendingLogicalSourcesByText.get(source);
+	const logicalSource = pending?.shift();
+	if (logicalSource) {
+		logicalSourceByLineTable.set(lineTable, logicalSource);
+	}
+	if (pending?.length === 0) {
+		pendingLogicalSourcesByText.delete(source);
+	}
+	return lineTable;
 }
 
 export function lineText(lineTable: LineTable, line: number): string {

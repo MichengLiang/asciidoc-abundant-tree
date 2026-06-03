@@ -5,7 +5,12 @@ import type {
 	ToolDiagnostic,
 } from "../model";
 import type { LineTable } from "../source-lines";
-import { sourceLines } from "../source-lines";
+import {
+	lineText,
+	logicalSourceForLineTable as logicalSourceForRegisteredLineTable,
+	registerPendingLogicalSourceForLineTable,
+	sourceLines,
+} from "../source-lines";
 import type { LineOrigin, LogicalSource, SourceFileRecord } from "./model";
 
 export type BookEntryRecoveryDiagnosticCode =
@@ -26,18 +31,16 @@ export type OriginRecoveryResult =
 			readonly diagnostic: ToolDiagnostic;
 	  };
 
-const logicalSourceByText = new Map<string, LogicalSource>();
-
 export function registerLogicalSourceForRecovery(
 	logicalSource: LogicalSource,
 ): void {
-	logicalSourceByText.set(logicalSource.logicalText, logicalSource);
+	registerPendingLogicalSourceForLineTable(logicalSource);
 }
 
 export function logicalSourceForLineTable(
 	lineTable: LineTable,
 ): LogicalSource | undefined {
-	return logicalSourceByText.get(lineTable.source);
+	return logicalSourceForRegisteredLineTable(lineTable);
 }
 
 export function originForLogicalLine(
@@ -238,18 +241,13 @@ export function recoverSectionSourceLayer(
 			: headingOrigin.sourceLine;
 	const lineSpan = {
 		startLine,
-		endLine: sourceFile.lineTable.lines.length,
+		endLine: sectionHeadingSliceEndLine(
+			sourceFile.lineTable,
+			startLine,
+			headingOrigin.sourceLine,
+		),
 	};
-	const sourceSpan = originSourceSpan(sourceFile, lineSpan, {
-		start: {
-			line: logicalMetadataStartLine,
-			column: 1,
-		},
-		end: {
-			line: logicalHeadingLine,
-			column: logicalTitleSpan?.end.column ?? 1,
-		},
-	});
+	const sourceSpan = originSourceSpan(sourceFile, lineSpan, undefined);
 	if (!sourceSpan) {
 		return recoveryFailure(
 			"source-recovery.origin-line-missing",
@@ -345,6 +343,57 @@ function originSourceSpan(
 			column: logicalSourceSpan?.end.column ?? [...endLine.text].length + 1,
 		},
 	};
+}
+
+function sectionHeadingSliceEndLine(
+	lineTable: LineTable,
+	startLine: number,
+	headingLine: number,
+): number {
+	for (let line = headingLine + 1; line <= lineTable.lines.length; line += 1) {
+		const text = lineText(lineTable, line);
+		if (!isHeadingSliceBoundaryLine(text)) {
+			continue;
+		}
+		return Math.max(
+			startLine,
+			metadataStartBeforeBoundary(lineTable, line, headingLine + 1) - 1,
+		);
+	}
+	return lineTable.lines.length;
+}
+
+function metadataStartBeforeBoundary(
+	lineTable: LineTable,
+	boundaryLine: number,
+	minLine: number,
+): number {
+	let startLine = boundaryLine;
+	for (let line = boundaryLine - 1; line >= minLine; line -= 1) {
+		if (!isBlockMetadataLine(lineText(lineTable, line))) {
+			break;
+		}
+		startLine = line;
+	}
+	return startLine;
+}
+
+function isHeadingSliceBoundaryLine(text: string): boolean {
+	const trimmed = text.trim();
+	return (
+		isSectionHeadingLine(trimmed) ||
+		isBlockMetadataLine(trimmed) ||
+		trimmed === "----" ||
+		trimmed === "|==="
+	);
+}
+
+function isSectionHeadingLine(trimmed: string): boolean {
+	return /^={1,6}\s+\S/u.test(trimmed);
+}
+
+function isBlockMetadataLine(trimmed: string): boolean {
+	return /^\[[^[\]]+\]$/u.test(trimmed) || /^\.[^\s.]/u.test(trimmed);
 }
 
 function recoveryFailure(

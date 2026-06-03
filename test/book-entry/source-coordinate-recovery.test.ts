@@ -23,6 +23,7 @@ import type {
 } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { buildLineTable } from "../../src/source-lines";
+import { writeFixture } from "../helpers";
 
 const projectRoot = process.cwd();
 const fixtureRoot = join(projectRoot, "test/book-entry/fixtures");
@@ -54,13 +55,28 @@ describe("book-entry origin source coordinate recovery", () => {
 		const document = parseBookEntryFixture();
 		const chapterSection = sectionByTitle(document, "Xref Origin");
 		const nestedSection = sectionByTitle(document, "Nested Origin");
+		const targetSection = sectionByTitle(document, "Target Origin");
 
-		expect(chapterSection.source?.raw).toContain("== Xref Origin");
-		expect(chapterSection.source?.raw).toContain(
-			"include::nested/section.adoc[]",
-		);
+		expect(chapterSection.source?.raw).toBe(`[#xref-origin]
+== Xref Origin
+
+This chapter points to xref:target-origin[Target Origin].
+
+This chapter owns anchor:chapter-anchor[Chapter Anchor] for scope recovery.
+
+include::nested/section.adoc[]
+
+`);
 		expect(chapterSection.source?.raw).not.toContain("=== Nested Origin");
+		expect(chapterSection.source?.raw).not.toContain("[#chapter-listing]");
 		expect(nestedSection.source?.raw).toContain("=== Nested Origin");
+		expect(targetSection.source?.raw).toBe(`[#target-origin]
+== Target Origin
+
+This chapter owns the target section.
+
+`);
+		expect(targetSection.source?.raw).not.toContain("[#chapter-table]");
 	});
 
 	it("maps xref, anchor, and target source coordinates to their origin files", () => {
@@ -127,17 +143,88 @@ describe("book-entry origin source coordinate recovery", () => {
 		expect(listing.contentSpan).toBeUndefined();
 		expect(listing.source?.raw).toBeUndefined();
 	});
+
+	it("does not reuse book-entry recovery context for later same-text single-file parses", () => {
+		const bookEntryDocument = parseBookEntryFixture();
+		if (!bookEntryDocument.sourceText) {
+			throw new Error("Book-entry document sourceText is required.");
+		}
+		const singleFilePath = writeFixture(
+			"same-text-after-book-entry.adoc",
+			bookEntryDocument.sourceText,
+		);
+
+		const singleFileDocument = parseAbundantTree({
+			sourcePath: singleFilePath,
+		});
+		const singleFileSection = sectionByTitle(singleFileDocument, "Xref Origin");
+
+		expect(singleFileDocument.mode).toBe("single-file");
+		expect(singleFileSection.source?.relativePath).toBeUndefined();
+		expect(singleFileSection.source?.sourceSpan?.start.line).toBe(26);
+	});
 });
 
 describe("book-entry origin coordinate mapper diagnostics", () => {
-	it("registers logical source contexts by logical text line table", () => {
+	it("binds logical source context only to the next matching line table instance", () => {
 		const logicalSource = syntheticLogicalSource();
-		const lineTable = buildLineTable(logicalSource.logicalText);
 
 		registerLogicalSourceForRecovery(logicalSource);
+		const lineTable = buildLineTable(logicalSource.logicalText);
+		const sameTextLineTable = buildLineTable(logicalSource.logicalText);
 
 		expect(logicalSourceForLineTable(lineTable)).toBe(logicalSource);
+		expect(logicalSourceForLineTable(sameTextLineTable)).toBeUndefined();
 		expect(logicalSourceForLineTable(buildLineTable("other"))).toBeUndefined();
+	});
+
+	it("keeps identical logical texts isolated by line table identity", () => {
+		const first = syntheticLogicalSource({
+			lineOrigins: [
+				{
+					logicalLine: 1,
+					absolutePath: "/first.adoc",
+					relativePath: "first.adoc",
+					sourceLine: 1,
+				},
+			],
+			sourceFiles: [
+				{
+					absolutePath: "/first.adoc",
+					relativePath: "first.adoc",
+					text: "same",
+					lineTable: buildLineTable("same"),
+				},
+			],
+			logicalText: "same",
+		});
+		const second = syntheticLogicalSource({
+			lineOrigins: [
+				{
+					logicalLine: 1,
+					absolutePath: "/second.adoc",
+					relativePath: "second.adoc",
+					sourceLine: 1,
+				},
+			],
+			sourceFiles: [
+				{
+					absolutePath: "/second.adoc",
+					relativePath: "second.adoc",
+					text: "same",
+					lineTable: buildLineTable("same"),
+				},
+			],
+			logicalText: "same",
+		});
+
+		registerLogicalSourceForRecovery(first);
+		const firstLineTable = buildLineTable("same");
+		registerLogicalSourceForRecovery(second);
+		const secondLineTable = buildLineTable("same");
+
+		expect(logicalSourceForLineTable(firstLineTable)).toBe(first);
+		expect(logicalSourceForLineTable(secondLineTable)).toBe(second);
 	});
 
 	it("recovers same-origin source layers without raw when raw is not requested", () => {
