@@ -33,9 +33,9 @@
 
 |Batch 04
 |Origin-aware Source Recovery
-|未开始
-|
-|
+|待审核
+|`3038d36b3a1e74b483537db0384fac5787433e48`
+|xref:batch-04-review-package[batch-04-review-package.adoc]
 
 |Batch 05
 |Public API 与 CLI Mode
