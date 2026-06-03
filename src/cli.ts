@@ -4,11 +4,12 @@ import { existsSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
 import process from "node:process";
 import { rdf12 } from "./index";
-import type { OutputFormat } from "./model";
+import type { OutputFormat, ParseAbundantTreeOptions } from "./model";
 import { parseAbundantTree } from "./parser";
 import { formatAbundantTree, serializeAbundantTreeToJson } from "./serializers";
 
 type CliOutputFormat = OutputFormat | "rdf12" | "rdf12-json-ld";
+type CliMode = "single-file" | "book-entry";
 
 export type CliResult = {
 	code: number;
@@ -19,9 +20,11 @@ export type CliResult = {
 const USAGE = `Usage:
   asciidoc-abundant-tree <file.adoc> [--json]
   asciidoc-abundant-tree <file.adoc> [--format tree|json|rdf12|rdf12-json-ld]
+  asciidoc-abundant-tree <file.adoc> [--mode single-file|book-entry]
+  asciidoc-abundant-tree <file.adoc> [--document-root <root>]
   asciidoc-abundant-tree --help
 
-Default output is pretty text. JSON is a machine-friendly projection of the same TypeScript document model. RDF 1.2 output is available as Turtle text or JSON-LD.`;
+Default mode is single-file. In book-entry mode, --document-root is the relativePath basis and path boundary; when omitted it defaults to the current working directory. JSON is a machine-friendly projection of the same TypeScript document model. RDF 1.2 output is available as Turtle text or JSON-LD.`;
 
 export function runCli(args: string[]): CliResult {
 	let parsed: ReturnType<typeof parseArgs>;
@@ -53,7 +56,7 @@ export function runCli(args: string[]): CliResult {
 	}
 
 	const inputPath = resolve(parsed.sourcePath);
-	const documentRoot = process.cwd();
+	const documentRoot = resolve(parsed.documentRoot ?? process.cwd());
 
 	if (!existsSync(inputPath)) {
 		return {
@@ -65,6 +68,16 @@ export function runCli(args: string[]): CliResult {
 
 	try {
 		if (
+			parsed.mode === "book-entry" &&
+			isOutsideRoot(documentRoot, inputPath)
+		) {
+			return {
+				code: 1,
+				stdout: "",
+				stderr: `Input source path is outside documentRoot: ${inputPath}`,
+			};
+		}
+		if (
 			isRdf12Format(parsed.format) &&
 			isOutsideRoot(documentRoot, inputPath)
 		) {
@@ -74,9 +87,9 @@ export function runCli(args: string[]): CliResult {
 				stderr: `Input source path is outside document root: ${inputPath}`,
 			};
 		}
-		const document = parseAbundantTree({
-			sourcePath: inputPath,
-		});
+		const document = parseAbundantTree(
+			parserOptions(parsed, inputPath, documentRoot),
+		);
 		if (parsed.format === "rdf12") {
 			const projection = rdf12(document, { documentRoot });
 			return {
@@ -114,10 +127,14 @@ function parseArgs(args: string[]): {
 	help: boolean;
 	sourcePath: string | undefined;
 	format: CliOutputFormat;
+	mode: CliMode;
+	documentRoot: string | undefined;
 } {
 	let help = false;
 	let sourcePath: string | undefined;
 	let format: CliOutputFormat = "tree";
+	let mode: CliMode = "single-file";
+	let documentRoot: string | undefined;
 
 	for (let index = 0; index < args.length; index += 1) {
 		const arg = args[index];
@@ -156,6 +173,31 @@ function parseArgs(args: string[]): {
 			continue;
 		}
 
+		if (arg === "--mode") {
+			const next = args[index + 1];
+			if (!next) {
+				throw new Error("--mode requires a value");
+			}
+			if (next !== "single-file" && next !== "book-entry") {
+				throw new Error(
+					`Unsupported mode: ${next}. Expected single-file or book-entry.`,
+				);
+			}
+			mode = next;
+			index += 1;
+			continue;
+		}
+
+		if (arg === "--document-root") {
+			const next = args[index + 1];
+			if (!next) {
+				throw new Error("--document-root requires a value");
+			}
+			documentRoot = next;
+			index += 1;
+			continue;
+		}
+
 		if (arg.startsWith("-")) {
 			throw new Error(`Unknown argument: ${arg}`);
 		}
@@ -168,7 +210,25 @@ function parseArgs(args: string[]): {
 		throw new Error(`Unexpected extra argument: ${arg}`);
 	}
 
-	return { help, sourcePath, format };
+	return { help, sourcePath, format, mode, documentRoot };
+}
+
+function parserOptions(
+	parsed: ReturnType<typeof parseArgs>,
+	inputPath: string,
+	documentRoot: string,
+): ParseAbundantTreeOptions {
+	if (parsed.mode === "book-entry") {
+		return {
+			sourcePath: inputPath,
+			mode: "book-entry",
+			documentRoot,
+		};
+	}
+	return {
+		sourcePath: inputPath,
+		mode: "single-file",
+	};
 }
 
 function isRdf12Format(format: CliOutputFormat): boolean {

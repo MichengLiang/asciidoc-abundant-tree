@@ -1,15 +1,19 @@
-import { describe, expect, it, vi } from "vitest";
-
-vi.mock("../src/parser", () => ({
-	parseAbundantTree: vi.fn(),
-}));
-
+import { join } from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { runCli } from "../src/cli";
-import { parseAbundantTree } from "../src/parser";
+import * as parserModule from "../src/parser";
+
+const projectRoot = process.cwd();
+const bookEntryFixtureRoot = join(projectRoot, "test/book-entry/fixtures");
+const bookEntryPath = join(bookEntryFixtureRoot, "simple-book/book.adoc");
 
 describe("cli error handling", () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
 	it("reports parser errors", () => {
-		vi.mocked(parseAbundantTree).mockImplementation(() => {
+		vi.spyOn(parserModule, "parseAbundantTree").mockImplementation(() => {
 			throw new Error("parser boom");
 		});
 
@@ -21,7 +25,7 @@ describe("cli error handling", () => {
 	});
 
 	it("reports unknown parser failures", () => {
-		vi.mocked(parseAbundantTree).mockImplementation(() => {
+		vi.spyOn(parserModule, "parseAbundantTree").mockImplementation(() => {
 			throw "boom";
 		});
 
@@ -30,5 +34,90 @@ describe("cli error handling", () => {
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toBe("Unknown error");
+	});
+
+	it("rejects unsupported modes", () => {
+		const result = runCli([
+			"samples/reference-links.adoc",
+			"--mode",
+			"workspace",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toContain("Unsupported mode: workspace");
+	});
+
+	it("rejects missing mode values", () => {
+		const result = runCli(["samples/reference-links.adoc", "--mode"]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toBe("--mode requires a value");
+	});
+
+	it("rejects missing documentRoot values", () => {
+		const result = runCli(["samples/reference-links.adoc", "--document-root"]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toBe("--document-root requires a value");
+	});
+
+	it("throws from the library API when book-entry mode omits documentRoot", () => {
+		expect(() =>
+			parserModule.parseAbundantTree({
+				sourcePath: bookEntryPath,
+				mode: "book-entry",
+			} as Parameters<typeof parserModule.parseAbundantTree>[0]),
+		).toThrow(/documentRoot/);
+	});
+
+	it("reports book-entry input files outside documentRoot", () => {
+		const result = runCli([
+			bookEntryPath,
+			"--mode",
+			"book-entry",
+			"--document-root",
+			join(bookEntryFixtureRoot, "negative"),
+			"--format",
+			"json",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toContain("outside documentRoot");
+	});
+
+	it("reports include targets outside documentRoot", () => {
+		const result = runCli([
+			join(bookEntryFixtureRoot, "negative/outside-root.adoc"),
+			"--mode",
+			"book-entry",
+			"--document-root",
+			join(bookEntryFixtureRoot, "negative"),
+			"--format",
+			"json",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toContain(
+			"Book-entry logical document construction failed",
+		);
+	});
+
+	it("does not accept rdf, ttl, or turtle aliases", () => {
+		for (const format of ["rdf", "ttl", "turtle"]) {
+			const result = runCli([
+				"samples/reference-links.adoc",
+				"--format",
+				format,
+			]);
+
+			expect(result.code).toBe(1);
+			expect(result.stdout).toBe("");
+			expect(result.stderr).toContain(`Unsupported format: ${format}`);
+		}
 	});
 });

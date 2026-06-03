@@ -14,6 +14,9 @@ export function parseAbundantTree(
 	const adapter = createAsciidoctorAdapter();
 
 	if (options.mode === "book-entry") {
+		if (!options.documentRoot) {
+			throw new Error("Book-entry mode requires documentRoot.");
+		}
 		const logicalSource = buildBookEntryLogicalSource({
 			sourcePath,
 			documentRoot: options.documentRoot,

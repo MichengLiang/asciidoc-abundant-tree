@@ -21,6 +21,7 @@ The pretty tree format is designed for terminal reading. Its shape is intentiona
 - Xref occurrence records that keep raw target text, labels, local/external/unresolved scope, containing section, and resolved target kind.
 - Official Asciidoctor binding data for xrefs: `href`, `resolvedId`, `resolvedType`, and `reftext`.
 - Pretty tree output for terminal inspection and JSON output for automation.
+- Explicit book-entry mode for parsing an entry file plus supported full-file includes with origin source coordinates.
 - RDF 1.2 graph, Turtle, and JSON-LD output through the single `rdf12` projection for source-aware graph queries, frontend consumption, and line-based edit loops.
 
 The primary artifact is the TypeScript object. Pretty text, JSON, RDF 1.2 Turtle, and RDF 1.2 JSON-LD are projections of the same parsed document.
@@ -119,8 +120,8 @@ Release validation covers the RDF projection with semantic graph comparison, Tur
 
 This package is intentionally narrow.
 
-- It reads one source file at a time.
-- It does not expand an AsciiDoc include graph as a multi-file workspace.
+- By default it reads one source file at a time.
+- It expands a supported full-file include graph only when `mode: "book-entry"` or `--mode book-entry` is explicitly selected.
 - It does not validate interdocument xref targets by opening other files.
 - It does not expose a complete inline CST.
 - It does not lint prose style.
@@ -155,6 +156,7 @@ asciidoc-abundant-tree <file.adoc> --format tree
 asciidoc-abundant-tree <file.adoc> --format json
 asciidoc-abundant-tree <file.adoc> --format rdf12
 asciidoc-abundant-tree <file.adoc> --format rdf12-json-ld
+asciidoc-abundant-tree <file.adoc> --mode book-entry --document-root <root> --format json
 asciidoc-abundant-tree --help
 ```
 
@@ -190,6 +192,17 @@ RDF 1.2 JSON-LD output writes the same graph as a JSON document for frontend con
 asciidoc-abundant-tree docs/index.adoc --format rdf12-json-ld > projection.jsonld
 ```
 
+Book-entry mode parses an entry file and supported full-file include directives into one logical document. It is always explicit:
+
+```bash
+asciidoc-abundant-tree docs/books/example/book.adoc \
+  --mode book-entry \
+  --document-root docs \
+  --format json
+```
+
+When `--document-root` is omitted in book-entry mode, the CLI uses the current working directory. In single-file mode, `--document-root` does not change parser input construction; RDF output still uses it as the projection root.
+
 The CLI exposes only `rdf12` and `rdf12-json-ld` for RDF output. It does not accept `rdf`, `ttl`, or `turtle` as public format aliases.
 
 ## Library API
@@ -204,6 +217,12 @@ import {
 
 const document = parseAbundantTree({
 	sourcePath: "docs/index.adoc",
+});
+
+const book = parseAbundantTree({
+	sourcePath: "docs/books/example/book.adoc",
+	mode: "book-entry",
+	documentRoot: "docs",
 });
 
 const prettyText = formatAbundantTree(document);
