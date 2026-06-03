@@ -1,7 +1,7 @@
 [#logical-document]
 == Logical Document
 
-Logical document 是 book-entry mode 构造出的 in-memory AsciiDoc 文本。Parser 把它作为一份 source document 解析。
+Logical document 是 book-entry mode 构造出的 in-memory AsciiDoc 文本。Parser 把它作为一份逻辑 source document 解析。
 
 === Logical Text
 
@@ -19,6 +19,8 @@ Logical text 中的非 include 行必须原样复制 source line。实现不得�
 
 === 示例
 
+本节源码块中的 include line 使用反斜杠阻止本书构建期执行 include。示例 entry file 的 authored surface 是不带反斜杠的 `include::chapters/01-projection-object.adoc[]`。
+
 Entry file：
 
 [source,asciidoc]
@@ -35,7 +37,7 @@ Chapter file：
 [#projection-object]
 == 投影对象
 
-标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。
+本章定义投影对象的输入事实。
 ----
 
 Logical text：
@@ -47,13 +49,13 @@ Logical text：
 [#projection-object]
 == 投影对象
 
-标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。
+本章定义投影对象的输入事实。
 ----
 
-Logical text 用于结构解析。`= 第一部：投影对象` 的 source coordinate 仍指向 entry file。`== 投影对象` 的 source coordinate 指向 chapter file。
+Logical text 用于结构解析。`= 第一部：投影对象` 的 source coordinate 指向 entry file。`== 投影对象` 的 source coordinate 指向 chapter file。
 
 === 非源文件身份
 
 Logical document 没有独立 source file identity。它可以有 parse identity，但不能作为 raw recovery 的 source。
 
-Raw recovery 必须回到 line origin 指向的 source file。
+Raw recovery 必须回到 line origin 指向的 source file。实现不得把 logical text 当成 heading raw、block raw 或 xref sourceSpan 的 source file。

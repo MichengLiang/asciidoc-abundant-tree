@@ -13,7 +13,7 @@ CLI 使用者读取 JSON 以交给其它程序。该动作需要 JSON 与 TypeSc
 
 TypeScript 调用者直接调用 `parseAbundantTree` 并读取 `AbundantDocument`。该动作需要稳定类型、稳定字段名和可区分的 source layer 与 official layer。
 
-调用者可以遍历 section tree，读取 target catalog，检查 xref occurrence，定位 anchor occurrence，并根据 source span 回到源文件行列范围。
+调用者遍历 section tree，读取 target catalog，检查 xref occurrence，定位 anchor occurrence，并根据 source span 回到源文件行列范围。
 
 === 下游投影器
 

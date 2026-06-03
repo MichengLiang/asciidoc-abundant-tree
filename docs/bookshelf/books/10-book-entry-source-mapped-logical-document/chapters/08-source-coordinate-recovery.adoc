@@ -13,6 +13,8 @@ Entry file 中的 heading raw 按 entry file 原文恢复。该 raw 可以包含
 
 Included file 中的 heading raw 按 included file 原文恢复。
 
+Heading raw 终点按 origin source file 内的 heading slice 规则确定。Logical document 只提供结构关系，不提供 raw slice source。
+
 === Xref Occurrence
 
 Inline scanner 在 logical line table 中发现 xref occurrence。
@@ -21,11 +23,15 @@ Occurrence 的 logical line 和 logical column 通过 line origin 转换为 orig
 
 Xref sourceSpan 的 relativePath 必须表示 xref 出现的原始 source file。
 
-=== Payload-like Block
+Column 映射以 logical line 原样复制 origin line 为前提。实现若改写 logical line text，不得继续直接继承 column。
+
+=== Block Raw
 
 Listing 或其它 block 的 logical span 可以映射为 origin span。正常 block 的所有 logical lines 应来自同一个 origin source file。
 
 若一个 block span 映射到多个 origin source files，source coordinate recovery 不得输出假 raw。该情况进入 diagnostic。
+
+Block raw 和 content span 从 origin source file line table 恢复。Logical text 中的 block interval 只用于定位对应 logical lines。
 
 === Source Scope 查找
 

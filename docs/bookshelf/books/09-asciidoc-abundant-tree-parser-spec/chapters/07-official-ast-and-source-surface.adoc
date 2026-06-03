@@ -19,7 +19,7 @@ Source surface 是 official block 在源文本中的可恢复表面。它包含 
 
 源码扫描不得创建 official AST 中不存在的 section、listing、table、literal、pass 或 open block。
 
-源码扫描可以补充 metadata、raw、line span、column span、局部 delimiter confirmation 和 fallback diagnostic。
+源码扫描补充 metadata、raw、line span、column span、局部 delimiter confirmation 和 fallback diagnostic。
 
 Fallback 必须锚定 official block。没有 official block 锚点时，解析器不得用全文件正则制造结构。
 
@@ -27,9 +27,9 @@ Fallback 必须锚定 official block。没有 official block 锚点时，解析�
 
 Inline occurrence scanner 按 official block context 扫描。
 
-Paragraph 和可扫描 table prose 可以产生 xref 或 anchor occurrence。Listing、literal、pass-through 和 fenced code content 不产生 xref 或 anchor occurrence。
+Paragraph、带 macros substitutions 的 prose block 和可扫描 table prose 产生 xref 或 anchor occurrence。Listing、literal、pass-through 和 fenced code content 不产生 xref 或 anchor occurrence。
 
-Open block 是容器。它自身不产生 prose occurrence；其 paragraph descendants 可以产生 occurrence。
+Open block 是容器。它自身不产生 prose occurrence；occurrence 来自其 paragraph descendants。
 
 === Section Scope
 

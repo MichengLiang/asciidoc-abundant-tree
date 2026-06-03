@@ -38,15 +38,17 @@ asciidoc-abundant-tree <file.adoc>
 asciidoc-abundant-tree <file.adoc> --json
 asciidoc-abundant-tree <file.adoc> --format tree
 asciidoc-abundant-tree <file.adoc> --format json
+asciidoc-abundant-tree <file.adoc> --format rdf12
+asciidoc-abundant-tree <file.adoc> --format rdf12-json-ld
 asciidoc-abundant-tree --help
 ----
 
-默认输出是 pretty tree。`--json` 是 `--format json` 的快捷入口。
+默认输出是 pretty tree。`--json` 是 `--format json` 的快捷入口。`rdf12` 和 `rdf12-json-ld` 是下游投影格式；它们消费同一个 `AbundantDocument`，不改变解析器对象定义。
 
 CLI 参数错误、输入文件不存在和内部工具错误返回非零 exit code。成功输出写入 stdout。错误消息写入 stderr。
 
 === 下游投影出口
 
-包可以导出其它投影函数。下游投影函数以 `AbundantDocument` 为输入。
+包导出 `rdf12(document, options)` 作为下游投影函数。下游投影函数以 `AbundantDocument` 为输入，并要求调用者提供自己的投影选项。
 
 下游投影函数不改变解析器公共模型。它们定义自己的输出表面和验收条件。

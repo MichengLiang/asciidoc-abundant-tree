@@ -39,6 +39,9 @@ CLI 必须覆盖：
 * `--json` 输出 JSON。
 * `--format json` 与 `--json` 等价。
 * `--format tree` 与默认输出等价。
+* `--format rdf12` 输出下游投影 Turtle。
+* `--format rdf12-json-ld` 输出下游投影 JSON-LD。
+* `rdf`、`ttl` 和 `turtle` 不是 format alias。
 * 非法 format 返回错误。
 * 输入文件不存在返回错误。
 
@@ -52,6 +55,7 @@ pnpm test
 pnpm typecheck
 pnpm build
 pnpm pack:check
+pnpm smoke:cli
 ----
 
 质量检查命令：
@@ -85,4 +89,4 @@ pnpm --dir docs/bookshelf run build
 * 跨文档 xref 被静默当成本地 target。
 * Parser diagnostic 作为 document child 输出。
 * Serializer 重新解析 AsciiDoc。
-* 新增全文件正则结构 scanner 取代 official AST 结构权威。
+* 全文件正则结构 scanner 取代 official AST 结构权威。

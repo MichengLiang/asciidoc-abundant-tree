@@ -14,6 +14,7 @@ Book-entry 完成必须由 contract tests 证明。测试对象是 logical docum
 * Missing include 失败。
 * Circular include 失败。
 * Unsupported attrlist 失败。
+* Path outside documentRoot 失败。
 * Relative path 按包含 directive 的文件目录解析。
 * Logical line count 与 line origin count 一致。
 
@@ -28,6 +29,7 @@ Book-entry 完成必须由 contract tests 证明。测试对象是 logical docum
 * Chapter heading 的 source relativePath 指向 chapter file。
 * Nested include heading 的 source relativePath 指向 nested file。
 * Heading raw 来自 origin file。
+* Heading raw 不从 logical text 直接切取。
 * Xref occurrence 的 sourceSpan 指向 xref 所在 origin file。
 * Source scope 查找不跨 relativePath 匹配。
 
@@ -39,7 +41,8 @@ Book-entry 完成必须由 contract tests 证明。测试对象是 logical docum
 
 * Book-entry 输出不包含 `build/adoc` 聚合路径。
 * 同一 logical document 中不同 resources 可以有不同 relativePath。
-* Payload-like block 的 raw 和 source span 来自 origin file。
+* Listing 或 table block 的 raw 和 source span 来自 origin file。
+* 跨 origin source files 的 block 不输出假 raw。
 
 === Regression Tests
 
@@ -50,6 +53,7 @@ single-file mode 必须保持不变。
 * Single-file parser 不展开 include。
 * Single-file external source location 仍产生 diagnostic。
 * Existing parser tests 和 serializer tests 不回退。
+* `:doctype: book` 不触发隐式 book-entry mode。
 
 === 完成声明
 

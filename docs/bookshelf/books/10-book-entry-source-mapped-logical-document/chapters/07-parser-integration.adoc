@@ -20,7 +20,7 @@ Parser core 读取 logical text，并通过 line origin 恢复 source layer 坐�
 
 === Parser 输入
 
-Parser 需要一个能够接受内存文本的入口。该入口可以是内部函数，不必暴露为 single-file public API。
+Parser core 需要一个能够接受内存文本的内部入口。该入口服务 book-entry public mode，不改变 single-file public call 的默认行为。
 
 [source,typescript]
 ----
@@ -33,7 +33,7 @@ parseLogicalDocument({
 });
 ----
 
-该函数返回 `AbundantDocument`。返回对象的 `sourcePath` 表示 entry file。可回源节点的 source coordinate 来自 line origin。
+该函数返回 `AbundantDocument`。返回对象的 `sourcePath` 表示 entry file，`mode` 表示 `book-entry` 输入构造身份。可回源事实的 source coordinate 来自 line origin。
 
 === Asciidoctor 调用
 
@@ -41,8 +41,10 @@ Asciidoctor 应解析 logical text，而不是 entry file。
 
 该调用不得再次展开 include。Include resolution 已由 book-entry pipeline 完成。
 
+Asciidoctor 在该调用中提供 official AST、section tree、block context 和 ref catalog。Raw recovery、xref sourceSpan 和 block source coordinate 不得从 Asciidoctor include sourcemap 推导。
+
 === 与 Parser 规约的关系
 
 Parser 规约定义 `AbundantDocument`、source layer、official layer 和 single-file parser。Book-entry 规约定义 logical document 如何进入 parser core。
 
-Parser 不需要知道 RDF 投影器。Book-entry pipeline 也不需要知道 RDF 投影器。
+Parser 不需要知道下游投影器。Book-entry pipeline 也不需要知道下游投影器的输出形状。

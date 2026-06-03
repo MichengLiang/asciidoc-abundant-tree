@@ -5,7 +5,7 @@
 
 `AbundantDocument` 是解析器的核心产物。pretty tree、JSON 和其它序列化表面只投影该对象，不拥有独立事实来源。
 
-解析器恢复当前下游需要的结构事实。该事实集合包括 document title、section tree、paragraph、listing、table、metadata surface、xref occurrence、anchor occurrence、target catalog、source span 和 official interpretation。
+解析器恢复本对象需要的结构事实。该事实集合包括 document title、section tree、paragraph、listing、table、metadata surface、xref occurrence、anchor occurrence、target catalog、source span 和 official interpretation。
 
 解析器不承诺完整 concrete syntax tree。strong、emphasis、literal inline formatting、完整 macro grammar、完整 AsciiDoc preprocessor 状态和 site build graph 不属于本书定义的解析器对象。
 
@@ -15,9 +15,9 @@ AsciiDoc 源文档包含可被作者直接观察的结构表面。标题创建 s
 
 下游程序需要这些事实，但不能直接依赖 Asciidoctor 内部对象形状。Asciidoctor official AST 提供结构解释；源文本提供 raw surface 和回源坐标。解析器把这两类事实放入同一个 TypeScript 数据模型。
 
-=== 当前对象
+=== 本对象
 
-当前对象包含三个公共表面：
+本对象包含三个公共表面：
 
 [horizontal]
 TypeScript data model:: `AbundantDocument`。该对象是解析器公共契约的核心。
@@ -28,10 +28,10 @@ Pretty tree 和 JSON 必须来自同一个 `AbundantDocument`。序列化器不�
 
 === 相邻对象
 
-RDF 投影器是 `AbundantDocument` 的下游消费者。它可以读取 section、xref、target、payload-like listing 和 source coordinate，但它不属于解析器对象。
+下游投影器是 `AbundantDocument` 的消费者。它读取 section、xref、target、listing 和 source coordinate，但它不属于解析器对象。
 
-文档 lint 是相邻对象。解析器可以提供 target catalog、xref occurrence 和 diagnostics，但它不判断引用风格、业务语义或 schema 合法性。
+文档 lint 是相邻对象。解析器提供 target catalog、xref occurrence 和 diagnostics，但它不判断引用风格、业务语义或 schema 合法性。
 
 站点生成器是相邻对象。解析器不生成 HTML、PDF、图片资源、导航页或部署产物。
 
-完整 inline CST 恢复器是相邻对象。解析器保留当前下游需要的 inline occurrence，不恢复所有 inline formatting 结构。
+完整 inline CST 恢复器是相邻对象。解析器保留本对象需要的 inline occurrence，不恢复所有 inline formatting 结构。

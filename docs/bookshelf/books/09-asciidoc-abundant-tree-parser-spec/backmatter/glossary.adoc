@@ -20,7 +20,7 @@ xref occurrence:: 源文本中一个交叉引用出现点。
 
 anchor occurrence:: 源文本中一个 inline 或 block anchor 出现点。
 
-target catalog:: 当前源文档内可被引用的本地 target 集合。
+target catalog:: 当前 source document 内可被引用的本地 target 集合。
 
 tool diagnostic:: 解析器恢复 source surface 时产生的诊断事实。
 

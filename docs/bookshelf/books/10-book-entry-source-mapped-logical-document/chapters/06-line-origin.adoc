@@ -19,6 +19,8 @@ export type LineOrigin = {
 
 每个 logical line 必须有且只有一个 line origin。
 
+Line origin 描述行来源，不描述下游投影资源。可回源资源通过自身 source coordinate 消费 line origin 的结果。
+
 === Source File Record
 
 Source file table 保存参与 logical document 构造的源文件。

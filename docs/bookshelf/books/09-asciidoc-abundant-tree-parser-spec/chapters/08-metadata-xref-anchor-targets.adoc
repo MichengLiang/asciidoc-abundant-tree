@@ -42,9 +42,9 @@ anchor:id[]
 
 Target catalog 保存当前 source document 内可寻址 target。
 
-Target 可以来自 section、listing、table、inline anchor 或 block anchor。Target type 是解析器事实，不是下游资源类型。
+Target 来自 section、listing、table、inline anchor 或 block anchor。Target type 是解析器事实，不是下游资源类型。
 
-下游消费者可以把 target ID 解释为 label、link endpoint、lint 对象或其它投影事实。解析器不决定该投影。
+下游消费者把 target ID 解释为 label、link endpoint、lint 对象或其它投影事实。解析器不决定该投影。
 
 === Binding Merge
 

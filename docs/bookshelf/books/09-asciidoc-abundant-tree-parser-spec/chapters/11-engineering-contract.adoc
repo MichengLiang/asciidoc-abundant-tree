@@ -58,11 +58,11 @@ asciidoc-abundant-tree
 
 解析器运行依赖 `@asciidoctor/core` 和 HTML fragment parser。解析器不引入站点生成器、数据库、UI 框架或部署工具。
 
-新增依赖必须服务当前对象。不能仅因相邻工具需要而进入 parser 运行依赖。
+每个 parser 运行依赖都必须服务本对象。相邻工具需要的依赖不得进入 parser 运行依赖。
 
 === 提交边界
 
-提交在内部 Git 仓库中执行。新文件必须先进入 Git index。
+提交在内部 Git 仓库中执行。未跟踪文件必须先进入 Git index。
 
 [source,bash]
 ----

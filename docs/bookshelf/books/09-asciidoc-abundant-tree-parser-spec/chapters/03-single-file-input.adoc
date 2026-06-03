@@ -27,7 +27,7 @@ asciidoc-abundant-tree samples/reference-links.adoc
 
 single-file mode 只读取输入文件。该模式不展开 include directive，不打开跨文档 xref 指向的 `.adoc` 文件，也不构造 workspace graph。
 
-跨文档 xref 可以作为 source occurrence 出现。解析器保存 raw target 和 official href，但不验证目标文档是否存在。
+跨文档 xref 作为 source occurrence 出现。解析器保存 raw target 和 official href，但不验证目标文档是否存在。
 
 === Asciidoctor 配置
 

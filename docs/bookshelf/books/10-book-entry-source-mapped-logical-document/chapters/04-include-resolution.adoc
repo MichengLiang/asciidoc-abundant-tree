@@ -1,27 +1,17 @@
 [#include-resolution]
 == Include Resolution
 
-Include resolution 读取 entry file 中的受支持 include directive，并把目标 source file 的行插入 logical document。
+Include resolution 读取 source file 中的受支持 include directive，并把目标 source file 的行插入 logical document。
 
 === 支持表面
 
-当前对象支持完整行 include directive。
-
-[source,asciidoc]
-----
-\include::chapters/01-projection-object.adoc[]
-----
+本对象支持不带转义前缀的 full-file 完整行 include directive：`include::chapters/01-projection-object.adoc[]`。
 
 Directive 可以带前导空白。Target path 按包含该 directive 的 source file 所在目录解析。
 
-Escaped include 不执行 resolution。
+Escaped include 不执行 resolution。Escaped include 的 source line 以反斜杠开头：`\include::chapters/01-projection-object.adoc[]`。
 
-[source,asciidoc]
-----
-\include::chapters/01-projection-object.adoc[]
-----
-
-Escaped include 是普通 source line。它进入 logical document，并保留原始 line origin。
+Escaped include 是普通 source line。它以原文进入 logical document，并保留原始 line origin。
 
 === 递归 include
 
@@ -31,15 +21,9 @@ Included file 可以继续包含 include directive。Resolution 递归执行，�
 
 === Unsupported Attrlist
 
-当前对象只定义 full-file include。Include attrlist 若包含 tag、lines 或其它改变目标文件行集的语义，resolution 不得静默按整文件 include 处理。
+本对象只定义 full-file include。Include attrlist 若包含 tag、lines 或其它改变目标文件行集的语义，resolution 不得静默按整文件 include 处理。
 
-示例：
-
-[source,asciidoc]
-----
-\include::chapter.adoc[tag=main]
-\include::chapter.adoc[lines=1..20]
-----
+示例 surface 包括 `include::chapter.adoc[tag=main]` 和 `include::chapter.adoc[lines=1..20]`。
 
 这些 surface 进入 unsupported include diagnostic。该诊断保护 line origin 的真实性。
 
@@ -53,4 +37,4 @@ Resolved include path 必须位于允许边界内。允许边界由 `documentRoo
 
 AsciiDoc include 是预处理器行为。未转义完整行 include directive 是构造 logical document 的输入事实。
 
-本对象不实现完整 Asciidoctor preprocessor。它只实现本书定义的 include resolution。其它 AsciiDoc 语义由 parser 在 logical document 上解释。
+本对象不实现完整 Asciidoctor preprocessor。它只实现本书定义的 full-file include resolution。其它 AsciiDoc 语义由 parser 在 logical document 上解释。

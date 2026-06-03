@@ -3,8 +3,8 @@
 
 本书定义 `asciidoc-abundant-tree` 解析器的对象边界、公共数据模型、解析流水线、工程承载和验收条件。
 
-`asciidoc-abundant-tree` 从 AsciiDoc 源文档恢复 source-aware `AbundantDocument`。该对象保存标题作用域、block 表面、metadata、xref occurrence、anchor occurrence、target catalog、source span 和 Asciidoctor official interpretation，供 pretty tree、JSON、RDF 投影和其它下游程序消费。
+`asciidoc-abundant-tree` 从 AsciiDoc 源文档恢复 source-aware `AbundantDocument`。该对象保存标题作用域、block 表面、metadata、xref occurrence、anchor occurrence、target catalog、source span 和 Asciidoctor official interpretation，供 pretty tree、JSON、图投影和其它下游程序消费。
 
-本书定义解析器事实供给层。下游投影器消费 `AbundantDocument`，不重新解析 AsciiDoc 源结构。本书不定义 RDF 图形状、关系谓词、payload 图语义或站点构建流程。
+本书定义解析器事实供给层。下游投影器消费 `AbundantDocument`，不重新解析 AsciiDoc 源结构。本书不定义下游图形状、关系谓词、复杂属性解释或站点构建流程。
 
 本书使用中文叙事。AsciiDoc、Asciidoctor、AST、source layer、official layer、source span、line span、AbundantDocument、target catalog、diagnostic 等术语在正文中保留英文形式或中英并列形式，以保持与源码、测试和下游投影规约之间的术语连续性。

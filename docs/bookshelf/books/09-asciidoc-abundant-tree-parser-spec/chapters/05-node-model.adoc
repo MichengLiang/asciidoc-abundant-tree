@@ -1,7 +1,7 @@
 [#node-model]
 == 节点模型
 
-节点模型描述 AsciiDoc source document 中可恢复的结构事实。每个节点可以携带 source layer、official layer 和子节点。
+节点模型描述 AsciiDoc source document 中可恢复的结构事实。节点按自身事实类型携带 source layer、official layer 和子节点。
 
 === NodeBase
 
@@ -23,7 +23,7 @@ type NodeBase = {
 
 `TitleNode` 表示 document title。document title 不等同于普通 section。
 
-Title 保存标题文本和可恢复的 source location。没有源标题行时，解析器可以保留 official title text，但不得伪造 raw source。
+Title 保存标题文本和可恢复的 source location。没有源标题行时，解析器保留 official title text，且不得伪造 raw source。
 
 === Section
 
@@ -45,9 +45,9 @@ official section tree 决定 section identity 和父子结构。source layer 恢
 
 === Paragraph
 
-`ParagraphNode` 表示 official paragraph block。Paragraph 可以保存 text，并可以包含 xref 或 anchor occurrence 子节点。
+`ParagraphNode` 表示 official paragraph block。Paragraph 保存 text，并在内容行存在 inline occurrence 时包含 xref 或 anchor occurrence 子节点。
 
-Paragraph 不恢复完整 inline formatting CST。strong、emphasis、literal inline formatting 等表面在当前对象中作为文本保留。
+Paragraph 不恢复完整 inline formatting CST。strong、emphasis、literal inline formatting 等表面在本对象中作为文本保留。
 
 === Listing
 
@@ -61,13 +61,13 @@ Listing span 覆盖 metadata、delimiter、content 和 closing delimiter。conte
 
 `TableNode` 表示 official table block。
 
-Table 保存 explicit ID、block title、metadata、rows、cells 和 source span。Table 内容结构来自 Asciidoctor official table model；解析器不手写 table grammar。
+Table 保存 explicit ID、block title、metadata、rows 和 source span。`cells` 是公共模型保留字段；解析器投影以 official row group 提供的 `rows` 为表格内容表面。Table 内容结构来自 Asciidoctor official table model；解析器不手写 table grammar。
 
 === Metadata
 
 `MetadataNode` 表示附着到 block 或 section 的源文本 metadata surface。
 
-当前 metadata kind 包括 `id`、`title`、`attrlist`、`anchor` 和 `unknown`。
+Metadata kind 包括 `id`、`title`、`attrlist`、`anchor` 和 `unknown`。
 
 Metadata raw 是 source layer 事实。解析器不得丢弃 raw metadata 后只保留 official attributes。
 
@@ -85,11 +85,11 @@ Metadata raw 是 source layer 事实。解析器不得丢弃 raw metadata 后只
 
 它保存 raw、syntax、ids、reftext、sourceSpan、containingSectionId 和 anchorScope。
 
-Anchor occurrence 与 target catalog entry 是不同投影。一个 anchor 可以产生 target fact，但 occurrence 仍然保留其源文本位置。
+Anchor occurrence 与 target catalog entry 是不同投影。anchor occurrence 产生 target fact，且 occurrence 仍然保留其源文本位置。
 
 === Target
 
-`TargetNode` 表示当前文件内可被引用的本地 target。
+`TargetNode` 表示当前 source document 内可被引用的本地 target。
 
 `targetType` 包括 `section`、`listing`、`table`、`inline-anchor`、`block` 和 `unknown`。
 

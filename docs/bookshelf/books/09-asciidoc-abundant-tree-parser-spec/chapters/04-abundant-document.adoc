@@ -24,7 +24,9 @@ export type AbundantDocument = {
 };
 ----
 
-`sourcePath` 是输入文件路径。`mode` 标记输入模式。`parser` 标记 official parser 名称和版本。`children` 保存文档结构树。`targets` 保存本地 target catalog。`xrefOccurrences` 和 `anchorOccurrences` 保存源文档中的 inline occurrence。`toolDiagnostics` 保存解析器诊断。
+`sourcePath` 是解析入口路径。`mode` 标记输入构造身份。`parser` 标记 official parser 名称和版本。`children` 保存文档结构树。`targets` 保存本地 target catalog。`xrefOccurrences` 和 `anchorOccurrences` 保存源文档中的 inline occurrence。`toolDiagnostics` 保存解析器诊断。
+
+本书定义的解析器输出使用 `mode: "single-file"`。xref:../10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约] 定义的 book-entry 输入构造要求 `AbundantDocument` 接受 `book-entry` mode，并保持节点、target、occurrence 和 diagnostic 语义不变。
 
 `sourceText` 是可选源文本缓存。该字段服务需要从文档标题或其它顶层对象恢复 raw slice 的消费者。字段缺失表示该文本未随模型携带，不表示源文档没有文本。
 
@@ -40,7 +42,7 @@ export type ParserInfo = {
 };
 ----
 
-解析器可以升级 `@asciidoctor/core` 版本。版本字段保留实际运行时事实，不作为行为分支开关。
+`version` 保留实际运行时事实。解析器行为不得以该字段作为分支开关。
 
 === 节点集合
 
@@ -50,6 +52,6 @@ export type ParserInfo = {
 
 === 字段缺失语义
 
-可选字段缺失表示该事实不存在、当前 official parser 没有提供该事实，或 source recovery 无法可靠恢复该事实。实现不得用空字符串、零行号或伪造 span 表示未知事实。
+可选字段缺失表示该事实不存在、official parser 没有提供该事实，或 source recovery 无法可靠恢复该事实。实现不得用空字符串、零行号或伪造 span 表示未知事实。
 
 工具错误不写入 `AbundantDocument`。输入读取失败、parser load 失败和内部不变量失败必须通过错误出口表达。

@@ -1,7 +1,5 @@
 [#bibliography]
 == 参考坐标
 
-* xref:../06-rdf12-line-projection/book.adoc[AsciiDoc 标题切片到 RDF 1.2 投影规约]：下游 RDF 标题投影图对象。
-* xref:../07-rdf12-heading-projection-implementation-plan/book.adoc[RDF 1.2 标题投影图实现计划书]：下游 RDF 投影实现批次。
 * link:https://docs.asciidoctor.org/asciidoctor.js/latest/[Asciidoctor.js documentation]：official parser 语义来源。
 * link:https://docs.asciidoctor.org/asciidoc/latest/[AsciiDoc language documentation]：AsciiDoc 源文档语法来源。

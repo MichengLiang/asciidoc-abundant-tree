@@ -9,13 +9,14 @@ Entry file 由调用者显式传入。
 
 [source,typescript]
 ----
-parseBookEntry({
+parseAbundantTree({
   sourcePath: "docs/bookshelf/books/06-rdf12-line-projection/book.adoc",
+  mode: "book-entry",
   documentRoot: "docs/bookshelf",
 });
 ----
 
-实现不得仅凭文件名、`:doctype: book` 或 include directive 自动切换输入模式。调用者必须选择 book-entry public API 或 CLI mode。
+实现不得仅凭文件名、`:doctype: book` 或 include directive 自动切换输入模式。调用者必须显式设置 book-entry public API mode 或 CLI mode。
 
 `:doctype: book` 可以作为一致性检查事实。它不是模式切换开关。
 

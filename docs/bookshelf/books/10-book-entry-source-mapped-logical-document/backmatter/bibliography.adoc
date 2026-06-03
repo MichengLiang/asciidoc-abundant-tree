@@ -2,6 +2,5 @@
 == 参考坐标
 
 * xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc[asciidoc-abundant-tree 解析器规约]：本书所消费的 parser 与 `AbundantDocument` 对象。
-* xref:../06-rdf12-line-projection/book.adoc[AsciiDoc 标题切片到 RDF 1.2 投影规约]：下游 RDF 标题投影图对象。
 * link:https://docs.asciidoctor.org/asciidoc/latest/directives/include/[AsciiDoc include directive documentation]：include directive 语义坐标。
 * link:https://docs.asciidoctor.org/asciidoctor.js/latest/[Asciidoctor.js documentation]：official parser 语义坐标。

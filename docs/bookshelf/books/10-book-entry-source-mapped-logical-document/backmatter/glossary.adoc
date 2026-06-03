@@ -8,7 +8,7 @@ entry file:: 调用者显式传入的书稿入口 source file。
 
 source set:: Entry file 通过受支持 include directive 到达的 source files 集合。
 
-logical document:: Book-entry pipeline 在内存中构造的 AsciiDoc 文本。Parser 将其作为一份文档解析。
+logical document:: Book-entry pipeline 在内存中构造的 AsciiDoc 文本。Parser 将其作为一份逻辑 source document 解析。
 
 logical line:: Logical document 中的 1-based line。
 
@@ -18,7 +18,7 @@ source file table:: 参与 logical document 构造的 source files 记录集合�
 
 documentRoot:: Relative path 基准和 include path 边界。
 
-include directive:: AsciiDoc 预处理器表面，用于把目标 source file 内容纳入 logical document。
+include directive:: AsciiDoc 预处理器表面。本对象只把受支持 full-file include directive 解释为 logical document 构造指令。
 
 origin source coordinate:: 可回源事实在原始 source file 中的位置。
 
