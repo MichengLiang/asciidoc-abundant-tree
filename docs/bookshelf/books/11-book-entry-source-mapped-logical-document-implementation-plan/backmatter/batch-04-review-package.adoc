@@ -6,7 +6,9 @@
 [horizontal]
 批次编号:: `Batch 04`
 批次名称:: `Origin-aware Source Recovery`
-提交 hash:: `3038d36b3a1e74b483537db0384fac5787433e48`
+提交 hash:: `26d4305c4e6623d11e072318ffe9d306bb6a6edc`
+原实现提交:: `3038d36b3a1e74b483537db0384fac5787433e48`
+打回修正提交:: `26d4305c4e6623d11e072318ffe9d306bb6a6edc`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
 审核状态:: `待审核`
@@ -20,6 +22,7 @@ src/book-entry/origin-coordinate.ts
 src/book-entry/source-scope-index.ts
 src/inline-occurrence-scanner.ts
 src/official-projector.ts
+src/source-lines.ts
 src/source-surfaces.ts
 test/book-entry/book-entry.acceptance.test.ts
 test/book-entry/fixtures/simple-book/chapters/01-entry-origin.adoc
@@ -32,6 +35,8 @@ test/book-entry/source-scope-index.test.ts
 docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-04-review-package.adoc
 docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
 ----
+
+Fixture boundary note: the changes under `test/book-entry/fixtures/simple-book/**` are fixture-only support for the allowed Batch 04 tests. They add origin files and cross-origin block shapes needed by `test/book-entry/source-coordinate-recovery.test.ts` and `test/book-entry/source-scope-index.test.ts`; they are not production scope expansion and do not introduce Batch 05+ behavior.
 
 === 上下文闭包阅读记录
 
@@ -80,6 +85,8 @@ docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation
 - src/book-entry/origin-coordinate.ts 提供 logical line 到 line origin lookup、origin source file lookup、origin source span construction、origin raw recovery 和 recovery diagnostics。
 - src/book-entry/source-scope-index.ts 提供 relativePath-aware source scope lookup；book-entry containing section 查找同时比较 occurrence relativePath 和 origin line range。
 - book-entry section source layer 映射到 heading origin relativePath；heading raw 从 origin file line table 恢复，不从 logical text 切取。
+- 打回修正后，book-entry recovery context 绑定到具体 `LineTable` 实例：`buildLineTable(source)` 消费一次 pending logical source 并写入 `WeakMap<LineTable, LogicalSource>`；同文本 single-file parse 和同文本不同 origin 的 book-entry parse 不共享 recovery context。
+- 打回修正后，section heading raw/span 按 origin file heading-slice boundary 恢复，不再盲目延伸到 origin file EOF；同 origin 后续 block metadata/listing/table boundary 会截断 heading raw，跨 origin nested include heading 不截断 parent origin include directive raw。
 - xref occurrence 和 anchor occurrence sourceSpan/source layer 映射到 occurrence origin relativePath。
 - target source layer 通过 section/listing/table/block source layer 携带 origin relativePath；顶层 sourceSpan 只保留兼容镜像。
 - paragraph、listing 和 table source layers 映射到单一 origin file；listing contentSpan 映射到 origin content line range。
@@ -97,7 +104,6 @@ docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation
 - Downstream RDF coordinate regression：归属 Batch 06。
 - Public dispatch diagnostics 和 negative contract final surface：归属 Batch 07。
 - 迁移期 expected-fail 标记最终清理和全局收口：归属 Batch 08。
-- Parser core 显式传递 LogicalSource recovery context 的 API 形状：当前 Batch 04 受文件边界约束，以 logicalText registry 连接 recovery context；后续若调整 parser-core 输入对象，应在相应批次或审核返工中处理。
 ----
 
 === 已运行命令
@@ -111,6 +117,8 @@ pnpm --dir docs/bookshelf test
 pnpm exec biome check src/source-lines.ts src/source-surfaces.ts src/inline-occurrence-scanner.ts src/official-projector.ts src/source-interval-resolver.ts src/book-entry test/book-entry test/parser-input-edges.test.ts test/source-surfaces.test.ts test/official-projector.test.ts
 git diff --check
 git diff --name-only -- src/rdf12-projection src/cli.ts README.md CHANGELOG.md src/parser.ts src/parser-core.ts src/asciidoctor-adapter.ts
+rg -n 'logicalSourceByText|lineTable\.source\)|lineTable\.source\]|new Map<string, LogicalSource>|logicalText.*Map' src/source-lines.ts src/book-entry/origin-coordinate.ts
+rg -n 'WeakMap<LineTable|pendingLogicalSourcesByText|registerPendingLogicalSourceForLineTable|logicalSourceForLineTable' src/source-lines.ts src/book-entry/origin-coordinate.ts
 rg -n 'writeFile|mkdtemp|tmp|loadFile\(|build/adoc|@asciidoctor|asciidoctor-adapter|rdf12' src/book-entry src/source-surfaces.ts src/inline-occurrence-scanner.ts src/official-projector.ts test/book-entry/source-coordinate-recovery.test.ts test/book-entry/source-scope-index.test.ts
 rg -n 'sectionByLine|get\(line\)|candidate\.startLine <=|startLine <= .*line|line <= .*endLine' src/source-surfaces.ts src/inline-occurrence-scanner.ts src/official-projector.ts src/book-entry
 ----
@@ -122,7 +130,7 @@ rg -n 'sectionByLine|get\(line\)|candidate\.startLine <=|startLine <= .*line|lin
 pnpm test -- test/book-entry/source-coordinate-recovery.test.ts test/book-entry/source-scope-index.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser-input-edges.test.ts test/source-surfaces.test.ts test/official-projector.test.ts:
   PASS
   Test Files 46 passed (46)
-  Tests 313 passed | 5 expected fail (318)
+  Tests 315 passed | 5 expected fail (320)
 
 pnpm typecheck:
   PASS
@@ -131,8 +139,8 @@ pnpm typecheck:
 pnpm test:coverage:
   FAIL
   Test Files 46 passed (46)
-  Tests 313 passed | 5 expected fail (318)
-  Failure reason: global branch coverage 88.94% is below configured threshold 90%.
+  Tests 315 passed | 5 expected fail (320)
+  Failure reason: global branch coverage 89.06% is below configured threshold 90%.
   Batch 04 judgment: command was run and true baseline is recorded; `src/book-entry/**` and origin mapper coverage exceed the Batch 04 90% threshold.
 
 pnpm --dir docs/bookshelf test:
@@ -151,9 +159,17 @@ git diff --name-only -- src/rdf12-projection src/cli.ts README.md CHANGELOG.md s
   PASS
   No output.
 
+rg -n 'logicalSourceByText|lineTable\.source\)|lineTable\.source\]|new Map<string, LogicalSource>|logicalText.*Map' src/source-lines.ts src/book-entry/origin-coordinate.ts:
+  PASS
+  No output; the previous text-key-only lookup symbols are absent.
+
+rg -n 'WeakMap<LineTable|pendingLogicalSourcesByText|registerPendingLogicalSourceForLineTable|logicalSourceForLineTable' src/source-lines.ts src/book-entry/origin-coordinate.ts:
+  PASS
+  Shows recovery context storage in `WeakMap<LineTable, LogicalSource>` plus one-shot pending registration consumed by `buildLineTable(source)`.
+
 rg -n 'writeFile|mkdtemp|tmp|loadFile\(|build/adoc|@asciidoctor|asciidoctor-adapter|rdf12' src/book-entry src/source-surfaces.ts src/inline-occurrence-scanner.ts src/official-projector.ts test/book-entry/source-coordinate-recovery.test.ts test/book-entry/source-scope-index.test.ts:
   PASS
-  Matches only existing type imports from `./asciidoctor-adapter`; no `loadFile`, temporary file, `build/adoc`, writeFile, @asciidoctor import, or rdf12 use in Batch 04 book-entry recovery code.
+  No output; no `loadFile`, temporary file, `build/adoc`, writeFile, @asciidoctor import, or rdf12 use in Batch 04 book-entry recovery code.
 
 rg -n 'sectionByLine|get\(line\)|candidate\.startLine <=|startLine <= .*line|line <= .*endLine' src/source-surfaces.ts src/inline-occurrence-scanner.ts src/official-projector.ts src/book-entry:
   PASS
@@ -165,20 +181,20 @@ rg -n 'sectionByLine|get\(line\)|candidate\.startLine <=|startLine <= .*line|lin
 [source,text]
 ----
 pnpm test:coverage: FAIL
-Statements: 95.23% (1719/1805)
-Branches: 88.94% (1151/1294)
-Functions: 97.62% (411/421)
-Lines: 95.16% (1691/1777)
+Statements: 95.25% (1748/1835)
+Branches: 89.06% (1165/1308)
+Functions: 97.66% (418/428)
+Lines: 95.18% (1718/1805)
 
-src/book-entry/** Statements: 98.83%
-src/book-entry/** Branches: 95.76%
+src/book-entry/** Statements: 98.41%
+src/book-entry/** Branches: 96.03%
 src/book-entry/** Functions: 100%
-src/book-entry/** Lines: 98.83%
+src/book-entry/** Lines: 98.38%
 
-src/book-entry/origin-coordinate.ts Statements: 97.18%
-src/book-entry/origin-coordinate.ts Branches: 92.59%
+src/book-entry/origin-coordinate.ts Statements: 96.59%
+src/book-entry/origin-coordinate.ts Branches: 93.54%
 src/book-entry/origin-coordinate.ts Functions: 100%
-src/book-entry/origin-coordinate.ts Lines: 97.14%
+src/book-entry/origin-coordinate.ts Lines: 96.47%
 
 src/book-entry/source-scope-index.ts Statements: 100%
 src/book-entry/source-scope-index.ts Branches: 96.15%
@@ -192,6 +208,7 @@ src/book-entry/source-scope-index.ts Lines: 100%
 * 本批没有重新定义 10 号书目标对象。
 * 本批没有破坏 single-file mode。
 * 本批没有把 line origin table 变成下游主契约。
+* 本批不再通过全局 logicalText identity 恢复 book-entry context；recovery context 按 `LineTable` object identity 读取。
 * 本批没有输出假 source coordinate；cross-origin block source layer 保持缺失并产生 diagnostic。
 * 本批测试覆盖了正向事实：heading、xref、anchor、target、paragraph、listing、table、source scope。
 * 本批测试覆盖了必要负向事实：cross-origin block、unmapped logical interval、origin line missing、missing source scope identity。
@@ -208,6 +225,7 @@ src/book-entry/source-scope-index.ts Lines: 100%
 * 本批新增代码有对应测试。
 * 本批 source scope lookup 比较 relativePath 和 origin line range。
 * 本批 raw recovery 使用 origin source file lineTable，不从 logical text 切取。
+* 本批 heading raw recovery 使用 origin file boundary，不再无条件切到 EOF。
 * 本批没有通过 `any` 或类型逃逸掩盖公共模型冲突。
 * 本批新增模块职责清晰：origin mapper 与 source scope index 分离。
 * 本批没有新增 `@asciidoctor/core` import，没有调用 Asciidoctor adapter，没有写入临时文件或 `build/adoc`。
@@ -216,14 +234,14 @@ src/book-entry/source-scope-index.ts Lines: 100%
 
 [source,text]
 ----
-- Batch 04 在不修改 parser-core/parser.ts 的文件边界内，通过 `registerLogicalSourceForRecovery(logicalSource)` 按 logicalText 注册 recovery context，再由 source recovery 模块按 lineTable.source 取回。该连接方式满足本批边界，但比 parser core 显式携带 LogicalSource context 更隐式；审核者应重点复核是否接受该批内边界折中。
 - `sectionByLine` 仍作为 single-file 兼容字段存在于 SourceSurfaces 和 projector option；book-entry 下该 map 为空，实际 containing section assignment 使用 `SourceScopeIndex`。审核者应重点复核 book-entry 路径没有回落到 line-only map。
-- 全局 `pnpm test:coverage` 仍因 branch coverage 88.94% 低于 90% 失败；Batch 04 新增 origin mapper和 `src/book-entry/**` 覆盖率均超过 90%。
+- 全局 `pnpm test:coverage` 仍因 branch coverage 89.06% 低于 90% 失败；Batch 04 新增 origin mapper 和 `src/book-entry/**` 覆盖率均超过 90%。
+- Section heading slice boundary 目前覆盖 Batch 04 需要的 section heading、block metadata、listing delimiter 和 table delimiter；若后续支持更多 AsciiDoc structural boundary，需要扩展相同 origin-file boundary predicate。
 ----
 
 === 审核结论
 
 [horizontal]
 结论:: `待审核`
-理由:: Batch 04 实现提交已完成 origin-aware source recovery、relativePath-aware source scope、cross-origin recovery diagnostics 和 single-file regression preservation；验证命令已运行并记录真实 coverage failure baseline。
+理由:: Batch 04 实现提交和打回修正提交已完成 origin-aware source recovery、relativePath-aware source scope、cross-origin recovery diagnostics、LineTable identity recovery binding、heading-slice boundary recovery 和 single-file regression preservation；验证命令已运行并记录真实 coverage failure baseline。
 后续动作:: 主线程/Principal coordinator 审核 Batch 04；通过后由协调者更新台账为 `通过` 并解锁 Batch 05。
