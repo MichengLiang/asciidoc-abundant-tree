@@ -1,0 +1,196 @@
+[#batch-03-review-package]
+== Batch 03 阶段审核包
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 03`
+批次名称:: `Parser Core 内存入口`
+提交 hash:: `ea6c2b9c24bd5239204fd0cc470deedcbab30a5f`
+执行者:: `subagent`
+审核者:: `主线程/Principal coordinator`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/asciidoctor-adapter.ts
+src/official-projector.ts
+src/parser-core.ts
+src/parser.ts
+test/book-entry/book-entry.acceptance.test.ts
+test/book-entry/parser-integration.test.ts
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-03-review-package.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 上下文闭包阅读记录
+
+[source,text]
+----
+- 目标规格闭包：
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/05-logical-document.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/07-parser-integration.adoc
+- 上游 parser 契约闭包：
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/07-official-ast-and-source-surface.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/10-cli-and-library-api.adoc
+- 当前代码闭包：
+  src/parser.ts
+  src/asciidoctor-adapter.ts
+  src/source-surfaces.ts
+  src/official-projector.ts
+  src/book-entry/logical-source-builder.ts
+- 测试闭包：
+  test/parser.test.ts
+  test/parser-include-source-map.test.ts
+  test/book-entry/book-entry.acceptance.test.ts
+- 治理闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/06-batch-03-parser-core-memory-entry.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/01-execution-contract.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/05-batch-02-logical-source-builder.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/review-package-template.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- src/parser-core.ts 承担 shared parser core assembly：source surface projection、official projection、target merge、xref binding、AbundantDocument assembly。
+- single-file public parser path 保持 readFileSync(sourcePath)、buildLineTable(source physical text)、adapter.loadFile(sourcePath)。
+- book-entry public parser path 调用 buildLogicalSource，再以 logicalText 建立 parser surface line table。
+- book-entry public parser path 调用 adapter.loadSource(logicalText)，不调用 adapter.loadFile(entryPath)。
+- adapter 显式区分 loadFile(sourcePath) 与 loadSource(sourceText)；memory parse 入口不接收 sourcePath。
+- book-entry 返回标准 AbundantDocument，mode 为 "book-entry"，sourcePath 为 resolved entry file path，sourceText 为 logicalText。
+- parser core 对 book-entry logical input 不传 sourceSurfacePath，因此不把 logical text 伪装成 entry physical source file。
+- parser-integration.test.ts 覆盖 included headings 进入 section tree、logical sourceText、book-entry mode、entry sourcePath、memory parse logical line alignment、book-entry 不依赖 include sourcemap。
+- book-entry acceptance 中 parser core memory entry 相关 expected-fail 已移除；origin-aware recovery、public API/CLI、downstream 和 diagnostics 相关 expected-fail 保留到后续批次。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- origin-aware source coordinate、source.relativePath、origin raw recovery：归属 Batch 04。
+- public API runtime diagnostics surface 和 CLI book-entry mode：归属 Batch 05、Batch 07。
+- downstream coordinate regression：归属 Batch 06。
+- parser public dispatch diagnostics 和 negative contracts：归属 Batch 07。
+- expected-fail 迁移标记全部删除：归属 Batch 08。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser.test.ts test/parser-include-source-map.test.ts
+pnpm typecheck
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm exec biome check --vcs-use-ignore-file=false src/parser.ts src/parser-core.ts src/asciidoctor-adapter.ts src/source-surfaces.ts src/official-projector.ts test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser.test.ts test/parser-include-source-map.test.ts
+rg 'writeFile|mkdtemp|tmp|loadFile\(.*book|loadFile\(.*entry|build/adoc' src test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts
+git diff -- src/rdf12-projection src/cli.ts README.md CHANGELOG.md
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser.test.ts test/parser-include-source-map.test.ts:
+  PASS
+  Test Files 44 passed (44)
+  Tests 290 passed | 9 expected fail (299)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm test:coverage:
+  FAIL
+  Test Files 44 passed (44)
+  Tests 290 passed | 9 expected fail (299)
+  Failure reason: global branch coverage 88.53% is below configured threshold 90%.
+  Batch 03 judgment: command was run and true baseline is recorded; failure is the existing global branch coverage threshold condition.
+
+pnpm --dir docs/bookshelf test:
+  PASS
+  node --test reported 11 pass, 0 fail
+
+pnpm exec biome check --vcs-use-ignore-file=false src/parser.ts src/parser-core.ts src/asciidoctor-adapter.ts src/source-surfaces.ts src/official-projector.ts test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser.test.ts test/parser-include-source-map.test.ts:
+  PASS
+  Checked 9 files. No fixes applied.
+
+rg 'writeFile|mkdtemp|tmp|loadFile\(.*book|loadFile\(.*entry|build/adoc' src test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts:
+  PASS
+  No matches.
+
+git diff -- src/rdf12-projection src/cli.ts README.md CHANGELOG.md:
+  PASS
+  No diff.
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+pnpm test:coverage: FAIL
+Statements: 95.33% (1573/1650)
+Branches: 88.53% (1027/1160)
+Functions: 97.48% (387/397)
+Lines: 95.25% (1546/1623)
+src/book-entry/** Statements: 100% (78/78)
+src/book-entry/** Branches: 100% (38/38)
+src/book-entry/** Functions: 100% (17/17)
+src/book-entry/** Lines: 100% (78/78)
+src/parser-core.ts Statements: 100% (6/6)
+src/parser-core.ts Branches: 100% (4/4)
+src/parser-core.ts Functions: 100% (2/2)
+src/parser-core.ts Lines: 100% (6/6)
+src/parser.ts Statements: 92.85% (13/14)
+src/parser.ts Branches: 75% (3/4)
+src/parser.ts Functions: 100% (2/2)
+src/parser.ts Lines: 92.85% (13/14)
+----
+
+=== 规约检查清单
+
+* 本批目标对象来自 10 号书或 9 号书，不来自当前实现惯性。
+* 本批没有重新定义 10 号书目标对象。
+* 本批没有破坏 single-file mode。
+* 本批没有把 line origin table 变成下游主契约。
+* 本批没有输出假 source coordinate。
+* 本批测试覆盖了正向事实。
+* 本批测试覆盖了必要负向事实。
+* 本批未处理对象有去向。
+
+=== 工程质量检查清单
+
+* 本批没有修改批次边界外文件。
+* 本批没有修改 `src/rdf12-projection/**`、`src/cli.ts`、`README.md` 或 `CHANGELOG.md`。
+* 本批没有引入全局打回条件；全局 branch coverage 阈值失败为已记录基线。
+* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批新增代码有对应测试。
+* 本批 parser core 拆分消除 single-file 和 logical input assembly 重复。
+* 本批 memory parse 入口与 file parse 入口通过不同 adapter 方法区分。
+* 本批 book-entry mode 没有写临时文件，没有写入 `build/adoc`。
+* 本批 single-file mode 保持 `adapter.loadFile(sourcePath)`。
+* 本批 book-entry mode 使用 `adapter.loadSource(logicalText)`。
+* 本批没有通过 `any` 或类型逃逸掩盖公共模型冲突。
+* 本批注释只记录迁移 expected-fail 移除批次。
+
+=== 残余风险
+
+[source,text]
+----
+- src/parser.ts 的 non-construction-error rethrow 分支未被 coverage 覆盖；该分支只透传 buildLogicalSource 之外的异常，不属于 book-entry 成功路径。
+- Batch 03 暂不填充 origin-aware source.relativePath，也不恢复 origin raw；相关 acceptance 仍 expected-fail 到 Batch 04。
+- Batch 03 暂不暴露最终 public negative diagnostics；相关 negative contract 仍 expected-fail 到 Batch 07。
+----
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: Batch 03 实现提交使 single-file 和 book-entry 共享 parser core；book-entry 使用 in-memory logical text 解析并返回标准 AbundantDocument；全局 coverage 命令已运行并记录真实阈值失败。
+后续动作:: 主线程/Principal coordinator 审核 Batch 03；审核通过前不进入 Batch 04。
