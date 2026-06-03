@@ -1,0 +1,157 @@
+[#batch-07-diagnostics-and-negative-contracts]
+== Batch 07：Diagnostics 与 Negative Contracts
+
+=== 批次目标
+
+本批集中加固 book-entry construction errors、origin recovery diagnostics、CLI/API error surface 和 negative contracts。
+
+本批不新增目标对象。本批把前序批次已经实现的失败面收敛为稳定、可测试、可审核的 public failure behavior。
+
+=== 上游门槛
+
+* Batch 06 状态为 `通过`。
+* Batch 06 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文闭包
+
+执行者必须阅读：
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#diagnostics-and-failure-surface[9 号书：Diagnostics 与 Failure Surface]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#diagnostics[10 号书：Diagnostics]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#contract-tests[10 号书：Contract Tests]
+* xref:execution-contract[本书：执行契约]
+* `src/book-entry/**`
+* `src/parser.ts`
+* `src/cli.ts`
+* `src/source-surfaces.ts`
+* `test/book-entry/book-entry-negative.test.ts`
+* `test/cli-error.test.ts`
+
+=== 输入事实
+
+10 号书区分 construction errors 和 recovery diagnostics。Construction errors 阻止 logical document 成立。Recovery diagnostics 描述局部 origin recovery 缺口，并阻止假精确坐标输出。
+
+9 号书区分工具错误、tool diagnostic 和下游 lint。Book-entry failure surface 必须保持该分层。
+
+=== 文件边界
+
+修改：
+
+* `src/book-entry/**`
+* `src/parser.ts`
+* `src/cli.ts`
+* `src/source-surfaces.ts`
+* `test/book-entry/book-entry-negative.test.ts`
+* `test/book-entry/source-coordinate-recovery.test.ts`
+* `test/cli-error.test.ts`
+
+不得修改：
+
+* RDF12 graph semantics。
+* README 或 CHANGELOG，除非错误消息 public surface 已经需要更新使用说明。
+
+=== Construction error 契约
+
+以下情况必须阻止 logical document 成立：
+
+* Entry file 不存在。
+* Include target 不存在。
+* Include path 越出 documentRoot。
+* Include graph 出现循环。
+* Include directive 使用 unsupported attrlist。
+* Logical line count 与 line origin count 不一致。
+* Line origin 指向 source file table 中不存在的 file。
+* Line origin 的 sourceLine 越出 origin file line table。
+
+这些错误不得被输出为成功 `AbundantDocument.toolDiagnostics`。
+
+=== Recovery diagnostic 契约
+
+以下情况进入 recovery diagnostic：
+
+* Block span 映射到多个 origin source files。
+* Origin file line table 无法恢复 raw。
+* Parser core 提供的 logical interval 无法映射到 line origin。
+
+Recovery diagnostic 必须阻止假精确坐标输出。无法可靠恢复的 source coordinate 应保持缺失。
+
+=== Message 规则
+
+Diagnostic message 描述失败对象和失败原因。Message 不写实现者过程，不写时间状态，不写“暂时不支持”。
+
+正确方向：
+
+[source,text]
+----
+include.unsupported-attrlist: include directive uses unsupported attrlist 'tag=main'.
+----
+
+错误方向：
+
+[source,text]
+----
+tag include 暂时不支持，后续再实现。
+----
+
+=== 测试任务
+
+`book-entry-negative.test.ts` 必须覆盖：
+
+* Construction error 不返回 successful `AbundantDocument`。
+* 每个 construction error 有稳定 code。
+* 每个 construction error message 描述对象事实。
+* Unsupported attrlist message 包含 attrlist surface。
+* Cycle error message 可定位 cycle 对象。
+
+`source-coordinate-recovery.test.ts` 必须覆盖：
+
+* Cross-origin block recovery diagnostic。
+* Diagnostic 后不输出假 raw。
+* Diagnostic 后不输出假 source coordinate。
+
+`cli-error.test.ts` 必须覆盖：
+
+* Construction errors 返回非零 exit code。
+* 错误消息写入 stderr。
+* stdout 为空。
+* Unknown args 和 unsupported mode 仍按 CLI error 处理。
+
+=== 验收标准
+
+* Construction errors、tool errors、tool diagnostics 和 downstream lint 不混层。
+* 错误 code 稳定并被测试覆盖。
+* Message 使用对象事实语言。
+* 成功 `AbundantDocument` 不包含 construction error。
+* Recovery diagnostic 不伪造 coordinate。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/book-entry/book-entry-negative.test.ts test/book-entry/source-coordinate-recovery.test.ts test/cli-error.test.ts
+pnpm typecheck
+pnpm test:coverage
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/book-entry src/parser.ts src/cli.ts src/source-surfaces.ts test/book-entry test/cli-error.test.ts
+git commit --only -m "fix: harden book-entry diagnostics" -- src/book-entry src/parser.ts src/cli.ts src/source-surfaces.ts test/book-entry test/cli-error.test.ts
+----
+
+=== 审核规则
+
+审核者必须检查 construction error 没有被降级为 warning。审核者必须检查 diagnostic messages 没有过程语言。审核者必须检查 recovery diagnostic 与 coordinate 缺失同时成立。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* Construction error 返回 successful `AbundantDocument`。
+* Construction error 被写入 document child。
+* Diagnostic code 未被测试覆盖。
+* Message 使用“暂时”“后续”“目前”作为失败语义。
+* Recovery diagnostic 后仍输出假 raw 或假 coordinate。
+* CLI construction error 写入 stdout。

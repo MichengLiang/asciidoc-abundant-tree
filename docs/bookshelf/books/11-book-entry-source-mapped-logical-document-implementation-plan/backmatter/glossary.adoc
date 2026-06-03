@@ -1,0 +1,39 @@
+[#glossary]
+== 术语表
+
+[glossary]
+book-entry mode:: 从书稿入口构造 source-mapped logical document 的显式输入模式。
+
+entry file:: 调用者显式传入的书稿入口 source file。
+
+documentRoot:: Book-entry mode 中 relativePath 的基准和 include path 的允许边界。
+
+source set:: Entry file 通过受支持 include directive 到达的 source files 集合。
+
+logical document:: Book-entry pipeline 在内存中构造的 AsciiDoc 文本。Parser 将其作为一份逻辑 source document 解析。
+
+logical line:: Logical document 中的 1-based line。
+
+line origin:: Logical line 到 origin source file 和 origin source line 的映射。
+
+source file table:: 参与 logical document 构造的 source files 记录集合。
+
+origin source coordinate:: 可回源事实在原始 source file 中的位置。
+
+origin raw recovery:: 从 origin source file line table 恢复 raw slice 的过程。
+
+parser core:: 共享 official parse、source surface projection、official projection、target merge 和 document assembly 的内部 parser orchestration。
+
+construction error:: 阻止 logical document 成立的输入构造错误。
+
+recovery diagnostic:: 描述局部 source coordinate recovery 缺口的 diagnostic。
+
+downstream coordinate regression:: 下游投影器消费 origin-aware `AbundantDocument` 后仍输出正确 origin source coordinate 的回归验证。
+
+work package:: 有明确目标、上下文闭包、文件边界、实施任务、测试任务、验收标准、验证命令、提交规则、审核规则和打回条件的工作单元。
+
+review package:: 工作包状态转移的审核证据包。
+
+status ledger:: 批次当前治理状态的台账投影。
+
+closure record:: 本计划结束方式、最终证据、未处理对象去向和后续入口的记录。

@@ -1,0 +1,183 @@
+[#batch-00-baseline-and-migration-guardrails]
+== Batch 00：基线与迁移护栏
+
+=== 批次目标
+
+本批建立 book-entry 迁移基线、目标验收、负契约测试、覆盖率基线和迁移期间允许失败集合。本批不修改运行时代码。
+
+本批的核心产物是测试护栏。测试护栏必须直接来自 10 号书目标契约，而不是来自当前 single-file 实现形状。
+
+=== 上游门槛
+
+Batch 00 没有前置批次。开始前必须确认本计划书执行契约已经存在，当前工作树中不存在与本计划无关的未提交修改。
+
+=== 本批上下文闭包
+
+执行者必须阅读：
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#parser-object[9 号书：解析器对象]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#single-file-input[9 号书：Single-file 输入]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#abundant-document[9 号书：AbundantDocument]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#diagnostics-and-failure-surface[9 号书：Diagnostics 与 Failure Surface]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#acceptance-and-gates[9 号书：验收与门禁]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc[10 号书全文]
+* xref:../08-body-lab-material-system/book.adoc#lab-object-conditions[8 号书：Lab]
+* xref:../08-body-lab-material-system/book.adoc#body-evaluation[8 号书：实例评判标准]
+* xref:execution-contract[本书：执行契约]
+* xref:current-source-state[本书：当前源码状态]
+* `src/model.ts`
+* `src/parser.ts`
+* `src/asciidoctor-adapter.ts`
+* `src/source-lines.ts`
+* `src/source-surfaces.ts`
+* `src/official-projector.ts`
+* `src/inline-occurrence-scanner.ts`
+* `src/cli.ts`
+* `src/index.ts`
+* `src/rdf12-projection/projector.ts`
+* `src/rdf12-projection/source-location.ts`
+* `test/parser.test.ts`
+* `test/parser-input-edges.test.ts`
+* `test/parser-include-source-map.test.ts`
+* `test/cli.test.ts`
+* `test/rdf12-projection/structure-projector.test.ts`
+* `test/rdf12-projection/xref-projector.test.ts`
+
+=== 输入事实
+
+当前 parser 只支持 single-file mode。当前源码没有 book-entry public mode、logical source builder、line origin、source file table 或 origin-aware source coordinate。
+
+10 号书要求 book-entry mode 由显式 public input 触发，并要求下游消费者从 `AbundantDocument` 中读取 origin source coordinate。
+
+=== 文件边界
+
+创建：
+
+* `test/book-entry/fixtures/simple-book/book.adoc`
+* `test/book-entry/fixtures/simple-book/frontmatter/preface.adoc`
+* `test/book-entry/fixtures/simple-book/chapters/01-entry-origin.adoc`
+* `test/book-entry/fixtures/simple-book/chapters/02-target-origin.adoc`
+* `test/book-entry/fixtures/simple-book/chapters/nested/section.adoc`
+* `test/book-entry/fixtures/simple-book/backmatter/glossary.adoc`
+* `test/book-entry/fixtures/negative/missing-include.adoc`
+* `test/book-entry/fixtures/negative/circular-a.adoc`
+* `test/book-entry/fixtures/negative/circular-b.adoc`
+* `test/book-entry/fixtures/negative/unsupported-tag.adoc`
+* `test/book-entry/fixtures/negative/unsupported-lines.adoc`
+* `test/book-entry/fixtures/negative/outside-root.adoc`
+* `test/book-entry/book-entry.acceptance.test.ts`
+* `test/book-entry/book-entry-negative.test.ts`
+* `test/book-entry/single-file-regression.test.ts`
+
+修改：
+
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc`
+
+不得修改：
+
+* `src/**`
+* `README.md`
+* `CHANGELOG.md`
+
+=== Fixture 要求
+
+`simple-book/book.adoc` 必须包含 document title、part heading、frontmatter include、chapter include、nested include、backmatter include 和 escaped include。Escaped include 必须以反斜杠开头，并作为普通 source line 保留。
+
+两个 chapter 文件必须包含相同行号的 section surface。该 fixture 服务 Batch 04 的 relativePath-aware source scope 测试。
+
+一个 chapter 文件必须包含 xref occurrence，另一个 chapter 文件必须包含 target section。该 fixture 服务 xref origin coordinate 和 target origin coordinate 测试。
+
+Nested include 文件必须包含可被 parser 投影的 heading。该 fixture 服务递归 include 和 nested origin coordinate 测试。
+
+=== 实施任务
+
+. 创建 book-entry fixture 目录。
+. 创建目标验收测试文件。
+. 在目标验收测试顶部集中登记迁移期允许失败集合。
+. 创建 negative contract 测试文件。
+. 创建 single-file regression 测试文件。
+. 记录当前覆盖率基线命令。
+. 更新 Batch 00 状态台账条目为 `待审核` 的预期位置，只在真实提交和审核包产生后写提交 hash。
+
+=== 目标验收断言
+
+`book-entry.acceptance.test.ts` 必须覆盖：
+
+* book-entry mode 返回 `mode: "book-entry"`。
+* `sourcePath` 表示 entry file。
+* Included heading 出现在 `AbundantDocument` section tree 中。
+* Entry heading 的 source relativePath 指向 entry file。
+* Chapter heading 的 source relativePath 指向 chapter file。
+* Nested include heading 的 source relativePath 指向 nested file。
+* Heading raw 来自 origin file。
+* Heading raw 不从 logical text 直接切取。
+* Xref occurrence 的 source coordinate 指向 xref 所在 origin file。
+* Target source coordinate 指向 target 所在 origin file。
+* Escaped include 不展开。
+* Same line number in different origin files 不污染 containing section scope。
+
+`book-entry-negative.test.ts` 必须覆盖：
+
+* Missing include 失败。
+* Circular include 失败。
+* Unsupported `tag` attrlist 失败。
+* Unsupported `lines` attrlist 失败。
+* Include path outside documentRoot 失败。
+* Logical line count 与 line origin count 不一致时失败。
+
+`single-file-regression.test.ts` 必须覆盖：
+
+* Single-file mode 不展开 include。
+* `:doctype: book` 不触发 book-entry mode。
+* 未传 `mode` 时保持 single-file。
+
+=== 迁移期允许失败集合
+
+Batch 00 可以把 book-entry 目标测试登记为 expected fail。Expected fail 标记必须集中在测试文件顶部，并标明移除批次：
+
+[horizontal]
+公共模型与 coordinate identity 相关失败:: Batch 01 移除。
+logical source builder 相关失败:: Batch 02 移除。
+parser core memory entry 相关失败:: Batch 03 移除。
+origin-aware recovery 相关失败:: Batch 04 移除。
+public API 和 CLI 相关失败:: Batch 05 移除。
+downstream coordinate 相关失败:: Batch 06 移除。
+diagnostics 和 negative contracts 相关失败:: Batch 07 移除。
+最终迁移标记:: Batch 08 全部删除。
+
+Expected fail 不得散落在具体断言旁。审核者必须能从文件顶部看到每个允许失败对象的移除批次。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/book-entry test/parser-include-source-map.test.ts test/parser-input-edges.test.ts
+pnpm typecheck
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+----
+
+Book-entry 目标测试在 Batch 00 可以包含 expected fail。Single-file regression、typecheck 和书架测试必须通过。Coverage 命令必须运行并记录真实结果。
+
+=== 提交规则
+
+[source,bash]
+----
+git add test/book-entry docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter
+git commit --only -m "test: add book-entry migration guardrails" -- test/book-entry docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter
+----
+
+=== 审核规则
+
+审核者必须确认本批没有修改 `src/**`。审核者必须确认目标测试直接来自 10 号书 contract tests、source coordinate recovery 和 diagnostics 章节。审核者必须确认 expected fail 集中登记，并且每个 expected fail 有移除批次。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 本批修改 `src/**`。
+* 目标测试只证明 include 展开，不证明 origin coordinate。
+* Negative tests 缺少 missing include、cycle、unsupported attrlist 或 outside documentRoot。
+* Expected fail 标记散落在断言旁。
+* Single-file regression 未覆盖 `:doctype: book` 不触发 book-entry。
+* 覆盖率命令未运行却写成通过。

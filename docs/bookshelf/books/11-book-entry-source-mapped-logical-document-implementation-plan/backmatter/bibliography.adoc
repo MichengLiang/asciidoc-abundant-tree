@@ -1,0 +1,9 @@
+[#bibliography]
+== 参考坐标
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc[asciidoc-abundant-tree 解析器规约]：本计划的 parser 公共模型、single-file 输入、source layer、official layer、diagnostics、CLI/API 和验收门禁来源。
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约]：本计划的目标 body 依据。
+* xref:../08-body-lab-material-system/book.adoc[`100_body` 与 `200_lab`：书籍化项目材料体系设计]：本计划的 lab book、work package、review package、status ledger 和 closure record 材料体系依据。
+* xref:../07-rdf12-heading-projection-implementation-plan/book.adoc[RDF 1.2 标题投影图实现计划书]：本计划的批次结构、审核包和状态台账形态参考。
+* link:https://docs.asciidoctor.org/asciidoc/latest/directives/include/[AsciiDoc include directive documentation]：include directive 语义坐标。
+* link:https://docs.asciidoctor.org/asciidoctor.js/latest/[Asciidoctor.js documentation]：official parser 与 Asciidoctor.js runtime 坐标。

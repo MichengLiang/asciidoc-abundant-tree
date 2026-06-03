@@ -1,0 +1,144 @@
+[#batch-05-public-api-and-cli-mode]
+== Batch 05：Public API 与 CLI Mode
+
+=== 批次目标
+
+本批把 book-entry mode 锁定为显式 public API 和 CLI mode。本批还定义 documentRoot 的 CLI 行为、错误出口和 help surface。
+
+=== 上游门槛
+
+* Batch 04 状态为 `通过`。
+* Batch 04 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文闭包
+
+执行者必须阅读：
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#cli-and-library-api[9 号书：CLI 与 Library API]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#acceptance-and-gates[9 号书：验收与门禁]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#entry-and-source-set[10 号书：Entry 与 Source Set]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#public-api-and-cli[10 号书：Public API 与 CLI]
+* xref:batch-04-origin-aware-source-recovery[Batch 04：Origin-aware Source Recovery]
+* `src/parser.ts`
+* `src/cli.ts`
+* `src/index.ts`
+* `test/cli.test.ts`
+* `test/cli-error.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+=== 输入事实
+
+10 号书要求调用者显式声明 book-entry mode。Library API 中，book-entry 调用必须提供 `documentRoot`。CLI 可以使用当前工作目录作为默认 `documentRoot`，并允许调用者显式覆盖。
+
+=== 文件边界
+
+修改：
+
+* `src/parser.ts`
+* `src/cli.ts`
+* `src/index.ts`
+* `test/cli.test.ts`
+* `test/cli-error.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+允许修改：
+
+* `README.md`
+
+不得修改：
+
+* `src/rdf12-projection/**`
+* `CHANGELOG.md`
+
+=== CLI 公共表面
+
+CLI 必须支持：
+
+[source,bash]
+----
+asciidoc-abundant-tree <file.adoc> --mode book-entry --document-root <root> --format json
+asciidoc-abundant-tree <file.adoc> --mode book-entry --format tree
+asciidoc-abundant-tree <file.adoc> --mode single-file --format json
+asciidoc-abundant-tree <file.adoc> --format json
+----
+
+默认 mode 是 `single-file`。`--mode book-entry` 只选择输入构造方式，不改变 output format 的对象定义。
+
+`--document-root` 在 book-entry mode 中作为 relativePath 基准和路径边界。CLI 未显式传入 `--document-root` 时，默认值是当前工作目录。
+
+=== 实施任务
+
+. 扩展 CLI args parser，支持 `--mode single-file|book-entry`。
+. 扩展 CLI args parser，支持 `--document-root <path>`。
+. 更新 `--help` 输出。
+. Library API 在 book-entry mode 缺少 `documentRoot` 时抛出错误。
+. CLI book-entry mode 使用解析后的 documentRoot。
+. CLI single-file mode 忽略 documentRoot 对 parser 输入构造的影响，但 RDF12 output 仍使用 documentRoot 作为 projection option。
+. 错误输出写入 stderr。
+. 成功输出写入 stdout。
+. 更新 README public usage。
+
+=== 测试任务
+
+`cli.test.ts` 必须覆盖：
+
+* `--help` 显示 `--mode` 和 `--document-root`。
+* `--mode book-entry --format json` 输出 book-entry JSON。
+* `--mode book-entry --format tree` 输出 pretty tree。
+* 未提供 `--mode` 时保持 single-file。
+* `--mode single-file` 不展开 include。
+* CLI book-entry mode 默认 documentRoot 为 current working directory。
+* CLI book-entry mode 可以显式覆盖 documentRoot。
+* `--format rdf12` 和 `--format rdf12-json-ld` 可以消费 book-entry `AbundantDocument`。
+
+`cli-error.test.ts` 必须覆盖：
+
+* Unsupported mode 返回错误。
+* `--mode` 缺少值返回错误。
+* `--document-root` 缺少值返回错误。
+* Library API book-entry 缺少 documentRoot 抛错。
+* Input file outside documentRoot 返回错误。
+* Include outside documentRoot 返回错误。
+* `rdf`、`ttl`、`turtle` 仍不是 format alias。
+
+=== 验收标准
+
+* Book-entry mode 必须显式声明。
+* `:doctype: book` 不触发 book-entry。
+* Library API 和 CLI mode 语义一致。
+* CLI 错误出口与 9 号书一致。
+* README 只描述当前 public behavior，不叙述迁移过程。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/cli.test.ts test/cli-error.test.ts test/book-entry/book-entry.acceptance.test.ts
+pnpm typecheck
+pnpm test:coverage
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/parser.ts src/cli.ts src/index.ts test/cli.test.ts test/cli-error.test.ts test/book-entry README.md
+git commit --only -m "feat: expose book-entry parser mode" -- src/parser.ts src/cli.ts src/index.ts test/cli.test.ts test/cli-error.test.ts test/book-entry README.md
+----
+
+若 README 未修改，提交命令应移除该路径。
+
+=== 审核规则
+
+审核者必须检查 mode 选择只来自 public option 或 CLI flag。审核者必须检查 CLI argument parser 不静默忽略未知参数。审核者必须检查 stdout/stderr 行为。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 文件名、doctype 或 include directive 触发隐式 book-entry。
+* Library API 和 CLI mode 语义不一致。
+* Unknown mode 被静默当作 single-file。
+* `--document-root` 越界检查缺失。
+* 错误消息写入 stdout。
+* 成功输出写入 stderr。

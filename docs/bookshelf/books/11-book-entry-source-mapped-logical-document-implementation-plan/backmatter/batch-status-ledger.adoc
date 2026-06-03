@@ -1,0 +1,71 @@
+[#batch-status-ledger]
+== 批次状态台账
+
+本台账记录批次事实。状态字段只使用 `未开始`、`执行中`、`待审核`、`打回` 和 `通过`。
+
+[cols="1,3,1,2,3", options="header"]
+|===
+|批次 |名称 |状态 |提交 hash |审核记录
+
+|Batch 00
+|基线与迁移护栏
+|未开始
+|
+|
+
+|Batch 01
+|公共模型与坐标身份
+|未开始
+|
+|
+
+|Batch 02
+|Logical Source Builder
+|未开始
+|
+|
+
+|Batch 03
+|Parser Core 内存入口
+|未开始
+|
+|
+
+|Batch 04
+|Origin-aware Source Recovery
+|未开始
+|
+|
+
+|Batch 05
+|Public API 与 CLI Mode
+|未开始
+|
+|
+
+|Batch 06
+|Downstream Coordinate Regression
+|未开始
+|
+|
+
+|Batch 07
+|Diagnostics 与 Negative Contracts
+|未开始
+|
+|
+
+|Batch 08
+|Final Gates and Closure
+|未开始
+|
+|
+|===
+
+=== 台账规则
+
+* 批次提交产生后，提交 hash 必须写入本表。
+* 审核包路径必须写入审核记录。
+* 批次被打回时，审核记录必须写明打回对象和返工入口。
+* 下一批次开始前，上一批次状态必须为 `通过`。
+* 台账备注不得记录愿望、估计、口头进度或情绪判断。

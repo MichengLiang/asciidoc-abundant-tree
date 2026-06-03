@@ -1,0 +1,290 @@
+[#execution-contract]
+== 执行契约
+
+本章定义本计划书的执行契约。所有批次章节、审核包、状态台账和关闭记录均受本章约束。
+
+=== 对象边界
+
+本计划书的对象是 book-entry source-mapped logical document 的实现序列。目标对象由 xref:../10-book-entry-source-mapped-logical-document/book.adoc[10 号书] 定义；上游 parser 公共契约由 xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc[9 号书] 定义；材料治理规则由 xref:../08-body-lab-material-system/book.adoc[8 号书] 定义。
+
+本计划书不重新定义 `logical document`、`line origin`、`source file table`、`include resolution`、`origin source coordinate` 或 `AbundantDocument`。本计划书只定义如何从当前源码状态到达这些对象：哪些文件承担哪些职责，哪些测试证明行为成立，哪些质量门槛阻止低质量实现进入下一状态。
+
+本计划书不定义下游 RDF 图对象，不实现完整 AsciiDoc preprocessor，不生成 HTML、PDF、site navigation 或 `build/adoc` 发布产物。下游投影器只作为 book-entry origin coordinate 的消费者进入本计划。
+
+=== 公共目标
+
+Library API 的目标入口是显式 book-entry mode：
+
+[source,typescript]
+----
+parseAbundantTree({
+	sourcePath: "docs/bookshelf/books/10-book-entry-source-mapped-logical-document/book.adoc",
+	mode: "book-entry",
+	documentRoot: "docs/bookshelf",
+});
+----
+
+CLI 的目标入口是显式 `--mode book-entry`：
+
+[source,bash]
+----
+asciidoc-abundant-tree docs/bookshelf/books/10-book-entry-source-mapped-logical-document/book.adoc \
+  --mode book-entry \
+  --document-root docs/bookshelf \
+  --format json
+----
+
+未声明 `mode` 的 library API 和 CLI 调用保持 single-file 语义。`:doctype: book`、文件名、include directive 和目录形状都不是模式切换开关。
+
+=== 主数据流
+
+Book-entry pipeline 的主数据流固定为：
+
+[source,text]
+----
+entry file
+  -> include resolution
+  -> logical text + line origins + source file table
+  -> parser core
+  -> origin-aware AbundantDocument
+  -> serializers and downstream projectors
+----
+
+该数据流中的 `logical text` 是 parser surface。`line origins` 和 `source file table` 是 origin recovery 的内部 IR。`AbundantDocument` 是下游主输入。下游投影器不得把 line origin table 作为主契约。
+
+=== 批次状态
+
+批次状态使用受控集合：
+
+[horizontal]
+`未开始`:: 批次没有实现提交。
+`执行中`:: 批次存在实现活动，尚未提交审核包。
+`待审核`:: 批次提交 hash 和审核包已经产生。
+`打回`:: 审核者拒绝通过该批次。
+`通过`:: 审核者确认该批次满足本书验收条件。
+
+批次状态记录在 xref:batch-status-ledger[批次状态台账]。状态台账只记录治理事实，不记录愿望、估计、口头进度或情绪判断。
+
+=== 批次门槛
+
+每个批次开始前必须满足以下门槛：
+
+* 前一批次状态为 `通过`。
+* 前一批次提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+* 当前工作树中不存在与本批无关的未提交修改。
+* 执行者已经阅读本批上下文闭包列出的目标规格、上游 parser 契约、当前代码入口、测试入口和治理规则。
+
+Batch 00 没有前置批次。Batch 00 开始前必须确认本计划书位于 `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/`，10 号书位于 `docs/bookshelf/books/10-book-entry-source-mapped-logical-document/`，当前源码位于 `src/`。
+
+=== 上下文闭包
+
+每个批次必须列出上下文闭包。上下文闭包包含目标规格闭包、上游 parser 契约闭包、当前代码闭包、测试闭包和治理闭包。
+
+执行者没有阅读本批上下文闭包时，不得开始本批实现。审核者必须检查 review package 是否记录本批上下文闭包的阅读事实。
+
+上下文闭包不是装饰引用。每个 xref 或路径必须服务批次目标、文件边界、验收标准或打回条件。
+
+=== 语言规则
+
+批次任务、验收标准、审核结论和状态台账核心字段使用对象语言。以下表达不得作为任务授权、完成声明或审核依据：
+
+* 建议。
+* 可以考虑。
+* 最好。
+* 尽量。
+* 后续再说。
+* 视情况。
+* 基本完成。
+* 差不多。
+* 暂时支持。
+* 简单支持。
+* 未来完善。
+* 先这么做。
+
+未确定对象不得进入实施任务。未确定对象必须登记为风险、相邻人工制品、打回项、后续 proposal 或明确非目标。
+
+=== 工程质量契约
+
+实现必须满足本节的工程质量契约。测试通过不替代工程质量判断。
+
+==== 模块边界
+
+Book-entry 输入构造位于 `src/book-entry/`。该目录承载 logical source builder、include resolution、path boundary、line origin、source file table 和构造 diagnostics。Include resolution 不得混入 `src/parser.ts` 主流程。
+
+`src/parser.ts` 承担 public dispatcher 和 parser orchestration。它不得同时承担 include resolver、line origin mapper、origin raw recovery、CLI option parser 和 downstream projection 职责。
+
+Parser core 必须具有内存文本入口。该入口接受 logical text 和 origin recovery context。Book-entry mode 不得通过写临时文件再调用 `loadFile` 取得 logical document。
+
+Asciidoctor adapter 必须显式区分 file parse 和 memory parse。`loadFile` 服务 single-file mode；memory parse 入口服务 logical document。两种入口不得通过模糊布尔参数混合。
+
+==== 数据流
+
+Line origin 是内部 IR。下游主契约是 origin-aware `AbundantDocument`。如果实现提供 line origin debug surface，该表面必须与下游主契约分离。
+
+Raw recovery 必须从 origin source file line table 恢复。Logical text 只能用于 official parse 和 logical interval 定位，不能作为 heading raw、block raw、xref raw 或 anchor raw 的 source file。
+
+Source coordinate recovery 必须通过显式 mapper 或 coordinate service 完成。禁止在多个模块中散落重复的 line origin 查找、source file table 查找和 origin line table 切片逻辑。
+
+Source scope index 必须包含 file identity。Book-entry mode 下，任何 containing section 查找都必须同时比较 `relativePath` 和 line range。
+
+==== 控制流
+
+Include resolution 必须在读取目标文件前检查 documentRoot 边界。越界 include 不得先读取再产生 warning。
+
+Include cycle 必须通过 include stack 或访问状态检测。循环检测不得依赖递归深度错误。
+
+Unsupported include attrlist 必须阻止 logical document 成立。实现不得把 `tag`、`lines` 或其它改变目标文件行集的 attrlist 静默当作 full-file include。
+
+工具错误、构造错误和 recovery diagnostic 必须分层。构造错误阻止 successful `AbundantDocument` 成立；recovery diagnostic 只能用于局部 source coordinate 无法可靠恢复的情况。
+
+==== 性能
+
+同一 absolute path 在一个 book-entry 构造中最多读取一次。重复 include 可以在 logical document 中出现多次；source file table 中仍只有一个 file record。
+
+Line origin lookup 不得在高频 recovery 路径上对全表做线性扫描。Origin lookup 应使用数组索引、map 或等价的 bounded lookup 结构。
+
+Source file table 必须缓存 line table。Raw recovery 不得反复对同一 source text 执行 split。
+
+Section scope lookup 不得对全书所有 sections 做无界扫描。实现应按 `relativePath` 分组或使用等价索引结构。
+
+Downstream projection 不得为每个 resource 重复计算 documentRoot-relative path。Resource-level source coordinate 已有 origin relativePath 时，下游应直接消费该事实。
+
+==== 可维护性
+
+每个新增模块必须具有单一职责。`src/book-entry/**` 负责输入构造；parser core 负责解析编排；origin mapper 负责 logical-to-origin recovery；RDF12 修改只负责 downstream coordinate regression。
+
+公共类型变更必须伴随 serializer、public API tests 和 downstream tests。类型逃逸、`any` 扩散或未测试的兼容分支不得通过审核。
+
+代码注释只记录代码自身无法表达的约束、why 和不变量。注释不得解释代码表面动作。
+
+新增 helper 必须消除真实重复或封装真实不变量。为了绕过测试而创建的一次性 wrapper 不得通过审核。
+
+=== 覆盖率门槛
+
+本计划的覆盖率目标是 90%。
+
+Batch 00 必须运行 `pnpm test:coverage` 并记录当前覆盖率基线。若当前全项目覆盖率低于 90%，Batch 00 review package 必须记录真实基线，不得把目标写成通过事实。
+
+新增 `src/book-entry/**` 模块的覆盖率必须不低于 90%。修改 parser core、source recovery、CLI mode parsing 和 downstream coordinate projection 的批次必须提供对应测试证据。
+
+Batch 08 必须运行 `pnpm test:coverage` 并记录 coverage summary。最终完成声明不得省略覆盖率结果。覆盖率命令失败时，review package 必须记录失败输出、失败原因和阻塞判断。
+
+=== 文件提交规则
+
+提交在内部 Git 仓库 `micheng-ts/projects/asciidoc-abundant-tree` 中执行。
+
+新文件必须先进入 Git index：
+
+[source,bash]
+----
+git add <new-files>
+----
+
+每批提交使用 `git commit --only` 限定路径：
+
+[source,bash]
+----
+git commit --only -m "<message>" -- <paths>
+----
+
+每批提交只包含本批文件。跨批文件、其它项目文件、构建产物和无关格式化不得进入本批提交。
+
+=== 审核包
+
+每批完成后必须提交审核包。审核包格式见 xref:review-package-template[阶段审核包模板]。
+
+审核包必须包含批次编号、批次名称、提交 hash、执行者、审核者、审核状态、修改文件、上下文闭包阅读记录、完成范围、未处理对象、已运行命令、命令结果、覆盖率结果、规约检查清单、工程质量检查清单和审核结论。
+
+没有提交 hash 的批次不得进入审核。没有审核通过结论的批次不得解锁下一批。计划运行但未运行的命令不得写入已运行命令。
+
+=== 全局打回条件
+
+出现以下任一情况，当前批次必须打回：
+
+* 未显式设置 `mode: "book-entry"` 却展开 include。
+* Single-file mode 展开 include。
+* `:doctype: book` 触发隐式 book-entry mode。
+* Book-entry 构造成功但没有 line origin。
+* Logical line count 与 line origin count 不一致。
+* Include path 越出 documentRoot 后仍读取目标文件。
+* Unsupported include attrlist 被当作 full-file include 处理。
+* Source coordinate 缺少 origin relativePath，却被下游当作 entry file coordinate。
+* Block span 跨多个 origin source files 时输出假 raw。
+* Containing section 只按 line number 查找。
+* 下游投影器读取 internal line origin table 作为主契约。
+* RDF12、JSON 或 pretty tree 输出把 `build/adoc` 聚合路径当作 origin source file，除非调用者显式把该聚合产物作为 ordinary single-file 输入。
+* Serializer 重新解析 AsciiDoc。
+* Parser core 为 book-entry 重新实现完整 AsciiDoc preprocessor。
+* 测试只证明 logical text 可解析，不证明 origin coordinate 正确。
+* 覆盖率命令未运行却写成通过。
+
+=== 覆盖矩阵
+
+[cols="3,2,2", options="header"]
+|===
+|10 号书承诺 |实现批次 |验收批次
+
+|显式 `mode: "book-entry"`，不隐式切换
+|Batch 01、Batch 05
+|Batch 05、Batch 08
+
+|`documentRoot` 是 relativePath 基准和路径边界
+|Batch 01、Batch 02、Batch 05
+|Batch 05、Batch 07、Batch 08
+
+|source set 与 source file table
+|Batch 02
+|Batch 02、Batch 07、Batch 08
+
+|full-file include resolution
+|Batch 02
+|Batch 02、Batch 03、Batch 08
+
+|escaped include 不展开
+|Batch 02
+|Batch 02、Batch 08
+
+|unsupported attrlist 阻止 logical document 成立
+|Batch 02
+|Batch 07、Batch 08
+
+|include cycle 阻止 logical document 成立
+|Batch 02
+|Batch 07、Batch 08
+
+|logical text 不写入 `build/adoc`
+|Batch 02
+|Batch 06、Batch 08
+
+|每个 logical line 有唯一 line origin
+|Batch 02
+|Batch 02、Batch 07
+
+|parser core 内存文本入口
+|Batch 03
+|Batch 03、Batch 08
+
+|heading raw 从 origin file 恢复
+|Batch 04
+|Batch 04、Batch 08
+
+|xref occurrence source coordinate 指向 origin file
+|Batch 04
+|Batch 04、Batch 08
+
+|source scope 查找比较 relativePath
+|Batch 04
+|Batch 04、Batch 08
+
+|downstream projector 不读取 line origin table
+|Batch 06
+|Batch 06、Batch 08
+
+|single-file mode 保持不变
+|Batch 00、Batch 01、Batch 03、Batch 05
+|Batch 08
+
+|contract tests 与最终完成声明
+|Batch 00、Batch 08
+|Batch 08
+|===

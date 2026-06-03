@@ -1,0 +1,78 @@
+= 书稿入口回源逻辑文档实现计划书
+弥澄亮 <MichengLiang>
+v0.1, 2026-06
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:experimental:
+:idprefix:
+:idseparator: -
+
+include::../../shared/attributes.adoc[]
+
+[preface]
+include::frontmatter/preface.adoc[]
+
+= 第一部：执行契约
+
+[partintro]
+这一部定义本计划书的对象边界、工程质量契约、覆盖率门槛、批次状态、提交规则、审核规则、全局打回条件和当前源码基线。
+
+include::chapters/01-execution-contract.adoc[]
+
+include::chapters/02-current-source-state.adoc[]
+
+= 第二部：输入构造与公共模型
+
+[partintro]
+这一部建立迁移护栏，扩展公共模型，并实现 book-entry logical source builder。
+
+include::chapters/03-batch-00-baseline-and-migration-guardrails.adoc[]
+
+include::chapters/04-batch-01-public-model-and-coordinate-identity.adoc[]
+
+include::chapters/05-batch-02-logical-source-builder.adoc[]
+
+= 第三部：Parser 集成与回源
+
+[partintro]
+这一部建立 parser core 内存入口，并把 logical coordinate 恢复为 origin source coordinate。
+
+include::chapters/06-batch-03-parser-core-memory-entry.adoc[]
+
+include::chapters/07-batch-04-origin-aware-source-recovery.adoc[]
+
+= 第四部：公共入口与下游坐标
+
+[partintro]
+这一部锁定 book-entry public API、CLI mode、downstream coordinate regression、diagnostics 和 negative contracts。
+
+include::chapters/08-batch-05-public-api-and-cli-mode.adoc[]
+
+include::chapters/09-batch-06-downstream-coordinate-regression.adoc[]
+
+include::chapters/10-batch-07-diagnostics-and-negative-contracts.adoc[]
+
+= 第五部：最终门禁与关闭
+
+[partintro]
+这一部删除迁移期允许失败集合，执行最终验证，更新当前公共材料，并关闭本计划。
+
+include::chapters/11-batch-08-final-gates-and-closure.adoc[]
+
+[appendix]
+include::backmatter/review-package-template.adoc[]
+
+[appendix]
+include::backmatter/batch-status-ledger.adoc[]
+
+[appendix]
+include::backmatter/closure-record-template.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]
+
+[bibliography]
+include::backmatter/bibliography.adoc[]

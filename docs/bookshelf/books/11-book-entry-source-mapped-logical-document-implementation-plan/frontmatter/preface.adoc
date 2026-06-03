@@ -1,0 +1,14 @@
+[#preface]
+== 前言
+
+本书定义 `asciidoc-abundant-tree` 中 book-entry source-mapped logical document 的实现计划。xref:../10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约] 定义目标对象；本书定义从当前 single-file parser 基线到该目标对象的工程批次、文件边界、测试要求、审核门槛、状态台账和关闭条件。
+
+当前源码已经具备 single-file parser、source-aware `AbundantDocument`、metadata surface recovery、xref occurrence recovery、anchor occurrence recovery、RDF 1.2 下游投影、CLI 和 serializer 基础。当前源码不具备 book-entry mode、logical source builder、line origin、source file table、origin-aware source coordinate recovery 和 book-entry CLI。上述事实是实现基线，不是目标对象。
+
+本书的核心断言是：book-entry mode 必须同时成立 logical document 和 origin source coordinate。每个批次必须产生可验证的源码变化、测试变化、文档变化和审核证据。没有审核通过结论的批次不得解锁下一批。
+
+本书是 xref:../08-body-lab-material-system/book.adoc[`100_body` 与 `200_lab`：书籍化项目材料体系设计] 定义的 lab book。它不替代 10 号书，不反向支撑 10 号书成立。本书只承担实现治理、批次执行、审核证据和关闭追溯职责。
+
+本书面向执行者、审核者、协调者和后续维护者。执行者使用本书获取每批上下文闭包、文件边界、实施任务、测试任务和提交规则。审核者使用本书判断批次是否满足目标规格、工程质量契约、覆盖率门槛和打回条件。协调者使用状态台账判断批次是否可启动。后续维护者使用审核包和关闭记录追溯 book-entry mode 的实现过程。
+
+本书使用中文叙事。book-entry mode、entry file、source set、logical document、line origin、source file table、origin source coordinate、parser core、work package、review package、status ledger、closure record 等术语在正文中保留英文形式或中英并列形式，以保持与 09 号书、10 号书、源码和测试之间的术语连续性。

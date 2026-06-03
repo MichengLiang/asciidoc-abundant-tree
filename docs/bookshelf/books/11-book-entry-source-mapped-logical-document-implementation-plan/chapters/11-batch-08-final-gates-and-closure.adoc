@@ -1,0 +1,153 @@
+[#batch-08-final-gates-and-closure]
+== Batch 08：Final Gates and Closure
+
+=== 批次目标
+
+本批删除所有迁移期允许失败标记，锁定 book-entry public contract、coverage evidence、文档表面、书架表面和本计划关闭记录。
+
+本批是最终门禁批次。没有本批审核通过结论，本计划不得声明完成。
+
+=== 上游门槛
+
+* Batch 07 状态为 `通过`。
+* Batch 07 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文闭包
+
+执行者必须阅读：
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#acceptance-and-gates[9 号书：验收与门禁]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#public-api-and-cli[10 号书：Public API 与 CLI]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#contract-tests[10 号书：Contract Tests]
+* xref:../08-body-lab-material-system/book.adoc#entry-conditions[8 号书：从 Lab 到 Body 的进入规则]
+* xref:../08-body-lab-material-system/book.adoc#cross-reference-direction[8 号书：引用、版本与归档]
+* xref:batch-status-ledger[批次状态台账]
+* xref:closure-record-template[关闭记录模板]
+* `README.md`
+* `CHANGELOG.md`
+* `docs/bookshelf/catalog.adoc`
+* `package.json`
+* `test/book-entry/**`
+* `test/cli.test.ts`
+* `test/rdf12-projection/**`
+
+=== 输入事实
+
+最终完成声明必须回到 9 号书 parser 契约、10 号书 book-entry 契约、8 号书 lab 治理规则和实际验证命令。
+
+Review package 只记录实际发生的证据。未运行命令不能写成通过。
+
+=== 文件边界
+
+修改：
+
+* `test/book-entry/**`
+* `test/cli.test.ts`
+* `test/cli-error.test.ts`
+* `test/rdf12-projection/**`
+* `README.md`
+* `CHANGELOG.md`
+* `docs/bookshelf/catalog.adoc`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/closure-record-template.adoc` 或实际 closure record 文件
+
+允许修改：
+
+* `src/**`，仅限最终测试暴露的契约缺口修复。
+
+=== 实施任务
+
+. 删除 Batch 00 中登记的全部迁移期 expected fail 标记。
+. 确认 book-entry contract tests 全部通过。
+. 确认 single-file regression tests 全部通过。
+. 确认 CLI 和 library API 行为一致。
+. 确认 JSON、pretty tree 和 RDF12 downstream 坐标均可回 origin source file。
+. 运行最终验证命令。
+. 记录 coverage summary。
+. 更新 README 中 book-entry public usage。
+. 更新 CHANGELOG。
+. 更新书架 catalog，加入本计划书入口。
+. 写入 closure record。
+. 将本计划状态台账更新为关闭事实。
+
+=== 最终验证命令
+
+[source,bash]
+----
+pnpm test
+pnpm typecheck
+pnpm lint
+pnpm build
+pnpm pack:check
+pnpm smoke:cli
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm --dir docs/bookshelf run build
+----
+
+审核包必须列出实际运行的完整命令和结果。命令失败时，必须保留失败输出摘要，并说明是否阻塞完成声明。
+
+=== 覆盖率验收
+
+最终覆盖率目标是 90%。Batch 08 review package 必须记录全项目 coverage summary。
+
+新增 `src/book-entry/**` 模块覆盖率必须不低于 90%。Parser core、origin recovery、CLI mode parsing 和 downstream coordinate projection 的修改必须有测试覆盖证据。
+
+若历史代码基线导致全项目覆盖率低于 90%，本批不得直接声明完成。审核者必须打回，或创建明确补测 work package 并保持本计划未关闭。
+
+=== 文档验收
+
+README 只描述当前 public behavior。README 不叙述迁移过程，不把本计划书作为使用者理解当前对象的必要入口。
+
+CHANGELOG 记录 book-entry public mode、origin source coordinate 和相关 CLI/API 行为。CHANGELOG 不替代 9 号书或 10 号书。
+
+书架 catalog 可以列出本计划书。Catalog 不得让本计划书抢占 10 号书的当前规格入口。
+
+=== 关闭条件
+
+本计划关闭前必须满足：
+
+* Batch 00 至 Batch 08 状态均为 `通过`。
+* 每批提交 hash 均写入状态台账。
+* 每批审核包均可通过 xref 定位。
+* 最终验证命令结果已记录。
+* Coverage evidence 已记录。
+* 未处理对象有明确去向。
+* 需要修订 9 号书或 10 号书的对象已经进入新的 lab object 或明确非目标。
+* Closure record 记录关闭理由、结果去向和后续入口。
+
+=== 验收标准
+
+* 没有迁移期 expected fail 标记。
+* Book-entry mode contract tests 全部通过。
+* Single-file mode regression 全部通过。
+* CLI、library API、pretty tree、JSON 和 RDF12 downstream surface 表达同一 origin coordinate 事实。
+* `pnpm test:coverage` 结果满足覆盖率门槛。
+* README、CHANGELOG 和书架 catalog 与当前行为一致。
+* Closure record 存在并指向最终提交与验证证据。
+
+=== 提交规则
+
+[source,bash]
+----
+git add src test README.md CHANGELOG.md docs/bookshelf
+git commit --only -m "feat: finalize book-entry source-mapped parsing" -- src test README.md CHANGELOG.md docs/bookshelf
+----
+
+若最终批次没有源码修改，提交命令应移除 `src`。若 README 或 CHANGELOG 未修改，审核者必须确认不修改的依据。
+
+=== 审核规则
+
+审核者必须从 public API、CLI、JSON、pretty tree、RDF12 和 docs bookshelf 六个表面检查同一对象。任一表面仍以 entry file path 替代 origin source file 时，本批不得通过。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 任一迁移期 expected fail 仍存在。
+* 任一 final gate 命令未运行却写成通过。
+* 覆盖率低于 90%，且没有打回或补测 work package。
+* Book-entry 输出需要下游读取 line origin table 才能回源。
+* README 描述与 CLI/API 行为不一致。
+* 书架 xref 断裂。
+* Closure record 缺少最终验证命令、coverage summary 或未处理对象去向。

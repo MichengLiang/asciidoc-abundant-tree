@@ -1,0 +1,152 @@
+[#batch-01-public-model-and-coordinate-identity]
+== Batch 01：公共模型与坐标身份
+
+=== 批次目标
+
+本批扩展 public model，使 `AbundantDocument` 能表达 `single-file` 和 `book-entry` 两种输入构造身份，并使可回源事实能携带 origin relativePath。
+
+本批不实现 include resolution。本批不实现 parser core memory entry。本批只建立公共模型、类型边界、serializer 表面和目标测试。
+
+=== 上游门槛
+
+* Batch 00 状态为 `通过`。
+* Batch 00 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文闭包
+
+执行者必须阅读：
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#abundant-document[9 号书：AbundantDocument]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#node-model[9 号书：节点模型]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#source-coordinate[9 号书：Source Coordinate]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#entry-and-source-set[10 号书：Entry 与 Source Set]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#line-origin[10 号书：Line Origin]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#public-api-and-cli[10 号书：Public API 与 CLI]
+* xref:execution-contract[本书：执行契约]
+* `src/model.ts`
+* `src/serializers.ts`
+* `src/index.ts`
+* `test/serializers.test.ts`
+* `test/parser.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+=== 输入事实
+
+当前 `AbundantDocument.mode` 只有 `single-file`。当前 `ParseAbundantTreeOptions` 没有 `mode` 和 `documentRoot`。当前 source coordinate 没有文件身份。
+
+10 号书要求 book-entry 输出中每个可回源事实指向 origin source file。下游投影器不得读取 line origin table 作为主契约。
+
+=== 文件边界
+
+修改：
+
+* `src/model.ts`
+* `src/serializers.ts`
+* `src/index.ts`
+* `test/serializers.test.ts`
+* `test/parser.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+不得修改：
+
+* `src/parser.ts` 的运行时流程，除非只为类型编译做最小兼容。
+* `src/book-entry/**`
+* `src/rdf12-projection/**`
+
+=== 公共模型目标
+
+`AbundantDocument.mode` 必须扩展为：
+
+[source,typescript]
+----
+"single-file" | "book-entry"
+----
+
+`ParseAbundantTreeOptions` 必须成为 discriminated union：
+
+[source,typescript]
+----
+export type ParseAbundantTreeOptions =
+	| {
+			sourcePath: string;
+			mode?: "single-file";
+	  }
+	| {
+			sourcePath: string;
+			mode: "book-entry";
+			documentRoot: string;
+	  };
+----
+
+可回源事实必须能表达 origin relativePath。推荐公共形态是让 `SourceLayer` 携带 `relativePath?: string`，并保持 `SourceSpan` 只表达 line/column 范围：
+
+[source,typescript]
+----
+export type SourceLayer = {
+	raw?: string;
+	relativePath?: string;
+	line?: number;
+	span?: LineSpan;
+	sourceSpan?: SourceSpan;
+};
+----
+
+节点如果同时保留顶层 `sourceSpan` 和 `source.sourceSpan`，必须定义单一权威读取位置。实现不得让顶层 span 与 source layer relativePath 表达两个互相矛盾的 coordinate。
+
+=== 实施任务
+
+. 扩展 `AbundantDocument.mode`。
+. 扩展 `ParseAbundantTreeOptions`。
+. 为 source layer 增加 origin file identity 字段。
+. 更新 public type exports。
+. 更新 serializer ordering，使 `relativePath` 在 pretty tree 和 JSON 中可见。
+. 更新 single-file parser 测试，确认 single-file 输出仍为 `mode: "single-file"`。
+. 更新 book-entry expected-fail 测试中的公共 JSON 目标形状。
+
+=== 测试任务
+
+`parser.test.ts` 必须断言未传 `mode` 时输出 `mode: "single-file"`。
+
+`serializers.test.ts` 必须断言 `source.relativePath` 在 JSON serialization 中保留，并且 pretty tree 不隐藏该字段。
+
+`book-entry.acceptance.test.ts` 必须断言目标公共形状可以表达 entry file、chapter file 和 nested file 的不同 relativePath。
+
+=== 验收标准
+
+* Public model 可以表达 `book-entry` mode。
+* Public parse options 可以表达显式 `documentRoot`。
+* 可回源事实可以表达 origin relativePath。
+* Line origin table 没有进入 `AbundantDocument` 主模型。
+* Single-file mode 保持默认语义。
+* Serializer 不重新解析 AsciiDoc。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/parser.test.ts test/serializers.test.ts test/book-entry/book-entry.acceptance.test.ts
+pnpm typecheck
+pnpm test:coverage
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/model.ts src/serializers.ts src/index.ts test/parser.test.ts test/serializers.test.ts test/book-entry
+git commit --only -m "feat: extend parser model for book-entry coordinates" -- src/model.ts src/serializers.ts src/index.ts test/parser.test.ts test/serializers.test.ts test/book-entry
+----
+
+=== 审核规则
+
+审核者必须检查 public model 是否有单一 coordinate 权威。审核者必须检查 line origin table 没有进入下游主契约。审核者必须检查类型变更没有通过 `any` 或类型断言掩盖不一致。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* `AbundantDocument` 暴露 line origin table 作为下游主契约。
+* `SourceSpan`、`SourceLayer` 和节点顶层字段表达互相矛盾的 file identity。
+* Single-file consumer 必须理解 book-entry internal IR 才能读取旧字段。
+* `mode` 仍只能是 `single-file`。
+* TypeScript 类型错误通过 `any`、双重断言或未测试分支绕过。

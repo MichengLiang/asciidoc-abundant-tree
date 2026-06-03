@@ -1,0 +1,134 @@
+[#batch-06-downstream-coordinate-regression]
+== Batch 06：Downstream Coordinate Regression
+
+=== 批次目标
+
+本批使 downstream projectors 消费 book-entry `AbundantDocument` 中的 origin source coordinate。本批不改变 RDF 1.2 标题投影图对象语义。
+
+本批的主要 downstream surface 是 RDF12 projection。RDF12 resource-level source coordinate 必须来自节点自身 source layer，而不是来自 document-level `sourcePath`。
+
+=== 上游门槛
+
+* Batch 05 状态为 `通过`。
+* Batch 05 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文闭包
+
+执行者必须阅读：
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#cli-and-library-api[9 号书：CLI 与 Library API]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#consumer-actions[10 号书：消费者动作]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#source-coordinate-recovery[10 号书：Source Coordinate Recovery]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#contract-tests[10 号书：Contract Tests]
+* xref:../06-rdf12-line-projection/book.adoc[6 号书：AsciiDoc 标题切片到 RDF 1.2 投影规约]
+* xref:../07-rdf12-heading-projection-implementation-plan/book.adoc#batch-07-public-contract-and-final-gates[7 号书：公共契约与最终门禁]
+* `src/rdf12-projection/projector.ts`
+* `src/rdf12-projection/source-location.ts`
+* `src/rdf12-projection/path-coordinate.ts`
+* `src/rdf12-projection/structure-projector.ts`
+* `src/rdf12-projection/xref-projector.ts`
+* `src/rdf12-projection/payload-projector.ts`
+* `test/rdf12-projection/structure-projector.test.ts`
+* `test/rdf12-projection/xref-projector.test.ts`
+* `test/rdf12-projection/query-contracts.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+=== 输入事实
+
+当前 RDF12 projection 根据 `document.sourcePath` 计算一个 document-level relativePath，并把该 path 传给多个 resource projection 模块。
+
+Book-entry mode 允许同一 `AbundantDocument` 中的 resources 来自不同 origin files。下游 projection 必须读取 resource 自身 source coordinate。
+
+=== 文件边界
+
+修改：
+
+* `src/rdf12-projection/source-location.ts`
+* `src/rdf12-projection/projector.ts`
+* `src/rdf12-projection/structure-projector.ts`
+* `src/rdf12-projection/labels.ts`
+* `src/rdf12-projection/xref-projector.ts`
+* `src/rdf12-projection/payload-projector.ts`
+* `test/rdf12-projection/structure-projector.test.ts`
+* `test/rdf12-projection/xref-projector.test.ts`
+* `test/rdf12-projection/query-contracts.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+允许创建：
+
+* `test/rdf12-projection/book-entry-coordinate.test.ts`
+
+不得修改：
+
+* `src/book-entry/**`
+* `src/parser.ts`
+* RDF12 graph object semantics unrelated to source coordinate。
+
+=== 实施任务
+
+. 为 RDF12 source-location projection 增加 resource-level relativePath 读取规则。
+. 保留 document-level provenance 对 entry file 的描述。
+. 让 heading resource 使用 section source layer 的 relativePath。
+. 让 xref edge evidence 使用 xref occurrence source layer 的 relativePath。
+. 让 payload、direct field 和 label 相关 source coordinate 使用 owner 或 occurrence 的 origin coordinate。
+. 删除对所有 resource 统一传入 document-level relativePath 的旧路径，或隔离为 document-level provenance 专用路径。
+. 确认 downstream projector 不读取 line origin table。
+. 保持 6 号书和 7 号书锁定的 RDF12 graph 对象语义。
+
+=== 测试任务
+
+`book-entry-coordinate.test.ts` 必须覆盖：
+
+* Book-entry RDF12 graph 中不同 headings 可以拥有不同 `aat:relativePath`。
+* Entry heading 使用 entry file relativePath。
+* Chapter heading 使用 chapter file relativePath。
+* Nested include heading 使用 nested file relativePath。
+* Xref edge evidence 使用 xref occurrence 所在文件 relativePath。
+* Projection-level source document provenance 可以继续指向 entry file。
+* 输出不包含 `build/adoc` 聚合路径。
+* RDF12 projector 不需要 line origin table 参数。
+
+Existing RDF12 tests 必须继续证明：
+
+* RDF12 标题投影图对象语义不变。
+* Turtle 和 JSON-LD serializer 不回退。
+* `rdf`、`ttl`、`turtle` 不是 CLI format alias。
+
+=== 验收标准
+
+* Resource-level source coordinate 来自 node 或 occurrence 自身 source layer。
+* Document-level path coordinate 只用于 document/provenance 层对象。
+* Downstream projector 不读取 internal line origin table。
+* RDF12 graph 不出现 `build/adoc` 聚合路径，除非输入本身就是普通 single-file 聚合产物。
+* RDF12 标题投影图语义不改变。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/book-entry-coordinate.test.ts test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/query-contracts.test.ts test/book-entry/book-entry.acceptance.test.ts
+pnpm typecheck
+pnpm test:coverage
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/rdf12-projection test/rdf12-projection test/book-entry
+git commit --only -m "feat: project book-entry origin coordinates downstream" -- src/rdf12-projection test/rdf12-projection test/book-entry
+----
+
+=== 审核规则
+
+审核者必须检查 RDF12 修改只改变 source coordinate consumption，不改变标题投影图对象。审核者必须检查 line origin table 没有进入 RDF12 public API。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 所有 RDF12 resources 继续使用 entry file relativePath。
+* RDF12 projector 要求调用者传入 internal line origin table。
+* 为修坐标改动 RDF12 标题投影图对象语义。
+* `build/adoc` 聚合路径出现在 book-entry origin coordinate 中。
+* Downstream coordinate 测试只检查 document-level provenance，不检查 resource-level coordinate。

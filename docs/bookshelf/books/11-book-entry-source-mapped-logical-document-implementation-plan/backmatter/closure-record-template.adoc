@@ -1,0 +1,86 @@
+[#closure-record-template]
+== 关闭记录模板
+
+关闭记录记录本计划书的结束方式。关闭记录是 lab object 的治理事实，不是当前 parser 对象定义。
+
+=== 关闭对象
+
+[horizontal]
+关闭对象:: `11-book-entry-source-mapped-logical-document-implementation-plan`
+目标 body 依据:: xref:../10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约]
+上游 parser 依据:: xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc[asciidoc-abundant-tree 解析器规约]
+材料体系依据:: xref:../08-body-lab-material-system/book.adoc[`100_body` 与 `200_lab`：书籍化项目材料体系设计]
+
+=== 最终提交
+
+[horizontal]
+最终提交 hash:: `<git commit hash>`
+最终审核状态:: `通过` 或 `打回`
+关闭结论:: `完成`、`打回`、`替代`、`废弃` 或 `归档`
+
+=== 最终验证命令
+
+[source,bash]
+----
+pnpm test
+pnpm typecheck
+pnpm lint
+pnpm build
+pnpm pack:check
+pnpm smoke:cli
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm --dir docs/bookshelf run build
+----
+
+关闭记录必须写入实际运行结果。未运行命令不得写成通过。
+
+=== 覆盖率结果
+
+[source,text]
+----
+Statements: <percent>
+Branches: <percent>
+Functions: <percent>
+Lines: <percent>
+src/book-entry/**: <percent>
+----
+
+覆盖率低于 90% 时，本计划不得关闭为完成状态。
+
+=== 已进入当前事实的对象
+
+[source,text]
+----
+- <public API/object fact>
+- <CLI/object fact>
+- <source coordinate/object fact>
+- <diagnostic/object fact>
+----
+
+本节只列已经由代码、测试、文档和审核证据共同支撑的对象事实。
+
+=== 未处理对象与去向
+
+[source,text]
+----
+- <对象>：<非目标、后续 Batch、打回项、新 proposal、相邻人工制品或关闭理由>
+----
+
+未处理对象必须有去向。不得写“后续再说”。
+
+=== Body 修订判断
+
+[horizontal]
+是否需要修订 9 号书:: `是` 或 `否`
+是否需要修订 10 号书:: `是` 或 `否`
+修订入口:: `<新 lab object 或非目标理由>`
+
+实现中发现目标 body 缺口时，关闭记录必须指向新的 lab object。计划书不得在关闭记录中直接改写 body 事实。
+
+=== 后续入口
+
+[horizontal]
+当前对象入口:: `<current body entry>`
+治理追溯入口:: `<archive entry or closed lab entry>`
+后续治理入口:: `<active lab entry or none>`

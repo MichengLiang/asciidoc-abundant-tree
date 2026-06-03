@@ -18,6 +18,7 @@ v0.1, 2026-05
 
 * xref:books/09-asciidoc-abundant-tree-parser-spec/book.adoc[asciidoc-abundant-tree 解析器规约]
 * xref:books/10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约]
+* xref:books/11-book-entry-source-mapped-logical-document-implementation-plan/book.adoc[书稿入口回源逻辑文档实现计划书]
 * xref:books/06-rdf12-line-projection/book.adoc[AsciiDoc 标题切片到 RDF 1.2 投影规约]
 * xref:books/07-rdf12-heading-projection-implementation-plan/book.adoc[RDF 1.2 标题投影图实现计划书]
 * xref:books/08-body-lab-material-system/book.adoc[`100_body` 与 `200_lab`：书籍化项目材料体系设计]

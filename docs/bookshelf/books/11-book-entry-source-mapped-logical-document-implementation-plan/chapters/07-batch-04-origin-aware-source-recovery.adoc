@@ -1,0 +1,181 @@
+[#batch-04-origin-aware-source-recovery]
+== Batch 04：Origin-aware Source Recovery
+
+=== 批次目标
+
+本批把 parser 在 logical document 中观察到的 source line、source span 和 source interval 转换为 origin source coordinate。
+
+本批完成 heading raw、xref occurrence、anchor occurrence、target、paragraph、listing、table 和 source scope 的 origin-aware recovery。
+
+=== 上游门槛
+
+* Batch 03 状态为 `通过`。
+* Batch 03 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文闭包
+
+执行者必须阅读：
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#node-model[9 号书：节点模型]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#source-coordinate[9 号书：Source Coordinate]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#metadata-xref-anchor-targets[9 号书：Metadata、Xref、Anchor 与 Target]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#line-origin[10 号书：Line Origin]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#source-coordinate-recovery[10 号书：Source Coordinate Recovery]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#diagnostics[10 号书：Diagnostics]
+* xref:execution-contract[本书：执行契约]
+* `src/source-lines.ts`
+* `src/source-surfaces.ts`
+* `src/inline-occurrence-scanner.ts`
+* `src/official-projector.ts`
+* `src/source-interval-resolver.ts`
+* `src/book-entry/**`
+* `test/source-surfaces.test.ts`
+* `test/official-projector.test.ts`
+* `test/parser-input-edges.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+=== 输入事实
+
+Logical line number 是 parser observation surface。Origin source coordinate 是 public recovery surface。二者必须通过 line origin 映射连接。
+
+Logical document 没有 source file identity。Raw recovery 必须回到 origin source file line table。
+
+=== 文件边界
+
+修改：
+
+* `src/source-lines.ts`
+* `src/source-surfaces.ts`
+* `src/inline-occurrence-scanner.ts`
+* `src/official-projector.ts`
+* `src/source-interval-resolver.ts`
+* `src/book-entry/**`
+* `test/source-surfaces.test.ts`
+* `test/official-projector.test.ts`
+* `test/parser-input-edges.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+允许创建：
+
+* `src/book-entry/origin-coordinate.ts`
+* `src/book-entry/source-scope-index.ts`
+* `test/book-entry/source-coordinate-recovery.test.ts`
+* `test/book-entry/source-scope-index.test.ts`
+
+不得修改：
+
+* `src/rdf12-projection/**`
+* `src/cli.ts`
+* `README.md`
+* `CHANGELOG.md`
+
+=== 实施任务
+
+. 实现 logical line 到 line origin 的 lookup。
+. 实现 origin line table lookup。
+. 实现 origin source span construction。
+. 实现 origin raw slice recovery。
+. 将 section source layer 映射到 origin relativePath。
+. 将 xref occurrence source layer 映射到 origin relativePath。
+. 将 anchor occurrence source layer 映射到 origin relativePath。
+. 将 target source coordinate 映射到 origin relativePath。
+. 将 paragraph、listing 和 table source layer 映射到 origin relativePath。
+. 将 source scope index 改为 relativePath-aware。
+. 跨 origin source files 的 block span 不输出假 raw，并产生 recovery diagnostic。
+. 保持 single-file recovery 行为不变。
+
+=== Source scope 规则
+
+错误规则：
+
+[source,text]
+----
+candidate.startLine <= line <= candidate.endLine
+----
+
+正确规则：
+
+[source,text]
+----
+candidate.relativePath == occurrence.relativePath
+candidate.startLine <= occurrence.line <= candidate.endLine
+----
+
+实现必须把正确规则编码为可测试对象。审核者不得接受只在注释中说明该规则的实现。
+
+=== Recovery diagnostic
+
+本批必须定义或使用以下 recovery diagnostic：
+
+[horizontal]
+`source-recovery.cross-origin-block`:: Block span maps to more than one origin source file.
+`source-recovery.origin-line-missing`:: Origin file line table cannot recover requested source line.
+`source-recovery.logical-interval-unmapped`:: Parser core interval cannot map to line origin.
+
+Recovery diagnostic 必须阻止假精确坐标输出。无法可靠恢复的 source coordinate 应保持缺失。
+
+=== 测试任务
+
+`source-coordinate-recovery.test.ts` 必须覆盖：
+
+* Entry file heading source relativePath 指向 entry file。
+* Chapter heading source relativePath 指向 chapter file。
+* Nested include heading source relativePath 指向 nested file。
+* Heading raw 来自 origin file。
+* Heading raw 不从 logical text 直接切取。
+* Xref occurrence source relativePath 指向 xref 所在 origin file。
+* Anchor occurrence source relativePath 指向 anchor 所在 origin file。
+* Target source relativePath 指向 target 定义所在 origin file。
+* Listing raw、contentSpan 和 source span 来自 origin file。
+* Table source span 来自 origin file。
+* Cross-origin block 不输出假 raw，并产生 recovery diagnostic。
+
+`source-scope-index.test.ts` 必须覆盖：
+
+* 两个不同 origin files 中相同行号的 section 不互相污染。
+* Xref containingSectionId 使用 xref occurrence 的 relativePath。
+* Anchor containingSectionId 使用 anchor occurrence 的 relativePath。
+
+`parser-input-edges.test.ts` 必须继续覆盖 CRLF 和 Unicode columns。
+
+=== 验收标准
+
+* 每个可回源事实携带 origin relativePath，或缺失 coordinate 并产生 diagnostic。
+* Raw recovery 从 origin source file line table 恢复。
+* Source scope lookup 比较 relativePath。
+* Cross-origin block 不输出假 raw。
+* Single-file mode 坐标回归通过。
+* 新增 origin coordinate mapper 代码覆盖率不低于 90%。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/book-entry/source-coordinate-recovery.test.ts test/book-entry/source-scope-index.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser-input-edges.test.ts test/source-surfaces.test.ts test/official-projector.test.ts
+pnpm typecheck
+pnpm test:coverage
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/source-lines.ts src/source-surfaces.ts src/inline-occurrence-scanner.ts src/official-projector.ts src/source-interval-resolver.ts src/book-entry test/book-entry test/parser-input-edges.test.ts test/source-surfaces.test.ts test/official-projector.test.ts
+git commit --only -m "feat: recover book-entry origin source coordinates" -- src/source-lines.ts src/source-surfaces.ts src/inline-occurrence-scanner.ts src/official-projector.ts src/source-interval-resolver.ts src/book-entry test/book-entry test/parser-input-edges.test.ts test/source-surfaces.test.ts test/official-projector.test.ts
+----
+
+=== 审核规则
+
+审核者必须检查所有 line containment 查找都比较 relativePath。审核者必须检查 raw recovery 没有从 logical text 直接切取。审核者必须检查 cross-origin block 的 diagnostic 和缺失 coordinate 同时成立。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* 任一 book-entry source coordinate 使用 entry file path 替代真实 origin file。
+* `sectionByLine` 或同等结构仍只按 line number 匹配。
+* Raw recovery 从 logical text 直接切取。
+* Cross-origin block 输出假 raw。
+* 坐标使用 0-based line 或 column。
+* 缺失坐标使用 `0`、`-1` 或空字符串代替。
+* Origin coordinate mapper 覆盖率低于 90%。

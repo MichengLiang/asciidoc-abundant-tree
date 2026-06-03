@@ -1,0 +1,134 @@
+[#current-source-state]
+== 当前源码状态
+
+本章记录实现计划的源码基线。该基线描述当前事实，不定义目标对象。
+
+=== 仓库与验证基线
+
+项目位于：
+
+[source,text]
+----
+/home/t103o/workbench/micheng-ts/projects/asciidoc-abundant-tree
+----
+
+该目录是内部 Git 仓库。提交和状态检查必须在该仓库中执行。
+
+本计划书撰写前，工作树处于干净状态。以下基线命令已经作为调查证据运行：
+
+[source,bash]
+----
+pnpm test -- test/parser-include-source-map.test.ts test/parser-input-edges.test.ts
+pnpm --dir docs/bookshelf test
+----
+
+第一条命令通过，Vitest 报告 38 个测试文件、258 个测试通过。第二条命令通过，书架 node test 报告 11 个测试通过。
+
+=== 当前公共模型
+
+`src/model.ts` 定义 `AbundantDocument`、节点 union、source layer、official layer、source span、line span、diagnostic 和 parse options。
+
+当前 `AbundantDocument.mode` 只有 `single-file`。当前 `ParseAbundantTreeOptions` 只有 `sourcePath`。当前公共模型没有 `book-entry` mode、`documentRoot`、`LineOrigin`、`SourceFileRecord` 或 origin relativePath。
+
+当前 `SourceSpan` 只包含 1-based line 和 1-based column。当前 `SourceLayer` 只包含 `raw`、`line`、`span` 和 `sourceSpan`。该模型不能区分 entry file 第 8 行和 chapter file 第 8 行。
+
+=== 当前 parser 入口
+
+`src/parser.ts` 当前把 single-file parse 固定为以下流程：
+
+[source,text]
+----
+resolve(sourcePath)
+  -> readFileSync(sourcePath)
+  -> buildLineTable(source)
+  -> adapter.loadFile(sourcePath)
+  -> projectSourceSurfaces(...)
+  -> projectOfficialDocument(...)
+  -> assemble AbundantDocument(mode: "single-file")
+----
+
+该流程把 official parse surface 和 source recovery surface 绑定到同一个物理文件。它没有 parser core 内存文本入口，也没有 logical text、line origin 或 source file table。
+
+=== 当前 Asciidoctor adapter
+
+`src/asciidoctor-adapter.ts` 当前只公开 `loadFile(sourcePath)`。该入口调用 `processor.loadFile(sourcePath, { safe: "secure", sourcemap: true, to_file: false })`。
+
+当前 adapter 没有 memory parse 入口。Book-entry mode 不能依赖当前 `loadFile(entryPath)`，因为该入口解析的是 entry file，不是 include resolution 后的 logical text。
+
+=== 当前 include 相关测试
+
+`test/parser-include-source-map.test.ts` 当前保护 single-file secure mode。该测试证明 include directive 在 single-file mode 下不展开，并且 official source location 指向外部文件时，`projectSourceSurfaces` 产生 `source-location.external-file` diagnostic 并跳过对应 official block。
+
+该测试不是 book-entry pipeline 测试。它不构造 logical document，不生成 line origin，不恢复 origin source coordinate。
+
+=== 当前 source surface recovery
+
+`src/source-surfaces.ts` 遍历 official block surface，使用 single-file line table 恢复 source interval、section surface、inline occurrences、anchor occurrences、section scope 和 diagnostics。
+
+当前 `sectionByLine` 是 `Map<number, SectionNode>`。`assignContainingSectionIds` 只按 line number 查找 section。该结构在 single-file mode 下成立，在 book-entry mode 下会把不同 source file 中的相同行号混在同一 scope 空间中。
+
+`src/inline-occurrence-scanner.ts` 当前按 logical line table 扫描 xref 和 anchor，并生成 line/column source span。该 scanner 没有 origin relativePath。
+
+`src/official-projector.ts` 当前从 single-file line table 读取 paragraph text、listing content、table span、section raw 和 target source span。该 projector 没有 origin raw recovery。
+
+=== 当前 CLI
+
+`src/cli.ts` 当前支持：
+
+[source,bash]
+----
+asciidoc-abundant-tree <file.adoc>
+asciidoc-abundant-tree <file.adoc> --json
+asciidoc-abundant-tree <file.adoc> --format tree
+asciidoc-abundant-tree <file.adoc> --format json
+asciidoc-abundant-tree <file.adoc> --format rdf12
+asciidoc-abundant-tree <file.adoc> --format rdf12-json-ld
+asciidoc-abundant-tree --help
+----
+
+当前 CLI 没有 `--mode`，没有 `--document-root`。当前 `documentRoot` 只在 RDF12 输出中默认为 `process.cwd()`，它不是 parser 输入构造参数。
+
+=== 当前 downstream coordinate
+
+`src/rdf12-projection/path-coordinate.ts` 根据 `documentRoot` 和 `document.sourcePath` 计算一个 document-level `relativePath`。
+
+`src/rdf12-projection/projector.ts` 把该 `relativePath` 传给 structure、labels、xref、attributes 和 payload projection。当前 RDF12 resource-level source coordinate 默认来自同一个 document-level path。
+
+Book-entry mode 要求同一 `AbundantDocument` 中的不同 resource 可以具有不同 origin relativePath。当前 RDF12 coordinate 数据流不能满足该要求。
+
+=== 可复用基础设施
+
+当前源码具有以下可复用基础设施：
+
+* `src/source-lines.ts` 提供 line table、line text、line span 和 source span 工具。
+* `src/source-interval-resolver.ts` 提供 official block source interval recovery。
+* `src/official-block-walker.ts` 提供 official AST 遍历。
+* `src/metadata-parser.ts` 提供 metadata surface parsing。
+* `src/inline-occurrence-scanner.ts` 提供 xref 和 anchor occurrence scanning。
+* `src/official-projector.ts` 提供 official projection 到 `AbundantDocument` tree 的基础。
+* `src/serializers.ts` 提供 pretty tree 和 JSON serialization。
+* `src/rdf12-projection/**` 提供 RDF 1.2 downstream projection、source location triples、path coordinate 和 serializer。
+
+这些基础设施可以被 book-entry implementation 复用。复用不得改变 09 号书 single-file 契约。
+
+=== 目标缺口
+
+当前源码缺少以下目标对象：
+
+* `mode: "book-entry"` public option。
+* `documentRoot` parser input boundary。
+* `src/book-entry/` input construction 模块。
+* full-file include resolution。
+* escaped include preservation。
+* unsupported include attrlist construction error。
+* include cycle detection。
+* source file table。
+* logical text。
+* line origin。
+* parser core memory entry。
+* origin source coordinate public model。
+* origin raw recovery。
+* relativePath-aware source scope lookup。
+* book-entry CLI。
+* downstream coordinate regression tests。
+* book-entry contract tests。

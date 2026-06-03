@@ -1,0 +1,137 @@
+[#batch-03-parser-core-memory-entry]
+== Batch 03：Parser Core 内存入口
+
+=== 批次目标
+
+本批把 logical source 接入 parser core。Parser core 必须能解析 in-memory logical text，并返回标准 `AbundantDocument`。
+
+本批不完成 origin-aware raw recovery。Logical line 到 origin source coordinate 的完整转换归属 Batch 04。
+
+=== 上游门槛
+
+* Batch 02 状态为 `通过`。
+* Batch 02 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+
+=== 本批上下文闭包
+
+执行者必须阅读：
+
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#official-ast-and-source-surface[9 号书：Official AST 与 Source Surface]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#cli-and-library-api[9 号书：CLI 与 Library API]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#logical-document[10 号书：Logical Document]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#parser-integration[10 号书：Parser Integration]
+* xref:batch-02-logical-source-builder[Batch 02：Logical Source Builder]
+* `src/parser.ts`
+* `src/asciidoctor-adapter.ts`
+* `src/source-surfaces.ts`
+* `src/official-projector.ts`
+* `src/book-entry/logical-source-builder.ts`
+* `test/parser.test.ts`
+* `test/parser-include-source-map.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+=== 输入事实
+
+Current parser 入口读取一个 physical source file，并调用 `adapter.loadFile(sourcePath)`。Book-entry pipeline 需要 parser 解析 logical text，而不是 entry file。
+
+Asciidoctor official AST 仍然是 block identity 和 structure relation 的权威。Source recovery 仍然由 parser source layer 负责。Book-entry mode 不创建旁路 document model。
+
+=== 文件边界
+
+修改：
+
+* `src/parser.ts`
+* `src/asciidoctor-adapter.ts`
+* `src/source-surfaces.ts`
+* `src/official-projector.ts`
+* `test/parser.test.ts`
+* `test/parser-include-source-map.test.ts`
+* `test/book-entry/book-entry.acceptance.test.ts`
+
+允许创建：
+
+* `src/parser-core.ts`
+* `test/book-entry/parser-integration.test.ts`
+
+不得修改：
+
+* `src/rdf12-projection/**`
+* `src/cli.ts`
+* `README.md`
+* `CHANGELOG.md`
+
+=== 实施任务
+
+. 拆出 parser core，使 file input 和 logical input 共享 official projection、source surface projection、target merge 和 serializer-compatible document assembly。
+. 在 Asciidoctor adapter 中新增 memory parse 入口。该入口解析 logical text。
+. 保留 `loadFile(sourcePath)` 作为 single-file mode 专用入口。
+. 让 `parseAbundantTree({ sourcePath, mode: "book-entry", documentRoot })` 调用 logical source builder，再调用 parser core。
+. 让 book-entry 返回 `AbundantDocument`，并设置 `mode: "book-entry"`。
+. 让 book-entry 返回的 `sourcePath` 表示 entry file。
+. 保持 single-file path 的运行时行为不变。
+. 写 characterization test，证明 memory parse 的 official source line 与 logical line 对齐。
+
+=== Parser core 约束
+
+Parser core 的输入必须包含 logical line table。Parser core 不得从 entry file 重新读取 source text 作为 parse surface。
+
+Parser core 可以接收 origin recovery context，但本批只要求 logical line 级行为成立。Origin recovery context 在 Batch 04 成为 source coordinate mapper 的输入。
+
+Book-entry mode 不得写临时文件再调用 `loadFile`。临时文件会把 logical document 伪装成 source file identity，并破坏 10 号书的非源文件身份规则。
+
+=== 测试任务
+
+`parser-integration.test.ts` 必须覆盖：
+
+* Book-entry parser 解析 logical text。
+* Included heading 出现在 `AbundantDocument.children`。
+* `document.mode` 是 `book-entry`。
+* `document.sourcePath` 是 entry file path。
+* Asciidoctor memory parse source line 与 logical line 对齐。
+* Book-entry parser 不依赖 Asciidoctor include sourcemap。
+
+`parser.test.ts` 必须继续覆盖 single-file public API。
+
+`parser-include-source-map.test.ts` 必须继续覆盖 single-file secure-mode include 不展开。
+
+=== 验收标准
+
+* Public parser 返回标准 `AbundantDocument`，不是 book-entry 专用旁路对象。
+* Book-entry mode 使用 logical text 作为 official parse surface。
+* Single-file mode 调用 `loadFile(sourcePath)`。
+* Memory parse 入口与 file parse 入口可审查地区分。
+* Included headings 可以进入 section tree。
+* Book-entry mode 不生成 `build/adoc` 文件。
+
+=== 验证命令
+
+[source,bash]
+----
+pnpm test -- test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser.test.ts test/parser-include-source-map.test.ts
+pnpm typecheck
+pnpm test:coverage
+----
+
+=== 提交规则
+
+[source,bash]
+----
+git add src/parser.ts src/asciidoctor-adapter.ts src/source-surfaces.ts src/official-projector.ts src/parser-core.ts test/parser.test.ts test/parser-include-source-map.test.ts test/book-entry
+git commit --only -m "feat: parse book-entry logical documents" -- src/parser.ts src/asciidoctor-adapter.ts src/source-surfaces.ts src/official-projector.ts src/parser-core.ts test/parser.test.ts test/parser-include-source-map.test.ts test/book-entry
+----
+
+若 `src/parser-core.ts` 未创建，提交命令应移除该路径。
+
+=== 审核规则
+
+审核者必须检查 book-entry mode 没有调用 `loadFile(entryPath)` 作为 logical document parse。审核者必须检查 parser core 不通过临时文件模拟 memory parse。审核者必须检查 single-file include regression 没有回退。
+
+=== 打回条件
+
+出现以下任一情况，本批不通过：
+
+* Book-entry mode 调用 `adapter.loadFile(entryPath)` 并依赖 Asciidoctor include sourcemap。
+* Parser core 把 logical text 写入临时文件。
+* Single-file mode 行为变化。
+* Memory parse source line 无法与 logical line 对齐却继续通过。
+* Book-entry mode 返回非标准 `AbundantDocument`。
