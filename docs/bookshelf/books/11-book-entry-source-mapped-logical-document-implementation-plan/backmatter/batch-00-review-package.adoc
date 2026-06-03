@@ -1,0 +1,198 @@
+[#batch-00-review-package]
+== Batch 00 阶段审核包
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 00`
+批次名称:: `基线与迁移护栏`
+提交 hash:: `4a8299800c0da0966ea051fc25dccfc7fbae9569`
+执行者:: `subagent`
+审核者:: `主线程/Principal coordinator`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+test/book-entry/book-entry.acceptance.test.ts
+test/book-entry/book-entry-negative.test.ts
+test/book-entry/single-file-regression.test.ts
+test/book-entry/fixtures/simple-book/book.adoc
+test/book-entry/fixtures/simple-book/frontmatter/preface.adoc
+test/book-entry/fixtures/simple-book/chapters/01-entry-origin.adoc
+test/book-entry/fixtures/simple-book/chapters/02-target-origin.adoc
+test/book-entry/fixtures/simple-book/chapters/nested/section.adoc
+test/book-entry/fixtures/simple-book/backmatter/glossary.adoc
+test/book-entry/fixtures/negative/missing-include.adoc
+test/book-entry/fixtures/negative/circular-a.adoc
+test/book-entry/fixtures/negative/circular-b.adoc
+test/book-entry/fixtures/negative/unsupported-tag.adoc
+test/book-entry/fixtures/negative/unsupported-lines.adoc
+test/book-entry/fixtures/negative/outside-root.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-00-review-package.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 上下文闭包阅读记录
+
+[source,text]
+----
+- 目标规格闭包：
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/book.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/frontmatter/preface.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/01-object-boundary.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/02-consumer-actions.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/03-entry-and-source-set.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/04-include-resolution.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/05-logical-document.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/06-line-origin.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/07-parser-integration.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/08-source-coordinate-recovery.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/09-diagnostics.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/10-public-api-and-cli.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/11-contract-tests.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/backmatter/glossary.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/backmatter/bibliography.adoc
+- 上游 parser 契约闭包：
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/01-parser-object.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/03-single-file-input.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/04-abundant-document.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/09-diagnostics-and-failure-surface.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/12-acceptance-and-gates.adoc
+- 当前代码闭包：
+  src/model.ts
+  src/parser.ts
+  src/asciidoctor-adapter.ts
+  src/source-lines.ts
+  src/source-surfaces.ts
+  src/official-projector.ts
+  src/inline-occurrence-scanner.ts
+  src/cli.ts
+  src/index.ts
+  src/rdf12-projection/projector.ts
+  src/rdf12-projection/source-location.ts
+- 测试闭包：
+  test/parser.test.ts
+  test/parser-input-edges.test.ts
+  test/parser-include-source-map.test.ts
+  test/cli.test.ts
+  test/rdf12-projection/structure-projector.test.ts
+  test/rdf12-projection/xref-projector.test.ts
+- 治理闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/book.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/01-execution-contract.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/02-current-source-state.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/03-batch-00-baseline-and-migration-guardrails.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/review-package-template.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+  docs/bookshelf/books/08-body-lab-material-system/chapters/04-lab.adoc
+  docs/bookshelf/books/08-body-lab-material-system/chapters/08-evaluation.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- 建立 simple-book fixture：entry file、frontmatter、两个 chapter、nested include、backmatter glossary。
+- simple-book/book.adoc 包含 document title、part heading、frontmatter include、chapter include、nested include、backmatter include 和 escaped include。
+- escaped include 使用反斜杠前缀，single-file regression 证明当前模式下不展开 include。
+- 两个 chapter 文件在第 3 行包含 section heading，服务后续 relativePath-aware source scope 测试。
+- chapter 01 包含 xref occurrence，chapter 02 包含 target section。
+- nested include 文件包含可被 parser 投影的 heading。
+- book-entry acceptance tests 覆盖 mode、entry sourcePath、included heading、entry/chapter/nested relativePath、origin raw、xref coordinate、target coordinate、escaped include、same-line source scope。
+- negative contract tests 覆盖 missing include、circular include、unsupported tag、unsupported lines、outside documentRoot、logical line count 与 line origin count 不一致。
+- single-file regression 覆盖 explicit single-file 不展开 include、:doctype: book 不触发 book-entry、未传 mode 保持 single-file。
+- expected-fail 标记集中在 book-entry acceptance 和 negative test 文件顶部，并标明移除批次。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- 公共模型与 coordinate identity：归属 Batch 01。
+- logical source builder：归属 Batch 02。
+- parser core memory entry：归属 Batch 03。
+- origin-aware source recovery：归属 Batch 04。
+- public API 和 CLI book-entry mode：归属 Batch 05。
+- downstream coordinate regression：归属 Batch 06。
+- diagnostics 和 negative contracts 实现：归属 Batch 07。
+- expected-fail 迁移标记删除：归属 Batch 08。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/book-entry test/parser-include-source-map.test.ts test/parser-input-edges.test.ts
+pnpm typecheck
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/book-entry test/parser-include-source-map.test.ts test/parser-input-edges.test.ts:
+  PASS
+  Test Files 41 passed (41)
+  Tests 261 passed | 13 expected fail (274)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm test:coverage:
+  FAIL
+  Test Files 41 passed (41)
+  Tests 261 passed | 13 expected fail (274)
+  Failure reason: global branch coverage 88.12% is below configured threshold 90%.
+  Batch 00 judgment: command was run and true baseline is recorded; this is a coverage baseline concern, not a runtime-code change.
+
+pnpm --dir docs/bookshelf test:
+  PASS
+  node --test reported 11 pass, 0 fail
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+pnpm test:coverage: FAIL
+Statements: 95.06% (1483/1560)
+Branches: 88.12% (987/1120)
+Functions: 97.32% (364/374)
+Lines: 94.98% (1457/1534)
+src/book-entry/**: not present in Batch 00
+----
+
+=== 规约检查清单
+
+* 本批目标对象来自 10 号书或 9 号书，不来自当前实现惯性。
+* 本批没有重新定义 10 号书目标对象。
+* 本批没有破坏 single-file mode。
+* 本批没有把 line origin table 变成下游主契约。
+* 本批没有输出假 source coordinate。
+* 本批测试覆盖了正向事实。
+* 本批测试覆盖了必要负向事实。
+* 本批未处理对象有去向。
+
+=== 工程质量检查清单
+
+* 本批没有修改批次边界外文件。
+* 本批没有修改 `src/**`、`README.md` 或 `CHANGELOG.md`。
+* 本批没有引入全局打回条件。
+* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批新增测试集中表达 expected-fail 迁移护栏。
+* 本批没有新增运行时代码模块。
+* 本批没有通过 `any` 扩散掩盖公共模型冲突；未来字段访问集中在测试 helper 的局部 `unknown` cast 中。
+* 本批注释只记录迁移 expected-fail 移除批次和 fixture 不变量。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: Batch 00 已产生实现提交、测试护栏、覆盖率基线、审核包和状态台账更新。Coverage 命令因既有全局 branch 覆盖率低于阈值失败，真实基线已记录。
+后续动作:: 主线程/Principal coordinator 审核 Batch 00；通过后解锁 Batch 01。
