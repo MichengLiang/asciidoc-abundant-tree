@@ -15,7 +15,7 @@
 
 |Batch 01
 |公共模型与坐标身份
-|待审核
+|通过
 |`7766995b9263e8cfb8a05d087762033bf66578b3`
 |xref:batch-01-review-package[batch-01-review-package.adoc]
 
