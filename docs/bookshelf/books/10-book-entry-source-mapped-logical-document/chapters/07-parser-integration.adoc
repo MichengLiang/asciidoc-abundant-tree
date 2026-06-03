@@ -1,0 +1,48 @@
+[#parser-integration]
+== Parser Integration
+
+Book-entry pipeline 通过 logical document 调用 `asciidoc-abundant-tree` parser。它不改变 parser 的对象边界。
+
+=== 集成形状
+
+Book-entry pipeline 的内部数据流：
+
+[source,text]
+----
+entry file
+  -> include resolution
+  -> logical text + line origins + source file table
+  -> parser core
+  -> origin-aware AbundantDocument
+----
+
+Parser core 读取 logical text，并通过 line origin 恢复 source layer 坐标。
+
+=== Parser 输入
+
+Parser 需要一个能够接受内存文本的入口。该入口可以是内部函数，不必暴露为 single-file public API。
+
+[source,typescript]
+----
+parseLogicalDocument({
+  logicalText,
+  lineOrigins,
+  sourceFiles,
+  entryPath,
+  documentRoot,
+});
+----
+
+该函数返回 `AbundantDocument`。返回对象的 `sourcePath` 表示 entry file。可回源节点的 source coordinate 来自 line origin。
+
+=== Asciidoctor 调用
+
+Asciidoctor 应解析 logical text，而不是 entry file。
+
+该调用不得再次展开 include。Include resolution 已由 book-entry pipeline 完成。
+
+=== 与 Parser 规约的关系
+
+Parser 规约定义 `AbundantDocument`、source layer、official layer 和 single-file parser。Book-entry 规约定义 logical document 如何进入 parser core。
+
+Parser 不需要知道 RDF 投影器。Book-entry pipeline 也不需要知道 RDF 投影器。

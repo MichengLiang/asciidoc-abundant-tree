@@ -1,0 +1,29 @@
+[#glossary]
+== 术语表
+
+[glossary]
+AbundantDocument:: `asciidoc-abundant-tree` 解析器的公共 TypeScript 数据模型。
+
+source layer:: 来自原始源文本的 raw、line、span、sourceSpan、metadata、xref raw 和 anchor raw 等事实层。
+
+official layer:: 来自 Asciidoctor official result 的 context、nodeName、href、resolvedId、resolvedType 和 reftext 等事实层。
+
+source span:: 使用 1-based line 和 1-based column 表示的源文本行列范围。
+
+line span:: 使用 1-based line number 表示的连续行范围。
+
+section:: 等号标题创建的标题作用域容器。
+
+metadata surface:: 附着到 section 或 block 的源文本表面，例如 explicit ID、block title 和 attrlist。
+
+xref occurrence:: 源文本中一个交叉引用出现点。
+
+anchor occurrence:: 源文本中一个 inline 或 block anchor 出现点。
+
+target catalog:: 当前源文档内可被引用的本地 target 集合。
+
+tool diagnostic:: 解析器恢复 source surface 时产生的诊断事实。
+
+single-file mode:: 只读取调用者传入 source file 的解析模式。
+
+official AST:: Asciidoctor 返回的 official document/block tree。

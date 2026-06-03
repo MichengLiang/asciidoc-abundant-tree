@@ -1,0 +1,10 @@
+[#preface]
+== 前言
+
+本书定义书稿入口回源逻辑文档。该对象从一个 AsciiDoc book entry 出发，解析受支持的 include directive，构造一份带 line origin 的 in-memory logical document，并通过 `asciidoc-abundant-tree` 解析器产出可回源的 `AbundantDocument`。
+
+书稿在逻辑上是一份 AsciiDoc 文档。物理文件系统中，书稿可以由 entry file、frontmatter、chapters、backmatter 和 shared attributes 组成。回源逻辑文档保留这两个事实：解析器看到一份 logical document；每个可回源事实仍指向原始 source file。
+
+本书定义输入构造对象，不定义 RDF 图。下游投影器消费 `AbundantDocument` 中的 source coordinate。投影器不需要知道 include resolution、line origin 或 logical document 的内部结构。
+
+本书使用中文叙事。book-entry mode、entry file、source set、logical document、line origin、source coordinate、documentRoot、include directive、AbundantDocument 等术语在正文中保留英文形式或中英并列形式，以保持与源码、测试和解析器规约之间的术语连续性。

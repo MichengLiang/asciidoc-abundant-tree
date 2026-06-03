@@ -1,0 +1,55 @@
+[#abundant-document]
+== AbundantDocument
+
+`AbundantDocument` 是解析器的公共 TypeScript 数据模型。所有序列化表面和下游投影都消费该对象。
+
+=== 文档根
+
+`AbundantDocument` 表示一次解析结果。
+
+[source,typescript]
+----
+export type AbundantDocument = {
+  kind: "document";
+  sourcePath: string;
+  sourceText?: string;
+  mode: "single-file";
+  parser: ParserInfo;
+  title?: TitleNode;
+  children: AbundantNode[];
+  targets: TargetNode[];
+  xrefOccurrences: XrefOccurrenceNode[];
+  anchorOccurrences: AnchorOccurrenceNode[];
+  toolDiagnostics: ToolDiagnostic[];
+};
+----
+
+`sourcePath` 是输入文件路径。`mode` 标记输入模式。`parser` 标记 official parser 名称和版本。`children` 保存文档结构树。`targets` 保存本地 target catalog。`xrefOccurrences` 和 `anchorOccurrences` 保存源文档中的 inline occurrence。`toolDiagnostics` 保存解析器诊断。
+
+`sourceText` 是可选源文本缓存。该字段服务需要从文档标题或其它顶层对象恢复 raw slice 的消费者。字段缺失表示该文本未随模型携带，不表示源文档没有文本。
+
+=== ParserInfo
+
+`ParserInfo` 描述 official parser。
+
+[source,typescript]
+----
+export type ParserInfo = {
+  name: "@asciidoctor/core";
+  version: string;
+};
+----
+
+解析器可以升级 `@asciidoctor/core` 版本。版本字段保留实际运行时事实，不作为行为分支开关。
+
+=== 节点集合
+
+`AbundantNode` 是文档树节点的 union。节点集合包含 section、paragraph、listing、table、metadata、xref occurrence、anchor occurrence、target、title、text 和 unknown。
+
+节点类型描述解析器恢复出的 source-aware structure facts。节点类型不表示下游图投影的资源类型。
+
+=== 字段缺失语义
+
+可选字段缺失表示该事实不存在、当前 official parser 没有提供该事实，或 source recovery 无法可靠恢复该事实。实现不得用空字符串、零行号或伪造 span 表示未知事实。
+
+工具错误不写入 `AbundantDocument`。输入读取失败、parser load 失败和内部不变量失败必须通过错误出口表达。

@@ -1,0 +1,28 @@
+[#consumer-actions]
+== 消费者动作
+
+书稿入口回源逻辑文档的公共表面由消费者动作授权。
+
+=== Parser
+
+Parser 消费 logical text。该动作要求 logical text 是一份可被 Asciidoctor 解析的 AsciiDoc document。
+
+Parser 还消费 line origin。该动作要求 parser 在恢复 source layer 时能把 logical line 映射回 origin source file 和 source line。
+
+=== 文档作者与修改执行者
+
+文档作者和修改执行者消费 origin source coordinate。该动作要求查询结果、诊断结果或下游投影结果能回到原始章节文件。
+
+回源结果不得指向 `build/adoc` 聚合产物，除非调用者显式把该聚合产物作为普通 source file 输入。
+
+=== 下游投影器
+
+下游投影器消费 `AbundantDocument`。它读取 section、xref occurrence、target、payload-like block 和 source coordinate。
+
+下游投影器不消费 include directive、line origin table 或 source file table。它不需要知道 logical document 如何构造。
+
+=== 测试者与审核者
+
+测试者和审核者消费 diagnostics、logical line count、line origin map 和 origin-aware `AbundantDocument`。
+
+测试必须证明 logical document 能恢复书稿结构，并且每个可回源事实指向原始 source file。

@@ -1,0 +1,26 @@
+[#object-boundary]
+== 对象边界
+
+书稿入口回源逻辑文档是一个输入构造对象。它把物理多文件书稿构造成一份带 source origin 的 logical document。
+
+=== 当前对象
+
+当前对象接受一个 book entry file，读取受支持 include directive 指向的 source files，生成 logical text、line origin、source file table 和 diagnostics。
+
+Logical text 交给 `asciidoc-abundant-tree` 解析器。解析器产出 `AbundantDocument`。该 `AbundantDocument` 中可回源事实的 source coordinate 来自 line origin。
+
+=== 不属于当前对象
+
+当前对象不定义 RDF graph、RDF resource、relation predicate、payload 图语义或 query contract。
+
+当前对象不替代 `asciidoc-abundant-tree` parser。它构造 parser input，并要求 parser 支持 origin-aware source recovery。
+
+当前对象不生成 HTML、PDF、site navigation 或 `build/adoc` 发布产物。
+
+当前对象不实现完整 AsciiDoc reducer。它只定义本书支持的 include resolution 与 line origin 规则。
+
+=== 核心断言
+
+书稿入口回源逻辑文档的核心断言是：logical document 是解析表面，line origin 是回源表面。二者必须同时成立。
+
+只有 logical document 而没有 line origin，会退化为不可回源的聚合文本。只有 source files 而没有 logical document，解析器无法恢复整本书的结构关系。

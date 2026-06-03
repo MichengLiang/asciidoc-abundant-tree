@@ -1,0 +1,59 @@
+[#logical-document]
+== Logical Document
+
+Logical document 是 book-entry mode 构造出的 in-memory AsciiDoc 文本。Parser 把它作为一份 source document 解析。
+
+=== Logical Text
+
+Logical text 由 entry file 与 included files 的 source lines 组成。
+
+Include directive line 在 logical text 中被 included file lines 替换。Directive line 仍保留在 entry file 的原始 source text 中，并可作为 entry file heading raw 的一部分被恢复。
+
+Logical text 不写入 `build/adoc`。它不是发布产物，不是作者编辑对象，也不是 source file。
+
+=== Line Preservation
+
+Logical text 中的非 include 行必须原样复制 source line。实现不得改写空白、缩进、Unicode 字符或 inline 内容。
+
+该规则使 logical column 与 origin column 保持一致。Inline occurrence 的 column 可以直接从 logical line 映射到 origin line。
+
+=== 示例
+
+Entry file：
+
+[source,asciidoc]
+----
+= 第一部：投影对象
+
+\include::chapters/01-projection-object.adoc[]
+----
+
+Chapter file：
+
+[source,asciidoc]
+----
+[#projection-object]
+== 投影对象
+
+标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。
+----
+
+Logical text：
+
+[source,asciidoc]
+----
+= 第一部：投影对象
+
+[#projection-object]
+== 投影对象
+
+标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。
+----
+
+Logical text 用于结构解析。`= 第一部：投影对象` 的 source coordinate 仍指向 entry file。`== 投影对象` 的 source coordinate 指向 chapter file。
+
+=== 非源文件身份
+
+Logical document 没有独立 source file identity。它可以有 parse identity，但不能作为 raw recovery 的 source。
+
+Raw recovery 必须回到 line origin 指向的 source file。

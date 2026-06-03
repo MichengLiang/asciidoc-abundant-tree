@@ -1,0 +1,71 @@
+= asciidoc-abundant-tree 解析器规约
+弥澄亮 <MichengLiang>
+v0.1, 2026-06
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:experimental:
+:idprefix:
+:idseparator: -
+
+include::../../shared/attributes.adoc[]
+
+[preface]
+include::frontmatter/preface.adoc[]
+
+= 第一部：对象与消费者
+
+[partintro]
+这一部定义解析器对象、消费者动作和 single-file 输入边界。
+
+include::chapters/01-parser-object.adoc[]
+
+include::chapters/02-consumer-actions.adoc[]
+
+include::chapters/03-single-file-input.adoc[]
+
+= 第二部：公共数据模型
+
+[partintro]
+这一部定义 `AbundantDocument`、节点模型、source layer、official layer 和 source coordinate。
+
+include::chapters/04-abundant-document.adoc[]
+
+include::chapters/05-node-model.adoc[]
+
+include::chapters/06-source-coordinate.adoc[]
+
+= 第三部：解析流水线
+
+[partintro]
+这一部定义 official AST、source surface、metadata、inline occurrence、target catalog 和 diagnostics 的职责分配。
+
+include::chapters/07-official-ast-and-source-surface.adoc[]
+
+include::chapters/08-metadata-xref-anchor-targets.adoc[]
+
+include::chapters/09-diagnostics-and-failure-surface.adoc[]
+
+= 第四部：工程承载
+
+[partintro]
+这一部定义源码目录、公共入口、模块职责、工具链和提交边界。
+
+include::chapters/10-cli-and-library-api.adoc[]
+
+include::chapters/11-engineering-contract.adoc[]
+
+= 第五部：验收
+
+[partintro]
+这一部定义解析器完成声明、黑盒测试、质量门禁和打回条件。
+
+include::chapters/12-acceptance-and-gates.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]
+
+[bibliography]
+include::backmatter/bibliography.adoc[]

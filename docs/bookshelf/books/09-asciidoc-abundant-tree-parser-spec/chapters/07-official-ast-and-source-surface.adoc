@@ -1,0 +1,38 @@
+[#official-ast-and-source-surface]
+== Official AST 与 Source Surface
+
+解析器流水线分离结构权威和源文本证据。Official AST 决定 block identity 和结构关系；source surface 恢复 raw、metadata、span 和 column。
+
+=== Official AST
+
+Asciidoctor official document 提供 section tree、block context、block parent-child relation、refs catalog 和 official xref conversion。
+
+解析器通过 `official-block-walker` 遍历 official block tree。walker 只读取 official block 属性，不扫描源文件。
+
+=== Source Surface
+
+Source surface 是 official block 在源文本中的可恢复表面。它包含 block 起点、metadata、content span、full span、title span 和 diagnostics。
+
+`source-interval-resolver` 以 official block source location 为锚点恢复 source interval。Delimiter 查找只能在 official context 已确认的 block 内局部执行。
+
+=== 结构权威规则
+
+源码扫描不得创建 official AST 中不存在的 section、listing、table、literal、pass 或 open block。
+
+源码扫描可以补充 metadata、raw、line span、column span、局部 delimiter confirmation 和 fallback diagnostic。
+
+Fallback 必须锚定 official block。没有 official block 锚点时，解析器不得用全文件正则制造结构。
+
+=== Inline 扫描边界
+
+Inline occurrence scanner 按 official block context 扫描。
+
+Paragraph 和可扫描 table prose 可以产生 xref 或 anchor occurrence。Listing、literal、pass-through 和 fenced code content 不产生 xref 或 anchor occurrence。
+
+Open block 是容器。它自身不产生 prose occurrence；其 paragraph descendants 可以产生 occurrence。
+
+=== Section Scope
+
+Section scope 由 official section surfaces 和 source intervals 建立。Table cell、listing、pass-through 或 literal content 中的 section-looking text 不得污染 section tree。
+
+`sectionByLine` 只能来自 official section surfaces。该映射服务 containingSectionId 和下游 source scope 查询。

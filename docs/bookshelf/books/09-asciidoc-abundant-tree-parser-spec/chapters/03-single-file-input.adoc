@@ -1,0 +1,53 @@
+[#single-file-input]
+== Single-file 输入
+
+single-file mode 是解析器的基本输入模式。该模式只读取调用者传入的 AsciiDoc source file。
+
+=== 输入形状
+
+library API 输入：
+
+[source,typescript]
+----
+parseAbundantTree({
+  sourcePath: "samples/reference-links.adoc",
+});
+----
+
+CLI 输入：
+
+[source,bash]
+----
+asciidoc-abundant-tree samples/reference-links.adoc
+----
+
+`sourcePath` 按当前进程工作目录解析。文件内容按 UTF-8 文本读取。行号使用 1-based line number。列号使用 1-based Unicode code point column。
+
+=== 文件边界
+
+single-file mode 只读取输入文件。该模式不展开 include directive，不打开跨文档 xref 指向的 `.adoc` 文件，也不构造 workspace graph。
+
+跨文档 xref 可以作为 source occurrence 出现。解析器保存 raw target 和 official href，但不验证目标文档是否存在。
+
+=== Asciidoctor 配置
+
+single-file mode 使用 `@asciidoctor/core` 解析输入文件。加载配置为：
+
+[source,typescript]
+----
+processor.loadFile(sourcePath, {
+  safe: "secure",
+  sourcemap: true,
+  to_file: false,
+});
+----
+
+`safe: "secure"` 支持 single-file 边界。include directive 在该模式下不会展开为外部文件内容。`sourcemap: true` 提供 official source location。`to_file: false` 避免输出文件副作用。
+
+Asciidoctor source location 不独立定义完整 source span。解析器必须用源文本 line table 恢复 metadata、raw、content span 和 column span。
+
+=== 外部 source location
+
+official block 的 source location 若指向输入文件之外的路径，single-file mode 不把该 block 投影成当前文件结构。
+
+该情况进入 `toolDiagnostics`。解析器不得用当前文件 line table 强行解释外部 block。

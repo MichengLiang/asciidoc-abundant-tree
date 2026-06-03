@@ -1,0 +1,52 @@
+[#cli-and-library-api]
+== CLI 与 Library API
+
+解析器提供 library API 和 CLI。两者消费同一解析流程。
+
+=== Library API
+
+公共解析入口：
+
+[source,typescript]
+----
+import { parseAbundantTree } from "asciidoc-abundant-tree";
+
+const document = parseAbundantTree({
+  sourcePath: "samples/reference-links.adoc",
+});
+----
+
+`parseAbundantTree` 返回 `AbundantDocument`。调用者不需要解析 pretty tree 或 JSON。
+
+公共序列化入口：
+
+[source,typescript]
+----
+formatAbundantTree(document);
+serializeAbundantTreeToJson(document);
+----
+
+Serializer 只读取 `AbundantDocument`。Serializer 不读取文件，不调用 Asciidoctor，不扫描 AsciiDoc。
+
+=== CLI
+
+公共命令：
+
+[source,bash]
+----
+asciidoc-abundant-tree <file.adoc>
+asciidoc-abundant-tree <file.adoc> --json
+asciidoc-abundant-tree <file.adoc> --format tree
+asciidoc-abundant-tree <file.adoc> --format json
+asciidoc-abundant-tree --help
+----
+
+默认输出是 pretty tree。`--json` 是 `--format json` 的快捷入口。
+
+CLI 参数错误、输入文件不存在和内部工具错误返回非零 exit code。成功输出写入 stdout。错误消息写入 stderr。
+
+=== 下游投影出口
+
+包可以导出其它投影函数。下游投影函数以 `AbundantDocument` 为输入。
+
+下游投影函数不改变解析器公共模型。它们定义自己的输出表面和验收条件。

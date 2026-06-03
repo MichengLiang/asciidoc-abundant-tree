@@ -1,0 +1,81 @@
+[#source-coordinate]
+== Source Coordinate
+
+Source coordinate 描述某个恢复事实在源文档中的位置。该坐标支持阅读、审查和修改动作。
+
+=== LineSpan
+
+`LineSpan` 表示连续行范围。
+
+[source,typescript]
+----
+export type LineSpan = {
+  startLine: number;
+  endLine: number;
+};
+----
+
+行号使用 1-based line number。`startLine` 和 `endLine` 均包含在范围内。
+
+=== SourceSpan
+
+`SourceSpan` 表示行列范围。
+
+[source,typescript]
+----
+export type SourcePosition = {
+  line: number;
+  column: number;
+};
+
+export type SourceSpan = {
+  start: SourcePosition;
+  end: SourcePosition;
+};
+----
+
+列号使用 1-based Unicode code point column。`end.column` 表示 token 结束后的列位置。
+
+=== SourceLayer
+
+`SourceLayer` 保存源文本事实。
+
+[source,typescript]
+----
+export type SourceLayer = {
+  raw?: string;
+  line?: number;
+  span?: LineSpan;
+  sourceSpan?: SourceSpan;
+};
+----
+
+`raw` 是源文件切片。`line` 是事实的起始行或主行。`span` 是行范围。`sourceSpan` 是行列范围。
+
+Source layer 字段只能来自源文本或 source span recovery。Official parser 的解释结果不能覆盖 raw source surface。
+
+=== AsciidoctorLayer
+
+`AsciidoctorLayer` 保存 official interpretation。
+
+[source,typescript]
+----
+export type AsciidoctorLayer = {
+  context?: string;
+  nodeName?: string;
+  href?: string;
+  resolvedId?: string;
+  resolvedType?: TargetType;
+  reftext?: string;
+};
+----
+
+Official layer 字段只能来自 Asciidoctor official result 或 official conversion fragment。Source scanner 不得伪造 official binding。
+
+=== 坐标不变量
+
+公开坐标必须使用 1-based line 和 1-based column。
+
+Raw slice、line span 和 source span 必须来自同一 source surface。实现不得把 official line number、source scanner raw 和另一个文件的 line table 混合成一个 source layer。
+
+字段缺失必须保持缺失。实现不得用 `0`、`-1`、空 raw 或空 span 表示未知坐标。

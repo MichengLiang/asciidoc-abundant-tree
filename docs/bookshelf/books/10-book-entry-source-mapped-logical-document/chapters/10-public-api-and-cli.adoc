@@ -1,0 +1,56 @@
+[#public-api-and-cli]
+== Public API 与 CLI
+
+Book-entry pipeline 需要显式公共入口。调用者必须声明自己正在解析书稿入口。
+
+=== Library API
+
+Library API 使用独立函数：
+
+[source,typescript]
+----
+import { parseBookEntry } from "asciidoc-abundant-tree";
+
+const document = parseBookEntry({
+  sourcePath: "docs/bookshelf/books/06-rdf12-line-projection/book.adoc",
+  documentRoot: "docs/bookshelf",
+});
+----
+
+`parseBookEntry` 返回 `AbundantDocument`。该函数表达 book-entry pipeline 的对象身份。
+
+`parseAbundantTree` 保持 single-file 输入语义。
+
+=== CLI
+
+CLI 使用显式 mode：
+
+[source,bash]
+----
+asciidoc-abundant-tree docs/bookshelf/books/06-rdf12-line-projection/book.adoc \
+  --mode book-entry \
+  --format json
+----
+
+下游投影格式可以消费该 `AbundantDocument`。CLI mode 只选择输入构造方式，不改变输出格式的对象定义。
+
+=== documentRoot
+
+Library API 要求 `documentRoot`。
+
+CLI 可以使用当前工作目录作为默认 `documentRoot`，并允许调用者显式传入：
+
+[source,bash]
+----
+asciidoc-abundant-tree books/example/book.adoc \
+  --mode book-entry \
+  --document-root docs/bookshelf
+----
+
+所有输出 relativePath 均相对于 `documentRoot`。
+
+=== Public Model
+
+Public model 必须让可回源事实携带自己的 source coordinate。Book-entry pipeline 不要求下游消费者读取 line origin table。
+
+Line origin table 是内部 IR。公共 API 可以提供调试表面，但下游投影器的主输入仍是 `AbundantDocument`。

@@ -1,0 +1,73 @@
+[#engineering-contract]
+== 工程承载
+
+本章定义解析器在仓库中的工程承载方式。
+
+=== 仓库位置
+
+项目位于：
+
+[source,text]
+----
+/home/t103o/workbench/micheng-ts/projects/asciidoc-abundant-tree
+----
+
+该目录是内部 Git 仓库。外层 `micheng-ts` 工作区和内层 `asciidoc-abundant-tree` 仓库有不同 Git 边界。提交和状态检查必须在正确仓库中执行。
+
+=== Package 身份
+
+package 名称：
+
+[source,text]
+----
+asciidoc-abundant-tree
+----
+
+CLI bin 名称：
+
+[source,text]
+----
+asciidoc-abundant-tree
+----
+
+运行时是 Node.js ESM。源码使用 TypeScript strict。包管理使用 pnpm。
+
+=== 模块职责
+
+`src/model.ts` 定义公共 TypeScript 数据模型。
+
+`src/asciidoctor-adapter.ts` 承载 `@asciidoctor/core` 和 HTML fragment parser 的直接调用。
+
+`src/parser.ts` 编排文件读取、official parse、source surface projection、official projection、target/xref merge 和 `AbundantDocument` 构造。
+
+`src/source-lines.ts` 提供 line table、line text、line span 和 source span 工具。
+
+`src/official-block-walker.ts` 遍历 official AST。
+
+`src/source-interval-resolver.ts` 从 official block anchor 恢复 source interval。
+
+`src/source-surfaces.ts` 合成 sections、inline occurrences、anchor occurrences 和 diagnostics。
+
+`src/official-projector.ts` 从 official block 和 source evidence 构造 document tree。
+
+`src/serializers.ts` 只负责 pretty tree 和 JSON 序列化。
+
+`src/cli.ts` 只负责 CLI 参数、错误出口和调用 public API。
+
+=== 依赖边界
+
+解析器运行依赖 `@asciidoctor/core` 和 HTML fragment parser。解析器不引入站点生成器、数据库、UI 框架或部署工具。
+
+新增依赖必须服务当前对象。不能仅因相邻工具需要而进入 parser 运行依赖。
+
+=== 提交边界
+
+提交在内部 Git 仓库中执行。新文件必须先进入 Git index。
+
+[source,bash]
+----
+git add <new-files>
+git commit --only -m "<message>" -- <paths>
+----
+
+每次提交只包含当前任务文件。构建产物、无关格式化和其它项目修改不得混入解析器提交。

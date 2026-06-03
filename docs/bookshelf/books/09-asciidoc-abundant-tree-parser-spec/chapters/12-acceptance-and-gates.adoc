@@ -1,0 +1,88 @@
+[#acceptance-and-gates]
+== 验收与门禁
+
+完成声明必须提供对象证据、行为证据和工程证据。
+
+=== 对象证据
+
+解析器完成必须满足：
+
+* `parseAbundantTree({ sourcePath })` 返回 `AbundantDocument`。
+* Pretty tree 和 JSON 来自同一个 `AbundantDocument`。
+* Source layer 与 official layer 字段保持可区分。
+* Section tree、target catalog、xref occurrence、anchor occurrence 和 diagnostics 可由 public model 读取。
+* 工具错误不作为 document tree 节点输出。
+
+=== 行为证据
+
+核心样例必须覆盖：
+
+* document title。
+* generated section ID。
+* explicit section ID。
+* listing ID、title、language、metadataSpan、contentSpan 和 span。
+* table ID、title、rows 和 span。
+* inline anchor occurrence。
+* shorthand xref。
+* macro xref。
+* interdocument xref。
+* target catalog。
+* containing section scope。
+
+=== CLI 黑盒证据
+
+CLI 必须覆盖：
+
+* `--help` 输出用法。
+* 未传文件返回错误。
+* 默认 pretty tree 输出。
+* `--json` 输出 JSON。
+* `--format json` 与 `--json` 等价。
+* `--format tree` 与默认输出等价。
+* 非法 format 返回错误。
+* 输入文件不存在返回错误。
+
+=== 工程门禁
+
+项目验证命令：
+
+[source,bash]
+----
+pnpm test
+pnpm typecheck
+pnpm build
+pnpm pack:check
+----
+
+质量检查命令：
+
+[source,bash]
+----
+pnpm lint
+pnpm test:coverage
+----
+
+文档书架变更时，书架命令也必须运行：
+
+[source,bash]
+----
+pnpm --dir docs/bookshelf test
+pnpm --dir docs/bookshelf run build
+----
+
+未运行的验证不能写成通过。不可用命令必须报告不可用原因。
+
+=== 打回条件
+
+出现以下任一情况，不得声明完成：
+
+* Pretty tree 和 JSON 来自不同内部对象。
+* JSON 只是 pretty tree 字符串包装。
+* Source span 使用 0-based 坐标。
+* Xref occurrence 丢失 raw。
+* Anchor occurrence 丢失 sourceSpan。
+* Official binding 覆盖 raw target。
+* 跨文档 xref 被静默当成本地 target。
+* Parser diagnostic 作为 document child 输出。
+* Serializer 重新解析 AsciiDoc。
+* 新增全文件正则结构 scanner 取代 official AST 结构权威。

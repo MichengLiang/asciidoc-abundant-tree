@@ -1,0 +1,59 @@
+[#line-origin]
+== Line Origin
+
+Line origin 把 logical line 映射到原始 source file 和 source line。它是 book-entry 回源能力的构成性对象。
+
+=== 数据形状
+
+[source,typescript]
+----
+export type LineOrigin = {
+  logicalLine: number;
+  absolutePath: string;
+  relativePath: string;
+  sourceLine: number;
+};
+----
+
+`logicalLine` 使用 1-based line number。`relativePath` 相对于 `documentRoot`。`sourceLine` 是 origin source file 中的 1-based line number。
+
+每个 logical line 必须有且只有一个 line origin。
+
+=== Source File Record
+
+Source file table 保存参与 logical document 构造的源文件。
+
+[source,typescript]
+----
+export type SourceFileRecord = {
+  absolutePath: string;
+  relativePath: string;
+  text: string;
+  lineTable: LineTable;
+};
+----
+
+Source file table 服务 raw recovery、diagnostics 和 relative path 计算。它不是下游投影资源集合。
+
+=== Column 映射
+
+Logical line 文本原样来自 origin line 时，column 保持不变。
+
+[source,text]
+----
+logical line 27, column 14
+  -> origin relativePath "books/example/chapters/01.adoc"
+  -> origin line 8, column 14
+----
+
+实现不得在 logical text 构造阶段改写行文本。若某种转换需要改写文本，该转换必须同时定义 column map；本对象不包含该转换。
+
+=== 不变量
+
+Logical line count 与 line origin count 必须一致。
+
+Line origin 的 absolutePath 必须存在于 source file table。
+
+Line origin 的 sourceLine 必须位于对应 source file lineTable 范围内。
+
+违反这些不变量时，logical document 不成立。

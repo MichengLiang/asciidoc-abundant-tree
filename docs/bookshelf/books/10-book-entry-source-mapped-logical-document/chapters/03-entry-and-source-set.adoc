@@ -1,0 +1,36 @@
+[#entry-and-source-set]
+== Entry 与 Source Set
+
+Entry file 是 book-entry mode 的显式输入。Source set 是 entry file 通过受支持 include directive 到达的 source files 集合。
+
+=== Entry File
+
+Entry file 由调用者显式传入。
+
+[source,typescript]
+----
+parseBookEntry({
+  sourcePath: "docs/bookshelf/books/06-rdf12-line-projection/book.adoc",
+  documentRoot: "docs/bookshelf",
+});
+----
+
+实现不得仅凭文件名、`:doctype: book` 或 include directive 自动切换输入模式。调用者必须选择 book-entry public API 或 CLI mode。
+
+`:doctype: book` 可以作为一致性检查事实。它不是模式切换开关。
+
+=== documentRoot
+
+`documentRoot` 是 relativePath 基准和路径边界。
+
+所有 source file relativePath 均相对于 `documentRoot` 计算。Include target 解析出的绝对路径不得越出允许边界。
+
+Library API 中，book-entry 调用必须提供 `documentRoot`。CLI 可以使用当前工作目录作为默认 documentRoot，并允许调用者显式覆盖。
+
+=== Source Set
+
+Source set 包含 entry file 和受支持 include directive 指向的 files。
+
+同一绝对路径只读取一次。重复 include 可以在 logical document 中出现多次；source file table 中仍只有一个 file record。
+
+Source set 是输入构造事实，不是下游投影资源集合。下游消费者读取 `AbundantDocument` 中的 source coordinate，而不是读取 source set。

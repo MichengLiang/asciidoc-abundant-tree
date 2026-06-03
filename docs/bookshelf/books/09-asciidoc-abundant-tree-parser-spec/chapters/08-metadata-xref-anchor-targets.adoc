@@ -1,0 +1,53 @@
+[#metadata-xref-anchor-targets]
+== Metadata、Xref、Anchor 与 Target
+
+本章定义 source occurrence 与 target catalog 的关系。解析器保存源文档事实，不决定下游图形状。
+
+=== Metadata Attachment
+
+Metadata surface 附着到紧随其后的 section 或 block。可附着 surface 包括 explicit ID、block title、attribute list 和 block anchor。
+
+紧邻性是 metadata attachment 的前提。远离 block 的普通行不得被解释为该 block 的 metadata。
+
+=== Xref Occurrence
+
+Xref occurrence 来自源文本中的 xref syntax。
+
+[source,asciidoc]
+----
+<<target>>
+<<target,label>>
+xref:target[label]
+xref:target[label,key=value]
+----
+
+解析器保存 raw selector、display label、named attributes、sourceSpan 和 official binding facts。
+
+Xref occurrence 不验证外部 target。Interdocument target 保持 raw target 和 official href。
+
+=== Anchor Occurrence
+
+Anchor occurrence 来自 inline 或 block anchor syntax。
+
+[source,asciidoc]
+----
+[[id]]
+[[id,reftext]]
+anchor:id[]
+----
+
+解析器保存 raw anchor、ID、reftext、sourceSpan 和 containingSectionId。
+
+=== Target Catalog
+
+Target catalog 保存当前 source document 内可寻址 target。
+
+Target 可以来自 section、listing、table、inline anchor 或 block anchor。Target type 是解析器事实，不是下游资源类型。
+
+下游消费者可以把 target ID 解释为 label、link endpoint、lint 对象或其它投影事实。解析器不决定该投影。
+
+=== Binding Merge
+
+Source layer occurrence 与 official layer binding 必须保持可区分。
+
+Raw xref target 不被 official href 覆盖。Official reftext 不替代 source label。Binding merge 只把两个来源的事实放在同一个 occurrence 上。

@@ -1,0 +1,55 @@
+[#source-coordinate-recovery]
+== Source Coordinate Recovery
+
+Book-entry source coordinate recovery 把 parser 在 logical document 中观察到的行列位置转换为 origin source coordinate。
+
+=== Heading Raw
+
+Section heading 的 logical line 通过 line origin 映射到 origin source file 和 origin heading line。
+
+Heading raw 必须从 origin source file line table 恢复。实现不得从 logical text 直接切 heading raw。
+
+Entry file 中的 heading raw 按 entry file 原文恢复。该 raw 可以包含 include directive，因为 include directive 是 entry file 的原始文本。
+
+Included file 中的 heading raw 按 included file 原文恢复。
+
+=== Xref Occurrence
+
+Inline scanner 在 logical line table 中发现 xref occurrence。
+
+Occurrence 的 logical line 和 logical column 通过 line origin 转换为 origin relativePath、sourceLine 和 column。
+
+Xref sourceSpan 的 relativePath 必须表示 xref 出现的原始 source file。
+
+=== Payload-like Block
+
+Listing 或其它 block 的 logical span 可以映射为 origin span。正常 block 的所有 logical lines 应来自同一个 origin source file。
+
+若一个 block span 映射到多个 origin source files，source coordinate recovery 不得输出假 raw。该情况进入 diagnostic。
+
+=== Source Scope 查找
+
+任何通过 line containment 查找 source scope 的算法都必须同时比较 relativePath。
+
+错误规则：
+
+[source,text]
+----
+candidate.startLine <= line <= candidate.endLine
+----
+
+正确规则：
+
+[source,text]
+----
+candidate.relativePath == occurrence.relativePath
+candidate.startLine <= occurrence.line <= candidate.endLine
+----
+
+该规则保护不同 source files 中相同行号的 section 不被错误匹配。
+
+=== 下游坐标
+
+`AbundantDocument` 中的每个可回源事实必须携带 origin source coordinate，或保持 source coordinate 缺失并产生 diagnostic。
+
+下游投影器不得用 entry file path 替代缺失的 resource coordinate。

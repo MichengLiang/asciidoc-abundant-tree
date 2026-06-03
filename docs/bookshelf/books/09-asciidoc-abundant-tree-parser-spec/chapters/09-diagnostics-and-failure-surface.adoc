@@ -1,0 +1,42 @@
+[#diagnostics-and-failure-surface]
+== Diagnostics 与 Failure Surface
+
+解析器区分工具错误、解析诊断和下游 lint。
+
+=== 工具错误
+
+工具错误阻止 `AbundantDocument` 成立。
+
+工具错误包括输入文件不存在、文件读取失败、Asciidoctor load 失败、内部不变量失败和 serializer 收到未知不可处理对象。
+
+工具错误通过错误出口表达。CLI 使用非零 exit code。Library API 抛出错误或返回明确失败对象。
+
+=== ToolDiagnostic
+
+`ToolDiagnostic` 保存解析器在恢复 source surface 时发现的可报告问题。
+
+[source,typescript]
+----
+export type ToolDiagnostic = {
+  level: "info" | "warning" | "error";
+  code: string;
+  message: string;
+  source?: SourceSpan;
+};
+----
+
+Tool diagnostic 不作为 document child。它不参与 section tree，不替代 source node，也不表示文档 lint 结论。
+
+=== Source Recovery Diagnostic
+
+Source recovery diagnostic 描述 official block 与 source surface 之间的恢复缺口。
+
+示例包括 missing official source location、external source location、delimiter not found 和 unknown official block context。
+
+出现恢复缺口时，解析器不得输出伪造精确坐标。可恢复的结构事实可以保留；不可靠的 source layer 字段必须缺失或附带 diagnostic。
+
+=== 非职责诊断
+
+引用风格建议、业务 schema 错误、payload 内部字段错误、跨文档 target 是否存在，都不是解析器诊断。
+
+这些判断属于下游 lint、业务 validator 或投影消费者。

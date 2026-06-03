@@ -1,0 +1,42 @@
+[#diagnostics]
+== Diagnostics
+
+Book-entry diagnostics 描述 logical document 构造和 origin recovery 中的失败面。
+
+=== 构造错误
+
+以下情况阻止 logical document 成立：
+
+* Entry file 不存在。
+* Include target 不存在。
+* Include path 越出允许边界。
+* Include graph 出现循环。
+* Include directive 使用 unsupported attrlist。
+* Logical line count 与 line origin count 不一致。
+* Line origin 指向 source file table 中不存在的 file。
+
+这些错误不得被输出为成功 `AbundantDocument`。
+
+=== Recovery Diagnostic
+
+以下情况可以进入 recovery diagnostic：
+
+* Official source line 无法映射到 line origin。
+* Block span 映射到多个 origin source files。
+* Origin file line table 无法恢复 raw。
+* Parser core 提供的 source interval 与 origin map 不一致。
+
+Recovery diagnostic 必须阻止假精确坐标输出。无法可靠恢复的 source coordinate 应保持缺失。
+
+=== 诊断表面
+
+Diagnostic 必须包含 code、level、message 和可用 source coordinate。
+
+Diagnostic message 应描述对象事实，不写实现者过程。示例：
+
+[source,text]
+----
+include.unsupported-attrlist: include directive uses unsupported attrlist 'tag=main'.
+----
+
+该消息说明失败对象和失败原因。它不写“暂时不支持”或“以后实现”。

@@ -1,0 +1,68 @@
+[#contract-tests]
+== Contract Tests
+
+Book-entry 完成必须由 contract tests 证明。测试对象是 logical document、line origin 和 origin-aware `AbundantDocument`。
+
+=== Logical Source Builder Tests
+
+测试必须覆盖：
+
+* Simple include 展开。
+* Nested include 展开。
+* Shared attributes include。
+* Escaped include 不展开。
+* Missing include 失败。
+* Circular include 失败。
+* Unsupported attrlist 失败。
+* Relative path 按包含 directive 的文件目录解析。
+* Logical line count 与 line origin count 一致。
+
+=== Parser Integration Tests
+
+测试 fixture 应包含 entry file、两个 chapter files 和一个 nested include file。
+
+断言：
+
+* Included heading 出现在 `AbundantDocument` section tree 中。
+* Entry file heading 的 source relativePath 指向 entry file。
+* Chapter heading 的 source relativePath 指向 chapter file。
+* Nested include heading 的 source relativePath 指向 nested file。
+* Heading raw 来自 origin file。
+* Xref occurrence 的 sourceSpan 指向 xref 所在 origin file。
+* Source scope 查找不跨 relativePath 匹配。
+
+=== Downstream Coordinate Tests
+
+下游 projection 测试只验证它消费到的 source coordinate 正确。测试不得要求 downstream projector 读取 line origin table。
+
+断言：
+
+* Book-entry 输出不包含 `build/adoc` 聚合路径。
+* 同一 logical document 中不同 resources 可以有不同 relativePath。
+* Payload-like block 的 raw 和 source span 来自 origin file。
+
+=== Regression Tests
+
+single-file mode 必须保持不变。
+
+断言：
+
+* Single-file parser 不展开 include。
+* Single-file external source location 仍产生 diagnostic。
+* Existing parser tests 和 serializer tests 不回退。
+
+=== 完成声明
+
+完成声明必须列出实际运行命令和结果。
+
+[source,bash]
+----
+pnpm test
+pnpm typecheck
+pnpm build
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm --dir docs/bookshelf run build
+----
+
+未运行的命令不能写成通过。
