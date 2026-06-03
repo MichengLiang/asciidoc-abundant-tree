@@ -1,0 +1,188 @@
+[#batch-02-review-package]
+== Batch 02 阶段审核包
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 02`
+批次名称:: `Logical Source Builder`
+提交 hash:: `5a3a1f4e005e4a4fc228f7f003f3fd983de33308`
+执行者:: `subagent`
+审核者:: `主线程/Principal coordinator`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/book-entry/diagnostics.ts
+src/book-entry/include-resolution.ts
+src/book-entry/logical-source-builder.ts
+src/book-entry/model.ts
+src/book-entry/path-boundary.ts
+test/book-entry/book-entry-negative.test.ts
+test/book-entry/book-entry.acceptance.test.ts
+test/book-entry/include-resolution.test.ts
+test/book-entry/logical-source-builder.test.ts
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-02-review-package.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 上下文闭包阅读记录
+
+[source,text]
+----
+- 目标规格闭包：
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/01-object-boundary.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/03-entry-and-source-set.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/04-include-resolution.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/05-logical-document.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/06-line-origin.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/09-diagnostics.adoc
+- 上游 parser 契约闭包：
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/04-abundant-document.adoc
+- 当前代码闭包：
+  src/source-lines.ts
+- 测试闭包：
+  test/book-entry/fixtures/**
+  test/book-entry/book-entry-negative.test.ts
+  test/book-entry/book-entry.acceptance.test.ts
+- 治理闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/05-batch-02-logical-source-builder.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/01-execution-contract.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/review-package-template.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- 建立 src/book-entry 模块边界：model、diagnostics、path-boundary、include-resolution、logical-source-builder。
+- LogicalSource 表达 entryPath、documentRoot、logicalText、lineOrigins 和 sourceFiles。
+- LineOrigin 记录 logicalLine、absolutePath、relativePath、sourceLine。
+- SourceFileRecord 记录 absolutePath、relativePath、text 和缓存的 LineTable。
+- book-entry construction error codes 覆盖 include.missing-target、include.outside-document-root、include.cycle、include.unsupported-attrlist、logical-line-origin.count-mismatch、line-origin.source-file-missing、line-origin.source-line-out-of-range。
+- builder 从 entry file 出发展开未转义 full-file include directive。
+- escaped include 作为普通 source line 保留。
+- include target 按 containing directive 所在文件目录解析。
+- nested include 和 recursive include 展开进入 logical text。
+- include cycle 使用 include stack 检测并返回 include.cycle。
+- documentRoot boundary check 在读取 include target 文件前执行。
+- source file table 以 absolutePath 去重，同一 absolutePath 在一次构造中最多读取一次。
+- logical line origin 与 logical line 保持 1-based 连续顺序，支持 O(1) logical line 下标查找。
+- assertLogicalDocumentInvariants 覆盖 logical line count、source file table reference、sourceLine range。
+- book-entry acceptance 中 logical source builder 相关 expected-fail 已移除，parser core memory entry 相关 expected-fail 保留到 Batch 03+。
+- book-entry negative test 中 logical-line-origin.count-mismatch 构造层 expected-fail 已移除，parser public dispatch negative contract expected-fail 保留到 Batch 07。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- parser core memory entry：归属 Batch 03。
+- origin-aware source recovery：归属 Batch 04。
+- public API runtime dispatch 和 CLI book-entry mode：归属 Batch 05。
+- downstream coordinate regression：归属 Batch 06。
+- parser public dispatch diagnostics 和 negative contracts：归属 Batch 07。
+- expected-fail 迁移标记全部删除：归属 Batch 08。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts test/book-entry/book-entry-negative.test.ts
+pnpm typecheck
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm exec biome check --vcs-use-ignore-file=false src/book-entry test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts test/book-entry/book-entry-negative.test.ts test/book-entry/book-entry.acceptance.test.ts
+rg '@asciidoctor|asciidoctor-adapter|rdf12|build/adoc|writeFile' src/book-entry test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts
+git diff -- src/parser.ts src/asciidoctor-adapter.ts src/rdf12-projection src/model.ts src/serializers.ts src/index.ts README.md CHANGELOG.md
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts test/book-entry/book-entry-negative.test.ts:
+  PASS
+  Test Files 43 passed (43)
+  Tests 283 passed | 12 expected fail (295)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm test:coverage:
+  FAIL
+  Test Files 43 passed (43)
+  Tests 283 passed | 12 expected fail (295)
+  Failure reason: global branch coverage 88.56% is below configured threshold 90%.
+  Batch 02 judgment: command was run and true baseline is recorded; src/book-entry/** coverage is above the required 90% threshold.
+
+pnpm --dir docs/bookshelf test:
+  PASS
+  node --test reported 11 pass, 0 fail
+
+pnpm exec biome check --vcs-use-ignore-file=false src/book-entry test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts test/book-entry/book-entry-negative.test.ts test/book-entry/book-entry.acceptance.test.ts:
+  PASS
+  Checked 9 files. No fixes applied.
+
+rg '@asciidoctor|asciidoctor-adapter|rdf12|build/adoc|writeFile' src/book-entry test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts:
+  PASS
+  No matches.
+
+git diff -- src/parser.ts src/asciidoctor-adapter.ts src/rdf12-projection src/model.ts src/serializers.ts src/index.ts README.md CHANGELOG.md:
+  PASS
+  No diff.
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+pnpm test:coverage: FAIL
+Statements: 95.36% (1563/1639)
+Branches: 88.56% (1022/1154)
+Functions: 97.45% (383/393)
+Lines: 95.28% (1536/1612)
+src/book-entry/** Statements: 100% (78/78)
+src/book-entry/** Branches: 100% (38/38)
+src/book-entry/** Functions: 100% (17/17)
+src/book-entry/** Lines: 100% (78/78)
+----
+
+=== 规约检查清单
+
+* 本批目标对象来自 10 号书或 9 号书，不来自当前实现惯性。
+* 本批没有重新定义 10 号书目标对象。
+* 本批没有破坏 single-file mode。
+* 本批没有把 line origin table 变成下游主契约。
+* 本批没有输出假 source coordinate。
+* 本批测试覆盖了正向事实。
+* 本批测试覆盖了必要负向事实。
+* 本批未处理对象有去向。
+
+=== 工程质量检查清单
+
+* 本批没有修改批次边界外文件。
+* 本批没有修改 `src/parser.ts`、`src/asciidoctor-adapter.ts`、`src/rdf12-projection/**`、`src/model.ts`、`src/serializers.ts`、`src/index.ts`、`README.md` 或 `CHANGELOG.md`。
+* 本批没有引入全局打回条件；全局 branch coverage 阈值失败为已记录基线，`src/book-entry/**` 覆盖率满足本批要求。
+* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批新增代码有对应测试。
+* 本批性能相关结构没有无界扫描高频路径；logical line lookup 使用 lineOrigins 下标。
+* 本批新增模块职责清晰。
+* 本批没有通过 `any` 或类型逃逸掩盖公共模型冲突。
+* 本批注释只记录测试 fixture 中的行号不变量和迁移 expected-fail 移除批次。
+* 本批没有 import 或调用 Asciidoctor。
+* 本批没有写入 `build/adoc`。
+* 本批越界 include target 在 readFile 调用前被 documentRoot boundary check 阻止，并由 readFile spy 测试覆盖。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: Batch 02 实现提交建立了 logical source construction 模块和对应正负向测试；全局 coverage 命令已运行并记录真实阈值失败，`src/book-entry/**` 覆盖率满足本批验收阈值。
+后续动作:: 主线程/Principal coordinator 审核 Batch 02；审核通过前不进入 Batch 03。

@@ -21,9 +21,9 @@
 
 |Batch 02
 |Logical Source Builder
-|未开始
-|
-|
+|待审核
+|`5a3a1f4e005e4a4fc228f7f003f3fd983de33308`
+|xref:batch-02-review-package[batch-02-review-package.adoc]
 
 |Batch 03
 |Parser Core 内存入口
