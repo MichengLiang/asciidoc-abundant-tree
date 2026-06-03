@@ -46,7 +46,7 @@
 |Batch 06
 |Downstream Coordinate Regression
 |待审核
-|`38ec5158eb99b631f23fc4efbc6d0d266e2faaf3`
+|`38ec515397da4c49fc024e6b0eb48bf4676ef7f4`
 |xref:batch-06-review-package[batch-06-review-package.adoc]
 
 |Batch 07

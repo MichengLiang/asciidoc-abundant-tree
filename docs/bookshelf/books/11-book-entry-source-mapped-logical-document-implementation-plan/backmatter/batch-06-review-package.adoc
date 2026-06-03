@@ -6,7 +6,7 @@
 [horizontal]
 批次编号:: `Batch 06`
 批次名称:: `Downstream Coordinate Regression`
-提交 hash:: `38ec5158eb99b631f23fc4efbc6d0d266e2faaf3`
+提交 hash:: `38ec515397da4c49fc024e6b0eb48bf4676ef7f4`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
 审核状态:: `待审核`
@@ -198,5 +198,5 @@ src/rdf12-projection/xref-projector.ts: Statements 91.00%, Branches 87.80%, Func
 
 [horizontal]
 结论:: `待审核`
-理由:: Batch 06 implementation commit `38ec5158eb99b631f23fc4efbc6d0d266e2faaf3` projects RDF12 resource-level coordinates from public source layers while preserving entry-file provenance; required tests, typecheck, coverage, docs tests, Biome, forbidden diff, and focused no-line-origin/no-aggregate checks have been run.
+理由:: Batch 06 implementation commit `38ec515397da4c49fc024e6b0eb48bf4676ef7f4` projects RDF12 resource-level coordinates from public source layers while preserving entry-file provenance; required tests, typecheck, coverage, docs tests, Biome, forbidden diff, and focused no-line-origin/no-aggregate checks have been run.
 后续动作:: 主线程/Principal coordinator 审核 Batch 06；通过后进入 Batch 07。
