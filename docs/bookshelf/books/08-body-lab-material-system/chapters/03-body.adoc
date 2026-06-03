@@ -1,0 +1,46 @@
+[#body-object-conditions]
+== Body Object 的成立条件
+
+body object 是进入 `100_body` 的承重对象。一个 body object 必须具备当前有效性、对象边界、依赖关系、术语稳定性和验收方式。
+
+当前有效性表示该对象描述的是项目当前承认的对象事实。对象边界表示该对象说明自己负责什么、不负责什么。依赖关系表示该对象说明哪些后继对象可以依赖它，以及它依赖哪些同区或上游 body object。术语稳定性表示该对象使用的关键术语具有明确所指。验收方式表示该对象能够说明如何判断自身被满足、被实现或被破坏。
+
+body object 可以被更新、替换或废弃，但这些动作必须通过治理过程进入。body object 不能把未关闭争议、候选方案或执行状态写成当前对象事实。
+
+[#body-object-types]
+== Body Object 的类型
+
+常见 body object 包括 specification、reference、standard、current design、protocol definition、API contract、terminology、acceptance facts 和 user-facing current documentation。
+
+Specification 定义对象规则和公共契约。Reference 提供当前可依赖的查询入口。Standard 规定跨实现或跨协作者必须遵守的规范。Current design 描述当前设计结构。Terminology 稳定术语所指。Acceptance facts 定义对象满足条件。User-facing current documentation 面向使用者表达当前公共行为。
+
+这些类型不是必备清单。一个项目是否需要某类 body object，由项目对象复杂度、消费动作和后继依赖决定。类型名称不能替代对象边界；名为 specification 的材料如果只记录未关闭提案，仍然不是 body object。
+
+[#body-language-rules]
+== Body 的语言规则
+
+`100_body` 使用对象语言。对象语言描述当前对象是什么、边界在哪里、关系如何成立、公共契约如何被依赖。
+
+body 核心定义不得叙述作者过程。设计来源、讨论路径、打回过程、迁移步骤和临时状态只有在它们本身被定义为当前对象时，才进入 body；否则留在 `200_lab` 或历史归档。
+
+body 中的例子不能替代规则。例子只作为规则的投影出现。排除语句只在阻止高成本误读时出现；排除不能替代正面定义。
+
+body 中的术语一经定义，应在同一对象范围内稳定使用。一个术语不能在当前契约、历史过程和候选方案之间滑动。
+
+[#body-internal-structure]
+== Body 的内部结构
+
+一本 body book 可以很大。part、chapter、appendix、xref 和 include 用于组织同一承重对象的不同方面。物理分书不由页数决定，而由对象职责、消费面、依赖方向和生命周期决定。
+
+同一 body book 内部可以包含对象边界、输入契约、结构模型、公共出口、验收事实、术语表和参考坐标。这些章节共同支撑同一个当前对象时，应留在同一 body。
+
+当材料服务不同当前对象，或一个材料是当前正文，另一个材料是治理过程，物理分书才成立。章节结构不能把治理对象伪装成正文对象。
+
+[#body-update]
+== Body 的更新
+
+body 可以更新。更新后的 body 应呈现当前对象语言，而不是保留变更过程作为核心定义。
+
+更新 body 的动作由 `200_lab` 治理。proposal、migration plan、review package 和 status ledger 可以记录为什么更新、如何更新、哪些提交完成更新。更新完成后，body 核心章节只表达更新后的当前事实。
+
+历史解释可以通过版本记录、归档 lab object 或专门历史材料保存。历史解释不得成为当前对象定义的必要路径。

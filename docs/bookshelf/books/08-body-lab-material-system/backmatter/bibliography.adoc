@@ -1,0 +1,9 @@
+[#bibliography]
+== 参考坐标
+
+* [[[wbs]]] Project Management Institute, _Practice Standard for Work Breakdown Structures_. Work package 用于标记有边界、有交付物、有验收的工作单元。
+* [[[cm]]] ISO/IEC/IEEE 828, _Systems and software engineering -- Configuration management_. Baseline、change control 和 traceability 用于标记可引用项目状态与受控变更。
+* [[[rfc]]] IETF, _RFC Series_. RFC 用于标记提案、规范文本、评审和归档在工程共同体中的分层传统。
+* [[[pep]]] Python Steering Council, _PEP 1 -- PEP Purpose and Guidelines_. PEP 用于标记 proposal、acceptance 和当前语言事实之间的分层关系。
+* [[[adr]]] Michael Nygard, _Documenting Architecture Decisions_. ADR 用于标记设计决策记录与当前设计之间的关系。
+* [[[git]]] Git project, _Git Documentation_. Commit、diff 和 history 用于标记变更证据层。

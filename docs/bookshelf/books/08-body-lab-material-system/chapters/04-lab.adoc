@@ -1,0 +1,71 @@
+[#lab-object-conditions]
+== Lab Object 的成立条件
+
+lab object 是进入 `200_lab` 的治理对象。一个 lab object 必须说明它治理的问题、依赖的 body 事实、当前状态、预期产物和关闭条件。
+
+治理的问题可以是开放议题、术语候选、方案比较、设计提案、实现计划、迁移计划、审核事项或状态记录。依赖的 body 事实用于限定问题范围。当前状态用于表达该 lab object 处于打开、评估、执行、待审核、打回、通过、关闭或归档中的哪一位置。
+
+lab object 不承担 body 当前存在性。它可以改变 body 的候选未来，可以记录 body 变更证据，但不能在未进入 body 前成为当前对象事实。
+
+[#lab-object-types]
+== Lab Object 的类型
+
+常见 lab object 包括 open issue、open question、term candidate、proposal、spike report、ADR、comparison、evaluation、implementation plan、migration plan、work package、review package、status ledger 和 closure record。
+
+Open issue 记录尚未关闭的问题。Term candidate 记录术语收口前的候选。Proposal 提出可进入 body 的变更。Spike report 记录探索证据。ADR 记录已接受的设计决策及其上下文。Comparison 和 evaluation 比较候选方案。Implementation plan 和 migration plan 组织受控变更。Review package 记录审核证据。Status ledger 投影过程状态。Closure record 记录治理对象的关闭结果。
+
+这些对象可以在同一个 lab book 内按 part 或 appendix 组织。它们共同服务同一治理过程时，不需要因类型不同而物理拆书。
+
+[#proposal-and-evaluation]
+== 提案与评价
+
+Proposal 是进入 body 的候选变更，不是当前 body。Proposal 必须说明它修改哪个 body object、解决哪个问题、引入什么新事实、排除什么旧事实、需要什么验收。
+
+评价材料比较 proposal 或候选方案。评价可以记录优点、缺点、风险、成本、证据和未决问题。评价没有自动进入 body 的资格。只有被接受的结论，经过受控更新，才能成为 body 当前事实。
+
+未接受的 proposal、被拒绝的 proposal 和被替代的 proposal 应保留关闭状态。它们保留历史价值，但不应继续占据当前 body。
+
+[#implementation-and-migration-plan]
+== 变更计划
+
+Implementation plan 和 migration plan 是 lab object。它们定义受控变更如何执行，不定义目标对象本身。
+
+变更计划必须说明源状态、目标 body 依据、工作包边界、文件边界、验证命令、提交规则、审核规则和打回条件。目标对象来自 body 或已接受 proposal；变更计划不能凭空发明目标对象。
+
+变更计划可以管理 body 文件、代码、测试、用户文档、配置和自身过程记录的修改。被管理的文件进入工作包边界；变更计划本身不因此成为 body。
+
+[#work-package]
+== 工作包
+
+Work package 是受控变更的工作单元。一个 work package 必须有明确目标、上游门槛、输入事实、文件边界、实施任务、测试任务、验收标准、验证命令、提交规则、审核规则和打回条件。
+
+Work package 不是时间段，也不是随手任务。它的完成必须能通过证据判断。一个工作包完成以后，应产生可追踪提交、实际命令结果和审核结论。
+
+工作包可以按 batch 命名。Batch 编号表达治理顺序或依赖关系，不表达对象本体。阶段安排不能替代对象定义。
+
+[#review-package]
+== 审核包
+
+Review package 是工作包状态转移的证据记录。它记录批次编号、提交 hash、修改文件、完成范围、未处理对象、已运行命令、命令结果、检查清单和审核结论。
+
+审核包不是进度汇报。它只记录实际发生的证据。计划运行但未运行的命令不能写成通过；失败命令必须记录失败状态、失败范围和是否属于已授权的非阻塞对象。
+
+审核包使审核者能够把书面声明、Git diff、验证命令和审核决定连接起来。
+
+[#status-ledger]
+== 状态台账
+
+Status ledger 是治理状态的投影。它记录 lab object 或 work package 的当前状态、提交 hash、审核记录和关闭位置。
+
+状态台账只记录治理事实。愿望、估计、口头进度、情绪判断和未发生动作不得进入台账核心字段。台账可以记录 `未开始`、`执行中`、`待审核`、`打回`、`通过`、`关闭` 等受控状态。
+
+状态台账服务当前协作者快速定位过程状态。它不定义项目当前对象。
+
+[#closure-record]
+== 关闭记录
+
+Closure record 记录 lab object 的结束方式。结束方式可以是接受、拒绝、替代、废弃、完成或归档。
+
+关闭记录应说明关闭对象、关闭理由、结果去向和后续入口。被接受的结果应指向进入 body 的位置或变更提交；被拒绝或废弃的对象应说明不再承担当前治理职责。
+
+关闭不是删除。关闭后的 lab object 保留追溯价值，但不继续占据当前执行入口。

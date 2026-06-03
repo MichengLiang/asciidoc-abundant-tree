@@ -21,6 +21,8 @@ package.json          # 书库构建依赖入口
 ## 当前书目
 
 - `books/06-rdf12-line-projection/`：AsciiDoc 标题切片到 RDF 1.2 标题投影图的规约。
+- `books/07-rdf12-heading-projection-implementation-plan/`：RDF 1.2 标题投影图实现计划书。
+- `books/08-body-lab-material-system/`：`100_body` 与 `200_lab` 书籍化项目材料体系设计。
 
 公开书页：
 
@@ -66,7 +68,11 @@ build/html/catalog.html
 
 ```text
 build/adoc/books/06-rdf12-line-projection.adoc
+build/adoc/books/07-rdf12-heading-projection-implementation-plan.adoc
+build/adoc/books/08-body-lab-material-system.adoc
 build/html/books/06-rdf12-line-projection/book.html
+build/html/books/07-rdf12-heading-projection-implementation-plan/book.html
+build/html/books/08-body-lab-material-system/book.html
 ```
 
 `build/adoc/` 是纯文本投影。它展开书稿 include，保留图片宏和跨书 xref 的文本语义，不复制图片资源。

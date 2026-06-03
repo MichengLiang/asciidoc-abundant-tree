@@ -1,0 +1,41 @@
+[#checklists]
+== 检查清单
+
+=== Body 检查
+
+* Body 是否定义当前对象。
+* Body 是否说明边界、依赖、公共契约和验收事实。
+* Body 是否可以被后继对象依赖。
+* Body 是否不依赖未关闭 lab object 成立。
+* Body 是否没有过程语言污染核心定义。
+* Body 是否使用稳定术语。
+
+=== Lab 检查
+
+* Lab object 是否说明治理对象。
+* Lab object 是否引用或限定相关 body 事实。
+* Lab object 是否说明当前状态。
+* Lab object 是否有关闭条件。
+* Proposal 是否在被接受前保持候选身份。
+* Plan 是否没有重新定义目标对象。
+* Review package 是否记录实际证据。
+* Status ledger 是否只记录治理事实。
+
+=== 引用检查
+
+* Lab 到 body 的引用是否表达治理依赖。
+* Body 核心章节是否避免依赖 lab 才能成立。
+* Body 内部 xref 是否表达当前对象依赖。
+* Lab 内部 xref 是否表达治理关系。
+* 归档对象是否不会被误认为当前事实。
+
+=== 变更检查
+
+* 变更是否有源基线。
+* 变更是否有目标 body 依据。
+* Work package 是否有文件边界。
+* Work package 是否有验证命令。
+* Review package 是否有提交 hash。
+* 失败命令是否被如实记录。
+* 未处理对象是否有去向。
+* 完成后是否有关闭记录。

@@ -1,0 +1,81 @@
+= `100_body` 与 `200_lab`：书籍化项目材料体系设计
+弥澄亮 <MichengLiang>
+v0.1, 2026-06
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:experimental:
+:idprefix:
+:idseparator: -
+
+include::../../shared/attributes.adoc[]
+
+[preface]
+include::frontmatter/preface.adoc[]
+
+= 第一部：对象边界
+
+[partintro]
+这一部定义项目材料体系的对象、职责分化和误置成本。
+
+include::chapters/01-object-boundary.adoc[]
+
+= 第二部：材料分区
+
+[partintro]
+这一部定义 `100_body`、`200_lab`、依赖方向、消费面和生命周期。
+
+include::chapters/02-material-zones.adoc[]
+
+= 第三部：`100_body`
+
+[partintro]
+这一部定义 body object 的成立条件、对象类型、语言规则、内部结构和更新规则。
+
+include::chapters/03-body.adoc[]
+
+= 第四部：`200_lab`
+
+[partintro]
+这一部定义 lab object 的成立条件、对象类型、提案、变更计划、工作包、审核包、状态台账和关闭记录。
+
+include::chapters/04-lab.adoc[]
+
+= 第五部：从 Lab 到 Body 的进入规则
+
+[partintro]
+这一部定义 lab 结果进入 body 的条件、动作、变更控制、打回、回退和迁移清理。
+
+include::chapters/05-entry-rules.adoc[]
+
+= 第六部：引用、版本与归档
+
+[partintro]
+这一部定义交叉引用方向、物理分书规则、版本、归档和 Git 证据关系。
+
+include::chapters/06-reference-version-archive.adoc[]
+
+= 第七部：术语与公共坐标
+
+[partintro]
+这一部定义术语职责、本地术语、公共坐标和术语漂移防止规则。
+
+include::chapters/07-terminology.adoc[]
+
+= 第八部：实例评判标准
+
+[partintro]
+这一部定义评判实例 body、lab、引用和变更质量的检查标准。
+
+include::chapters/08-evaluation.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]
+
+[appendix]
+include::backmatter/checklists.adoc[]
+
+[bibliography]
+include::backmatter/bibliography.adoc[]
