@@ -24,27 +24,61 @@ type SourceScopeCandidate = {
 	readonly section: SectionNode;
 };
 
+export type SectionSourceScope = {
+	readonly relativePath: string;
+	readonly startLine: number;
+	readonly endLine: number;
+};
+
+const sectionSourceScopeBySection = new WeakMap<
+	SectionNode,
+	SectionSourceScope
+>();
+
+export function registerSectionSourceScope(
+	section: SectionNode,
+	scope: SectionSourceScope,
+): void {
+	sectionSourceScopeBySection.set(section, scope);
+}
+
 export function buildSourceScopeIndex(
 	sections: readonly SectionNode[],
 ): SourceScopeIndex {
 	return {
 		candidates: sections.flatMap((section) => {
-			const relativePath = section.source?.relativePath;
-			const startLine = section.source?.span?.startLine ?? section.source?.line;
-			const endLine =
-				section.source?.span?.endLine ?? section.source?.line ?? startLine;
-			if (!relativePath || startLine === undefined || endLine === undefined) {
+			const scope = sourceScopeForSection(section);
+			if (!scope) {
 				return [];
 			}
 			return [
 				{
-					relativePath,
-					startLine,
-					endLine,
+					...scope,
 					section,
 				},
 			];
 		}),
+	};
+}
+
+function sourceScopeForSection(
+	section: SectionNode,
+): SectionSourceScope | undefined {
+	const registered = sectionSourceScopeBySection.get(section);
+	if (registered) {
+		return registered;
+	}
+	const relativePath = section.source?.relativePath;
+	const startLine = section.source?.span?.startLine ?? section.source?.line;
+	const endLine =
+		section.source?.span?.endLine ?? section.source?.line ?? startLine;
+	if (!relativePath || startLine === undefined || endLine === undefined) {
+		return undefined;
+	}
+	return {
+		relativePath,
+		startLine,
+		endLine,
 	};
 }
 

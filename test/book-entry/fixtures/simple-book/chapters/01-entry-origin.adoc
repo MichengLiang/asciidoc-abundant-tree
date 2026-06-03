@@ -15,3 +15,5 @@ include::nested/section.adoc[]
 ----
 console.log("chapter");
 ----
+
+Late section text after listing keeps xref:target-origin[Late Target] and anchor:late-chapter-anchor[Late Chapter Anchor] in the same source scope.

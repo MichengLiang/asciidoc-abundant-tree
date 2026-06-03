@@ -9,6 +9,7 @@ import {
 import {
 	assignContainingSectionIdsFromSourceScope,
 	buildSourceScopeIndex,
+	registerSectionSourceScope,
 	type SourceScopeIndex,
 } from "./book-entry/source-scope-index";
 import {
@@ -313,11 +314,55 @@ function buildSectionSurfaces(
 			}),
 			children: [],
 		}) as SectionNode;
+		if (logicalSource) {
+			const sourceScope = sectionSourceScopeFromLogicalInterval(
+				logicalSource,
+				interval.span,
+				sourceLine,
+			);
+			if (sourceScope) {
+				registerSectionSourceScope(section, sourceScope);
+			}
+		}
 		sections.push(section);
 		sectionByBlock.set(surface.block, section);
 	}
 
 	return { sections, sectionByBlock };
+}
+
+function sectionSourceScopeFromLogicalInterval(
+	logicalSource: NonNullable<ReturnType<typeof logicalSourceForLineTable>>,
+	span: SourceInterval["span"],
+	headingLogicalLine: number,
+):
+	| {
+			readonly relativePath: string;
+			readonly startLine: number;
+			readonly endLine: number;
+	  }
+	| undefined {
+	const headingOrigin = logicalSource.lineOrigins[headingLogicalLine - 1];
+	if (!headingOrigin) {
+		return undefined;
+	}
+	let endLine = headingOrigin.sourceLine;
+	for (
+		let logicalLine = span.startLine;
+		logicalLine <= span.endLine;
+		logicalLine += 1
+	) {
+		const origin = logicalSource.lineOrigins[logicalLine - 1];
+		if (!origin || origin.relativePath !== headingOrigin.relativePath) {
+			continue;
+		}
+		endLine = Math.max(endLine, origin.sourceLine);
+	}
+	return {
+		relativePath: headingOrigin.relativePath,
+		startLine: headingOrigin.sourceLine,
+		endLine,
+	};
 }
 
 function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {

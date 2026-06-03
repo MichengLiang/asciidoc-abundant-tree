@@ -3,6 +3,7 @@ import {
 	assignContainingSectionIdsFromSourceScope,
 	buildSourceScopeIndex,
 	lookupContainingSection,
+	registerSectionSourceScope,
 } from "../../src/book-entry/source-scope-index";
 import type {
 	AnchorOccurrenceNode,
@@ -132,6 +133,31 @@ describe("book-entry source scope index", () => {
 
 		expect(xref.containingSectionId).toBe("xref-origin");
 		expect(anchor.containingSectionId).toBe("xref-origin");
+	});
+
+	it("uses registered source scope instead of the public heading raw span", () => {
+		const xrefSection = section("xref-origin", "chapter-a.adoc", 3, 11);
+		registerSectionSourceScope(xrefSection, {
+			relativePath: "chapter-a.adoc",
+			startLine: 3,
+			endLine: 19,
+		});
+		const index = buildSourceScopeIndex([xrefSection]);
+
+		expect(
+			lookupContainingSection(index, {
+				relativePath: "chapter-a.adoc",
+				line: 19,
+			}),
+		).toBe(xrefSection);
+		expect(index.candidates[0]).toEqual(
+			expect.objectContaining({
+				relativePath: "chapter-a.adoc",
+				startLine: 3,
+				endLine: 19,
+				section: xrefSection,
+			}),
+		);
 	});
 });
 

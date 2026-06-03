@@ -69,6 +69,7 @@ include::nested/section.adoc[]
 `);
 		expect(chapterSection.source?.raw).not.toContain("=== Nested Origin");
 		expect(chapterSection.source?.raw).not.toContain("[#chapter-listing]");
+		expect(chapterSection.source?.raw).not.toContain("Late section text");
 		expect(nestedSection.source?.raw).toContain("=== Nested Origin");
 		expect(targetSection.source?.raw).toBe(`[#target-origin]
 == Target Origin
@@ -96,6 +97,19 @@ This chapter owns the target section.
 		expect(target.source?.relativePath).toBe(targetRelativePath);
 		expect(target.sourceSpan?.start.line).toBe(3);
 		expect(paragraph.source?.relativePath).toBe(chapterRelativePath);
+	});
+
+	it("keeps same-origin late occurrences in section scope after block boundaries", () => {
+		const document = parseBookEntryFixture();
+		const lateXref = xrefByLabel(document, "Late Target");
+		const lateAnchor = anchorById(document, "late-chapter-anchor");
+
+		expect(lateXref.source?.relativePath).toBe(chapterRelativePath);
+		expect(lateXref.sourceSpan?.start.line).toBe(19);
+		expect(lateXref.containingSectionId).toBe("xref-origin");
+		expect(lateAnchor.source?.relativePath).toBe(chapterRelativePath);
+		expect(lateAnchor.sourceSpan?.start.line).toBe(19);
+		expect(lateAnchor.containingSectionId).toBe("xref-origin");
 	});
 
 	it("recovers listing raw, contentSpan, and source span from the origin file", () => {
@@ -546,6 +560,19 @@ function onlyXref(document: AbundantDocument): XrefOccurrenceNode {
 	const [xref] = document.xrefOccurrences;
 	if (!xref) {
 		throw new Error("Missing xref occurrence");
+	}
+	return xref;
+}
+
+function xrefByLabel(
+	document: AbundantDocument,
+	label: string,
+): XrefOccurrenceNode {
+	const xref = document.xrefOccurrences.find(
+		(candidate) => candidate.label === label,
+	);
+	if (!xref) {
+		throw new Error(`Missing xref occurrence: ${label}`);
 	}
 	return xref;
 }
