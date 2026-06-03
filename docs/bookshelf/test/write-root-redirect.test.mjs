@@ -1,29 +1,57 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { test } from "node:test";
 
 import {
-	rootRedirectHtml,
-	writeRootRedirect,
+	bookshelfHomeHtml,
+	writeBookshelfHome,
 } from "../scripts/write-root-redirect.mjs";
 
-test("rootRedirectHtml points the site root at the configured book", () => {
-	const html = rootRedirectHtml("books/current/book.html");
+test("bookshelfHomeHtml lays out the catalog and book entries", () => {
+	const html = bookshelfHomeHtml([
+		{
+			id: "alpha-book",
+			title: "Alpha Book",
+			href: "books/alpha-book/book.html",
+		},
+		{
+			id: "beta-book",
+			title: "Beta & Book",
+			href: "books/beta-book/book.html",
+		},
+	]);
 
-	assert.match(html, /url=books\/current\/book\.html/);
-	assert.match(html, /href="books\/current\/book\.html"/);
+	assert.doesNotMatch(html, /http-equiv="refresh"/);
+	assert.match(html, /href="catalog\.html"/);
+	assert.match(html, /href="books\/alpha-book\/book\.html"/);
+	assert.match(html, />Alpha Book</);
+	assert.match(html, /href="books\/beta-book\/book\.html"/);
+	assert.match(html, />Beta &amp; Book</);
 });
 
-test("writeRootRedirect writes index.html under the output root", async () => {
+test("writeBookshelfHome writes index.html from the workspace book structure", async () => {
 	const root = path.resolve(
 		"tmp",
 		"test-fixtures",
-		`root-redirect-${randomUUID()}`,
+		`bookshelf-home-${randomUUID()}`,
 	);
-	await writeRootRedirect(root, "books/current/book.html");
+	const outputRoot = path.join(root, "build", "html");
+	await mkdir(path.join(root, "books", "alpha-book"), { recursive: true });
+	await mkdir(path.join(root, "books", "beta-book"), { recursive: true });
+	await writeFile(
+		path.join(root, "books", "alpha-book", "book.adoc"),
+		"= Alpha\n",
+	);
+	await writeFile(
+		path.join(root, "books", "beta-book", "book.adoc"),
+		"= Beta\n",
+	);
 
-	const html = await readFile(path.join(root, "index.html"), "utf8");
-	assert.match(html, /books\/current\/book\.html/);
+	await writeBookshelfHome(outputRoot, root);
+
+	const html = await readFile(path.join(outputRoot, "index.html"), "utf8");
+	assert.match(html, /books\/alpha-book\/book\.html/);
+	assert.match(html, /books\/beta-book\/book\.html/);
 });
