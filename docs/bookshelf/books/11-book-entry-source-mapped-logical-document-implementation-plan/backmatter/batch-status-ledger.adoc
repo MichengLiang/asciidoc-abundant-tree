@@ -45,9 +45,9 @@
 
 |Batch 06
 |Downstream Coordinate Regression
-|执行中
-|
-|
+|待审核
+|`38ec5158eb99b631f23fc4efbc6d0d266e2faaf3`
+|xref:batch-06-review-package[batch-06-review-package.adoc]
 
 |Batch 07
 |Diagnostics 与 Negative Contracts

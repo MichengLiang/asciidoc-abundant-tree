@@ -1,0 +1,202 @@
+[#batch-06-review-package]
+== Batch 06 阶段审核包
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 06`
+批次名称:: `Downstream Coordinate Regression`
+提交 hash:: `38ec5158eb99b631f23fc4efbc6d0d266e2faaf3`
+执行者:: `subagent`
+审核者:: `主线程/Principal coordinator`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/rdf12-projection/payload-projector.ts
+src/rdf12-projection/source-location.ts
+src/rdf12-projection/structure-projector.ts
+src/rdf12-projection/xref-projector.ts
+test/rdf12-projection/book-entry-coordinate.test.ts
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-06-review-package.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 上下文闭包阅读记录
+
+[source,text]
+----
+- 目标规格闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/09-batch-06-downstream-coordinate-regression.adoc
+- 上游 parser/public API 契约闭包：
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/10-cli-and-library-api.adoc
+- 目标 book-entry 契约闭包：
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/02-consumer-actions.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/08-source-coordinate-recovery.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/11-contract-tests.adoc
+- RDF12 上游规格闭包：
+  docs/bookshelf/books/06-rdf12-line-projection/chapters/01-projection-object.adoc
+  docs/bookshelf/books/07-rdf12-heading-projection-implementation-plan/chapters/10-batch-07-public-contract-and-final-gates.adoc
+- 当前代码闭包：
+  src/rdf12-projection/projector.ts
+  src/rdf12-projection/source-location.ts
+  src/rdf12-projection/structure-projector.ts
+  src/rdf12-projection/xref-projector.ts
+  src/rdf12-projection/payload-projector.ts
+  src/rdf12-projection/labels.ts
+  src/rdf12-projection/attributes.ts
+  src/rdf12-projection/node-index.ts
+  src/model.ts
+- 测试闭包：
+  test/rdf12-projection/structure-projector.test.ts
+  test/rdf12-projection/xref-projector.test.ts
+  test/rdf12-projection/query-contracts.test.ts
+  test/rdf12-projection/helpers/graph-matchers.ts
+  test/book-entry/book-entry.acceptance.test.ts
+  test/book-entry/source-coordinate-recovery.test.ts
+  test/book-entry/fixtures/simple-book/book.adoc
+  test/book-entry/fixtures/simple-book/chapters/01-entry-origin.adoc
+  test/book-entry/fixtures/simple-book/chapters/02-target-origin.adoc
+  test/book-entry/fixtures/simple-book/chapters/nested/section.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- RDF12 heading resources read resource-level `aat:relativePath` from document title or section `source.relativePath`, with document-level relativePath only as fallback for single-file or virtual inputs.
+- RDF12 xref edge evidence reads `aat:relativePath` from the xref occurrence source layer.
+- RDF12 payload resources read `aat:relativePath` from the listing payload source layer.
+- Projection-level source document provenance still points at the entry/source document relativePath.
+- The old document-level relativePath remains a provenance/fallback coordinate, not the sole source coordinate for book-entry resources.
+- RDF12 downstream projection consumes only the public `AbundantDocument` and RDF12 options; it does not require a line origin table parameter.
+- Book-entry RDF12 coordinate tests cover entry, chapter, nested include, xref edge, payload, provenance, and absence of `build/adoc` aggregate paths.
+- Existing structure, xref, and query-contract tests remain passing as graph-semantics guard for heading projection object behavior.
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- Diagnostics 与 Negative Contracts：归属 Batch 07。
+- Final Gates and Closure：归属 Batch 08。
+- Surface attribute direct field source-coordinate resources：当前 RDF12 surface attributes project direct field triples without source-coordinate triples; no Batch 06 runtime change was required for `src/rdf12-projection/attributes.ts`.
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/rdf12-projection/book-entry-coordinate.test.ts
+pnpm test -- test/rdf12-projection/book-entry-coordinate.test.ts test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/query-contracts.test.ts test/book-entry/book-entry.acceptance.test.ts
+pnpm typecheck
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm exec biome check src/rdf12-projection test/rdf12-projection test/book-entry/book-entry.acceptance.test.ts
+git diff --name-only 8cbd2221fc8f0fca58f2f790509348a565594160 -- src/book-entry src/parser.ts CHANGELOG.md README.md
+git diff --check
+rg -n 'lineOrigins|line origin|LogicalSource|sourceFiles|build/adoc|document\.sourcePath.*relativePath|relativePath: coordinate\.relativePath' src/rdf12-projection test/rdf12-projection/book-entry-coordinate.test.ts
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/rdf12-projection/book-entry-coordinate.test.ts:
+  RED before implementation: FAIL
+  Failed expectations showed heading and xref edge resource relativePath still used document-level relativePath.
+
+pnpm test -- test/rdf12-projection/book-entry-coordinate.test.ts:
+  PASS after implementation
+  Test Files 47 passed (47)
+  Tests 342 passed | 5 expected fail (347)
+
+pnpm test -- test/rdf12-projection/book-entry-coordinate.test.ts test/rdf12-projection/structure-projector.test.ts test/rdf12-projection/xref-projector.test.ts test/rdf12-projection/query-contracts.test.ts test/book-entry/book-entry.acceptance.test.ts:
+  PASS
+  Test Files 47 passed (47)
+  Tests 342 passed | 5 expected fail (347)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm test:coverage:
+  PASS
+  Test Files 47 passed (47)
+  Tests 342 passed | 5 expected fail (347)
+
+pnpm --dir docs/bookshelf test:
+  PASS
+  node --test reported 11 pass, 0 fail
+
+pnpm exec biome check src/rdf12-projection test/rdf12-projection test/book-entry/book-entry.acceptance.test.ts:
+  PASS
+  Checked 55 files. No fixes applied.
+
+git diff --name-only 8cbd2221fc8f0fca58f2f790509348a565594160 -- src/book-entry src/parser.ts CHANGELOG.md README.md:
+  PASS
+  No output.
+
+git diff --check:
+  PASS
+  No whitespace errors.
+
+rg -n 'lineOrigins|line origin|LogicalSource|sourceFiles|build/adoc|document\.sourcePath.*relativePath|relativePath: coordinate\.relativePath' src/rdf12-projection test/rdf12-projection/book-entry-coordinate.test.ts:
+  PASS
+  Matches only appear in the new tests for no-line-origin-table and no-build/adoc assertions, plus `projector.ts` passing document relativePath as provenance/fallback input to subprojectors. No RDF12 projector reads line origin tables.
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+pnpm test:coverage: PASS
+Statements: 96.07% (1811/1885)
+Branches: 90.05% (1214/1348)
+Functions: 98.15% (426/434)
+Lines: 96.01% (1781/1855)
+
+src/rdf12-projection/**:
+Statements: 95.00%
+Branches: 86.60%
+Functions: 96.77%
+Lines: 94.94%
+
+Changed RDF12 files from coverage table:
+src/rdf12-projection/payload-projector.ts: Statements 98.91%, Branches 93.75%, Functions 100%, Lines 98.87%
+src/rdf12-projection/source-location.ts: covered through structure/xref/payload coordinate tests; per-file row is folded into the rdf12-projection table in captured output.
+src/rdf12-projection/structure-projector.ts: Statements 97.67%, Branches 90.47%, Functions 100%, Lines 97.64%
+src/rdf12-projection/xref-projector.ts: Statements 91.00%, Branches 87.80%, Functions 89.47%, Lines 91.00%
+----
+
+=== 规约检查清单
+
+* 本批目标对象来自 10 号书和 RDF12 projection 规格，不来自当前实现惯性。
+* 本批没有重新定义 10 号书目标对象。
+* 本批没有破坏 single-file mode；existing structure/xref/query-contract tests 继续通过。
+* 本批没有把 line origin table 变成下游主契约；RDF12 tests use `rdf12(document, options)` only.
+* 本批没有输出假 source coordinate；resource relativePath comes from each public source layer or single-file fallback.
+* 本批测试覆盖了正向事实：entry/chapter/nested heading relativePath、xref occurrence relativePath、payload relativePath、entry provenance、no `build/adoc` path、no line origin table API.
+* 本批测试覆盖了必要负向事实：no `build/adoc` aggregate path emitted.
+* 本批未处理对象有去向。
+
+=== 工程质量检查清单
+
+* 本批没有修改批次边界外文件；禁止路径 diff 为空。
+* 本批没有修改 `src/book-entry/**`、`src/parser.ts`、`CHANGELOG.md` 或 `README.md`。
+* 本批没有改变 RDF12 heading projection graph object semantics；`structure-projector.test.ts` and `query-contracts.test.ts` pass unchanged and continue to check heading type, identity, labels, structure edges, raw, and query contracts.
+* 本批保留 document-level provenance coordinate as entry/source document path.
+* 本批把 document-level relativePath isolated as projector fallback/provenance input; source triple writers use resource source layers.
+* 本批新增 helper only centralizes fallback selection and does not inspect line origins or source file tables.
+* 本批新增代码有对应测试。
+* 本批没有通过 `any` 或类型逃逸掩盖公共模型冲突。
+* 本批注释没有新增无必要说明。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: Batch 06 implementation commit `38ec5158eb99b631f23fc4efbc6d0d266e2faaf3` projects RDF12 resource-level coordinates from public source layers while preserving entry-file provenance; required tests, typecheck, coverage, docs tests, Biome, forbidden diff, and focused no-line-origin/no-aggregate checks have been run.
+后续动作:: 主线程/Principal coordinator 审核 Batch 06；通过后进入 Batch 07。
