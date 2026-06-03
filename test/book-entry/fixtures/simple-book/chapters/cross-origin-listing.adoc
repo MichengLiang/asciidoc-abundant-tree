@@ -1,0 +1,2 @@
+include::cross-origin-listing-body.adoc[]
+----

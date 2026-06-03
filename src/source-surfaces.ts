@@ -1,6 +1,17 @@
 import { basename, isAbsolute, join, normalize, resolve } from "node:path";
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import {
+	logicalSourceForLineTable,
+	recoverOriginSourceLayer,
+	recoverSectionSourceLayer,
+	recoverTitleSpan,
+} from "./book-entry/origin-coordinate";
+import {
+	assignContainingSectionIdsFromSourceScope,
+	buildSourceScopeIndex,
+	type SourceScopeIndex,
+} from "./book-entry/source-scope-index";
+import {
 	assignContainingSectionIds,
 	scanInlineOccurrencesInOfficialBlocks,
 } from "./inline-occurrence-scanner";
@@ -31,6 +42,7 @@ export type SourceSurfaces = {
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
 	sectionByLine: Map<number, SectionNode>;
+	sectionScopeIndex?: SourceScopeIndex;
 	toolDiagnostics: ToolDiagnostic[];
 };
 
@@ -49,6 +61,7 @@ export function projectSourceSurfaces(options: {
 	const mainSourcePath = options.sourcePath
 		? normalize(resolve(options.sourcePath))
 		: undefined;
+	const logicalSource = logicalSourceForLineTable(options.lineTable);
 
 	for (const surface of blockSurfaces) {
 		const policy = officialBlockPolicy(surface.context);
@@ -86,6 +99,19 @@ export function projectSourceSurfaces(options: {
 			projectableBlocks.add(surface.block);
 		}
 		toolDiagnostics.push(...interval.diagnostics);
+		if (
+			logicalSource &&
+			["paragraph", "listing", "table"].includes(surface.context ?? "")
+		) {
+			const recovered = recoverOriginSourceLayer(logicalSource, interval.span, {
+				logicalSourceSpan: interval.sourceSpan,
+				raw: true,
+				diagnosticContext: `${surface.context} block`,
+			});
+			if (!recovered.ok) {
+				toolDiagnostics.push(recovered.diagnostic);
+			}
+		}
 		if (policy === "diagnostic") {
 			toolDiagnostics.push(unknownContextDiagnostic(surface, interval));
 		}
@@ -96,18 +122,33 @@ export function projectSourceSurfaces(options: {
 		intervalByBlock,
 		options.lineTable,
 		toolDiagnostics,
+		logicalSource,
 	);
-	const sectionByLine = mapSectionScope(
-		sections,
-		options.lineTable.lines.length,
-	);
+	const sectionByLine = logicalSource
+		? new Map<number, SectionNode>()
+		: mapSectionScope(sections, options.lineTable.lines.length);
 	const { xrefOccurrences, anchorOccurrences } =
 		scanInlineOccurrencesInOfficialBlocks({
 			lineTable: options.lineTable,
 			blockSurfaces,
 			intervalByBlock,
+			toolDiagnostics,
 		});
-	assignContainingSectionIds(xrefOccurrences, anchorOccurrences, sectionByLine);
+	let sectionScopeIndex: SourceScopeIndex | undefined;
+	if (logicalSource) {
+		sectionScopeIndex = buildSourceScopeIndex(sections);
+		assignContainingSectionIdsFromSourceScope(
+			xrefOccurrences,
+			anchorOccurrences,
+			sectionScopeIndex,
+		);
+	} else {
+		assignContainingSectionIds(
+			xrefOccurrences,
+			anchorOccurrences,
+			sectionByLine,
+		);
+	}
 
 	return {
 		blockSurfaces,
@@ -119,6 +160,7 @@ export function projectSourceSurfaces(options: {
 		xrefOccurrences,
 		anchorOccurrences,
 		sectionByLine,
+		...(sectionScopeIndex ? { sectionScopeIndex } : {}),
 		toolDiagnostics,
 	};
 }
@@ -185,7 +227,8 @@ function buildSectionSurfaces(
 	blockSurfaces: OfficialBlockSurface[],
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
 	lineTable: LineTable,
-	_toolDiagnostics: ToolDiagnostic[],
+	toolDiagnostics: ToolDiagnostic[],
+	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
 ): {
 	sections: SectionNode[];
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
@@ -204,6 +247,43 @@ function buildSectionSurfaces(
 		if (!interval) {
 			continue;
 		}
+		const sourceLine = surface.sourceLine;
+		if (sourceLine === undefined) {
+			continue;
+		}
+		const recoveredSource = logicalSource
+			? recoverSectionSourceLayer(
+					logicalSource,
+					sourceLine,
+					interval.span.startLine,
+					interval.titleSpan,
+				)
+			: undefined;
+		if (recoveredSource && !recoveredSource.ok) {
+			toolDiagnostics.push(recoveredSource.diagnostic);
+		}
+		const sourceLayer = recoveredSource?.ok
+			? recoveredSource.sourceLayer
+			: definedObject({
+					line: surface.sourceLine,
+					span: interval.span,
+					sourceSpan: interval.sourceSpan,
+					raw: `${sourceLines(
+						lineTable,
+						interval.span.startLine,
+						interval.span.endLine,
+					).join("\n")}\n`,
+				});
+		const sectionLine = recoveredSource?.ok
+			? recoveredSource.sourceLayer.line
+			: sourceLine;
+		const sectionSpan = recoveredSource?.ok
+			? recoveredSource.sourceLayer.span
+			: interval.span;
+		const titleSpan =
+			logicalSource && recoveredSource?.ok
+				? recoverTitleSpan(logicalSource, interval.titleSpan)
+				: interval.titleSpan;
 		const metadata = interval.metadata;
 		const ids = metadata.flatMap((entry) => entry.ids);
 		const officialId = surface.id;
@@ -218,21 +298,12 @@ function buildSectionSurfaces(
 			level: surface.level ?? 1,
 			ids: ids.length > 0 ? ids : officialId ? [officialId] : [],
 			title: surface.title ?? "",
-			line: surface.sourceLine,
-			span: interval.span,
-			titleSpan: interval.titleSpan,
+			line: sectionLine,
+			span: sectionSpan,
+			titleSpan,
 			idOrigin,
 			metadata: metadata.map((entry) => entry.node),
-			source: definedObject({
-				line: surface.sourceLine,
-				span: interval.span,
-				sourceSpan: interval.sourceSpan,
-				raw: `${sourceLines(
-					lineTable,
-					interval.span.startLine,
-					interval.span.endLine,
-				).join("\n")}\n`,
-			}),
+			source: sourceLayer,
 			asciidoctor: definedObject({
 				context: surface.context,
 				nodeName: surface.nodeName,

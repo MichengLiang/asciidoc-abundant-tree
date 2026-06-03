@@ -4,3 +4,10 @@
 == Target Origin
 
 This chapter owns the target section.
+
+[#chapter-table]
+|===
+| Column
+
+| Value
+|===

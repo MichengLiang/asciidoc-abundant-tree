@@ -20,14 +20,6 @@ const expectedChapterRelativePath = "simple-book/chapters/01-entry-origin.adoc";
 const expectedTargetRelativePath = "simple-book/chapters/02-target-origin.adoc";
 const expectedNestedRelativePath = "simple-book/chapters/nested/section.adoc";
 
-// Batch 01+ migration expected-fail registry.
-// Remove origin-aware recovery failures in Batch 04.
-// Remove public API/CLI failures in Batch 05.
-// Remove downstream coordinate failures in Batch 06.
-// Remove diagnostics and negative contract failures in Batch 07.
-// Remove this migration gate entirely in Batch 08.
-const itBookEntryContract = it.fails;
-
 describe("book-entry source-mapped logical document contract", () => {
 	it("expresses book-entry mode and origin file identity through public model fields", () => {
 		const document: AbundantDocument = {
@@ -135,52 +127,41 @@ describe("book-entry source-mapped logical document contract", () => {
 		);
 	});
 
-	itBookEntryContract(
-		"keeps heading source coordinates on the origin files that authored them",
-		() => {
-			const document = parseBookEntryFixture();
-			const entrySection = sectionByTitle(document, "Part One");
-			const chapterSection = sectionByTitle(document, "Xref Origin");
-			const nestedSection = sectionByTitle(document, "Nested Origin");
+	it("keeps heading source coordinates on the origin files that authored them", () => {
+		const document = parseBookEntryFixture();
+		const entrySection = sectionByTitle(document, "Part One");
+		const chapterSection = sectionByTitle(document, "Xref Origin");
+		const nestedSection = sectionByTitle(document, "Nested Origin");
 
-			expect(sourceRelativePath(entrySection)).toBe(expectedEntryRelativePath);
-			expect(sourceRelativePath(chapterSection)).toBe(
-				expectedChapterRelativePath,
-			);
-			expect(sourceRelativePath(nestedSection)).toBe(
-				expectedNestedRelativePath,
-			);
-		},
-	);
+		expect(sourceRelativePath(entrySection)).toBe(expectedEntryRelativePath);
+		expect(sourceRelativePath(chapterSection)).toBe(
+			expectedChapterRelativePath,
+		);
+		expect(sourceRelativePath(nestedSection)).toBe(expectedNestedRelativePath);
+	});
 
-	itBookEntryContract(
-		"recovers heading raw from the origin file instead of slicing logical text",
-		() => {
-			const document = parseBookEntryFixture();
-			const chapterSection = sectionByTitle(document, "Xref Origin");
-			const nestedSection = sectionByTitle(document, "Nested Origin");
+	it("recovers heading raw from the origin file instead of slicing logical text", () => {
+		const document = parseBookEntryFixture();
+		const chapterSection = sectionByTitle(document, "Xref Origin");
+		const nestedSection = sectionByTitle(document, "Nested Origin");
 
-			expect(chapterSection.source?.raw).toContain("== Xref Origin");
-			expect(chapterSection.source?.raw).toContain(
-				"include::nested/section.adoc[]",
-			);
-			expect(chapterSection.source?.raw).not.toContain("=== Nested Origin");
-			expect(nestedSection.source?.raw).toContain("=== Nested Origin");
-		},
-	);
+		expect(chapterSection.source?.raw).toContain("== Xref Origin");
+		expect(chapterSection.source?.raw).toContain(
+			"include::nested/section.adoc[]",
+		);
+		expect(chapterSection.source?.raw).not.toContain("=== Nested Origin");
+		expect(nestedSection.source?.raw).toContain("=== Nested Origin");
+	});
 
-	itBookEntryContract(
-		"maps xref occurrences and their targets to their own origin files",
-		() => {
-			const document = parseBookEntryFixture();
-			const xref = onlyXref(document);
-			const target = targetById(document, "target-origin");
+	it("maps xref occurrences and their targets to their own origin files", () => {
+		const document = parseBookEntryFixture();
+		const xref = onlyXref(document);
+		const target = targetById(document, "target-origin");
 
-			expect(xref.raw).toBe("xref:target-origin[Target Origin]");
-			expect(sourceRelativePath(xref)).toBe(expectedChapterRelativePath);
-			expect(sourceRelativePath(target)).toBe(expectedTargetRelativePath);
-		},
-	);
+		expect(xref.raw).toBe("xref:target-origin[Target Origin]");
+		expect(sourceRelativePath(xref)).toBe(expectedChapterRelativePath);
+		expect(sourceRelativePath(target)).toBe(expectedTargetRelativePath);
+	});
 
 	it("preserves escaped include as an ordinary source line without expansion", () => {
 		const document = parseBookEntryFixture();
@@ -193,19 +174,16 @@ describe("book-entry source-mapped logical document contract", () => {
 		expect(sectionTitles).not.toContain("Escaped Include");
 	});
 
-	itBookEntryContract(
-		"does not let same line numbers in different origin files pollute section scope",
-		() => {
-			const document = parseBookEntryFixture();
-			const xref = onlyXref(document);
-			const chapterSection = sectionByTitle(document, "Xref Origin");
-			const targetSection = sectionByTitle(document, "Target Origin");
+	it("does not let same line numbers in different origin files pollute section scope", () => {
+		const document = parseBookEntryFixture();
+		const xref = onlyXref(document);
+		const chapterSection = sectionByTitle(document, "Xref Origin");
+		const targetSection = sectionByTitle(document, "Target Origin");
 
-			expect(chapterSection.line).toBe(3);
-			expect(targetSection.line).toBe(3);
-			expect(xref.containingSectionId).toBe("xref-origin");
-		},
-	);
+		expect(chapterSection.line).toBe(4);
+		expect(targetSection.line).toBe(4);
+		expect(xref.containingSectionId).toBe("xref-origin");
+	});
 });
 
 function parseBookEntryFixture(): AbundantDocument {

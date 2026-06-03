@@ -1,10 +1,15 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
+import {
+	logicalSourceForLineTable,
+	recoverOriginPointSourceLayer,
+} from "./book-entry/origin-coordinate";
 import { parseMacroArguments } from "./macro-argument-parser";
 import type {
 	AnchorOccurrenceNode,
 	LineSpan,
 	SectionNode,
 	SourceSpan,
+	ToolDiagnostic,
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
@@ -23,6 +28,7 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 	lineTable: LineTable;
 	blockSurfaces: OfficialBlockSurface[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
+	toolDiagnostics?: ToolDiagnostic[];
 }): {
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
@@ -76,11 +82,26 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 		}
 	}
 
+	const logicalSource = logicalSourceForLineTable(options.lineTable);
+	const recoveredXrefs = logicalSource
+		? recoverInlineOrigins(
+				xrefOccurrences,
+				logicalSource,
+				options.toolDiagnostics,
+			)
+		: xrefOccurrences;
+	const recoveredAnchors = logicalSource
+		? recoverInlineOrigins(
+				anchorOccurrences,
+				logicalSource,
+				options.toolDiagnostics,
+			)
+		: anchorOccurrences;
+
 	return {
-		xrefOccurrences:
-			dedupeOccurrences(xrefOccurrences).sort(compareSourceSpans),
+		xrefOccurrences: dedupeOccurrences(recoveredXrefs).sort(compareSourceSpans),
 		anchorOccurrences:
-			dedupeOccurrences(anchorOccurrences).sort(compareSourceSpans),
+			dedupeOccurrences(recoveredAnchors).sort(compareSourceSpans),
 	};
 }
 
@@ -150,6 +171,48 @@ function makeXref(
 			sourceSpan,
 		},
 	}) as XrefOccurrenceNode;
+}
+
+function recoverInlineOrigins<
+	T extends {
+		raw: string;
+		sourceSpan?: SourceSpan;
+		source?: {
+			raw?: string;
+			line?: number;
+			sourceSpan?: SourceSpan;
+			relativePath?: string;
+		};
+	},
+>(
+	occurrences: T[],
+	logicalSource: NonNullable<ReturnType<typeof logicalSourceForLineTable>>,
+	toolDiagnostics: ToolDiagnostic[] | undefined,
+): T[] {
+	const recoveredOccurrences: T[] = [];
+	for (const occurrence of occurrences) {
+		if (!occurrence.sourceSpan) {
+			recoveredOccurrences.push(occurrence);
+			continue;
+		}
+		const recovered = recoverOriginPointSourceLayer(
+			logicalSource,
+			occurrence.sourceSpan,
+			occurrence.raw,
+		);
+		if (!recovered.ok) {
+			toolDiagnostics?.push(recovered.diagnostic);
+			recoveredOccurrences.push(occurrence);
+			continue;
+		}
+		occurrence.sourceSpan = recovered.sourceSpan;
+		occurrence.source = {
+			...occurrence.source,
+			...recovered.sourceLayer,
+		};
+		recoveredOccurrences.push(occurrence);
+	}
+	return recoveredOccurrences;
 }
 
 function parseMacroLabel(raw: string): {

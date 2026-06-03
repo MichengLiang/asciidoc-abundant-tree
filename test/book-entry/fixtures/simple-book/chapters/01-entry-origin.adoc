@@ -5,4 +5,13 @@
 
 This chapter points to xref:target-origin[Target Origin].
 
+This chapter owns anchor:chapter-anchor[Chapter Anchor] for scope recovery.
+
 include::nested/section.adoc[]
+
+[#chapter-listing]
+.Chapter Listing
+[source,js]
+----
+console.log("chapter");
+----

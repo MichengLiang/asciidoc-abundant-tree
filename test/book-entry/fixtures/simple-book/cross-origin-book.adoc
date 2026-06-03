@@ -1,0 +1,6 @@
+= Cross Origin Book
+
+== Cross Origin Section
+
+----
+include::chapters/cross-origin-listing.adoc[]

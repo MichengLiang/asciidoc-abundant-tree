@@ -3,6 +3,11 @@ import type {
 	AsciidoctorBlock,
 } from "./asciidoctor-adapter";
 import { addTarget, applyOfficialBindings } from "./binding-merge";
+import type { LogicalSource } from "./book-entry/model";
+import {
+	logicalSourceForLineTable,
+	recoverOriginSourceLayer,
+} from "./book-entry/origin-coordinate";
 import type {
 	AbundantNode,
 	AnchorOccurrenceNode,
@@ -10,6 +15,7 @@ import type {
 	ListingNode,
 	ParagraphNode,
 	SectionNode,
+	SourceLayer,
 	TableNode,
 	TargetNode,
 	TargetType,
@@ -33,6 +39,8 @@ type ProjectContext = {
 	lineTable: LineTable;
 	sections: SectionNode[];
 	sectionByLine: Map<number, SectionNode>;
+	xrefOccurrences: XrefOccurrenceNode[];
+	anchorOccurrences: AnchorOccurrenceNode[];
 	xrefsByLine: Map<number, XrefOccurrenceNode[]>;
 	anchorsByLine: Map<number, AnchorOccurrenceNode[]>;
 	usedAnchorKeys: Set<string>;
@@ -42,6 +50,7 @@ type ProjectContext = {
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	adapter: OfficialProjectionAdapter;
 	targets: TargetNode[];
+	logicalSource?: LogicalSource;
 };
 
 type OfficialProjectionAdapter = Pick<AsciidoctorAdapter, "resolveXrefBinding">;
@@ -62,11 +71,14 @@ export function projectOfficialDocument(options: {
 	adapter: OfficialProjectionAdapter;
 }): { children: AbundantNode[]; targets: TargetNode[] } {
 	const targets: TargetNode[] = [];
-	const context: ProjectContext = {
+	const logicalSource = logicalSourceForLineTable(options.lineTable);
+	const context: ProjectContext = definedObject({
 		officialDocument: options.officialDocument,
 		lineTable: options.lineTable,
 		sections: options.sections,
 		sectionByLine: options.sectionByLine,
+		xrefOccurrences: options.xrefOccurrences,
+		anchorOccurrences: options.anchorOccurrences,
 		xrefsByLine: groupByLine(options.xrefOccurrences),
 		anchorsByLine: groupByLine(options.anchorOccurrences),
 		usedAnchorKeys: new Set(),
@@ -76,7 +88,8 @@ export function projectOfficialDocument(options: {
 		sectionByBlock: options.sectionByBlock,
 		adapter: options.adapter,
 		targets,
-	};
+		logicalSource,
+	}) as ProjectContext;
 
 	return {
 		children: buildChildren(options.officialDocument, context),
@@ -192,6 +205,7 @@ function buildSection(
 		sourceSpan:
 			section.source?.sourceSpan ??
 			sourceSpanFromLineSpan(context.lineTable, section.span),
+		source: section.source,
 		asciidoctor: section.asciidoctor,
 	});
 	section.children = (block.getBlocks?.() ?? []).flatMap((child) =>
@@ -271,38 +285,30 @@ function buildParagraph(
 		endLine: line,
 	};
 	const contentSpan = interval?.contentSpan ?? blockSpan;
-	const xrefs = collectOccurrencesInLineRange(
-		context.xrefsByLine,
-		contentSpan.startLine,
-		contentSpan.endLine,
+	const source = blockSourceLayer(
+		context,
+		interval,
+		blockSpan,
+		"paragraph block",
 	);
-	const anchors = collectOccurrencesInLineRange(
-		context.anchorsByLine,
-		contentSpan.startLine,
-		contentSpan.endLine,
-	).filter((anchor) => {
-		const key = anchorKey(anchor);
-		if (context.usedAnchorKeys.has(key)) {
-			return false;
-		}
-		context.usedAnchorKeys.add(key);
-		return true;
-	});
+	const xrefs = collectXrefsInSpan(context, contentSpan, source);
+	const anchors = collectAnchorsInSpan(context, contentSpan, source).filter(
+		(anchor) => {
+			const key = anchorKey(anchor);
+			if (context.usedAnchorKeys.has(key)) {
+				return false;
+			}
+			context.usedAnchorKeys.add(key);
+			return true;
+		},
+	);
 	applyOfficialBindings(
 		xrefs,
 		xrefs.map((xref) =>
 			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
 		),
 	);
-	const sourceSpan =
-		interval?.sourceSpan ??
-		sourceSpanFromLineSpan(context.lineTable, blockSpan);
-	const source = sourceSpan
-		? {
-				span: blockSpan,
-				sourceSpan,
-			}
-		: { span: blockSpan };
+	const sourceSpan = source?.sourceSpan;
 	const asciidoctor = definedObject({
 		context: block.getContext?.(),
 		nodeName: block.getNodeName?.(),
@@ -326,6 +332,7 @@ function buildParagraph(
 		targetType: "block",
 		title: block.getTitle?.(),
 		sourceSpan,
+		source,
 		asciidoctor,
 	});
 
@@ -344,6 +351,7 @@ function buildListing(
 		endLine: delimiterLine,
 	};
 	const contentSpan = interval?.contentSpan;
+	const source = blockSourceLayer(context, interval, span, "listing block");
 	const ids = metadata.flatMap((surface) => surface.ids);
 	const listing = definedObject({
 		kind: "listing",
@@ -366,13 +374,9 @@ function buildListing(
 					).join("\n")
 				: undefined),
 		metadataSpan: interval?.metadataSpan,
-		contentSpan,
-		span,
-		source: {
-			span,
-			sourceSpan:
-				interval?.sourceSpan ?? sourceSpanFromLineSpan(context.lineTable, span),
-		},
+		contentSpan: source ? originLineSpan(context, contentSpan) : undefined,
+		span: source?.span,
+		source,
 		asciidoctor: definedObject({
 			context: block.getContext?.(),
 			nodeName: block.getNodeName?.(),
@@ -390,6 +394,7 @@ function buildListing(
 		targetType: "listing",
 		title: listing.title,
 		sourceSpan: listing.source?.sourceSpan,
+		source: listing.source,
 		asciidoctor: listing.asciidoctor,
 	});
 	return listing;
@@ -406,16 +411,14 @@ function buildTable(
 		startLine: delimiterLine,
 		endLine: delimiterLine,
 	};
+	const source = blockSourceLayer(context, interval, span, "table block");
 	const ids = metadata.flatMap((surface) => surface.ids);
-	const tableXrefs = collectOccurrencesInLineRange(
-		context.xrefsByLine,
-		interval?.contentSpan?.startLine ?? span.startLine,
-		interval?.contentSpan?.endLine ?? span.endLine,
-	);
-	const tableAnchors = collectOccurrencesInLineRange(
-		context.anchorsByLine,
-		interval?.contentSpan?.startLine ?? span.startLine,
-		interval?.contentSpan?.endLine ?? span.endLine,
+	const tableContentSpan = interval?.contentSpan ?? span;
+	const tableXrefs = collectXrefsInSpan(context, tableContentSpan, source);
+	const tableAnchors = collectAnchorsInSpan(
+		context,
+		tableContentSpan,
+		source,
 	).filter((anchor) => {
 		const key = anchorKey(anchor);
 		if (context.usedAnchorKeys.has(key)) {
@@ -437,12 +440,8 @@ function buildTable(
 			metadata.find((surface) => surface.title)?.title ?? block.getTitle?.(),
 		metadata: metadata.map((surface) => surface.node),
 		rows: rowsFromTable(block.getRows?.()),
-		span,
-		source: {
-			span,
-			sourceSpan:
-				interval?.sourceSpan ?? sourceSpanFromLineSpan(context.lineTable, span),
-		},
+		span: source?.span,
+		source,
 		asciidoctor: definedObject({
 			context: block.getContext?.(),
 			nodeName: block.getNodeName?.(),
@@ -461,6 +460,7 @@ function buildTable(
 		targetType: "table",
 		title: table.title,
 		sourceSpan: table.source?.sourceSpan,
+		source: table.source,
 		asciidoctor: table.asciidoctor,
 	});
 	return table;
@@ -474,6 +474,7 @@ function registerOfficialBlockTarget(
 		title?: string | undefined;
 		idOrigin?: TargetNode["idOrigin"] | undefined;
 		sourceSpan?: TargetNode["sourceSpan"] | undefined;
+		source?: SourceLayer | undefined;
 		asciidoctor?: AsciidoctorLayer | undefined;
 	},
 ): void {
@@ -501,9 +502,114 @@ function registerOfficialBlockTarget(
 				options.idOrigin ??
 				(options.targetType === "section" ? "asciidoctor-generated" : "source"),
 			sourceSpan: options.sourceSpan,
+			source: options.source,
 			asciidoctor,
 		}) as TargetNode,
 	);
+}
+
+function blockSourceLayer(
+	context: ProjectContext,
+	interval: SourceInterval | undefined,
+	fallbackSpan: { startLine: number; endLine: number },
+	diagnosticContext: string,
+): SourceLayer | undefined {
+	if (!context.logicalSource) {
+		const sourceSpan =
+			interval?.sourceSpan ??
+			sourceSpanFromLineSpan(context.lineTable, fallbackSpan);
+		return sourceSpan
+			? {
+					span: fallbackSpan,
+					sourceSpan,
+				}
+			: { span: fallbackSpan };
+	}
+	if (!interval) {
+		return undefined;
+	}
+	const recovered = recoverOriginSourceLayer(
+		context.logicalSource,
+		interval.span,
+		{
+			logicalSourceSpan: interval.sourceSpan,
+			raw: true,
+			diagnosticContext,
+		},
+	);
+	return recovered.ok ? recovered.sourceLayer : undefined;
+}
+
+function originLineSpan(
+	context: ProjectContext,
+	span: { startLine: number; endLine: number } | undefined,
+): { startLine: number; endLine: number } | undefined {
+	if (!span || !context.logicalSource) {
+		return span;
+	}
+	const recovered = recoverOriginSourceLayer(context.logicalSource, span, {
+		raw: false,
+		diagnosticContext: "block content",
+	});
+	return recovered.ok ? recovered.lineSpan : undefined;
+}
+
+function collectXrefsInSpan(
+	context: ProjectContext,
+	logicalSpan: { startLine: number; endLine: number },
+	source: SourceLayer | undefined,
+): XrefOccurrenceNode[] {
+	return collectOccurrencesInSpan(
+		context,
+		context.xrefsByLine,
+		context.xrefOccurrences,
+		logicalSpan,
+		source,
+	);
+}
+
+function collectAnchorsInSpan(
+	context: ProjectContext,
+	logicalSpan: { startLine: number; endLine: number },
+	source: SourceLayer | undefined,
+): AnchorOccurrenceNode[] {
+	return collectOccurrencesInSpan(
+		context,
+		context.anchorsByLine,
+		context.anchorOccurrences,
+		logicalSpan,
+		source,
+	);
+}
+
+function collectOccurrencesInSpan<T extends { source?: SourceLayer }>(
+	context: ProjectContext,
+	groupedByLine: Map<number, T[]>,
+	occurrences: T[],
+	logicalSpan: { startLine: number; endLine: number },
+	source: SourceLayer | undefined,
+): T[] {
+	if (!context.logicalSource) {
+		return collectOccurrencesInLineRange(
+			groupedByLine,
+			logicalSpan.startLine,
+			logicalSpan.endLine,
+		);
+	}
+	if (!source?.relativePath || !source.span) {
+		return [];
+	}
+	const relativePath = source.relativePath;
+	const sourceSpan = source.span;
+	return occurrences.filter((occurrence) => {
+		const line = occurrence.source?.line;
+		return (
+			occurrence.source?.relativePath === relativePath &&
+			line !== undefined &&
+			line >= sourceSpan.startLine &&
+			line <= sourceSpan.endLine
+		);
+	});
 }
 
 export function rowsFromTable(rows: unknown): unknown[] {

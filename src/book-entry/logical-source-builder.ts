@@ -8,6 +8,7 @@ import type {
 	LogicalSource,
 	SourceFileRecord,
 } from "./model";
+import { registerLogicalSourceForRecovery } from "./origin-coordinate";
 import {
 	normalizeDocumentRoot,
 	relativePathWithinDocumentRoot,
@@ -46,6 +47,7 @@ export function buildLogicalSource(
 		sourceFiles: [...state.sourceFilesByPath.values()],
 	};
 	assertLogicalDocumentInvariants(logicalSource);
+	registerLogicalSourceForRecovery(logicalSource);
 	return logicalSource;
 }
 
