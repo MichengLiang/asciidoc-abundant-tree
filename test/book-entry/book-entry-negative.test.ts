@@ -1,5 +1,7 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { assertLogicalDocumentInvariants } from "../../src/book-entry/logical-source-builder";
+import type { LogicalSource } from "../../src/book-entry/model";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 
@@ -55,28 +57,24 @@ describe("book-entry negative construction contracts", () => {
 		},
 	);
 
-	itBookEntryNegativeContract(
-		"fails when logical line count and line origin count diverge",
-		async () => {
-			const { assertLogicalDocumentInvariants } =
-				await importFutureLogicalDocumentModule();
-
-			expect(() =>
-				assertLogicalDocumentInvariants({
-					logicalText: "= Probe\n\n== Origin\n",
-					lineOrigins: [
-						{
-							logicalLine: 1,
-							absolutePath: join(negativeRoot, "missing-include.adoc"),
-							relativePath: "negative/missing-include.adoc",
-							sourceLine: 1,
-						},
-					],
-					sourceFiles: [],
-				}),
-			).toThrow(/logical line count|line origin count/i);
-		},
-	);
+	it("fails when logical line count and line origin count diverge", () => {
+		expect(() =>
+			assertLogicalDocumentInvariants({
+				entryPath: join(negativeRoot, "missing-include.adoc"),
+				documentRoot: fixtureRoot,
+				logicalText: "= Probe\n\n== Origin\n",
+				lineOrigins: [
+					{
+						logicalLine: 1,
+						absolutePath: join(negativeRoot, "missing-include.adoc"),
+						relativePath: "negative/missing-include.adoc",
+						sourceLine: 1,
+					},
+				],
+				sourceFiles: [],
+			} satisfies LogicalSource),
+		).toThrow(/logical line count|line origin count/i);
+	});
 });
 
 type BookEntryParseOptions = {
@@ -89,23 +87,6 @@ type BookEntryDocument = Omit<AbundantDocument, "mode"> & {
 	mode: "book-entry";
 };
 
-type LineOriginProbe = {
-	logicalLine: number;
-	absolutePath: string;
-	relativePath: string;
-	sourceLine: number;
-};
-
-type LogicalDocumentInvariantProbe = {
-	logicalText: string;
-	lineOrigins: LineOriginProbe[];
-	sourceFiles: unknown[];
-};
-
-type LogicalDocumentModule = {
-	assertLogicalDocumentInvariants(input: LogicalDocumentInvariantProbe): void;
-};
-
 function parseNegativeFixture(name: string): BookEntryDocument {
 	const parseBookEntry = parseAbundantTree as unknown as (
 		options: BookEntryParseOptions,
@@ -115,10 +96,4 @@ function parseNegativeFixture(name: string): BookEntryDocument {
 		mode: "book-entry",
 		documentRoot: fixtureRoot,
 	});
-}
-
-async function importFutureLogicalDocumentModule(): Promise<LogicalDocumentModule> {
-	const modulePath: string = "../../src/book-entry/logical-document";
-	const imported: unknown = await import(modulePath);
-	return imported as LogicalDocumentModule;
 }

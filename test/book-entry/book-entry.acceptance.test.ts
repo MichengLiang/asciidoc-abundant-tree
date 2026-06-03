@@ -1,5 +1,6 @@
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
+import { buildLogicalSource } from "../../src/book-entry/logical-source-builder";
 import type {
 	AbundantDocument,
 	AbundantNode,
@@ -20,7 +21,6 @@ const expectedTargetRelativePath = "simple-book/chapters/02-target-origin.adoc";
 const expectedNestedRelativePath = "simple-book/chapters/nested/section.adoc";
 
 // Batch 01+ migration expected-fail registry.
-// Remove logical source builder failures in Batch 02.
 // Remove parser core memory entry failures in Batch 03.
 // Remove origin-aware recovery failures in Batch 04.
 // Remove public API/CLI failures in Batch 05.
@@ -78,6 +78,36 @@ describe("book-entry source-mapped logical document contract", () => {
 		);
 		expect(sourceRelativePath(targetById(document, "target-origin"))).toBe(
 			expectedTargetRelativePath,
+		);
+	});
+
+	it("constructs simple-book logical text with line origins before parser integration", () => {
+		const logicalSource = buildLogicalSource({
+			sourcePath: entryPath,
+			documentRoot,
+		});
+
+		expect(logicalSource.logicalText).toContain("== Preface Origin");
+		expect(logicalSource.logicalText).toContain("== Xref Origin");
+		expect(logicalSource.logicalText).toContain("=== Nested Origin");
+		expect(logicalSource.logicalText).toContain("== Glossary Origin");
+		expect(logicalSource.logicalText).toContain(
+			"\\include::chapters/escaped.adoc[]",
+		);
+		expect(logicalSource.lineOrigins).toHaveLength(
+			logicalSource.logicalText.split(/\r?\n/u).length,
+		);
+		expect(
+			logicalSource.sourceFiles.map((sourceFile) => sourceFile.relativePath),
+		).toEqual(
+			expect.arrayContaining([
+				expectedEntryRelativePath,
+				"simple-book/frontmatter/preface.adoc",
+				expectedChapterRelativePath,
+				expectedTargetRelativePath,
+				expectedNestedRelativePath,
+				"simple-book/backmatter/glossary.adoc",
+			]),
 		);
 	});
 
