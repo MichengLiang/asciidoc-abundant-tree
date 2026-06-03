@@ -9,6 +9,7 @@
 * Body 是否不依赖未关闭 lab object 成立。
 * Body 是否没有过程语言污染核心定义。
 * Body 是否使用稳定术语。
+* Body 是否说明相关事实承载物如何回到 current body。
 * Body appendix 是否没有容纳未关闭 proposal、status ledger 或审核返工记录。
 * Body 的术语表、验收事实、索引和用户表面是否与核心章节一致。
 * 当前入口是否指向 current body，而不是归档 lab 或迁移计划。
@@ -23,6 +24,7 @@
 * Plan 是否没有重新定义目标对象。
 * Review package 是否记录实际证据。
 * Status ledger 是否只记录治理事实。
+* Status ledger 的状态词是否具有受控语义。
 * Lab object 是否有结果去向。
 * Plan 是否指向 body 或已接受 proposal。
 * Plan 是否没有把探索和持久材料修改放入同一工作包。
@@ -38,6 +40,14 @@
 * Body 到 lab 的引用是否只服务历史索引、版本索引或追溯表面。
 * 引用是否具有明确关系，而不是装饰。
 * 可构建 xref 是否同时方向正确。
+
+=== 实例材料检查
+
+* 实例项目是否有 current body entry。
+* 存在受控变更时，实例项目是否有 active lab entry。
+* 旧版本 body、关闭 proposal、完成 plan 和审核证据是否有 archive entry。
+* 代码、测试、配置、用户文档、示例和发布材料是否能回到同一 current body。
+* 当前入口、治理入口和追溯入口是否没有互相抢占。
 
 === 变更检查
 

@@ -16,6 +16,8 @@
 
 Body 评判应覆盖关联面。术语表、附录、验收事实、交叉引用和用户文档如果与核心章节不一致，body 没有形成稳定当前事实。
 
+Body 评判还应覆盖事实承载物关系。Body 声明的公共契约如果由代码实现、测试验证、配置约束或用户文档表达，这些事实承载物应能回到同一 current body。关联表面之间存在冲突时，材料体系必须提供 lab 入口处理冲突。
+
 [#lab-evaluation]
 == Lab 评判清单
 
@@ -33,6 +35,8 @@ Lab 可以记录过程、争议、打回和失败。记录这些对象时，应�
 Lab 评判应检查 lab object 是否具备关闭路径。没有关闭条件的 issue、proposal、plan 或 review package 会持续占据治理空间，使协作者无法判断它是开放对象、废弃对象还是已完成对象。
 
 Lab 评判还应检查目标来源。Plan、work package 或 review package 如果声明目标，但不能指向 body 或已接受 proposal，该 lab object 越过治理职责。
+
+Lab 评判还应检查状态词。Status ledger 使用的状态词必须具有受控语义；本地状态词如果不能说明治理位置，会削弱协作者对当前过程的判断。
 
 [#reference-evaluation]
 == 引用评判清单
@@ -70,6 +74,21 @@ Lab 评判还应检查目标来源。Plan、work package 或 review package 如�
 
 受审例外必须显式记录。工作包修改了文件边界外对象时，审核包应说明例外路径、例外理由、风险和审核结论。未记录例外会削弱文件边界。
 
+[#minimum-instance-material-set]
+== 最小合格实例材料集合
+
+最小合格实例材料集合用于评判一个实例项目是否具备可依赖的 body/lab 结构。该集合定义材料职责，不定义具体业务内容。
+
+一个实例项目至少应具备 current body entry。该入口应指向当前有效的 body object，并使读者能够判断对象边界、消费动作、公共契约、术语和验收事实。
+
+存在受控变更时，实例项目应具备 active lab entry。该入口应指向当前打开、评估、执行、待审核或打回的 lab object，并使执行者和审核者能够定位目标来源、工作包、审核证据、状态台账和关闭条件。
+
+实例项目应说明事实承载物关系。代码、测试、配置、用户文档、示例和发布材料如果表达同一当前事实，应能回到 current body；如果它们被某个 work package 修改，应进入 lab 的文件边界、验证命令、review package 和 closure record。
+
+实例项目应具备 archive entry。旧版本 body、关闭的 proposal、完成的 implementation plan、migration plan、review package 和 status ledger 应保留追溯入口，同时不抢占 current body entry 或 active lab entry。
+
+最小合格集合不要求所有材料都物理分成不同书。物理分书仍由对象职责、消费面、依赖方向和生命周期决定。一个实例只有在当前对象、治理过程和历史追溯具有可区分入口时，才具备可审查的材料结构。
+
 [#failure-patterns]
 == 常见失效形态
 
@@ -82,7 +101,9 @@ Lab 评判还应检查目标来源。Plan、work package 或 review package 如�
 * Review package 缺少实际命令结果。
 * Work package 没有文件边界。
 * 术语在 body、proposal 和 plan 之间漂移。
-* 实例项目在自身 body 中解释外部教学目的。
+* 实例项目在自身 body 中解释外部示范目的。
+* 实例项目没有 current body entry、active lab entry 或 archive entry 的入口区分。
+* 代码、测试、用户文档和 body 表达不同当前事实，却没有 lab 入口处理冲突。
 * 关闭后的 lab object 继续占据当前执行入口。
 * Body appendix 容纳未关闭 proposal 或状态台账。
 * Plan 把探索任务和持久材料修改放在同一工作包。

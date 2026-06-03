@@ -1,7 +1,7 @@
 [#terminology-duty]
 == 术语的职责
 
-术语的职责是稳定指向对象。术语选择不是风格选择。一个术语应减少歧义、限定对象边界、支持交叉引用和降低解释成本。
+术语的职责是稳定指向对象。术语选择不是风格选择。一个术语应减少歧义、限定对象边界、支持交叉引用和降低解释成本。Signifier 与 signified 的区分用于标记术语表面和对象所指之间的关系。<<saussure>>
 
 术语不稳定时，协作者会在不同对象上使用同一个词，或用多个词指向同一个对象。术语漂移会使 body 与 lab 的边界失效，也会使审核者无法判断材料层位。
 
@@ -20,10 +20,15 @@
 `200_lab`:: 研究与治理区。存放开放问题、候选术语、方案比较、提案、变更计划、审核包、状态台账和关闭记录。
 body object:: 进入 `100_body` 的承重对象。
 lab object:: 进入 `200_lab` 的治理对象。
+fact-bearing artifact:: 表达、实现、验证或发布项目当前事实的材料。
+current body entry:: 当前对象入口。
+active lab entry:: 当前治理入口。
+archive entry:: 追溯入口。
 承重区:: `100_body` 的中文说明。该区承担项目知识基础设施的支撑责任。
 治理区:: `200_lab` 的中文说明。该区承担研究、评价、执行、审核和关闭治理。
 进入 body:: lab 结果经过准入与受控更新后，成为 body 当前对象事实。
 关闭记录:: lab object 结束方式、理由、结果去向和后续入口的记录。
+状态词表:: status ledger 使用的受控状态词集合。
 
 这些术语在本书中按上述所指使用。不得把 `body` 用作普通正文同义词，也不得把 `lab` 用作任意临时草稿目录的同义词。
 
@@ -34,7 +39,7 @@ lab object:: 进入 `200_lab` 的治理对象。
 
 公共工程术语用于锁定已有对象，不用于装饰表达。
 
-Specification 指定义对象规则和公共契约的材料。Reference 指当前可查询、可依赖的对象说明。Proposal 指尚未进入当前 body 的候选变更。Work package 指有边界、有交付物、有验收的工作单元。Baseline 指可引用的项目状态。Change control 指受控变更治理。Review package 指审核证据包。Status ledger 指状态台账。Audit trail 指可追溯证据链。
+Specification 指定义对象规则和公共契约的材料。Reference 指当前可查询、可依赖的对象说明。Proposal 指尚未进入当前 body 的候选变更。RFC 与 PEP 指 proposal、acceptance 和 current specification 之间的分层传统。ADR 指设计决策记录及其上下文。Work package 指有边界、有交付物、有验收的工作单元。Baseline 指可引用的项目状态。Change control 指受控变更治理。Review package 指审核证据包。Status ledger 指状态台账。Audit trail 指可追溯证据链。Commit、diff 和 history 指 Git 提供的变更证据层。Signifier 与 signified 指术语表面和对象所指之间的区分。
 
 公共坐标只有在减少歧义时使用。一个外部术语如果不能稳定当前对象，或会引入不必要的理论负担，应保留本地定义。
 

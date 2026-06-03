@@ -5,6 +5,8 @@ body object 是进入 `100_body` 的承重对象。一个 body object 必须具�
 
 当前有效性表示该对象描述的是项目当前承认的对象事实。对象边界表示该对象说明自己负责什么、不负责什么。依赖关系表示该对象说明哪些后继对象可以依赖它，以及它依赖哪些同区或上游 body object。术语稳定性表示该对象使用的关键术语具有明确所指。验收方式表示该对象能够说明如何判断自身被满足、被实现或被破坏。
 
+body object 还应说明自身与相关事实承载物的关系。一个 API contract 应说明哪些实现表面和测试表面受它约束；一个 acceptance facts 章节应说明哪些验证表面观察它；一个 user-facing current documentation 应说明它表达哪个公共契约。无法说明关联表面的 body object，会让后继实现、测试和文档只能凭经验推断当前事实。
+
 body object 可以被更新、替换或废弃，但这些动作必须通过治理过程进入。body object 不能把未关闭争议、候选方案或执行状态写成当前对象事实。
 
 body object 的成立还要求读者动作明确。一个 body object 应说明谁可以依赖它、依赖它完成什么判断、哪些后继对象受它约束。不能说明消费动作的正文材料，不能仅凭排版位置取得承重资格。
@@ -15,6 +17,8 @@ body object 的成立还要求读者动作明确。一个 body object 应说明�
 常见 body object 包括 specification、reference、standard、current design、protocol definition、API contract、terminology、acceptance facts 和 user-facing current documentation。
 
 Specification 定义对象规则和公共契约。Reference 提供当前可依赖的查询入口。Standard 规定跨实现或跨协作者必须遵守的规范。Current design 描述当前设计结构。Terminology 稳定术语所指。Acceptance facts 定义对象满足条件。User-facing current documentation 面向使用者表达当前公共行为。
+
+实现代码、测试用例和配置通常不是 body book 内部章节，但它们可以是 current body 约束下的事实承载物。代码承担实现表面，测试承担验证表面，配置承担运行约束表面。它们与 body 不一致时，应按 <<change-control,变更控制>> 发起修正。
 
 这些类型不是必备清单。一个项目是否需要某类 body object，由项目对象复杂度、消费动作和后继依赖决定。类型名称不能替代对象边界；名为 specification 的材料如果只记录未关闭提案，仍然不是 body object。
 
@@ -33,12 +37,12 @@ body 中的术语一经定义，应在同一对象范围内稳定使用。一个
 
 body 中的兼容性说明必须表达当前可依赖规则。兼容性说明可以写当前版本仍接受哪些旧输入、旧字段或旧入口；不能把历史迁移过程写成兼容性规则。读者应能从兼容性说明中判断当前行为，而不是重建历史。
 
-body 中的引用必须服务当前对象。引用公共坐标时，应说明该坐标稳定哪个对象；引用同区对象时，应表达当前依赖关系。引用不能用于装饰，也不能把未关闭 lab 讨论带入核心定义。
+body 中的引用必须服务当前对象。引用公共坐标时，应说明该坐标稳定哪个对象；引用同区对象时，应表达当前依赖关系。引用不能用于装饰，也不能把未关闭 lab 讨论带入核心定义。引用方向规则见 <<cross-reference-direction,交叉引用方向>>。
 
 [#body-internal-structure]
 == Body 的内部结构
 
-一本 body book 可以很大。part、chapter、appendix、xref 和 include 用于组织同一承重对象的不同方面。物理分书不由页数决定，而由对象职责、消费面、依赖方向和生命周期决定。
+一本 body book 可以很大。part、chapter、appendix、xref 和 include 用于组织同一承重对象的不同方面。物理分书不由页数决定，而由对象职责、消费面、依赖方向和生命周期决定。分书判断见 <<physical-book-split,物理分书规则>>。
 
 同一 body book 内部可以包含对象边界、输入契约、结构模型、公共出口、验收事实、术语表和参考坐标。这些章节共同支撑同一个当前对象时，应留在同一 body。
 
@@ -53,6 +57,10 @@ body 可以更新。更新后的 body 应呈现当前对象语言，而不是保
 
 更新 body 的动作由 `200_lab` 治理。proposal、migration plan、review package 和 status ledger 可以记录为什么更新、如何更新、哪些提交完成更新。更新完成后，body 核心章节只表达更新后的当前事实。
 
+body object 不必在每个章节重复通用更新流程。材料体系级规则可以定义通用进入条件、变更控制和审核要求；具体 body object 只在存在特殊变更入口、额外审核条件或特殊兼容性约束时定义自身更新规则。
+
 历史解释可以通过版本记录、归档 lab object 或专门历史材料保存。历史解释不得成为当前对象定义的必要路径。
 
 更新 body 的提交应能被审查为正文更新。审核者应检查更新后的 body 是否保留当前对象语言，是否移除了临时过程词，是否同步更新相关术语、引用、验收事实和后继依赖。只修改正文片段而不检查依赖面的更新，不构成完整 body 更新。
+
+body 更新还应检查相关事实承载物。正文更新如果改变公共契约，应检查代码、测试、用户文档、配置和示例是否受影响；如果判断不受影响，review package 应记录该判断。未检查关联表面的正文更新，会留下 current body 与实现表面或验证表面的潜在冲突。

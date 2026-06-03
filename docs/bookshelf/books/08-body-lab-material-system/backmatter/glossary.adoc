@@ -19,6 +19,14 @@ lab book:: 以 lab object 或治理过程为核心对象的书。它服务研究
 
 current body:: 某一项目版本下当前有效的 body。
 
+fact-bearing artifact:: 表达、实现、验证或发布项目当前事实的材料。代码、测试、配置、用户文档、示例、发布说明和书籍正文都可以成为 fact-bearing artifact。
+
+current body entry:: 当前对象入口。它指向当前有效的 body object，使读者能够判断项目当前是什么、哪些契约可以依赖、哪些验收事实成立。
+
+active lab entry:: 当前治理入口。它指向仍在打开、评估、执行、待审核或打回状态的 lab object。
+
+archive entry:: 追溯入口。它指向旧版本 body、关闭的 proposal、完成的 plan、review package、status ledger 和 closure record。
+
 proposal:: 进入 body 的候选变更。Proposal 在被接受前不改变 current body。
 
 work package:: 有边界、有输入、有输出、有验证、有审核条件的工作单元。
@@ -26,6 +34,8 @@ work package:: 有边界、有输入、有输出、有验证、有审核条件�
 review package:: 工作包状态转移的审核证据包。
 
 status ledger:: lab object 或 work package 当前治理状态的台账投影。
+
+status vocabulary:: status ledger 使用的受控状态词集合。状态词必须表达可审查的治理位置。
 
 closure record:: lab object 的结束方式、理由、结果去向和后续入口记录。
 

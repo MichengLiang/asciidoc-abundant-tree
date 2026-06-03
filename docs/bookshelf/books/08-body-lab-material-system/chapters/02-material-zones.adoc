@@ -1,7 +1,7 @@
 [#body-zone-definition]
 == `100_body` 的定义
 
-`100_body` 是正文主区。这里存放的对象都是当前有效、当前成立、能够被后继对象依赖的 `body objects`。
+`100_body` 是正文主区。这里存放的对象都是当前有效、当前成立、能够被后继对象依赖的 `body objects`。body object 与代码、测试、配置、用户文档、示例等事实承载物的关系见 <<fact-bearing-artifacts,事实承载物>>。
 
 `100_body` 承担以下职责：
 
@@ -29,7 +29,7 @@
 * 管理实现计划和迁移计划。
 * 记录审核包、状态台账和关闭记录。
 
-`200_lab` 依赖 `100_body`。它可以引用 body object 发起问题、约束提案、界定变更范围和判断完成状态。`200_lab` 不反向支撑 `100_body` 的成立。
+`200_lab` 依赖 `100_body`。它可以引用 body object 发起问题、约束提案、界定变更范围和判断完成状态。`200_lab` 不反向支撑 `100_body` 的成立。lab 结果进入 body 的条件由 <<entry-conditions,进入条件>> 定义。
 
 `200_lab` 可以包含已经完成的治理对象。完成状态不改变对象所属分区。一个已关闭 migration plan、一个已通过 review package 或一个已归档 proposal，仍然是 lab object；它们解释项目演化，不变成 body object。
 
@@ -54,6 +54,19 @@
 消费面按动作区分，不按身份固定。同一个人维护当前对象时读取 `100_body`，执行迁移时读取 `200_lab`，追溯历史时读取归档 lab object。
 
 消费动作决定入口。读者要判断当前对象、当前术语或当前公共契约时，入口是 `100_body`。读者要判断某个变更为何发生、如何执行、是否通过审核或为何关闭时，入口是 `200_lab`。
+
+[#entry-surface]
+== 入口语义
+
+入口语义定义读者进入材料时能够执行的动作。入口不是目录链接的同义词；入口必须说明材料当前承担的对象职责。
+
+Current body entry 是当前对象入口。它指向当前有效的 body object，使读者能够判断项目当前是什么、哪些契约可以依赖、哪些验收事实成立。
+
+Active lab entry 是当前治理入口。它指向仍在打开、评估、执行、待审核或打回状态的 lab object，使执行者和审核者能够定位当前治理动作。
+
+Archive entry 是追溯入口。它指向旧版本 body、关闭的 proposal、完成的 implementation plan、migration plan、review package、status ledger 和 closure record，使追溯者能够理解历史过程。
+
+同一书架可以同时存在三类入口。Current body entry 不应被关闭的 lab object 抢占；active lab entry 不应伪装成当前对象入口；archive entry 不应以当前入口语义呈现旧版本或关闭过程。
 
 [#lifecycle]
 == 生命周期
