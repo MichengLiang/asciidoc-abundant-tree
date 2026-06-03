@@ -21,7 +21,6 @@ const expectedTargetRelativePath = "simple-book/chapters/02-target-origin.adoc";
 const expectedNestedRelativePath = "simple-book/chapters/nested/section.adoc";
 
 // Batch 01+ migration expected-fail registry.
-// Remove parser core memory entry failures in Batch 03.
 // Remove origin-aware recovery failures in Batch 04.
 // Remove public API/CLI failures in Batch 05.
 // Remove downstream coordinate failures in Batch 06.
@@ -111,36 +110,30 @@ describe("book-entry source-mapped logical document contract", () => {
 		);
 	});
 
-	itBookEntryContract(
-		"returns a book-entry document whose sourcePath remains the entry file",
-		() => {
-			const document = parseBookEntryFixture();
+	it("returns a book-entry document whose sourcePath remains the entry file", () => {
+		const document = parseBookEntryFixture();
 
-			expect(document.mode).toBe("book-entry");
-			expect(document.sourcePath).toBe(entryPath);
-		},
-	);
+		expect(document.mode).toBe("book-entry");
+		expect(document.sourcePath).toBe(entryPath);
+	});
 
-	itBookEntryContract(
-		"projects entry, included, nested, and backmatter headings into one section tree",
-		() => {
-			const document = parseBookEntryFixture();
-			const sectionTitles = collectSections(document.children).map(
-				(section) => section.title,
-			);
+	it("projects entry, included, nested, and backmatter headings into one section tree", () => {
+		const document = parseBookEntryFixture();
+		const sectionTitles = collectSections(document.children).map(
+			(section) => section.title,
+		);
 
-			expect(sectionTitles).toEqual(
-				expect.arrayContaining([
-					"Part One",
-					"Preface Origin",
-					"Xref Origin",
-					"Target Origin",
-					"Nested Origin",
-					"Glossary Origin",
-				]),
-			);
-		},
-	);
+		expect(sectionTitles).toEqual(
+			expect.arrayContaining([
+				"Part One",
+				"Preface Origin",
+				"Xref Origin",
+				"Target Origin",
+				"Nested Origin",
+				"Glossary Origin",
+			]),
+		);
+	});
 
 	itBookEntryContract(
 		"keeps heading source coordinates on the origin files that authored them",
@@ -189,21 +182,16 @@ describe("book-entry source-mapped logical document contract", () => {
 		},
 	);
 
-	itBookEntryContract(
-		"preserves escaped include as an ordinary source line without expansion",
-		() => {
-			const document = parseBookEntryFixture();
-			const sectionTitles = collectSections(document.children).map(
-				(section) => section.title,
-			);
+	it("preserves escaped include as an ordinary source line without expansion", () => {
+		const document = parseBookEntryFixture();
+		const sectionTitles = collectSections(document.children).map(
+			(section) => section.title,
+		);
 
-			expect(document.mode).toBe("book-entry");
-			expect(document.sourceText).toContain(
-				"\\include::chapters/escaped.adoc[]",
-			);
-			expect(sectionTitles).not.toContain("Escaped Include");
-		},
-	);
+		expect(document.mode).toBe("book-entry");
+		expect(document.sourceText).toContain("\\include::chapters/escaped.adoc[]");
+		expect(sectionTitles).not.toContain("Escaped Include");
+	});
 
 	itBookEntryContract(
 		"does not let same line numbers in different origin files pollute section scope",

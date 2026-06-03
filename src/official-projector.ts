@@ -40,9 +40,11 @@ type ProjectContext = {
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
-	adapter: AsciidoctorAdapter;
+	adapter: OfficialProjectionAdapter;
 	targets: TargetNode[];
 };
+
+type OfficialProjectionAdapter = Pick<AsciidoctorAdapter, "resolveXrefBinding">;
 
 type BuildResult = AbundantNode | AbundantNode[] | undefined;
 
@@ -57,7 +59,7 @@ export function projectOfficialDocument(options: {
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
-	adapter: AsciidoctorAdapter;
+	adapter: OfficialProjectionAdapter;
 }): { children: AbundantNode[]; targets: TargetNode[] } {
 	const targets: TargetNode[] = [];
 	const context: ProjectContext = {

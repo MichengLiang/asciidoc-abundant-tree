@@ -67,7 +67,11 @@ export type AsciidoctorAdapter = {
 	): OfficialXrefBinding | undefined;
 };
 
-export function createAsciidoctorAdapter(): AsciidoctorAdapter {
+export type AsciidoctorParserAdapter = AsciidoctorAdapter & {
+	loadSource(sourceText: string): AsciidoctorBlock;
+};
+
+export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 	const processor = createAsciidoctor();
 	if (!hasRuntimeInlineFactory(processor)) {
 		throw new Error("Asciidoctor runtime does not expose Inline.create");
@@ -77,6 +81,13 @@ export function createAsciidoctorAdapter(): AsciidoctorAdapter {
 		parserVersion: processor.getVersion(),
 		loadFile(sourcePath) {
 			return processor.loadFile(sourcePath, {
+				safe: "secure",
+				sourcemap: true,
+				to_file: false,
+			}) as AsciidoctorBlock;
+		},
+		loadSource(sourceText) {
+			return processor.load(sourceText, {
 				safe: "secure",
 				sourcemap: true,
 				to_file: false,

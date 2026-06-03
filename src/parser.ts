@@ -1,75 +1,57 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createAsciidoctorAdapter } from "./asciidoctor-adapter";
-import { addAnchorTargets, bindXrefs } from "./binding-merge";
-import type {
-	AbundantDocument,
-	AsciidoctorLayer,
-	ParseAbundantTreeOptions,
-} from "./model";
-import { definedObject } from "./object-utils";
-import { projectOfficialDocument } from "./official-projector";
-import { buildLineTable, spanForLineText } from "./source-lines";
-import { projectSourceSurfaces } from "./source-surfaces";
+import { BookEntryConstructionError } from "./book-entry/diagnostics";
+import { buildLogicalSource } from "./book-entry/logical-source-builder";
+import type { AbundantDocument, ParseAbundantTreeOptions } from "./model";
+import { parseAsciidoctorDocument } from "./parser-core";
+import { buildLineTable } from "./source-lines";
 
 export function parseAbundantTree(
 	options: ParseAbundantTreeOptions,
 ): AbundantDocument {
 	const sourcePath = resolve(options.sourcePath);
+	const adapter = createAsciidoctorAdapter();
+
+	if (options.mode === "book-entry") {
+		const logicalSource = buildBookEntryLogicalSource({
+			sourcePath,
+			documentRoot: options.documentRoot,
+		});
+		const lineTable = buildLineTable(logicalSource.logicalText);
+		return parseAsciidoctorDocument({
+			officialDocument: adapter.loadSource(logicalSource.logicalText),
+			adapter,
+			lineTable,
+			sourcePath,
+			sourceText: logicalSource.logicalText,
+			mode: "book-entry",
+		});
+	}
+
 	const source = readFileSync(sourcePath, "utf8");
 	const lineTable = buildLineTable(source);
-	const adapter = createAsciidoctorAdapter();
-	const officialDocument = adapter.loadFile(sourcePath);
-	const sourceSurfaces = projectSourceSurfaces({
-		officialDocument,
-		lineTable,
-		sourcePath,
-	});
-	const officialProjection = projectOfficialDocument({
-		officialDocument,
-		lineTable,
-		sections: sourceSurfaces.sections,
-		sectionByLine: sourceSurfaces.sectionByLine,
-		xrefOccurrences: sourceSurfaces.xrefOccurrences,
-		anchorOccurrences: sourceSurfaces.anchorOccurrences,
-		intervalByBlock: sourceSurfaces.intervalByBlock,
-		projectableBlocks: sourceSurfaces.projectableBlocks,
-		containerFallbackBlocks: sourceSurfaces.containerFallbackBlocks,
-		sectionByBlock: sourceSurfaces.sectionByBlock,
+	return parseAsciidoctorDocument({
+		officialDocument: adapter.loadFile(sourcePath),
 		adapter,
-	});
-
-	addAnchorTargets(
-		officialProjection.targets,
-		sourceSurfaces.anchorOccurrences,
-	);
-	bindXrefs(sourceSurfaces.xrefOccurrences, officialProjection.targets);
-
-	return {
-		kind: "document",
+		lineTable,
 		sourcePath,
 		sourceText: source,
 		mode: "single-file",
-		parser: {
-			name: "@asciidoctor/core",
-			version: adapter.parserVersion,
-		},
-		title: {
-			kind: "title",
-			text: officialDocument.getDocumentTitle?.() ?? "",
-			source: {
-				line: 1,
-				sourceSpan: spanForLineText(lineTable, 1, 1),
-			},
-			asciidoctor: definedObject({
-				context: officialDocument.getContext?.(),
-				nodeName: officialDocument.getNodeName?.(),
-			}) as AsciidoctorLayer,
-		},
-		children: officialProjection.children,
-		targets: officialProjection.targets,
-		xrefOccurrences: sourceSurfaces.xrefOccurrences,
-		anchorOccurrences: sourceSurfaces.anchorOccurrences,
-		toolDiagnostics: sourceSurfaces.toolDiagnostics,
-	};
+		sourceSurfacePath: sourcePath,
+	});
+}
+
+function buildBookEntryLogicalSource(options: {
+	readonly sourcePath: string;
+	readonly documentRoot: string;
+}): ReturnType<typeof buildLogicalSource> {
+	try {
+		return buildLogicalSource(options);
+	} catch (error) {
+		if (error instanceof BookEntryConstructionError) {
+			throw new Error("Book-entry logical document construction failed.");
+		}
+		throw error;
+	}
 }
