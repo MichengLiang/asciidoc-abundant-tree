@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { AbundantDocument } from "../src/model";
+import type {
+	AbundantDocument,
+	ParseAbundantTreeOptions,
+	SourceSpan,
+} from "../src/model";
 import {
 	formatAbundantTree,
 	serializeAbundantTree,
@@ -134,6 +138,63 @@ describe("serializers", () => {
 		expect(json.xrefOccurrences[0]?.source?.sourceSpan).toEqual(sourceSpan);
 	});
 
+	it("preserves source relativePath in JSON and pretty tree output", () => {
+		const sourceSpan = {
+			start: { line: 8, column: 4 },
+			end: { line: 8, column: 15 },
+		};
+		const json = serializeAbundantTreeToJson({
+			...document,
+			children: [
+				{
+					kind: "section",
+					level: 1,
+					ids: ["origin-section"],
+					title: "Origin Section",
+					idOrigin: "source",
+					source: {
+						relativePath: "books/example/chapters/01-origin.adoc",
+						line: 8,
+						sourceSpan,
+					},
+				},
+			],
+		});
+		const output = formatAbundantTree(json);
+
+		expect(json.children[0]?.source?.relativePath).toBe(
+			"books/example/chapters/01-origin.adoc",
+		);
+		expect(output).toContain(
+			'relativePath="books/example/chapters/01-origin.adoc"',
+		);
+	});
+
+	it("keeps SourceSpan free of file identity fields", () => {
+		const span = acceptSourceSpan({
+			start: { line: 1, column: 1 },
+			end: { line: 1, column: 7 },
+		});
+
+		expect(Object.keys(span)).toEqual(["start", "end"]);
+		acceptSourceSpan({
+			start: { line: 1, column: 1 },
+			end: { line: 1, column: 7 },
+			// @ts-expect-error SourceSpan must remain a line/column range only.
+			relativePath: "books/example/book.adoc",
+		});
+	});
+
+	it("allows public parse options to express explicit book-entry documentRoot", () => {
+		const options: ParseAbundantTreeOptions = {
+			sourcePath: "books/example/book.adoc",
+			mode: "book-entry",
+			documentRoot: "books",
+		};
+
+		expect(options.documentRoot).toBe("books");
+	});
+
 	it("serializes json format with a trailing newline", () => {
 		const output = serializeAbundantTree(document, "json");
 
@@ -184,3 +245,7 @@ describe("serializers", () => {
 		expect(output).toContain('<source line=1 raw="Bad span.">');
 	});
 });
+
+function acceptSourceSpan(span: SourceSpan): SourceSpan {
+	return span;
+}

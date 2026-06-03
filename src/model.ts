@@ -30,6 +30,7 @@ export type ParserInfo = {
 
 export type SourceLayer = {
 	raw?: string;
+	relativePath?: string;
 	line?: number;
 	span?: LineSpan;
 	sourceSpan?: SourceSpan;
@@ -173,7 +174,7 @@ export type AbundantDocument = {
 	kind: "document";
 	sourcePath: string;
 	sourceText?: string;
-	mode: "single-file";
+	mode: "single-file" | "book-entry";
 	parser: ParserInfo;
 	title?: TitleNode;
 	children: AbundantNode[];
@@ -183,6 +184,13 @@ export type AbundantDocument = {
 	toolDiagnostics: ToolDiagnostic[];
 };
 
-export type ParseAbundantTreeOptions = {
-	sourcePath: string;
-};
+export type ParseAbundantTreeOptions =
+	| {
+			sourcePath: string;
+			mode?: "single-file";
+	  }
+	| {
+			sourcePath: string;
+			mode: "book-entry";
+			documentRoot: string;
+	  };

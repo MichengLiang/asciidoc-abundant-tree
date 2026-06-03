@@ -156,17 +156,14 @@ function sourceSpanFingerprint(value: unknown): string | undefined {
 }
 
 function orderedScalarKeys(object: Record<string, unknown>): string[] {
-	return Object.keys(object)
-		.filter((key) => isScalar(object[key]) && !isMultilineString(object[key]))
-		.sort((a, b) => {
-			if (a === "kind") {
-				return -1;
-			}
-			if (b === "kind") {
-				return 1;
-			}
-			return a.localeCompare(b);
-		});
+	const keys = Object.keys(object).filter(
+		(key) => isScalar(object[key]) && !isMultilineString(object[key]),
+	);
+	const priority = ["kind", "relativePath"].filter((key) => keys.includes(key));
+	const rest = keys
+		.filter((key) => !priority.includes(key))
+		.sort((a, b) => a.localeCompare(b));
+	return [...priority, ...rest];
 }
 
 function isScalar(value: unknown): boolean {

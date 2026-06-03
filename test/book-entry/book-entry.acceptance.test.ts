@@ -19,8 +19,7 @@ const expectedChapterRelativePath = "simple-book/chapters/01-entry-origin.adoc";
 const expectedTargetRelativePath = "simple-book/chapters/02-target-origin.adoc";
 const expectedNestedRelativePath = "simple-book/chapters/nested/section.adoc";
 
-// Batch 00 migration expected-fail registry.
-// Remove public model and coordinate identity failures in Batch 01.
+// Batch 01+ migration expected-fail registry.
 // Remove logical source builder failures in Batch 02.
 // Remove parser core memory entry failures in Batch 03.
 // Remove origin-aware recovery failures in Batch 04.
@@ -31,6 +30,57 @@ const expectedNestedRelativePath = "simple-book/chapters/nested/section.adoc";
 const itBookEntryContract = it.fails;
 
 describe("book-entry source-mapped logical document contract", () => {
+	it("expresses book-entry mode and origin file identity through public model fields", () => {
+		const document: AbundantDocument = {
+			kind: "document",
+			sourcePath: entryPath,
+			mode: "book-entry",
+			parser: { name: "@asciidoctor/core", version: "test" },
+			children: [
+				sectionFixture("Part One", expectedEntryRelativePath),
+				sectionFixture("Xref Origin", expectedChapterRelativePath),
+				sectionFixture("Nested Origin", expectedNestedRelativePath),
+			],
+			targets: [
+				{
+					kind: "target",
+					id: "target-origin",
+					targetType: "section",
+					idOrigin: "source",
+					source: { relativePath: expectedTargetRelativePath },
+				},
+			],
+			xrefOccurrences: [
+				{
+					kind: "xref",
+					syntax: "macro",
+					raw: "xref:target-origin[Target Origin]",
+					target: "target-origin",
+					source: { relativePath: expectedChapterRelativePath },
+				},
+			],
+			anchorOccurrences: [],
+			toolDiagnostics: [],
+		};
+
+		expect(document.mode).toBe("book-entry");
+		expect(sourceRelativePath(sectionByTitle(document, "Part One"))).toBe(
+			expectedEntryRelativePath,
+		);
+		expect(sourceRelativePath(sectionByTitle(document, "Xref Origin"))).toBe(
+			expectedChapterRelativePath,
+		);
+		expect(sourceRelativePath(sectionByTitle(document, "Nested Origin"))).toBe(
+			expectedNestedRelativePath,
+		);
+		expect(sourceRelativePath(onlyXref(document))).toBe(
+			expectedChapterRelativePath,
+		);
+		expect(sourceRelativePath(targetById(document, "target-origin"))).toBe(
+			expectedTargetRelativePath,
+		);
+	});
+
 	itBookEntryContract(
 		"returns a book-entry document whose sourcePath remains the entry file",
 		() => {
@@ -140,21 +190,8 @@ describe("book-entry source-mapped logical document contract", () => {
 	);
 });
 
-type BookEntryParseOptions = {
-	sourcePath: string;
-	mode: "book-entry";
-	documentRoot: string;
-};
-
-type BookEntryDocument = Omit<AbundantDocument, "mode"> & {
-	mode: "book-entry";
-};
-
-function parseBookEntryFixture(): BookEntryDocument {
-	const parseBookEntry = parseAbundantTree as unknown as (
-		options: BookEntryParseOptions,
-	) => BookEntryDocument;
-	return parseBookEntry({
+function parseBookEntryFixture(): AbundantDocument {
+	return parseAbundantTree({
 		sourcePath: entryPath,
 		mode: "book-entry",
 		documentRoot,
@@ -162,7 +199,7 @@ function parseBookEntryFixture(): BookEntryDocument {
 }
 
 function sectionByTitle(
-	document: BookEntryDocument,
+	document: AbundantDocument,
 	title: string,
 ): SectionNode {
 	const section = collectSections(document.children).find(
@@ -174,7 +211,7 @@ function sectionByTitle(
 	return section;
 }
 
-function targetById(document: BookEntryDocument, id: string): TargetNode {
+function targetById(document: AbundantDocument, id: string): TargetNode {
 	const target = document.targets.find((candidate) => candidate.id === id);
 	if (!target) {
 		throw new Error(`Missing target: ${id}`);
@@ -182,12 +219,24 @@ function targetById(document: BookEntryDocument, id: string): TargetNode {
 	return target;
 }
 
-function onlyXref(document: BookEntryDocument): XrefOccurrenceNode {
+function onlyXref(document: AbundantDocument): XrefOccurrenceNode {
 	const [xref] = document.xrefOccurrences;
 	if (!xref) {
 		throw new Error("Missing xref occurrence");
 	}
 	return xref;
+}
+
+function sectionFixture(title: string, relativePath: string): SectionNode {
+	return {
+		kind: "section",
+		level: title === "Part One" ? 0 : 1,
+		ids: [title.toLowerCase().replaceAll(" ", "-")],
+		title,
+		idOrigin: "source",
+		source: { relativePath },
+		children: [],
+	};
 }
 
 function collectSections(nodes: AbundantNode[]): SectionNode[] {
@@ -206,14 +255,7 @@ function sourceRelativePath(node: unknown): string | undefined {
 		return undefined;
 	}
 	const source = isRecord(node.source) ? node.source : undefined;
-	const sourceSpan = isRecord(node.sourceSpan) ? node.sourceSpan : undefined;
-	const sourceSourceSpan = isRecord(source?.sourceSpan)
-		? source?.sourceSpan
-		: undefined;
-	const relativePath =
-		stringValue(source?.relativePath) ??
-		stringValue(sourceSourceSpan?.relativePath) ??
-		stringValue(sourceSpan?.relativePath);
+	const relativePath = stringValue(source?.relativePath);
 	if (!relativePath) {
 		return undefined;
 	}

@@ -60,6 +60,12 @@ const bookPartAuditPath = join(
 );
 
 describe("parseAbundantTree", () => {
+	it("defaults omitted mode to single-file", () => {
+		const document = parseAbundantTree({ sourcePath: referencePath });
+
+		expect(document.mode).toBe("single-file");
+	});
+
 	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", () => {
 		const document = parseAbundantTree({ sourcePath: referencePath });
 
