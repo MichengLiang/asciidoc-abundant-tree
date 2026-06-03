@@ -7,3 +7,4 @@
 * [[[pep]]] Python Steering Council, _PEP 1 -- PEP Purpose and Guidelines_. PEP 用于标记 proposal、acceptance 和当前语言事实之间的分层关系。
 * [[[adr]]] Michael Nygard, _Documenting Architecture Decisions_. ADR 用于标记设计决策记录与当前设计之间的关系。
 * [[[git]]] Git project, _Git Documentation_. Commit、diff 和 history 用于标记变更证据层。
+* [[[saussure]]] Ferdinand de Saussure, _Course in General Linguistics_. Signifier 与 signified 用于标记术语表面和对象所指之间的区分。

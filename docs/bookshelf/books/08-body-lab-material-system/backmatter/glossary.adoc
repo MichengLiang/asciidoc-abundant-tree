@@ -9,6 +9,10 @@ body object:: 进入 `100_body` 的承重对象。
 
 lab object:: 进入 `200_lab` 的治理对象。
 
+body book:: 以 body object 为核心对象的书。它服务当前对象理解和后继依赖。
+
+lab book:: 以 lab object 或治理过程为核心对象的书。它服务研究、执行、审核、关闭和追溯。
+
 承重区:: `100_body` 的中文说明。该区承担项目知识基础设施的支撑责任。
 
 治理区:: `200_lab` 的中文说明。该区承担研究、评价、执行、审核和关闭治理。
@@ -30,3 +34,9 @@ baseline:: 可引用的项目状态。
 change control:: 受控变更治理。
 
 audit trail:: 可追溯证据链。
+
+public coordinate:: 已有工程共同体中具有稳定所指的术语或文献坐标。本书只在它减少歧义时使用。
+
+entry action:: 已接受 lab 结果写入 body 当前对象语言的受控动作。
+
+archive:: 已关闭或已过期对象的追溯位置。归档对象不承担当前入口。

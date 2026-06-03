@@ -11,4 +11,6 @@
 
 本书不定义某个具体软件项目，不提供 AsciiDoc 语法教程，不记录材料体系形成过程中的对话材料。具体项目应当形成自己的 `100_body` 与 `200_lab`，并在自己的材料空间中独立成立。
 
+本书的规则面向书籍化项目材料。书籍化项目材料可以由 AsciiDoc book 承载，也可以由具备稳定目录、交叉引用、版本记录和构建检查能力的同类载体承载。本书使用 `100_body` 与 `200_lab` 作为物理分区名称，是为了固定承重正文与治理过程的依赖方向，不是为了替代 specification、proposal、work package、review package、baseline 等既有工程对象。
+
 本书使用中文叙事。`body`、`lab`、`body object`、`lab object`、`specification`、`proposal`、`work package`、`baseline`、`review package`、`status ledger` 等术语在正文中保留英文形式或中英并列形式，以保持对象边界和公共工程坐标的稳定。

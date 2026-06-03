@@ -7,6 +7,8 @@ lab object 是进入 `200_lab` 的治理对象。一个 lab object 必须说明�
 
 lab object 不承担 body 当前存在性。它可以改变 body 的候选未来，可以记录 body 变更证据，但不能在未进入 body 前成为当前对象事实。
 
+lab object 必须保留自身身份。一个 proposal 不因内容成熟而自动成为 body；一个 plan 不因执行完成而自动成为 body；一个 review package 不因结论通过而自动成为 body。对象身份改变只能通过进入 body 的受控动作发生。
+
 [#lab-object-types]
 == Lab Object 的类型
 
@@ -15,6 +17,8 @@ lab object 不承担 body 当前存在性。它可以改变 body 的候选未来
 Open issue 记录尚未关闭的问题。Term candidate 记录术语收口前的候选。Proposal 提出可进入 body 的变更。Spike report 记录探索证据。ADR 记录已接受的设计决策及其上下文。Comparison 和 evaluation 比较候选方案。Implementation plan 和 migration plan 组织受控变更。Review package 记录审核证据。Status ledger 投影过程状态。Closure record 记录治理对象的关闭结果。
 
 这些对象可以在同一个 lab book 内按 part 或 appendix 组织。它们共同服务同一治理过程时，不需要因类型不同而物理拆书。
+
+Lab object 类型决定读者动作。Open issue 用于判断问题是否仍需处理；proposal 用于判断候选变更是否可接受；implementation plan 用于判断工作如何执行；review package 用于判断状态转移是否有证据；status ledger 用于定位当前治理状态。类型名称和读者动作不一致时，应优先修正对象边界，而不是保留名称。
 
 [#proposal-and-evaluation]
 == 提案与评价
@@ -25,6 +29,8 @@ Proposal 是进入 body 的候选变更，不是当前 body。Proposal 必须说
 
 未接受的 proposal、被拒绝的 proposal 和被替代的 proposal 应保留关闭状态。它们保留历史价值，但不应继续占据当前 body。
 
+Proposal 不应同时承担 implementation plan 职责。Proposal 可以提出目标 body 变更和验收方向，但不安排提交顺序、文件边界和批次状态。执行安排进入 implementation plan 或 migration plan。
+
 [#implementation-and-migration-plan]
 == 变更计划
 
@@ -33,6 +39,8 @@ Implementation plan 和 migration plan 是 lab object。它们定义受控变更
 变更计划必须说明源状态、目标 body 依据、工作包边界、文件边界、验证命令、提交规则、审核规则和打回条件。目标对象来自 body 或已接受 proposal；变更计划不能凭空发明目标对象。
 
 变更计划可以管理 body 文件、代码、测试、用户文档、配置和自身过程记录的修改。被管理的文件进入工作包边界；变更计划本身不因此成为 body。
+
+变更计划启动前应具备可审查目标。目标可以来自 current body，也可以来自已接受 proposal。尚未形成目标的探索活动应留在 spike report、evaluation 或 proposal 中。变更计划不能把探索过程和持久材料修改放入同一工作包。
 
 [#work-package]
 == 工作包
@@ -43,6 +51,10 @@ Work package 不是时间段，也不是随手任务。它的完成必须能通�
 
 工作包可以按 batch 命名。Batch 编号表达治理顺序或依赖关系，不表达对象本体。阶段安排不能替代对象定义。
 
+工作包边界应覆盖所有被修改的事实承载物。代码、测试、body 文件、用户文档、配置、示例和 lab 记录只要进入本批修改，就必须进入文件边界和审核范围。工作包不得把文档更新、测试更新或台账更新视为附带动作而省略。
+
+工作包可以发现缺口，但不能私自扩大目标。执行中发现目标事实不足、影响面遗漏或验收条件错误时，应记录打回、拆分或补充 proposal。继续在同一工作包中即兴定义新目标，会破坏审核边界。
+
 [#review-package]
 == 审核包
 
@@ -51,6 +63,8 @@ Review package 是工作包状态转移的证据记录。它记录批次编号�
 审核包不是进度汇报。它只记录实际发生的证据。计划运行但未运行的命令不能写成通过；失败命令必须记录失败状态、失败范围和是否属于已授权的非阻塞对象。
 
 审核包使审核者能够把书面声明、Git diff、验证命令和审核决定连接起来。
+
+审核包应区分完成范围和未处理对象。完成范围只列本工作包已经实现并由证据覆盖的对象事实；未处理对象必须指向后续 lab object、明确非目标或关闭理由。未处理对象不能以“后续再说”的形式悬空。
 
 [#status-ledger]
 == 状态台账
@@ -61,6 +75,8 @@ Status ledger 是治理状态的投影。它记录 lab object 或 work package �
 
 状态台账服务当前协作者快速定位过程状态。它不定义项目当前对象。
 
+状态台账字段应受控。状态字段、提交 hash、审核记录、关闭位置和备注各自承担不同职责。备注可以说明已发生的打回、返工或受审例外；备注不能写入预测、承诺、情绪判断或未授权目标。
+
 [#closure-record]
 == 关闭记录
 
@@ -69,3 +85,5 @@ Closure record 记录 lab object 的结束方式。结束方式可以是接受�
 关闭记录应说明关闭对象、关闭理由、结果去向和后续入口。被接受的结果应指向进入 body 的位置或变更提交；被拒绝或废弃的对象应说明不再承担当前治理职责。
 
 关闭不是删除。关闭后的 lab object 保留追溯价值，但不继续占据当前执行入口。
+
+关闭记录应阻止治理对象继续漂移。一个关闭的 proposal 不再继续收集候选；一个关闭的 migration plan 不再继续接收新工作包；一个关闭的 review package 不再改变审核结论。需要追加变更时，应开启新的 lab object 并引用旧对象作为历史依据。
