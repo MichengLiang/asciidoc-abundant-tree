@@ -6,7 +6,9 @@
 [horizontal]
 批次编号:: `Batch 05`
 批次名称:: `Public API 与 CLI Mode`
-提交 hash:: `cd666f9e072afaed410679b46dfb066561fe0678`
+提交 hash:: `3ada9168fbe1546c9cf7567c708ee3193189d9f2`
+原实现提交:: `cd666f9e072afaed410679b46dfb066561fe0678`
+打回修正提交:: `3ada9168fbe1546c9cf7567c708ee3193189d9f2`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
 审核状态:: `待审核`
@@ -68,12 +70,14 @@ docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation
 ----
 - CLI args parser 支持 `--mode single-file|book-entry`，未知 mode 返回错误，不回落到 single-file。
 - CLI args parser 支持 `--document-root <root>`，缺少值返回错误。
+- 打回修正后，`--mode`、`--document-root` 和 `--format` 遇到下一个 token 仍是 flag 时均按缺少值处理。
 - `--help` 输出包含 `--mode` 和 `--document-root`。
 - CLI book-entry mode 调用 `parseAbundantTree({ sourcePath, mode: "book-entry", documentRoot })`。
 - CLI book-entry mode 未显式传入 `--document-root` 时使用 `process.cwd()` 作为 documentRoot。
 - CLI single-file/default mode 调用 single-file parser options；即使传入 `--document-root`，parser input construction 仍不展开 include。
 - RDF12 CLI formats 继续消费同一个 `AbundantDocument`；single-file mode 的 `--document-root` 仍作为 RDF projection option。
 - Library API 对 invalid JS 调用 `mode: "book-entry"` 且缺少 `documentRoot` 增加 runtime validation。
+- 打回修正后，Library API 对 unsupported runtime `mode` 值抛出错误，不静默回落到 single-file。
 - CLI 错误返回 stderr 且 stdout 为空；成功输出返回 stdout 且 stderr 为空。
 - README 描述当前显式 book-entry public usage、CLI documentRoot 默认值和 single-file documentRoot 行为。
 ----
@@ -108,7 +112,7 @@ git diff --check
 pnpm test -- test/cli.test.ts test/cli-error.test.ts test/book-entry/book-entry.acceptance.test.ts:
   PASS
   Test Files 46 passed (46)
-  Tests 332 passed | 5 expected fail (337)
+  Tests 336 passed | 5 expected fail (341)
 
 pnpm typecheck:
   PASS
@@ -117,8 +121,8 @@ pnpm typecheck:
 pnpm test:coverage:
   FAIL
   Test Files 46 passed (46)
-  Tests 332 passed | 5 expected fail (337)
-  Failure reason: global branch coverage 89.28% is below configured threshold 90%.
+  Tests 336 passed | 5 expected fail (341)
+  Failure reason: global branch coverage 89.30% is below configured threshold 90%.
   Batch 05 judgment: command was run and true baseline is recorded; failure is the existing global branch coverage baseline.
 
 pnpm --dir docs/bookshelf test:
@@ -147,15 +151,15 @@ git diff --check:
 [source,text]
 ----
 pnpm test:coverage: FAIL
-Statements: 95.37% (1796/1883)
-Branches: 89.28% (1200/1344)
-Functions: 97.91% (423/432)
-Lines: 95.30% (1766/1853)
+Statements: 95.38% (1797/1884)
+Branches: 89.30% (1202/1346)
+Functions: 97.92% (424/433)
+Lines: 95.30% (1767/1854)
 
-src/parser.ts Statements: 93.75%
-src/parser.ts Branches: 83.33%
+src/parser.ts Statements: 94.44%
+src/parser.ts Branches: 90.00%
 src/parser.ts Functions: 100%
-src/parser.ts Lines: 93.75%
+src/parser.ts Lines: 94.44%
 
 src/cli.ts is covered by CLI tests, but the coverage table groups it outside the visible truncated per-file rows in the captured output. The CLI behavior is covered by black-box stdout/stderr tests in `test/cli.test.ts` and `test/cli-error.test.ts`.
 ----
@@ -168,7 +172,7 @@ src/cli.ts is covered by CLI tests, but the coverage table groups it outside the
 * 本批没有把 line origin table 变成下游主契约。
 * 本批没有输出假 source coordinate。
 * 本批测试覆盖了正向事实：help surface、book-entry JSON/tree、single-file default、explicit single-file、documentRoot default/override、RDF12 output consumption。
-* 本批测试覆盖了必要负向事实：unsupported mode、missing mode value、missing documentRoot value、library missing documentRoot、entry outside documentRoot、include outside documentRoot、invalid RDF format aliases。
+* 本批测试覆盖了必要负向事实：unsupported mode、missing mode value、flag-following missing option values、missing documentRoot value、library missing documentRoot、library unsupported mode、entry outside documentRoot、include outside documentRoot、invalid RDF format aliases。
 * 本批未处理对象有去向。
 
 === 工程质量检查清单
@@ -178,6 +182,8 @@ src/cli.ts is covered by CLI tests, but the coverage table groups it outside the
 * 本批没有引入隐式 book-entry inference；mode 只来自 library option 或 CLI `--mode`。
 * Unknown CLI args 不会被静默忽略。
 * Unsupported CLI mode 不会被静默当作 single-file。
+* Unsupported Library API runtime mode 不会被静默当作 single-file。
+* CLI value-taking options do not consume a following flag as their value.
 * CLI 解析、parser option construction 和 rendering 分离在独立代码路径中。
 * CLI single-file mode 忽略 `--document-root` 对 parser input construction 的影响。
 * RDF12 output 仍使用 documentRoot projection option。
@@ -189,5 +195,5 @@ src/cli.ts is covered by CLI tests, but the coverage table groups it outside the
 
 [horizontal]
 结论:: `待审核`
-理由:: Batch 05 实现提交已完成显式 book-entry public API/CLI mode、documentRoot CLI 行为、runtime validation、stdout/stderr error behavior 和 README usage；验证命令已运行并记录真实 coverage failure baseline。
+理由:: Batch 05 实现提交和打回修正提交已完成显式 book-entry public API/CLI mode、documentRoot CLI 行为、runtime validation、stdout/stderr error behavior、option value validation 和 README usage；验证命令已运行并记录真实 coverage failure baseline。
 后续动作:: 主线程/Principal coordinator 审核 Batch 05；通过后由协调者更新台账为 `通过` 并解锁 Batch 06。

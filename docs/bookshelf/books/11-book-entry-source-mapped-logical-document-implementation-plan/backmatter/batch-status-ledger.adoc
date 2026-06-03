@@ -40,7 +40,7 @@
 |Batch 05
 |Public API 与 CLI Mode
 |待审核
-|`cd666f9e072afaed410679b46dfb066561fe0678`
+|`3ada9168fbe1546c9cf7567c708ee3193189d9f2`
 |xref:batch-05-review-package[batch-05-review-package.adoc]
 
 |Batch 06
