@@ -39,9 +39,9 @@
 
 |Batch 05
 |Public API 与 CLI Mode
-|未开始
-|
-|
+|待审核
+|`cd666f9e072afaed410679b46dfb066561fe0678`
+|xref:batch-05-review-package[batch-05-review-package.adoc]
 
 |Batch 06
 |Downstream Coordinate Regression

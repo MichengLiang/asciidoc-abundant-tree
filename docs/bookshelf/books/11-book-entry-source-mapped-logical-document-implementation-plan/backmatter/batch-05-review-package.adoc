@@ -1,0 +1,193 @@
+[#batch-05-review-package]
+== Batch 05 阶段审核包
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 05`
+批次名称:: `Public API 与 CLI Mode`
+提交 hash:: `cd666f9e072afaed410679b46dfb066561fe0678`
+执行者:: `subagent`
+审核者:: `主线程/Principal coordinator`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+README.md
+src/cli.ts
+src/parser.ts
+test/cli-error.test.ts
+test/cli.test.ts
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-05-review-package.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 上下文闭包阅读记录
+
+[source,text]
+----
+- 目标规格闭包：
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/03-entry-and-source-set.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/10-public-api-and-cli.adoc
+- 上游 parser 契约闭包：
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/10-cli-and-library-api.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/12-acceptance-and-gates.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/09-diagnostics-and-failure-surface.adoc
+- 上游 book-entry 行为闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/07-batch-04-origin-aware-source-recovery.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-04-review-package.adoc
+- 当前代码闭包：
+  src/parser.ts
+  src/cli.ts
+  src/index.ts
+  src/model.ts
+  src/book-entry/diagnostics.ts
+  src/book-entry/include-resolution.ts
+  src/book-entry/logical-source-builder.ts
+  src/book-entry/model.ts
+  src/book-entry/origin-coordinate.ts
+  src/book-entry/path-boundary.ts
+  src/book-entry/source-scope-index.ts
+  README.md
+- 测试闭包：
+  test/cli.test.ts
+  test/cli-error.test.ts
+  test/book-entry/book-entry.acceptance.test.ts
+- 治理闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/08-batch-05-public-api-and-cli-mode.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/01-execution-contract.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/review-package-template.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- CLI args parser 支持 `--mode single-file|book-entry`，未知 mode 返回错误，不回落到 single-file。
+- CLI args parser 支持 `--document-root <root>`，缺少值返回错误。
+- `--help` 输出包含 `--mode` 和 `--document-root`。
+- CLI book-entry mode 调用 `parseAbundantTree({ sourcePath, mode: "book-entry", documentRoot })`。
+- CLI book-entry mode 未显式传入 `--document-root` 时使用 `process.cwd()` 作为 documentRoot。
+- CLI single-file/default mode 调用 single-file parser options；即使传入 `--document-root`，parser input construction 仍不展开 include。
+- RDF12 CLI formats 继续消费同一个 `AbundantDocument`；single-file mode 的 `--document-root` 仍作为 RDF projection option。
+- Library API 对 invalid JS 调用 `mode: "book-entry"` 且缺少 `documentRoot` 增加 runtime validation。
+- CLI 错误返回 stderr 且 stdout 为空；成功输出返回 stdout 且 stderr 为空。
+- README 描述当前显式 book-entry public usage、CLI documentRoot 默认值和 single-file documentRoot 行为。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- Downstream RDF coordinate regression：归属 Batch 06。
+- Public dispatch diagnostics 和 negative contract final surface：归属 Batch 07。
+- 迁移期 expected-fail 标记最终清理和全局收口：归属 Batch 08。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/cli.test.ts test/cli-error.test.ts test/book-entry/book-entry.acceptance.test.ts
+pnpm typecheck
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm exec biome check src/parser.ts src/cli.ts src/index.ts test/cli.test.ts test/cli-error.test.ts test/book-entry/book-entry.acceptance.test.ts README.md
+git diff --name-only 3d8a3d4fab4aee39a07352c41b0fc0ddcc49b8cf..HEAD -- src/rdf12-projection CHANGELOG.md
+rg -n 'doctype.*book.*mode|include::.*mode|mode.*doctype|mode.*include|mode.*filename|Unknown argument|Unsupported mode|document-root|documentRoot' src/cli.ts src/parser.ts test/cli.test.ts test/cli-error.test.ts
+git diff --check
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/cli.test.ts test/cli-error.test.ts test/book-entry/book-entry.acceptance.test.ts:
+  PASS
+  Test Files 46 passed (46)
+  Tests 332 passed | 5 expected fail (337)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm test:coverage:
+  FAIL
+  Test Files 46 passed (46)
+  Tests 332 passed | 5 expected fail (337)
+  Failure reason: global branch coverage 89.28% is below configured threshold 90%.
+  Batch 05 judgment: command was run and true baseline is recorded; failure is the existing global branch coverage baseline.
+
+pnpm --dir docs/bookshelf test:
+  PASS
+  node --test reported 11 pass, 0 fail
+
+pnpm exec biome check src/parser.ts src/cli.ts src/index.ts test/cli.test.ts test/cli-error.test.ts test/book-entry/book-entry.acceptance.test.ts README.md:
+  PASS
+  Checked 6 files. No fixes applied.
+
+git diff --name-only 3d8a3d4fab4aee39a07352c41b0fc0ddcc49b8cf..HEAD -- src/rdf12-projection CHANGELOG.md:
+  PASS
+  No output.
+
+rg -n 'doctype.*book.*mode|include::.*mode|mode.*doctype|mode.*include|mode.*filename|Unknown argument|Unsupported mode|document-root|documentRoot' src/cli.ts src/parser.ts test/cli.test.ts test/cli-error.test.ts:
+  PASS
+  Matches show explicit `--mode`, `--document-root`, runtime documentRoot validation, and unknown/unsupported argument tests. No doctype-, include-, or filename-based mode inference appears.
+
+git diff --check:
+  PASS
+  No whitespace errors.
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+pnpm test:coverage: FAIL
+Statements: 95.37% (1796/1883)
+Branches: 89.28% (1200/1344)
+Functions: 97.91% (423/432)
+Lines: 95.30% (1766/1853)
+
+src/parser.ts Statements: 93.75%
+src/parser.ts Branches: 83.33%
+src/parser.ts Functions: 100%
+src/parser.ts Lines: 93.75%
+
+src/cli.ts is covered by CLI tests, but the coverage table groups it outside the visible truncated per-file rows in the captured output. The CLI behavior is covered by black-box stdout/stderr tests in `test/cli.test.ts` and `test/cli-error.test.ts`.
+----
+
+=== 规约检查清单
+
+* 本批目标对象来自 10 号书和 9 号书，不来自当前实现惯性。
+* 本批没有重新定义 10 号书目标对象。
+* 本批没有破坏 single-file mode。
+* 本批没有把 line origin table 变成下游主契约。
+* 本批没有输出假 source coordinate。
+* 本批测试覆盖了正向事实：help surface、book-entry JSON/tree、single-file default、explicit single-file、documentRoot default/override、RDF12 output consumption。
+* 本批测试覆盖了必要负向事实：unsupported mode、missing mode value、missing documentRoot value、library missing documentRoot、entry outside documentRoot、include outside documentRoot、invalid RDF format aliases。
+* 本批未处理对象有去向。
+
+=== 工程质量检查清单
+
+* 本批没有修改批次边界外文件；禁止路径 diff 为空。
+* 本批没有修改 `src/rdf12-projection/**` 或 `CHANGELOG.md`。
+* 本批没有引入隐式 book-entry inference；mode 只来自 library option 或 CLI `--mode`。
+* Unknown CLI args 不会被静默忽略。
+* Unsupported CLI mode 不会被静默当作 single-file。
+* CLI 解析、parser option construction 和 rendering 分离在独立代码路径中。
+* CLI single-file mode 忽略 `--document-root` 对 parser input construction 的影响。
+* RDF12 output 仍使用 documentRoot projection option。
+* 本批新增代码有对应测试。
+* 本批没有通过 `any` 或类型逃逸掩盖公共模型冲突。
+* README 只描述当前 public behavior，不叙述迁移过程。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: Batch 05 实现提交已完成显式 book-entry public API/CLI mode、documentRoot CLI 行为、runtime validation、stdout/stderr error behavior 和 README usage；验证命令已运行并记录真实 coverage failure baseline。
+后续动作:: 主线程/Principal coordinator 审核 Batch 05；通过后由协调者更新台账为 `通过` 并解锁 Batch 06。
