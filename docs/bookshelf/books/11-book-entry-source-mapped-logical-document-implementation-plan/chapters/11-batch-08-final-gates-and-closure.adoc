@@ -48,8 +48,10 @@ Review package 只记录实际发生的证据。未运行命令不能写成通�
 * `README.md`
 * `CHANGELOG.md`
 * `docs/bookshelf/catalog.adoc`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/book.adoc`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-08-review-package.adoc`
 * `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc`
-* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/closure-record-template.adoc` 或实际 closure record 文件
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/closure-record.adoc`
 
 允许修改：
 
@@ -67,8 +69,9 @@ Review package 只记录实际发生的证据。未运行命令不能写成通�
 . 更新 README 中 book-entry public usage。
 . 更新 CHANGELOG。
 . 更新书架 catalog，加入本计划书入口。
-. 写入 closure record。
-. 将本计划状态台账更新为关闭事实。
+. 基于 xref:closure-record-template[关闭记录模板] 创建 `backmatter/closure-record.adoc`。
+. 更新 `book.adoc`，使实际关闭记录进入书稿公共表面。
+. 将 Batch 08 状态台账条目更新为 `通过`，并写入最终提交 hash 与审核包 xref。
 
 === 最终验证命令
 
@@ -114,7 +117,8 @@ CHANGELOG 记录 book-entry public mode、origin source coordinate 和相关 CLI
 * Coverage evidence 已记录。
 * 未处理对象有明确去向。
 * 需要修订 9 号书或 10 号书的对象已经进入新的 lab object 或明确非目标。
-* Closure record 记录关闭理由、结果去向和后续入口。
+* `backmatter/closure-record.adoc` 记录关闭理由、结果去向和后续入口。
+* `book.adoc` 包含实际关闭记录，关闭记录不只停留在文件系统中。
 
 === 验收标准
 
@@ -124,17 +128,20 @@ CHANGELOG 记录 book-entry public mode、origin source coordinate 和相关 CLI
 * CLI、library API、pretty tree、JSON 和 RDF12 downstream surface 表达同一 origin coordinate 事实。
 * `pnpm test:coverage` 结果满足覆盖率门槛。
 * README、CHANGELOG 和书架 catalog 与当前行为一致。
-* Closure record 存在并指向最终提交与验证证据。
+* `backmatter/closure-record.adoc` 存在并指向最终提交与验证证据。
+* `book.adoc` 包含实际关闭记录。
 
 === 提交规则
 
 [source,bash]
 ----
-git add src test README.md CHANGELOG.md docs/bookshelf
-git commit --only -m "feat: finalize book-entry source-mapped parsing" -- src test README.md CHANGELOG.md docs/bookshelf
+git add src test README.md CHANGELOG.md docs/bookshelf/catalog.adoc
+git commit --only -m "feat: finalize book-entry source-mapped parsing" -- src test README.md CHANGELOG.md docs/bookshelf/catalog.adoc
+git add docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/book.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-08-review-package.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/closure-record.adoc
+git commit --only -m "docs: record book-entry plan closure" -- docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/book.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-08-review-package.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/closure-record.adoc
 ----
 
-若最终批次没有源码修改，提交命令应移除 `src`。若 README 或 CHANGELOG 未修改，审核者必须确认不修改的依据。
+若最终批次没有源码修改，第一个提交命令应移除 `src`。若 README、CHANGELOG 或 catalog 未修改，审核者必须确认不修改的依据。第二个提交记录第一个提交的 hash；状态台账的 Batch 08 提交 hash 指向第一个提交。`book.adoc`、`batch-08-review-package.adoc`、`batch-status-ledger.adoc` 和 `closure-record.adoc` 不得从第二个提交命令中移除。
 
 === 审核规则
 
@@ -150,4 +157,5 @@ git commit --only -m "feat: finalize book-entry source-mapped parsing" -- src te
 * Book-entry 输出需要下游读取 line origin table 才能回源。
 * README 描述与 CLI/API 行为不一致。
 * 书架 xref 断裂。
-* Closure record 缺少最终验证命令、coverage summary 或未处理对象去向。
+* `backmatter/closure-record.adoc` 缺少最终验证命令、coverage summary 或未处理对象去向。
+* 实际关闭记录未进入 `book.adoc`。

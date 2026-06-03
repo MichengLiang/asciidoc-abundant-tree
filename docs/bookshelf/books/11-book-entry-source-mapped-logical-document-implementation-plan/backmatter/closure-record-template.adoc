@@ -3,6 +3,8 @@
 
 关闭记录记录本计划书的结束方式。关闭记录是 lab object 的治理事实，不是当前 parser 对象定义。
 
+实际关闭记录文件为 `backmatter/closure-record.adoc`。该文件创建后必须由 `book.adoc` include，进入本计划书公共表面。
+
 === 关闭对象
 
 [horizontal]

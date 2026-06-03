@@ -44,6 +44,8 @@
 * `test/book-entry/book-entry-negative.test.ts`
 * `test/book-entry/source-coordinate-recovery.test.ts`
 * `test/cli-error.test.ts`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-07-review-package.adoc`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc`
 
 不得修改：
 
@@ -139,7 +141,11 @@ pnpm test:coverage
 ----
 git add src/book-entry src/parser.ts src/cli.ts src/source-surfaces.ts test/book-entry test/cli-error.test.ts
 git commit --only -m "fix: harden book-entry diagnostics" -- src/book-entry src/parser.ts src/cli.ts src/source-surfaces.ts test/book-entry test/cli-error.test.ts
+git add docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-07-review-package.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+git commit --only -m "docs: record book-entry batch 07 review" -- docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-07-review-package.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
 ----
+
+第二个提交记录第一个提交的 hash。状态台账的 Batch 07 提交 hash 指向第一个提交。
 
 === 审核规则
 

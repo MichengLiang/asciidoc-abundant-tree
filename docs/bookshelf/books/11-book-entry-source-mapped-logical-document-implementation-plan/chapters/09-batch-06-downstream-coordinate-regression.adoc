@@ -53,10 +53,12 @@ Book-entry mode 允许同一 `AbundantDocument` 中的 resources 来自不同 or
 * `test/rdf12-projection/xref-projector.test.ts`
 * `test/rdf12-projection/query-contracts.test.ts`
 * `test/book-entry/book-entry.acceptance.test.ts`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc`
 
 允许创建：
 
 * `test/rdf12-projection/book-entry-coordinate.test.ts`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-06-review-package.adoc`
 
 不得修改：
 
@@ -117,7 +119,11 @@ pnpm test:coverage
 ----
 git add src/rdf12-projection test/rdf12-projection test/book-entry
 git commit --only -m "feat: project book-entry origin coordinates downstream" -- src/rdf12-projection test/rdf12-projection test/book-entry
+git add docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-06-review-package.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+git commit --only -m "docs: record book-entry batch 06 review" -- docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-06-review-package.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
 ----
+
+第二个提交记录第一个提交的 hash。状态台账的 Batch 06 提交 hash 指向第一个提交。
 
 === 审核规则
 

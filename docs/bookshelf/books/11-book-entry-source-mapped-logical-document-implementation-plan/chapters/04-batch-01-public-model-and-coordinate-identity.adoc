@@ -29,6 +29,8 @@
 * `test/serializers.test.ts`
 * `test/parser.test.ts`
 * `test/book-entry/book-entry.acceptance.test.ts`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-01-review-package.adoc`
+* `docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc`
 
 === 输入事实
 
@@ -78,7 +80,7 @@ export type ParseAbundantTreeOptions =
 	  };
 ----
 
-可回源事实必须能表达 origin relativePath。推荐公共形态是让 `SourceLayer` 携带 `relativePath?: string`，并保持 `SourceSpan` 只表达 line/column 范围：
+可回源事实必须能表达 origin relativePath。公共坐标权威位置是 `SourceLayer.relativePath`。`SourceSpan` 只表达 line/column 范围，不携带 file identity：
 
 [source,typescript]
 ----
@@ -91,13 +93,13 @@ export type SourceLayer = {
 };
 ----
 
-节点如果同时保留顶层 `sourceSpan` 和 `source.sourceSpan`，必须定义单一权威读取位置。实现不得让顶层 span 与 source layer relativePath 表达两个互相矛盾的 coordinate。
+节点如果同时保留顶层 `sourceSpan` 和 `source.sourceSpan`，顶层 `sourceSpan` 只能作为兼容镜像存在。消费者读取 origin file identity 时必须使用 `source.relativePath`。实现不得让顶层 span 与 source layer relativePath 表达两个互相矛盾的 coordinate。
 
 === 实施任务
 
 . 扩展 `AbundantDocument.mode`。
 . 扩展 `ParseAbundantTreeOptions`。
-. 为 source layer 增加 origin file identity 字段。
+. 为 source layer 增加 `relativePath`，并把它作为 public origin file identity 的权威位置。
 . 更新 public type exports。
 . 更新 serializer ordering，使 `relativePath` 在 pretty tree 和 JSON 中可见。
 . 更新 single-file parser 测试，确认 single-file 输出仍为 `mode: "single-file"`。
@@ -111,11 +113,14 @@ export type SourceLayer = {
 
 `book-entry.acceptance.test.ts` 必须断言目标公共形状可以表达 entry file、chapter file 和 nested file 的不同 relativePath。
 
+Public model tests 必须断言 `SourceSpan` 不携带 file identity。该断言保护 line/column range 与 origin file identity 的职责分离。
+
 === 验收标准
 
 * Public model 可以表达 `book-entry` mode。
 * Public parse options 可以表达显式 `documentRoot`。
-* 可回源事实可以表达 origin relativePath。
+* 可回源事实通过 `source.relativePath` 表达 origin relativePath。
+* `SourceSpan` 只表达 line/column 范围。
 * Line origin table 没有进入 `AbundantDocument` 主模型。
 * Single-file mode 保持默认语义。
 * Serializer 不重新解析 AsciiDoc。
@@ -135,7 +140,11 @@ pnpm test:coverage
 ----
 git add src/model.ts src/serializers.ts src/index.ts test/parser.test.ts test/serializers.test.ts test/book-entry
 git commit --only -m "feat: extend parser model for book-entry coordinates" -- src/model.ts src/serializers.ts src/index.ts test/parser.test.ts test/serializers.test.ts test/book-entry
+git add docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-01-review-package.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+git commit --only -m "docs: record book-entry batch 01 review" -- docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-01-review-package.adoc docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
 ----
+
+第二个提交记录第一个提交的 hash。状态台账的 Batch 01 提交 hash 指向第一个提交。
 
 === 审核规则
 
@@ -147,6 +156,8 @@ git commit --only -m "feat: extend parser model for book-entry coordinates" -- s
 
 * `AbundantDocument` 暴露 line origin table 作为下游主契约。
 * `SourceSpan`、`SourceLayer` 和节点顶层字段表达互相矛盾的 file identity。
+* `SourceSpan` 携带 file identity。
+* 消费者必须读取顶层 `sourceSpan` 才能取得 origin file identity。
 * Single-file consumer 必须理解 book-entry internal IR 才能读取旧字段。
 * `mode` 仍只能是 `single-file`。
 * TypeScript 类型错误通过 `any`、双重断言或未测试分支绕过。
