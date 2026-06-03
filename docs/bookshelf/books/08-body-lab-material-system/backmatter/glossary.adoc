@@ -19,7 +19,7 @@ lab book:: 以 lab object 或治理过程为核心对象的书。它服务研究
 
 current body:: 某一项目版本下当前有效的 body。
 
-fact-bearing artifact:: 表达、实现、验证或发布项目当前事实的材料。代码、测试、配置、用户文档、示例、发布说明和书籍正文都可以成为 fact-bearing artifact。
+fact-bearing artifact:: 表达、实现、验证或发布项目当前事实的材料。代码、测试、配置、用户文档、样例、发布说明和书籍正文都可以成为 fact-bearing artifact。
 
 current body entry:: 当前对象入口。它指向当前有效的 body object，使读者能够判断项目当前是什么、哪些契约可以依赖、哪些验收事实成立。
 

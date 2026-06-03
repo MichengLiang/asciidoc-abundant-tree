@@ -83,7 +83,7 @@ Lab 评判还应检查状态词。Status ledger 使用的状态词必须具有�
 
 存在受控变更时，实例项目应具备 active lab entry。该入口应指向当前打开、评估、执行、待审核或打回的 lab object，并使执行者和审核者能够定位目标来源、工作包、审核证据、状态台账和关闭条件。
 
-实例项目应说明事实承载物关系。代码、测试、配置、用户文档、示例和发布材料如果表达同一当前事实，应能回到 current body；如果它们被某个 work package 修改，应进入 lab 的文件边界、验证命令、review package 和 closure record。
+实例项目应说明事实承载物关系。代码、测试、配置、用户文档、样例和发布材料如果表达同一当前事实，应能回到 current body；如果它们被某个 work package 修改，应进入 lab 的文件边界、验证命令、review package 和 closure record。
 
 实例项目应具备 archive entry。旧版本 body、关闭的 proposal、完成的 implementation plan、migration plan、review package 和 status ledger 应保留追溯入口，同时不抢占 current body entry 或 active lab entry。
 

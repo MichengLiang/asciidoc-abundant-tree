@@ -1,7 +1,7 @@
 [#body-zone-definition]
 == `100_body` 的定义
 
-`100_body` 是正文主区。这里存放的对象都是当前有效、当前成立、能够被后继对象依赖的 `body objects`。body object 与代码、测试、配置、用户文档、示例等事实承载物的关系见 <<fact-bearing-artifacts,事实承载物>>。
+`100_body` 是正文主区。这里存放的对象都是当前有效、当前成立、能够被后继对象依赖的 `body objects`。body object 与代码、测试、配置、用户文档、样例等事实承载物的关系见 <<fact-bearing-artifacts,事实承载物>>。
 
 `100_body` 承担以下职责：
 

@@ -59,7 +59,7 @@ body 可以按版本演化。某一版本的 body 描述该版本下当前有效
 [#git-evidence]
 == Git 与证据
 
-Git 提供变更证据层。提交 hash、diff、路径列表和提交时间把治理声明绑定到实际文件变化。Commit、diff 和 history 的证据职责由 Git 坐标锁定。<<git>>
+Git 提供变更证据层。提交 hash、diff、路径列表和提交时间把治理声明绑定到实际文件变化。Commit、diff 和 history 的证据职责由 Git 坐标锁定，见 <<git>>。
 
 Review package 把 Git 证据、验证命令和审核结论连接起来。Status ledger 把 review package 投影为当前治理状态。变更计划把 review package 和 work package 放入同一执行结构。
 

@@ -16,7 +16,7 @@ lab object 必须保留自身身份。一个 proposal 不因内容成熟而自�
 
 Open issue 记录尚未关闭的问题。Term candidate 记录术语收口前的候选。Proposal 提出可进入 body 的变更。Spike report 记录探索证据。ADR 记录已接受的设计决策及其上下文。Comparison 和 evaluation 比较候选方案。Implementation plan 和 migration plan 组织受控变更。Review package 记录审核证据。Status ledger 投影过程状态。Closure record 记录治理对象的关闭结果。
 
-ADR 的默认职责是记录决策上下文、候选、取舍和后果。ADR 的接受结论如果约束当前对象，应通过 <<entry-action,进入动作>> 写入 body 的 current design、architecture reference 或相关 specification。若某项目把 accepted ADR 作为当前设计入口，该 ADR 必须满足 <<body-object-conditions,body object 的成立条件>>；否则它仍是 lab 或历史记录。ADR 作为设计决策记录的公共坐标见 <<adr>>。
+ADR 的默认职责是记录决策上下文、候选、取舍和后果。ADR 的接受结论如果约束当前对象，应通过 <<entry-action,进入动作>> 写入 body 的 current design、architecture reference 或相关 specification。若某项目把 accepted ADR 作为当前设计入口，该 ADR 必须满足 <<body-object-conditions,body object 的成立条件>>；否则它仍是 lab 或历史记录。ADR 这一公共坐标用于锁定设计决策记录与当前设计之间的关系，见 <<adr>>。
 
 这些对象可以在同一个 lab book 内按 part 或 appendix 组织。它们共同服务同一治理过程时，不需要因类型不同而物理拆书。
 
@@ -25,7 +25,7 @@ Lab object 类型决定读者动作。Open issue 用于判断问题是否仍需�
 [#proposal-and-evaluation]
 == 提案与评价
 
-Proposal 是进入 body 的候选变更，不是当前 body。Proposal 必须说明它修改哪个 body object、解决哪个问题、引入什么新事实、排除什么旧事实、需要什么验收。Proposal 与 accepted specification 之间的分层，可由 RFC 或 PEP 这类提案传统作为公共坐标锁定。<<rfc>> <<pep>>
+Proposal 是进入 body 的候选变更，不是当前 body。Proposal 必须说明它修改哪个 body object、解决哪个问题、引入什么新事实、排除什么旧事实、需要什么验收。RFC 和 PEP 作为公共坐标，用于锁定 proposal、acceptance 与 current specification 之间的分层关系，见 <<rfc>> 与 <<pep>>。
 
 评价材料比较 proposal 或候选方案。评价可以记录优点、缺点、风险、成本、证据和未决问题。评价没有自动进入 body 的资格。只有被接受的结论，经过受控更新，才能成为 body 当前事实。
 
@@ -47,13 +47,13 @@ Implementation plan 和 migration plan 是 lab object。它们定义受控变更
 [#work-package]
 == 工作包
 
-Work package 是受控变更的工作单元。一个 work package 必须有明确目标、上游门槛、输入事实、文件边界、实施任务、测试任务、验收标准、验证命令、提交规则、审核规则和打回条件。Work package 的边界、交付物和验收职责，对应工作分解结构中的工作包坐标。<<wbs>>
+Work package 是受控变更的工作单元。一个 work package 必须有明确目标、上游门槛、输入事实、文件边界、实施任务、测试任务、验收标准、验证命令、提交规则、审核规则和打回条件。Work package 的边界、交付物和验收职责由工作分解结构中的工作包坐标锁定，见 <<wbs>>。
 
 Work package 不是时间段，也不是随手任务。它的完成必须能通过证据判断。一个工作包完成以后，应产生可追踪提交、实际命令结果和审核结论。
 
 工作包可以按 batch 命名。Batch 编号表达治理顺序或依赖关系，不表达对象本体。阶段安排不能替代对象定义。
 
-工作包边界应覆盖所有被修改的事实承载物。代码、测试、body 文件、用户文档、配置、示例和 lab 记录只要进入本批修改，就必须进入文件边界和审核范围。工作包不得把文档更新、测试更新或台账更新视为附带动作而省略。
+工作包边界应覆盖所有被修改的事实承载物。代码、测试、body 文件、用户文档、配置、样例和 lab 记录只要进入本批修改，就必须进入文件边界和审核范围。工作包不得把文档更新、测试更新或台账更新视为附带动作而省略。
 
 工作包可以发现缺口，但不能私自扩大目标。执行中发现目标事实不足、影响面遗漏或验收条件错误时，应记录打回、拆分或补充 proposal。继续在同一工作包中即兴定义新目标，会破坏审核边界。
 
@@ -73,7 +73,7 @@ Review package 是工作包状态转移的证据记录。它记录批次编号�
 
 Status ledger 是治理状态的投影。它记录 lab object 或 work package 的当前状态、提交 hash、审核记录和关闭位置。
 
-状态台账只记录治理事实。愿望、估计、口头进度、情绪判断和未发生动作不得进入台账核心字段。台账可以记录 `未开始`、`执行中`、`待审核`、`打回`、`通过`、`关闭` 等受控状态。
+状态台账只记录治理事实。愿望、估计、口头进度、情绪判断和未发生动作不得进入台账核心字段。台账可以记录 `打开`、`评估中`、`执行中`、`待审核`、`打回`、`通过`、`关闭`、`归档` 等受控状态。
 
 状态台账服务当前协作者快速定位过程状态。它不定义项目当前对象。
 
@@ -84,7 +84,7 @@ Status ledger 是治理状态的投影。它记录 lab object 或 work package �
 
 状态词表定义 status ledger 可以使用的受控状态。状态词不是自然语言备注；每个状态必须表达可审查的治理位置。
 
-Open 表示治理对象已经登记但尚未形成结论。Evaluating 表示治理对象正在比较候选、收集证据或形成提案。Executing 表示已接受目标正在由 work package 执行。Reviewing 表示工作包或 lab 结果已经提交审核。Rejected 表示审核打回且需要补充事实、拆分范围或修正实现。Accepted 表示提案、决策或工作包已经获得进入下一动作的审核结论。Closed 表示治理对象已经结束并记录结果去向。Archived 表示关闭对象不再承担当前入口，只保留追溯价值。
+`打开` 表示治理对象已经登记但尚未形成结论。`评估中` 表示治理对象正在比较候选、收集证据或形成提案。`执行中` 表示已接受目标正在由 work package 执行。`待审核` 表示工作包或 lab 结果已经提交审核。`打回` 表示审核结论要求补充事实、拆分范围或修正实现。`通过` 表示提案、决策或工作包已经获得进入下一动作的审核结论。`关闭` 表示治理对象已经结束并记录结果去向。`归档` 表示关闭对象不再承担当前入口，只保留追溯价值。
 
 项目可以定义本地状态词，但本地状态词必须说明与上述治理位置的关系。状态词不得表达预测、愿望、情绪判断或未授权目标。
 
