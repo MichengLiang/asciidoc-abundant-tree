@@ -12,7 +12,7 @@
 第二次打回修正提交:: `3367ab40119fa1a65034a8940c2f0bed7dee7f78`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
-审核状态:: `待审核`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -251,6 +251,6 @@ src/book-entry/source-scope-index.ts Lines: 100%
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: Batch 04 实现提交和两次打回修正提交已完成 origin-aware source recovery、relativePath-aware source scope、cross-origin recovery diagnostics、LineTable identity recovery binding、heading-slice boundary recovery、source scope/heading slice separation 和 single-file regression preservation；验证命令已运行并记录真实 coverage failure baseline。
-后续动作:: 主线程/Principal coordinator 审核 Batch 04；通过后由协调者更新台账为 `通过` 并解锁 Batch 05。
+结论:: `通过`
+理由:: 主线程复核 Batch 04 实现提交和两次打回修正提交后，确认 origin-aware source recovery、relativePath-aware source scope、cross-origin recovery diagnostics、LineTable identity recovery binding、heading-slice boundary recovery、source scope/heading slice separation 和 single-file regression preservation 均满足本批验收标准。主线程已复跑验收测试、typecheck、docs/bookshelf test、Biome、forbidden path/search checks 和 coverage；coverage 仅保留已记录的全局 branch threshold 基线失败，Batch 04 新增 book-entry recovery 覆盖率达标。
+后续动作:: Batch 04 解锁 Batch 05；Batch 05 开始前继续以本台账为准。
