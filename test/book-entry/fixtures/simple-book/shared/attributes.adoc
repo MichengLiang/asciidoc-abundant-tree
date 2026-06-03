@@ -1,0 +1,1 @@
+:book-entry-shared-attribute: shared attribute value from include

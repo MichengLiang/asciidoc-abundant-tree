@@ -28,11 +28,43 @@ describe("book-entry logical source builder", () => {
 		expect(logicalSource.logicalText).toContain("== Xref Origin");
 		expect(logicalSource.logicalText).toContain("=== Nested Origin");
 		expect(logicalSource.logicalText).toContain("== Glossary Origin");
+		expect(logicalSource.logicalText).toContain(
+			":book-entry-shared-attribute: shared attribute value from include",
+		);
 		expect(logicalSource.logicalText).not.toContain(
 			"include::frontmatter/preface.adoc[]",
 		);
 		expect(logicalSource.logicalText).not.toContain(
+			"include::shared/attributes.adoc[]",
+		);
+		expect(logicalSource.logicalText).not.toContain(
 			"include::nested/section.adoc[]",
+		);
+	});
+
+	it("records shared attributes include as its own source file and line origin", () => {
+		const logicalSource = buildLogicalSource({
+			sourcePath: entryPath,
+			documentRoot: fixtureRoot,
+		});
+		const attributeLine =
+			":book-entry-shared-attribute: shared attribute value from include";
+		const attributeLogicalLine =
+			logicalSource.logicalText.split(/\r?\n/u).indexOf(attributeLine) + 1;
+		const attributeOrigin = originForLogicalLine(
+			logicalSource,
+			attributeLogicalLine,
+		);
+
+		expect(attributeLogicalLine).toBeGreaterThan(0);
+		expect(
+			logicalSource.sourceFiles.map((file) => file.relativePath),
+		).toContain("simple-book/shared/attributes.adoc");
+		expect(attributeOrigin).toEqual(
+			expect.objectContaining({
+				relativePath: "simple-book/shared/attributes.adoc",
+				sourceLine: 1,
+			}),
 		);
 	});
 

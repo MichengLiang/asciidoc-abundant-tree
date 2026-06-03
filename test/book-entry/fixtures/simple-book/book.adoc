@@ -1,6 +1,8 @@
 = Simple Source-Mapped Book
 :doctype: book
 
+include::shared/attributes.adoc[]
+
 \include::chapters/escaped.adoc[]
 
 [preface]
