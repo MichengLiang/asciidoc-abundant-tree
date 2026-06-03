@@ -11,7 +11,7 @@
 打回修正提交:: `3ada9168fbe1546c9cf7567c708ee3193189d9f2`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
-审核状态:: `待审核`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -194,6 +194,6 @@ src/cli.ts is covered by CLI tests, but the coverage table groups it outside the
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: Batch 05 实现提交和打回修正提交已完成显式 book-entry public API/CLI mode、documentRoot CLI 行为、runtime validation、stdout/stderr error behavior、option value validation 和 README usage；验证命令已运行并记录真实 coverage failure baseline。
-后续动作:: 主线程/Principal coordinator 审核 Batch 05；通过后由协调者更新台账为 `通过` 并解锁 Batch 06。
+结论:: `通过`
+理由:: Batch 05 实现提交和打回修正提交已完成显式 book-entry public API/CLI mode、documentRoot CLI 行为、runtime validation、stdout/stderr error behavior、option value validation 和 README usage；主线程复核验证命令已运行，除既有全局 branch coverage baseline 外未发现本批阻塞项。
+后续动作:: Batch 06 已解锁。
