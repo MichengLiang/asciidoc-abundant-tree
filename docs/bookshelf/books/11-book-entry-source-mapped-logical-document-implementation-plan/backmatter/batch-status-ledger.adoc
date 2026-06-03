@@ -34,7 +34,7 @@
 |Batch 04
 |Origin-aware Source Recovery
 |待审核
-|`26d4305c4e6623d11e072318ffe9d306bb6a6edc`
+|`3367ab40119fa1a65034a8940c2f0bed7dee7f78`
 |xref:batch-04-review-package[batch-04-review-package.adoc]
 
 |Batch 05
