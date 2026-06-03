@@ -1,0 +1,156 @@
+[#batch-01-review-package]
+== Batch 01 阶段审核包
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 01`
+批次名称:: `公共模型与坐标身份`
+提交 hash:: `7766995b9263e8cfb8a05d087762033bf66578b3`
+执行者:: `subagent`
+审核者:: `主线程/Principal coordinator`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/model.ts
+src/serializers.ts
+test/parser.test.ts
+test/serializers.test.ts
+test/book-entry/book-entry.acceptance.test.ts
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-01-review-package.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+`src/index.ts` 已检查。现有公共类型 export 已覆盖本批新增字段所在类型，本批没有对该文件产生 diff。
+
+=== 上下文闭包阅读记录
+
+[source,text]
+----
+- 目标规格闭包：
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/03-entry-and-source-set.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/06-line-origin.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/10-public-api-and-cli.adoc
+- 上游 parser 契约闭包：
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/04-abundant-document.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/05-node-model.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/06-source-coordinate.adoc
+- 当前代码闭包：
+  src/model.ts
+  src/serializers.ts
+  src/index.ts
+- 测试闭包：
+  test/serializers.test.ts
+  test/parser.test.ts
+  test/book-entry/book-entry.acceptance.test.ts
+- 治理闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/04-batch-01-public-model-and-coordinate-identity.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/01-execution-contract.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/review-package-template.adoc
+----
+
+=== 完成范围
+
+[source,text]
+----
+- AbundantDocument.mode 扩展为 "single-file" | "book-entry"。
+- ParseAbundantTreeOptions 扩展为 single-file/book-entry discriminated union，book-entry 分支要求 documentRoot。
+- SourceLayer 增加 relativePath，作为 public origin file identity 的权威位置。
+- SourceSpan 保持 line/column range；测试使用 @ts-expect-error 锁定 SourceSpan 不接受 relativePath。
+- Serializer pretty tree 把 relativePath 作为 source layer headline scalar 输出；JSON serialization 保留 source.relativePath。
+- parser.test.ts 断言未传 mode 时输出 mode: "single-file"。
+- book-entry acceptance 中公共模型/coordinate identity 的 expected-fail 已移除；sourceRelativePath helper 只读取 source.relativePath。
+- Line origin table 没有进入 AbundantDocument 主模型。
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- logical source builder：归属 Batch 02。
+- parser core memory entry：归属 Batch 03。
+- origin-aware source recovery：归属 Batch 04。
+- public API runtime dispatch 和 CLI book-entry mode：归属 Batch 05。
+- downstream coordinate regression：归属 Batch 06。
+- diagnostics 和 negative contracts 实现：归属 Batch 07。
+- expected-fail 迁移标记全部删除：归属 Batch 08。
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/parser.test.ts test/serializers.test.ts test/book-entry/book-entry.acceptance.test.ts
+pnpm typecheck
+pnpm test:coverage
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/parser.test.ts test/serializers.test.ts test/book-entry/book-entry.acceptance.test.ts:
+  PASS
+  Test Files 41 passed (41)
+  Tests 266 passed | 13 expected fail (279)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm test:coverage:
+  FAIL
+  Test Files 41 passed (41)
+  Tests 266 passed | 13 expected fail (279)
+  Failure reason: global branch coverage 88.17% is below configured threshold 90%.
+  Batch 01 judgment: command was run and true baseline is recorded; failure is the existing global branch coverage threshold condition.
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+pnpm test:coverage: FAIL
+Statements: 95.13% (1485/1561)
+Branches: 88.17% (984/1116)
+Functions: 97.34% (366/376)
+Lines: 95.04% (1458/1534)
+src/book-entry/**: not present in Batch 01
+----
+
+=== 规约检查清单
+
+* 本批目标对象来自 10 号书或 9 号书，不来自当前实现惯性。
+* 本批没有重新定义 10 号书目标对象。
+* 本批没有破坏 single-file mode。
+* 本批没有把 line origin table 变成下游主契约。
+* 本批没有输出假 source coordinate。
+* 本批测试覆盖了正向事实。
+* 本批测试覆盖了必要负向事实。
+* 本批未处理对象有去向。
+
+=== 工程质量检查清单
+
+* 本批没有修改批次边界外文件。
+* 本批没有修改 `src/parser.ts` 运行时流程。
+* 本批没有修改 `src/book-entry/**`。
+* 本批没有修改 `src/rdf12-projection/**`。
+* 本批没有修改 `README.md` 或 `CHANGELOG.md`。
+* 本批没有引入 line origin table、source file table 或 book-entry runtime builder。
+* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批新增代码有对应测试。
+* 本批没有新增高频路径或性能相关结构。
+* 本批没有通过 `any` 或双重断言掩盖公共模型冲突。
+* 本批注释只记录迁移 expected-fail 移除批次和 SourceSpan 职责边界。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: Batch 01 已产生公共模型、serializer 表面、目标测试、coverage 基线、审核包和状态台账更新。Coverage 命令因既有全局 branch 覆盖率低于阈值失败，真实结果已记录。
+后续动作:: 主线程/Principal coordinator 审核 Batch 01；通过后解锁 Batch 02。
