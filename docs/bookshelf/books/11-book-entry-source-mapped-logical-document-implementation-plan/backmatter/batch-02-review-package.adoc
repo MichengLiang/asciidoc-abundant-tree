@@ -9,7 +9,7 @@
 提交 hash:: `9c50aa619299a76f0f272cdcc44b51b101a0c530`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
-审核状态:: `待审核`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -201,9 +201,24 @@ src/book-entry/** Lines: 100% (78/78)
 * 本批没有写入 `build/adoc`。
 * 本批越界 include target 在 readFile 调用前被 documentRoot boundary check 阻止，并由 readFile spy 测试覆盖。
 
+=== 审核者复核记录
+
+[source,text]
+----
+git status --short: clean
+git diff --name-only f470bee9d30e7a76c050e182d8262c505094ba9f..HEAD -- src/parser.ts src/asciidoctor-adapter.ts src/rdf12-projection src/model.ts src/serializers.ts src/index.ts README.md CHANGELOG.md: no output
+pnpm test -- test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts test/book-entry/book-entry-negative.test.ts: PASS, 284 passed, 12 expected fail
+pnpm typecheck: PASS
+pnpm --dir docs/bookshelf test: PASS, 11 passed
+pnpm exec biome check --vcs-use-ignore-file=false src/book-entry test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts test/book-entry/book-entry-negative.test.ts test/book-entry/book-entry.acceptance.test.ts: PASS
+rg '@asciidoctor|asciidoctor-adapter|rdf12|build/adoc|writeFile' src/book-entry test/book-entry/logical-source-builder.test.ts test/book-entry/include-resolution.test.ts: no matches
+rg 'shared|attributes|include::.*attributes' test/book-entry src/book-entry: matches real shared attributes fixture, include directive, and sourceFiles/line origin assertions
+pnpm test:coverage: FAIL, global branch coverage 88.56% below configured 90% threshold; coverage/src/book-entry/index.html reports 100% for statements, branches, functions, and lines
+----
+
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: Batch 02 实现提交建立了 logical source construction 模块和对应正负向测试；打回修正提交补齐真实 shared attributes include 展开覆盖；全局 coverage 命令已运行并记录真实阈值失败，`src/book-entry/**` 覆盖率满足本批验收阈值。
-后续动作:: 主线程/Principal coordinator 审核 Batch 02；审核通过前不进入 Batch 03。
+结论:: `通过`
+理由:: Batch 02 建立了职责分离的 logical source construction 模块，越界 include 在读取前被阻止，unsupported attrlist 阻止 logical source 成立，source file table 以 absolutePath 去重，line origin 连续且由 invariant 检查保护；打回对象已由真实 shared attributes include fixture 和断言修正。
+后续动作:: Batch 03 可以在工作树干净且本通过状态提交后开始。

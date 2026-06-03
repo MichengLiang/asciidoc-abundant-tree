@@ -21,7 +21,7 @@
 
 |Batch 02
 |Logical Source Builder
-|待审核
+|通过
 |`9c50aa619299a76f0f272cdcc44b51b101a0c530`
 |xref:batch-02-review-package[batch-02-review-package.adoc]
 
