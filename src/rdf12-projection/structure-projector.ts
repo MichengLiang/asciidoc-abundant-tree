@@ -23,7 +23,10 @@ import {
 	makeResourceIri,
 	type OrdinalAllocator,
 } from "./resource-identity";
-import { addLineSpanTriples } from "./source-location";
+import {
+	addLineSpanTriples,
+	sourceRelativePathOrFallback,
+} from "./source-location";
 import { iriTerm, type Rdf12IriTerm } from "./terms";
 
 export type ProjectStructureResourcesInput = {
@@ -75,7 +78,12 @@ function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 		span: slice.span,
 	});
 
-	addTypeAndSourceTriples(context.graph, iri, context.relativePath, slice.span);
+	addTypeAndSourceTriples(
+		context.graph,
+		iri,
+		sourceRelativePathOrFallback(title.source, context.relativePath),
+		slice.span,
+	);
 	addStringTriple(context.graph, iri, "headline", title.text);
 	addIntegerTriple(context.graph, iri, "headingLevel", 0);
 	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
@@ -123,7 +131,12 @@ function projectHeading(
 		span: slice.span,
 	});
 
-	addTypeAndSourceTriples(context.graph, iri, context.relativePath, slice.span);
+	addTypeAndSourceTriples(
+		context.graph,
+		iri,
+		sourceRelativePathOrFallback(node.source, context.relativePath),
+		slice.span,
+	);
 	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
 	addIntegerTriple(context.graph, iri, "headingLevel", node.level);
 	addStringTriple(context.graph, iri, "headline", node.title);

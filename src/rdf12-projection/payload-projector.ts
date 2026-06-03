@@ -12,7 +12,10 @@ import {
 	type OrdinalAllocator,
 } from "./resource-identity";
 import { bindSelector } from "./selector-binding";
-import { addLineSpanTriples } from "./source-location";
+import {
+	addLineSpanTriples,
+	sourceRelativePathOrFallback,
+} from "./source-location";
 import { iriTerm, type Rdf12IriTerm } from "./terms";
 import type { Rdf12XrefIndex } from "./xref-projector";
 
@@ -108,7 +111,10 @@ function projectPayloadListing(
 	addLineSpanTriples({
 		graph: context.graph,
 		subject: payload,
-		relativePath: context.relativePath,
+		relativePath: sourceRelativePathOrFallback(
+			node.source,
+			context.relativePath,
+		),
 		span: node.span,
 	});
 	addOptionalLineSpan(context.graph, payload, "content", node.contentSpan);

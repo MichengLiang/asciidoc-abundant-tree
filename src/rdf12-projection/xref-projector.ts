@@ -15,7 +15,10 @@ import {
 	type OrdinalAllocator,
 } from "./resource-identity";
 import { bindSelector } from "./selector-binding";
-import { addSourceSpanTriples } from "./source-location";
+import {
+	addSourceSpanTriples,
+	sourceRelativePathOrFallback,
+} from "./source-location";
 import { iriTerm, type Rdf12IriTerm } from "./terms";
 
 export type ProjectXrefResourcesInput = {
@@ -208,7 +211,10 @@ function createXrefResource(
 	addSourceSpanTriples({
 		graph: context.graph,
 		subject: xrefIri,
-		relativePath: context.relativePath,
+		relativePath: sourceRelativePathOrFallback(
+			xref.source,
+			context.relativePath,
+		),
 		sourceSpan: xref.sourceSpan,
 	});
 	addStringTriple(context.graph, xrefIri, "syntax", xref.syntax);

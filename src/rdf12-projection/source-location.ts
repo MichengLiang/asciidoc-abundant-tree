@@ -1,4 +1,4 @@
-import type { LineSpan, SourceSpan } from "../model";
+import type { LineSpan, SourceLayer, SourceSpan } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
 import { integerLiteral, stringLiteral } from "./literals";
@@ -18,6 +18,13 @@ export type AddSourceSpanTriplesInput = {
 	readonly relativePath: string;
 	readonly sourceSpan: SourceSpan;
 };
+
+export function sourceRelativePathOrFallback(
+	source: SourceLayer | undefined,
+	fallbackRelativePath: string,
+): string {
+	return source?.relativePath ?? fallbackRelativePath;
+}
 
 export function addLineSpanTriples(input: AddLineSpanTriplesInput): void {
 	input.graph.add(
