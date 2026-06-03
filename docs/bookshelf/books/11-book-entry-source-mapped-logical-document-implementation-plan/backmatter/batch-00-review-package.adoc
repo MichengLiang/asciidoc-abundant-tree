@@ -9,7 +9,7 @@
 提交 hash:: `4a8299800c0da0966ea051fc25dccfc7fbae9569`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
-审核状态:: `待审核`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -190,9 +190,21 @@ src/book-entry/**: not present in Batch 00
 * 本批没有通过 `any` 扩散掩盖公共模型冲突；未来字段访问集中在测试 helper 的局部 `unknown` cast 中。
 * 本批注释只记录迁移 expected-fail 移除批次和 fixture 不变量。
 
+=== 审核者复核记录
+
+[source,text]
+----
+git status --short: clean
+git diff --name-only bcb4235b51cd5d959dc57ea27c1773fb73d63931..HEAD -- src README.md CHANGELOG.md: no output
+pnpm test -- test/book-entry test/parser-include-source-map.test.ts test/parser-input-edges.test.ts: PASS, 261 passed, 13 expected fail
+pnpm typecheck: PASS
+pnpm test:coverage: FAIL, branch coverage 88.12% below configured 90% threshold
+pnpm --dir docs/bookshelf test: PASS, 11 passed
+----
+
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: Batch 00 已产生实现提交、测试护栏、覆盖率基线、审核包和状态台账更新。Coverage 命令因既有全局 branch 覆盖率低于阈值失败，真实基线已记录。
-后续动作:: 主线程/Principal coordinator 审核 Batch 00；通过后解锁 Batch 01。
+结论:: `通过`
+理由:: Batch 00 的实现提交只包含允许的 `test/book-entry/**` 文件，审核证据提交只包含允许的审核包和状态台账文件；测试护栏覆盖本批正向 contract、negative contract 和 single-file regression；coverage 命令已运行并记录真实基线。
+后续动作:: Batch 01 可以在工作树干净且本通过状态提交后开始。

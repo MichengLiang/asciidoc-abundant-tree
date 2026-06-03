@@ -9,7 +9,7 @@
 
 |Batch 00
 |基线与迁移护栏
-|待审核
+|通过
 |`4a8299800c0da0966ea051fc25dccfc7fbae9569`
 |xref:batch-00-review-package[batch-00-review-package.adoc]
 
