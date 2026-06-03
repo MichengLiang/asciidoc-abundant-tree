@@ -27,7 +27,7 @@
 
 |Batch 03
 |Parser Core 内存入口
-|待审核
+|通过
 |`ea6c2b9c24bd5239204fd0cc470deedcbab30a5f`
 |xref:batch-03-review-package[batch-03-review-package.adoc]
 

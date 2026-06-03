@@ -9,7 +9,7 @@
 提交 hash:: `ea6c2b9c24bd5239204fd0cc470deedcbab30a5f`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
-审核状态:: `待审核`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -188,9 +188,24 @@ src/parser.ts Lines: 92.85% (13/14)
 - Batch 03 暂不暴露最终 public negative diagnostics；相关 negative contract 仍 expected-fail 到 Batch 07。
 ----
 
+=== 审核者复核记录
+
+[source,text]
+----
+git status --short: clean
+git diff --name-only cb515d44d471fad4463b7e298364f19f42c7b3cc..HEAD -- src/rdf12-projection src/cli.ts README.md CHANGELOG.md: no output
+pnpm test -- test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser.test.ts test/parser-include-source-map.test.ts: PASS, 290 passed, 9 expected fail
+pnpm typecheck: PASS
+pnpm --dir docs/bookshelf test: PASS, 11 passed
+pnpm exec biome check --vcs-use-ignore-file=false src/parser.ts src/parser-core.ts src/asciidoctor-adapter.ts src/source-surfaces.ts src/official-projector.ts test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts test/parser.test.ts test/parser-include-source-map.test.ts: PASS
+rg 'writeFile|mkdtemp|tmp|loadFile\(.*book|loadFile\(.*entry|build/adoc' src test/book-entry/parser-integration.test.ts test/book-entry/book-entry.acceptance.test.ts: no matches
+rg 'loadFile|loadSource|readFileSync|writeFile|mkdtemp|build/adoc|sourceSurfacePath' src/parser.ts src/parser-core.ts src/asciidoctor-adapter.ts: book-entry uses loadSource(logicalText), single-file uses readFileSync and loadFile(sourcePath), no writeFile/mkdtemp/build/adoc matches
+pnpm test:coverage: FAIL, global branch coverage 88.53% below configured 90% threshold; coverage/src/parser-core.ts.html reports 100% statements, branches, functions, and lines
+----
+
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: Batch 03 实现提交使 single-file 和 book-entry 共享 parser core；book-entry 使用 in-memory logical text 解析并返回标准 AbundantDocument；全局 coverage 命令已运行并记录真实阈值失败。
-后续动作:: 主线程/Principal coordinator 审核 Batch 03；审核通过前不进入 Batch 04。
+结论:: `通过`
+理由:: Batch 03 实现提交使 single-file 和 book-entry 共享 parser core；book-entry 使用 in-memory logical text 解析并返回标准 `AbundantDocument`；single-file 仍使用 `loadFile(sourcePath)`；memory parse 与 file parse 入口可审查地区分；未发现临时文件、`build/adoc` 写入或 RDF/CLI 越界修改。
+后续动作:: Batch 04 可以在工作树干净且本通过状态提交后开始。
