@@ -56,12 +56,51 @@ describe("cli error handling", () => {
 		expect(result.stderr).toBe("--mode requires a value");
 	});
 
+	it("rejects mode values that are another flag", () => {
+		const result = runCli([
+			"samples/reference-links.adoc",
+			"--mode",
+			"--format",
+			"json",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toBe("--mode requires a value");
+	});
+
 	it("rejects missing documentRoot values", () => {
 		const result = runCli(["samples/reference-links.adoc", "--document-root"]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toBe("--document-root requires a value");
+	});
+
+	it("rejects documentRoot values that are another flag", () => {
+		const result = runCli([
+			"samples/reference-links.adoc",
+			"--document-root",
+			"--format",
+			"json",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toBe("--document-root requires a value");
+	});
+
+	it("rejects format values that are another flag", () => {
+		const result = runCli([
+			"samples/reference-links.adoc",
+			"--format",
+			"--mode",
+			"book-entry",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toBe("--format requires a value");
 	});
 
 	it("throws from the library API when book-entry mode omits documentRoot", () => {
@@ -71,6 +110,15 @@ describe("cli error handling", () => {
 				mode: "book-entry",
 			} as Parameters<typeof parserModule.parseAbundantTree>[0]),
 		).toThrow(/documentRoot/);
+	});
+
+	it("throws from the library API for unsupported modes", () => {
+		expect(() =>
+			parserModule.parseAbundantTree({
+				sourcePath: bookEntryPath,
+				mode: "bogus",
+			} as unknown as Parameters<typeof parserModule.parseAbundantTree>[0]),
+		).toThrow(/Unsupported mode: bogus/);
 	});
 
 	it("reports book-entry input files outside documentRoot", () => {

@@ -31,6 +31,9 @@ export function parseAbundantTree(
 			mode: "book-entry",
 		});
 	}
+	if (options.mode !== undefined && options.mode !== "single-file") {
+		throw new Error(`Unsupported mode: ${String(options.mode)}.`);
+	}
 
 	const source = readFileSync(sourcePath, "utf8");
 	const lineTable = buildLineTable(source);

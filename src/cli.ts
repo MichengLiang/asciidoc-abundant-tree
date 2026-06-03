@@ -155,9 +155,7 @@ function parseArgs(args: string[]): {
 
 		if (arg === "--format") {
 			const next = args[index + 1];
-			if (!next) {
-				throw new Error("--format requires a value");
-			}
+			requireOptionValue(next, "--format");
 			if (
 				next !== "tree" &&
 				next !== "json" &&
@@ -175,9 +173,7 @@ function parseArgs(args: string[]): {
 
 		if (arg === "--mode") {
 			const next = args[index + 1];
-			if (!next) {
-				throw new Error("--mode requires a value");
-			}
+			requireOptionValue(next, "--mode");
 			if (next !== "single-file" && next !== "book-entry") {
 				throw new Error(
 					`Unsupported mode: ${next}. Expected single-file or book-entry.`,
@@ -190,9 +186,7 @@ function parseArgs(args: string[]): {
 
 		if (arg === "--document-root") {
 			const next = args[index + 1];
-			if (!next) {
-				throw new Error("--document-root requires a value");
-			}
+			requireOptionValue(next, "--document-root");
 			documentRoot = next;
 			index += 1;
 			continue;
@@ -211,6 +205,15 @@ function parseArgs(args: string[]): {
 	}
 
 	return { help, sourcePath, format, mode, documentRoot };
+}
+
+function requireOptionValue(
+	value: string | undefined,
+	optionName: string,
+): asserts value is string {
+	if (!value || value.startsWith("-")) {
+		throw new Error(`${optionName} requires a value`);
+	}
 }
 
 function parserOptions(
