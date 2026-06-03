@@ -1,0 +1,6 @@
+// Same-line heading fixture: the section surface is on line 3 in both chapter files.
+
+[#target-origin]
+== Target Origin
+
+This chapter owns the target section.

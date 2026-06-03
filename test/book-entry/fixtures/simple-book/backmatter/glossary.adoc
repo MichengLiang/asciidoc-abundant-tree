@@ -1,0 +1,4 @@
+[#glossary-origin]
+== Glossary Origin
+
+origin:: The source file that authored a logical document line.

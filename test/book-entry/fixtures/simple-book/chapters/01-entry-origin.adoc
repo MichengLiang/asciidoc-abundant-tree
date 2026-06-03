@@ -1,0 +1,8 @@
+// Same-line heading fixture: the section surface is on line 3 in both chapter files.
+
+[#xref-origin]
+== Xref Origin
+
+This chapter points to xref:target-origin[Target Origin].
+
+include::nested/section.adoc[]

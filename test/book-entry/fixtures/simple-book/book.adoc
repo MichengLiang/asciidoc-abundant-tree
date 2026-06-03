@@ -1,0 +1,22 @@
+= Simple Source-Mapped Book
+:doctype: book
+
+\include::chapters/escaped.adoc[]
+
+[preface]
+include::frontmatter/preface.adoc[]
+
+= Part One
+
+[partintro]
+The entry file owns this part introduction.
+
+[#entry-owned-chapter]
+== Entry Owned Chapter
+
+include::chapters/01-entry-origin.adoc[]
+
+include::chapters/02-target-origin.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]

@@ -1,0 +1,3 @@
+= Circular A
+
+include::circular-b.adoc[]
