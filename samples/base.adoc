@@ -1,0 +1,30 @@
+= 我的笔记本
+
+一段文字xxx
+
+[#delivery-policy.policy, status=active, owner=ops]
+== 配送策略
+
+配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, banana=true]。
+
+[#capacity-rule.rule, status=active]
+== 运力规则
+
+运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
+
+=== 细分规则a
+
+一段文字xxx
+
+==== 细分规则a.a
+
+一段文字xxx
+
+== 其他东西
+
+在标题里的交叉引用，主语默认是当前标题。
+例如 xref:delivery-policy[rel=implementation]
+就是 其他东西 实现 配送策略
+
+若rel为空，则语义为 references
+例如 xref:capacity-rule[]
