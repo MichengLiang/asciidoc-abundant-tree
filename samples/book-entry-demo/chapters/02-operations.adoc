@@ -1,0 +1,22 @@
+[#demo-operations]
+== Operations
+
+The operations chapter links back to xref:demo-overview[the overview section].
+
+[#demo-checklist]
+=== Checklist
+
+* Parse the entry file in explicit book-entry mode.
+* Preserve source coordinates from each included file.
+* Keep single-file mode separate from include expansion.
+
+[cols="1,2", options="header"]
+|===
+|Surface |Expected source
+
+|Overview section
+|chapters/01-overview.adoc
+
+|Checklist section
+|chapters/02-operations.adoc
+|===

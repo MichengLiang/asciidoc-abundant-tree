@@ -32,6 +32,7 @@ The primary artifact is the TypeScript object. Pretty text, JSON, RDF 1.2 Turtle
 - RDF 1.2 heading projection specification: [AsciiDoc `AbundantDocument` 到 RDF 1.2 标题投影图规约](https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html)
 - Generated book source: [`docs/bookshelf/build/adoc/books/06-rdf12-line-projection.adoc`](./docs/bookshelf/build/adoc/books/06-rdf12-line-projection.adoc)
 - Compact preview sample: [`samples/rdf12-projection-preview.adoc`](./samples/rdf12-projection-preview.adoc)
+- Book-entry sample: [`samples/book-entry-demo/book.adoc`](./samples/book-entry-demo/book.adoc)
 - Source: [`docs/bookshelf`](./docs/bookshelf/)
 
 The RDF 1.2 projection book specifies the graph vocabulary and query contract used by the package runtime. The public runtime surface exposes that projection through the `rdf12(document, options)` API and CLI `--format rdf12` / `--format rdf12-json-ld`.
@@ -195,13 +196,15 @@ asciidoc-abundant-tree docs/index.adoc --format rdf12-json-ld > projection.jsonl
 Book-entry mode parses an entry file and supported full-file include directives into one logical document. It is always explicit:
 
 ```bash
-asciidoc-abundant-tree docs/books/example/book.adoc \
+asciidoc-abundant-tree samples/book-entry-demo/book.adoc \
   --mode book-entry \
-  --document-root docs \
+  --document-root samples/book-entry-demo \
   --format json
 ```
 
 When `--document-root` is omitted in book-entry mode, the CLI uses the current working directory. In single-file mode, `--document-root` does not change parser input construction; RDF output still uses it as the projection root.
+
+The demo book keeps the entry file, included chapters, and an assets directory under one sample tree. Its JSON, pretty tree, and RDF 1.2 outputs expose origin `relativePath` values such as `chapters/01-overview.adoc` and `chapters/02-operations.adoc` instead of treating the entry file as the source for every node.
 
 The CLI exposes only `rdf12` and `rdf12-json-ld` for RDF output. It does not accept `rdf`, `ttl`, or `turtle` as public format aliases.
 
@@ -220,9 +223,9 @@ const document = parseAbundantTree({
 });
 
 const book = parseAbundantTree({
-	sourcePath: "docs/books/example/book.adoc",
+	sourcePath: "samples/book-entry-demo/book.adoc",
 	mode: "book-entry",
-	documentRoot: "docs",
+	documentRoot: "samples/book-entry-demo",
 });
 
 const prettyText = formatAbundantTree(document);
@@ -299,11 +302,12 @@ Run the CLI from source:
 pnpm dev samples/reference-links.adoc
 pnpm dev samples/reference-links.adoc --json
 pnpm dev samples/reference-links.adoc --format rdf12
+pnpm dev samples/book-entry-demo/book.adoc --mode book-entry --document-root samples/book-entry-demo --format json
 ```
 
 ## Release State
 
-The package is usable for single-file source analysis, xref/target auditing, and RDF 1.2 heading projection. The object model and RDF vocabulary are intentionally small and conservative. Prefer pinning a minor version in production workflows and checking the JSON and RDF shapes against your own fixtures before relying on it for large document systems.
+The package is usable for single-file source analysis, explicit book-entry include graphs, xref/target auditing, and RDF 1.2 heading projection. The object model and RDF vocabulary are intentionally small and conservative. Prefer pinning a minor version in production workflows and checking the JSON and RDF shapes against your own fixtures before relying on it for large document systems.
 
 The GitHub Actions publish workflow runs on `v*` tag pushes, publishes to npm with provenance, and creates a GitHub Release from `CHANGELOG.md` when the release does not already exist.
 

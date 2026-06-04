@@ -11,6 +11,11 @@ This project uses semantic versioning after `0.1.0`.
 - Added explicit `book-entry` parsing mode for the library API and CLI, with `documentRoot`-bounded full-file include construction and origin source coordinates.
 - Added CLI `--mode single-file|book-entry` and `--document-root <root>` behavior for JSON, pretty tree, RDF 1.2 Turtle, and RDF 1.2 JSON-LD output.
 - Added downstream RDF 1.2 projection coverage for book-entry origin `aat:relativePath` values on heading resources, xref edge evidence, payload resources, and source document provenance.
+- Added `samples/book-entry-demo/` as a small book-shaped black-box sample for explicit book-entry parsing.
+
+### Changed
+
+- Extended the CLI smoke gate to cover the book-entry demo JSON path.
 
 ### Fixed
 

@@ -1,7 +1,7 @@
 {
 	"name": "asciidoc-abundant-tree",
 	"version": "0.1.8",
-	"description": "Recover a source-aware, analysis-ready tree from a single AsciiDoc file.",
+	"description": "Recover a source-aware, analysis-ready tree from AsciiDoc files and explicit book-entry include graphs.",
 	"license": "Apache-2.0",
 	"author": {
 		"name": "弥澄亮",
@@ -29,7 +29,8 @@
 		"./package.json": "./package.json"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"samples"
 	],
 	"sideEffects": false,
 	"keywords": [
@@ -59,7 +60,7 @@
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
 		"pack:check": "pnpm build && publint && npm pack --dry-run",
-		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format rdf12 >/dev/null && node dist/cli.mjs samples/reference-links.adoc --format rdf12-json-ld >/dev/null",
+		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format rdf12 >/dev/null && node dist/cli.mjs samples/reference-links.adoc --format rdf12-json-ld >/dev/null && node dist/cli.mjs samples/book-entry-demo/book.adoc --mode book-entry --document-root samples/book-entry-demo --format json >/dev/null",
 		"clean": "rm -rf dist coverage"
 	},
 	"dependencies": {

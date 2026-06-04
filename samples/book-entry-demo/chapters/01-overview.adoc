@@ -1,0 +1,12 @@
+[#demo-overview]
+== Overview
+
+This sample starts in the overview chapter and links to xref:demo-checklist[the operations checklist].
+
+[#overview-note]
+The overview note is anchored in the first included source file.
+
+[source,json]
+----
+{"chapter":"overview","purpose":"book-entry smoke sample"}
+----

@@ -1,0 +1,3 @@
+= Book Entry Demo Assets
+
+This directory is intentionally present to show a normal book-shaped sample tree.
