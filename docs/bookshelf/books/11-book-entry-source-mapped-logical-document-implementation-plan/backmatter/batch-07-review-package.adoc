@@ -1,0 +1,195 @@
+[#batch-07-review-package]
+== Batch 07 阶段审核包
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 07`
+批次名称:: `Diagnostics 与 Negative Contracts`
+提交 hash:: `ae4ff07a2f6a408a9d150706ff81ba841f9ce6b3`
+执行者:: `subagent`
+审核者:: `主线程/Principal coordinator`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+src/book-entry/diagnostics.ts
+src/book-entry/logical-source-builder.ts
+src/cli.ts
+src/parser.ts
+test/book-entry/book-entry-negative.test.ts
+test/cli-error.test.ts
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-07-review-package.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+----
+
+=== 上下文闭包阅读记录
+
+[source,text]
+----
+- 目标规格闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/10-batch-07-diagnostics-and-negative-contracts.adoc
+- 上游 parser 契约闭包：
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/09-diagnostics-and-failure-surface.adoc
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/12-acceptance-and-gates.adoc
+- 目标 book-entry 契约闭包：
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/09-diagnostics.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/11-contract-tests.adoc
+- 治理闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/01-execution-contract.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+- 当前代码闭包：
+  src/book-entry/diagnostics.ts
+  src/book-entry/include-resolution.ts
+  src/book-entry/logical-source-builder.ts
+  src/book-entry/model.ts
+  src/book-entry/origin-coordinate.ts
+  src/book-entry/path-boundary.ts
+  src/book-entry/source-scope-index.ts
+  src/parser.ts
+  src/cli.ts
+  src/source-surfaces.ts
+- 测试闭包：
+  test/book-entry/book-entry-negative.test.ts
+  test/book-entry/source-coordinate-recovery.test.ts
+  test/book-entry/logical-source-builder.test.ts
+  test/book-entry/include-resolution.test.ts
+  test/cli-error.test.ts
+----
+
+=== 完成范围
+
+[source,text]
+----
+- `entry.missing-source` is a stable construction error code for missing book-entry entry files.
+- Book-entry parser API preserves `BookEntryConstructionError` code and object-fact message instead of wrapping it in a generic error.
+- Entry missing, include missing, outside documentRoot, include cycle, unsupported attrlist, logical-line/origin count mismatch, source-file missing, and sourceLine out-of-range all block successful `AbundantDocument` construction.
+- Batch 00 `it.fails` migration gate was removed from `book-entry-negative.test.ts`; Batch 07 negative contracts are ordinary passing tests.
+- Negative contract tests assert stable code, error level, and object-fact message contents.
+- Unsupported attrlist messages include the attrlist surface, including `tag=main` and `lines=1..4`.
+- Include cycle message includes the cycle path with both `circular-a.adoc` and `circular-b.adoc`.
+- Successful book-entry documents are asserted not to contain construction error codes in `toolDiagnostics`.
+- CLI book-entry construction errors return nonzero, write stderr only, keep stdout empty, and expose construction code plus object-fact message.
+- Recovery diagnostics remain `ToolDiagnostic` warnings; existing cross-origin recovery test still proves no fake raw/source coordinate is emitted.
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- Final Gates and Closure：归属 Batch 08。
+- Global branch coverage threshold remains slightly below 90% in this run; true result is recorded under coverage.
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test -- test/book-entry/book-entry-negative.test.ts test/cli-error.test.ts
+pnpm test -- test/book-entry/book-entry-negative.test.ts test/book-entry/source-coordinate-recovery.test.ts test/cli-error.test.ts
+pnpm typecheck
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm exec biome check src/book-entry src/parser.ts src/cli.ts src/source-surfaces.ts test/book-entry/book-entry-negative.test.ts test/book-entry/source-coordinate-recovery.test.ts test/cli-error.test.ts
+git diff --name-only 6bf0de4 -- src/rdf12-projection README.md CHANGELOG.md
+git diff --check
+rg -n '暂时|后续|目前|currently|not yet|TODO' src/book-entry src/parser.ts src/cli.ts src/source-surfaces.ts test/book-entry/book-entry-negative.test.ts test/book-entry/source-coordinate-recovery.test.ts test/cli-error.test.ts
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test -- test/book-entry/book-entry-negative.test.ts test/cli-error.test.ts:
+  RED before implementation: FAIL
+  Failure showed parser converted construction errors to generic `Error("Book-entry logical document construction failed.")`.
+
+pnpm test -- test/book-entry/book-entry-negative.test.ts test/book-entry/source-coordinate-recovery.test.ts test/cli-error.test.ts:
+  PASS
+  Test Files 47 passed (47)
+  Tests 356 passed (356)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm test:coverage:
+  FAIL
+  Test Files 47 passed (47)
+  Tests 356 passed (356)
+  Failure reason: global branch coverage 89.98% is below configured threshold 90%.
+  Batch 07 judgment: command was run and true result is recorded; no test failed, and the threshold failure is limited to global branch coverage.
+
+pnpm --dir docs/bookshelf test:
+  PASS
+  node --test reported 11 pass, 0 fail
+
+pnpm exec biome check src/book-entry src/parser.ts src/cli.ts src/source-surfaces.ts test/book-entry/book-entry-negative.test.ts test/book-entry/source-coordinate-recovery.test.ts test/cli-error.test.ts:
+  PASS
+  Checked 13 files. No fixes applied.
+
+git diff --name-only 6bf0de4 -- src/rdf12-projection README.md CHANGELOG.md:
+  PASS
+  No output.
+
+git diff --check:
+  PASS
+  No whitespace errors.
+
+rg -n '暂时|后续|目前|currently|not yet|TODO' src/book-entry src/parser.ts src/cli.ts src/source-surfaces.ts test/book-entry/book-entry-negative.test.ts test/book-entry/source-coordinate-recovery.test.ts test/cli-error.test.ts:
+  PASS
+  No output.
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+pnpm test:coverage: FAIL
+Statements: 96.12% (1836/1910)
+Branches: 89.98% (1249/1388)
+Functions: 97.49% (428/439)
+Lines: 96.06% (1806/1880)
+Failure reason: global branch coverage 89.98% is below configured threshold 90%.
+
+src/book-entry/**:
+Statements: 98.51%
+Branches: 96.21%
+Functions: 100%
+Lines: 98.49%
+----
+
+=== 规约检查清单
+
+* 本批目标对象来自 10 号书和 9 号书 diagnostics/failure surface，不来自当前实现惯性。
+* 本批没有新增 object model 目标。
+* 本批没有破坏 single-file mode；single-file missing input still uses existing CLI input-file error surface.
+* 本批没有把 construction errors 输出为 successful `AbundantDocument.toolDiagnostics`。
+* 本批没有把 recovery diagnostics 升级为 construction errors。
+* 本批没有输出假 source coordinate；cross-origin recovery diagnostic test remains in force.
+* 本批测试覆盖了所有 construction error codes listed in the Batch 07 contract.
+* 本批测试覆盖了 CLI construction error stderr-only behavior.
+* 本批 message checks reject prohibited process/time/status language.
+* 本批未处理对象有去向。
+
+=== 工程质量检查清单
+
+* 本批没有修改批次边界外文件；RDF12 graph semantics、README、CHANGELOG diff 为空。
+* 本批没有修改 `src/rdf12-projection/**`。
+* Parser API preserves typed construction error objects instead of erasing code/message.
+* CLI explicit book-entry mode lets missing entry file surface as construction error; single-file mode keeps existing input precheck.
+* Include path outside documentRoot remains checked before target read by existing include-resolution tests.
+* Include cycle diagnostics identify the cycle path.
+* Unsupported attrlist diagnostics include the concrete attrlist surface.
+* 本批新增测试先以 RED 暴露 parser wrapping failure，再转为 passing tests.
+* 本批没有通过 `any` 或类型逃逸掩盖公共模型冲突。
+* 本批注释没有新增无必要说明。
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: Batch 07 implementation commit `ae4ff07a2f6a408a9d150706ff81ba841f9ce6b3` hardens construction error codes/messages, parser API propagation, CLI stderr-only error behavior, and negative contracts; required tests, typecheck, coverage, docs tests, Biome, forbidden diff, and prohibited-language search have been run.
+后续动作:: 主线程/Principal coordinator 审核 Batch 07；通过后进入 Batch 08。
