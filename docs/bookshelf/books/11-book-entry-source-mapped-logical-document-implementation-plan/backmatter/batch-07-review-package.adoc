@@ -9,7 +9,7 @@
 提交 hash:: `ae4ff07a2f6a408a9d150706ff81ba841f9ce6b3`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
-审核状态:: `待审核`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -190,6 +190,6 @@ Lines: 98.49%
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: Batch 07 implementation commit `ae4ff07a2f6a408a9d150706ff81ba841f9ce6b3` hardens construction error codes/messages, parser API propagation, CLI stderr-only error behavior, and negative contracts; required tests, typecheck, coverage, docs tests, Biome, forbidden diff, and prohibited-language search have been run.
-后续动作:: 主线程/Principal coordinator 审核 Batch 07；通过后进入 Batch 08。
+结论:: `通过`
+理由:: Batch 07 implementation commit `ae4ff07a2f6a408a9d150706ff81ba841f9ce6b3` hardens construction error codes/messages, parser API propagation, CLI stderr-only error behavior, and negative contracts；主线程复核 required tests, typecheck, coverage, docs tests, Biome, forbidden diff, prohibited-language search, and targeted CLI/API construction-error probes. Coverage failure is limited to the recorded global branch threshold.
+后续动作:: Batch 08 已解锁。

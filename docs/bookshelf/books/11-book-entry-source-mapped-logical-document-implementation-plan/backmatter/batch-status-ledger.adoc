@@ -51,7 +51,7 @@
 
 |Batch 07
 |Diagnostics 与 Negative Contracts
-|待审核
+|通过
 |`ae4ff07a2f6a408a9d150706ff81ba841f9ce6b3`
 |xref:batch-07-review-package[batch-07-review-package.adoc]
 
