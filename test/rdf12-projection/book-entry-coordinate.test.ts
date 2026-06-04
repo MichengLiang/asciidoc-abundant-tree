@@ -9,6 +9,7 @@ import { serializeRdf12ProjectionToTurtle } from "../../src/rdf12-projection/tur
 import {
 	aatTerm,
 	expectLiteralValue,
+	literalValues,
 	rdfTerm,
 	termIri,
 } from "./helpers/graph-matchers";
@@ -39,6 +40,31 @@ describe("rdf12 book-entry origin source coordinates", () => {
 			aatTerm("relativePath"),
 			"simple-book/chapters/nested/section.adoc",
 		);
+	});
+
+	it("does not project book-entry document-title raw from expanded logical text", () => {
+		const projection = projectBookEntryFixture();
+		const titleHeading = headingByHeadline(
+			projection.graph,
+			"Simple Source-Mapped Book",
+		);
+		const raw = onlyLiteralValue(
+			projection.graph,
+			titleHeading,
+			aatTerm("raw"),
+		);
+
+		expectLiteralValue(
+			projection.graph,
+			titleHeading,
+			aatTerm("relativePath"),
+			"simple-book/book.adoc",
+		);
+		expect(raw).toBe("= Simple Source-Mapped Book\n");
+		expect(raw).not.toContain(
+			":book-entry-shared-attribute: shared attribute value from include",
+		);
+		expect(raw).not.toContain("include::shared/attributes.adoc[]");
 	});
 
 	it("projects xref edge evidence relativePath from the occurrence origin file", () => {
@@ -325,4 +351,15 @@ function objectIri(
 
 	expect(objects).toHaveLength(1);
 	return objects[0] ?? termIri("");
+}
+
+function onlyLiteralValue(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicate: Rdf12IriTerm,
+): string {
+	const values = literalValues(graph, subject, predicate);
+
+	expect(values).toHaveLength(1);
+	return values[0] ?? "";
 }
