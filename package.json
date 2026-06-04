@@ -1,6 +1,6 @@
 {
 	"name": "asciidoc-abundant-tree",
-	"version": "0.1.8",
+	"version": "0.1.9",
 	"description": "Recover a source-aware, analysis-ready tree from AsciiDoc files and explicit book-entry include graphs.",
 	"license": "Apache-2.0",
 	"author": {
@@ -30,7 +30,10 @@
 	},
 	"files": [
 		"dist",
-		"samples"
+		"samples/*.adoc",
+		"samples/book-entry-demo/*.adoc",
+		"samples/book-entry-demo/assets/*.adoc",
+		"samples/book-entry-demo/chapters/*.adoc"
 	],
 	"sideEffects": false,
 	"keywords": [
