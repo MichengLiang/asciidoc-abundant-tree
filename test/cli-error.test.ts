@@ -137,6 +137,23 @@ describe("cli error handling", () => {
 		expect(result.stderr).toContain("outside documentRoot");
 	});
 
+	it("reports missing book-entry entry files as construction errors", () => {
+		const result = runCli([
+			join(bookEntryFixtureRoot, "negative/missing-entry.adoc"),
+			"--mode",
+			"book-entry",
+			"--document-root",
+			bookEntryFixtureRoot,
+			"--format",
+			"json",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toContain("entry.missing-source");
+		expect(result.stderr).toContain("Entry source file does not exist");
+	});
+
 	it("reports include targets outside documentRoot", () => {
 		const result = runCli([
 			join(bookEntryFixtureRoot, "negative/outside-root.adoc"),
@@ -150,9 +167,44 @@ describe("cli error handling", () => {
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
+		expect(result.stderr).toContain("include.outside-document-root");
 		expect(result.stderr).toContain(
-			"Book-entry logical document construction failed",
+			"Resolved include path is outside documentRoot",
 		);
+	});
+
+	it("reports missing book-entry include targets on stderr only", () => {
+		const result = runCli([
+			join(bookEntryFixtureRoot, "negative/missing-include.adoc"),
+			"--mode",
+			"book-entry",
+			"--document-root",
+			bookEntryFixtureRoot,
+			"--format",
+			"json",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toContain("include.missing-target");
+		expect(result.stderr).toContain("Include target file does not exist");
+	});
+
+	it("reports unsupported book-entry include attrlists on stderr only", () => {
+		const result = runCli([
+			join(bookEntryFixtureRoot, "negative/unsupported-tag.adoc"),
+			"--mode",
+			"book-entry",
+			"--document-root",
+			bookEntryFixtureRoot,
+			"--format",
+			"json",
+		]);
+
+		expect(result.code).toBe(1);
+		expect(result.stdout).toBe("");
+		expect(result.stderr).toContain("include.unsupported-attrlist");
+		expect(result.stderr).toContain("tag=main");
 	});
 
 	it("does not accept rdf, ttl, or turtle aliases", () => {

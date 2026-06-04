@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createAsciidoctorAdapter } from "./asciidoctor-adapter";
-import { BookEntryConstructionError } from "./book-entry/diagnostics";
 import { buildLogicalSource } from "./book-entry/logical-source-builder";
 import type { AbundantDocument, ParseAbundantTreeOptions } from "./model";
 import { parseAsciidoctorDocument } from "./parser-core";
@@ -17,7 +16,7 @@ export function parseAbundantTree(
 		if (!options.documentRoot) {
 			throw new Error("Book-entry mode requires documentRoot.");
 		}
-		const logicalSource = buildBookEntryLogicalSource({
+		const logicalSource = buildLogicalSource({
 			sourcePath,
 			documentRoot: options.documentRoot,
 		});
@@ -46,18 +45,4 @@ export function parseAbundantTree(
 		mode: "single-file",
 		sourceSurfacePath: sourcePath,
 	});
-}
-
-function buildBookEntryLogicalSource(options: {
-	readonly sourcePath: string;
-	readonly documentRoot: string;
-}): ReturnType<typeof buildLogicalSource> {
-	try {
-		return buildLogicalSource(options);
-	} catch (error) {
-		if (error instanceof BookEntryConstructionError) {
-			throw new Error("Book-entry logical document construction failed.");
-		}
-		throw error;
-	}
 }

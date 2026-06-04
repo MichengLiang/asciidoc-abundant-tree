@@ -22,6 +22,7 @@ type BuilderState = {
 	readonly sourceFilesByPath: Map<string, SourceFileRecord>;
 	readonly logicalLines: string[];
 	readonly lineOrigins: LineOrigin[];
+	readonly entryPath: string;
 };
 
 export function buildLogicalSource(
@@ -36,6 +37,7 @@ export function buildLogicalSource(
 		sourceFilesByPath: new Map(),
 		logicalLines: [],
 		lineOrigins: [],
+		entryPath,
 	};
 
 	appendSourceFile(entryPath, state, []);
@@ -97,10 +99,14 @@ function appendSourceFile(
 	state: BuilderState,
 	includeStack: readonly string[],
 ): void {
-	if (includeStack.includes(absolutePath)) {
+	const cycleStart = includeStack.indexOf(absolutePath);
+	if (cycleStart !== -1) {
+		const cyclePath = [...includeStack.slice(cycleStart), absolutePath].join(
+			" -> ",
+		);
 		throw constructionError(
 			"include.cycle",
-			`Include graph contains a cycle at ${absolutePath}.`,
+			`Include graph contains a cycle: ${cyclePath}.`,
 		);
 	}
 
@@ -148,7 +154,7 @@ function readSourceFileRecord(
 		state.documentRoot,
 		absolutePath,
 	);
-	const text = readSourceText(absolutePath, state.readFile);
+	const text = readSourceText(absolutePath, state);
 	const sourceFile: SourceFileRecord = {
 		absolutePath,
 		relativePath,
@@ -159,13 +165,16 @@ function readSourceFileRecord(
 	return sourceFile;
 }
 
-function readSourceText(
-	absolutePath: string,
-	readFile: (absolutePath: string) => string,
-): string {
+function readSourceText(absolutePath: string, state: BuilderState): string {
 	try {
-		return readFile(absolutePath);
+		return state.readFile(absolutePath);
 	} catch {
+		if (absolutePath === state.entryPath) {
+			throw constructionError(
+				"entry.missing-source",
+				`Entry source file does not exist: ${absolutePath}.`,
+			);
+		}
 		throw constructionError(
 			"include.missing-target",
 			`Include target file does not exist: ${absolutePath}.`,
@@ -175,10 +184,7 @@ function readSourceText(
 
 function defaultReadFile(absolutePath: string): string {
 	if (!existsSync(absolutePath)) {
-		throw constructionError(
-			"include.missing-target",
-			`Include target file does not exist: ${absolutePath}.`,
-		);
+		throw new Error(`File does not exist: ${absolutePath}`);
 	}
 	return readFileSync(absolutePath, "utf8");
 }

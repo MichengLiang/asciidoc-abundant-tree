@@ -58,7 +58,7 @@ export function runCli(args: string[]): CliResult {
 	const inputPath = resolve(parsed.sourcePath);
 	const documentRoot = resolve(parsed.documentRoot ?? process.cwd());
 
-	if (!existsSync(inputPath)) {
+	if (parsed.mode !== "book-entry" && !existsSync(inputPath)) {
 		return {
 			code: 1,
 			stdout: "",

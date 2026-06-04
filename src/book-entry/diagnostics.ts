@@ -1,6 +1,7 @@
 import type { SourceSpan } from "../model";
 
 export type BookEntryConstructionErrorCode =
+	| "entry.missing-source"
 	| "include.missing-target"
 	| "include.outside-document-root"
 	| "include.cycle"
