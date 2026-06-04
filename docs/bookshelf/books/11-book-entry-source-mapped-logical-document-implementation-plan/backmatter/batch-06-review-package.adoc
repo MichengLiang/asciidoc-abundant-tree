@@ -11,7 +11,7 @@
 返工修正提交:: `0aaa1ff598dfeb107e6aed3906f0e6ff8eb11528`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
-审核状态:: `待审核`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -213,6 +213,6 @@ src/rdf12-projection/xref-projector.ts: Statements 89.65%, Branches 85.24%, Func
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: Batch 06返工修正 commit `0aaa1ff598dfeb107e6aed3906f0e6ff8eb11528` projects RDF12 resource-level coordinates from public source layers and binds xref source scopes by origin relativePath; required tests, typecheck, coverage, docs tests, Biome, forbidden diff, reviewer reproduction guard, and focused source-scope/no-line-origin checks have been run.
-后续动作:: 主线程/Principal coordinator 审核 Batch 06；通过后进入 Batch 07。
+结论:: `通过`
+理由:: Batch 06返工修正 commit `0aaa1ff598dfeb107e6aed3906f0e6ff8eb11528` projects RDF12 resource-level coordinates from public source layers and binds xref source scopes by origin relativePath;主线程复核 required tests, typecheck, coverage, docs tests, Biome, forbidden diff, reviewer reproduction guard, and focused source-scope/no-line-origin checks. Coverage failure is limited to the recorded global branch threshold.
+后续动作:: Batch 07 已解锁。
