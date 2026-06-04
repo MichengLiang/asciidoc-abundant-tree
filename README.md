@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/npm/l/asciidoc-abundant-tree.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/node/v/asciidoc-abundant-tree.svg)](./package.json)
 
-`asciidoc-abundant-tree` turns one AsciiDoc source file into a source-aware, analysis-ready document tree.
+`asciidoc-abundant-tree` turns an AsciiDoc source file, or an explicit book-entry include graph, into a source-aware, analysis-ready document tree.
 
 The package exists for tools that need more than rendered HTML and less than a full AsciiDoc language server. Asciidoctor is excellent at conversion and official reference resolution, but its public output surfaces are not shaped as a compact source map for downstream static analysis. This package keeps Asciidoctor as the authority for AsciiDoc semantics, then adds a TypeScript object model that preserves the authored surface, source spans, block structure, target catalog, xref occurrences, and official xref bindings in one object.
 

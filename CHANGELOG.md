@@ -4,6 +4,19 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## Unreleased
+
+### Added
+
+- Added explicit `book-entry` parsing mode for the library API and CLI, with `documentRoot`-bounded full-file include construction and origin source coordinates.
+- Added CLI `--mode single-file|book-entry` and `--document-root <root>` behavior for JSON, pretty tree, RDF 1.2 Turtle, and RDF 1.2 JSON-LD output.
+- Added downstream RDF 1.2 projection coverage for book-entry origin `aat:relativePath` values on heading resources, xref edge evidence, payload resources, and source document provenance.
+
+### Fixed
+
+- Preserved single-file mode as the default and kept `:doctype: book`, include directives, filenames, and `--document-root` from implicitly switching parser input construction.
+- Hardened book-entry construction and recovery diagnostics so construction errors block document creation and unrecoverable origin spans do not emit fake raw text or coordinates.
+
 ## 0.1.8 - 2026-05-29
 
 ### Fixed

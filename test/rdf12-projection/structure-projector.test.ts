@@ -156,6 +156,46 @@ describe("rdf12 structure projection", () => {
 		});
 	});
 
+	it("looks up projected heading targets by target type and line span", () => {
+		const projection = structuralPayloadProjection();
+		const rootEntry = projection.nodeIndex
+			.entries()
+			.find((entry) => entry.localId === "heading-l1-o0");
+		const root = resourceIri(projection.documentIri, "heading-l1-o0");
+
+		if (rootEntry === undefined) {
+			throw new Error("expected root heading index entry");
+		}
+
+		expect(projection.nodeIndex.get(rootEntry.node)?.value).toBe(root);
+		expect(
+			projection.nodeIndex.findByTarget({
+				targetType: "section",
+				startLine: 1,
+				endLine: 4,
+			})?.value,
+		).toBe(root);
+		expect(
+			projection.nodeIndex.findByTarget({
+				targetType: "section",
+				startLine: 1,
+			})?.value,
+		).toBe(root);
+		expect(
+			projection.nodeIndex.findByTarget({
+				targetType: "listing",
+				startLine: 1,
+			}),
+		).toBeUndefined();
+		expect(
+			projection.nodeIndex.findByTarget({
+				targetType: "section",
+				startLine: 1,
+				endLine: 99,
+			}),
+		).toBeUndefined();
+	});
+
 	it("does not read a virtual sourcePath when document title raw must degrade without sourceText", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			virtualDocumentWithTitle(),
