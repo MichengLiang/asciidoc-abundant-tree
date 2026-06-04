@@ -1,8 +1,10 @@
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseAbundantTree, rdf12 } from "../../src/index";
 import type { AbundantDocument } from "../../src/model";
 import type { Rdf12Graph } from "../../src/rdf12-projection/graph";
+import { parseTurtleToRdf12Graph } from "../../src/rdf12-projection/n3-adapter";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import type { Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import { serializeRdf12ProjectionToTurtle } from "../../src/rdf12-projection/turtle-serializer";
@@ -17,6 +19,13 @@ import {
 const projectRoot = process.cwd();
 const fixtureRoot = join(projectRoot, "test/book-entry/fixtures");
 const entryPath = join(fixtureRoot, "simple-book/book.adoc");
+const book10DocumentRoot = join(projectRoot, "docs/bookshelf");
+const book10EntryPath = join(
+	book10DocumentRoot,
+	"books/10-book-entry-source-mapped-logical-document/book.adoc",
+);
+const book10EntryRelativePath =
+	"books/10-book-entry-source-mapped-logical-document/book.adoc";
 
 describe("rdf12 book-entry origin source coordinates", () => {
 	it("projects heading resource relativePath values from each heading origin file", () => {
@@ -151,6 +160,71 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
+	it("projects one source reconstruction resource for each simple-book source-set file", () => {
+		const document = parseBookEntryFixture();
+		const projection = rdf12(document, { documentRoot: fixtureRoot });
+		const sourceFileMap = sourceFileRawByRelativePath(projection.graph);
+
+		expect(sourceFileMap).toEqual(
+			new Map(
+				(document.sourceFiles ?? []).map((sourceFile) => [
+					sourceFile.relativePath,
+					sourceFile.raw,
+				]),
+			),
+		);
+		expect(sourceFileMap.get("simple-book/book.adoc")).toBe(
+			readFixture("simple-book/book.adoc"),
+		);
+		expect(sourceFileMap.get("simple-book/shared/attributes.adoc")).toBe(
+			readFixture("simple-book/shared/attributes.adoc"),
+		);
+		expect(sourceFileMap.get("simple-book/chapters/01-entry-origin.adoc")).toBe(
+			readFixture("simple-book/chapters/01-entry-origin.adoc"),
+		);
+		expect(sourceFileResources(projection.graph)).toHaveLength(
+			document.sourceFiles?.length ?? 0,
+		);
+		expect(
+			projection.graph.match({
+				subject: termIri(projection.sourceDocumentIri),
+				predicate: aatTerm("sourceFile"),
+			}),
+		).toHaveLength(document.sourceFiles?.length ?? 0);
+	});
+
+	it("lets parsed Turtle reconstruct Book 10 source-set files by relativePath and raw", () => {
+		const document = parseAbundantTree({
+			sourcePath: book10EntryPath,
+			mode: "book-entry",
+			documentRoot: book10DocumentRoot,
+		});
+		const projection = rdf12(document, { documentRoot: book10DocumentRoot });
+		const parsed = parseTurtleToRdf12Graph(projection.ttl);
+		const sourceFileMap = sourceFileRawByRelativePath(parsed);
+
+		expect(sourceFileMap).toEqual(
+			new Map(
+				(document.sourceFiles ?? []).map((sourceFile) => [
+					sourceFile.relativePath,
+					sourceFile.raw,
+				]),
+			),
+		);
+		expect(sourceFileMap.get(book10EntryRelativePath)).toBe(
+			readFileSync(book10EntryPath, "utf8"),
+		);
+		expect(sourceFileMap.get(book10EntryRelativePath)).toContain(
+			"include::../../shared/attributes.adoc[]",
+		);
+		expect(sourceFileMap.get("shared/attributes.adoc")).toBe(
+			readFileSync(join(book10DocumentRoot, "shared/attributes.adoc"), "utf8"),
+		);
+		expect(sourceFileResources(parsed)).toHaveLength(
+			document.sourceFiles?.length ?? 0,
+		);
+	});
+
 	it("does not emit build/adoc aggregate source paths", () => {
 		const projection = projectBookEntryFixture();
 		const turtle = serializeRdf12ProjectionToTurtle(projection);
@@ -183,14 +257,22 @@ describe("rdf12 book-entry origin source coordinates", () => {
 	});
 });
 
-function projectBookEntryFixture() {
-	const document = parseAbundantTree({
+function parseBookEntryFixture(): AbundantDocument {
+	return parseAbundantTree({
 		sourcePath: entryPath,
 		mode: "book-entry",
 		documentRoot: fixtureRoot,
 	});
+}
+
+function projectBookEntryFixture() {
+	const document = parseBookEntryFixture();
 
 	return rdf12(document, { documentRoot: fixtureRoot });
+}
+
+function readFixture(relativePath: string): string {
+	return readFileSync(join(fixtureRoot, relativePath), "utf8");
 }
 
 function bookEntryPayloadDocument(): AbundantDocument {
@@ -351,6 +433,31 @@ function objectIri(
 
 	expect(objects).toHaveLength(1);
 	return objects[0] ?? termIri("");
+}
+
+function sourceFileResources(graph: Rdf12Graph): Rdf12IriTerm[] {
+	return graph
+		.match({
+			predicate: rdfTerm("type"),
+			object: aatTerm("SourceFile"),
+		})
+		.map((triple) => triple.subject);
+}
+
+function sourceFileRawByRelativePath(graph: Rdf12Graph): Map<string, string> {
+	const files = new Map<string, string>();
+
+	for (const subject of sourceFileResources(graph)) {
+		const relativePath = onlyLiteralValue(
+			graph,
+			subject,
+			aatTerm("relativePath"),
+		);
+		const raw = onlyLiteralValue(graph, subject, aatTerm("raw"));
+		files.set(relativePath, raw);
+	}
+
+	return files;
 }
 
 function onlyLiteralValue(

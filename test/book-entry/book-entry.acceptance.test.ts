@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 import { buildLogicalSource } from "../../src/book-entry/logical-source-builder";
@@ -19,6 +20,15 @@ const expectedEntryRelativePath = "simple-book/book.adoc";
 const expectedChapterRelativePath = "simple-book/chapters/01-entry-origin.adoc";
 const expectedTargetRelativePath = "simple-book/chapters/02-target-origin.adoc";
 const expectedNestedRelativePath = "simple-book/chapters/nested/section.adoc";
+const expectedSourceFileRelativePaths = [
+	expectedEntryRelativePath,
+	"simple-book/shared/attributes.adoc",
+	"simple-book/frontmatter/preface.adoc",
+	expectedChapterRelativePath,
+	expectedNestedRelativePath,
+	expectedTargetRelativePath,
+	"simple-book/backmatter/glossary.adoc",
+];
 
 describe("book-entry source-mapped logical document contract", () => {
 	it("expresses book-entry mode and origin file identity through public model fields", () => {
@@ -109,6 +119,20 @@ describe("book-entry source-mapped logical document contract", () => {
 		expect(document.sourcePath).toBe(entryPath);
 	});
 
+	it("exposes source-set files on the public book-entry document model", () => {
+		const document = parseBookEntryFixture();
+		const files = sourceFilesByRelativePath(document);
+
+		expect([...files.keys()]).toEqual(expectedSourceFileRelativePaths);
+		expect(files.get(expectedEntryRelativePath)?.raw).toBe(
+			readFixture("book.adoc"),
+		);
+		expect(files.get("simple-book/shared/attributes.adoc")?.raw).toBe(
+			readFixture("shared/attributes.adoc"),
+		);
+		expect(Reflect.has(document, "lineOrigins")).toBe(false);
+	});
+
 	it("projects entry, included, nested, and backmatter headings into one section tree", () => {
 		const document = parseBookEntryFixture();
 		const sectionTitles = collectSections(document.children).map(
@@ -192,6 +216,21 @@ function parseBookEntryFixture(): AbundantDocument {
 		mode: "book-entry",
 		documentRoot,
 	});
+}
+
+function readFixture(relativePath: string): string {
+	return readFileSync(join(fixtureRoot, relativePath), "utf8");
+}
+
+function sourceFilesByRelativePath(
+	document: AbundantDocument,
+): Map<string, { readonly relativePath: string; readonly raw: string }> {
+	return new Map(
+		(document.sourceFiles ?? []).map((sourceFile) => [
+			sourceFile.relativePath,
+			sourceFile,
+		]),
+	);
 }
 
 function sectionByTitle(

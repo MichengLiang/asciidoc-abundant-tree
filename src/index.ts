@@ -23,6 +23,7 @@ export type {
 	ParseAbundantTreeOptions,
 	ParserInfo,
 	SectionNode,
+	SourceFileNode,
 	SourceLayer,
 	SourcePosition,
 	SourceSpan,

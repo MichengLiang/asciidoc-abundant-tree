@@ -15,6 +15,7 @@ export type ParserCoreInput = {
 	readonly lineTable: LineTable;
 	readonly sourcePath: string;
 	readonly sourceText: string;
+	readonly sourceFiles?: AbundantDocument["sourceFiles"];
 	readonly mode: AbundantDocument["mode"];
 	readonly sourceSurfacePath?: string;
 };
@@ -51,6 +52,9 @@ export function parseAsciidoctorDocument(
 		kind: "document",
 		sourcePath: input.sourcePath,
 		sourceText: input.sourceText,
+		...(input.sourceFiles !== undefined
+			? { sourceFiles: input.sourceFiles }
+			: {}),
 		mode: input.mode,
 		parser: parserInfo(input.adapter),
 		title: {

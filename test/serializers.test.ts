@@ -170,6 +170,34 @@ describe("serializers", () => {
 		);
 	});
 
+	it("preserves source-set file records in JSON data", () => {
+		const json = serializeAbundantTreeToJson({
+			...document,
+			mode: "book-entry",
+			sourceFiles: [
+				{
+					relativePath: "books/example/book.adoc",
+					raw: "= Example\n\ninclude::shared/attributes.adoc[]\n",
+				},
+				{
+					relativePath: "shared/attributes.adoc",
+					raw: ":series-name: example\n",
+				},
+			],
+		});
+
+		expect(json.sourceFiles).toEqual([
+			{
+				relativePath: "books/example/book.adoc",
+				raw: "= Example\n\ninclude::shared/attributes.adoc[]\n",
+			},
+			{
+				relativePath: "shared/attributes.adoc",
+				raw: ":series-name: example\n",
+			},
+		]);
+	});
+
 	it("keeps SourceSpan free of file identity fields", () => {
 		const span = acceptSourceSpan({
 			start: { line: 1, column: 1 },

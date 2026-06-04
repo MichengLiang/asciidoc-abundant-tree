@@ -36,6 +36,11 @@ export type SourceLayer = {
 	sourceSpan?: SourceSpan;
 };
 
+export type SourceFileNode = {
+	relativePath: string;
+	raw: string;
+};
+
 export type AsciidoctorLayer = {
 	context?: string;
 	nodeName?: string;
@@ -174,6 +179,7 @@ export type AbundantDocument = {
 	kind: "document";
 	sourcePath: string;
 	sourceText?: string;
+	sourceFiles?: SourceFileNode[];
 	mode: "single-file" | "book-entry";
 	parser: ParserInfo;
 	title?: TitleNode;

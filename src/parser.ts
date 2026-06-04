@@ -27,6 +27,10 @@ export function parseAbundantTree(
 			lineTable,
 			sourcePath,
 			sourceText: logicalSource.logicalText,
+			sourceFiles: logicalSource.sourceFiles.map((sourceFile) => ({
+				relativePath: sourceFile.relativePath,
+				raw: sourceFile.text,
+			})),
 			mode: "book-entry",
 		});
 	}

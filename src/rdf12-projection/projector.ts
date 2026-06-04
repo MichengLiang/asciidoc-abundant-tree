@@ -16,6 +16,7 @@ import {
 	makeSourceLocalId,
 } from "./resource-identity";
 import { normalizeSourceDigest } from "./source-digest";
+import { projectSourceFiles } from "./source-file-projector";
 import { projectStructureResources } from "./structure-projector";
 import { projectXrefResources } from "./xref-projector";
 
@@ -79,6 +80,13 @@ export function projectAbundantDocumentToRdf12(
 		projectionActivityIri,
 		relativePath: coordinate.relativePath,
 		...(sourceDigest !== undefined ? { sourceDigest } : {}),
+	});
+	projectSourceFiles({
+		graph,
+		document,
+		baseIri: normalizedOptions.baseIri,
+		documentKey: coordinate.documentKey,
+		sourceDocumentIri,
 	});
 	const nodeIndex = projectStructureResources({
 		graph,
