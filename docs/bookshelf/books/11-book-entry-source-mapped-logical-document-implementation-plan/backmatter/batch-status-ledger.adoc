@@ -57,7 +57,7 @@
 
 |Batch 08
 |Final Gates and Closure
-|待审核
+|通过
 |`d5dd50e33b81f0f7c9ee6895ed90f68c586458d4`
 |xref:batch-08-review-package[batch-08-review-package.adoc]
 |===

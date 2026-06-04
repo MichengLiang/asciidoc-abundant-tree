@@ -9,7 +9,7 @@
 提交 hash:: `d5dd50e33b81f0f7c9ee6895ed90f68c586458d4`
 执行者:: `subagent`
 审核者:: `主线程/Principal coordinator`
-审核状态:: `待审核`
+审核状态:: `通过`
 
 === 修改文件
 
@@ -69,14 +69,13 @@ docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation
 - CHANGELOG records book-entry public mode, CLI/API documentRoot behavior, origin source coordinates, downstream RDF12 coordinate coverage, single-file default preservation, and diagnostics hardening.
 - `closure-record.adoc` records final verification commands, true results, coverage summary, current object facts, unresolved objects, body revision judgment, and follow-up entries.
 - `book.adoc` includes the actual closure record in the plan book public surface.
-- Batch 08 ledger entry is `待审核`, with the implementation commit hash and review package xref.
+- Batch 08 ledger entry is `通过`, with the implementation commit hash and review package xref.
 ----
 
 === 未处理对象
 
 [source,text]
 ----
-- Batch 08 approval：coordinator-owned 审核动作；本批证据提交不写 `通过`。
 - Future include forms beyond supported full-file include directives：outside this plan; requires a new lab object.
 - RDF12 graph semantics unrelated to source coordinates：outside Batch 08 implementation/finalization scope.
 ----
@@ -116,7 +115,7 @@ pnpm typecheck:
 
 pnpm lint:
   PASS
-  biome check --vcs-use-ignore-file=false . checked 297 files. No fixes applied.
+  reviewer rerun: biome check --vcs-use-ignore-file=false . checked 301 files. No fixes applied.
 
 pnpm build:
   PASS
@@ -217,6 +216,6 @@ Lines: 98.49%
 === 审核结论
 
 [horizontal]
-结论:: `待审核`
-理由:: Batch 08 implementation commit `d5dd50e33b81f0f7c9ee6895ed90f68c586458d4` satisfies final gate command results, coverage threshold, executable expected-fail absence, public docs update, closure record creation, and plan book surface inclusion.
-后续动作:: Coordinator reviews Batch 08 evidence and decides ledger approval.
+结论:: `通过`
+理由:: Batch 08 implementation commit `d5dd50e33b81f0f7c9ee6895ed90f68c586458d4` satisfies coordinator-rerun final gates, coverage threshold, executable expected-fail absence, public docs update, closure record creation, and plan book surface inclusion.
+后续动作:: Plan closure is recorded; no further batch action remains in this implementation plan.
