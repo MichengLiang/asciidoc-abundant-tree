@@ -1,4 +1,9 @@
-import type { LineSpan, SourceLayer, SourceSpan } from "../model";
+import type {
+	AbundantDocument,
+	LineSpan,
+	SourceLayer,
+	SourceSpan,
+} from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
 import { integerLiteral, stringLiteral } from "./literals";
@@ -22,8 +27,13 @@ export type AddSourceSpanTriplesInput = {
 export function sourceRelativePathOrFallback(
 	source: SourceLayer | undefined,
 	fallbackRelativePath: string,
-): string {
-	return source?.relativePath ?? fallbackRelativePath;
+	documentMode: AbundantDocument["mode"],
+): string | undefined {
+	if (source?.relativePath !== undefined) {
+		return source.relativePath;
+	}
+
+	return documentMode === "single-file" ? fallbackRelativePath : undefined;
 }
 
 export function addLineSpanTriples(input: AddLineSpanTriplesInput): void {

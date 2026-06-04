@@ -62,6 +62,40 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
+	it("binds xref sourceHeading by origin relativePath and line containment", () => {
+		const projection = projectBookEntryFixture();
+		const edge = xrefEdgeByRaw(
+			projection.graph,
+			"xref:target-origin[Target Origin]",
+		);
+		const sourceHeading = objectIri(
+			projection.graph,
+			edge,
+			aatTerm("sourceHeading"),
+		);
+
+		expect(sourceHeading).toBe(
+			headingByHeadline(projection.graph, "Xref Origin"),
+		);
+		expect(sourceHeading).not.toBe(
+			headingByHeadline(projection.graph, "Simple Source-Mapped Book"),
+		);
+	});
+
+	it("does not fallback book-entry xref sourceHeading binding to the entry file when occurrence origin is absent", () => {
+		const projection = rdf12(bookEntryXrefWithoutOriginDocument(), {
+			documentRoot: fixtureRoot,
+		});
+		const edge = xrefEdgeByRaw(projection.graph, "xref:target[Target]");
+
+		expect(
+			projection.graph.match({
+				subject: edge,
+				predicate: aatTerm("sourceHeading"),
+			}),
+		).toHaveLength(0);
+	});
+
 	it("keeps source document provenance on the entry file", () => {
 		const projection = projectBookEntryFixture();
 
@@ -186,6 +220,49 @@ function bookEntryPayloadDocument(): AbundantDocument {
 	};
 }
 
+function bookEntryXrefWithoutOriginDocument(): AbundantDocument {
+	return {
+		kind: "document",
+		sourcePath: entryPath,
+		sourceText: "= Synthetic Book\n\n== Entry\n\nxref:target[Target]\n",
+		mode: "book-entry",
+		parser: { name: "@asciidoctor/core", version: "test" },
+		children: [
+			{
+				kind: "section",
+				level: 1,
+				ids: ["entry"],
+				title: "Entry",
+				line: 3,
+				span: { startLine: 3, endLine: 5 },
+				idOrigin: "source",
+				source: {
+					relativePath: "simple-book/book.adoc",
+					span: { startLine: 3, endLine: 5 },
+				},
+				children: [
+					{
+						kind: "xref",
+						syntax: "macro",
+						raw: "xref:target[Target]",
+						target: "target",
+						label: "Target",
+						sourceSpan: {
+							start: { line: 5, column: 1 },
+							end: { line: 5, column: 20 },
+						},
+						containingSectionId: "entry",
+					},
+				],
+			},
+		],
+		targets: [],
+		xrefOccurrences: [],
+		anchorOccurrences: [],
+		toolDiagnostics: [],
+	};
+}
+
 function headingByHeadline(graph: Rdf12Graph, headline: string): Rdf12IriTerm {
 	const headings = graph
 		.match({ predicate: aatTerm("headline") })
@@ -234,4 +311,18 @@ function resourceByLiteral(
 
 	expect(resources).toHaveLength(1);
 	return resources[0] ?? termIri("");
+}
+
+function objectIri(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicate: Rdf12IriTerm,
+): Rdf12IriTerm {
+	const objects = graph
+		.match({ subject, predicate })
+		.map((triple) => triple.object)
+		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
+
+	expect(objects).toHaveLength(1);
+	return objects[0] ?? termIri("");
 }

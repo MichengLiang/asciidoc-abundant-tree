@@ -208,15 +208,19 @@ function createXrefResource(
 			iriTerm(`${namespaces.aat}XrefEdge`),
 		),
 	);
-	addSourceSpanTriples({
-		graph: context.graph,
-		subject: xrefIri,
-		relativePath: sourceRelativePathOrFallback(
-			xref.source,
-			context.relativePath,
-		),
-		sourceSpan: xref.sourceSpan,
-	});
+	const relativePath = sourceRelativePathOrFallback(
+		xref.source,
+		context.relativePath,
+		context.document.mode,
+	);
+	if (relativePath !== undefined) {
+		addSourceSpanTriples({
+			graph: context.graph,
+			subject: xrefIri,
+			relativePath,
+			sourceSpan: xref.sourceSpan,
+		});
+	}
 	addStringTriple(context.graph, xrefIri, "syntax", xref.syntax);
 	addStringTriple(context.graph, xrefIri, "raw", xref.raw);
 	addStringTriple(context.graph, xrefIri, "targetSelector", xref.target);
@@ -266,7 +270,7 @@ function writeSourceBinding(
 		);
 	}
 
-	const sourceHeading = sourceHeadingForXref(context.nodeIndex, xref);
+	const sourceHeading = sourceHeadingForXref(context, xref);
 	if (sourceHeading === undefined) {
 		return undefined;
 	}
@@ -282,37 +286,94 @@ function writeSourceBinding(
 }
 
 function sourceHeadingForXref(
-	nodeIndex: Rdf12NodeIndex,
+	context: XrefProjectorContext,
 	xref: XrefOccurrenceNode,
 ): Rdf12IriTerm | undefined {
 	if (xref.sourceSpan === undefined) {
 		return undefined;
 	}
+	const relativePath = sourceRelativePathOrFallback(
+		xref.source,
+		context.relativePath,
+		context.document.mode,
+	);
+	if (relativePath === undefined) {
+		return undefined;
+	}
+	const selectorHeading = sourceHeadingBySelector(
+		context.nodeIndex,
+		relativePath,
+		xref.containingSectionId,
+	);
+	if (selectorHeading !== undefined) {
+		return selectorHeading;
+	}
 
 	const line = xref.sourceSpan.start.line;
-	const candidates = nodeIndex
+	const candidates = context.nodeIndex
 		.entries()
-		.filter((entry) => containsLine(entry, line))
+		.filter((entry) => containsLine(entry, { line, relativePath }))
 		.toSorted(compareInnermostHeading);
 
 	return candidates[0]?.iri;
 }
 
-function containsLine(entry: Rdf12NodeIndexEntry, line: number): boolean {
-	return entry.startLine <= line && line <= entry.endLine;
+function sourceHeadingBySelector(
+	nodeIndex: Rdf12NodeIndex,
+	relativePath: string,
+	selector: string | undefined,
+): Rdf12IriTerm | undefined {
+	if (selector === undefined) {
+		return undefined;
+	}
+
+	const candidates = nodeIndex.entries().filter((entry) => {
+		return (
+			entry.relativePath === relativePath &&
+			entry.kind === "section" &&
+			entry.node.ids.includes(selector)
+		);
+	});
+
+	return candidates.length === 1 ? candidates[0]?.iri : undefined;
+}
+
+function containsLine(
+	entry: Rdf12NodeIndexEntry,
+	occurrence: { readonly line: number; readonly relativePath: string },
+): boolean {
+	return (
+		entry.relativePath === occurrence.relativePath &&
+		entry.sourceStartLine !== undefined &&
+		entry.sourceEndLine !== undefined &&
+		entry.sourceStartLine <= occurrence.line &&
+		occurrence.line <= entry.sourceEndLine
+	);
 }
 
 function compareInnermostHeading(
 	left: Rdf12NodeIndexEntry,
 	right: Rdf12NodeIndexEntry,
 ): number {
-	const leftSpan = left.endLine - left.startLine;
-	const rightSpan = right.endLine - right.startLine;
+	const leftSpan = sourceSpanLength(left);
+	const rightSpan = sourceSpanLength(right);
 	if (leftSpan !== rightSpan) {
 		return leftSpan - rightSpan;
 	}
 
-	return right.startLine - left.startLine;
+	return sourceStartLine(right) - sourceStartLine(left);
+}
+
+function sourceSpanLength(entry: Rdf12NodeIndexEntry): number {
+	return sourceEndLine(entry) - sourceStartLine(entry);
+}
+
+function sourceStartLine(entry: Rdf12NodeIndexEntry): number {
+	return entry.sourceStartLine ?? entry.startLine;
+}
+
+function sourceEndLine(entry: Rdf12NodeIndexEntry): number {
+	return entry.sourceEndLine ?? entry.endLine;
 }
 
 function writeTargetBinding(

@@ -108,15 +108,19 @@ function projectPayloadListing(
 		),
 	);
 	addString(context.graph, payload, "payloadId", payloadId);
-	addLineSpanTriples({
-		graph: context.graph,
-		subject: payload,
-		relativePath: sourceRelativePathOrFallback(
-			node.source,
-			context.relativePath,
-		),
-		span: node.span,
-	});
+	const relativePath = sourceRelativePathOrFallback(
+		node.source,
+		context.relativePath,
+		context.document.mode,
+	);
+	if (relativePath !== undefined) {
+		addLineSpanTriples({
+			graph: context.graph,
+			subject: payload,
+			relativePath,
+			span: node.span,
+		});
+	}
 	addOptionalLineSpan(context.graph, payload, "content", node.contentSpan);
 	addOptionalString(context.graph, payload, "raw", node.content);
 	addOptionalString(context.graph, payload, "format", dataFormatFor(node));

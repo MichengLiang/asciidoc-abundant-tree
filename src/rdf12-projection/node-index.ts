@@ -11,6 +11,9 @@ type Rdf12HeadingIndexBase = {
 	readonly iri: Rdf12IriTerm;
 	readonly localId: string;
 	readonly kind: "section";
+	readonly relativePath?: string;
+	readonly sourceStartLine?: number;
+	readonly sourceEndLine?: number;
 	readonly startLine: number;
 	readonly endLine: number;
 	readonly targetType: "section";
@@ -23,6 +26,9 @@ export type Rdf12NodeIndexEntry =
 			readonly iri: Rdf12IriTerm;
 			readonly localId: string;
 			readonly kind: "document-title";
+			readonly relativePath?: string;
+			readonly sourceStartLine?: number;
+			readonly sourceEndLine?: number;
 			readonly startLine: number;
 			readonly endLine: number;
 			readonly targetType: "section";

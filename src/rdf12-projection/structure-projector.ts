@@ -77,13 +77,9 @@ function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 		startLine: slice.span.startLine,
 		span: slice.span,
 	});
+	const relativePath = title.source?.relativePath ?? context.relativePath;
 
-	addTypeAndSourceTriples(
-		context.graph,
-		iri,
-		sourceRelativePathOrFallback(title.source, context.relativePath),
-		slice.span,
-	);
+	addTypeAndSourceTriples(context.graph, iri, relativePath, slice.span);
 	addStringTriple(context.graph, iri, "headline", title.text);
 	addIntegerTriple(context.graph, iri, "headingLevel", 0);
 	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
@@ -94,6 +90,13 @@ function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 		iri,
 		localId: localIdFromIri(iri),
 		kind: "document-title",
+		...(relativePath !== undefined ? { relativePath } : {}),
+		...(relativePath !== undefined
+			? {
+					sourceStartLine: slice.span.startLine,
+					sourceEndLine: slice.span.endLine,
+				}
+			: {}),
 		startLine: slice.span.startLine,
 		endLine: slice.span.endLine,
 		targetType: "section",
@@ -130,13 +133,13 @@ function projectHeading(
 		startLine: slice.span.startLine,
 		span: slice.span,
 	});
-
-	addTypeAndSourceTriples(
-		context.graph,
-		iri,
-		sourceRelativePathOrFallback(node.source, context.relativePath),
-		slice.span,
+	const relativePath = sourceRelativePathOrFallback(
+		node.source,
+		context.relativePath,
+		context.document.mode,
 	);
+
+	addTypeAndSourceTriples(context.graph, iri, relativePath, slice.span);
 	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
 	addIntegerTriple(context.graph, iri, "headingLevel", node.level);
 	addStringTriple(context.graph, iri, "headline", node.title);
@@ -149,6 +152,8 @@ function projectHeading(
 		iri,
 		localId: localIdFromIri(iri),
 		kind: "section",
+		...(relativePath !== undefined ? { relativePath } : {}),
+		...sourceScopeLines(context.document, node, slice.span),
 		startLine: slice.span.startLine,
 		endLine: slice.span.endLine,
 		targetType: "section",
@@ -234,6 +239,31 @@ function headingLevel(entry: Rdf12NodeIndexEntry): number {
 	return entry.kind === "document-title" ? 0 : entry.node.level;
 }
 
+function sourceScopeLines(
+	document: AbundantDocument,
+	node: SectionNode,
+	sliceSpan: LineSpan,
+):
+	| {
+			readonly sourceStartLine: number;
+			readonly sourceEndLine: number;
+	  }
+	| Record<string, never> {
+	if (node.source?.span !== undefined) {
+		return {
+			sourceStartLine: node.source.span.startLine,
+			sourceEndLine: node.source.span.endLine,
+		};
+	}
+
+	return document.mode === "single-file"
+		? {
+				sourceStartLine: sliceSpan.startLine,
+				sourceEndLine: sliceSpan.endLine,
+			}
+		: {};
+}
+
 function createHeadingResource(
 	context: StructureProjectorContext,
 	input: { readonly startLine: number; readonly span: LineSpan },
@@ -257,7 +287,7 @@ function createHeadingResource(
 function addTypeAndSourceTriples(
 	graph: Rdf12Graph,
 	iri: Rdf12IriTerm,
-	relativePath: string,
+	relativePath: string | undefined,
 	span: LineSpan,
 ): void {
 	graph.add(
@@ -267,12 +297,14 @@ function addTypeAndSourceTriples(
 			iriTerm(`${namespaces.aat}Heading`),
 		),
 	);
-	addLineSpanTriples({
-		graph,
-		subject: iri,
-		relativePath,
-		span,
-	});
+	if (relativePath !== undefined) {
+		addLineSpanTriples({
+			graph,
+			subject: iri,
+			relativePath,
+			span,
+		});
+	}
 }
 
 function addHeadingLabels(
