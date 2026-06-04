@@ -35,3 +35,7 @@ Source set 包含 entry file 和受支持 include directive 指向的 files。
 同一绝对路径只读取一次。重复 include 可以在 logical document 中出现多次；source file table 中仍只有一个 file record。
 
 Source set 是输入构造事实，不是下游投影资源集合。下游消费者读取 `AbundantDocument` 中的 source coordinate，而不是读取 source set。
+
+Book-entry RDF12 输出必须为 source set 提供文件级重建表面。该表面以 `documentRoot` relativePath 标识 source file，并携带该 source file 的完整原始文本。
+
+Source set reconstruction surface 必须覆盖只贡献 attributes 或其它非结构节点的 source files。没有 section、xref、target 或 block 投影资源的 source file 仍属于 source set，仍必须可从 RDF12 输出重建。

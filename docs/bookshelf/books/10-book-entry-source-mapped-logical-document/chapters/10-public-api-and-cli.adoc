@@ -55,3 +55,16 @@ asciidoc-abundant-tree books/example/book.adoc \
 Public model 必须让可回源事实携带自己的 source coordinate。Book-entry pipeline 不要求下游消费者读取 line origin table。
 
 Line origin table 是内部 IR。公共 API 可以提供调试表面，但下游投影器的主输入仍是 `AbundantDocument`。
+
+=== RDF12 Source File Reconstruction
+
+RDF12 book-entry 输出必须包含 source file reconstruction surface。该表面为 source set 中每个 source file 输出一个文件级资源。
+
+文件级资源必须包含：
+
+* `relativePath`：相对于 `documentRoot` 的 source file path。
+* `raw`：source file 的完整原始文本。
+
+该表面必须覆盖 entry file、frontmatter、chapters、backmatter、shared attributes 和递归 include 到达的 source files。该表面必须保留 include directive 原文；entry file 中的 include directive 不得被 included file 文本替代。
+
+RDF12 source file reconstruction surface 与 resource-level source coordinate 是两个公共表面。前者支持逐文件重建；后者支持 section、xref occurrence、target 和 block 回源。

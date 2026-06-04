@@ -44,6 +44,18 @@ Book-entry 完成必须由 contract tests 证明。测试对象是 logical docum
 * Listing 或 table block 的 raw 和 source span 来自 origin file。
 * 跨 origin source files 的 block 不输出假 raw。
 
+=== RDF12 Source Reconstruction Tests
+
+Book-entry RDF12 测试必须证明 Turtle 输出可重建 source set 中的每个原始 source file。
+
+断言：
+
+* RDF12 输出包含 entry file 的完整原始文本。
+* RDF12 输出包含每个 included chapter、frontmatter 和 backmatter file 的完整原始文本。
+* RDF12 输出包含 shared attributes file 的完整原始文本，即使该文件不产生 section、xref、target 或 block resource。
+* Entry file reconstruction 保留 include directive 原文，不使用 expanded logical text 替代 include directive line。
+* RDF12 source reconstruction resources 的 `relativePath` 均相对于 `documentRoot`。
+
 === Regression Tests
 
 single-file mode 必须保持不变。
