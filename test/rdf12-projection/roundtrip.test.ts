@@ -52,9 +52,8 @@ describe("rdf12 Turtle roundtrip", () => {
 
 	it("roundtrips xsd integer, Chinese, multiline, quote, and backslash literals", () => {
 		const projection = testProjection();
-		const parsed = parseTurtleToRdf12Graph(
-			serializeRdf12ProjectionToTurtle(projection),
-		);
+		const turtle = serializeRdf12ProjectionToTurtle(projection);
+		const parsed = parseTurtleToRdf12Graph(turtle);
 
 		expect(
 			parsed.has(
@@ -74,15 +73,21 @@ describe("rdf12 Turtle roundtrip", () => {
 				),
 			),
 		).toBe(true);
+		expect(turtle).toMatch(/aat:raw\s+(?:"""|''')first line\n/u);
 		expect(
 			parsed.has(
 				rdf12Triple(
 					iriTerm("urn:aat:doc:test#payload-l20-o0"),
 					iriTerm(`${namespaces.aat}raw`),
-					stringLiteral('first line\nsecond "quoted" line \\ path'),
+					stringLiteral('first line\nsecond "quoted" line \\ path\n'),
 				),
 			),
 		).toBe(true);
+		expect(parsed.size).toBe(projection.graph.size);
+		const [reifier] = parseTurtleToN3Quads(turtle).filter(
+			(quad) => quad.predicate.value === `${namespaces.rdf}reifies`,
+		);
+		expect(reifier?.object.termType).toBe("Quad");
 	});
 
 	it("roundtrips language-tagged literals through the adapter boundary", () => {
@@ -194,7 +199,7 @@ function testProjection(): Rdf12Projection {
 		rdf12Triple(
 			iriTerm("urn:aat:doc:test#payload-l20-o0"),
 			iriTerm(`${namespaces.aat}raw`),
-			stringLiteral('first line\nsecond "quoted" line \\ path'),
+			stringLiteral('first line\nsecond "quoted" line \\ path\n'),
 		),
 	);
 

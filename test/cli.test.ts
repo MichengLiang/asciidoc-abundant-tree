@@ -259,6 +259,11 @@ describe("cli", () => {
 		expect(result.stdout).toContain("@prefix aat:");
 		expect(result.stdout).toContain('"Simple Source-Mapped Book"');
 		expect(result.stdout).toContain('"Xref Origin"');
+		expect(() => parseTurtleToRdf12Graph(result.stdout)).not.toThrow();
+		expect(result.stdout).toMatch(/aat:raw\s+(?:"""|''')/u);
+		expect(result.stdout).not.toContain(
+			'aat:raw "= Simple Source-Mapped Book\\n\\ninclude::shared/attributes.adoc[]\\n',
+		);
 	});
 
 	it("prints full document title raw in RDF 1.2 Turtle for the parsed source path", () => {

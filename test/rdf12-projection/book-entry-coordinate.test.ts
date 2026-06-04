@@ -203,6 +203,10 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		const parsed = parseTurtleToRdf12Graph(projection.ttl);
 		const sourceFileMap = sourceFileRawByRelativePath(parsed);
 
+		expect(projection.ttl).toMatch(/aat:raw\s+(?:"""|''')/u);
+		expect(projection.ttl).not.toContain(
+			'aat:raw "include::../../shared/attributes.adoc[]\\n',
+		);
 		expect(sourceFileMap).toEqual(
 			new Map(
 				(document.sourceFiles ?? []).map((sourceFile) => [
