@@ -1,0 +1,130 @@
+[#closure-record]
+== 关闭记录
+
+本关闭记录记录 `11-book-entry-source-mapped-logical-document-implementation-plan` 的 Batch 08 待审核关闭事实。最终通过状态由审核者写入台账。
+
+=== 关闭对象
+
+[horizontal]
+关闭对象:: `11-book-entry-source-mapped-logical-document-implementation-plan`
+目标 body 依据:: xref:../10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约]
+上游 parser 依据:: xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc[asciidoc-abundant-tree 解析器规约]
+材料体系依据:: xref:../08-body-lab-material-system/book.adoc[`100_body` 与 `200_lab`：书籍化项目材料体系设计]
+
+=== 最终提交
+
+[horizontal]
+最终提交 hash:: `d5dd50e33b81f0f7c9ee6895ed90f68c586458d4`
+最终审核状态:: `待审核`
+关闭结论:: `待审核`
+
+=== 最终验证命令
+
+[source,bash]
+----
+pnpm test
+pnpm typecheck
+pnpm lint
+pnpm build
+pnpm pack:check
+pnpm smoke:cli
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm --dir docs/bookshelf run build
+----
+
+=== 最终验证结果
+
+[source,text]
+----
+pnpm test:
+  PASS
+  Test Files 47 passed (47)
+  Tests 357 passed (357)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm lint:
+  PASS
+  biome check --vcs-use-ignore-file=false . checked 297 files. No fixes applied.
+
+pnpm build:
+  PASS
+  tsdown built dist/cli.mjs, dist/index.mjs, dist/src-BemgHLtg.mjs, dist/index.d.mts, and dist/cli.d.mts.
+
+pnpm pack:check:
+  PASS
+  pnpm build, publint, and npm pack --dry-run completed. npm emitted environment-config warnings for unsupported npm config keys; packaging completed.
+
+pnpm smoke:cli:
+  PASS
+  dist CLI produced rdf12 and rdf12-json-ld output for samples/reference-links.adoc.
+
+pnpm test:coverage:
+  PASS
+  Test Files 47 passed (47)
+  Tests 357 passed (357)
+  Global branch coverage is above the configured 90% threshold.
+
+pnpm --dir docs/bookshelf test:
+  PASS
+  node --test reported 11 pass, 0 fail.
+
+pnpm --dir docs/bookshelf run build:
+  PASS
+  bookshelf adoc/html build and local resource check completed.
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+Statements: 96.33% (1840/1910)
+Branches: 90.41% (1255/1388)
+Functions: 97.94% (430/439)
+Lines: 96.27% (1810/1880)
+
+src/book-entry/**:
+Statements: 98.51%
+Branches: 96.21%
+Functions: 100%
+Lines: 98.49%
+----
+
+=== 已进入当前事实的对象
+
+[source,text]
+----
+- Library API: `parseAbundantTree({ sourcePath })` remains single-file mode; `parseAbundantTree({ sourcePath, mode: "book-entry", documentRoot })` constructs a documentRoot-bounded logical document from supported full-file includes.
+- CLI: `--mode book-entry` explicitly selects book-entry input construction; omitted mode and `--mode single-file` preserve single-file input behavior.
+- Source coordinate: book-entry `AbundantDocument` section, xref, anchor, target, paragraph, listing, table, and downstream RDF12 resource coordinates use origin `relativePath` facts instead of an aggregate `build/adoc` path.
+- Diagnostics: book-entry construction errors block document construction; origin recovery diagnostics prevent fake raw text and fake precise source coordinates.
+- Downstream projection: RDF12 projection consumes public `AbundantDocument` source layers and does not require a line origin table parameter.
+- Regression state: executable source and tests contain no migration expected-fail markers.
+----
+
+=== 未处理对象与去向
+
+[source,text]
+----
+- Batch 08 approval: coordinator-owned审核动作；本记录和 Batch 08 审核包保持 `待审核`。
+- Future semantic expansion beyond supported full-file include directives: outside this implementation plan; requires a new lab object before entering body facts.
+- RDF12 vocabulary changes unrelated to source coordinates: outside this implementation plan; governed by RDF12 projection body and its own implementation plan.
+- HTML/PDF/EPUB/static-site generation by parser runtime: outside package boundary; README records the current runtime boundary.
+----
+
+=== Body 修订判断
+
+[horizontal]
+是否需要修订 9 号书:: `否`
+是否需要修订 10 号书:: `否`
+修订入口:: `无；Batch 08 edits updated README, CHANGELOG, tests, review package, closure record, and plan book surface.`
+
+=== 后续入口
+
+[horizontal]
+当前对象入口:: xref:../10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约]
+治理追溯入口:: xref:batch-status-ledger[批次状态台账] and xref:batch-08-review-package[Batch 08 阶段审核包]
+后续治理入口:: `none`

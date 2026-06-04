@@ -1,0 +1,222 @@
+[#batch-08-review-package]
+== Batch 08 阶段审核包
+
+=== 批次信息
+
+[horizontal]
+批次编号:: `Batch 08`
+批次名称:: `Final Gates and Closure`
+提交 hash:: `d5dd50e33b81f0f7c9ee6895ed90f68c586458d4`
+执行者:: `subagent`
+审核者:: `主线程/Principal coordinator`
+审核状态:: `待审核`
+
+=== 修改文件
+
+[source,text]
+----
+README.md
+CHANGELOG.md
+test/rdf12-projection/structure-projector.test.ts
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/book.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-08-review-package.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/closure-record.adoc
+----
+
+=== 上下文闭包阅读记录
+
+[source,text]
+----
+- 目标规格闭包：
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/chapters/11-batch-08-final-gates-and-closure.adoc
+- 上游 parser 契约闭包：
+  docs/bookshelf/books/09-asciidoc-abundant-tree-parser-spec/chapters/12-acceptance-and-gates.adoc
+- 目标 book-entry 契约闭包：
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/10-public-api-and-cli.adoc
+  docs/bookshelf/books/10-book-entry-source-mapped-logical-document/chapters/11-contract-tests.adoc
+- 材料体系治理闭包：
+  docs/bookshelf/books/08-body-lab-material-system/chapters/05-entry-rules.adoc
+  docs/bookshelf/books/08-body-lab-material-system/chapters/06-reference-version-archive.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/batch-status-ledger.adoc
+  docs/bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan/backmatter/closure-record-template.adoc
+- 当前公共表面闭包：
+  README.md
+  CHANGELOG.md
+  docs/bookshelf/catalog.adoc
+  package.json
+- 测试闭包：
+  test/book-entry/book-entry.acceptance.test.ts
+  test/book-entry/source-coordinate-recovery.test.ts
+  test/book-entry/book-entry-negative.test.ts
+  test/book-entry/single-file-regression.test.ts
+  test/cli.test.ts
+  test/cli-error.test.ts
+  test/rdf12-projection/book-entry-coordinate.test.ts
+  test/rdf12-projection/structure-projector.test.ts
+  test/rdf12-projection/xref-projector.test.ts
+  test/rdf12-projection/query-contracts.test.ts
+----
+
+=== 完成范围
+
+[source,text]
+----
+- Executable source and tests contain no migration expected-fail markers for the Batch 00 migration gate search.
+- Global coverage now satisfies the configured threshold: branch coverage is 90.41%.
+- `test/rdf12-projection/structure-projector.test.ts` covers public RDF12 node index lookup by section target type, exact line span, omitted endLine, non-section target rejection, and mismatched endLine rejection.
+- README current behavior describes explicit book-entry include graph parsing alongside single-file parsing.
+- CHANGELOG records book-entry public mode, CLI/API documentRoot behavior, origin source coordinates, downstream RDF12 coordinate coverage, single-file default preservation, and diagnostics hardening.
+- `closure-record.adoc` records final verification commands, true results, coverage summary, current object facts, unresolved objects, body revision judgment, and follow-up entries.
+- `book.adoc` includes the actual closure record in the plan book public surface.
+- Batch 08 ledger entry is `待审核`, with the implementation commit hash and review package xref.
+----
+
+=== 未处理对象
+
+[source,text]
+----
+- Batch 08 approval：coordinator-owned 审核动作；本批证据提交不写 `通过`。
+- Future include forms beyond supported full-file include directives：outside this plan; requires a new lab object.
+- RDF12 graph semantics unrelated to source coordinates：outside Batch 08 implementation/finalization scope.
+----
+
+=== 已运行命令
+
+[source,bash]
+----
+pnpm test
+pnpm typecheck
+pnpm lint
+pnpm build
+pnpm pack:check
+pnpm smoke:cli
+pnpm test:coverage
+pnpm --dir docs/bookshelf test
+pnpm --dir docs/bookshelf run build
+rg -n 'it\.fails|describe\.fails|\.fails\(|expected-fail|expected fail|允许失败|migration expected|Batch 00 migration' src test
+pnpm test -- test/cli.test.ts test/book-entry/book-entry.acceptance.test.ts test/rdf12-projection/book-entry-coordinate.test.ts
+pnpm exec biome check --vcs-use-ignore-file=false README.md CHANGELOG.md test/rdf12-projection/structure-projector.test.ts
+git diff --name-only dc4458e..HEAD -- src/rdf12-projection CHANGELOG.md README.md test/rdf12-projection/structure-projector.test.ts
+git status --short
+----
+
+=== 命令结果
+
+[source,text]
+----
+pnpm test:
+  PASS
+  Test Files 47 passed (47)
+  Tests 357 passed (357)
+
+pnpm typecheck:
+  PASS
+  tsc --noEmit exited 0
+
+pnpm lint:
+  PASS
+  biome check --vcs-use-ignore-file=false . checked 297 files. No fixes applied.
+
+pnpm build:
+  PASS
+  tsdown built CLI and library dist artifacts.
+
+pnpm pack:check:
+  PASS
+  pnpm build, publint, and npm pack --dry-run completed. npm emitted environment-config warnings for unsupported npm config keys; packaging completed.
+
+pnpm smoke:cli:
+  PASS
+  dist CLI emitted rdf12 and rdf12-json-ld output for samples/reference-links.adoc.
+
+pnpm test:coverage:
+  PASS
+  Test Files 47 passed (47)
+  Tests 357 passed (357)
+  Branch coverage 90.41% satisfies the configured 90% threshold.
+
+pnpm --dir docs/bookshelf test:
+  PASS
+  node --test reported 11 pass, 0 fail.
+
+pnpm --dir docs/bookshelf run build:
+  Initial closure-draft run: FAIL
+  Failure reason: check:html reported four missing local resources from closure-record body-book xrefs.
+  Corrected rerun: PASS
+  build:adoc, build:catalog, build:books, copy:assets, write:root, enhance:html, and check:html completed.
+
+rg -n 'it\.fails|describe\.fails|\.fails\(|expected-fail|expected fail|允许失败|migration expected|Batch 00 migration' src test:
+  PASS
+  No output.
+
+pnpm test -- test/cli.test.ts test/book-entry/book-entry.acceptance.test.ts test/rdf12-projection/book-entry-coordinate.test.ts:
+  PASS
+  Test Files 47 passed (47)
+  Tests 357 passed (357)
+  Evidence scope: CLI JSON/pretty/RDF12 surfaces, public book-entry model coordinates, RDF12 origin relativePath facts, and absence of `build/adoc` aggregate source paths.
+
+pnpm exec biome check --vcs-use-ignore-file=false README.md CHANGELOG.md test/rdf12-projection/structure-projector.test.ts:
+  PASS
+  Checked 1 file in 7ms. No fixes applied.
+
+git diff --name-only dc4458e..HEAD -- src/rdf12-projection CHANGELOG.md README.md test/rdf12-projection/structure-projector.test.ts:
+  PASS
+  Output:
+  CHANGELOG.md
+  README.md
+  test/rdf12-projection/structure-projector.test.ts
+
+git status --short:
+  PASS
+  Clean after implementation commit and final gate commands.
+----
+
+=== 覆盖率结果
+
+[source,text]
+----
+pnpm test:coverage: PASS
+Statements: 96.33% (1840/1910)
+Branches: 90.41% (1255/1388)
+Functions: 97.94% (430/439)
+Lines: 96.27% (1810/1880)
+
+src/book-entry/**:
+Statements: 98.51%
+Branches: 96.21%
+Functions: 100%
+Lines: 98.49%
+----
+
+=== 规约检查清单
+
+* 本批目标对象来自 9 号书 acceptance/gates、10 号书 public API/CLI and contract tests、8 号书 body/lab entry and archive rules.
+* 本批没有重新定义 10 号书目标对象。
+* 本批没有修改 parser runtime source.
+* 本批没有破坏 single-file mode; single-file regressions are included in full `pnpm test`.
+* 本批没有把 line origin table 变成下游主契约; RDF12 book-entry coordinate tests assert public document projection without line origin table parameter.
+* 本批没有输出假 source coordinate; Batch 04/07 cross-origin recovery tests remain in full test suite.
+* 本批测试覆盖了 final coverage gap through real RDF12 node index target lookup behavior.
+* 本批 public docs describe current behavior and do not require this implementation plan for runtime use.
+* 本批 catalog did not require modification because Book 10 remains listed before this implementation plan.
+* 本批未处理对象有去向。
+
+=== 工程质量检查清单
+
+* 本批 implementation commit changed only allowed Batch 08 public docs and tests: README, CHANGELOG, and one RDF12 test file.
+* 本批 evidence commit changes only required plan closure/evidence files.
+* 本批 did not modify `src/**`; no runtime source exception is present.
+* 本批 did not weaken coverage thresholds.
+* 本批 did not remove meaningful tests.
+* Full test, typecheck, lint, build, pack, smoke, coverage, and docs bookshelf gates were run after implementation commit.
+* Expected-fail marker search has no executable `src` or `test` matches.
+* Worktree was clean after implementation commit and final verification commands.
+* Closure record is included in `book.adoc`.
+
+=== 审核结论
+
+[horizontal]
+结论:: `待审核`
+理由:: Batch 08 implementation commit `d5dd50e33b81f0f7c9ee6895ed90f68c586458d4` satisfies final gate command results, coverage threshold, executable expected-fail absence, public docs update, closure record creation, and plan book surface inclusion.
+后续动作:: Coordinator reviews Batch 08 evidence and decides ledger approval.

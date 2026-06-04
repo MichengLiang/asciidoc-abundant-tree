@@ -72,6 +72,9 @@ include::backmatter/batch-status-ledger.adoc[]
 include::backmatter/closure-record-template.adoc[]
 
 [appendix]
+include::backmatter/closure-record.adoc[]
+
+[appendix]
 include::backmatter/glossary.adoc[]
 
 [bibliography]
