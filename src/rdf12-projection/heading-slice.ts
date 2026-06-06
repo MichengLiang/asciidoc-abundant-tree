@@ -19,6 +19,16 @@ export type HeadingSlice = {
 export function resolveHeadingSlice(
 	node: SectionNode,
 ): HeadingSlice | undefined {
+	// Origin-aware book-entry sections already carry the exact heading slice.
+	// Single-file fallback raw can still include child sections and must be sliced below.
+	if (
+		node.source?.relativePath !== undefined &&
+		node.source.raw !== undefined &&
+		node.source.span !== undefined
+	) {
+		return headingSliceFromSourceLayer(node);
+	}
+
 	const headingLine = node.line ?? node.titleSpan?.start.line;
 	if (headingLine === undefined) {
 		return undefined;
@@ -38,6 +48,36 @@ export function resolveHeadingSlice(
 
 	return {
 		span: { startLine, endLine },
+		headingLine,
+		raw,
+		...(metadataSpan !== undefined ? { metadataSpan } : {}),
+		...(contentSpan !== undefined ? { contentSpan } : {}),
+	};
+}
+
+function headingSliceFromSourceLayer(
+	node: SectionNode,
+): HeadingSlice | undefined {
+	const span = node.source?.span;
+	const raw = node.source?.raw;
+	if (span === undefined || raw === undefined) {
+		return undefined;
+	}
+	const headingLine = node.line ?? node.titleSpan?.start.line;
+	if (headingLine === undefined) {
+		return undefined;
+	}
+
+	const metadataSpan =
+		span.startLine < headingLine
+			? { startLine: span.startLine, endLine: headingLine - 1 }
+			: undefined;
+	const contentSpan =
+		contentLineSpanFromSourceRaw(node, headingLine, span.endLine) ??
+		contentLineSpan(node.children, headingLine, span.endLine);
+
+	return {
+		span,
 		headingLine,
 		raw,
 		...(metadataSpan !== undefined ? { metadataSpan } : {}),

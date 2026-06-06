@@ -76,6 +76,33 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		expect(raw).not.toContain("include::shared/attributes.adoc[]");
 	});
 
+	it("projects book-entry section raw from the origin heading slice", () => {
+		const projection = projectBookEntryFixture();
+		const chapterHeading = headingByHeadline(projection.graph, "Xref Origin");
+		const nestedHeading = headingByHeadline(projection.graph, "Nested Origin");
+		const raw = onlyLiteralValue(
+			projection.graph,
+			chapterHeading,
+			aatTerm("raw"),
+		);
+
+		expect(raw).toContain("[#xref-origin]\n== Xref Origin");
+		expect(raw).toContain("include::nested/section.adoc[]");
+		expect(raw).not.toContain("=== Nested Origin");
+		expectLiteralValue(
+			projection.graph,
+			chapterHeading,
+			aatTerm("relativePath"),
+			"simple-book/chapters/01-entry-origin.adoc",
+		);
+		expectLiteralValue(
+			projection.graph,
+			nestedHeading,
+			aatTerm("raw"),
+			"[#nested-origin]\n=== Nested Origin\n\nThe nested include owns this heading.\n\n",
+		);
+	});
+
 	it("projects xref edge evidence relativePath from the occurrence origin file", () => {
 		const projection = projectBookEntryFixture();
 		const edge = xrefEdgeByRaw(
