@@ -10,6 +10,7 @@ import type { Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import { serializeRdf12ProjectionToTurtle } from "../../src/rdf12-projection/turtle-serializer";
 import {
 	aatTerm,
+	expectIntegerValue,
 	expectLiteralValue,
 	literalValues,
 	rdfTerm,
@@ -19,6 +20,8 @@ import {
 const projectRoot = process.cwd();
 const fixtureRoot = join(projectRoot, "test/book-entry/fixtures");
 const entryPath = join(fixtureRoot, "simple-book/book.adoc");
+const headingSliceFixtureRoot = join(fixtureRoot, "heading-slice-book");
+const headingSliceBookPath = join(headingSliceFixtureRoot, "book.adoc");
 const book10DocumentRoot = join(projectRoot, "docs/bookshelf");
 const book10EntryPath = join(
 	book10DocumentRoot,
@@ -88,6 +91,9 @@ describe("rdf12 book-entry origin source coordinates", () => {
 
 		expect(raw).toContain("[#xref-origin]\n== Xref Origin");
 		expect(raw).toContain("include::nested/section.adoc[]");
+		expect(raw).toContain("[#chapter-listing]");
+		expect(raw).toContain('console.log("chapter");');
+		expect(raw).toContain("Late section text after listing");
 		expect(raw).not.toContain("=== Nested Origin");
 		expectLiteralValue(
 			projection.graph,
@@ -99,8 +105,45 @@ describe("rdf12 book-entry origin source coordinates", () => {
 			projection.graph,
 			nestedHeading,
 			aatTerm("raw"),
-			"[#nested-origin]\n=== Nested Origin\n\nThe nested include owns this heading.\n\n",
+			"[#nested-origin]\n=== Nested Origin\n\nThe nested include owns this heading.\n",
 		);
+	});
+
+	it("projects book-entry heading raw through an included table body", () => {
+		const document = parseAbundantTree({
+			sourcePath: headingSliceBookPath,
+			mode: "book-entry",
+			documentRoot: headingSliceFixtureRoot,
+		});
+		const projection = rdf12(document, {
+			documentRoot: headingSliceFixtureRoot,
+		});
+		const heading = headingByHeadline(projection.graph, "Appendix Table");
+		const raw = onlyLiteralValue(projection.graph, heading, aatTerm("raw"));
+
+		expectLiteralValue(
+			projection.graph,
+			heading,
+			aatTerm("relativePath"),
+			"backmatter/appendix-table.adoc",
+		);
+		expectIntegerValue(projection.graph, heading, aatTerm("startLine"), 1);
+		expectIntegerValue(projection.graph, heading, aatTerm("endLine"), 11);
+		expectIntegerValue(
+			projection.graph,
+			heading,
+			aatTerm("contentStartLine"),
+			3,
+		);
+		expectIntegerValue(
+			projection.graph,
+			heading,
+			aatTerm("contentEndLine"),
+			11,
+		);
+		expect(raw).toContain('[cols="1,2", options="header"]');
+		expect(raw).toContain("|`== Chapter`");
+		expect(raw).toContain("|===");
 	});
 
 	it("projects xref edge evidence relativePath from the occurrence origin file", () => {

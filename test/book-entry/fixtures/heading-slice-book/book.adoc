@@ -1,0 +1,8 @@
+= Heading Slice Book
+:doctype: book
+
+[appendix]
+include::backmatter/appendix-table.adoc[]
+
+[appendix]
+include::backmatter/appendix-listing.adoc[]

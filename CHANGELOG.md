@@ -6,6 +6,12 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.12 - 2026-06-08
+
+### Fixed
+
+- Fixed book-entry heading slice recovery so table, listing, source-block, and ordinary block metadata surfaces no longer truncate section `source.raw/span` or RDF12 heading `aat:raw/endLine` before the next real same-origin heading.
+
 ## 0.1.11 - 2026-06-08
 
 ### Added

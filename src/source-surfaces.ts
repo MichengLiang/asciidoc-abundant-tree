@@ -47,6 +47,14 @@ export type SourceSurfaces = {
 	toolDiagnostics: ToolDiagnostic[];
 };
 
+type OriginHeadingBoundary = {
+	readonly relativePath: string;
+	readonly headingLine: number;
+	readonly sliceStartLine: number;
+};
+
+type OriginHeadingBoundaryIndex = Map<string, readonly OriginHeadingBoundary[]>;
+
 export { assignContainingSectionIds };
 
 export function projectSourceSurfaces(options: {
@@ -236,6 +244,11 @@ function buildSectionSurfaces(
 } {
 	const sections: SectionNode[] = [];
 	const sectionByBlock = new WeakMap<AsciidoctorBlock, SectionNode>();
+	const originHeadingBoundaryIndex = buildOriginHeadingBoundaryIndex(
+		blockSurfaces,
+		intervalByBlock,
+		logicalSource,
+	);
 
 	for (const surface of blockSurfaces) {
 		if (surface.context !== "section") {
@@ -252,12 +265,23 @@ function buildSectionSurfaces(
 		if (sourceLine === undefined) {
 			continue;
 		}
+		const currentBoundary = originHeadingBoundaryForSection(
+			originHeadingBoundaryIndex,
+			logicalSource,
+			sourceLine,
+			interval.span.startLine,
+		);
+		const nextBoundary = nextOriginHeadingBoundary(
+			originHeadingBoundaryIndex,
+			currentBoundary,
+		);
 		const recoveredSource = logicalSource
 			? recoverSectionSourceLayer(
 					logicalSource,
 					sourceLine,
 					interval.span.startLine,
 					interval.titleSpan,
+					nextBoundary?.sliceStartLine,
 				)
 			: undefined;
 		if (recoveredSource && !recoveredSource.ok) {
@@ -329,6 +353,98 @@ function buildSectionSurfaces(
 	}
 
 	return { sections, sectionByBlock };
+}
+
+function buildOriginHeadingBoundaryIndex(
+	blockSurfaces: readonly OfficialBlockSurface[],
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
+	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
+): OriginHeadingBoundaryIndex | undefined {
+	if (!logicalSource) {
+		return undefined;
+	}
+	const grouped = new Map<string, OriginHeadingBoundary[]>();
+	for (const surface of blockSurfaces) {
+		if (surface.context !== "section") {
+			continue;
+		}
+		if (hasDiagnosticPolicyAncestor(surface)) {
+			continue;
+		}
+		const logicalHeadingLine = surface.sourceLine;
+		const interval = intervalByBlock.get(surface.block);
+		if (logicalHeadingLine === undefined || !interval) {
+			continue;
+		}
+		const headingOrigin = logicalSource.lineOrigins[logicalHeadingLine - 1];
+		if (!headingOrigin) {
+			continue;
+		}
+		const metadataOrigin =
+			logicalSource.lineOrigins[interval.span.startLine - 1] ?? headingOrigin;
+		const sliceStartLine =
+			metadataOrigin.relativePath === headingOrigin.relativePath
+				? metadataOrigin.sourceLine
+				: headingOrigin.sourceLine;
+		const bucket = grouped.get(headingOrigin.relativePath) ?? [];
+		bucket.push({
+			relativePath: headingOrigin.relativePath,
+			headingLine: headingOrigin.sourceLine,
+			sliceStartLine,
+		});
+		grouped.set(headingOrigin.relativePath, bucket);
+	}
+	return new Map(
+		[...grouped.entries()].map(([relativePath, boundaries]) => [
+			relativePath,
+			boundaries.toSorted(
+				(left, right) =>
+					left.sliceStartLine - right.sliceStartLine ||
+					left.headingLine - right.headingLine,
+			),
+		]),
+	);
+}
+
+function originHeadingBoundaryForSection(
+	index: OriginHeadingBoundaryIndex | undefined,
+	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
+	logicalHeadingLine: number,
+	logicalMetadataStartLine: number,
+): OriginHeadingBoundary | undefined {
+	if (!index || !logicalSource) {
+		return undefined;
+	}
+	const headingOrigin = logicalSource.lineOrigins[logicalHeadingLine - 1];
+	if (!headingOrigin) {
+		return undefined;
+	}
+	const metadataOrigin =
+		logicalSource.lineOrigins[logicalMetadataStartLine - 1] ?? headingOrigin;
+	const sliceStartLine =
+		metadataOrigin.relativePath === headingOrigin.relativePath
+			? metadataOrigin.sourceLine
+			: headingOrigin.sourceLine;
+
+	return index
+		.get(headingOrigin.relativePath)
+		?.find(
+			(candidate) =>
+				candidate.sliceStartLine === sliceStartLine &&
+				candidate.headingLine === headingOrigin.sourceLine,
+		);
+}
+
+function nextOriginHeadingBoundary(
+	index: OriginHeadingBoundaryIndex | undefined,
+	current: OriginHeadingBoundary | undefined,
+): OriginHeadingBoundary | undefined {
+	if (!index || !current) {
+		return undefined;
+	}
+	return index
+		.get(current.relativePath)
+		?.find((candidate) => candidate.sliceStartLine > current.sliceStartLine);
 }
 
 function sectionSourceScopeFromLogicalInterval(

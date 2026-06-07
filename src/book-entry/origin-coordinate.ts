@@ -6,7 +6,6 @@ import type {
 } from "../model";
 import type { LineTable } from "../source-lines";
 import {
-	lineText,
 	logicalSourceForLineTable as logicalSourceForRegisteredLineTable,
 	registerPendingLogicalSourceForLineTable,
 	sourceLines,
@@ -214,6 +213,7 @@ export function recoverSectionSourceLayer(
 	logicalHeadingLine: number,
 	logicalMetadataStartLine: number,
 	logicalTitleSpan: SourceSpan | undefined,
+	nextOriginHeadingSliceStartLine: number | undefined,
 ): OriginRecoveryResult {
 	const headingOrigin = originForLogicalLine(logicalSource, logicalHeadingLine);
 	if (!headingOrigin) {
@@ -239,13 +239,13 @@ export function recoverSectionSourceLayer(
 		metadataOrigin.relativePath === headingOrigin.relativePath
 			? metadataOrigin.sourceLine
 			: headingOrigin.sourceLine;
+	const endLine =
+		nextOriginHeadingSliceStartLine !== undefined
+			? Math.max(startLine, nextOriginHeadingSliceStartLine - 1)
+			: finalAuthoredLine(sourceFile.lineTable);
 	const lineSpan = {
 		startLine,
-		endLine: sectionHeadingSliceEndLine(
-			sourceFile.lineTable,
-			startLine,
-			headingOrigin.sourceLine,
-		),
+		endLine,
 	};
 	const sourceSpan = originSourceSpan(sourceFile, lineSpan, undefined);
 	if (!sourceSpan) {
@@ -345,55 +345,17 @@ function originSourceSpan(
 	};
 }
 
-function sectionHeadingSliceEndLine(
-	lineTable: LineTable,
-	startLine: number,
-	headingLine: number,
-): number {
-	for (let line = headingLine + 1; line <= lineTable.lines.length; line += 1) {
-		const text = lineText(lineTable, line);
-		if (!isHeadingSliceBoundaryLine(text)) {
-			continue;
-		}
-		return Math.max(
-			startLine,
-			metadataStartBeforeBoundary(lineTable, line, headingLine + 1) - 1,
-		);
+function finalAuthoredLine(lineTable: LineTable): number {
+	// buildLineTable keeps a terminal empty sentinel for sources ending in "\n";
+	// public source spans use authored line numbers, not that split artifact.
+	if (
+		lineTable.lines.length > 1 &&
+		lineTable.source.endsWith("\n") &&
+		lineTable.lines.at(-1)?.text === ""
+	) {
+		return lineTable.lines.length - 1;
 	}
 	return lineTable.lines.length;
-}
-
-function metadataStartBeforeBoundary(
-	lineTable: LineTable,
-	boundaryLine: number,
-	minLine: number,
-): number {
-	let startLine = boundaryLine;
-	for (let line = boundaryLine - 1; line >= minLine; line -= 1) {
-		if (!isBlockMetadataLine(lineText(lineTable, line))) {
-			break;
-		}
-		startLine = line;
-	}
-	return startLine;
-}
-
-function isHeadingSliceBoundaryLine(text: string): boolean {
-	const trimmed = text.trim();
-	return (
-		isSectionHeadingLine(trimmed) ||
-		isBlockMetadataLine(trimmed) ||
-		trimmed === "----" ||
-		trimmed === "|==="
-	);
-}
-
-function isSectionHeadingLine(trimmed: string): boolean {
-	return /^={1,6}\s+\S/u.test(trimmed);
-}
-
-function isBlockMetadataLine(trimmed: string): boolean {
-	return /^\[[^[\]]+\]$/u.test(trimmed) || /^\.[^\s.]/u.test(trimmed);
 }
 
 function recoveryFailure(

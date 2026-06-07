@@ -1,0 +1,14 @@
+= Fake Table Heading Slice
+
+== Table Cell Heading Text
+
+|===
+|Syntax |Meaning
+
+|`== Not A Heading`
+|plain table cell text.
+|===
+
+== Real Next Heading
+
+Real heading body.

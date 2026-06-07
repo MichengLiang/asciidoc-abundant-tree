@@ -87,7 +87,7 @@ Fixture boundary note: the changes under `test/book-entry/fixtures/simple-book/*
 - src/book-entry/source-scope-index.ts 提供 relativePath-aware source scope lookup；book-entry containing section 查找同时比较 occurrence relativePath 和 origin line range。
 - book-entry section source layer 映射到 heading origin relativePath；heading raw 从 origin file line table 恢复，不从 logical text 切取。
 - 打回修正后，book-entry recovery context 绑定到具体 `LineTable` 实例：`buildLineTable(source)` 消费一次 pending logical source 并写入 `WeakMap<LineTable, LogicalSource>`；同文本 single-file parse 和同文本不同 origin 的 book-entry parse 不共享 recovery context。
-- 打回修正后，section heading raw/span 按 origin file heading-slice boundary 恢复，不再盲目延伸到 origin file EOF；同 origin 后续 block metadata/listing/table boundary 会截断 heading raw，跨 origin nested include heading 不截断 parent origin include directive raw。
+- 历史实现记录：打回修正后，section heading raw/span 曾按 origin file heading-slice boundary 恢复，且同 origin 后续 block metadata/listing/table boundary 会截断 heading raw。该 boundary predicate 已废弃；当前 section heading raw/span 只由同 origin file 的下一个 official section heading slice start 或 origin file EOF 截断，跨 origin nested include heading 不截断 parent origin include directive raw。
 - 第二次打回修正后，section heading raw/span 与 source scope containment 分离：public `section.source.raw/span` 仍表示 heading slice，book-entry containment 使用内部注册的 `SectionSourceScope` candidate。
 - `src/source-surfaces.ts` 从 parser logical section interval 映射 same-origin source scope range，并注册到 `src/book-entry/source-scope-index.ts`；该 range 按 origin `relativePath` 与 origin line 匹配，不暴露为 public fake raw/source coordinate。
 - xref occurrence 和 anchor occurrence sourceSpan/source layer 映射到 occurrence origin relativePath。
@@ -245,7 +245,7 @@ src/book-entry/source-scope-index.ts Lines: 100%
 ----
 - `sectionByLine` 仍作为 single-file 兼容字段存在于 SourceSurfaces 和 projector option；book-entry 下该 map 为空，实际 containing section assignment 使用 `SourceScopeIndex`。审核者应重点复核 book-entry 路径没有回落到 line-only map。
 - 全局 `pnpm test:coverage` 仍因 branch coverage 89.03% 低于 90% 失败；Batch 04 新增 origin mapper 和 `src/book-entry/**` 覆盖率均超过 90%。
-- Section heading slice boundary 目前覆盖 Batch 04 需要的 section heading、block metadata、listing delimiter 和 table delimiter；若后续支持更多 AsciiDoc structural boundary，需要扩展相同 origin-file boundary predicate。
+- 历史风险记录：Batch 04 当时的 section heading slice boundary predicate 覆盖 section heading、block metadata、listing delimiter 和 table delimiter。该 predicate 已废弃；当前待复核边界来源为 same-origin official section heading slice start 或 origin file EOF。
 ----
 
 === 审核结论

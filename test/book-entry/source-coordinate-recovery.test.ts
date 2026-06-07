@@ -66,18 +66,34 @@ This chapter owns anchor:chapter-anchor[Chapter Anchor] for scope recovery.
 
 include::nested/section.adoc[]
 
+[#chapter-listing]
+.Chapter Listing
+[source,js]
+----
+console.log("chapter");
+----
+
+Late section text after listing keeps xref:target-origin[Late Target] and anchor:late-chapter-anchor[Late Chapter Anchor] in the same source scope.
 `);
 		expect(chapterSection.source?.raw).not.toContain("=== Nested Origin");
-		expect(chapterSection.source?.raw).not.toContain("[#chapter-listing]");
-		expect(chapterSection.source?.raw).not.toContain("Late section text");
+		expect(chapterSection.source?.raw).toContain("[#chapter-listing]");
+		expect(chapterSection.source?.raw).toContain('console.log("chapter");');
+		expect(chapterSection.source?.raw).toContain("Late section text");
 		expect(nestedSection.source?.raw).toContain("=== Nested Origin");
 		expect(targetSection.source?.raw).toBe(`[#target-origin]
 == Target Origin
 
 This chapter owns the target section.
 
+[#chapter-table]
+|===
+| Column
+
+| Value
+|===
 `);
-		expect(targetSection.source?.raw).not.toContain("[#chapter-table]");
+		expect(targetSection.source?.raw).toContain("[#chapter-table]");
+		expect(targetSection.source?.raw).toContain("| Value");
 	});
 
 	it("maps xref, anchor, and target source coordinates to their origin files", () => {
@@ -456,10 +472,16 @@ describe("book-entry origin coordinate mapper diagnostics", () => {
 
 	it("recovers section raw from heading origin and handles section recovery failures", () => {
 		const logicalSource = syntheticLogicalSource();
-		const recovered = recoverSectionSourceLayer(logicalSource, 3, 2, {
-			start: { line: 3, column: 4 },
-			end: { line: 3, column: 11 },
-		});
+		const recovered = recoverSectionSourceLayer(
+			logicalSource,
+			3,
+			2,
+			{
+				start: { line: 3, column: 4 },
+				end: { line: 3, column: 11 },
+			},
+			undefined,
+		);
 
 		expect(recovered).toEqual(
 			expect.objectContaining({
@@ -471,7 +493,9 @@ describe("book-entry origin coordinate mapper diagnostics", () => {
 			expect(recovered.sourceLayer.raw).toContain("b heading");
 			expect(recovered.sourceLayer.span).toEqual({ startLine: 1, endLine: 2 });
 		}
-		expect(recoverSectionSourceLayer(logicalSource, 99, 99, undefined)).toEqual(
+		expect(
+			recoverSectionSourceLayer(logicalSource, 99, 99, undefined, undefined),
+		).toEqual(
 			expect.objectContaining({
 				ok: false,
 				diagnostic: expect.objectContaining({
@@ -494,6 +518,7 @@ describe("book-entry origin coordinate mapper diagnostics", () => {
 				}),
 				1,
 				1,
+				undefined,
 				undefined,
 			),
 		).toEqual(

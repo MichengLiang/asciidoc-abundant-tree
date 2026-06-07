@@ -1,0 +1,12 @@
+= First Heading
+
+First body.
+
+[#second-heading.rule]
+== Second Heading
+
+Second body.
+
+== Third Heading
+
+Third body.

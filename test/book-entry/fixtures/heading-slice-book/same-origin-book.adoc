@@ -1,0 +1,5 @@
+= Same Origin Heading Slice Book
+:doctype: book
+
+[part]
+include::same-origin-next-heading.adoc[]

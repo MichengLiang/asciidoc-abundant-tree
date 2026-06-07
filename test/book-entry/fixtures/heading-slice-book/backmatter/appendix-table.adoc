@@ -1,0 +1,11 @@
+= Appendix Table
+
+[cols="1,2", options="header"]
+|===
+|Syntax |Meaning
+|`= Book`
+|document title.
+
+|`== Chapter`
+|chapter.
+|===
