@@ -6,6 +6,16 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.10 - 2026-06-07
+
+### Fixed
+
+- Fixed RDF 1.2 book-entry heading raw projection so origin-backed section nodes emit the exact source heading slice instead of being sliced again through the single-file fallback path.
+
+### Changed
+
+- Completed the npm publish workflow so both tag-triggered and manual dispatch releases publish the package, keep the version tag aligned with `package.json`, and create the GitHub release record when needed.
+
 ## 0.1.9 - 2026-06-04
 
 ### Added
