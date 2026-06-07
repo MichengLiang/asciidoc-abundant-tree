@@ -6,6 +6,14 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.11 - 2026-06-08
+
+### Added
+
+- Added a business-layer animation YAML exporter that consumes book-entry RDF 1.2 projection facts and emits structured animation adaptation YAML.
+- Added the `animation-yaml-export` CLI bin and `exportAnimationYaml` TypeScript API for downstream tools such as `seekwant`.
+- Added JSON/YAML payload parsing, animation script block extraction, business role and relation mapping, source coordinates, export warnings, and coverage fixtures for animation profile data.
+
 ## 0.1.10 - 2026-06-07
 
 ### Fixed
