@@ -1,6 +1,6 @@
 {
 	"name": "asciidoc-abundant-tree",
-	"version": "0.1.10",
+	"version": "0.1.11",
 	"description": "Recover a source-aware, analysis-ready tree from AsciiDoc files and explicit book-entry include graphs.",
 	"license": "Apache-2.0",
 	"author": {
@@ -19,7 +19,8 @@
 	"type": "module",
 	"types": "./dist/index.d.mts",
 	"bin": {
-		"asciidoc-abundant-tree": "dist/cli.mjs"
+		"asciidoc-abundant-tree": "dist/cli.mjs",
+		"animation-yaml-export": "dist/animation-yaml-export/cli.mjs"
 	},
 	"exports": {
 		".": {
@@ -57,6 +58,7 @@
 		"build": "tsdown",
 		"check": "pnpm lint && pnpm typecheck && pnpm test && pnpm pack:check && pnpm smoke:cli",
 		"dev": "tsx src/cli.ts",
+		"export:animation-yaml": "tsx src/animation-yaml-export/cli.ts",
 		"lint": "biome check --vcs-use-ignore-file=false .",
 		"format": "biome check --write --vcs-use-ignore-file=false .",
 		"typecheck": "tsc --noEmit",
@@ -69,7 +71,8 @@
 	"dependencies": {
 		"@asciidoctor/core": "^3.0.4",
 		"n3": "^2.0.3",
-		"parse5": "^8.0.1"
+		"parse5": "^8.0.1",
+		"yaml": "^2.9.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",

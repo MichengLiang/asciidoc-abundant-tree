@@ -1,0 +1,41 @@
+[#beat-rabbit-appears.beat, function=opening-image]
+== 节拍：白兔打破无聊
+
+本节拍改编自 xref:event-rabbit-appears[事件：白兔出现, rel=adapted-from]。
+
+[#card-riverbank-rabbit.scene-card, status=ready]
+== 场景卡：河岸与白兔
+
+本场景卡实现 xref:beat-rabbit-appears[节拍：白兔打破无聊, rel=realizes]。
+本场景卡包含 xref:char-alice[爱丽丝, rel=features-character]。
+本场景卡位于 xref:env-riverbank[河岸背景, rel=located-at] 和 xref:loc-riverbank[河岸地点, rel=located-at]。
+本场景卡需要 xref:prop-pocket-watch[怀表, rel=requires-prop]。
+本场景卡受 xref:qr-visible-audible[可见可听优先规则, rel=constrains] 约束。
+本场景卡还受 xref:vr-quick-readable-silhouette[快速可读剪影规则, rel=constrains] 约束。
+
+[#card-riverbank-rabbit-payload.payload, for=card-riverbank-rabbit, data=json]
+[source,json]
+----
+{
+  "sceneFunction": "move Alice from boredom to pursuit",
+  "valueShift": {
+    "start": "boredom",
+    "end": "curiosity"
+  }
+}
+----
+
+[#choice-externalize-curiosity.adaptation-choice, strategy=externalize-inner-state]
+== 改编选择：外化好奇心
+
+本选择实现 xref:card-riverbank-rabbit[场景卡：河岸与白兔, rel=realizes]。
+本选择外化 xref:char-alice[爱丽丝, rel=externalizes] 的心理状态。
+本选择压缩 xref:event-rabbit-appears[事件：白兔出现, rel=compresses] 为一个镜头触发。
+本选择重排 xref:src-ch1-rabbit[白兔看表, rel=reorders] 的叙述重点。
+
+[#choice-externalize-curiosity-payload.payload, for=choice-externalize-curiosity, data=yaml]
+[source,yaml]
+----
+rationale: keep the opening readable without narration
+animationDevice: eye reflection plus metallic tick
+----

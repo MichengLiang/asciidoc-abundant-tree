@@ -10,6 +10,11 @@ import {
 } from "./rdf12-projection/projector";
 import { serializeRdf12ProjectionToTurtle } from "./rdf12-projection/turtle-serializer";
 
+export {
+	type ExportAnimationYamlOptions,
+	type ExportAnimationYamlResult,
+	exportAnimationYaml,
+} from "./animation-yaml-export/export-animation-yaml";
 export type {
 	AbundantDocument,
 	AbundantNode,

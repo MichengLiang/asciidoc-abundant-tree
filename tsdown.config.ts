@@ -1,7 +1,7 @@
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
-	entry: ["src/index.ts", "src/cli.ts"],
+	entry: ["src/index.ts", "src/cli.ts", "src/animation-yaml-export/cli.ts"],
 	dts: true,
 	clean: true,
 	format: ["esm"],

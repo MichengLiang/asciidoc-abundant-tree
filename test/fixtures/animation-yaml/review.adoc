@@ -1,0 +1,12 @@
+[#review-note-rabbit.review-note, status=open, assigned-to=executor]
+== 审查意见：强化怀表触发
+
+本意见批评 xref:scene-riverbank-rabbit[场景：河岸与白兔, rel=critiques]。
+本意见依据 xref:qr-visible-audible[可见可听优先规则, rel=evidenced-by]。
+本意见批准 xref:shot-rabbit-watch[Shot：怀表闪光, rel=approves]。
+
+[#mapping-animation-yaml.export-mapping, target=animation-yaml]
+== 导出映射：动画 YAML
+
+本映射导出 xref:profile-animation-main[动画改编剖面, rel=exports-to]。
+本映射导出 xref:scene-riverbank-rabbit[场景：河岸与白兔, rel=exports-to]。

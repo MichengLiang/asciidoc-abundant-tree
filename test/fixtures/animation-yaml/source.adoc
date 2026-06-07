@@ -1,0 +1,27 @@
+[#profile-animation-main.adaptation-profile, target=animation-script, production=animated-short, status=active]
+== 动画改编剖面
+
+本项目使用动画改编剖面。
+
+[#profile-animation-main-payload.payload, for=profile-animation-main, data=json]
+[source,json]
+----
+{
+  "adaptationTarget": "animation_script",
+  "productionForm": "animated_short",
+  "requiredModules": ["source_trace", "story_bible", "animation_script", "storyboard"]
+}
+----
+
+[#src-ch1.source-chapter, order=1]
+== 第一章：测试章节
+
+[#src-ch1-rabbit.source-snippet, event=inciting-incident]
+=== 白兔看表
+
+白兔拿出怀表，说自己迟到了。
+
+[#event-rabbit-appears.source-event]
+=== 事件：白兔出现
+
+本事件来自 xref:src-ch1-rabbit[白兔看表, rel=adapted-from]。

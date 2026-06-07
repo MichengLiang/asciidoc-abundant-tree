@@ -1,0 +1,36 @@
+[#scene-riverbank-rabbit.animation-scene, status=draft, sequence=1]
+== 场景：河岸与白兔
+
+本场景实现 xref:card-riverbank-rabbit[场景卡：河岸与白兔, rel=realizes]。
+本场景改编自 xref:src-ch1-rabbit[白兔看表, rel=adapted-from]。
+本场景包含 xref:char-alice[爱丽丝, rel=features-character]。
+本场景位于 xref:env-riverbank[河岸背景, rel=located-at]。
+本场景需要 xref:prop-pocket-watch[怀表, rel=requires-prop]。
+本场景受 xref:qr-visible-audible[可见可听优先规则, rel=constrains] 约束。
+本场景采用 xref:choice-externalize-curiosity[改编选择：外化好奇心, rel=depends-on]。
+
+[animation-script]
+----
+EXT. RIVERBANK - AFTERNOON
+
+Alice looks up as the White Rabbit snaps open a pocket watch.
+
+ALICE
+A rabbit with a watch?
+----
+
+[#shot-rabbit-watch.shot, scene=scene-riverbank-rabbit, order=1]
+== Shot：怀表闪光
+
+本镜头实现 xref:scene-riverbank-rabbit[场景：河岸与白兔, rel=realizes]。
+本镜头需要 xref:prop-pocket-watch[怀表, rel=requires-asset]。
+本镜头兑现 xref:choice-externalize-curiosity[改编选择：外化好奇心, rel=pays-off]。
+
+[#shot-rabbit-watch-payload.payload, for=shot-rabbit-watch, data=json]
+[source,json]
+----
+{
+  "framing": "close-up on pocket watch reflected in Alice's eye",
+  "sound": "bright metallic tick"
+}
+----

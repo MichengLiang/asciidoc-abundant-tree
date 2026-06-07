@@ -1,0 +1,54 @@
+[#char-alice.character, status=active]
+== 爱丽丝
+
+爱丽丝由 xref:src-ch1-rabbit[白兔看表, rel=derived-from] 建立好奇心。
+
+[#char-alice-payload.payload, for=char-alice, data=yaml]
+[source,yaml]
+----
+visualDesign:
+  motionStyle: quick curiosity-driven steps
+voiceProfile:
+  tone: polite and curious
+----
+
+[#char-bad-payload.character, status=draft]
+== 坏 payload 角色
+
+这个角色只用于验证 payload 解析失败时导出诊断。
+
+[#char-bad-payload-data.payload, for=char-bad-payload, data=json]
+[source,json]
+----
+{"broken": true
+----
+
+[#env-riverbank.environment-asset, layer=background]
+== 河岸背景
+
+河岸背景由 xref:src-ch1-rabbit[白兔看表, rel=evidenced-by] 提供现实世界起点。
+
+[#loc-riverbank.location, region=wonderland-threshold]
+== 河岸地点
+
+河岸地点由 xref:src-ch1-rabbit[白兔看表, rel=evidenced-by] 建立空间起点。
+
+[#prop-pocket-watch.prop]
+== 怀表
+
+怀表由 xref:src-ch1-rabbit[白兔看表, rel=derived-from] 建立。
+
+[#rule-scale-elasticity.world-rule]
+== 比例弹性规则
+
+动画世界允许比例变化。
+
+[#qr-visible-audible.quality-rule]
+== 可见可听优先规则
+
+动画剧本必须把心理状态外化为可见或可听的元素。
+
+[#vr-quick-readable-silhouette.visual-rule, palette=bright-contrast]
+== 快速可读剪影规则
+
+动画镜头必须让角色动作和关键道具在短镜头中可读。

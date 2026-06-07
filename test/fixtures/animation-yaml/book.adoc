@@ -1,0 +1,11 @@
+= Animation YAML Export Fixture
+:doctype: book
+:toc:
+:idprefix:
+:idseparator: -
+
+include::source.adoc[]
+include::bible.adoc[]
+include::structure.adoc[]
+include::script.adoc[]
+include::review.adoc[]
