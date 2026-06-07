@@ -1,3 +1,4 @@
+已经完成，0.1.12
 # Book-entry Heading Slice Recovery Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `subagent-driven-development` or `executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
