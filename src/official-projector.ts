@@ -12,10 +12,15 @@ import type {
 	AbundantNode,
 	AnchorOccurrenceNode,
 	AsciidoctorLayer,
+	DescriptionListItemNode,
+	DescriptionListNode,
+	DescriptionNode,
+	DescriptionTermNode,
 	ListingNode,
 	ParagraphNode,
 	SectionNode,
 	SourceLayer,
+	SourceSpan,
 	TableNode,
 	TargetNode,
 	TargetType,
@@ -23,6 +28,10 @@ import type {
 } from "./model";
 import { definedObject } from "./object-utils";
 import { officialBlockPolicy } from "./official-block-policy";
+import {
+	childBlocksOf,
+	descriptionListItemsFromBlock,
+} from "./official-block-utils";
 import type { SourceInterval } from "./source-interval-resolver";
 import {
 	collectOccurrencesInLineRange,
@@ -103,7 +112,7 @@ function buildChildren(
 ): AbundantNode[] {
 	const topLevel: AbundantNode[] = [];
 
-	for (const block of officialDocument.getBlocks?.() ?? []) {
+	for (const block of childBlocksOf(officialDocument)) {
 		topLevel.push(...toNodes(buildNode(block, context)));
 	}
 
@@ -135,6 +144,9 @@ function buildNode(
 	if (blockContext === "table" && officialLine !== undefined) {
 		return buildTable(block, officialLine, context, interval);
 	}
+	if (blockContext === "dlist" && officialLine !== undefined) {
+		return buildDescriptionList(block, officialLine, context, interval);
+	}
 	if (blockContext === "open" && line !== undefined) {
 		return buildOpenChildren(block, line, context);
 	}
@@ -151,7 +163,7 @@ function buildNode(
 					endLine: officialLine,
 				}),
 		});
-		return (block.getBlocks?.() ?? []).flatMap((child) =>
+		return childBlocksOf(block).flatMap((child) =>
 			toNodes(buildNode(child, context)),
 		);
 	}
@@ -208,7 +220,7 @@ function buildSection(
 		source: section.source,
 		asciidoctor: section.asciidoctor,
 	});
-	section.children = (block.getBlocks?.() ?? []).flatMap((child) =>
+	section.children = childBlocksOf(block).flatMap((child) =>
 		toNodes(buildNode(child, context)),
 	);
 	return section;
@@ -222,7 +234,7 @@ function buildOpenChildren(
 	const nodes: AbundantNode[] = [];
 	let cursor = line;
 
-	for (const child of block.getBlocks?.() ?? []) {
+	for (const child of childBlocksOf(block)) {
 		const childLine =
 			child.getSourceLocation?.()?.getLineNumber?.() ??
 			findBlockSourceLine(context, child, cursor);
@@ -234,11 +246,363 @@ function buildOpenChildren(
 	return nodes;
 }
 
+function buildDescriptionList(
+	block: AsciidoctorBlock,
+	startLine: number,
+	context: ProjectContext,
+	interval: SourceInterval | undefined,
+): DescriptionListNode {
+	const metadata = interval?.metadata ?? [];
+	const span = interval?.span ?? { startLine, endLine: startLine };
+	const contentSpan = interval?.contentSpan ?? span;
+	const source = blockSourceLayer(context, interval, span, "description list");
+	const ids = metadata.flatMap((surface) => surface.ids);
+	const list: DescriptionListNode = definedObject({
+		kind: "descriptionList",
+		ids,
+		title:
+			metadata.find((surface) => surface.title)?.title ?? block.getTitle?.(),
+		style:
+			metadata.find((surface) => surface.style)?.style ?? block.getStyle?.(),
+		delimiter: descriptionListDelimiterMatch(context.lineTable, startLine)?.raw,
+		metadata: metadata.map((surface) => surface.node),
+		metadataSpan: interval?.metadataSpan,
+		contentSpan: source ? originLineSpan(context, contentSpan) : undefined,
+		span: source?.span,
+		source,
+		asciidoctor: definedObject({
+			context: block.getContext?.(),
+			nodeName: block.getNodeName?.(),
+			resolvedId: block.getId?.(),
+			resolvedType: block.getId?.() ? "block" : undefined,
+			reftext: block.getTitle?.(),
+		}) as AsciidoctorLayer,
+		items: descriptionListItemsFromBlock(block).map((item) =>
+			buildDescriptionListItem(item, context),
+		),
+	}) as DescriptionListNode;
+	const officialId = block.getId?.();
+	if (list.ids.length === 0 && officialId) {
+		list.ids = [officialId];
+	}
+	registerOfficialBlockTarget(context, block, {
+		targetType: "block",
+		title: list.title,
+		sourceSpan: list.source?.sourceSpan,
+		source: list.source,
+		asciidoctor: list.asciidoctor,
+	});
+	return list;
+}
+
+function buildDescriptionListItem(
+	item: ReturnType<typeof descriptionListItemsFromBlock>[number],
+	context: ProjectContext,
+): DescriptionListItemNode {
+	const terms = item.terms.map((term) => buildDescriptionTerm(term, context));
+	const description = item.description
+		? buildDescription(item.description, context)
+		: undefined;
+	const itemSpan = mergeNodeLineSpans([
+		...terms.map((term) => term.source?.span),
+		description ? nodeTreeLineSpan(description) : undefined,
+	]);
+	return definedObject({
+		kind: "descriptionListItem",
+		terms,
+		...(description ? { description } : {}),
+		span: itemSpan,
+	}) as DescriptionListItemNode;
+}
+
+function buildDescriptionTerm(
+	block: AsciidoctorBlock,
+	context: ProjectContext,
+): DescriptionTermNode {
+	const line = block.getSourceLocation?.()?.getLineNumber?.();
+	const interval = context.intervalByBlock.get(block);
+	const span = interval?.contentSpan ?? interval?.span;
+	const sourceSpan =
+		line === undefined
+			? undefined
+			: descriptionTermSourceSpan(context.lineTable, line);
+	const source =
+		span && sourceSpan
+			? descriptionPartSourceLayer(
+					context,
+					span,
+					sourceSpan,
+					"description term",
+				)
+			: span
+				? blockSourceLayer(context, interval, span, "description term")
+				: undefined;
+	const xrefs = span
+		? collectXrefsInSpan(context, span, source).filter((xref) =>
+				isOccurrenceInsideSourceSpan(xref, sourceSpan),
+			)
+		: [];
+	const anchors = span
+		? collectAnchorsInSpan(context, span, source).filter((anchor) => {
+				if (!isOccurrenceInsideSourceSpan(anchor, sourceSpan)) {
+					return false;
+				}
+				const key = anchorKey(anchor);
+				if (context.usedAnchorKeys.has(key)) {
+					return false;
+				}
+				context.usedAnchorKeys.add(key);
+				return true;
+			})
+		: [];
+	applyOfficialBindings(
+		xrefs,
+		xrefs.map((xref) =>
+			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
+		),
+	);
+	return definedObject({
+		kind: "descriptionTerm",
+		text: normalizedListItemText(block),
+		line,
+		sourceSpan: sourceSpan ?? source?.sourceSpan,
+		source,
+		asciidoctor: definedObject({
+			context: block.getContext?.(),
+			nodeName: block.getNodeName?.(),
+		}) as AsciidoctorLayer,
+		children: [...xrefs, ...anchors].sort(compareNodesBySource),
+	}) as DescriptionTermNode;
+}
+
+function buildDescription(
+	block: AsciidoctorBlock,
+	context: ProjectContext,
+): DescriptionNode {
+	const line = block.getSourceLocation?.()?.getLineNumber?.();
+	const interval = context.intervalByBlock.get(block);
+	const span = interval?.contentSpan ?? interval?.span;
+	const sourceSpan =
+		line === undefined
+			? undefined
+			: descriptionTextSourceSpan(context.lineTable, line);
+	const source =
+		span && sourceSpan
+			? descriptionPartSourceLayer(
+					context,
+					span,
+					sourceSpan,
+					"description item",
+				)
+			: span
+				? blockSourceLayer(context, interval, span, "description item")
+				: undefined;
+	const xrefs = span
+		? collectXrefsInSpan(context, span, source).filter((xref) =>
+				isOccurrenceInsideSourceSpan(xref, sourceSpan),
+			)
+		: [];
+	const anchors = span
+		? collectAnchorsInSpan(context, span, source).filter((anchor) => {
+				if (!isOccurrenceInsideSourceSpan(anchor, sourceSpan)) {
+					return false;
+				}
+				const key = anchorKey(anchor);
+				if (context.usedAnchorKeys.has(key)) {
+					return false;
+				}
+				context.usedAnchorKeys.add(key);
+				return true;
+			})
+		: [];
+	applyOfficialBindings(
+		xrefs,
+		xrefs.map((xref) =>
+			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
+		),
+	);
+	const children = [
+		...xrefs,
+		...anchors,
+		...childBlocksOf(block).flatMap((child) =>
+			toNodes(buildNode(child, context)),
+		),
+	].sort(compareAbundantNodesBySource);
+	return definedObject({
+		kind: "description",
+		text: normalizedListItemText(block) || undefined,
+		line,
+		sourceSpan: sourceSpan ?? source?.sourceSpan,
+		source,
+		asciidoctor: definedObject({
+			context: block.getContext?.(),
+			nodeName: block.getNodeName?.(),
+		}) as AsciidoctorLayer,
+		children,
+	}) as DescriptionNode;
+}
+
 function toNodes(result: BuildResult): AbundantNode[] {
 	if (result === undefined) {
 		return [];
 	}
 	return Array.isArray(result) ? result : [result];
+}
+
+function normalizedListItemText(block: AsciidoctorBlock): string {
+	const text = block.getText?.();
+	if (typeof text !== "string") {
+		return "";
+	}
+	return text.replace(/<[^>]+>/gu, "");
+}
+
+function descriptionTermSourceSpan(
+	lineTable: LineTable,
+	line: number,
+): SourceSpan | undefined {
+	const delimiter = descriptionListDelimiterMatch(lineTable, line);
+	if (!delimiter) {
+		return undefined;
+	}
+	return {
+		start: { line, column: 1 },
+		end: { line, column: delimiter.column },
+	};
+}
+
+function descriptionTextSourceSpan(
+	lineTable: LineTable,
+	line: number,
+): SourceSpan | undefined {
+	const delimiter = descriptionListDelimiterMatch(lineTable, line);
+	if (!delimiter) {
+		return undefined;
+	}
+	const text = lineText(lineTable, line);
+	const afterDelimiterIndex = delimiter.index + delimiter.raw.length;
+	const firstTextIndex =
+		/\S/u.exec(text.slice(afterDelimiterIndex))?.index ?? 0;
+	return {
+		start: {
+			line,
+			column:
+				[...text.slice(0, afterDelimiterIndex + firstTextIndex)].length + 1,
+		},
+		end: { line, column: [...text].length + 1 },
+	};
+}
+
+function descriptionListDelimiterMatch(
+	lineTable: LineTable,
+	line: number,
+): { raw: string; index: number; column: number } | undefined {
+	const text = lineText(lineTable, line);
+	const match = /:{2,4}|;;/u.exec(text);
+	if (!match || match.index === undefined) {
+		return undefined;
+	}
+	return {
+		raw: match[0],
+		index: match.index,
+		column: [...text.slice(0, match.index)].length + 1,
+	};
+}
+
+function descriptionPartSourceLayer(
+	context: ProjectContext,
+	span: { startLine: number; endLine: number },
+	sourceSpan: SourceSpan,
+	diagnosticContext: string,
+): SourceLayer | undefined {
+	if (!context.logicalSource) {
+		return { span, sourceSpan };
+	}
+	const recovered = recoverOriginSourceLayer(context.logicalSource, span, {
+		logicalSourceSpan: sourceSpan,
+		diagnosticContext,
+	});
+	return recovered.ok ? recovered.sourceLayer : undefined;
+}
+
+function isOccurrenceInsideSourceSpan(
+	occurrence: { sourceSpan?: SourceSpan },
+	sourceSpan: SourceSpan | undefined,
+): boolean {
+	if (!sourceSpan || !occurrence.sourceSpan) {
+		return true;
+	}
+	const start = occurrence.sourceSpan.start;
+	const end = occurrence.sourceSpan.end;
+	if (
+		start.line !== sourceSpan.start.line ||
+		end.line !== sourceSpan.end.line
+	) {
+		return false;
+	}
+	return (
+		start.column >= sourceSpan.start.column &&
+		end.column <= sourceSpan.end.column
+	);
+}
+
+function mergeNodeLineSpans(
+	spans: Array<{ startLine: number; endLine: number } | undefined>,
+): { startLine: number; endLine: number } | undefined {
+	const present = spans.filter(isLineSpan);
+	if (present.length === 0) {
+		return undefined;
+	}
+	return {
+		startLine: Math.min(...present.map((span) => span.startLine)),
+		endLine: Math.max(...present.map((span) => span.endLine)),
+	};
+}
+
+function nodeTreeLineSpan(
+	node: AbundantNode,
+): { startLine: number; endLine: number } | undefined {
+	return mergeNodeLineSpans([
+		node.source?.span,
+		...(node.children ?? []).map((child) => nodeTreeLineSpan(child)),
+	]);
+}
+
+function compareAbundantNodesBySource(
+	left: AbundantNode,
+	right: AbundantNode,
+): number {
+	return (
+		nodeSourceLine(left) - nodeSourceLine(right) ||
+		nodeSourceColumn(left) - nodeSourceColumn(right)
+	);
+}
+
+function nodeSourceLine(node: AbundantNode): number {
+	return (
+		sourceSpanOf(node)?.start.line ??
+		node.source?.line ??
+		node.source?.span?.startLine ??
+		0
+	);
+}
+
+function nodeSourceColumn(node: AbundantNode): number {
+	return (
+		sourceSpanOf(node)?.start.column ??
+		node.source?.sourceSpan?.start.column ??
+		0
+	);
+}
+
+function sourceSpanOf(node: AbundantNode) {
+	return "sourceSpan" in node ? node.sourceSpan : undefined;
+}
+
+function isLineSpan(
+	value: { startLine: number; endLine: number } | undefined,
+): value is { startLine: number; endLine: number } {
+	return value !== undefined;
 }
 
 function findBlockSourceLine(
@@ -515,9 +879,7 @@ function blockSourceLayer(
 	diagnosticContext: string,
 ): SourceLayer | undefined {
 	if (!context.logicalSource) {
-		const sourceSpan =
-			interval?.sourceSpan ??
-			sourceSpanFromLineSpan(context.lineTable, fallbackSpan);
+		const sourceSpan = sourceSpanFromLineSpan(context.lineTable, fallbackSpan);
 		return sourceSpan
 			? {
 					span: fallbackSpan,
@@ -528,16 +890,26 @@ function blockSourceLayer(
 	if (!interval) {
 		return undefined;
 	}
+	const logicalSourceSpan = sameLineSpan(fallbackSpan, interval.span)
+		? interval.sourceSpan
+		: undefined;
 	const recovered = recoverOriginSourceLayer(
 		context.logicalSource,
-		interval.span,
+		fallbackSpan,
 		{
-			logicalSourceSpan: interval.sourceSpan,
+			logicalSourceSpan,
 			raw: true,
 			diagnosticContext,
 		},
 	);
 	return recovered.ok ? recovered.sourceLayer : undefined;
+}
+
+function sameLineSpan(
+	left: { startLine: number; endLine: number },
+	right: { startLine: number; endLine: number },
+): boolean {
+	return left.startLine === right.startLine && left.endLine === right.endLine;
 }
 
 function originLineSpan(

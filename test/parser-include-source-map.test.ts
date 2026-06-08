@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
 import { createAsciidoctorAdapter } from "../src/asciidoctor-adapter";
+import { childBlocksOf } from "../src/official-block-utils";
 import { projectOfficialDocument } from "../src/official-projector";
 import { parseAbundantTree } from "../src/parser";
 import { buildLineTable } from "../src/source-lines";
@@ -32,9 +33,8 @@ include::included-secure.adoc[]
 		const document = parseAbundantTree({ sourcePath: path });
 
 		expect(
-			officialDocument
-				.getBlocks?.()
-				?.flatMap((block) => block.getBlocks?.() ?? [])
+			childBlocksOf(officialDocument)
+				.flatMap((block) => childBlocksOf(block))
 				.map((block) => [block.getContext?.(), block.getSource?.()]),
 		).toContainEqual(["paragraph", "link:included-secure.adoc[role=include]"]);
 		expect(document.targets.map((target) => target.id)).toEqual(

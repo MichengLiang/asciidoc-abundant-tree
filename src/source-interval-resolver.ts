@@ -31,7 +31,7 @@ export function resolveSourceInterval(
 	}
 
 	const blockStartLine = surface.sourceLine;
-	const metadata = collectPrecedingMetadata(lineTable, blockStartLine);
+	const metadata = metadataForSurface(surface, lineTable, blockStartLine);
 	const startLine = metadata.at(0)?.line ?? blockStartLine;
 	const diagnostics: ToolDiagnostic[] = [];
 	const delimited = resolveContextDelimitedSpan(
@@ -44,9 +44,14 @@ export function resolveSourceInterval(
 		blockStartLine,
 	);
 	const nextSiblingStart = nextSiblingStartLine(surface, lineTable);
+	const childEndLine =
+		surface.context === "dlist"
+			? lastChildEndLine(surface, lineTable)
+			: undefined;
 	const endLine =
 		delimited?.span.endLine ??
 		sourceContentSpan?.endLine ??
+		childEndLine ??
 		(nextSiblingStart !== undefined ? nextSiblingStart - 1 : undefined) ??
 		parentEndLine(surface, lineTable) ??
 		lineTable.lines.length;
@@ -104,6 +109,37 @@ function nextSiblingStartLine(
 	}
 	const metadata = collectPrecedingMetadata(lineTable, next.sourceLine);
 	return metadata.at(0)?.line ?? next.sourceLine;
+}
+
+function metadataForSurface(
+	surface: OfficialBlockSurface,
+	lineTable: LineTable,
+	blockStartLine: number,
+): MetadataSurface[] {
+	if (surface.context === "list_item") {
+		return [];
+	}
+	return collectPrecedingMetadata(lineTable, blockStartLine);
+}
+
+function lastChildEndLine(
+	surface: OfficialBlockSurface,
+	lineTable: LineTable,
+): number | undefined {
+	const childLines = surface.children.flatMap((child) =>
+		descendantSourceLines(child),
+	);
+	if (childLines.length === 0) {
+		return undefined;
+	}
+	return Math.min(Math.max(...childLines), lastContentLine(lineTable));
+}
+
+function descendantSourceLines(surface: OfficialBlockSurface): number[] {
+	return [
+		...(surface.sourceLine === undefined ? [] : [surface.sourceLine]),
+		...surface.children.flatMap((child) => descendantSourceLines(child)),
+	];
 }
 
 function parentEndLine(
@@ -245,4 +281,14 @@ function normalizeLineSpan(span: LineSpan): LineSpan {
 		startLine: span.startLine,
 		endLine: Math.min(span.endLine, Number.MAX_SAFE_INTEGER),
 	};
+}
+
+function lastContentLine(lineTable: LineTable): number {
+	for (let index = lineTable.lines.length - 1; index >= 0; index -= 1) {
+		const line = lineTable.lines[index];
+		if (line && line.text !== "") {
+			return line.number;
+		}
+	}
+	return Math.max(1, lineTable.lines.length);
 }

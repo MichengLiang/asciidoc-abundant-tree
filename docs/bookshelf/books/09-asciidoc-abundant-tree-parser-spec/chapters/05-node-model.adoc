@@ -63,6 +63,18 @@ Listing span 覆盖 metadata、delimiter、content 和 closing delimiter。conte
 
 Table 保存 explicit ID、block title、metadata、rows 和 source span。`cells` 是公共模型保留字段；解析器投影以 official row group 提供的 `rows` 为表格内容表面。Table 内容结构来自 Asciidoctor official table model；解析器不手写 table grammar。
 
+=== Description List
+
+`DescriptionListNode` 表示 official description list block。
+
+Description list 保存 explicit ID、block title、style、delimiter、metadata、metadataSpan、contentSpan、span 和 items。`delimiter` 记录该 list authored surface 中的 description delimiter；它是 source evidence，不定义列表层级。
+
+`DescriptionListItemNode` 表示一个 official description list item。Item 保存 `terms`、可选 `description` 和 item source line span。Item span 覆盖 term、直接 description text 和 description 子树中可恢复的 block surface。
+
+`DescriptionTermNode` 表示 description list item 的 term surface。Term 保存 display text、line、sourceSpan、source layer 和 term 文本区内的 inline occurrence 子节点。
+
+`DescriptionNode` 表示 description list item 的 description surface。Description 保存直接 description text、line、sourceSpan、source layer 和 attached block 或 nested description list 子节点。Description text 和 children 可以同时存在。
+
 === Metadata
 
 `MetadataNode` 表示附着到 block 或 section 的源文本 metadata surface。

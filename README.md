@@ -15,7 +15,7 @@ The pretty tree format is designed for terminal reading. Its shape is intentiona
 ## What It Gives You
 
 - A single `AbundantDocument` object for a `.adoc` file.
-- Section, paragraph, listing, table, title, metadata, target, anchor, and xref nodes.
+- Section, paragraph, description list, listing, table, title, metadata, target, anchor, and xref nodes.
 - Raw source text and source spans for recoverable authored surfaces.
 - A target catalog for sections, blocks, listings, tables, inline anchors, and block anchors.
 - Xref occurrence records that keep raw target text, labels, local/external/unresolved scope, containing section, and resolved target kind.

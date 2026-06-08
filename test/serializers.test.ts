@@ -67,6 +67,41 @@ describe("serializers", () => {
 		);
 	});
 
+	it("formats description list structure through items, terms, and description", () => {
+		const output = formatAbundantTree({
+			...document,
+			children: [
+				{
+					kind: "descriptionList",
+					ids: [],
+					items: [
+						{
+							kind: "descriptionListItem",
+							terms: [
+								{
+									kind: "descriptionTerm",
+									text: "Host",
+								},
+							],
+							description: {
+								kind: "description",
+								text: "127.0.0.1",
+							},
+						},
+					],
+				},
+			],
+		});
+
+		expect(output).toContain("<descriptionList>");
+		expect(output).toContain("items[]");
+		expect(output).toContain('<descriptionTerm text="Host">');
+		expect(output).toContain('<description text="127.0.0.1">');
+		expect(output).not.toContain(
+			"        children[]\n            <descriptionTerm",
+		);
+	});
+
 	it("prints one sourceSpan when a node source layer carries the same span", () => {
 		const sourceSpan = {
 			start: { line: 10, column: 100 },

@@ -119,6 +119,40 @@ export type TableNode = NodeBase & {
 	span?: LineSpan;
 };
 
+export type DescriptionListNode = NodeBase & {
+	kind: "descriptionList";
+	ids: string[];
+	title?: string;
+	style?: string;
+	delimiter?: string;
+	metadata?: MetadataNode[];
+	metadataSpan?: LineSpan;
+	contentSpan?: LineSpan;
+	span?: LineSpan;
+	items: DescriptionListItemNode[];
+};
+
+export type DescriptionListItemNode = NodeBase & {
+	kind: "descriptionListItem";
+	terms: DescriptionTermNode[];
+	description?: DescriptionNode;
+	span?: LineSpan;
+};
+
+export type DescriptionTermNode = NodeBase & {
+	kind: "descriptionTerm";
+	text: string;
+	line?: number;
+	sourceSpan?: SourceSpan;
+};
+
+export type DescriptionNode = NodeBase & {
+	kind: "description";
+	text?: string;
+	line?: number;
+	sourceSpan?: SourceSpan;
+};
+
 export type XrefOccurrenceNode = NodeBase & {
 	kind: "xref";
 	syntax: "shorthand" | "macro";
@@ -167,6 +201,10 @@ export type AbundantNode =
 	| ParagraphNode
 	| ListingNode
 	| TableNode
+	| DescriptionListNode
+	| DescriptionListItemNode
+	| DescriptionTermNode
+	| DescriptionNode
 	| MetadataNode
 	| XrefOccurrenceNode
 	| AnchorOccurrenceNode

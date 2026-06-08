@@ -3,7 +3,7 @@ import { type DefaultTreeAdapterMap, parseFragment } from "parse5";
 
 export type AsciidoctorBlock = {
 	getAttributes?: () => Record<string, unknown>;
-	getBlocks?: () => AsciidoctorBlock[];
+	getBlocks?: () => unknown[];
 	getCatalog?: () => unknown;
 	getContent?: () => string;
 	getContext?: () => string;
@@ -22,6 +22,7 @@ export type AsciidoctorBlock = {
 	getSubstitutions?: () => string[];
 	getRefs?: () => Record<string, unknown>;
 	getStyle?: () => string;
+	getText?: () => unknown;
 	getTitle?: () => string;
 	$resolve_id?: (target: string) => unknown;
 };

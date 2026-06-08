@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
 import { buildLogicalSource } from "../../src/book-entry/logical-source-builder";
 import type { AbundantNode, SectionNode } from "../../src/model";
+import { childBlocksOf } from "../../src/official-block-utils";
 import { parseAbundantTree } from "../../src/parser";
 
 const projectRoot = process.cwd();
@@ -81,13 +82,49 @@ describe("book-entry parser integration", () => {
 			"Logical paragraph.",
 		].join("\n");
 		const officialDocument = createAsciidoctorAdapter().loadSource(logicalText);
-		const logicalHeading = officialDocument
-			.getBlocks?.()
-			?.find((block) => block.getTitle?.() === "Logical Heading");
+		const logicalHeading = childBlocksOf(officialDocument).find(
+			(block) => block.getTitle?.() === "Logical Heading",
+		);
 
 		expect(logicalHeading?.getSourceLocation?.()?.getLineNumber?.()).toBe(6);
 	});
+
+	it("recovers description list source layers from included origin files", () => {
+		const document = parseAbundantTree({
+			sourcePath: entryPath,
+			mode: "book-entry",
+			documentRoot,
+		});
+		const glossary = collectSections(document.children).find(
+			(section) => section.title === "Glossary Origin",
+		);
+		const list = glossary?.children?.find(
+			(node) => node.kind === "descriptionList",
+		) as DescriptionListView | undefined;
+
+		expect(list?.source?.relativePath).toBe(
+			"simple-book/backmatter/glossary.adoc",
+		);
+		expect(list?.items[0]?.terms[0]?.source?.relativePath).toBe(
+			"simple-book/backmatter/glossary.adoc",
+		);
+		expect(list?.items[0]?.description?.source?.relativePath).toBe(
+			"simple-book/backmatter/glossary.adoc",
+		);
+	});
 });
+
+type DescriptionListView = AbundantNode & {
+	kind: "descriptionList";
+	items: Array<{
+		description?: {
+			source?: { relativePath?: string };
+		};
+		terms: Array<{
+			source?: { relativePath?: string };
+		}>;
+	}>;
+};
 
 function collectSections(nodes: readonly AbundantNode[]): SectionNode[] {
 	const result: SectionNode[] = [];

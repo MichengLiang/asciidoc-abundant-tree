@@ -10,6 +10,7 @@ import {
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm } from "../../src/rdf12-projection/terms";
+import { writeFixture } from "../helpers";
 
 const projectRoot = process.cwd();
 const structuralPayloadPath = join(
@@ -56,6 +57,33 @@ describe("rdf12 structure projection", () => {
 				resourcesOfType(projection.graph, `${namespaces.aat}${oldType}`),
 			).toHaveLength(0);
 		}
+	});
+
+	it("does not project description lists as heading structure resources", () => {
+		const path = writeFixture(
+			"rdf-description-list-structure.adoc",
+			`= Probe
+
+== Section
+
+Host:: 127.0.0.1
+Port:: 8080
+`,
+		);
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({ sourcePath: path }),
+			{ documentRoot: projectRoot },
+		);
+
+		expect(
+			resourcesOfType(projection.graph, `${namespaces.aat}Heading`),
+		).toHaveLength(2);
+		expect(
+			resourcesOfType(projection.graph, `${namespaces.aat}DescriptionList`),
+		).toHaveLength(0);
+		expect(
+			resourcesOfType(projection.graph, `${namespaces.aat}DescriptionListItem`),
+		).toHaveLength(0);
 	});
 
 	it("projects heading identity, headline, level, labels, and line coordinates", () => {

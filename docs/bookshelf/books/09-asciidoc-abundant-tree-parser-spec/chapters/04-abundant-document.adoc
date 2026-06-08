@@ -46,7 +46,7 @@ export type ParserInfo = {
 
 === 节点集合
 
-`AbundantNode` 是文档树节点的 union。节点集合包含 section、paragraph、listing、table、metadata、xref occurrence、anchor occurrence、target、title、text 和 unknown。
+`AbundantNode` 是文档树节点的 union。节点集合包含 section、paragraph、description list、description list item、description term、description、listing、table、metadata、xref occurrence、anchor occurrence、target、title、text 和 unknown。
 
 节点类型描述解析器恢复出的 source-aware structure facts。节点类型不表示下游图投影的资源类型。
 

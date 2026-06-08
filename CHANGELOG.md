@@ -6,6 +6,17 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.13 - 2026-06-09
+
+### Added
+
+- Added first-class description list nodes with item, term, description, delimiter, metadata, source span, inline occurrence, nested list, and book-entry origin source recovery support.
+
+### Fixed
+
+- Fixed official AST traversal for Asciidoctor description list tuple items so description lists no longer produce unknown `undefined` block diagnostics or disappear from the public tree.
+- Fixed description list item and description source spans so direct description text, attached blocks, and nested description lists keep distinct source surfaces.
+
 ## 0.1.12 - 2026-06-08
 
 ### Fixed

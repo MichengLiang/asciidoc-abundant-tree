@@ -1,4 +1,5 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
+import { childBlocksOf } from "./official-block-utils";
 
 export type OfficialBlockSurface = {
 	block: AsciidoctorBlock;
@@ -20,7 +21,7 @@ export type OfficialBlockSurface = {
 export function walkOfficialBlocks(
 	officialDocument: AsciidoctorBlock,
 ): OfficialBlockSurface[] {
-	const roots = (officialDocument.getBlocks?.() ?? []).map((block, index) =>
+	const roots = childBlocksOf(officialDocument).map((block, index) =>
 		walkBlock(block, undefined, index),
 	);
 	for (const root of roots) {
@@ -52,7 +53,7 @@ function walkBlock(
 	if (parent) {
 		surface.parent = parent;
 	}
-	surface.children = (block.getBlocks?.() ?? []).map((child, index) =>
+	surface.children = childBlocksOf(block).map((child, index) =>
 		walkBlock(child, surface, index),
 	);
 	return surface;
