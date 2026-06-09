@@ -191,13 +191,17 @@ SELECT ?payloadRaw ?format ?start ?end WHERE {
 }
 ----
 
-=== 查找来源快照
+=== 查找 Source Set 文件
+
+包含 source file reconstruction surface 的 RDF12 输出可以列出 source set 中的 source files。
 
 [source,sparql]
 ----
-SELECT ?path ?digest WHERE {
+SELECT ?path WHERE {
   ?sourceDoc a aat:AsciiDocSourceDocument ;
-             aat:relativePath ?path .
-  OPTIONAL { ?sourceDoc aat:sourceDigest ?digest . }
+             aat:sourceFile ?sourceFile .
+  ?sourceFile a aat:SourceFile ;
+              aat:relativePath ?path .
 }
+ORDER BY ?path
 ----

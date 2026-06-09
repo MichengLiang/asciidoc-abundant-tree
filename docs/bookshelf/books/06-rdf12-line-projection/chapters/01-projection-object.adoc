@@ -75,8 +75,7 @@ payload 内部 JSON、YAML、TOML、XML 或其它格式不在标题投影图中�
 [source,turtle]
 ----
 :source-doc a prov:Entity, aat:AsciiDocSourceDocument ;
-  aat:relativePath "samples/structural-payload.adoc" ;
-  aat:sourceDigest "sha256:..." .
+  aat:relativePath "samples/structural-payload.adoc" .
 
 :projection a prov:Entity, aat:HeadingProjection ;
   prov:wasDerivedFrom :source-doc ;
@@ -87,4 +86,6 @@ payload 内部 JSON、YAML、TOML、XML 或其它格式不在标题投影图中�
   prov:used :source-doc .
 ----
 
-`aat:relativePath` 使用 `/` 作为路径分隔符。该路径相对于调用方给定的 document root。每个可回源的 heading、xref edge evidence 和 payload 都必须保存相同的 `aat:relativePath` 以及自己的 line span。`aat:sourceDigest` 表示源文件快照；调用方提供 digest 或 source text 时必须输出该字段。
+`aat:relativePath` 使用 `/` 作为路径分隔符。该路径相对于调用方给定的 document root。每个可回源的 heading、xref edge evidence 和 payload 都必须保存自身的 `aat:relativePath` 以及自己的 line span。
+
+包含 source file reconstruction surface 的 RDF12 输出通过 `aat:sourceFile` 连接 source document 与 `aat:SourceFile`。`aat:SourceFile` 使用 `aat:relativePath` 标识 source file，并使用 `aat:raw` 保存该 source file 的完整原始文本。

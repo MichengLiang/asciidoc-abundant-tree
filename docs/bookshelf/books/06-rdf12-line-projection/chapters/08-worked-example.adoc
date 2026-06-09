@@ -110,8 +110,7 @@
 [source,turtle]
 ----
 :source-doc a prov:Entity, aat:AsciiDocSourceDocument ;
-  aat:relativePath "samples/structural-payload.adoc" ;
-  aat:sourceDigest "sha256:..." .
+  aat:relativePath "samples/structural-payload.adoc" .
 
 :projection a prov:Entity, aat:HeadingProjection ;
   prov:wasDerivedFrom :source-doc ;
@@ -121,6 +120,8 @@
 :projection-activity a prov:Activity, aat:ProjectionActivity ;
   prov:used :source-doc .
 ----
+
+包含 source file reconstruction surface 的 RDF12 输出还会通过 `aat:sourceFile` 指向 `aat:SourceFile`。`aat:SourceFile` 保存 source file 的 `aat:relativePath` 和完整 `aat:raw`。
 
 === 节点事实
 
