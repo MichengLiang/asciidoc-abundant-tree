@@ -27,7 +27,7 @@ include::chapters/02-current-source-state.adoc[]
 = 第二部：标题结构批次
 
 [partintro]
-这一部把当前结构资源投影迁移为标题节点、标题切片、标题层级边和兄弟顺序。
+这一部把当前结构资源投影迁移为标题节点、标题切片、直接父子关系、同父局部顺序和全局 preorder。
 
 include::chapters/03-batch-00-baseline-and-migration-guardrails.adoc[]
 

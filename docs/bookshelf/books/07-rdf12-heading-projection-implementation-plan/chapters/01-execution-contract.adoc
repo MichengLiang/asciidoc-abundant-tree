@@ -122,7 +122,11 @@ git commit --only -m "<message>" -- <paths>
 * 可回源 resource 或复杂属性缺少 `aat:relativePath`、`aat:startLine` 或 `aat:endLine`。
 * 标题节点自身 `aat:raw` 吞并子标题切片。
 * `aat:containsDirectly` 连接标题节点到 paragraph、listing、table、payload、label 或普通属性。
-* `aat:previousSibling` 跨父标题或跨层级连接。
+* `aat:childOrder` 缺失于存在 parent heading 的 heading。
+* 同一 parent 的 direct children 的 `aat:childOrder` 不连续、不唯一或不从 `1` 开始。
+* `aat:documentOrder` 缺失、不连续、不唯一或不从 `1` 开始。
+* `aat:previousSibling` 出现在当前核心 heading projection 中。
+* heading order 从 source line、relative path、IRI lexical order 或 Turtle textual order 推导。
 * 未绑定 selector 生成虚构 target heading。
 * 多义 selector 生成单一 target heading。
 * xref `payload` selector 字符串占用 `aat:payload`。
@@ -153,7 +157,11 @@ git commit --only -m "<message>" -- <paths>
 |Batch 02
 |Batch 02、Batch 07
 
-|`aat:previousSibling` 表达同父同级顺序
+|`aat:childOrder` 表达同父 direct children 局部顺序
+|Batch 02
+|Batch 02、Batch 07
+
+|`aat:documentOrder` 表达 logical heading tree preorder
 |Batch 02
 |Batch 02、Batch 07
 

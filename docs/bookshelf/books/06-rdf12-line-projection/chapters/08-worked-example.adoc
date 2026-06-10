@@ -100,10 +100,16 @@
 :heading-l1-o0 aat:containsDirectly :heading-l41-o0 .
 :heading-l41-o0 aat:containsDirectly :heading-l46-o0 .
 
-:heading-l41-o0 aat:previousSibling :heading-l5-o0 .
+:heading-l1-o0 aat:documentOrder 1 .
+:heading-l5-o0 aat:documentOrder 2 ;
+    aat:childOrder 1 .
+:heading-l41-o0 aat:documentOrder 3 ;
+    aat:childOrder 2 .
+:heading-l46-o0 aat:documentOrder 4 ;
+    aat:childOrder 1 .
 ----
 
-`root` 不直接包含 `我是3级标题`。该关系由递归查询推出。
+`root` 不直接包含 `我是3级标题`。该关系由递归查询推出。同一父标题下的 direct children 通过 `aat:childOrder` 排序；整篇文档的 preorder 通过 `aat:documentOrder` 排序。
 
 === 来源事实
 
@@ -137,6 +143,8 @@
   aat:status "active" ;
   aat:owner "ops" ;
   aat:headingLevel 1 ;
+  aat:documentOrder 2 ;
+  aat:childOrder 1 ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 5 ;
   aat:endLine 40 ;
@@ -189,6 +197,8 @@
   aat:kind "rule" ;
   aat:status "active" ;
   aat:headingLevel 1 ;
+  aat:documentOrder 3 ;
+  aat:childOrder 2 ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 41 ;
   aat:endLine 45 ;
@@ -337,7 +347,8 @@
 * `运力规则` 节点自身 raw 不包含 `=== 我是3级标题`。
 * `root` 直接包含 `配送策略` 和 `运力规则`。
 * `运力规则` 直接包含 `我是3级标题`。
-* `运力规则` 的 previous sibling 是 `配送策略`。
+* `配送策略` 和 `运力规则` 在 `root` 的 direct children 中分别拥有 `aat:childOrder 1` 和 `aat:childOrder 2`。
+* 四个标题节点的 `aat:documentOrder` 按 `root`、`配送策略`、`运力规则`、`我是3级标题` 连续递增。
 * `配送策略` 到 `运力规则` 生成 `rel:depends-on` 边。
 * xref `weight=0.8` 投影为边证据上的 `aat:weight "0.8"`。
 * xref `payload=rel-delivery-capacity` 投影为边证据上的 `aat:payloadSelector "rel-delivery-capacity"`。

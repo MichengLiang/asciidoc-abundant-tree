@@ -5,7 +5,7 @@
 
 === 直接包含
 
-`aat:containsDirectly` 表达父标题到直接子标题的关系。
+`aat:containsDirectly` 表达父标题到直接子标题的关系。该关系来自 `AbundantDocument` 的 logical heading tree，不来自 source line、relative path、IRI 或 Turtle 文本顺序。
 
 示例：
 
@@ -20,25 +20,51 @@
 
 直接包含只连接标题节点。标题节点不通过 `aat:containsDirectly` 指向段落、listing、table、payload、label 或普通属性。
 
-顶层标题没有父标题。若源文档存在一个等号 document title，该标题可以作为其它顶层 section 的父标题。若源文档没有可作为父级的等号标题，多个顶层标题之间不生成虚构 document heading；它们只通过各自的 line span 和 sibling relation 保持文档顺序。
+顶层标题没有父标题。若源文档存在一个等号 document title，该标题可以作为其它顶层 section 的父标题。若源文档没有可作为父级的等号标题，多个顶层标题之间不生成虚构 document heading；它们通过 `aat:documentOrder` 保持全局阅读顺序。
 
 === 递归读取
 
 消费者通过 `aat:containsDirectly` 的递归查询取得标题子树。读取当前标题自身时只使用该标题节点的 `aat:raw`。读取标题统摄的完整子树时，递归读取子标题节点的 `aat:raw`。
 
-=== 兄弟顺序
+=== 局部顺序
 
-`aat:previousSibling` 表达同一父标题下的前一个兄弟标题。
+`aat:childOrder` 表达标题在其父标题 direct children 中的 1-based 局部顺序。只有存在父标题的 heading 输出 `aat:childOrder`。
 
 示例：
 
 [source,turtle]
 ----
-:heading-l41-o0 aat:previousSibling :heading-l5-o0 .
+:heading-l5-o0 aat:childOrder 1 .
+:heading-l41-o0 aat:childOrder 2 .
+:heading-l46-o0 aat:childOrder 1 .
 ----
 
-该 triple 表示 `运力规则` 与 `配送策略` 具有同一父标题，且 `运力规则` 排在 `配送策略` 之后。
+同一父标题下的 direct children 必须拥有唯一、连续、从 `1` 开始的 `aat:childOrder`。消费者通过 `aat:containsDirectly` 取得 direct children 后，按 numeric `aat:childOrder` 排序。
 
-第一个兄弟标题没有 `aat:previousSibling`。顶层第一个标题没有 `aat:previousSibling`。
+`aat:childOrder` 不跨父标题。不同 parent 下的两个 heading 可以拥有相同 `aat:childOrder`，因为该值只在 parent 的 direct children 集合内解释。
 
-`aat:previousSibling` 不跨父标题。子标题的前一个文档标题若不是同父兄弟，不得作为该子标题的 `aat:previousSibling`。
+=== 全局顺序
+
+`aat:documentOrder` 表达标题在 logical heading tree preorder traversal 中的 1-based 全局顺序。所有 heading resources 必须输出 `aat:documentOrder`。
+
+示例：
+
+[source,turtle]
+----
+:heading-l1-o0 aat:documentOrder 1 .
+:heading-l5-o0 aat:documentOrder 2 .
+:heading-l41-o0 aat:documentOrder 3 .
+:heading-l46-o0 aat:documentOrder 4 .
+----
+
+`aat:documentOrder` 在同一 projection 内唯一、连续、从 `1` 开始。存在 document title heading 时，该 heading 的 `aat:documentOrder` 为 `1`。无 document title heading 时，顶层 sections 按 `AbundantDocument.children` 顺序进入 traversal。
+
+消费者需要整篇文档的线性标题序列时，按 numeric `aat:documentOrder` 排序。该字段不替代 `aat:containsDirectly`，因为全局 preorder 不能单独表达父子结构。
+
+=== 回源坐标与排序边界
+
+`aat:relativePath`、`aat:startLine`、`aat:endLine`、`aat:headingLine` 和 `aat:raw` 表达 heading 在 origin source file 中的位置与原文切片。
+
+source coordinate fields 不表达 heading tree order。book-entry 输入中，不同 included files 的 heading 可以拥有相同 origin line number；消费者不得通过 source line、relative path、IRI lexical order 或 Turtle textual order 推断文档顺序。
+
+`aat:previousSibling` 不属于当前核心 heading projection。旧版本使用该 predicate 表达同父 sibling 链；当前契约使用 `aat:childOrder` 表达同父局部顺序，使用 `aat:documentOrder` 表达全局 preorder。

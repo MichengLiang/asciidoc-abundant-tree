@@ -6,6 +6,12 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Changed
+
+- **Breaking:** RDF 1.2 heading projection now represents the ordered heading tree with `aat:containsDirectly`, `aat:childOrder`, and `aat:documentOrder`. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder.
+- **Breaking:** RDF 1.2 heading projection no longer emits `aat:previousSibling`. Consumers should migrate sibling ordering to numeric `aat:childOrder` and whole-document heading traversal to numeric `aat:documentOrder`.
+- **Breaking:** Book-entry heading order now comes from the logical `AbundantDocument` heading tree. Source coordinate fields such as `aat:relativePath`, `aat:startLine`, `aat:endLine`, `aat:headingLine`, and `aat:raw` continue to describe origin source location and slices, but they are not valid order fallbacks.
+
 ## 0.1.13 - 2026-06-09
 
 ### Added

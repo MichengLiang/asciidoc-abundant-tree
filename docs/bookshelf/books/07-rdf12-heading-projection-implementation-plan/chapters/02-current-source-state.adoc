@@ -53,7 +53,7 @@
 
 [horizontal]
 `projector.ts`:: 编排标题投影图生成顺序，不承载具体规则。
-`structure-projector.ts`:: 生成 heading node、heading slice raw、heading containment 和 sibling order。
+`structure-projector.ts`:: 生成 heading node、heading slice raw、heading containment、`childOrder` 和 `documentOrder`。
 `node-index.ts`:: 只索引 heading node，并支持 xref source heading 和 target heading 绑定。
 `label-catalog.ts`:: 只维护标题节点 label 空间。
 `labels.ts`:: 写入 `aat:addressLabel`、`aat:generatedAddressLabel`、`aat:headline` 等标题查询字段；不创建 label resource。

@@ -66,7 +66,9 @@ Batch 00 没有上游批次。开始前必须确认 06 号书位于 `docs/booksh
 * `运力规则` 节点自身 `aat:raw` 不包含 `=== 我是3级标题`。
 * `root` 直接包含 `配送策略` 和 `运力规则`。
 * `运力规则` 直接包含 `我是3级标题`。
-* `运力规则` 的 `aat:previousSibling` 是 `配送策略`。
+* `root` 的 direct children 中，`配送策略` 的 `aat:childOrder` 为 `1`，`运力规则` 的 `aat:childOrder` 为 `2`。
+* 四个标题节点的 `aat:documentOrder` 按 `root`、`配送策略`、`运力规则`、`我是3级标题` 连续递增。
+* 当前核心 projection 不输出 `aat:previousSibling`。
 * `配送策略` 到 `运力规则` 生成 `rel:depends-on`。
 * xref 边证据类型为 `aat:XrefEdge`。
 * xref `weight=0.8` 投影为 `aat:weight "0.8"`。

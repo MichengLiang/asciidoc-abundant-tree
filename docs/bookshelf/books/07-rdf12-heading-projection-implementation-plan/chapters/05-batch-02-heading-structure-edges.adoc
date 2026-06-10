@@ -3,7 +3,7 @@
 
 === 批次目标
 
-本批实现标题节点之间的直接结构关系。本批生成 `aat:containsDirectly` 和 `aat:previousSibling`。
+本批实现 ordered heading tree graph。本批生成 `aat:containsDirectly`、`aat:childOrder` 和 `aat:documentOrder`。
 
 本批不生成 xref relation。本批不改变 payload。本批不改变 public API。
 
@@ -27,7 +27,11 @@
 
 `aat:containsDirectly` 表达父标题到直接子标题的关系。它不表达传递闭包。
 
-`aat:previousSibling` 表达同一父标题下的前一个兄弟标题。它不表示任意前一个文档标题。
+`aat:childOrder` 表达 heading 在同一 parent 的 direct children 中的 1-based 局部顺序。它不跨 parent 解释。
+
+`aat:documentOrder` 表达 logical heading tree preorder traversal 中的 1-based 全局顺序。
+
+source coordinate fields 表达 origin source location。`relativePath`、`startLine`、`endLine`、`headingLine` 和 `raw` 不参与 heading tree order 计算。
 
 === 文件边界
 
@@ -49,9 +53,11 @@
 . 在标题节点创建后记录父标题关系。
 . 仅在父子标题之间写入 `aat:containsDirectly`。
 . 移除 document resource 到 paragraph、listing、table、anchor 的 contains 输出。
-. 生成同父同级标题之间的 `aat:previousSibling`。
-. 保证第一个兄弟标题没有 `aat:previousSibling`。
-. 保证顶层第一个标题没有 `aat:previousSibling`。
+. 为所有 heading 写入连续、唯一、1-based `aat:documentOrder`。
+. 为存在 parent heading 的 heading 写入同父连续、1-based `aat:childOrder`。
+. 保证 document title heading 存在时拥有 `aat:documentOrder 1` 且没有 `aat:childOrder`。
+. 保证无 document title heading 时不创建虚构 parent heading，顶层 sections 没有 `aat:childOrder`。
+. 停止输出 `aat:previousSibling`。
 . 保证 `root` 到 `我是3级标题` 不生成直接 contains。
 
 === 测试任务
@@ -61,17 +67,22 @@
 . `containment.test.ts` 断言 `运力规则 containsDirectly 我是3级标题`。
 . `containment.test.ts` 断言 `root` 不直接 contains `我是3级标题`。
 . `containment.test.ts` 断言 `配送策略` 不 contains paragraph 或 listing。
-. `containment.test.ts` 断言 `运力规则 previousSibling 配送策略`。
-. `containment.test.ts` 断言 `我是3级标题` 没有 `previousSibling` 指向 `运力规则`。
+. `containment.test.ts` 断言 `root` 的 direct children 按 `childOrder` 为 `配送策略`、`运力规则`。
+. `containment.test.ts` 断言所有 heading 按 `documentOrder` 形成 preorder。
+. `containment.test.ts` 断言 graph 不输出 `aat:previousSibling`。
 . `query-contracts.test.ts` 覆盖直接子标题和递归子树查询。
 . `heading-projection.acceptance.test.ts` 中结构边断言解除允许失败标记。
 
 === 验收标准
 
 * `aat:containsDirectly` 的 subject 和 object 均为 `aat:Heading`。
-* `aat:previousSibling` 的 subject 和 object 均为同父同级 `aat:Heading`。
+* 有 parent heading 的 direct children 均有 `aat:childOrder`。
+* 同一 parent 的 direct children 的 `aat:childOrder` 唯一、连续、从 `1` 开始。
+* 所有 heading 均有 `aat:documentOrder`。
+* `aat:documentOrder` 在 projection 内唯一、连续、从 `1` 开始。
 * 传递包含由查询层使用 property path 表达，不由投影器物化。
-* line span 仍然负责回源；`previousSibling` 负责结构顺序。
+* line span 仍然负责回源；`childOrder` 和 `documentOrder` 负责结构顺序。
+* `aat:previousSibling` 不作为当前核心契约输出。
 
 === 验证命令
 
@@ -91,12 +102,13 @@ git commit --only -m "feat: project rdf12 heading structure edges" -- src/rdf12-
 
 === 审核规则
 
-审核者必须检查 `containsDirectly` 没有连接非标题资源。审核者必须检查 sibling relation 不跨父级。
+审核者必须检查 `containsDirectly` 没有连接非标题资源。审核者必须检查 `childOrder` 只在同一 parent 的 direct children 内解释。审核者必须检查 `documentOrder` 是 logical heading tree preorder。审核者必须检查 graph 不输出 `aat:previousSibling`。
 
 === 打回条件
 
 出现以下任一情况，本批不通过：
 
 * `root containsDirectly 我是3级标题` 被物化。
-* `我是3级标题 previousSibling 运力规则` 被生成。
 * 非标题资源出现在 structure edge 两端。
+* `aat:previousSibling` 被生成。
+* `childOrder` 或 `documentOrder` 从 source line、relative path、IRI 或 Turtle textual order 推导。

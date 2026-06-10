@@ -82,7 +82,7 @@
 
 * payload 是复杂属性对象，不是标题节点。
 * payload 不参与 `aat:containsDirectly`。
-* payload 不参与 `aat:previousSibling`。
+* payload 不参与 `aat:childOrder` 或 `aat:documentOrder`。
 * payload 不作为 xref target heading。
 * xref `payload` selector 和 `aat:payload` 对象谓词不混用。
 

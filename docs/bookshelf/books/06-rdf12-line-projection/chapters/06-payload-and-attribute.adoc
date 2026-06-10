@@ -132,6 +132,6 @@ payload raw 不展开为 RDF 图。JSON、YAML、TOML、XML 或其它 payload �
 
 payload 字段必须保存 payload id、payload kind、raw、relative path、完整 line span 和 content line span。payload format 按本章 format 规则输出。
 
-payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`，不参与 `aat:previousSibling`，不作为 relation triple 的端点。公共查询应通过所属标题节点或 xref edge evidence 取得 payload，而不是把 payload 当作独立文档节点遍历。
+payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`、`aat:childOrder` 或 `aat:documentOrder`，不作为 relation triple 的端点。公共查询应通过所属标题节点或 xref edge evidence 取得 payload，而不是把 payload 当作独立文档节点遍历。
 
 payload listing 的本地 target ID 成为所属标题节点的 address label。该 address label 只用于寻址标题节点，不改变 payload 对象的复杂属性身份。

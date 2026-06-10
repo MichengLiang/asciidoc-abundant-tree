@@ -13,7 +13,7 @@ heading slice:: 标题节点对应的连续源文本区域。该区域从标题�
 
 heading raw:: 标题切片的源文本原文。
 
-structure edge:: 标题节点之间的结构边，包括 `aat:containsDirectly` 和 `aat:previousSibling`。
+structure edge:: 标题节点之间的直接父子结构边。`aat:containsDirectly` 表达直接包含；同父局部顺序由 `aat:childOrder` 表达，全局 preorder 由 `aat:documentOrder` 表达。
 
 xref edge:: 由标题切片中的交叉引用创建的非层级关系边。
 

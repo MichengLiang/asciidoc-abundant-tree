@@ -27,7 +27,7 @@ include::chapters/02-heading-node.adoc[]
 = 第二部：标题结构
 
 [partintro]
-这一部定义标题切片、层级边、兄弟顺序和回源坐标。
+这一部定义标题切片、直接父子关系、同父局部顺序、全局 preorder 和回源坐标。
 
 include::chapters/03-heading-slice.adoc[]
 

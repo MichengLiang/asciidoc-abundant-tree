@@ -72,9 +72,9 @@
 * 按 `aat:addressLabel` 查标题。
 * 按 `aat:headline` 查标题。
 * 读取标题自身 `aat:raw`。
-* 查询直接子标题。
+* 查询直接子标题，并按 `aat:childOrder` 排序。
 * 使用 property path 查询标题子树。
-* 查询 `aat:previousSibling`。
+* 查询全局 heading preorder，并按 `aat:documentOrder` 排序。
 * 查询标题发出的 xref edge。
 * 查询边 payload。
 * 查询节点 payload。
@@ -102,6 +102,7 @@
 * `aat:sourceNode`
 * `aat:targetNode`
 * `aat:rawRel`
+* `aat:previousSibling`
 
 === 验证命令
 
