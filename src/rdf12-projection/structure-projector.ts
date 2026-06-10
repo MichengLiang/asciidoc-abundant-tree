@@ -99,6 +99,8 @@ function projectDocumentTitleHeading(
 	addTypeAndSourceTriples(context.graph, iri, relativePath, slice.span);
 	addStringTriple(context.graph, iri, "headline", title.text);
 	addIntegerTriple(context.graph, iri, "headingLevel", 0);
+	addIntegerTriple(context.graph, iri, "documentOrder", entry.documentOrder);
+	addOptionalIntegerTriple(context.graph, iri, "childOrder", entry.childOrder);
 	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
 	addStringTriple(context.graph, iri, "raw", slice.raw);
 	addOptionalLineSpan(context.graph, iri, "content", slice.contentSpan);
@@ -146,6 +148,8 @@ function projectHeading(
 	addTypeAndSourceTriples(context.graph, iri, relativePath, slice.span);
 	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
 	addIntegerTriple(context.graph, iri, "headingLevel", node.level);
+	addIntegerTriple(context.graph, iri, "documentOrder", entry.documentOrder);
+	addOptionalIntegerTriple(context.graph, iri, "childOrder", entry.childOrder);
 	addStringTriple(context.graph, iri, "headline", node.title);
 	addStringTriple(context.graph, iri, "raw", slice.raw);
 	addOptionalLineSpan(context.graph, iri, "metadata", slice.metadataSpan);
@@ -188,24 +192,13 @@ function addHeadingStructureEdgesForChildren(
 		return iri === undefined ? [] : [iri];
 	});
 
-	for (const [index, childIri] of projectedChildren.entries()) {
+	for (const childIri of projectedChildren) {
 		if (parentIri !== undefined) {
 			context.graph.add(
 				rdf12Triple(
 					parentIri,
 					iriTerm(`${namespaces.aat}containsDirectly`),
 					childIri,
-				),
-			);
-		}
-
-		const previous = projectedChildren[index - 1];
-		if (previous !== undefined) {
-			context.graph.add(
-				rdf12Triple(
-					childIri,
-					iriTerm(`${namespaces.aat}previousSibling`),
-					previous,
 				),
 			);
 		}
@@ -341,6 +334,19 @@ function addIntegerTriple(
 			integerLiteral(value),
 		),
 	);
+}
+
+function addOptionalIntegerTriple(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	value: number | undefined,
+): void {
+	if (value === undefined) {
+		return;
+	}
+
+	addIntegerTriple(graph, subject, predicateLocalName, value);
 }
 
 function localIdFromIri(iri: Rdf12IriTerm): string {

@@ -120,8 +120,14 @@ describe("rdf12 payload query contract acceptance", () => {
 			).toHaveLength(0);
 			expect(
 				projection.graph.match({
-					predicate: aat("previousSibling"),
-					object: payload,
+					subject: payload,
+					predicate: aat("childOrder"),
+				}),
+			).toHaveLength(0);
+			expect(
+				projection.graph.match({
+					subject: payload,
+					predicate: aat("documentOrder"),
 				}),
 			).toHaveLength(0);
 			expect(

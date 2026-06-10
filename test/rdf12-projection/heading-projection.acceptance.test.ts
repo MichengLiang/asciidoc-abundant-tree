@@ -112,12 +112,12 @@ describe("rdf12 heading projection target acceptance", () => {
 		expect(literalValues(graph, nestedHeading, aatTerm("raw"))).toHaveLength(1);
 	});
 
-	it("Batch 02 projects heading containment and sibling order", () => {
-		const { graph, heading } = structuralPayloadProjection();
-		const root = heading("heading-l1-o0");
-		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l41-o0");
-		const nestedHeading = heading("heading-l46-o0");
+	it("Batch 02 projects ordered heading tree facts", () => {
+		const { graph } = structuralPayloadProjection();
+		const root = headingByHeadline(graph, "root");
+		const deliveryPolicy = headingByHeadline(graph, "配送策略");
+		const capacityRule = headingByHeadline(graph, "运力规则");
+		const nestedHeading = headingByHeadline(graph, "我是3级标题");
 
 		expectTriple(graph, root, aatTerm("containsDirectly"), deliveryPolicy);
 		expectTriple(graph, root, aatTerm("containsDirectly"), capacityRule);
@@ -127,11 +127,22 @@ describe("rdf12 heading projection target acceptance", () => {
 			aatTerm("containsDirectly"),
 			nestedHeading,
 		);
-		expectTriple(
-			graph,
-			capacityRule,
-			aatTerm("previousSibling"),
+		expect(directChildrenInOrder(graph, root)).toEqual([
 			deliveryPolicy,
+			capacityRule,
+		]);
+		expect(directChildrenInOrder(graph, capacityRule)).toEqual([nestedHeading]);
+		expectIntegerValue(graph, deliveryPolicy, aatTerm("childOrder"), 1);
+		expectIntegerValue(graph, capacityRule, aatTerm("childOrder"), 2);
+		expectIntegerValue(graph, nestedHeading, aatTerm("childOrder"), 1);
+		expect(headlinesByDocumentOrder(graph)).toEqual([
+			"root",
+			"配送策略",
+			"运力规则",
+			"我是3级标题",
+		]);
+		expect(graph.match({ predicate: aatTerm("previousSibling") })).toHaveLength(
+			0,
 		);
 	});
 
@@ -329,6 +340,69 @@ function structuralPayloadProjection(): {
 
 function resourceIri(documentIri: string, localId: string): string {
 	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
+}
+
+function headingByHeadline(graph: Rdf12Graph, headline: string): Rdf12IriTerm {
+	return onlySubjectWithLiteral(graph, aatTerm("headline"), headline);
+}
+
+function onlySubjectWithLiteral(
+	graph: Rdf12Graph,
+	predicate: Rdf12IriTerm,
+	value: string,
+): Rdf12IriTerm {
+	const subjects = graph
+		.match({ predicate, object: stringLiteral(value) })
+		.map((triple) => triple.subject);
+
+	expect(subjects).toHaveLength(1);
+	return subjects[0] ?? termIri("");
+}
+
+function directChildrenInOrder(
+	graph: Rdf12Graph,
+	parent: Rdf12IriTerm,
+): Rdf12IriTerm[] {
+	return graph
+		.match({
+			subject: parent,
+			predicate: aatTerm("containsDirectly"),
+		})
+		.map((triple) => triple.object)
+		.filter((term): term is Rdf12IriTerm => term.termType === "iri")
+		.toSorted(
+			(left, right) =>
+				integerValue(graph, left, "childOrder") -
+				integerValue(graph, right, "childOrder"),
+		);
+}
+
+function headlinesByDocumentOrder(graph: Rdf12Graph): string[] {
+	return resourcesOfType(graph, aatTerm("Heading"))
+		.toSorted(
+			(left, right) =>
+				integerValue(graph, left, "documentOrder") -
+				integerValue(graph, right, "documentOrder"),
+		)
+		.map((heading) => {
+			const [headline] = literalValues(graph, heading, aatTerm("headline"));
+			if (headline === undefined) {
+				throw new Error("expected heading headline");
+			}
+			return headline;
+		});
+}
+
+function integerValue(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+): number {
+	const [value] = literalValues(graph, subject, aatTerm(predicateLocalName));
+	if (value === undefined) {
+		throw new Error(`expected ${predicateLocalName} integer`);
+	}
+	return Number(value);
 }
 
 function onlyResourceOfType(

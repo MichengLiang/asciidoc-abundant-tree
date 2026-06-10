@@ -19,8 +19,10 @@ import {
 	expectLiteralValue,
 	expectResourceTypeCount,
 	expectTriple,
+	literalValues,
 	rdfTerm,
 	relTerm,
+	resourcesOfType,
 	termIri,
 } from "./helpers/graph-matchers";
 
@@ -61,6 +63,12 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			heading("heading-l5-o0"),
 			heading("heading-l41-o0"),
 		]);
+		expectHeadlinesByDocumentOrder(parsed, [
+			"root",
+			"配送策略",
+			"运力规则",
+			"我是3级标题",
+		]);
 	});
 
 	it("parses CLI rdf12 stdout and supports recursive heading subtree queries", () => {
@@ -89,9 +97,9 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectDirectChildren(graph, capacityRule, [nestedHeading]);
 		expectTriple(
 			graph,
-			capacityRule,
-			aatTerm("previousSibling"),
-			heading("配送策略"),
+			nestedHeading,
+			aatTerm("childOrder"),
+			integerLiteral(1),
 		);
 	});
 
@@ -234,6 +242,7 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			"sourceNode",
 			"targetNode",
 			"rawRel",
+			"previousSibling",
 		]) {
 			expect(graph.match({ predicate: aatTerm(oldPredicate) })).toHaveLength(0);
 		}
@@ -342,9 +351,48 @@ function expectDirectChildren(
 				subject: parent,
 				predicate: aatTerm("containsDirectly"),
 			})
-			.map((triple) => triple.object.value)
-			.sort(),
-	).toEqual(children.map((child) => child.value).sort());
+			.map((triple) => triple.object)
+			.filter((term): term is Rdf12IriTerm => term.termType === "iri")
+			.toSorted(
+				(left, right) =>
+					integerValue(graph, left, "childOrder") -
+					integerValue(graph, right, "childOrder"),
+			)
+			.map((term) => term.value),
+	).toEqual(children.map((child) => child.value));
+}
+
+function expectHeadlinesByDocumentOrder(
+	graph: Rdf12Graph,
+	headlines: readonly string[],
+): void {
+	expect(
+		resourcesOfType(graph, aatTerm("Heading"))
+			.toSorted(
+				(left, right) =>
+					integerValue(graph, left, "documentOrder") -
+					integerValue(graph, right, "documentOrder"),
+			)
+			.map((heading) => {
+				const [headline] = literalValues(graph, heading, aatTerm("headline"));
+				if (headline === undefined) {
+					throw new Error("expected heading headline");
+				}
+				return headline;
+			}),
+	).toEqual(headlines);
+}
+
+function integerValue(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+): number {
+	const [value] = literalValues(graph, subject, aatTerm(predicateLocalName));
+	if (value === undefined) {
+		throw new Error(`expected ${predicateLocalName} integer`);
+	}
+	return Number(value);
 }
 
 function transitiveHeadingChildren(

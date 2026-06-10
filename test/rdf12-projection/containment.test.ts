@@ -2,11 +2,18 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
+import type { Rdf12Graph } from "../../src/rdf12-projection/graph";
+import {
+	integerLiteral,
+	stringLiteral,
+} from "../../src/rdf12-projection/literals";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
+import type { Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import {
 	aatTerm,
 	expectNoTriple,
 	expectTriple,
+	literalValues,
 	resourcesOfType,
 	termIri,
 } from "./helpers/graph-matchers";
@@ -16,14 +23,16 @@ const structuralPayloadPath = join(
 	projectRoot,
 	"samples/structural-payload.adoc",
 );
+const orderedBookFixtureRoot = join(projectRoot, "test/book-entry/fixtures");
+const orderedBookPath = join(orderedBookFixtureRoot, "ordered-book/book.adoc");
 
 describe("rdf12 heading structure edges", () => {
 	it("projects only direct heading containment edges", () => {
-		const { graph, heading } = structuralPayloadProjection();
-		const root = heading("heading-l1-o0");
-		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l41-o0");
-		const nestedHeading = heading("heading-l46-o0");
+		const { graph } = structuralPayloadProjection();
+		const root = headingByHeadline(graph, "root");
+		const deliveryPolicy = headingByHeadline(graph, "配送策略");
+		const capacityRule = headingByHeadline(graph, "运力规则");
+		const nestedHeading = headingByHeadline(graph, "我是3级标题");
 
 		expectTriple(graph, root, aatTerm("containsDirectly"), deliveryPolicy);
 		expectTriple(graph, root, aatTerm("containsDirectly"), capacityRule);
@@ -64,56 +73,118 @@ describe("rdf12 heading structure edges", () => {
 		}
 	});
 
-	it("projects previousSibling only between same-parent sibling headings", () => {
-		const { graph, heading } = structuralPayloadProjection();
-		const root = heading("heading-l1-o0");
-		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l41-o0");
-		const nestedHeading = heading("heading-l46-o0");
+	it("projects childOrder for headings with parent headings", () => {
+		const { graph } = structuralPayloadProjection();
+		const root = headingByHeadline(graph, "root");
+		const deliveryPolicy = headingByHeadline(graph, "配送策略");
+		const capacityRule = headingByHeadline(graph, "运力规则");
+		const nestedHeading = headingByHeadline(graph, "我是3级标题");
 
-		expectTriple(
-			graph,
-			capacityRule,
-			aatTerm("previousSibling"),
+		expect(directChildrenInOrder(graph, root)).toEqual([
 			deliveryPolicy,
-		);
-		expectNoTriple(graph, deliveryPolicy, aatTerm("previousSibling"), root);
-		expectNoTriple(
-			graph,
-			nestedHeading,
-			aatTerm("previousSibling"),
 			capacityRule,
-		);
+		]);
+		expect(directChildrenInOrder(graph, capacityRule)).toEqual([nestedHeading]);
+		expectIntegerTriple(graph, deliveryPolicy, "childOrder", 1);
+		expectIntegerTriple(graph, capacityRule, "childOrder", 2);
+		expectIntegerTriple(graph, nestedHeading, "childOrder", 1);
 		expect(
-			graph.match({ subject: root, predicate: aatTerm("previousSibling") }),
+			graph.match({ subject: root, predicate: aatTerm("childOrder") }),
 		).toHaveLength(0);
 	});
 
-	it("orders top-level sibling headings when no document title heading exists", () => {
+	it("projects documentOrder as heading tree preorder", () => {
+		const { graph } = structuralPayloadProjection();
+
+		expect(headlinesByDocumentOrder(graph)).toEqual([
+			"root",
+			"配送策略",
+			"运力规则",
+			"我是3级标题",
+		]);
+	});
+
+	it("does not output previousSibling", () => {
+		const { graph } = structuralPayloadProjection();
+
+		expect(graph.match({ predicate: aatTerm("previousSibling") })).toHaveLength(
+			0,
+		);
+	});
+
+	it("orders rootless top-level headings by documentOrder without childOrder", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			documentWithoutTitleHeading(),
 			{ documentRoot: projectRoot },
 		);
-		const first = termIri(resourceIri(projection.documentIri, "heading-l1-o0"));
-		const second = termIri(
-			resourceIri(projection.documentIri, "heading-l3-o0"),
-		);
+		const graph = graphOf(projection);
+		const first = headingByHeadline(graph, "First");
+		const second = headingByHeadline(graph, "Second");
 
-		expectTriple(
-			graphOf(projection),
-			second,
-			aatTerm("previousSibling"),
-			first,
+		expect(headlinesByDocumentOrder(graph)).toEqual(["First", "Second"]);
+		expect(
+			graph.match({ subject: first, predicate: aatTerm("childOrder") }),
+		).toHaveLength(0);
+		expect(
+			graph.match({ subject: second, predicate: aatTerm("childOrder") }),
+		).toHaveLength(0);
+		expect(
+			graph.match({ predicate: aatTerm("containsDirectly") }),
+		).toHaveLength(0);
+		expect(graph.match({ predicate: aatTerm("previousSibling") })).toHaveLength(
+			0,
 		);
-		expect(
-			graphOf(projection).match({
-				subject: first,
-				predicate: aatTerm("previousSibling"),
+	});
+
+	it("projects ordered book-entry headings without using origin line order", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({
+				sourcePath: orderedBookPath,
+				mode: "book-entry",
+				documentRoot: orderedBookFixtureRoot,
 			}),
-		).toHaveLength(0);
-		expect(
-			graphOf(projection).match({ predicate: aatTerm("containsDirectly") }),
-		).toHaveLength(0);
+			{ documentRoot: orderedBookFixtureRoot },
+		);
+		const graph = projection.graph;
+		const orderedBook = headingByHeadline(graph, "Ordered Book");
+		const preface = headingByHeadline(graph, "Preface");
+		const partOne = headingByHeadline(graph, "Part One");
+		const first = headingByHeadline(graph, "First");
+		const second = headingByHeadline(graph, "Second");
+		const partTwo = headingByHeadline(graph, "Part Two");
+		const third = headingByHeadline(graph, "Third");
+		const index = headingByHeadline(graph, "Index");
+
+		expect(headlinesByDocumentOrder(graph)).toEqual([
+			"Ordered Book",
+			"Preface",
+			"Part One",
+			"First",
+			"Second",
+			"Part Two",
+			"Third",
+			"Index",
+		]);
+		expect(directChildrenInOrder(graph, orderedBook)).toEqual([
+			preface,
+			partOne,
+			partTwo,
+			index,
+		]);
+		expect(directChildrenInOrder(graph, partOne)).toEqual([first, second]);
+		expect(directChildrenInOrder(graph, partTwo)).toEqual([third]);
+		expectIntegerTriple(graph, preface, "childOrder", 1);
+		expectIntegerTriple(graph, partOne, "childOrder", 2);
+		expectIntegerTriple(graph, partTwo, "childOrder", 3);
+		expectIntegerTriple(graph, index, "childOrder", 4);
+
+		const startLines = [preface, first, second, third, index].map((heading) =>
+			integerValue(graph, heading, "startLine"),
+		);
+		expect(new Set(startLines).size).toBeLessThan(startLines.length);
+		expect(graph.match({ predicate: aatTerm("previousSibling") })).toHaveLength(
+			0,
+		);
 	});
 });
 
@@ -125,14 +196,7 @@ function structuralPayloadProjection() {
 
 	return {
 		graph: projection.graph,
-		heading(localId: string) {
-			return termIri(resourceIri(projection.documentIri, localId));
-		},
 	};
-}
-
-function resourceIri(documentIri: string, localId: string): string {
-	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
 }
 
 function documentWithoutTitleHeading(): AbundantDocument {
@@ -188,4 +252,78 @@ function graphOf(
 	projection: ReturnType<typeof projectAbundantDocumentToRdf12>,
 ) {
 	return projection.graph;
+}
+
+function headingByHeadline(graph: Rdf12Graph, headline: string) {
+	const headings = graph
+		.match({
+			predicate: aatTerm("headline"),
+			object: stringLiteral(headline),
+		})
+		.map((triple) => triple.subject);
+
+	expect(headings).toHaveLength(1);
+	return headings[0] ?? termIri("urn:missing-heading");
+}
+
+function directChildrenInOrder(graph: Rdf12Graph, parent: Rdf12IriTerm) {
+	return graph
+		.match({
+			subject: parent,
+			predicate: aatTerm("containsDirectly"),
+		})
+		.map((triple) => triple.object)
+		.filter((term): term is Rdf12IriTerm => term.termType === "iri")
+		.toSorted(
+			(left, right) =>
+				integerValue(graph, left, "childOrder") -
+				integerValue(graph, right, "childOrder"),
+		);
+}
+
+function headlinesByDocumentOrder(graph: Rdf12Graph) {
+	return resourcesOfType(graph, aatTerm("Heading"))
+		.toSorted(
+			(left, right) =>
+				integerValue(graph, left, "documentOrder") -
+				integerValue(graph, right, "documentOrder"),
+		)
+		.map((heading) => onlyLiteralValue(graph, heading, "headline"));
+}
+
+function expectIntegerTriple(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	value: number,
+): void {
+	expect(
+		graph.has({
+			subject,
+			predicate: aatTerm(predicateLocalName),
+			object: integerLiteral(value),
+		}),
+	).toBe(true);
+}
+
+function integerValue(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+): number {
+	const values = literalValues(graph, subject, aatTerm(predicateLocalName));
+
+	expect(values).toHaveLength(1);
+	return Number(values[0]);
+}
+
+function onlyLiteralValue(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+): string {
+	const values = literalValues(graph, subject, aatTerm(predicateLocalName));
+
+	expect(values).toHaveLength(1);
+	return values[0] ?? "";
 }
