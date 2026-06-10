@@ -6,6 +6,8 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.14 - 2026-06-10
+
 ### Changed
 
 - **Breaking:** RDF 1.2 heading projection now represents the ordered heading tree with `aat:containsDirectly`, `aat:childOrder`, and `aat:documentOrder`. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder.
