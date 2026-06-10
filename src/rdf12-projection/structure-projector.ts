@@ -1,21 +1,20 @@
-import type {
-	AbundantDocument,
-	AbundantNode,
-	LineSpan,
-	SectionNode,
-} from "../model";
+import type { AbundantDocument, LineSpan, SectionNode } from "../model";
 import { type Rdf12Graph, rdf12Triple } from "./graph";
 import {
 	resolveDocumentTitleHeadingSlice,
 	resolveHeadingSlice,
 } from "./heading-slice";
+import {
+	buildHeadingTreeProjection,
+	type HeadingTreeEntry,
+	type HeadingTreeProjection,
+} from "./heading-tree";
 import { integerLiteral, stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
 import {
 	createRdf12NodeIndex,
 	type MutableRdf12NodeIndex,
 	type Rdf12NodeIndex,
-	type Rdf12NodeIndexEntry,
 } from "./node-index";
 import {
 	createOrdinalAllocator,
@@ -52,18 +51,33 @@ export function projectStructureResources(
 		nodeIndex: createRdf12NodeIndex(),
 		ordinalAllocator: createOrdinalAllocator(),
 	};
+	const headingTree = buildHeadingTreeProjection(input.document);
 
-	projectDocumentTitleHeading(context);
-	for (const section of collectSections(input.document.children)) {
-		projectHeading(context, section);
+	for (const entry of headingTree.entries) {
+		projectHeadingTreeEntry(context, entry);
 	}
-	projectHeadingStructureEdges(context);
+	projectHeadingStructureEdges(context, headingTree);
 
 	return context.nodeIndex;
 }
 
-function projectDocumentTitleHeading(context: StructureProjectorContext): void {
-	const title = context.document.title;
+function projectHeadingTreeEntry(
+	context: StructureProjectorContext,
+	entry: HeadingTreeEntry,
+): void {
+	if (entry.kind === "document-title") {
+		projectDocumentTitleHeading(context, entry);
+		return;
+	}
+
+	projectHeading(context, entry);
+}
+
+function projectDocumentTitleHeading(
+	context: StructureProjectorContext,
+	entry: HeadingTreeEntry & { readonly kind: "document-title" },
+): void {
+	const title = entry.node;
 	const sourceText =
 		context.document.mode === "book-entry"
 			? undefined
@@ -72,7 +86,7 @@ function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 		...(sourceText !== undefined ? { sourceText } : {}),
 	});
 
-	if (title === undefined || slice === undefined) {
+	if (slice === undefined) {
 		return;
 	}
 
@@ -93,6 +107,8 @@ function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 		iri,
 		localId: localIdFromIri(iri),
 		kind: "document-title",
+		documentOrder: entry.documentOrder,
+		...(entry.childOrder !== undefined ? { childOrder: entry.childOrder } : {}),
 		...(relativePath !== undefined ? { relativePath } : {}),
 		...(relativePath !== undefined
 			? {
@@ -106,26 +122,11 @@ function projectDocumentTitleHeading(context: StructureProjectorContext): void {
 	});
 }
 
-function collectSections(
-	nodes: readonly AbundantNode[] | undefined,
-): SectionNode[] {
-	const sections: SectionNode[] = [];
-
-	for (const node of nodes ?? []) {
-		if (node.kind !== "section") {
-			continue;
-		}
-		sections.push(node);
-		sections.push(...collectSections(node.children));
-	}
-
-	return sections;
-}
-
 function projectHeading(
 	context: StructureProjectorContext,
-	node: SectionNode,
+	entry: HeadingTreeEntry & { readonly kind: "section" },
 ): void {
+	const node = entry.node;
 	const slice = resolveHeadingSlice(node);
 
 	if (slice === undefined) {
@@ -155,6 +156,8 @@ function projectHeading(
 		iri,
 		localId: localIdFromIri(iri),
 		kind: "section",
+		documentOrder: entry.documentOrder,
+		...(entry.childOrder !== undefined ? { childOrder: entry.childOrder } : {}),
 		...(relativePath !== undefined ? { relativePath } : {}),
 		...sourceScopeLines(context.document, node, slice.span),
 		startLine: slice.span.startLine,
@@ -165,81 +168,48 @@ function projectHeading(
 
 function projectHeadingStructureEdges(
 	context: StructureProjectorContext,
+	headingTree: HeadingTreeProjection,
 ): void {
-	const entries = context.nodeIndex
-		.entries()
-		.toSorted((left, right) => left.startLine - right.startLine);
-	const root = entries.find((entry) => entry.kind === "document-title");
-	const topLevelParent = root?.iri;
-	const childrenByParent = new Map<string, HeadingSiblingGroup>();
-	const stack: Rdf12NodeIndexEntry[] = [];
-
-	for (const entry of entries) {
-		if (entry.kind === "document-title") {
-			stack.length = 0;
-			stack.push(entry);
-			continue;
-		}
-
-		while (
-			stack.length > 0 &&
-			headingLevel(stack.at(-1) ?? entry) >= headingLevel(entry)
-		) {
-			stack.pop();
-		}
-
-		const parent = stack.at(-1)?.iri ?? topLevelParent;
-		appendChild(childrenByParent, parent, entry);
-		stack.push(entry);
-	}
-
-	for (const group of childrenByParent.values()) {
-		for (const [index, child] of group.children.entries()) {
-			if (group.parent !== undefined) {
-				context.graph.add(
-					rdf12Triple(
-						group.parent,
-						iriTerm(`${namespaces.aat}containsDirectly`),
-						child.iri,
-					),
-				);
-			}
-
-			const previous = group.children[index - 1];
-			if (previous !== undefined) {
-				context.graph.add(
-					rdf12Triple(
-						child.iri,
-						iriTerm(`${namespaces.aat}previousSibling`),
-						previous.iri,
-					),
-				);
-			}
-		}
+	addHeadingStructureEdgesForChildren(context, undefined, headingTree.roots);
+	for (const entry of headingTree.entries) {
+		addHeadingStructureEdgesForChildren(context, entry, entry.children);
 	}
 }
 
-type HeadingSiblingGroup = {
-	readonly parent?: Rdf12IriTerm;
-	readonly children: Rdf12NodeIndexEntry[];
-};
-
-function appendChild(
-	childrenByParent: Map<string, HeadingSiblingGroup>,
-	parent: Rdf12IriTerm | undefined,
-	child: Rdf12NodeIndexEntry,
+function addHeadingStructureEdgesForChildren(
+	context: StructureProjectorContext,
+	parent: HeadingTreeEntry | undefined,
+	children: readonly HeadingTreeEntry[],
 ): void {
-	const key = parent?.value ?? "__top-level-headings__";
-	const group = childrenByParent.get(key) ?? {
-		...(parent !== undefined ? { parent } : {}),
-		children: [],
-	};
-	group.children.push(child);
-	childrenByParent.set(key, group);
-}
+	const parentIri =
+		parent === undefined ? undefined : context.nodeIndex.get(parent.node);
+	const projectedChildren = children.flatMap((child) => {
+		const iri = context.nodeIndex.get(child.node);
+		return iri === undefined ? [] : [iri];
+	});
 
-function headingLevel(entry: Rdf12NodeIndexEntry): number {
-	return entry.kind === "document-title" ? 0 : entry.node.level;
+	for (const [index, childIri] of projectedChildren.entries()) {
+		if (parentIri !== undefined) {
+			context.graph.add(
+				rdf12Triple(
+					parentIri,
+					iriTerm(`${namespaces.aat}containsDirectly`),
+					childIri,
+				),
+			);
+		}
+
+		const previous = projectedChildren[index - 1];
+		if (previous !== undefined) {
+			context.graph.add(
+				rdf12Triple(
+					childIri,
+					iriTerm(`${namespaces.aat}previousSibling`),
+					previous,
+				),
+			);
+		}
+	}
 }
 
 function sourceScopeLines(

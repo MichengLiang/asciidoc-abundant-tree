@@ -1,0 +1,3 @@
+= Index
+
+Index content starts after a heading on the same origin line.
