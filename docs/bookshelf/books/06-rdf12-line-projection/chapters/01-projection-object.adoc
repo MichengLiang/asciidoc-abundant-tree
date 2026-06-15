@@ -40,7 +40,7 @@ payload object 是复杂属性值。节点 payload 通过 `aat:payload` 归属�
 
 payload object 的 RDF identity 由投影器生成。payload block 的手动 ID 只在 selector 需要指向该 block 时成为 source payload id。source payload id 是绑定事实，不是 payload object 的 RDF identity，也不是 payload role。节点 payload 不要求 source payload id；边 payload 需要 source payload id，因为 xref edge evidence 使用 `payload` selector 指向它。
 
-payload raw 内部字段不进入标题投影图。payload role 和 payload format 只为下游解释 raw 提供源表面线索；标题投影器不执行 schema validation，不把 payload 内部字段投影为 RDF 谓词。
+标题投影图把 payload raw 作为 opaque literal 保存。payload role 和 payload format 为下游解释 raw 提供源表面线索；payload schema validation 与 payload 内部字段解释属于下游消费者。
 
 本地非标题 target 的 ID 是标题节点的地址事实。该 ID 归属为覆盖 target source span 的标题节点的 `aat:addressLabel`，不创建结构节点，不参与标题层级边，也不作为 relation triple 的端点。
 
@@ -73,9 +73,9 @@ payload raw 内部字段不进入标题投影图。payload role 和 payload form
 
 本地非标题 target 的 ID 投影为所属标题节点的 `aat:addressLabel`。该投影不表示源文档标题表面声明了该 ID，只表示该 ID 在标题投影图中寻址到该标题节点。
 
-payload 内部 JSON、YAML、TOML、XML 或其它格式不在标题投影图中展开。payload raw 的内部解释属于读取 payload 的下游消费者。
+payload 内部 JSON、YAML、TOML、XML 或其它格式作为 raw literal 保留。payload raw 的内部解释属于读取 payload 的下游消费者。
 
-payload format 来自 source block language。`data` 不属于 payload format 控制字段，不覆盖 source block language。
+payload format 来自 source block language。该字段表达 payload raw 的源文本语法。
 
 payload kind 由绑定机制决定，不由 role token 决定。节点 payload 由 `for` 或 `forSelector` 字段决定；边 payload 由 xref `payload` selector 和 source payload id 决定。payload role 表达作者与下游消费者约定的 schema 或 model label。
 

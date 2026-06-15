@@ -43,6 +43,7 @@ xref:capacity[运力规则, rel=depends-on, weight=0.8]
 
 字段名映射规则与标题节点属性一致。字段名进入 `aat:` 命名空间下的表面字段谓词。字段值保存为 string literal。`rel` 和 `payload` 是 xref 控制字段；`rel` 决定主 relation triple 的谓词，并可作为 `aat:rel` 保留；`payload` 选择边 payload，并保存为 `aat:payloadSelector`，不占用 `aat:payload`。`for` 和 `forSelector` 是节点 payload 控制字段；它们不作为普通 payload 内部字段投影。
 
+[#payload-object]
 === Payload Object
 
 payload object 是归属于标题节点或 xref edge evidence 的复杂属性值。payload object 的 RDF identity 由投影器生成；payload block 的手动 ID 只在 selector 需要指向 payload block 时成为 source payload id。
@@ -58,17 +59,18 @@ payload object 保存以下事实：
 `aat:contentStartLine`、`aat:contentEndLine`:: payload body 的源文件行范围。
 `aat:payloadId`:: selector 显式指向 payload block 时保存的 source payload id。该字段只表达源文档绑定事实，不表达 payload object 的 RDF identity。
 
-payload raw 不展开为 RDF 图。payload role 和 payload format 只为下游解释 raw 提供源表面线索；标题投影器不执行 schema validation，不把 payload 内部字段投影为 RDF 谓词。
+payload raw 作为 opaque literal 保存在 payload object 上。payload role 和 payload format 为下游解释 raw 提供源表面线索；payload schema validation 与 payload 内部字段解释属于下游消费者。
 
+[#node-payload]
 === 节点 Payload
 
-声明 `for` 或 `forSelector` 字段的 listing block 表达节点 payload。`for` 或 `forSelector` 字段是节点 payload binding marker。该字段的存在使 listing block 成为节点 payload；字段有非空值时按 heading selector 绑定，字段无值时按源位置归属 owning heading。
+声明 `for` 或 `forSelector` 字段的 listing block 表达节点 payload。`for` 或 `forSelector` 字段是节点 payload binding marker。该字段使 listing block 进入节点 payload 语境；字段有非空值时按 heading selector 绑定，字段无值时按源位置归属 owning heading。
 
-带值 binding marker 查询 xref:heading-node[标题节点]定义的 heading projection label space。绑定目标可以来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload object 保留 `aat:forSelector` 和回源坐标，不连接到任何 heading node。binding marker 的值不绑定到 payload object 自身的 role、普通字段谓词、raw 文本或 RDF IRI。
+带值 binding marker 查询 xref:heading-node[标题节点]定义的 heading projection label space。绑定目标来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload object 保留 `aat:forSelector` 和回源坐标，并保持未归属状态。
 
-无值 binding marker 不是 selector。投影器使用该 payload block 的源位置，找到覆盖该 block 起始行的最内层 heading node，并把 payload object 连接到该 heading node。无法确定 owning heading 时，不生成虚构 owner。
+无值 binding marker 表达 source ownership binding。投影器使用该 payload block 的源位置，找到覆盖该 block 起始行的最内层 heading node，并把 payload object 连接到该 heading node。源位置无法确定 owning heading 时，payload object 保留回源事实并保持未归属状态。
 
-role token 表达 payload role，不决定节点 payload 身份。只有 role token、只有 source block language 或只有标题切片位置，都不足以使 listing block 成为节点 payload。
+节点 payload 身份由 binding marker 建立。role token 表达 payload role；source block language 表达 payload format；标题切片位置参与无值 binding marker 的 owning heading 归属。
 
 [source,asciidoc]
 ------
@@ -126,15 +128,16 @@ role token 表达 payload role，不决定节点 payload 身份。只有 role to
 ----
 ------
 
-该 payload block 已经由 `for` 字段声明为节点 payload。投影器按源位置确定 owning heading，并通过 owning heading 的 `aat:payload` 连接 payload object。该表面不输出 `aat:forSelector`，因为无值 binding marker 不是 selector literal。
+该 payload block 已经由 `for` 字段声明为节点 payload。投影器按源位置确定 owning heading，并通过 owning heading 的 `aat:payload` 连接 payload object。`aat:forSelector` 保留给非空 selector binding；无值 binding marker 的公共事实是 heading 到 payload object 的归属连接。
 
+[#edge-payload]
 === 边 Payload
 
 xref 的 `payload` 字段表达边 payload selector。带有匹配 source payload id 的 listing block 表达该边 payload。
 
 边 payload 的绑定分两步。xref edge evidence 先用 `payload` 字段保存 `aat:payloadSelector`。投影器再用该 selector 匹配 payload block 的 source payload id。唯一匹配时，xref edge evidence 通过 `aat:payload` 连接该 payload 对象。未匹配或多义匹配时，边证据保留 `aat:payloadSelector`，不连接 payload 对象。
 
-role token 不是边 payload 的识别条件。role token 可以作为源文档表面语义投影为 `aat:role`，但边 payload 绑定由 xref 的 `payload` selector 和 source payload id 决定。
+边 payload 绑定由 xref 的 `payload` selector 和 source payload id 建立。role token 作为 payload role 投影为 `aat:role`，为下游 schema 或 model 解释提供源表面线索。
 
 [source,asciidoc]
 ------
@@ -183,18 +186,21 @@ edge:
 
 边 payload 归属于交叉引用边证据。它不归属于 source heading，也不归属于 target heading。
 
-边 payload 的 selector 语境与 xref:xref-edge[交叉引用边]中的普通 xref target selector 语境不同。xref 的 `payload` 字段只选择边 payload；普通 xref target 指向同一个 source payload id 时，该 ID 按 xref:heading-node[本地非标题 target 归属规则]归属为所属标题的 `aat:addressLabel`。payload 对象仍然是复杂属性值，不作为 relation triple 的端点。
+边 payload 的 selector 语境与 xref:xref-edge[交叉引用边]中的普通 xref target selector 语境不同。xref 的 `payload` 字段只选择边 payload；普通 xref target 指向同一个 source payload id 时，该 ID 按 xref:local-target-heading-ownership[本地非标题 target 归属规则]归属为所属标题的 `aat:addressLabel`。payload 对象仍然是复杂属性值，不作为 relation triple 的端点。
 
 === Opaque Raw
 
-payload raw 不展开为 RDF 图。JSON、YAML、TOML、XML 或其它 payload 格式内部字段不进入标题投影图。
+payload raw 作为 opaque literal 保存在 payload object 上。JSON、YAML、TOML、XML 或其它 payload 格式内部字段由下游消费者解释。
 
 payload object 必须保存 payload kind、role、raw、relative path、完整 line span 和 content line span。payload format 来自 source block language。只有由 selector 显式指向的 payload block 才保存 `aat:payloadId`。
 
-payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`、`aat:childOrder` 或 `aat:documentOrder`，不作为 relation triple 的端点。公共查询应通过所属标题节点或 xref edge evidence 取得 payload，而不是把 payload 当作独立文档节点遍历。
+payload 对象是复杂属性值。公共查询通过所属标题节点或 xref edge evidence 取得 payload。标题结构遍历由 heading node、`aat:containsDirectly`、`aat:childOrder` 和 `aat:documentOrder` 承担；relation triple 的端点由 source heading 与 target heading 承担。
 
 payload block 的本地 target ID 成为所属标题节点的 address label。该 address label 只用于寻址标题节点，不改变 payload 对象的复杂属性身份。
 
+[#payload-format]
 === Payload Format
 
-payload format 只来自 source block language。`data` 不选择 payload format，不选择 payload role，不决定 payload kind，不参与 payload binding。规范 payload 表面不使用 `data`。
+payload format 表达 payload raw 的源文本语法。该事实来自 source block language：`[source,json]` 的 format 是 `json`，`[source,yaml]` 的 format 是 `yaml`。source block 没有 language 时，payload object 不输出 `aat:format`；投影器不通过 raw 内容猜测格式。
+
+payload role 与 payload format 是正交事实。`.banana` 或 `.pear` 表达下游 schema 或 model label；`json` 或 `yaml` 表达 raw 的文本语法。同一个 payload role 可以使用不同 source block language 承载；同一个 source block language 也可以承载不同 payload role。下游消费者先按 format 解析 raw，再按 role 选择业务解释。

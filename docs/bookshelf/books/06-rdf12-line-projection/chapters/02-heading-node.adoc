@@ -71,6 +71,7 @@ resourceIRI = <baseIri><documentKey>#<localId>
 
 同一 selector 可以命中多个标题节点。多义命中是源文档事实，投影器必须保留多义结果，不得任意选择一个标题节点作为唯一目标。
 
+[#local-target-heading-ownership]
 === 本地 Target 的标题归属
 
 AsciiDoc 的本地 target catalog 可以包含 section、listing、table、block、inline anchor 和未知类型 target。标题投影图只把等号标题创建为标题节点；非标题 target 不创建 RDF 结构节点。

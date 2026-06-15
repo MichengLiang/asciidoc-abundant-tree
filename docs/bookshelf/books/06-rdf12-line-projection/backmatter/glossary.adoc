@@ -21,7 +21,7 @@ xref edge evidence:: 保存 xref raw、source heading、target heading、target 
 
 payload:: 归属于 heading node 或 xref edge evidence 的复杂属性值。payload 保存 payload kind、payload role、format、raw、绑定事实和回源坐标，不展开内部结构，不作为 heading node、structure edge endpoint 或 xref target heading。只有由 selector 显式指向的 payload block 才保存 source payload id。
 
-payload block:: 源文档中承载 payload raw 的 listing block。payload block 通过 `for` 或 `forSelector` 成为节点 payload，或通过手动 ID 被 xref `payload` selector 选中成为边 payload。payload block 自身不创建 RDF 结构节点。
+payload block:: 源文档中承载 payload raw 的 listing block。payload block 通过 `for` 或 `forSelector` 成为节点 payload，或通过 source payload id 被 xref `payload` selector 选中成为边 payload。payload block 自身不创建 RDF 结构节点。
 
 source payload id:: payload block 在源文档中的手动 ID。source payload id 是 selector binding fact，不是 payload object 的 RDF identity，也不是 payload role。边 payload 需要 source payload id；节点 payload 不要求 source payload id。
 
@@ -46,6 +46,8 @@ heading projection label space:: selector 绑定 heading node 时查询的 label
 relative path:: 相对于投影调用方指定文档根目录的文件路径。
 
 line span:: 使用 1-based line number 表示的源文件连续行范围。line span 是闭区间。
+
+source span:: 使用 1-based line number 和 1-based Unicode code point column 表示的源文件行列范围。`start.column` 是 token 起始列；`end.column` 是 token 结束后的列位置。
 
 triple term:: RDF 1.2 中作为 RDF term 使用的 triple。
 

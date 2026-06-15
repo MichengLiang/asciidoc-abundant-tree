@@ -7,7 +7,7 @@
 
 本书的核心断言是：标题是唯一节点来源，标题切片是阅读和回源单位，交叉引用是非层级边来源，payload 是归属于标题节点或交叉引用边证据的复杂属性值。段落、listing、table、label、surface attribute 和 payload block 不作为结构节点进入标题投影图。
 
-payload raw 的内部结构由下游消费者按 payload role 和 payload format 解释。标题投影图只保存源文档表面事实、payload 归属关系和回源坐标，不执行 payload schema validation，不把 payload 内部字段展开为业务 RDF 图。
+payload raw 的内部结构由下游消费者按 payload role 和 payload format 解释。标题投影图保存源文档表面事实、payload 归属关系和回源坐标；payload schema validation 与 payload 内部字段解释属于下游消费者。
 
 AsciiDoc 的本地可寻址 target 可以位于标题内部的 listing、table、paragraph、inline anchor 或其它 block 上。标题投影图不把这些 target 提升为节点；这些 target 的 ID 在投影中归属为所属标题节点的 address label。消费者通过该 label 仍然查询标题节点、标题切片和标题之间的关系边。
 
