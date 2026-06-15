@@ -18,7 +18,7 @@ xref 所在的标题切片决定边的 source heading。
 
 xref target 是 selector。selector 在标题投影 label 空间中绑定。标题投影 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成；xref target 不绑定到 role、普通字段谓词、xref display label、raw 文本或标题节点 IRI。
 
-`aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。selector 指向 listing、table、block、inline anchor 或 payload listing 的本地 target ID 时，target heading 是该 target ID 所属的标题节点。
+`aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。selector 指向 listing、table、block、inline anchor 或 payload block 的本地 target ID 时，target heading 是该 target ID 所属的标题节点。
 
 `capacity` 绑定到 address label 为 `capacity` 的标题节点。因此上例的 target heading 是 `运力规则`。
 
@@ -88,7 +88,7 @@ xref:capacity[运力规则, rel=depends-on]
 
 [source,turtle]
 ----
-:heading-l5-o0 rel:depends-on :heading-l41-o0 .
+:heading-l5-o0 rel:depends-on :heading-l39-o0 .
 
 :xref-edge-l8-c8-o0 a aat:XrefEdge ;
   rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l39-o0 )>> ;
@@ -109,6 +109,6 @@ xref:capacity[运力规则, rel=depends-on]
 
 普通 xref named attributes 直接使用 `aat:` 命名空间下同名谓词。示例中的 `weight=0.8` 投影为 `aat:weight "0.8"`。字段值按源文档表面值保存为 string literal。
 
-`payload` 是控制字段，用于绑定边 payload。它不重复作为普通属性。边证据使用 `aat:payloadSelector` 保存该 selector 字符串，并在唯一匹配 payload block ID 时使用 `aat:payload` 连接边 payload object。
+`payload` 是控制字段，用于绑定边 payload。它不重复作为普通属性。边证据使用 `aat:payloadSelector` 保存该 selector 字符串，并在唯一匹配 source payload id 时使用 `aat:payload` 连接边 payload object。
 
 xref target selector 和 xref payload selector 使用不同绑定空间。xref target selector 查询 heading projection label space；xref payload selector 查询 payload block ID space。相同字符串在两个字段中出现时，由字段语境决定解释。

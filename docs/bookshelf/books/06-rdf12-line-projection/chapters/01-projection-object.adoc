@@ -3,7 +3,7 @@
 
 标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。该图描述标题节点、标题之间的结构边、标题切片中的交叉引用边，以及归属于节点或边的属性与 payload。
 
-标题投影图的输入事实来自 source document 以及解析器恢复出的标题、标题层级、标题 metadata、本地 target catalog、xref occurrence、payload block 和 source location。投影器不重新解释 payload 内部结构，不执行业务 lint，不把普通段落或 block 提升为节点。
+标题投影图的输入事实来自 source document 以及解析器恢复出的标题、标题层级、标题 metadata、本地 target catalog、xref occurrence、listing block 表面和 source location。投影器只在 listing block 满足节点 payload 或边 payload 规则时把它解释为 payload block。投影器不重新解释 payload 内部结构，不执行业务 lint，不把普通段落或 block 提升为节点。
 
 === RDF 坐标
 
@@ -38,7 +38,7 @@ source document、projection 和 projection activity 是 provenance 资源。它
 
 payload object 是复杂属性值。节点 payload 通过 `aat:payload` 归属于 heading node；边 payload 通过 `aat:payload` 归属于 xref edge evidence。payload object 保存 payload kind、payload role、format、raw、绑定事实和回源坐标。payload object 不作为标题层级、标题顺序、relation triple 或 xref target binding 的结构资源。
 
-payload object 的 RDF identity 由投影器生成。源文档中的 payload block ID 只在 selector 需要指向该 block 时成为绑定事实。节点 payload 不要求 payload block ID；边 payload 需要 payload block ID，因为 xref edge evidence 使用 `payload` selector 指向它。
+payload object 的 RDF identity 由投影器生成。payload block 的手动 ID 只在 selector 需要指向该 block 时成为 source payload id。source payload id 是绑定事实，不是 payload object 的 RDF identity，也不是 payload role。节点 payload 不要求 source payload id；边 payload 需要 source payload id，因为 xref edge evidence 使用 `payload` selector 指向它。
 
 payload raw 内部字段不进入标题投影图。payload role 和 payload format 只为下游解释 raw 提供源表面线索；标题投影器不执行 schema validation，不把 payload 内部字段投影为 RDF 谓词。
 
@@ -75,9 +75,9 @@ payload raw 内部字段不进入标题投影图。payload role 和 payload form
 
 payload 内部 JSON、YAML、TOML、XML 或其它格式不在标题投影图中展开。payload raw 的内部解释属于读取 payload 的下游消费者。
 
-payload format 来自 source block language。`data` 不属于 payload format 控制字段。
+payload format 来自 source block language。`data` 不属于 payload format 控制字段，不覆盖 source block language。
 
-payload kind 由绑定机制决定，不由 role token 决定。节点 payload 由 `for` 或 `forSelector` 字段决定；边 payload 由 xref `payload` selector 和 payload block ID 决定。payload role 表达作者与下游消费者约定的 schema 或 model label。
+payload kind 由绑定机制决定，不由 role token 决定。节点 payload 由 `for` 或 `forSelector` 字段决定；边 payload 由 xref `payload` selector 和 source payload id 决定。payload role 表达作者与下游消费者约定的 schema 或 model label。
 
 === 来源与回源
 

@@ -23,6 +23,8 @@ payload:: 归属于 heading node 或 xref edge evidence 的复杂属性值。pay
 
 payload block:: 源文档中承载 payload raw 的 listing block。payload block 通过 `for` 或 `forSelector` 成为节点 payload，或通过手动 ID 被 xref `payload` selector 选中成为边 payload。payload block 自身不创建 RDF 结构节点。
 
+source payload id:: payload block 在源文档中的手动 ID。source payload id 是 selector binding fact，不是 payload object 的 RDF identity，也不是 payload role。边 payload 需要 source payload id；节点 payload 不要求 source payload id。
+
 payload role:: payload block 的 role token。payload role 是作者与下游消费者约定的 schema 或 model label，例如 `banana` 或 `pear`。payload role 不决定 payload kind，不绑定 heading，不选择边 payload。
 
 payload format:: payload block 的 source block language。`[source,json]` 的 payload format 是 `json`；`[source,yaml]` 的 payload format 是 `yaml`。
@@ -31,9 +33,9 @@ direct attribute predicate:: 由源文档 named attribute 映射得到的 `aat:<
 
 local target:: source document 内可由 AsciiDoc xref 寻址的 target catalog entry。local target 可以是 section、listing、table、block、inline anchor 或未知类型 target。
 
-selector:: 用于绑定目标的字符串。xref target selector 和节点 payload `for` selector 查询 heading projection label space；xref `payload` selector 查询 payload block ID space。无值 `for` 不是 selector，它按 payload block 源位置归属 owning heading。
+selector:: 用于绑定目标的字符串。xref target selector 和节点 payload binding marker 的非空值查询 heading projection label space；xref `payload` selector 查询 source payload id space。无值 node payload binding marker 不是 selector，它按 payload block 源位置归属 owning heading。
 
-node payload binding marker:: listing block attrlist 中的 `for` 或 `forSelector` 字段。该字段的存在使 listing block 成为节点 payload；字段有值时按 heading selector 绑定，字段无值时按源位置归属 owning heading。
+node payload binding marker:: listing block attrlist 中的 `for` 或 `forSelector` 字段。该字段的存在使 listing block 成为节点 payload；字段有非空值时，该值是 heading selector；字段无值时，payload block 按源位置归属 owning heading。
 
 address label:: 标题投影图中可寻址到 heading node 的作者声明 label。address label 来自标题自身手动 ID，或来自归属到该标题切片的本地非标题 target ID。
 

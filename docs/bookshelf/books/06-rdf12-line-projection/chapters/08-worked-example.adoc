@@ -5,7 +5,7 @@
 
 === Source Document
 
-样例中的 `delivery` 和 `capacity` 是标题 address label。`.policy` 和 `.rule` 是标题 role。`.banana` 和 `.pear` 是 payload role，表示作者与下游消费者约定的 schema 或 model label。节点 payload 绑定来自 `for=delivery`。边 payload 绑定来自 xref 的 `payload=rel-delivery` 和 payload block 的手动 ID `rel-delivery`。
+样例中的 `delivery` 和 `capacity` 是标题 address label。`.policy` 和 `.rule` 是标题 role。`.banana` 和 `.pear` 是 payload role，表示作者与下游消费者约定的 schema 或 model label。节点 payload 绑定来自 `for=delivery`。边 payload 绑定来自 xref 的 `payload=rel-delivery` 和 payload block 的 source payload id `rel-delivery`。
 
 [source,asciidoc]
 ------
@@ -211,7 +211,7 @@ edge:
 
 === 节点 Payload
 
-`[.banana, for=delivery]` 表达节点 payload。`.banana` 是 payload role。`for=delivery` 是节点 payload binding marker 和 heading selector。该 payload block 没有手动 ID；节点 payload 不要求手动 ID。
+`[.banana, for=delivery]` 表达节点 payload。`.banana` 是 payload role。`for=delivery` 是节点 payload binding marker 和 heading selector。该 payload block 没有 source payload id；节点 payload 不要求 source payload id。
 
 [source,turtle]
 ----
@@ -238,7 +238,7 @@ edge:
 ] .
 ----
 
-节点 payload 的公共读取路径是 heading 的 `aat:payload`。消费者不需要 payload block ID 来读取该 payload。
+节点 payload 的公共读取路径是 heading 的 `aat:payload`。消费者不需要 source payload id 来读取该 payload。
 
 === 交叉引用边
 
@@ -265,7 +265,7 @@ edge:
 
 === 边 Payload
 
-`payload=rel-delivery` 表达边 payload selector。`[#rel-delivery.pear]` 提供该 selector 的 payload block ID 和 payload role。边 payload 归属于 xref edge evidence，不归属于 source heading 或 target heading。
+`payload=rel-delivery` 表达边 payload selector。`[#rel-delivery.pear]` 提供该 selector 的 source payload id 和 payload role。边 payload 归属于 xref edge evidence，不归属于 source heading 或 target heading。
 
 [source,turtle]
 ----
