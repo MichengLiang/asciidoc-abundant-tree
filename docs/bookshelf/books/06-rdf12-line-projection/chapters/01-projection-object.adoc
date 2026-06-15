@@ -36,7 +36,11 @@
 
 source document、projection 和 projection activity 是 provenance 资源。它们描述图从哪份源文件派生、由哪次投影活动生成。它们不属于标题节点集合，也不参与标题层级边。
 
-payload 对象是复杂属性值。payload 对象保存 payload id、kind、format、raw 和回源坐标；它必须通过所属标题节点或交叉引用边证据进入查询，不作为独立的文档结构资源参与标题层级、标题顺序或 relation triple 的端点。payload listing 的本地 target ID 按本地非标题 target 规则归属为所属标题的 address label。
+payload object 是复杂属性值。节点 payload 通过 `aat:payload` 归属于 heading node；边 payload 通过 `aat:payload` 归属于 xref edge evidence。payload object 保存 payload kind、payload role、format、raw、绑定事实和回源坐标。payload object 不作为标题层级、标题顺序、relation triple 或 xref target binding 的结构资源。
+
+payload object 的 RDF identity 由投影器生成。源文档中的 payload block ID 只在 selector 需要指向该 block 时成为绑定事实。节点 payload 不要求 payload block ID；边 payload 需要 payload block ID，因为 xref edge evidence 使用 `payload` selector 指向它。
+
+payload raw 内部字段不进入标题投影图。payload role 和 payload format 只为下游解释 raw 提供源表面线索；标题投影器不执行 schema validation，不把 payload 内部字段投影为 RDF 谓词。
 
 本地非标题 target 的 ID 是标题节点的地址事实。该 ID 归属为覆盖 target source span 的标题节点的 `aat:addressLabel`，不创建结构节点，不参与标题层级边，也不作为 relation triple 的端点。
 
@@ -50,7 +54,9 @@ payload 对象是复杂属性值。payload 对象保存 payload id、kind、form
 * 沿标题层级边递归读取子标题，并按 `aat:childOrder` 排序同父 direct children。
 * 按 `aat:documentOrder` 读取全局 preorder 标题序列。
 * 查看标题节点发出的交叉引用边。
-* 读取边属性、边 payload 和 xref raw。
+* 读取标题节点的直接属性和节点 payload。
+* 读取边证据的直接属性、边 payload 和 xref raw。
+* 通过 payload role 与 payload format 选择下游 payload 解析路径。
 * 从查询结果回到源文件行范围。
 
 公共图单位必须服务这些动作。不能服务这些动作的结构不进入标题投影图的核心对象。
@@ -68,6 +74,10 @@ payload 对象是复杂属性值。payload 对象保存 payload id、kind、form
 本地非标题 target 的 ID 投影为所属标题节点的 `aat:addressLabel`。该投影不表示源文档标题表面声明了该 ID，只表示该 ID 在标题投影图中寻址到该标题节点。
 
 payload 内部 JSON、YAML、TOML、XML 或其它格式不在标题投影图中展开。payload raw 的内部解释属于读取 payload 的下游消费者。
+
+payload format 来自 source block language。`data` 不属于 payload format 控制字段。
+
+payload kind 由绑定机制决定，不由 role token 决定。节点 payload 由 `for` 或 `forSelector` 字段决定；边 payload 由 xref `payload` selector 和 payload block ID 决定。payload role 表达作者与下游消费者约定的 schema 或 model label。
 
 === 来源与回源
 

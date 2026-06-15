@@ -9,7 +9,7 @@
 
 [source,asciidoc]
 ----
-[#capacity-rule.section, kind=rule, status=active]
+[#capacity.rule, status=active]
 == 运力规则
 ----
 
@@ -31,7 +31,7 @@
 
 [source,turtle]
 ----
-:heading-l41-o0 aat:raw """[#capacity-rule.section, kind=rule, status=active]
+:heading-l39-o0 aat:raw """[#capacity.rule, status=active]
 == 运力规则
 
 运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。

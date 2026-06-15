@@ -12,8 +12,8 @@
 [source,turtle]
 ----
 :heading-l1-o0 aat:containsDirectly :heading-l5-o0 .
-:heading-l1-o0 aat:containsDirectly :heading-l41-o0 .
-:heading-l41-o0 aat:containsDirectly :heading-l46-o0 .
+:heading-l1-o0 aat:containsDirectly :heading-l39-o0 .
+:heading-l39-o0 aat:containsDirectly :heading-l44-o0 .
 ----
 
 直接包含不表达传递闭包。若 `root` 直接包含 `运力规则`，且 `运力规则` 直接包含 `我是3级标题`，则 `root` 不直接包含 `我是3级标题`。
@@ -35,8 +35,8 @@
 [source,turtle]
 ----
 :heading-l5-o0 aat:childOrder 1 .
-:heading-l41-o0 aat:childOrder 2 .
-:heading-l46-o0 aat:childOrder 1 .
+:heading-l39-o0 aat:childOrder 2 .
+:heading-l44-o0 aat:childOrder 1 .
 ----
 
 同一父标题下的 direct children 必须拥有唯一、连续、从 `1` 开始的 `aat:childOrder`。消费者通过 `aat:containsDirectly` 取得 direct children 后，按 numeric `aat:childOrder` 排序。
@@ -53,8 +53,8 @@
 ----
 :heading-l1-o0 aat:documentOrder 1 .
 :heading-l5-o0 aat:documentOrder 2 .
-:heading-l41-o0 aat:documentOrder 3 .
-:heading-l46-o0 aat:documentOrder 4 .
+:heading-l39-o0 aat:documentOrder 3 .
+:heading-l44-o0 aat:documentOrder 4 .
 ----
 
 `aat:documentOrder` 在同一 projection 内唯一、连续、从 `1` 开始。存在 document title heading 时，该 heading 的 `aat:documentOrder` 为 `1`。无 document title heading 时，顶层 sections 按 `AbundantDocument.children` 顺序进入 traversal。
@@ -67,4 +67,4 @@
 
 source coordinate fields 不表达 heading tree order。book-entry 输入中，不同 included files 的 heading 可以拥有相同 origin line number；消费者不得通过 source line、relative path、IRI lexical order 或 Turtle textual order 推断文档顺序。
 
-`aat:previousSibling` 不属于当前核心 heading projection。旧版本使用该 predicate 表达同父 sibling 链；当前契约使用 `aat:childOrder` 表达同父局部顺序，使用 `aat:documentOrder` 表达全局 preorder。
+`aat:previousSibling` 不属于核心 heading projection。核心 heading projection 使用 `aat:childOrder` 表达同父局部顺序，使用 `aat:documentOrder` 表达全局 preorder。

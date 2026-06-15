@@ -19,13 +19,21 @@ xref edge:: 由标题切片中的交叉引用创建的非层级关系边。
 
 xref edge evidence:: 保存 xref raw、source heading、target heading、target selector、属性、payload 和回源坐标的边证据 resource。
 
-payload:: 归属于标题节点或 xref edge evidence 的复杂属性。payload 保存 id、kind、format、raw 和回源坐标，不展开内部结构，不作为标题节点、结构边端点或 xref target heading。
+payload:: 归属于 heading node 或 xref edge evidence 的复杂属性值。payload 保存 payload kind、payload role、format、raw、绑定事实和回源坐标，不展开内部结构，不作为 heading node、structure edge endpoint 或 xref target heading。只有由 selector 显式指向的 payload block 才保存 source payload id。
+
+payload block:: 源文档中承载 payload raw 的 listing block。payload block 通过 `for` 或 `forSelector` 成为节点 payload，或通过手动 ID 被 xref `payload` selector 选中成为边 payload。payload block 自身不创建 RDF 结构节点。
+
+payload role:: payload block 的 role token。payload role 是作者与下游消费者约定的 schema 或 model label，例如 `banana` 或 `pear`。payload role 不决定 payload kind，不绑定 heading，不选择边 payload。
+
+payload format:: payload block 的 source block language。`[source,json]` 的 payload format 是 `json`；`[source,yaml]` 的 payload format 是 `yaml`。
 
 direct attribute predicate:: 由源文档 named attribute 映射得到的 `aat:<name>` 谓词。该谓词表达源文档表面字段，不触发业务解释。标题 `#id`、role token、xref `rel` 和 xref `payload` 是专门字段，不按普通字段谓词处理。
 
 local target:: source document 内可由 AsciiDoc xref 寻址的 target catalog entry。local target 可以是 section、listing、table、block、inline anchor 或未知类型 target。
 
-selector:: xref target、节点 payload `for` 字段或 xref `payload` 字段中用于绑定目标的字符串。xref target 和节点 payload `for` 绑定标题投影 label 空间；xref `payload` 绑定 listing block 的手动 ID 以选择边 payload。
+selector:: 用于绑定目标的字符串。xref target selector 和节点 payload `for` selector 查询 heading projection label space；xref `payload` selector 查询 payload block ID space。无值 `for` 不是 selector，它按 payload block 源位置归属 owning heading。
+
+node payload binding marker:: listing block attrlist 中的 `for` 或 `forSelector` 字段。该字段的存在使 listing block 成为节点 payload；字段有值时按 heading selector 绑定，字段无值时按源位置归属 owning heading。
 
 address label:: 标题投影图中可寻址到 heading node 的作者声明 label。address label 来自标题自身手动 ID，或来自归属到该标题切片的本地非标题 target ID。
 
