@@ -63,11 +63,15 @@ The `rdf12` projection derives an RDF 1.2 graph from an `AbundantDocument`. The 
 
 Projection resources use deterministic IRIs generated from the document coordinate system, not author strings or ordering facts. Heading nodes expose their label space directly through `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`. Query code can use those fields to find headings, then read `relativePath`, `startLine`, and `endLine` for source inspection or patching.
 
-The graph includes source document provenance, heading nodes, direct heading containment, same-parent child order, global heading preorder, selector binding, xref edge evidence, RDF 1.2 reifiers for resolved xref relations, direct field predicates, and payload complex property objects. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder. Source coordinate fields such as `relativePath`, `startLine`, `endLine`, `headingLine`, and `raw` describe the origin source location and slice; they are not a heading order fallback. Xref edges keep raw selectors and official Asciidoctor evidence separately. Attribute lists such as `[#delivery-policy.section, kind=policy]` preserve the explicit ID as `aat:addressLabel`, `.section` as `aat:role`, and named fields as direct `aat:` predicates such as `aat:kind`.
+The graph includes source document provenance, heading nodes, direct heading containment, same-parent child order, global heading preorder, selector binding, xref edge evidence, RDF 1.2 reifiers for resolved xref relations, direct field predicates, and payload complex property objects. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder. Source coordinate fields such as `relativePath`, `startLine`, `endLine`, `headingLine`, and `raw` describe the origin source location and slice; they are not a heading order fallback. Xref edges keep raw selectors, payload selectors, and official Asciidoctor evidence as separate facts. Attribute lists such as `[#delivery.policy, status=active]` preserve the explicit ID as `aat:addressLabel`, `.policy` as `aat:role`, and named fields as direct `aat:` predicates such as `aat:status`.
+
+Local non-heading target IDs from listings, tables, blocks, inline anchors, and payload blocks become `aat:addressLabel` values on the owning heading. They participate in the heading label space without creating listing, table, block, anchor, or payload-block structure resources.
 
 The RDF 1.2 heading projection does not emit `aat:previousSibling`. Consumers that need ordered document trees should read `aat:containsDirectly`, sort each parent’s direct children by numeric `aat:childOrder`, and use numeric `aat:documentOrder` for whole-document preorder. IRI lexical order, Turtle textual order, `relativePath`, and source line values are not ordering contracts.
 
-Node payloads use `for=<heading-label>` to bind an opaque payload object to the selected heading through `aat:payload`. Xref payloads use the xref control field `payload=<payload-label>` to bind an `xref-payload` object to the xref edge evidence through `aat:payload`. Payload objects keep `aat:payloadId`, `aat:payloadKind`, `aat:format`, `aat:raw`, and source line spans; the projection does not interpret JSON, YAML, TOML, XML, or other payload formats. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and `payload` is retained as `aat:payloadSelector`; neither is emitted as a legacy surface-attribute resource.
+Node payloads use a `for` or `forSelector` marker to bind an opaque payload object to a heading through `aat:payload`. A marker with a selector value queries the heading label space; a no-value marker binds by source ownership. Node payloads do not require source payload IDs. Edge payloads use the xref control field `payload=<payload-id>` and a listing source payload ID to bind an opaque payload object to xref edge evidence through `aat:payload`. Payload role comes from metadata role tokens such as `.banana` or `.pear`; role tokens do not determine payload kind. Payload format comes from the source block language such as `[source,json]` or `[source,yaml]`; `data=` is not a payload format control field. Payload raw is an opaque literal and is not expanded into business RDF predicates.
+
+Ordinary xref target selectors and xref payload selectors use separate spaces. The xref target selector queries `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`; the xref payload selector queries source payload IDs. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and `payload` is retained as `aat:payloadSelector`; neither is emitted as a legacy surface-attribute resource.
 
 JSON-LD output is a frontend-friendly projection of the same RDF graph. RDF 1.2 triple terms are represented as structured `rdf12:TripleTerm` objects rather than flattened strings.
 
@@ -78,18 +82,26 @@ Source AsciiDoc:
 ```adoc
 = 投影预览
 
-[#delivery-policy.section, kind=policy, status=active]
+[#delivery.policy, status=active]
 == 配送策略
 
-配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, payload=rel-delivery-capacity]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, payload=rel-delivery]。
 
-[#rel-delivery-capacity.xref-payload, data=json]
+[.banana, for=delivery]
 [source,json]
 ----
-{"reason":"risk-control","signals":["capacity"]}
+{"owner":{"team":"ops"},"risk":{"signals":["capacity"]}}
 ----
 
-[#capacity-rule.section, kind=rule, status=active]
+[#rel-delivery.pear]
+[source,yaml]
+----
+reason: risk-control
+signals:
+  - capacity
+----
+
+[#capacity.rule, status=active]
 == 运力规则
 
 运力规则决定是否降级。
@@ -103,18 +115,32 @@ Projected Turtle:
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
 <urn:aat:doc:...#heading-l3-o0> a aat:Heading;
-    aat:addressLabel "delivery-policy";
+    aat:addressLabel "delivery", "rel-delivery";
     aat:headline "配送策略";
+    aat:role "policy";
     aat:payload <urn:aat:doc:...#payload-l8-o0>;
-    rel:depends-on <urn:aat:doc:...#heading-l14-o0>.
+    rel:depends-on <urn:aat:doc:...#heading-l22-o0>.
 
-<urn:aat:doc:...#xref-edge-l6-c8-o0> rdf:reifies <<(<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l14-o0>)>>;
+<urn:aat:doc:...#payload-l8-o0> aat:payloadKind "node";
+    aat:role "banana";
+    aat:forSelector "delivery";
+    aat:format "json";
+    aat:raw "{\"owner\":{\"team\":\"ops\"},\"risk\":{\"signals\":[\"capacity\"]}}".
+
+<urn:aat:doc:...#xref-edge-l6-c8-o0> rdf:reifies <<(<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l22-o0>)>>;
     a aat:XrefEdge;
     aat:sourceHeading <urn:aat:doc:...#heading-l3-o0>;
-    aat:targetHeading <urn:aat:doc:...#heading-l14-o0>;
-    aat:payloadSelector "rel-delivery-capacity";
-    aat:payload <urn:aat:doc:...#payload-l8-o0>;
+    aat:targetHeading <urn:aat:doc:...#heading-l22-o0>;
+    aat:targetSelector "capacity";
+    aat:payloadSelector "rel-delivery";
+    aat:payload <urn:aat:doc:...#payload-l14-o0>;
     aat:rel "depends-on".
+
+<urn:aat:doc:...#payload-l14-o0> aat:payloadKind "edge";
+    aat:payloadId "rel-delivery";
+    aat:role "pear";
+    aat:format "yaml";
+    aat:raw "reason: risk-control\nsignals:\n  - capacity".
 ```
 
 Release validation covers the RDF projection with semantic graph comparison, Turtle roundtrip checks, JSON-LD shape checks, selector ambiguity cases, source-span boundary cases, payload binding rules, relation predicate fallback, and CLI `rdf12` / `rdf12-json-ld` smoke output.

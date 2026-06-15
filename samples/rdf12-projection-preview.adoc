@@ -1,17 +1,25 @@
 = 投影预览
 
-[#delivery-policy.section, kind=policy, status=active]
+[#delivery.policy, status=active]
 == 配送策略
 
-配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, payload=rel-delivery-capacity]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, payload=rel-delivery]。
 
-[#rel-delivery-capacity.xref-payload, data=json]
+[.banana, for=delivery]
 [source,json]
 ----
-{"reason":"risk-control","signals":["capacity"]}
+{"owner":{"team":"ops"},"risk":{"signals":["capacity"]}}
 ----
 
-[#capacity-rule.section, kind=rule, status=active]
+[#rel-delivery.pear]
+[source,yaml]
+----
+reason: risk-control
+signals:
+  - capacity
+----
+
+[#capacity.rule, status=active]
 == 运力规则
 
 运力规则决定是否降级。
