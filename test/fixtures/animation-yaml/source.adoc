@@ -3,7 +3,7 @@
 
 本项目使用动画改编剖面。
 
-[#profile-animation-main-payload.payload, for=profile-animation-main, data=json]
+[.animation-payload, for=profile-animation-main]
 [source,json]
 ----
 {

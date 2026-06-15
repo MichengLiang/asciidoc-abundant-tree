@@ -9,7 +9,7 @@
 
 [source,asciidoc]
 ----
-[#delivery-policy.section, kind=policy, status=active, owner=ops]
+[#delivery.policy, status=active, owner=ops]
 == 配送策略
 ----
 
@@ -18,7 +18,7 @@
 [source,turtle]
 ----
 :heading-l5-o0
-  aat:kind "policy" ;
+  aat:role "policy" ;
   aat:status "active" ;
   aat:owner "ops" .
 ----
@@ -27,7 +27,7 @@ xref 普通 named attributes 直接投影为边证据谓词。
 
 [source,asciidoc]
 ----
-xref:capacity-rule[运力规则, rel=depends-on, weight=0.8]
+xref:capacity[运力规则, rel=depends-on, weight=0.8]
 ----
 
 投影为：
@@ -39,30 +39,52 @@ xref:capacity-rule[运力规则, rel=depends-on, weight=0.8]
   aat:weight "0.8" .
 ----
 
-属性谓词不触发业务解释。`aat:kind`、`aat:status`、`aat:owner`、`aat:weight` 只是源文档表面字段的 RDF 表达。下游消费者可以解释这些字段，也可以忽略这些字段。
+属性谓词不触发业务解释。`aat:role`、`aat:status`、`aat:owner`、`aat:weight` 只是源文档表面字段的 RDF 表达。下游消费者可以解释这些字段，也可以忽略这些字段。
 
-字段名映射规则与标题节点属性一致。字段名进入 `aat:` 命名空间下的表面字段谓词。字段值保存为 string literal。`rel` 和 `payload` 是 xref 控制字段；`rel` 决定主 relation triple 的谓词，并可作为 `aat:rel` 保留；`payload` 选择边 payload，并保存为 `aat:payloadSelector`，不占用 `aat:payload`。
+字段名映射规则与标题节点属性一致。字段名进入 `aat:` 命名空间下的表面字段谓词。字段值保存为 string literal。`rel` 和 `payload` 是 xref 控制字段；`rel` 决定主 relation triple 的谓词，并可作为 `aat:rel` 保留；`payload` 选择边 payload，并保存为 `aat:payloadSelector`，不占用 `aat:payload`。`for` 和 `forSelector` 是节点 payload 控制字段；它们不作为普通 payload 内部字段投影。
 
+[#payload-object]
+=== Payload Object
+
+payload object 是归属于标题节点或 xref edge evidence 的复杂属性值。payload object 的 RDF identity 由投影器生成；payload block 的手动 ID 只在 selector 需要指向 payload block 时成为 source payload id。
+
+payload object 保存以下事实：
+
+[horizontal]
+`aat:payloadKind`:: payload 归属种类。节点 payload 使用 `node`；边 payload 使用 `edge`。
+`aat:role`:: payload block 的 role token。该值是作者与下游消费者约定的 schema 或 model label。
+`aat:format`:: payload block 的 source block language。
+`aat:raw`:: payload body 原文。
+`aat:relativePath`、`aat:startLine`、`aat:endLine`:: payload block 的完整源文件行范围。
+`aat:contentStartLine`、`aat:contentEndLine`:: payload body 的源文件行范围。
+`aat:payloadId`:: selector 显式指向 payload block 时保存的 source payload id。该字段只表达源文档绑定事实，不表达 payload object 的 RDF identity。
+
+payload raw 作为 opaque literal 保存在 payload object 上。payload role 和 payload format 为下游解释 raw 提供源表面线索；payload schema validation 与 payload 内部字段解释属于下游消费者。
+
+[#node-payload]
 === 节点 Payload
 
-带有手动 ID 且声明 `for` 或 `forSelector` 字段的 listing block 表达节点 payload。绑定成功时，payload 作为该标题节点的 `aat:payload` 值。
+声明 `for` 或 `forSelector` 字段的 listing block 表达节点 payload。`for` 或 `forSelector` 字段是节点 payload binding marker。该字段使 listing block 进入节点 payload 语境；字段有非空值时按 heading selector 绑定，字段无值时按源位置归属 owning heading。
 
-节点 payload 的 `for` 字段只在标题投影 label 空间中绑定。绑定目标可以来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload 对象保留 `aat:forSelector` 和回源坐标，不连接到任何标题节点。`for` 字段不绑定到 payload 对象自身的 payload id、role、普通字段谓词或标题节点 IRI。
+带值 binding marker 查询 xref:heading-node[标题节点]定义的 heading projection label space。绑定目标来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，payload object 保留 `aat:forSelector` 和回源坐标，并保持未归属状态。
 
-节点 payload 的 `for` 字段使用标题投影 label 空间。该空间中的 `aat:addressLabel` 包含归属到标题的本地非标题 target ID。`for` 字段仍不绑定到 payload 对象自身的 `aat:payloadId`，也不把 payload listing 提升为标题节点。
+无值 binding marker 表达 source ownership binding。投影器使用该 payload block 的源位置，找到覆盖该 block 起始行的最内层 heading node，并把 payload object 连接到该 heading node。源位置无法确定 owning heading 时，payload object 保留回源事实并保持未归属状态。
 
-`.payload` role 不是节点 payload 的识别条件。role token 可以作为源文档表面语义投影为 `aat:role`，但节点 payload 绑定由 `for` 或 `forSelector` 字段决定。
-
-payload format 来自 payload attrlist 的 `data` 字段。缺少 `data` 字段时，format 来自 source block 的 language。二者都缺失时，不输出 `aat:format`。
+节点 payload 身份由 binding marker 建立。role token 表达 payload role；source block language 表达 payload format；标题切片位置参与无值 binding marker 的 owning heading 归属。
 
 [source,asciidoc]
 ------
-[#delivery-policy-payload, for=delivery-policy, data=json]
+[.banana, for=delivery]
 [source,json]
 ----
 {
   "owner": {
-    "team": "ops"
+    "team": "ops",
+    "fallback": "manual-review"
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["weather", "capacity"]
   }
 }
 ----
@@ -73,35 +95,66 @@ payload format 来自 payload attrlist 的 `data` 字段。缺少 `data` 字段�
 [source,turtle]
 ----
 :heading-l5-o0 aat:payload [
-  aat:payloadId "delivery-policy-payload" ;
   aat:payloadKind "node" ;
-  aat:forSelector "delivery-policy" ;
+  aat:role "banana" ;
+  aat:forSelector "delivery" ;
   aat:format "json" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 10 ;
   aat:endLine 23 ;
   aat:contentStartLine 13 ;
   aat:contentEndLine 22 ;
-  aat:raw "{\n  \"owner\": {\n    \"team\": \"ops\"\n  }\n}"
+  aat:raw """{
+  "owner": {
+    "team": "ops",
+    "fallback": "manual-review"
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["weather", "capacity"]
+  }
+}"""
 ] .
 ----
 
-=== 边 Payload
-
-xref 的 `payload` 字段表达边 payload selector。带有匹配 ID 的 listing block 表达该边 payload。
-
-边 payload 的绑定分两步。xref edge evidence 先用 `payload` 字段保存 `aat:payloadSelector`。投影器再用该 selector 匹配 listing block 的手动 ID。唯一匹配时，xref edge evidence 通过 `aat:payload` 连接该 payload 对象。未匹配或多义匹配时，边证据保留 `aat:payloadSelector`，不连接 payload 对象。
-
-`.xref-payload` role 不是边 payload 的识别条件。role token 可以作为源文档表面语义投影为 `aat:role`，但边 payload 绑定由 xref 的 `payload` selector 和 listing block 的 ID 决定。
+无值 `for` 使用源位置归属 owning heading：
 
 [source,asciidoc]
 ------
-xref:capacity-rule[运力规则, rel=depends-on, payload=rel-delivery-capacity]
-
-[#rel-delivery-capacity, data=json]
+[.banana, for]
 [source,json]
 ----
-{"reason":"risk-control"}
+{"owner":{"team":"ops"}}
+----
+------
+
+该 payload block 已经由 `for` 字段声明为节点 payload。投影器按源位置确定 owning heading，并通过 owning heading 的 `aat:payload` 连接 payload object。`aat:forSelector` 保留给非空 selector binding；无值 binding marker 的公共事实是 heading 到 payload object 的归属连接。
+
+[#edge-payload]
+=== 边 Payload
+
+xref 的 `payload` 字段表达边 payload selector。带有匹配 source payload id 的 listing block 表达该边 payload。
+
+边 payload 的绑定分两步。xref edge evidence 先用 `payload` 字段保存 `aat:payloadSelector`。投影器再用该 selector 匹配 payload block 的 source payload id。唯一匹配时，xref edge evidence 通过 `aat:payload` 连接该 payload 对象。未匹配或多义匹配时，边证据保留 `aat:payloadSelector`，不连接 payload 对象。
+
+边 payload 绑定由 xref 的 `payload` selector 和 source payload id 建立。role token 作为 payload role 投影为 `aat:role`，为下游 schema 或 model 解释提供源表面线索。
+
+[source,asciidoc]
+------
+xref:capacity[运力规则, rel=depends-on, payload=rel-delivery]
+
+[#rel-delivery.pear]
+[source,yaml]
+----
+reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true
 ----
 ------
 
@@ -110,28 +163,44 @@ xref:capacity-rule[运力规则, rel=depends-on, payload=rel-delivery-capacity]
 [source,turtle]
 ----
 :xref-edge-l8-c8-o0 aat:payload [
-  aat:payloadId "rel-delivery-capacity" ;
+  aat:payloadId "rel-delivery" ;
   aat:payloadKind "edge" ;
-  aat:format "json" ;
-  aat:raw "{\"reason\":\"risk-control\"}" ;
+  aat:role "pear" ;
+  aat:format "yaml" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 25 ;
-  aat:endLine 39 ;
+  aat:endLine 37 ;
   aat:contentStartLine 28 ;
-  aat:contentEndLine 38
+  aat:contentEndLine 36 ;
+  aat:raw """reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true"""
 ] .
 ----
 
 边 payload 归属于交叉引用边证据。它不归属于 source heading，也不归属于 target heading。
 
-边 payload 的 selector 语境与普通 xref target selector 语境不同。xref 的 `payload` 字段只选择边 payload；普通 xref target 指向同一个 listing block ID 时，该 ID 按本地非标题 target 规则归属为所属标题的 `aat:addressLabel`。payload 对象仍然是复杂属性值，不作为 relation triple 的端点。
+边 payload 的 selector 语境与 xref:xref-edge[交叉引用边]中的普通 xref target selector 语境不同。xref 的 `payload` 字段只选择边 payload；普通 xref target 指向同一个 source payload id 时，该 ID 按 xref:local-target-heading-ownership[本地非标题 target 归属规则]归属为所属标题的 `aat:addressLabel`。payload 对象仍然是复杂属性值，不作为 relation triple 的端点。
 
 === Opaque Raw
 
-payload raw 不展开为 RDF 图。JSON、YAML、TOML、XML 或其它 payload 格式内部字段不进入标题投影图。
+payload raw 作为 opaque literal 保存在 payload object 上。JSON、YAML、TOML、XML 或其它 payload 格式内部字段由下游消费者解释。
 
-payload 字段必须保存 payload id、payload kind、raw、relative path、完整 line span 和 content line span。payload format 按本章 format 规则输出。
+payload object 必须保存 payload kind、role、raw、relative path、完整 line span 和 content line span。payload format 来自 source block language。只有由 selector 显式指向的 payload block 才保存 `aat:payloadId`。
 
-payload 对象是复杂属性值。它不是标题节点，不参与 `aat:containsDirectly`、`aat:childOrder` 或 `aat:documentOrder`，不作为 relation triple 的端点。公共查询应通过所属标题节点或 xref edge evidence 取得 payload，而不是把 payload 当作独立文档节点遍历。
+payload 对象是复杂属性值。公共查询通过所属标题节点或 xref edge evidence 取得 payload。标题结构遍历由 heading node、`aat:containsDirectly`、`aat:childOrder` 和 `aat:documentOrder` 承担；relation triple 的端点由 source heading 与 target heading 承担。
 
-payload listing 的本地 target ID 成为所属标题节点的 address label。该 address label 只用于寻址标题节点，不改变 payload 对象的复杂属性身份。
+payload block 的本地 target ID 成为所属标题节点的 address label。该 address label 只用于寻址标题节点，不改变 payload 对象的复杂属性身份。
+
+[#payload-format]
+=== Payload Format
+
+payload format 表达 payload raw 的源文本语法。该事实来自 source block language：`[source,json]` 的 format 是 `json`，`[source,yaml]` 的 format 是 `yaml`。source block 没有 language 时，payload object 不输出 `aat:format`；投影器不通过 raw 内容猜测格式。
+
+payload role 与 payload format 是正交事实。`.banana` 或 `.pear` 表达下游 schema 或 model label；`json` 或 `yaml` 表达 raw 的文本语法。同一个 payload role 可以使用不同 source block language 承载；同一个 source block language 也可以承载不同 payload role。下游消费者先按 format 解析 raw，再按 role 选择业务解释。

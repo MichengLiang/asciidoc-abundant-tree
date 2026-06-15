@@ -9,7 +9,7 @@ xref 所在的标题切片决定边的 source heading。
 
 [source,asciidoc]
 ----
-配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
 ----
 
 该 xref 位于 `配送策略` 标题切片中，因此 source heading 是 `配送策略`。
@@ -18,9 +18,9 @@ xref 所在的标题切片决定边的 source heading。
 
 xref target 是 selector。selector 在标题投影 label 空间中绑定。标题投影 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成；xref target 不绑定到 role、普通字段谓词、xref display label、raw 文本或标题节点 IRI。
 
-`aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。selector 指向 listing、table、block、inline anchor 或 payload listing 的本地 target ID 时，target heading 是该 target ID 所属的标题节点。
+`aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。selector 指向 listing、table、block、inline anchor 或 payload block 的本地 target ID 时，target heading 是该 target ID 所属的标题节点。
 
-`capacity-rule` 绑定到 address label 为 `capacity-rule` 的标题节点。因此上例的 target heading 是 `运力规则`。
+`capacity` 绑定到 address label 为 `capacity` 的标题节点。因此上例的 target heading 是 `运力规则`。
 
 `engine-code` 是 `核心引擎设计` 标题切片内 listing block 的本地 target ID 时，xref target selector `engine-code` 绑定到 `核心引擎设计` 标题节点。relation triple 的 object 是标题节点，不是 listing block。
 
@@ -50,7 +50,7 @@ predicate 由 xref attribute `rel` 决定。没有 `rel` 时，predicate 是 `aa
 
 [source,asciidoc]
 ----
-xref:capacity-rule[运力规则]
+xref:capacity[运力规则]
 ----
 
 投影为：
@@ -64,7 +64,7 @@ xref:capacity-rule[运力规则]
 
 [source,asciidoc]
 ----
-xref:capacity-rule[运力规则, rel=depends-on]
+xref:capacity[运力规则, rel=depends-on]
 ----
 
 投影为：
@@ -84,29 +84,33 @@ xref:capacity-rule[运力规则, rel=depends-on]
 
 边证据 IRI 使用 `xref-edge-l<startLine>-c<startColumn>-o<ordinal>` local id。`startLine` 和 `startColumn` 来自 xref occurrence 的起点。相同行列出现多个 xref 时，`ordinal` 按源文档顺序从 `0` 递增；无冲突时使用 `0`。
 
+边证据的 `aat:startColumn` 与 `aat:endColumn` 使用 source span column 语义。列号是 1-based Unicode code point column；`aat:startColumn` 是 xref occurrence 的起始列，`aat:endColumn` 是 xref occurrence 结束后的列位置。
+
 示例：
 
 [source,turtle]
 ----
-:heading-l5-o0 rel:depends-on :heading-l41-o0 .
+:heading-l5-o0 rel:depends-on :heading-l39-o0 .
 
 :xref-edge-l8-c8-o0 a aat:XrefEdge ;
-  rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l41-o0 )>> ;
+  rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l39-o0 )>> ;
   aat:sourceHeading :heading-l5-o0 ;
-  aat:targetHeading :heading-l41-o0 ;
-  aat:targetSelector "capacity-rule" ;
+  aat:targetHeading :heading-l39-o0 ;
+  aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;
   aat:weight "0.8" ;
-  aat:payloadSelector "rel-delivery-capacity" ;
-  aat:raw "xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]" ;
+  aat:payloadSelector "rel-delivery" ;
+  aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 8 ;
   aat:endLine 8 ;
   aat:startColumn 8 ;
-  aat:endColumn 91 .
+  aat:endColumn 77 .
 ----
 
 普通 xref named attributes 直接使用 `aat:` 命名空间下同名谓词。示例中的 `weight=0.8` 投影为 `aat:weight "0.8"`。字段值按源文档表面值保存为 string literal。
 
-`payload` 是控制字段，用于绑定边 payload。它不重复作为普通属性。边证据使用 `aat:payloadSelector` 保存该 selector 字符串，使用 `aat:payload` 连接已绑定的复杂 payload 对象。
+`payload` 是控制字段，用于绑定边 payload。它不重复作为普通属性。边证据使用 `aat:payloadSelector` 保存该 selector 字符串，并在唯一匹配 source payload id 时使用 `aat:payload` 连接边 payload object。
+
+xref target selector 和 xref payload selector 使用不同绑定空间。xref target selector 查询 heading projection label space；xref payload selector 查询 source payload id space。相同字符串在两个字段中出现时，由字段语境决定解释。

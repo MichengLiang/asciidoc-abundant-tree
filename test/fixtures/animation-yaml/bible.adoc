@@ -3,7 +3,7 @@
 
 爱丽丝由 xref:src-ch1-rabbit[白兔看表, rel=derived-from] 建立好奇心。
 
-[#char-alice-payload.payload, for=char-alice, data=yaml]
+[.visual-payload, for=char-alice]
 [source,yaml]
 ----
 visualDesign:
@@ -17,7 +17,7 @@ voiceProfile:
 
 这个角色只用于验证 payload 解析失败时导出诊断。
 
-[#char-bad-payload-data.payload, for=char-bad-payload, data=json]
+[.visual-payload, for=char-bad-payload]
 [source,json]
 ----
 {"broken": true

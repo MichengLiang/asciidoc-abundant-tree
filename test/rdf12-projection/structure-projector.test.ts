@@ -30,8 +30,8 @@ describe("rdf12 structure projection", () => {
 		for (const localId of [
 			"heading-l1-o0",
 			"heading-l5-o0",
-			"heading-l41-o0",
-			"heading-l46-o0",
+			"heading-l39-o0",
+			"heading-l44-o0",
 		]) {
 			const heading = resourceIri(projection.documentIri, localId);
 			expect(headings).toContain(heading);
@@ -90,8 +90,8 @@ Port:: 8080
 		const projection = structuralPayloadProjection();
 		const root = resourceIri(projection.documentIri, "heading-l1-o0");
 		const deliveryPolicy = resourceIri(projection.documentIri, "heading-l5-o0");
-		const capacityRule = resourceIri(projection.documentIri, "heading-l41-o0");
-		const nestedHeading = resourceIri(projection.documentIri, "heading-l46-o0");
+		const capacityRule = resourceIri(projection.documentIri, "heading-l39-o0");
+		const nestedHeading = resourceIri(projection.documentIri, "heading-l44-o0");
 
 		expectStringTriple(projection.graph, root, "headline", "root");
 		expectNumberTriple(projection.graph, root, "headingLevel", 0);
@@ -123,11 +123,17 @@ Port:: 8080
 			projection.graph,
 			deliveryPolicy,
 			"addressLabel",
-			"delivery-policy",
+			"delivery",
+		);
+		expectStringTriple(
+			projection.graph,
+			deliveryPolicy,
+			"addressLabel",
+			"rel-delivery",
 		);
 		expectNumberTriple(projection.graph, deliveryPolicy, "headingLevel", 1);
 		expectNumberTriple(projection.graph, deliveryPolicy, "startLine", 5);
-		expectNumberTriple(projection.graph, deliveryPolicy, "endLine", 40);
+		expectNumberTriple(projection.graph, deliveryPolicy, "endLine", 38);
 		expectNumberTriple(projection.graph, deliveryPolicy, "headingLine", 6);
 		expectNumberTriple(
 			projection.graph,
@@ -137,23 +143,23 @@ Port:: 8080
 		);
 		expectNumberTriple(projection.graph, deliveryPolicy, "metadataEndLine", 5);
 		expectNumberTriple(projection.graph, deliveryPolicy, "contentStartLine", 8);
-		expectNumberTriple(projection.graph, deliveryPolicy, "contentEndLine", 39);
+		expectNumberTriple(projection.graph, deliveryPolicy, "contentEndLine", 37);
 
 		expectStringTriple(projection.graph, capacityRule, "headline", "运力规则");
 		expectStringTriple(
 			projection.graph,
 			capacityRule,
 			"addressLabel",
-			"capacity-rule",
+			"capacity",
 		);
 		expectNumberTriple(projection.graph, capacityRule, "headingLevel", 1);
-		expectNumberTriple(projection.graph, capacityRule, "startLine", 41);
-		expectNumberTriple(projection.graph, capacityRule, "endLine", 45);
-		expectNumberTriple(projection.graph, capacityRule, "headingLine", 42);
-		expectNumberTriple(projection.graph, capacityRule, "metadataStartLine", 41);
-		expectNumberTriple(projection.graph, capacityRule, "metadataEndLine", 41);
-		expectNumberTriple(projection.graph, capacityRule, "contentStartLine", 44);
-		expectNumberTriple(projection.graph, capacityRule, "contentEndLine", 44);
+		expectNumberTriple(projection.graph, capacityRule, "startLine", 39);
+		expectNumberTriple(projection.graph, capacityRule, "endLine", 43);
+		expectNumberTriple(projection.graph, capacityRule, "headingLine", 40);
+		expectNumberTriple(projection.graph, capacityRule, "metadataStartLine", 39);
+		expectNumberTriple(projection.graph, capacityRule, "metadataEndLine", 39);
+		expectNumberTriple(projection.graph, capacityRule, "contentStartLine", 42);
+		expectNumberTriple(projection.graph, capacityRule, "contentEndLine", 42);
 
 		expectStringTriple(
 			projection.graph,

@@ -6,6 +6,14 @@ import {
 	exportAnimationYaml,
 	runAnimationYamlCli,
 } from "../../src/animation-yaml-export/cli";
+import { parseAbundantTree, rdf12 } from "../../src/index";
+import type {
+	Rdf12Graph,
+	Rdf12IriTerm,
+} from "../../src/rdf12-projection/graph";
+import { stringLiteral } from "../../src/rdf12-projection/literals";
+import { namespaces } from "../../src/rdf12-projection/namespaces";
+import { iriTerm } from "../../src/rdf12-projection/terms";
 
 const fixtureRoot = join(process.cwd(), "test/fixtures/animation-yaml");
 const fixtureBook = join(fixtureRoot, "book.adoc");
@@ -21,7 +29,8 @@ describe("animation YAML export", () => {
 		expect(result.warnings).toContainEqual(
 			expect.objectContaining({
 				code: "payload_parse_failed",
-				node: "char-bad-payload-data",
+				node: expect.stringMatching(/#payload-l\d+-o\d+$/u),
+				message: expect.stringContaining("Failed to parse json payload"),
 			}),
 		);
 		expect(yaml.schema_version).toBe("1.0");
@@ -36,6 +45,7 @@ describe("animation YAML export", () => {
 				productionForm: "animated_short",
 			},
 		});
+		expectProfilePayloadHasNoSourcePayloadId();
 		expect(yaml.source.chapters).toContainEqual(
 			expect.objectContaining({
 				id: "src-ch1",
@@ -224,7 +234,7 @@ describe("animation YAML export", () => {
 			warnings: [
 				expect.objectContaining({
 					code: "payload_parse_failed",
-					node: "char-bad-payload-data",
+					node: expect.stringMatching(/#payload-l\d+-o\d+$/u),
 				}),
 			],
 		});
@@ -244,3 +254,60 @@ describe("animation YAML export", () => {
 		expect(yaml.storyboard.shots[0].id).toBe("shot-rabbit-watch");
 	});
 });
+
+function expectProfilePayloadHasNoSourcePayloadId(): void {
+	const projection = rdf12(
+		parseAbundantTree({
+			sourcePath: fixtureBook,
+			mode: "book-entry",
+			documentRoot: fixtureRoot,
+		}),
+		{ documentRoot: fixtureRoot },
+	);
+	const profile = onlyHeadingWithAddressLabel(
+		projection.graph,
+		"profile-animation-main",
+	);
+	const payload = onlyObjectIri(projection.graph, profile, aat("payload"));
+
+	expect(
+		projection.graph.match({ subject: payload, predicate: aat("payloadId") }),
+	).toHaveLength(0);
+	expect(
+		projection.graph.match({ subject: payload, predicate: aat("raw") }),
+	).toHaveLength(1);
+}
+
+function onlyHeadingWithAddressLabel(
+	graph: Rdf12Graph,
+	addressLabel: string,
+): Rdf12IriTerm {
+	const headings = graph
+		.match({
+			predicate: aat("addressLabel"),
+			object: stringLiteral(addressLabel),
+		})
+		.map((triple) => triple.subject)
+		.filter((subject): subject is Rdf12IriTerm => subject.termType === "iri");
+
+	expect(headings).toHaveLength(1);
+	return headings[0] ?? iriTerm("urn:missing-heading");
+}
+
+function onlyObjectIri(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicate: Rdf12IriTerm,
+): Rdf12IriTerm {
+	const objects = graph
+		.match({ subject, predicate })
+		.map((triple) => triple.object)
+		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
+
+	expect(objects).toHaveLength(1);
+	return objects[0] ?? iriTerm("urn:missing-object");
+}
+
+function aat(localName: string): Rdf12IriTerm {
+	return iriTerm(`${namespaces.aat}${localName}`);
+}

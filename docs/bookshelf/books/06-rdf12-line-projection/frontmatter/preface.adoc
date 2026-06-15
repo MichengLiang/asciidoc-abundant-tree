@@ -3,9 +3,11 @@
 
 本书定义从 AsciiDoc 源文档到 RDF 1.2 标题投影图的规则。
 
-标题投影图以等号标题为节点，以标题层级和交叉引用为边。标题节点保存标题自身切片 raw、标题头部属性、payload 和回源坐标。交叉引用边保存 xref raw、target selector、关系谓词、边属性、payload 和回源坐标。
+标题投影图以等号标题为节点，以标题层级和交叉引用为边。标题节点保存标题自身切片 raw、标题头部直接属性、节点 payload 和回源坐标。交叉引用边证据保存 xref raw、target selector、关系谓词、边直接属性、边 payload 和回源坐标。
 
-本书的核心断言是：标题是唯一节点来源，标题切片是阅读和回源单位，交叉引用是非层级边来源，payload 是节点或边的复杂属性。段落、listing、table、label、surface attribute 和 payload block 不作为结构节点进入标题投影图。
+本书的核心断言是：标题是唯一节点来源，标题切片是阅读和回源单位，交叉引用是非层级边来源，payload 是归属于标题节点或交叉引用边证据的复杂属性值。段落、listing、table、label、surface attribute 和 payload block 不作为结构节点进入标题投影图。
+
+payload raw 的内部结构由下游消费者按 payload role 和 payload format 解释。标题投影图保存源文档表面事实、payload 归属关系和回源坐标；payload schema validation 与 payload 内部字段解释属于下游消费者。
 
 AsciiDoc 的本地可寻址 target 可以位于标题内部的 listing、table、paragraph、inline anchor 或其它 block 上。标题投影图不把这些 target 提升为节点；这些 target 的 ID 在投影中归属为所属标题节点的 address label。消费者通过该 label 仍然查询标题节点、标题切片和标题之间的关系边。
 

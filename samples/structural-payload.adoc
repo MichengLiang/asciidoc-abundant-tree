@@ -2,12 +2,12 @@
 
 一段摘要
 
-[#delivery-policy.section, kind=policy, status=active, owner=ops]
+[#delivery.policy, status=active, owner=ops]
 == 配送策略
 
-配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
 
-[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[.banana, for=delivery]
 [source,json]
 ----
 {
@@ -22,23 +22,21 @@
 }
 ----
 
-[#rel-delivery-capacity.xref-payload, data=json]
-[source,json]
+[#rel-delivery.pear]
+[source,yaml]
 ----
-{
-  "reason": {
-    "type": "risk-control",
-    "signals": ["weather", "capacity"],
-    "description": "配送策略需要读取运力规则来决定是否降级。"
-  },
-  "edge": {
-    "direction": "outbound",
-    "required": true
-  }
-}
+reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true
 ----
 
-[#capacity-rule.section, kind=rule, status=active]
+[#capacity.rule, status=active]
 == 运力规则
 
 运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。

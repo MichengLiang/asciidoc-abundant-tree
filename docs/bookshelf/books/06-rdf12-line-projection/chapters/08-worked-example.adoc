@@ -5,7 +5,7 @@
 
 === Source Document
 
-样例中的 `.section`、`.payload` 和 `.xref-payload` 是源文档 role token。它们可以投影为 `aat:role` 字段；标题节点身份来自等号标题，节点 payload 绑定来自 `for=delivery-policy`，边 payload 绑定来自 xref 的 `payload=rel-delivery-capacity`。
+样例中的 `delivery` 和 `capacity` 是标题 address label。`.policy` 和 `.rule` 是标题 role。`.banana` 和 `.pear` 是 payload role，表示作者与下游消费者约定的 schema 或 model label。节点 payload 绑定来自 `for=delivery`。边 payload 绑定来自 xref 的 `payload=rel-delivery` 和 payload block 的 source payload id `rel-delivery`。
 
 [source,asciidoc]
 ------
@@ -13,12 +13,12 @@
 
 一段摘要
 
-[#delivery-policy.section, kind=policy, status=active, owner=ops]
+[#delivery.policy, status=active, owner=ops]
 == 配送策略
 
-配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
 
-[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[.banana, for=delivery]
 [source,json]
 ----
 {
@@ -33,23 +33,21 @@
 }
 ----
 
-[#rel-delivery-capacity.xref-payload, data=json]
-[source,json]
+[#rel-delivery.pear]
+[source,yaml]
 ----
-{
-  "reason": {
-    "type": "risk-control",
-    "signals": ["weather", "capacity"],
-    "description": "配送策略需要读取运力规则来决定是否降级。"
-  },
-  "edge": {
-    "direction": "outbound",
-    "required": true
-  }
-}
+reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true
 ----
 
-[#capacity-rule.section, kind=rule, status=active]
+[#capacity.rule, status=active]
 == 运力规则
 
 运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
@@ -75,37 +73,39 @@
 
 |`:heading-l5-o0`
 |`配送策略`
-|`delivery-policy`, `delivery-policy-payload`, `rel-delivery-capacity`
+|`delivery`, `rel-delivery`
 |`1`
-|line 5 到 line 40
+|line 5 到 line 38
 
-|`:heading-l41-o0`
+|`:heading-l39-o0`
 |`运力规则`
-|`capacity-rule`
+|`capacity`
 |`1`
-|line 41 到 line 45
+|line 39 到 line 43
 
-|`:heading-l46-o0`
+|`:heading-l44-o0`
 |`我是3级标题`
 |`_我是3级标题`
 |`2`
-|line 46 到 line 48
+|line 44 到 line 46
 |===
+
+`rel-delivery` 是边 payload block 的本地 target ID。该 ID 按本地非标题 target 规则归属为 `配送策略` 标题节点的 address label。该归属只表示 `rel-delivery` 可以在标题投影图中寻址到 `配送策略` 标题节点，不表示 payload object 成为标题节点。
 
 === 标题结构
 
 [source,turtle]
 ----
 :heading-l1-o0 aat:containsDirectly :heading-l5-o0 .
-:heading-l1-o0 aat:containsDirectly :heading-l41-o0 .
-:heading-l41-o0 aat:containsDirectly :heading-l46-o0 .
+:heading-l1-o0 aat:containsDirectly :heading-l39-o0 .
+:heading-l39-o0 aat:containsDirectly :heading-l44-o0 .
 
 :heading-l1-o0 aat:documentOrder 1 .
 :heading-l5-o0 aat:documentOrder 2 ;
     aat:childOrder 1 .
-:heading-l41-o0 aat:documentOrder 3 ;
+:heading-l39-o0 aat:documentOrder 3 ;
     aat:childOrder 2 .
-:heading-l46-o0 aat:documentOrder 4 ;
+:heading-l44-o0 aat:documentOrder 4 ;
     aat:childOrder 1 .
 ----
 
@@ -135,11 +135,9 @@
 ------
 :heading-l5-o0 a aat:Heading ;
   aat:headline "配送策略" ;
-  aat:addressLabel "delivery-policy" ;
-  aat:addressLabel "delivery-policy-payload" ;
-  aat:addressLabel "rel-delivery-capacity" ;
-  aat:role "section" ;
-  aat:kind "policy" ;
+  aat:addressLabel "delivery" ;
+  aat:addressLabel "rel-delivery" ;
+  aat:role "policy" ;
   aat:status "active" ;
   aat:owner "ops" ;
   aat:headingLevel 1 ;
@@ -147,18 +145,18 @@
   aat:childOrder 1 ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 5 ;
-  aat:endLine 40 ;
+  aat:endLine 38 ;
   aat:headingLine 6 ;
   aat:metadataStartLine 5 ;
   aat:metadataEndLine 5 ;
   aat:contentStartLine 8 ;
-  aat:contentEndLine 39 ;
-  aat:raw """[#delivery-policy.section, kind=policy, status=active, owner=ops]
+  aat:contentEndLine 37 ;
+  aat:raw """[#delivery.policy, status=active, owner=ops]
 == 配送策略
 
-配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
 
-[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[.banana, for=delivery]
 [source,json]
 ----
 {
@@ -173,41 +171,38 @@
 }
 ----
 
-[#rel-delivery-capacity.xref-payload, data=json]
-[source,json]
+[#rel-delivery.pear]
+[source,yaml]
 ----
-{
-  "reason": {
-    "type": "risk-control",
-    "signals": ["weather", "capacity"],
-    "description": "配送策略需要读取运力规则来决定是否降级。"
-  },
-  "edge": {
-    "direction": "outbound",
-    "required": true
-  }
-}
+reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true
 ----
 """ .
 
-:heading-l41-o0 a aat:Heading ;
+:heading-l39-o0 a aat:Heading ;
   aat:headline "运力规则" ;
-  aat:addressLabel "capacity-rule" ;
-  aat:role "section" ;
-  aat:kind "rule" ;
+  aat:addressLabel "capacity" ;
+  aat:role "rule" ;
   aat:status "active" ;
   aat:headingLevel 1 ;
   aat:documentOrder 3 ;
   aat:childOrder 2 ;
   aat:relativePath "samples/structural-payload.adoc" ;
-  aat:startLine 41 ;
-  aat:endLine 45 ;
-  aat:headingLine 42 ;
-  aat:metadataStartLine 41 ;
-  aat:metadataEndLine 41 ;
-  aat:contentStartLine 44 ;
-  aat:contentEndLine 44 ;
-  aat:raw """[#capacity-rule.section, kind=rule, status=active]
+  aat:startLine 39 ;
+  aat:endLine 43 ;
+  aat:headingLine 40 ;
+  aat:metadataStartLine 39 ;
+  aat:metadataEndLine 39 ;
+  aat:contentStartLine 42 ;
+  aat:contentEndLine 42 ;
+  aat:raw """[#capacity.rule, status=active]
 == 运力规则
 
 运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
@@ -216,12 +211,14 @@
 
 === 节点 Payload
 
+`[.banana, for=delivery]` 表达节点 payload。`.banana` 是 payload role。`for=delivery` 是节点 payload binding marker 和 heading selector。该 payload block 没有 source payload id；节点 payload 不要求 source payload id。
+
 [source,turtle]
 ----
 :heading-l5-o0 aat:payload [
-  aat:payloadId "delivery-policy-payload" ;
   aat:payloadKind "node" ;
-  aat:forSelector "delivery-policy" ;
+  aat:role "banana" ;
+  aat:forSelector "delivery" ;
   aat:format "json" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 10 ;
@@ -241,53 +238,56 @@
 ] .
 ----
 
+节点 payload 的公共读取路径是 heading 的 `aat:payload`。消费者不需要 source payload id 来读取该 payload。
+
 === 交叉引用边
 
 [source,turtle]
 ----
-:heading-l5-o0 rel:depends-on :heading-l41-o0 .
+:heading-l5-o0 rel:depends-on :heading-l39-o0 .
 
 :xref-edge-l8-c8-o0 a aat:XrefEdge ;
-  rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l41-o0 )>> ;
+  rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l39-o0 )>> ;
   aat:sourceHeading :heading-l5-o0 ;
-  aat:targetHeading :heading-l41-o0 ;
-  aat:targetSelector "capacity-rule" ;
+  aat:targetHeading :heading-l39-o0 ;
+  aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;
   aat:weight "0.8" ;
-  aat:payloadSelector "rel-delivery-capacity" ;
-  aat:raw "xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]" ;
+  aat:payloadSelector "rel-delivery" ;
+  aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 8 ;
   aat:endLine 8 ;
   aat:startColumn 8 ;
-  aat:endColumn 91 .
+  aat:endColumn 77 .
 ----
 
 === 边 Payload
 
+`payload=rel-delivery` 表达边 payload selector。`[#rel-delivery.pear]` 提供该 selector 的 source payload id 和 payload role。边 payload 归属于 xref edge evidence，不归属于 source heading 或 target heading。
+
 [source,turtle]
 ----
 :xref-edge-l8-c8-o0 aat:payload [
-  aat:payloadId "rel-delivery-capacity" ;
+  aat:payloadId "rel-delivery" ;
   aat:payloadKind "edge" ;
-  aat:format "json" ;
+  aat:role "pear" ;
+  aat:format "yaml" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 25 ;
-  aat:endLine 39 ;
+  aat:endLine 37 ;
   aat:contentStartLine 28 ;
-  aat:contentEndLine 38 ;
-  aat:raw """{
-  "reason": {
-    "type": "risk-control",
-    "signals": ["weather", "capacity"],
-    "description": "配送策略需要读取运力规则来决定是否降级。"
-  },
-  "edge": {
-    "direction": "outbound",
-    "required": true
-  }
-}"""
+  aat:contentEndLine 36 ;
+  aat:raw """reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true"""
 ] .
 ----
 
@@ -297,7 +297,7 @@
 
 [source,asciidoc]
 ------
-[#capacity-rule.section, kind=rule, status=active]
+[#capacity.rule, status=active]
 == 运力规则
 
 运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
@@ -308,7 +308,7 @@
 {"threshold": 80}
 ----
 
-[#delivery-policy.section, kind=policy]
+[#delivery.policy]
 == 配送策略
 
 配送策略读取 xref:capacity-evidence[运力证据, rel=depends-on]。
@@ -320,7 +320,7 @@
 ----
 :heading-capacity a aat:Heading ;
   aat:headline "运力规则" ;
-  aat:addressLabel "capacity-rule" ;
+  aat:addressLabel "capacity" ;
   aat:addressLabel "capacity-evidence" .
 
 :heading-delivery rel:depends-on :heading-capacity .
@@ -343,7 +343,8 @@
 
 * 标题节点数量为四个。
 * `= root` 创建标题节点。
-* `配送策略` 节点有 `aat:addressLabel "delivery-policy"`、`aat:addressLabel "delivery-policy-payload"`、`aat:addressLabel "rel-delivery-capacity"`、`aat:kind "policy"`、`aat:status "active"` 和 `aat:owner "ops"`。
+* `配送策略` 节点有 `aat:addressLabel "delivery"`、`aat:addressLabel "rel-delivery"`、`aat:role "policy"`、`aat:status "active"` 和 `aat:owner "ops"`。
+* `运力规则` 节点有 `aat:addressLabel "capacity"`、`aat:role "rule"` 和 `aat:status "active"`。
 * `运力规则` 节点自身 raw 不包含 `=== 我是3级标题`。
 * `root` 直接包含 `配送策略` 和 `运力规则`。
 * `运力规则` 直接包含 `我是3级标题`。
@@ -351,12 +352,17 @@
 * 四个标题节点的 `aat:documentOrder` 按 `root`、`配送策略`、`运力规则`、`我是3级标题` 连续递增。
 * `配送策略` 到 `运力规则` 生成 `rel:depends-on` 边。
 * xref `weight=0.8` 投影为边证据上的 `aat:weight "0.8"`。
-* xref `payload=rel-delivery-capacity` 投影为边证据上的 `aat:payloadSelector "rel-delivery-capacity"`。
-* `delivery-policy-payload` 通过 `for=delivery-policy` 绑定为 `配送策略` 节点 payload。
-* `rel-delivery-capacity` 通过 xref 的 `payload=rel-delivery-capacity` 绑定为 `depends-on` 边 payload。
+* xref `payload=rel-delivery` 投影为边证据上的 `aat:payloadSelector "rel-delivery"`。
+* `[.banana, for=delivery]` 表达节点 payload。
+* 节点 payload 通过 `for=delivery` 绑定为 `配送策略` 的 `aat:payload`。
+* 节点 payload 有 `aat:payloadKind "node"`、`aat:role "banana"`、`aat:forSelector "delivery"` 和 `aat:format "json"`。
+* 节点 payload 不要求 `aat:payloadId`。
+* `[#rel-delivery.pear]` 通过 xref 的 `payload=rel-delivery` 绑定为 `depends-on` 边 payload。
+* 边 payload 有 `aat:payloadKind "edge"`、`aat:payloadId "rel-delivery"`、`aat:role "pear"` 和 `aat:format "yaml"`。
+* payload format 来自 source block language。
 * payload raw 不展开为业务 RDF 图。
 * 第 8 行 paragraph 不创建结构节点。
-* 第 10 到 23 行 payload listing 不创建结构节点。
-* 第 25 到 39 行 xref payload listing 不创建结构节点。
+* 第 10 到 23 行节点 payload block 不创建结构节点。
+* 第 25 到 37 行边 payload block 不创建结构节点。
 * 本地非标题 target ID 作为所属标题的 `aat:addressLabel`，但该 target 不创建 listing、table、block 或 inline anchor 结构节点。
-* `kind`、`status`、`owner` 和 `weight` 使用直接 `aat:` 谓词，不生成属性资源。
+* `role`、`status`、`owner` 和 `weight` 使用直接 `aat:` 谓词，不生成属性资源。

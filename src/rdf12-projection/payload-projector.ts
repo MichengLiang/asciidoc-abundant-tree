@@ -1,6 +1,7 @@
 import type { AbundantDocument, AbundantNode, ListingNode } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
+import { findInnermostHeadingBySourceLine } from "./heading-ownership";
 import type { Rdf12LabelCatalog } from "./label-catalog";
 import { integerLiteral, stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
@@ -17,7 +18,7 @@ import {
 	sourceRelativePathOrFallback,
 } from "./source-location";
 import { iriTerm, type Rdf12IriTerm } from "./terms";
-import type { Rdf12XrefIndex } from "./xref-projector";
+import type { Rdf12XrefIndex, Rdf12XrefIndexEntry } from "./xref-projector";
 
 export type ProjectPayloadBlocksInput = {
 	readonly graph: Rdf12Graph;
@@ -33,34 +34,30 @@ export type ProjectPayloadBlocksInput = {
 type PayloadProjectorContext = ProjectPayloadBlocksInput & {
 	readonly ordinalAllocator: OrdinalAllocator;
 	readonly xrefPayloadSelectors: ReadonlySet<string>;
-	readonly payloadsBySelector: Map<string, PayloadRecord[]>;
+	readonly edgePayloadsBySelector: Map<string, Rdf12IriTerm[]>;
 };
 
-type PayloadKind = "node" | "xref";
+type PayloadKind = "node" | "edge";
 
-type PayloadRecord = {
-	readonly iri: Rdf12IriTerm;
-	readonly kind: PayloadKind;
-	readonly selector: string;
-	readonly forSelector?: string;
-};
+type NodePayloadMarker =
+	| { readonly kind: "selector"; readonly selector: string }
+	| { readonly kind: "source-owner" };
 
 export function projectPayloadBlocks(input: ProjectPayloadBlocksInput): void {
 	const context: PayloadProjectorContext = {
 		...input,
 		ordinalAllocator: createOrdinalAllocator(),
 		xrefPayloadSelectors: collectXrefPayloadSelectors(input.xrefIndex),
-		payloadsBySelector: new Map(),
+		edgePayloadsBySelector: new Map(),
 	};
 
 	for (const child of input.document.children) {
-		projectNodePayloads(context, child);
+		projectPayloads(context, child);
 	}
-	bindNodePayloads(context);
 	bindXrefPayloads(context);
 }
 
-function projectNodePayloads(
+function projectPayloads(
 	context: PayloadProjectorContext,
 	node: AbundantNode,
 ): void {
@@ -69,7 +66,7 @@ function projectNodePayloads(
 	}
 
 	for (const child of node.children ?? []) {
-		projectNodePayloads(context, child);
+		projectPayloads(context, child);
 	}
 }
 
@@ -77,13 +74,32 @@ function projectPayloadListing(
 	context: PayloadProjectorContext,
 	node: ListingNode,
 ): void {
-	const payloadKind = payloadKindForListing(context, node);
-	if (payloadKind === undefined || node.span === undefined) {
+	if (node.span === undefined) {
 		return;
 	}
-	const payloadId = node.ids[0];
-	if (payloadId === undefined) {
-		return;
+
+	const marker = nodePayloadMarkerFor(node);
+	if (marker !== undefined) {
+		const payload = createPayload(context, node, "node");
+		writeNodeBinding(context, payload, node, marker);
+	}
+
+	if (node.ids.some((id) => context.xrefPayloadSelectors.has(id))) {
+		const payload = createPayload(context, node, "edge");
+		for (const id of node.ids) {
+			addString(context.graph, payload, "payloadId", id);
+			addPayloadSelector(context, id, payload);
+		}
+	}
+}
+
+function createPayload(
+	context: PayloadProjectorContext,
+	node: ListingNode,
+	kind: PayloadKind,
+): Rdf12IriTerm {
+	if (node.span === undefined) {
+		throw new Error("payload resource requires a source span");
 	}
 
 	const ordinal = context.ordinalAllocator.next({
@@ -100,14 +116,10 @@ function projectPayloadListing(
 		}),
 	});
 
-	context.graph.add(
-		rdf12Triple(
-			payload,
-			iriTerm(`${namespaces.aat}payloadKind`),
-			stringLiteral(payloadKind === "xref" ? "edge" : "node"),
-		),
-	);
-	addString(context.graph, payload, "payloadId", payloadId);
+	addString(context.graph, payload, "payloadKind", kind);
+	for (const role of payloadRoles(node)) {
+		addString(context.graph, payload, "role", role);
+	}
 	const relativePath = sourceRelativePathOrFallback(
 		node.source,
 		context.relativePath,
@@ -123,48 +135,57 @@ function projectPayloadListing(
 	}
 	addOptionalLineSpan(context.graph, payload, "content", node.contentSpan);
 	addOptionalString(context.graph, payload, "raw", node.content);
-	addOptionalString(context.graph, payload, "format", dataFormatFor(node));
-	addOptionalString(
-		context.graph,
-		payload,
-		"forSelector",
-		forSelectorFor(node),
-	);
+	addOptionalString(context.graph, payload, "format", node.language);
 
-	for (const id of node.ids) {
-		addPayloadSelector(context, id, {
-			iri: payload,
-			kind: payloadKind,
-			selector: id,
-			...definedString("forSelector", forSelectorFor(node)),
-		});
-	}
+	return payload;
 }
 
-function bindNodePayloads(context: PayloadProjectorContext): void {
-	for (const entry of context.payloadsBySelector.values()) {
-		for (const payload of entry) {
-			if (payload.kind !== "node" || payload.forSelector === undefined) {
-				continue;
-			}
-			const result = bindSelector(context.labelCatalog, payload.forSelector);
-			if (result.status !== "bound") {
-				continue;
-			}
+function writeNodeBinding(
+	context: PayloadProjectorContext,
+	payload: Rdf12IriTerm,
+	node: ListingNode,
+	marker: NodePayloadMarker,
+): void {
+	if (marker.kind === "selector") {
+		addString(context.graph, payload, "forSelector", marker.selector);
+		const result = bindSelector(context.labelCatalog, marker.selector);
+		if (result.status === "bound") {
 			context.graph.add(
 				rdf12Triple(
 					result.target,
 					iriTerm(`${namespaces.aat}payload`),
-					payload.iri,
+					payload,
 				),
 			);
 		}
+		return;
 	}
+
+	const relativePath = sourceRelativePathOrFallback(
+		node.source,
+		context.relativePath,
+		context.document.mode,
+	);
+	if (relativePath === undefined || node.span === undefined) {
+		return;
+	}
+	const owner = findInnermostHeadingBySourceLine({
+		nodeIndex: context.nodeIndex,
+		relativePath,
+		line: node.span.startLine,
+	});
+	if (owner === undefined) {
+		return;
+	}
+
+	context.graph.add(
+		rdf12Triple(owner.iri, iriTerm(`${namespaces.aat}payload`), payload),
+	);
 }
 
 function bindXrefPayloads(context: PayloadProjectorContext): void {
 	for (const entry of context.xrefIndex.entries()) {
-		const payloadSelector = stringAttribute(entry.node.attributes, "payload");
+		const payloadSelector = stringAttribute(entry, "payload");
 		if (payloadSelector === undefined) {
 			continue;
 		}
@@ -178,32 +199,12 @@ function bindXrefPayloads(context: PayloadProjectorContext): void {
 	}
 }
 
-function payloadKindForListing(
-	context: PayloadProjectorContext,
-	node: ListingNode,
-): PayloadKind | undefined {
-	const roles = node.metadata?.flatMap((item) => item.roles ?? []) ?? [];
-	if (roles.includes("xref-payload")) {
-		return "xref";
-	}
-	if (roles.includes("payload")) {
-		return "node";
-	}
-	if (forSelectorFor(node) !== undefined) {
-		return "node";
-	}
-	if (node.ids.some((id) => context.xrefPayloadSelectors.has(id))) {
-		return "xref";
-	}
-	return undefined;
-}
-
 function collectXrefPayloadSelectors(
 	xrefIndex: Rdf12XrefIndex,
 ): ReadonlySet<string> {
 	const selectors = new Set<string>();
 	for (const entry of xrefIndex.entries()) {
-		const selector = stringAttribute(entry.node.attributes, "payload");
+		const selector = stringAttribute(entry, "payload");
 		if (selector !== undefined) {
 			selectors.add(selector);
 		}
@@ -211,66 +212,80 @@ function collectXrefPayloadSelectors(
 	return selectors;
 }
 
-function dataFormatFor(node: ListingNode): string | undefined {
+function nodePayloadMarkerFor(
+	node: ListingNode,
+): NodePayloadMarker | undefined {
 	for (const metadata of node.metadata ?? []) {
 		if (metadata.metadataKind !== "attrlist") {
 			continue;
 		}
-		const data = metadata.attributes?.data;
-		if (data !== undefined) {
-			return String(data);
-		}
-	}
-	return node.language;
-}
-
-function forSelectorFor(node: ListingNode): string | undefined {
-	for (const metadata of node.metadata ?? []) {
-		if (metadata.metadataKind !== "attrlist") {
+		const attributes = metadata.attributes;
+		if (attributes === undefined) {
 			continue;
 		}
-		const forSelector =
-			metadata.attributes?.forSelector ?? metadata.attributes?.for;
-		if (forSelector !== undefined) {
-			return String(forSelector);
+		const forSelector = markerValue(attributes.forSelector);
+		if (forSelector?.kind === "selector") {
+			return forSelector;
+		}
+		const forValue = markerValue(attributes.for);
+		if (forValue?.kind === "selector") {
+			return forValue;
+		}
+		if (
+			forSelector?.kind === "source-owner" ||
+			forValue?.kind === "source-owner"
+		) {
+			return { kind: "source-owner" };
 		}
 	}
 	return undefined;
 }
 
+function markerValue(
+	value: string | number | boolean | undefined,
+): NodePayloadMarker | undefined {
+	if (value === undefined) {
+		return undefined;
+	}
+	if (typeof value === "boolean") {
+		return value ? { kind: "source-owner" } : undefined;
+	}
+	const selector = String(value).trim();
+	return selector.length === 0
+		? { kind: "source-owner" }
+		: { kind: "selector", selector };
+}
+
+function payloadRoles(node: ListingNode): string[] {
+	return node.metadata?.flatMap((item) => item.roles ?? []) ?? [];
+}
+
 function addPayloadSelector(
 	context: PayloadProjectorContext,
 	selector: string,
-	payload: PayloadRecord,
+	payload: Rdf12IriTerm,
 ): void {
-	const payloads = context.payloadsBySelector.get(selector) ?? [];
+	const payloads = context.edgePayloadsBySelector.get(selector) ?? [];
+	if (payloads.some((existing) => existing.value === payload.value)) {
+		return;
+	}
 	payloads.push(payload);
-	context.payloadsBySelector.set(selector, payloads);
+	context.edgePayloadsBySelector.set(selector, payloads);
 }
 
 function uniquePayloadForSelector(
 	context: PayloadProjectorContext,
 	selector: string,
 ): Rdf12IriTerm | undefined {
-	const payloads = context.payloadsBySelector.get(selector) ?? [];
-	const xrefPayloads = payloads.filter((payload) => payload.kind === "xref");
-	return xrefPayloads.length === 1 ? xrefPayloads[0]?.iri : undefined;
-}
-
-function definedString<K extends string>(
-	key: K,
-	value: string | undefined,
-): { readonly [P in K]: string } | Record<string, never> {
-	return value === undefined
-		? {}
-		: ({ [key]: value } as { readonly [P in K]: string });
+	const payloads = context.edgePayloadsBySelector.get(selector) ?? [];
+	return payloads.length === 1 ? payloads[0] : undefined;
 }
 
 function stringAttribute(
-	attributes: Record<string, string | number | boolean> | undefined,
+	entry: Rdf12XrefIndexEntry,
 	name: string,
 ): string | undefined {
-	const value = attributes?.[name];
+	const value = entry.node.attributes?.[name];
 	return value === undefined ? undefined : String(value);
 }
 

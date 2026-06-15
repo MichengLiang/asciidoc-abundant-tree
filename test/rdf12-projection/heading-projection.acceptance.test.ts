@@ -47,13 +47,13 @@ describe("rdf12 heading projection target acceptance", () => {
 		);
 		expectTriple(
 			graph,
-			heading("heading-l41-o0"),
+			heading("heading-l39-o0"),
 			rdfTerm("type"),
 			aatTerm("Heading"),
 		);
 		expectTriple(
 			graph,
-			heading("heading-l46-o0"),
+			heading("heading-l44-o0"),
 			rdfTerm("type"),
 			aatTerm("Heading"),
 		);
@@ -63,8 +63,8 @@ describe("rdf12 heading projection target acceptance", () => {
 		const { graph, heading } = structuralPayloadProjection();
 		const root = heading("heading-l1-o0");
 		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l41-o0");
-		const nestedHeading = heading("heading-l46-o0");
+		const capacityRule = heading("heading-l39-o0");
+		const nestedHeading = heading("heading-l44-o0");
 
 		expectLiteralValue(graph, root, aatTerm("headline"), "root");
 		expectLiteralValue(graph, deliveryPolicy, aatTerm("headline"), "配送策略");
@@ -79,13 +79,19 @@ describe("rdf12 heading projection target acceptance", () => {
 			graph,
 			deliveryPolicy,
 			aatTerm("addressLabel"),
-			"delivery-policy",
+			"delivery",
+		);
+		expectLiteralValue(
+			graph,
+			deliveryPolicy,
+			aatTerm("addressLabel"),
+			"rel-delivery",
 		);
 		expectLiteralValue(
 			graph,
 			capacityRule,
 			aatTerm("addressLabel"),
-			"capacity-rule",
+			"capacity",
 		);
 		expectIntegerValue(graph, root, aatTerm("headingLevel"), 0);
 		expectIntegerValue(graph, deliveryPolicy, aatTerm("headingLevel"), 1);
@@ -150,13 +156,14 @@ describe("rdf12 heading projection target acceptance", () => {
 		const { graph, labelCatalog, heading } = structuralPayloadProjection();
 		const root = heading("heading-l1-o0");
 		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l41-o0");
-		const nestedHeading = heading("heading-l46-o0");
+		const capacityRule = heading("heading-l39-o0");
+		const nestedHeading = heading("heading-l44-o0");
 
 		expect(labelCatalog.owners("root")).toEqual([root]);
-		expect(labelCatalog.owners("delivery-policy")).toEqual([deliveryPolicy]);
+		expect(labelCatalog.owners("delivery")).toEqual([deliveryPolicy]);
 		expect(labelCatalog.owners("配送策略")).toEqual([deliveryPolicy]);
-		expect(labelCatalog.owners("capacity-rule")).toEqual([capacityRule]);
+		expect(labelCatalog.owners("rel-delivery")).toEqual([deliveryPolicy]);
+		expect(labelCatalog.owners("capacity")).toEqual([capacityRule]);
 		expect(labelCatalog.owners("运力规则")).toEqual([capacityRule]);
 		expect(labelCatalog.owners("_我是3级标题")).toEqual([nestedHeading]);
 		expect(labelCatalog.owners("我是3级标题")).toEqual([nestedHeading]);
@@ -166,12 +173,10 @@ describe("rdf12 heading projection target acceptance", () => {
 			"policy",
 			"active",
 			"ops",
-			"payload",
-			"xref-payload",
-			"delivery-policy-payload",
-			"rel-delivery-capacity",
+			"banana",
+			"pear",
 			deliveryPolicy.value,
-			`配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。`,
+			`配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。`,
 		]) {
 			expect(labelCatalog.owners(selector)).toEqual([]);
 		}
@@ -194,7 +199,7 @@ describe("rdf12 heading projection target acceptance", () => {
 	it("Batch 04 projects xref relation edge evidence and RDF 1.2 reifier", () => {
 		const { graph, heading } = structuralPayloadProjection();
 		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l41-o0");
+		const capacityRule = heading("heading-l39-o0");
 		const relation = rdf12Triple(
 			deliveryPolicy,
 			relTerm("depends-on"),
@@ -212,25 +217,20 @@ describe("rdf12 heading projection target acceptance", () => {
 		);
 		expectTriple(graph, xrefEdge, aatTerm("sourceHeading"), deliveryPolicy);
 		expectTriple(graph, xrefEdge, aatTerm("targetHeading"), capacityRule);
-		expectLiteralValue(
-			graph,
-			xrefEdge,
-			aatTerm("targetSelector"),
-			"capacity-rule",
-		);
+		expectLiteralValue(graph, xrefEdge, aatTerm("targetSelector"), "capacity");
 		expectLiteralValue(graph, xrefEdge, aatTerm("displayLabel"), "运力规则");
 		expectLiteralValue(graph, xrefEdge, aatTerm("rel"), "depends-on");
 		expectLiteralValue(
 			graph,
 			xrefEdge,
 			aatTerm("payloadSelector"),
-			"rel-delivery-capacity",
+			"rel-delivery",
 		);
 		expectLiteralValue(
 			graph,
 			xrefEdge,
 			aatTerm("raw"),
-			"xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]",
+			"xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]",
 		);
 	});
 
@@ -239,7 +239,7 @@ describe("rdf12 heading projection target acceptance", () => {
 		const deliveryPolicy = heading("heading-l5-o0");
 		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
 
-		expectLiteralValue(graph, deliveryPolicy, aatTerm("kind"), "policy");
+		expectLiteralValue(graph, deliveryPolicy, aatTerm("role"), "policy");
 		expectLiteralValue(graph, deliveryPolicy, aatTerm("status"), "active");
 		expectLiteralValue(graph, deliveryPolicy, aatTerm("owner"), "ops");
 		expectLiteralValue(graph, xrefEdge, aatTerm("weight"), "0.8");
@@ -249,18 +249,21 @@ describe("rdf12 heading projection target acceptance", () => {
 		const { graph, heading } = structuralPayloadProjection();
 		const deliveryPolicy = heading("heading-l5-o0");
 		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
-		const nodePayload = onlyPayloadById(graph, "delivery-policy-payload");
-		const edgePayload = onlyPayloadById(graph, "rel-delivery-capacity");
+		const nodePayload = onlyObjectIri(
+			graph,
+			deliveryPolicy,
+			aatTerm("payload"),
+		);
+		const edgePayload = onlyObjectIri(graph, xrefEdge, aatTerm("payload"));
 
 		expectTriple(graph, deliveryPolicy, aatTerm("payload"), nodePayload);
 		expectLiteralValue(graph, nodePayload, aatTerm("payloadKind"), "node");
-		expectLiteralValue(
-			graph,
-			nodePayload,
-			aatTerm("forSelector"),
-			"delivery-policy",
-		);
+		expectLiteralValue(graph, nodePayload, aatTerm("role"), "banana");
+		expectLiteralValue(graph, nodePayload, aatTerm("forSelector"), "delivery");
 		expectLiteralValue(graph, nodePayload, aatTerm("format"), "json");
+		expect(
+			graph.match({ subject: nodePayload, predicate: aatTerm("payloadId") }),
+		).toHaveLength(0);
 		expectLiteralValue(
 			graph,
 			nodePayload,
@@ -278,11 +281,13 @@ describe("rdf12 heading projection target acceptance", () => {
 		);
 		expectTriple(graph, xrefEdge, aatTerm("payload"), edgePayload);
 		expectLiteralValue(graph, edgePayload, aatTerm("payloadKind"), "edge");
+		expectLiteralValue(graph, edgePayload, aatTerm("role"), "pear");
+		expectLiteralValue(graph, edgePayload, aatTerm("format"), "yaml");
 		expectLiteralValue(
 			graph,
 			edgePayload,
 			aatTerm("payloadId"),
-			"rel-delivery-capacity",
+			"rel-delivery",
 		);
 	});
 
@@ -414,16 +419,18 @@ function onlyResourceOfType(
 	return resources[0] ?? termIri("");
 }
 
-function onlyPayloadById(graph: Rdf12Graph, payloadId: string): Rdf12IriTerm {
-	const payloads = graph
-		.match({
-			predicate: aatTerm("payloadId"),
-			object: stringLiteral(payloadId),
-		})
-		.map((triple) => triple.subject);
+function onlyObjectIri(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicate: Rdf12IriTerm,
+): Rdf12IriTerm {
+	const objects = graph
+		.match({ subject, predicate })
+		.map((triple) => triple.object)
+		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
 
-	expect(payloads).toHaveLength(1);
-	return payloads[0] ?? termIri("");
+	expect(objects).toHaveLength(1);
+	return objects[0] ?? termIri("");
 }
 
 const payloadInternalFieldPredicates = [
@@ -486,7 +493,7 @@ function isInsidePayloadSourceRange(
 
 	return [
 		{ start: 10, end: 23 },
-		{ start: 25, end: 39 },
+		{ start: 25, end: 37 },
 	].some(
 		(range) =>
 			Number(startLine) >= range.start && Number(startLine) <= range.end,

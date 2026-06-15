@@ -47,12 +47,13 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			assertRdf12GraphsEquivalent(result.graph, parsed),
 		).not.toThrow();
 		expectResourceTypeCount(parsed, aatTerm("Heading"), 4);
-		expectHeadingByAddressLabel(parsed, "delivery-policy", "配送策略", 5, 40);
-		expectHeadingByHeadline(parsed, "运力规则", 41, 45);
+		expectHeadingByAddressLabel(parsed, "delivery", "配送策略", 5, 38);
+		expectHeadingByAddressLabel(parsed, "rel-delivery", "配送策略", 5, 38);
+		expectHeadingByHeadline(parsed, "运力规则", 39, 43);
 		expectHeadingRaw(
 			parsed,
-			"capacity-rule",
-			`[#capacity-rule.section, kind=rule, status=active]
+			"capacity",
+			`[#capacity.rule, status=active]
 == 运力规则
 
 运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
@@ -61,7 +62,7 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		);
 		expectDirectChildren(parsed, heading("heading-l1-o0"), [
 			heading("heading-l5-o0"),
-			heading("heading-l41-o0"),
+			heading("heading-l39-o0"),
 		]);
 		expectHeadlinesByDocumentOrder(parsed, [
 			"root",
@@ -148,8 +149,12 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		if (edge === undefined) {
 			throw new Error("expected delivery policy xref edge");
 		}
-		const nodePayload = onlyPayloadById(graph, "delivery-policy-payload");
-		const edgePayload = onlyPayloadById(graph, "rel-delivery-capacity");
+		const nodePayload = onlyObjectIri(
+			graph,
+			deliveryPolicy,
+			aatTerm("payload"),
+		);
+		const edgePayload = onlyObjectIri(graph, edge, aatTerm("payload"));
 
 		expectTriple(graph, deliveryPolicy, aatTerm("payload"), nodePayload);
 		expectTriple(graph, edge, aatTerm("payload"), edgePayload);
@@ -162,17 +167,29 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			aatTerm("payloadKind"),
 			stringLiteral("node"),
 		);
+		expectTriple(graph, nodePayload, aatTerm("role"), stringLiteral("banana"));
+		expectTriple(
+			graph,
+			nodePayload,
+			aatTerm("forSelector"),
+			stringLiteral("delivery"),
+		);
+		expect(
+			graph.match({ subject: nodePayload, predicate: aatTerm("payloadId") }),
+		).toHaveLength(0);
 		expectTriple(
 			graph,
 			edgePayload,
 			aatTerm("payloadKind"),
 			stringLiteral("edge"),
 		);
+		expectTriple(graph, edgePayload, aatTerm("role"), stringLiteral("pear"));
+		expectTriple(graph, edgePayload, aatTerm("format"), stringLiteral("yaml"));
 		expectTriple(
 			graph,
 			edgePayload,
 			aatTerm("payloadId"),
-			stringLiteral("rel-delivery-capacity"),
+			stringLiteral("rel-delivery"),
 		);
 	});
 
@@ -190,7 +207,7 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectTriple(
 			graph,
 			deliveryPolicy,
-			aatTerm("kind"),
+			aatTerm("role"),
 			stringLiteral("policy"),
 		);
 		expectTriple(
@@ -418,14 +435,16 @@ function transitiveHeadingChildren(
 	return result;
 }
 
-function onlyPayloadById(graph: Rdf12Graph, payloadId: string): Rdf12IriTerm {
-	const payloads = graph
-		.match({
-			predicate: aatTerm("payloadId"),
-			object: stringLiteral(payloadId),
-		})
-		.map((triple) => triple.subject);
+function onlyObjectIri(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicate: Rdf12IriTerm,
+): Rdf12IriTerm {
+	const objects = graph
+		.match({ subject, predicate })
+		.map((triple) => triple.object)
+		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
 
-	expect(payloads).toHaveLength(1);
-	return payloads[0] ?? termIri("");
+	expect(objects).toHaveLength(1);
+	return objects[0] ?? termIri("");
 }

@@ -13,7 +13,7 @@
 本场景卡受 xref:qr-visible-audible[可见可听优先规则, rel=constrains] 约束。
 本场景卡还受 xref:vr-quick-readable-silhouette[快速可读剪影规则, rel=constrains] 约束。
 
-[#card-riverbank-rabbit-payload.payload, for=card-riverbank-rabbit, data=json]
+[.scene-payload, for=card-riverbank-rabbit]
 [source,json]
 ----
 {
@@ -33,7 +33,7 @@
 本选择压缩 xref:event-rabbit-appears[事件：白兔出现, rel=compresses] 为一个镜头触发。
 本选择重排 xref:src-ch1-rabbit[白兔看表, rel=reorders] 的叙述重点。
 
-[#choice-externalize-curiosity-payload.payload, for=choice-externalize-curiosity, data=yaml]
+[.choice-payload, for=choice-externalize-curiosity]
 [source,yaml]
 ----
 rationale: keep the opening readable without narration

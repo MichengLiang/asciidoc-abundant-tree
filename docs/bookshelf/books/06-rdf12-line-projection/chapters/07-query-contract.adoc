@@ -9,7 +9,7 @@
 ----
 SELECT ?heading ?headline ?path ?start ?end WHERE {
   ?heading a aat:Heading ;
-           aat:addressLabel "delivery-policy" ;
+           aat:addressLabel "delivery" ;
            aat:headline ?headline ;
            aat:relativePath ?path ;
            aat:startLine ?start ;
@@ -51,19 +51,19 @@ headline 可以重复。该查询可以返回多个标题节点。
 [source,sparql]
 ----
 SELECT ?raw WHERE {
-  ?heading aat:addressLabel "capacity-rule" ;
+  ?heading aat:addressLabel "capacity" ;
            aat:raw ?raw .
 }
 ----
 
-该查询返回 `capacity-rule` 标题节点自身切片 raw。子标题 raw 通过递归结构查询取得。
+该查询返回 `capacity` 标题节点自身切片 raw。子标题 raw 通过递归结构查询取得。
 
 === 读取直接子标题
 
 [source,sparql]
 ----
 SELECT ?child ?headline ?childOrder ?start ?end WHERE {
-  ?parent aat:addressLabel "capacity-rule" .
+  ?parent aat:addressLabel "capacity" .
   ?parent aat:containsDirectly ?child .
   ?child aat:headline ?headline ;
          aat:childOrder ?childOrder ;
@@ -78,7 +78,7 @@ ORDER BY ?childOrder
 [source,sparql]
 ----
 SELECT ?descendant ?headline ?raw WHERE {
-  ?root aat:addressLabel "capacity-rule" .
+  ?root aat:addressLabel "capacity" .
   ?root aat:containsDirectly+ ?descendant .
   ?descendant aat:headline ?headline ;
               aat:raw ?raw .
@@ -106,7 +106,7 @@ ORDER BY ?documentOrder
 [source,sparql]
 ----
 SELECT ?edge ?predicate ?target ?targetHeadline ?weight WHERE {
-  ?source aat:addressLabel "delivery-policy" .
+  ?source aat:addressLabel "delivery" .
   ?edge a aat:XrefEdge ;
         aat:sourceHeading ?source ;
         aat:targetHeading ?target ;
@@ -152,13 +152,16 @@ SELECT ?edge ?selector ?candidate WHERE {
 
 [source,sparql]
 ----
-SELECT ?payloadRaw ?format ?start ?end WHERE {
-  ?source aat:addressLabel "delivery-policy" .
-  ?target aat:addressLabel "capacity-rule" .
+SELECT ?payload ?selector ?role ?payloadRaw ?format ?start ?end WHERE {
+  ?source aat:addressLabel "delivery" .
+  ?target aat:addressLabel "capacity" .
   ?edge a aat:XrefEdge ;
         rdf:reifies <<( ?source rel:depends-on ?target )>> ;
+        aat:payloadSelector ?selector ;
         aat:payload ?payload .
-  ?payload aat:format ?format ;
+  ?payload aat:payloadKind "edge" ;
+           aat:role ?role ;
+           aat:format ?format ;
            aat:raw ?payloadRaw ;
            aat:startLine ?start ;
            aat:endLine ?end .
@@ -171,7 +174,7 @@ SELECT ?payloadRaw ?format ?start ?end WHERE {
 ----
 SELECT ?heading ?headline ?start ?end WHERE {
   ?heading a aat:Heading ;
-           aat:kind "policy" ;
+           aat:role "policy" ;
            aat:status "active" ;
            aat:headline ?headline ;
            aat:startLine ?start ;
@@ -185,14 +188,40 @@ SELECT ?heading ?headline ?start ?end WHERE {
 
 [source,sparql]
 ----
-SELECT ?payloadRaw ?format ?start ?end WHERE {
-  ?heading aat:addressLabel "delivery-policy" ;
+SELECT ?payload ?role ?payloadRaw ?format ?start ?end WHERE {
+  ?heading aat:addressLabel "delivery" ;
            aat:payload ?payload .
   ?payload aat:payloadKind "node" ;
+           aat:role ?role ;
            aat:format ?format ;
            aat:raw ?payloadRaw ;
            aat:startLine ?start ;
            aat:endLine ?end .
+}
+----
+
+=== 按 Payload Role 查找载荷
+
+payload role 是作者与下游消费者约定的 schema 或 model label。消费者可以按 role 选择需要解析的 payload raw。
+
+[source,sparql]
+----
+SELECT ?heading ?payload ?raw WHERE {
+  ?heading aat:payload ?payload .
+  ?payload aat:payloadKind "node" ;
+           aat:role "banana" ;
+           aat:raw ?raw .
+}
+----
+
+[source,sparql]
+----
+SELECT ?edge ?payload ?raw WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:payload ?payload .
+  ?payload aat:payloadKind "edge" ;
+           aat:role "pear" ;
+           aat:raw ?raw .
 }
 ----
 
