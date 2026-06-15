@@ -1,0 +1,32 @@
+= 基础 RDF 投影示例
+
+这个示例展示 RDF12 heading projection 的基础查询面：标题树、地址标签、直接属性、交叉引用边证据和本地 target 归属。
+
+[#order-flow.process, status=draft, owner=ops-docs]
+== 订单处理流程
+
+订单处理流程先执行 xref:stock-check[库存校验, rel=requires, weight=0.7]，然后把结果写入交接说明。
+
+[#stock-check.rule, status=active]
+== 库存校验
+
+库存校验规则描述订单进入履约前需要读取的库存快照。
+
+[#stock-query-example]
+[source,sql]
+----
+SELECT sku, available_qty
+FROM inventory_snapshot
+WHERE order_id = :order_id;
+----
+
+=== 缺货处理
+
+缺货处理标题使用生成 address label 进入 heading label space。
+
+[#handoff-note.note, status=active]
+== 交接说明
+
+交接说明用 xref:stock-query-example[库存查询示例, rel=documents] 指向库存校验章节里的 listing target。
+
+交接说明也用 xref:stock-check[] 展示默认 `aat:references` 关系。

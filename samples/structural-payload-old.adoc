@@ -1,0 +1,48 @@
+= root
+
+一段摘要
+
+[#delivery-policy.section, kind=policy, status=active, owner=ops]
+== 配送策略
+
+配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+
+[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[source,json]
+----
+{
+  "owner": {
+    "team": "ops",
+    "fallback": "manual-review"
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["weather", "capacity"]
+  }
+}
+----
+
+[#rel-delivery-capacity.xref-payload, data=json]
+[source,json]
+----
+{
+  "reason": {
+    "type": "risk-control",
+    "signals": ["weather", "capacity"],
+    "description": "配送策略需要读取运力规则来决定是否降级。"
+  },
+  "edge": {
+    "direction": "outbound",
+    "required": true
+  }
+}
+----
+
+[#capacity-rule.section, kind=rule, status=active]
+== 运力规则
+
+运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
+
+=== 我是3级标题
+
+123
