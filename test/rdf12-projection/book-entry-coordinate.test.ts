@@ -216,11 +216,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		const projection = rdf12(bookEntryPayloadDocument(), {
 			documentRoot: fixtureRoot,
 		});
-		const payload = resourceByLiteral(
-			projection.graph,
-			aatTerm("payloadId"),
-			"chapter-payload",
-		);
+		const heading = headingByHeadline(projection.graph, "Chapter");
+		const payload = objectIri(projection.graph, heading, aatTerm("payload"));
 
 		expectLiteralValue(
 			projection.graph,
@@ -378,10 +375,10 @@ function bookEntryPayloadDocument(): AbundantDocument {
 							{
 								kind: "metadata",
 								metadataKind: "attrlist",
-								raw: "[role=payload]",
+								raw: "[.banana, for=chapter]",
 								line: 5,
-								roles: ["payload"],
-								attributes: { role: "payload" },
+								roles: ["banana"],
+								attributes: { for: "chapter" },
 							},
 						],
 						content: "payload",
@@ -476,23 +473,6 @@ function xrefEdgeByRaw(graph: Rdf12Graph, raw: string): Rdf12IriTerm {
 
 	expect(edges).toHaveLength(1);
 	return edges[0] ?? termIri("");
-}
-
-function resourceByLiteral(
-	graph: Rdf12Graph,
-	predicate: Rdf12IriTerm,
-	value: string,
-): Rdf12IriTerm {
-	const resources = graph
-		.match({ predicate })
-		.filter(
-			(triple) =>
-				triple.object.termType === "literal" && triple.object.value === value,
-		)
-		.map((triple) => triple.subject);
-
-	expect(resources).toHaveLength(1);
-	return resources[0] ?? termIri("");
 }
 
 function objectIri(

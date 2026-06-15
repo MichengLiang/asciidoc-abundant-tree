@@ -151,6 +151,11 @@ function parseAttrList(raw: string): {
 			continue;
 		}
 
+		if (part === "for" || part === "forSelector") {
+			attributes[part] = true;
+			continue;
+		}
+
 		if (index === 1) {
 			attributes.language = part;
 			continue;
@@ -164,6 +169,9 @@ function parseAttrList(raw: string): {
 			if (role[1]) {
 				roles.push(role[1]);
 			}
+		}
+		if (!idMatch && !part.includes(".")) {
+			attributes[part] = true;
 		}
 	}
 

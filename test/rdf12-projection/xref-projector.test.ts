@@ -145,6 +145,148 @@ describe("rdf12 xref edge projection", () => {
 		).toHaveLength(0);
 	});
 
+	it("projects xrefs to local non-heading targets as owning heading relation edges", () => {
+		const projection = projectAbundantDocumentToRdf12(referenceDocument(), {
+			documentRoot: projectRoot,
+		});
+		const core = heading(projection.documentIri, "heading-l25-o0");
+		const troubleshooting = heading(projection.documentIri, "heading-l40-o0");
+		const conclusion = heading(projection.documentIri, "heading-l58-o0");
+		const engineFromConclusion = edgeForSelector(
+			projection.graph,
+			"engine-code",
+			"#xref-edge-l63-c11-o0",
+		);
+		const warningFromConclusion = edgeForSelector(
+			projection.graph,
+			"warning-text",
+			"#xref-edge-l64-c22-o0",
+		);
+		const perfTableSelfEdge = edgeForSelector(
+			projection.graph,
+			"perf-table",
+			"#xref-edge-l54-c4-o0",
+		);
+
+		expectTriple(
+			projection.graph,
+			engineFromConclusion,
+			"sourceHeading",
+			conclusion,
+		);
+		expectTriple(projection.graph, engineFromConclusion, "targetHeading", core);
+		expectStringTriple(
+			projection.graph,
+			engineFromConclusion,
+			"officialResolvedType",
+			"listing",
+		);
+		expectTripleTerm(
+			projection.graph,
+			engineFromConclusion,
+			rdf12Triple(conclusion, iriTerm(`${namespaces.aat}references`), core),
+		);
+
+		expectTriple(
+			projection.graph,
+			warningFromConclusion,
+			"sourceHeading",
+			conclusion,
+		);
+		expectTriple(
+			projection.graph,
+			warningFromConclusion,
+			"targetHeading",
+			troubleshooting,
+		);
+		expectStringTriple(
+			projection.graph,
+			warningFromConclusion,
+			"officialResolvedType",
+			"inline-anchor",
+		);
+
+		expectTriple(
+			projection.graph,
+			perfTableSelfEdge,
+			"sourceHeading",
+			troubleshooting,
+		);
+		expectTriple(
+			projection.graph,
+			perfTableSelfEdge,
+			"targetHeading",
+			troubleshooting,
+		);
+		expectStringTriple(
+			projection.graph,
+			perfTableSelfEdge,
+			"officialResolvedType",
+			"table",
+		);
+	});
+
+	it("projects paragraph and block target xrefs to the containing heading", () => {
+		for (const [fixture, selector, edgeFragment] of [
+			["paragraph-id-audit.adoc", "para-target", "#xref-edge-l8-c5-o0"],
+			["block-anchor-audit.adoc", "block-para", "#xref-edge-l9-c25-o0"],
+		] as const) {
+			const projection = projectAbundantDocumentToRdf12(
+				parseAbundantTree({
+					sourcePath: join(projectRoot, "test/fixtures", fixture),
+				}),
+				{ documentRoot: projectRoot },
+			);
+			const edge = edgeForSelector(projection.graph, selector, edgeFragment);
+			const section = heading(projection.documentIri, "heading-l3-o0");
+
+			expectTriple(projection.graph, edge, "sourceHeading", section);
+			expectTriple(projection.graph, edge, "targetHeading", section);
+			expectStringTriple(projection.graph, edge, "targetSelector", selector);
+			expectStringTriple(
+				projection.graph,
+				edge,
+				"officialResolvedType",
+				"block",
+			);
+			expectTripleTerm(
+				projection.graph,
+				edge,
+				rdf12Triple(section, iriTerm(`${namespaces.aat}references`), section),
+			);
+		}
+	});
+
+	it("does not use xref payload selectors as target bindings", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			payloadSelectorOnlyDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+		const edge = onlyXrefEdge(projection.graph);
+
+		expectStringTriple(
+			projection.graph,
+			edge,
+			"targetSelector",
+			"missing-target",
+		);
+		expectStringTriple(projection.graph, edge, "payloadSelector", "delivery");
+		expect(
+			projection.graph.match({
+				subject: iriTerm(edge),
+				predicate: iriTerm(`${namespaces.aat}targetHeading`),
+			}),
+		).toHaveLength(0);
+		expect(
+			projection.graph.match({
+				subject: iriTerm(edge),
+				predicate: iriTerm(`${namespaces.rdf}reifies`),
+			}),
+		).toHaveLength(0);
+	});
+
 	it("keeps unresolved selectors as edge evidence without relation triples", () => {
 		const projection = projectAbundantDocumentToRdf12(unresolvedDocument(), {
 			documentRoot: projectRoot,
@@ -493,6 +635,20 @@ function hasSelector(
 	);
 }
 
+function edgeForSelector(
+	graph: Rdf12Graph,
+	selector: string,
+	localIdFragment: string,
+): string {
+	const edge = resourcesOfType(graph, `${namespaces.aat}XrefEdge`).find(
+		(iri) => iri.includes(localIdFragment) && hasSelector(graph, iri, selector),
+	);
+	if (edge === undefined) {
+		throw new Error(`expected xref edge for selector ${selector}`);
+	}
+	return edge;
+}
+
 function onlyXrefEdge(graph: Rdf12Graph): string {
 	const [edge] = resourcesOfType(graph, `${namespaces.aat}XrefEdge`);
 	if (edge === undefined) {
@@ -832,6 +988,44 @@ function invalidRelDocument(): AbundantDocument {
 								sourceSpan: {
 									start: { line: 4, column: 1 },
 									end: { line: 4, column: 36 },
+								},
+							},
+						],
+					},
+				],
+				4,
+			),
+		],
+	};
+}
+
+function payloadSelectorOnlyDocument(): AbundantDocument {
+	return {
+		...baseDocument(),
+		children: [
+			sectionNode(
+				1,
+				"delivery",
+				"Delivery",
+				[
+					{
+						kind: "paragraph",
+						text: "Payload selector must not bind target.",
+						source: { span: { startLine: 4, endLine: 4 } },
+						children: [
+							{
+								kind: "xref",
+								syntax: "macro",
+								raw: "xref:missing-target[Missing, payload=delivery]",
+								target: "missing-target",
+								label: "Missing",
+								containingSectionId: "delivery",
+								attributes: {
+									payload: "delivery",
+								},
+								sourceSpan: {
+									start: { line: 4, column: 1 },
+									end: { line: 4, column: 47 },
 								},
 							},
 						],

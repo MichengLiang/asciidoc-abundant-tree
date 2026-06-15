@@ -1,10 +1,11 @@
 import type { AbundantDocument, XrefOccurrenceNode } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12TermKey, rdf12Triple } from "./graph";
+import { findInnermostHeadingBySourceLine } from "./heading-ownership";
 import type { Rdf12LabelCatalog } from "./label-catalog";
 import { stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
-import type { Rdf12NodeIndex, Rdf12NodeIndexEntry } from "./node-index";
+import type { Rdf12NodeIndex } from "./node-index";
 import type { NormalizedRdf12Options } from "./options";
 import { addReifierTriple } from "./reifier";
 import { mapRelationPredicate } from "./relation-predicate";
@@ -310,12 +311,11 @@ function sourceHeadingForXref(
 	}
 
 	const line = xref.sourceSpan.start.line;
-	const candidates = context.nodeIndex
-		.entries()
-		.filter((entry) => containsLine(entry, { line, relativePath }))
-		.toSorted(compareInnermostHeading);
-
-	return candidates[0]?.iri;
+	return findInnermostHeadingBySourceLine({
+		nodeIndex: context.nodeIndex,
+		relativePath,
+		line,
+	})?.iri;
 }
 
 function sourceHeadingBySelector(
@@ -336,44 +336,6 @@ function sourceHeadingBySelector(
 	});
 
 	return candidates.length === 1 ? candidates[0]?.iri : undefined;
-}
-
-function containsLine(
-	entry: Rdf12NodeIndexEntry,
-	occurrence: { readonly line: number; readonly relativePath: string },
-): boolean {
-	return (
-		entry.relativePath === occurrence.relativePath &&
-		entry.sourceStartLine !== undefined &&
-		entry.sourceEndLine !== undefined &&
-		entry.sourceStartLine <= occurrence.line &&
-		occurrence.line <= entry.sourceEndLine
-	);
-}
-
-function compareInnermostHeading(
-	left: Rdf12NodeIndexEntry,
-	right: Rdf12NodeIndexEntry,
-): number {
-	const leftSpan = sourceSpanLength(left);
-	const rightSpan = sourceSpanLength(right);
-	if (leftSpan !== rightSpan) {
-		return leftSpan - rightSpan;
-	}
-
-	return sourceStartLine(right) - sourceStartLine(left);
-}
-
-function sourceSpanLength(entry: Rdf12NodeIndexEntry): number {
-	return sourceEndLine(entry) - sourceStartLine(entry);
-}
-
-function sourceStartLine(entry: Rdf12NodeIndexEntry): number {
-	return entry.sourceStartLine ?? entry.startLine;
-}
-
-function sourceEndLine(entry: Rdf12NodeIndexEntry): number {
-	return entry.sourceEndLine ?? entry.endLine;
 }
 
 function writeTargetBinding(

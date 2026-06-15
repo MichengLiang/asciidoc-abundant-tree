@@ -90,16 +90,57 @@ describe("rdf12 heading label space", () => {
 		}
 	});
 
-	it("excludes listing ids, table ids, inline anchors, xref display text, roles, and payload ids from selector labels", () => {
+	it("projects local non-heading target ids as owning heading address labels", () => {
 		const projection = referenceProjection();
 
-		for (const value of [
+		const [engineCodeOwner] = projection.labelCatalog.owners("engine-code");
+		const [perfTableOwner] = projection.labelCatalog.owners("perf-table");
+		const [warningTextOwner] = projection.labelCatalog.owners("warning-text");
+
+		expect(engineCodeOwner?.value).toContain("#heading-l25-o0");
+		expect(perfTableOwner?.value).toContain("#heading-l40-o0");
+		expect(warningTextOwner?.value).toContain("#heading-l40-o0");
+		expectLiteralValue(
+			projection.graph,
+			engineCodeOwner ?? iriTerm("urn:missing"),
+			aatTerm("addressLabel"),
 			"engine-code",
+		);
+		expectLiteralValue(
+			projection.graph,
+			perfTableOwner ?? iriTerm("urn:missing"),
+			aatTerm("addressLabel"),
 			"perf-table",
+		);
+		expectLiteralValue(
+			projection.graph,
+			warningTextOwner ?? iriTerm("urn:missing"),
+			aatTerm("addressLabel"),
 			"warning-text",
-			"代码清单 3-1",
-			"重力井的危险性",
-		]) {
+		);
+
+		const payloadProjection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({
+				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
+			}),
+			{ documentRoot: projectRoot },
+		);
+		const [relDeliveryOwner] =
+			payloadProjection.labelCatalog.owners("rel-delivery");
+
+		expect(relDeliveryOwner?.value).toContain("#heading-l5-o0");
+		expectLiteralValue(
+			payloadProjection.graph,
+			relDeliveryOwner ?? iriTerm("urn:missing"),
+			aatTerm("addressLabel"),
+			"rel-delivery",
+		);
+	});
+
+	it("keeps non-address surfaces out of selector labels", () => {
+		const projection = referenceProjection();
+
+		for (const value of ["代码清单 3-1", "重力井的危险性"]) {
 			expect(projection.labelCatalog.owners(value)).toEqual([]);
 		}
 
@@ -110,13 +151,9 @@ describe("rdf12 heading label space", () => {
 			{ documentRoot: projectRoot },
 		);
 
-		expect(payloadProjection.labelCatalog.owners("payload")).toEqual([]);
-		expect(
-			payloadProjection.labelCatalog.owners("delivery-policy-payload"),
-		).toEqual([]);
-		expect(
-			payloadProjection.labelCatalog.owners("rel-delivery-capacity"),
-		).toEqual([]);
+		expect(payloadProjection.labelCatalog.owners("policy")).toEqual([]);
+		expect(payloadProjection.labelCatalog.owners("banana")).toEqual([]);
+		expect(payloadProjection.labelCatalog.owners("pear")).toEqual([]);
 	});
 
 	it("does not use label values in heading IRIs", () => {
@@ -126,8 +163,8 @@ describe("rdf12 heading label space", () => {
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const deliveryPolicy = projection.labelCatalog.owners("delivery-policy");
-		const capacityRule = projection.labelCatalog.owners("capacity-rule");
+		const deliveryPolicy = projection.labelCatalog.owners("delivery");
+		const capacityRule = projection.labelCatalog.owners("capacity");
 		const nestedGenerated = projection.labelCatalog.owners("_我是3级标题");
 
 		expect(deliveryPolicy).toEqual([expect.any(Object)]);
@@ -139,8 +176,8 @@ describe("rdf12 heading label space", () => {
 			...nestedGenerated,
 		]) {
 			expect(owner.value).toContain("#heading-l");
-			expect(owner.value).not.toContain("delivery-policy");
-			expect(owner.value).not.toContain("capacity-rule");
+			expect(owner.value).not.toContain("delivery");
+			expect(owner.value).not.toContain("capacity");
 			expect(owner.value).not.toContain("我是3级标题");
 		}
 	});

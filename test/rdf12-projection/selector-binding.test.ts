@@ -41,28 +41,60 @@ describe("rdf12 selector binding", () => {
 		}
 	});
 
-	it("does not bind listing ids, table ids, inline anchor ids, roles, payload ids, raw text, or heading IRIs", () => {
+	it("binds local non-heading target ids to their owning heading", () => {
 		const reference = referenceProjection();
+
+		for (const [selector, headingLocalId] of [
+			["engine-code", "#heading-l25-o0"],
+			["perf-table", "#heading-l40-o0"],
+			["warning-text", "#heading-l40-o0"],
+		] as const) {
+			const result = bindSelector(reference.labelCatalog, selector);
+
+			expect(result.status).toBe("bound");
+			if (result.status === "bound") {
+				expect(result.target.value).toContain(headingLocalId);
+			}
+		}
+	});
+
+	it("binds paragraph and block target ids to their containing heading", () => {
+		for (const [fixture, selector] of [
+			["paragraph-id-audit.adoc", "para-target"],
+			["block-anchor-audit.adoc", "block-para"],
+		] as const) {
+			const projection = projectAbundantDocumentToRdf12(
+				parseAbundantTree({
+					sourcePath: join(projectRoot, "test/fixtures", fixture),
+				}),
+				{ documentRoot: projectRoot },
+			);
+			const result = bindSelector(projection.labelCatalog, selector);
+
+			expect(result.status).toBe("bound");
+			if (result.status === "bound") {
+				expect(result.target.value).toContain("#heading-l3-o0");
+			}
+		}
+	});
+
+	it("keeps non-address surfaces out of selector binding", () => {
 		const payloadProjection = projectAbundantDocumentToRdf12(
 			parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const [deliveryHeading] =
-			payloadProjection.labelCatalog.owners("delivery-policy");
+		const [deliveryHeading] = payloadProjection.labelCatalog.owners("delivery");
 
 		for (const [projection, selector] of [
-			[reference, "engine-code"],
-			[reference, "perf-table"],
-			[reference, "warning-text"],
 			[payloadProjection, "section"],
-			[payloadProjection, "payload"],
-			[payloadProjection, "delivery-policy-payload"],
-			[payloadProjection, "rel-delivery-capacity"],
+			[payloadProjection, "policy"],
+			[payloadProjection, "banana"],
+			[payloadProjection, "pear"],
 			[
 				payloadProjection,
-				"配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。",
+				"配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。",
 			],
 			[payloadProjection, deliveryHeading?.value ?? ""],
 		] as const) {
@@ -110,24 +142,32 @@ describe("rdf12 selector binding", () => {
 		]);
 	});
 
-	it("does not use TargetNode catalog supplementation as selector labels", () => {
-		const document = targetSupplementDocument();
+	it("keeps local target aliases ambiguous when they belong to multiple headings", () => {
+		const document = ambiguousTargetAliasDocument();
 		const projection = projectAbundantDocumentToRdf12(document, {
 			documentRoot: projectRoot,
 		});
-		const result = bindSelector(projection.labelCatalog, "supplemented-id");
+		const result = bindSelector(projection.labelCatalog, "shared");
 
-		expect(result).toEqual({
-			status: "unresolved",
-			selector: "supplemented-id",
-			selectorLiteral: "supplemented-id",
+		expect(result.status).toBe("ambiguous");
+		if (result.status === "ambiguous") {
+			expect(result.candidates.map((candidate) => candidate.value)).toEqual([
+				expect.stringContaining("#heading-l1-o0"),
+				expect.stringContaining("#heading-l5-o0"),
+			]);
+		}
+	});
+
+	it("deduplicates repeated local target aliases within one heading", () => {
+		const projection = projectAbundantDocumentToRdf12(repeatedAliasDocument(), {
+			documentRoot: projectRoot,
 		});
-		expect(
-			projection.graph
-				.toArray()
-				.map((triple) => triple.subject.value)
-				.some((subject) => subject.includes("#target")),
-		).toBe(false);
+		const result = bindSelector(projection.labelCatalog, "shared");
+
+		expect(result.status).toBe("bound");
+		if (result.status === "bound") {
+			expect(result.target.value).toContain("#heading-l1-o0");
+		}
 	});
 
 	it("does not bind a selector from xref display labels", () => {
@@ -220,7 +260,7 @@ function duplicateDocument(): AbundantDocument {
 	};
 }
 
-function targetSupplementDocument(): AbundantDocument {
+function ambiguousTargetAliasDocument(): AbundantDocument {
 	return {
 		kind: "document",
 		sourcePath: referencePath,
@@ -230,26 +270,112 @@ function targetSupplementDocument(): AbundantDocument {
 			{
 				kind: "section",
 				level: 1,
-				ids: [],
-				title: "Supplemented",
-				idOrigin: "unknown",
-				span: { startLine: 10, endLine: 12 },
+				ids: ["shared"],
+				title: "First",
+				idOrigin: "source",
+				span: { startLine: 1, endLine: 4 },
+				metadata: [
+					{
+						kind: "metadata",
+						metadataKind: "id",
+						raw: "[#shared]",
+						line: 1,
+						ids: ["shared"],
+					},
+				],
 				titleSpan: {
-					start: { line: 10, column: 4 },
-					end: { line: 10, column: 15 },
+					start: { line: 1, column: 4 },
+					end: { line: 1, column: 9 },
+				},
+			},
+			{
+				kind: "section",
+				level: 1,
+				ids: ["second"],
+				title: "Second",
+				idOrigin: "source",
+				span: { startLine: 5, endLine: 9 },
+				metadata: [
+					{
+						kind: "metadata",
+						metadataKind: "id",
+						raw: "[#second]",
+						line: 5,
+						ids: ["second"],
+					},
+				],
+				titleSpan: {
+					start: { line: 5, column: 4 },
+					end: { line: 5, column: 10 },
 				},
 			},
 		],
 		targets: [
 			{
 				kind: "target",
-				id: "supplemented-id",
-				targetType: "section",
-				title: "Supplemented",
+				id: "shared",
+				targetType: "block",
 				idOrigin: "source",
 				sourceSpan: {
-					start: { line: 10, column: 1 },
-					end: { line: 12, column: 1 },
+					start: { line: 8, column: 1 },
+					end: { line: 8, column: 9 },
+				},
+			},
+		],
+		xrefOccurrences: [],
+		anchorOccurrences: [],
+		toolDiagnostics: [],
+	};
+}
+
+function repeatedAliasDocument(): AbundantDocument {
+	return {
+		kind: "document",
+		sourcePath: referencePath,
+		mode: "single-file",
+		parser: { name: "@asciidoctor/core", version: "test" },
+		children: [
+			{
+				kind: "section",
+				level: 1,
+				ids: ["owner"],
+				title: "Owner",
+				idOrigin: "source",
+				span: { startLine: 1, endLine: 10 },
+				metadata: [
+					{
+						kind: "metadata",
+						metadataKind: "id",
+						raw: "[#owner]",
+						line: 1,
+						ids: ["owner"],
+					},
+				],
+				titleSpan: {
+					start: { line: 1, column: 4 },
+					end: { line: 1, column: 9 },
+				},
+			},
+		],
+		targets: [
+			{
+				kind: "target",
+				id: "shared",
+				targetType: "block",
+				idOrigin: "source",
+				sourceSpan: {
+					start: { line: 4, column: 1 },
+					end: { line: 4, column: 9 },
+				},
+			},
+			{
+				kind: "target",
+				id: "shared",
+				targetType: "inline-anchor",
+				idOrigin: "source",
+				sourceSpan: {
+					start: { line: 6, column: 1 },
+					end: { line: 6, column: 9 },
 				},
 			},
 		],

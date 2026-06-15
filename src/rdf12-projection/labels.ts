@@ -1,12 +1,16 @@
-import type { AbundantDocument } from "../model";
-import type { Rdf12Graph } from "./graph";
+import type { AbundantDocument, TargetNode } from "../model";
+import { type Rdf12Graph, rdf12Triple } from "./graph";
+import { findInnermostHeadingBySourceLine } from "./heading-ownership";
 import {
 	createRdf12LabelCatalog,
 	type Rdf12HeadingLabelKind,
 	type Rdf12LabelCatalog,
 } from "./label-catalog";
+import { stringLiteral } from "./literals";
+import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex, Rdf12NodeIndexEntry } from "./node-index";
-import type { Rdf12IriTerm } from "./terms";
+import { sourceRelativePathOrFallback } from "./source-location";
+import { iriTerm, type Rdf12IriTerm } from "./terms";
 
 export type ProjectLabelsInput = {
 	readonly graph: Rdf12Graph;
@@ -23,6 +27,9 @@ export function projectLabels(input: ProjectLabelsInput): Rdf12LabelCatalog {
 
 	for (const entry of input.nodeIndex.entries()) {
 		addHeadingLabels(catalog, entry);
+	}
+	for (const target of input.document.targets) {
+		addLocalTargetAlias(catalog, input, target);
 	}
 
 	return catalog;
@@ -46,6 +53,47 @@ function addHeadingLabels(
 	for (const id of entry.node.ids) {
 		addCatalogEntry(catalog, entry, labelKind, id);
 	}
+}
+
+function addLocalTargetAlias(
+	catalog: Rdf12LabelCatalog,
+	input: ProjectLabelsInput,
+	target: TargetNode,
+): void {
+	if (
+		target.targetType === "section" ||
+		!target.id ||
+		target.sourceSpan === undefined
+	) {
+		return;
+	}
+
+	const relativePath = sourceRelativePathOrFallback(
+		target.source,
+		input.relativePath,
+		input.document.mode,
+	);
+	if (relativePath === undefined) {
+		return;
+	}
+
+	const owner = findInnermostHeadingBySourceLine({
+		nodeIndex: input.nodeIndex,
+		relativePath,
+		line: target.sourceSpan.start.line,
+	});
+	if (owner === undefined) {
+		return;
+	}
+
+	addCatalogEntry(catalog, owner, "addressLabel", target.id);
+	input.graph.add(
+		rdf12Triple(
+			owner.iri,
+			iriTerm(`${namespaces.aat}addressLabel`),
+			stringLiteral(target.id),
+		),
+	);
 }
 
 function addCatalogEntry(
