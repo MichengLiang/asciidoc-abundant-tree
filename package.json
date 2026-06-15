@@ -1,6 +1,6 @@
 {
 	"name": "asciidoc-abundant-tree",
-	"version": "0.1.14",
+	"version": "0.1.15",
 	"description": "Recover a source-aware, analysis-ready tree from AsciiDoc files and explicit book-entry include graphs.",
 	"license": "Apache-2.0",
 	"author": {

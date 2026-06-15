@@ -6,6 +6,21 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.15 - 2026-06-16
+
+### Changed
+
+- Synchronized the RDF 1.2 heading projection payload contract with the 06 specification book, replacing the old payload-block surface with explicit node payload and edge payload object semantics.
+- Updated README, RDF12 preview samples, canonical structural payload samples, and animation YAML fixtures to use `for` / `forSelector` node payload markers, xref `payload=` edge selectors, source block language formats, and role-token payload schemas.
+- Extended local non-heading target IDs from listings, tables, blocks, inline anchors, and payload blocks into owning heading address labels while keeping xref target selectors separate from xref payload selectors.
+
+### Fixed
+
+- Project node payloads without requiring source payload IDs, including source-owner binding from no-value `for` markers.
+- Project payload roles, source block language formats, raw payload literals, source line spans, and edge payload IDs without expanding payload raw content into business RDF predicates.
+- Hardened edge payload selector binding so repeated source payload IDs on the same payload object do not create false ambiguity, while multiple payload objects with the same selector remain unconnected.
+- Preserved animation YAML export for node payloads that do not have source payload IDs by reading payload objects from heading `aat:payload` links.
+
 ## 0.1.14 - 2026-06-10
 
 ### Changed
