@@ -34,7 +34,7 @@ export type ProjectPayloadBlocksInput = {
 type PayloadProjectorContext = ProjectPayloadBlocksInput & {
 	readonly ordinalAllocator: OrdinalAllocator;
 	readonly xrefPayloadSelectors: ReadonlySet<string>;
-	readonly edgePayloadsBySelector: Map<string, PayloadRecord[]>;
+	readonly edgePayloadsBySelector: Map<string, Rdf12IriTerm[]>;
 };
 
 type PayloadKind = "node" | "edge";
@@ -42,12 +42,6 @@ type PayloadKind = "node" | "edge";
 type NodePayloadMarker =
 	| { readonly kind: "selector"; readonly selector: string }
 	| { readonly kind: "source-owner" };
-
-type PayloadRecord = {
-	readonly iri: Rdf12IriTerm;
-	readonly kind: PayloadKind;
-	readonly ids: readonly string[];
-};
 
 export function projectPayloadBlocks(input: ProjectPayloadBlocksInput): void {
 	const context: PayloadProjectorContext = {
@@ -87,13 +81,13 @@ function projectPayloadListing(
 	const marker = nodePayloadMarkerFor(node);
 	if (marker !== undefined) {
 		const payload = createPayload(context, node, "node");
-		writeNodeBinding(context, payload.iri, node, marker);
+		writeNodeBinding(context, payload, node, marker);
 	}
 
 	if (node.ids.some((id) => context.xrefPayloadSelectors.has(id))) {
 		const payload = createPayload(context, node, "edge");
 		for (const id of node.ids) {
-			addString(context.graph, payload.iri, "payloadId", id);
+			addString(context.graph, payload, "payloadId", id);
 			addPayloadSelector(context, id, payload);
 		}
 	}
@@ -103,7 +97,7 @@ function createPayload(
 	context: PayloadProjectorContext,
 	node: ListingNode,
 	kind: PayloadKind,
-): PayloadRecord {
+): Rdf12IriTerm {
 	if (node.span === undefined) {
 		throw new Error("payload resource requires a source span");
 	}
@@ -143,11 +137,7 @@ function createPayload(
 	addOptionalString(context.graph, payload, "raw", node.content);
 	addOptionalString(context.graph, payload, "format", node.language);
 
-	return {
-		iri: payload,
-		kind,
-		ids: [...node.ids],
-	};
+	return payload;
 }
 
 function writeNodeBinding(
@@ -273,9 +263,12 @@ function payloadRoles(node: ListingNode): string[] {
 function addPayloadSelector(
 	context: PayloadProjectorContext,
 	selector: string,
-	payload: PayloadRecord,
+	payload: Rdf12IriTerm,
 ): void {
 	const payloads = context.edgePayloadsBySelector.get(selector) ?? [];
+	if (payloads.some((existing) => existing.value === payload.value)) {
+		return;
+	}
 	payloads.push(payload);
 	context.edgePayloadsBySelector.set(selector, payloads);
 }
@@ -285,7 +278,7 @@ function uniquePayloadForSelector(
 	selector: string,
 ): Rdf12IriTerm | undefined {
 	const payloads = context.edgePayloadsBySelector.get(selector) ?? [];
-	return payloads.length === 1 ? payloads[0]?.iri : undefined;
+	return payloads.length === 1 ? payloads[0] : undefined;
 }
 
 function stringAttribute(

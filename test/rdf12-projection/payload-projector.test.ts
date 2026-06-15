@@ -177,6 +177,24 @@ describe("rdf12 payload projection", () => {
 		);
 	});
 
+	it("deduplicates repeated source payload ids on the same edge payload object", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			edgePayloadDocument({
+				payloadIds: ["rel-delivery", "rel-delivery"],
+				payloadSelector: "rel-delivery",
+			}),
+			{ documentRoot: projectRoot },
+		);
+		const payload = onlyPayloadByKind(projection.graph, "edge");
+
+		expectTriple(
+			projection.graph,
+			onlyResourceOfType(projection.graph, "XrefEdge"),
+			"payload",
+			payload,
+		);
+	});
+
 	it("does not connect unmatched or ambiguous edge payload selectors", () => {
 		const unmatched = projectAbundantDocumentToRdf12(
 			edgePayloadDocument({
