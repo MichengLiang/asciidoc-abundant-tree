@@ -44,6 +44,30 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		expectLineSpan(projection.graph, core, 25, 39);
 	});
 
+	it("answers local non-heading target alias lookup queries", () => {
+		const projection = referenceProjection();
+		const core = onlyHeadingForLabel(
+			projection.graph,
+			"headline",
+			"3. 核心引擎设计",
+		);
+		const troubleshooting = onlyHeadingForLabel(
+			projection.graph,
+			"addressLabel",
+			"troubleshooting",
+		);
+
+		expect(
+			onlyHeadingForLabel(projection.graph, "addressLabel", "engine-code"),
+		).toEqual(core);
+		expect(
+			onlyHeadingForLabel(projection.graph, "addressLabel", "perf-table"),
+		).toEqual(troubleshooting);
+		expect(
+			onlyHeadingForLabel(projection.graph, "addressLabel", "warning-text"),
+		).toEqual(troubleshooting);
+	});
+
 	it("answers direct containment and file-line reverse lookup queries", () => {
 		const projection = referenceProjection();
 		const root = onlyHeadingForLabel(
@@ -140,11 +164,11 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		const deliveryPolicy = onlyHeadingForLabel(
 			projection.graph,
 			"addressLabel",
-			"delivery-policy",
+			"delivery",
 		);
-		const edge = onlyXrefEdgeForSelector(projection.graph, "capacity-rule");
+		const edge = onlyXrefEdgeForSelector(projection.graph, "capacity");
 
-		expectStringTriple(projection.graph, deliveryPolicy, "kind", "policy");
+		expectStringTriple(projection.graph, deliveryPolicy, "role", "policy");
 		expectStringTriple(projection.graph, deliveryPolicy, "status", "active");
 		expectStringTriple(projection.graph, deliveryPolicy, "owner", "ops");
 		expectStringTriple(projection.graph, edge, "weight", "0.8");
@@ -152,12 +176,12 @@ describe("rdf12 reference-links query contract acceptance", () => {
 			projection.graph,
 			edge,
 			"payloadSelector",
-			"rel-delivery-capacity",
+			"rel-delivery",
 		);
 		expect(
 			projection.graph.match({
 				predicate: iriTerm(`${namespaces.aat}payload`),
-				object: stringLiteral("rel-delivery-capacity"),
+				object: stringLiteral("rel-delivery"),
 			}),
 		).toHaveLength(0);
 		expect(

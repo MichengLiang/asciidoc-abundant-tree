@@ -314,6 +314,71 @@ content
 			}),
 		);
 	});
+
+	it("preserves only RDF12 for marker bare attrlist fields", () => {
+		const path = writeFixture(
+			"metadata-rdf12-for-markers.adoc",
+			`= Probe
+
+[.banana, for]
+----
+source owner
+----
+
+[.banana, for=delivery]
+----
+selector
+----
+
+[.banana, forSelector=delivery]
+----
+explicit selector
+----
+
+[.banana, customFlag]
+----
+ordinary bare token
+----
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const listings = collectNodes(
+			document.children,
+			"listing",
+		) as ListingNode[];
+		const attrlists = listings.map((listing) =>
+			listing.metadata?.find(
+				(metadata) => metadata.metadataKind === "attrlist",
+			),
+		);
+
+		expect(listings[0]).not.toHaveProperty("language");
+		expect(attrlists[0]).toEqual(
+			expect.objectContaining({
+				roles: ["banana"],
+				attributes: { for: true },
+			}),
+		);
+		expect(attrlists[1]).toEqual(
+			expect.objectContaining({
+				roles: ["banana"],
+				attributes: { for: "delivery" },
+			}),
+		);
+		expect(attrlists[2]).toEqual(
+			expect.objectContaining({
+				roles: ["banana"],
+				attributes: { forSelector: "delivery" },
+			}),
+		);
+		expect(attrlists[3]).toEqual(
+			expect.objectContaining({
+				roles: ["banana"],
+				attributes: {},
+			}),
+		);
+	});
 });
 
 function findNode(

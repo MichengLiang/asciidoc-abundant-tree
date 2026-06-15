@@ -8,6 +8,7 @@ import {
 	logicalSourceForLineTable,
 	recoverOriginSourceLayer,
 } from "./book-entry/origin-coordinate";
+import type { MetadataSurface } from "./metadata-parser";
 import type {
 	AbundantNode,
 	AnchorOccurrenceNode,
@@ -724,9 +725,7 @@ function buildListing(
 			metadata.find((surface) => surface.title)?.title ?? block.getTitle?.(),
 		style:
 			metadata.find((surface) => surface.style)?.style ?? block.getStyle?.(),
-		language:
-			metadata.find((surface) => surface.language)?.language ??
-			stringAttr(block, "language"),
+		language: listingLanguage(block, metadata),
 		metadata: metadata.map((surface) => surface.node),
 		content:
 			block.getSource?.() ??
@@ -762,6 +761,30 @@ function buildListing(
 		asciidoctor: listing.asciidoctor,
 	});
 	return listing;
+}
+
+function listingLanguage(
+	block: AsciidoctorBlock,
+	metadata: readonly MetadataSurface[],
+): string | undefined {
+	const explicitLanguage = metadata.find(
+		(surface) => surface.language,
+	)?.language;
+	if (explicitLanguage !== undefined) {
+		return explicitLanguage;
+	}
+	if (metadata.some(hasRdf12SourceOwnerMarker)) {
+		return undefined;
+	}
+	return stringAttr(block, "language");
+}
+
+function hasRdf12SourceOwnerMarker(surface: MetadataSurface): boolean {
+	if (surface.node.metadataKind !== "attrlist") {
+		return false;
+	}
+	const attributes = surface.node.attributes ?? {};
+	return attributes.for === true || attributes.forSelector === true;
 }
 
 function buildTable(

@@ -41,7 +41,7 @@ describe("rdf12 heading slices", () => {
 		expectNoNumberTriple(projection.graph, root, "metadataEndLine");
 	});
 
-	it("projects delivery policy raw as lines 5 through 40", () => {
+	it("projects delivery policy raw as lines 5 through 38", () => {
 		const projection = structuralPayloadProjection();
 		const deliveryPolicy = resourceIri(projection.documentIri, "heading-l5-o0");
 
@@ -49,12 +49,12 @@ describe("rdf12 heading slices", () => {
 			projection.graph,
 			deliveryPolicy,
 			"raw",
-			`[#delivery-policy.section, kind=policy, status=active, owner=ops]
+			`[#delivery.policy, status=active, owner=ops]
 == 配送策略
 
-配送策略依赖 xref:capacity-rule[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery-capacity]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
 
-[#delivery-policy-payload.payload, for=delivery-policy, data=json]
+[.banana, for=delivery]
 [source,json]
 ----
 {
@@ -69,34 +69,32 @@ describe("rdf12 heading slices", () => {
 }
 ----
 
-[#rel-delivery-capacity.xref-payload, data=json]
-[source,json]
+[#rel-delivery.pear]
+[source,yaml]
 ----
-{
-  "reason": {
-    "type": "risk-control",
-    "signals": ["weather", "capacity"],
-    "description": "配送策略需要读取运力规则来决定是否降级。"
-  },
-  "edge": {
-    "direction": "outbound",
-    "required": true
-  }
-}
+reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true
 ----
 
 `,
 		);
 		expectNumberTriple(projection.graph, deliveryPolicy, "startLine", 5);
-		expectNumberTriple(projection.graph, deliveryPolicy, "endLine", 40);
+		expectNumberTriple(projection.graph, deliveryPolicy, "endLine", 38);
 	});
 
-	it("projects capacity rule raw as lines 41 through 45 without nested heading text", () => {
+	it("projects capacity rule raw as lines 39 through 43 without nested heading text", () => {
 		const projection = structuralPayloadProjection();
-		const capacityRule = resourceIri(projection.documentIri, "heading-l41-o0");
+		const capacityRule = resourceIri(projection.documentIri, "heading-l39-o0");
 		const raw = onlyLiteralValue(projection.graph, capacityRule, "raw");
 
-		expect(raw).toBe(`[#capacity-rule.section, kind=rule, status=active]
+		expect(raw).toBe(`[#capacity.rule, status=active]
 == 运力规则
 
 运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
@@ -104,13 +102,13 @@ describe("rdf12 heading slices", () => {
 `);
 		expect(raw).not.toContain("=== 我是3级标题");
 		expect(raw).not.toContain("123");
-		expectNumberTriple(projection.graph, capacityRule, "startLine", 41);
-		expectNumberTriple(projection.graph, capacityRule, "endLine", 45);
+		expectNumberTriple(projection.graph, capacityRule, "startLine", 39);
+		expectNumberTriple(projection.graph, capacityRule, "endLine", 43);
 	});
 
 	it("projects the nested heading level as 2", () => {
 		const projection = structuralPayloadProjection();
-		const nestedHeading = resourceIri(projection.documentIri, "heading-l46-o0");
+		const nestedHeading = resourceIri(projection.documentIri, "heading-l44-o0");
 
 		expectNumberTriple(projection.graph, nestedHeading, "headingLevel", 2);
 	});

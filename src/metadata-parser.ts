@@ -156,11 +156,6 @@ function parseAttrList(raw: string): {
 			continue;
 		}
 
-		if (index === 1) {
-			attributes.language = part;
-			continue;
-		}
-
 		const idMatch = /#([\p{L}\p{N}_-]+)/u.exec(part);
 		if (idMatch?.[1]) {
 			ids.push(idMatch[1]);
@@ -170,8 +165,13 @@ function parseAttrList(raw: string): {
 				roles.push(role[1]);
 			}
 		}
-		if (!idMatch && !part.includes(".")) {
-			attributes[part] = true;
+		if (
+			index === 1 &&
+			typeof attributes.style === "string" &&
+			idMatch === null &&
+			!part.includes(".")
+		) {
+			attributes.language = part;
 		}
 	}
 
