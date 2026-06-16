@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
+import type { SourceAwareLogicalDocument } from "../../src/book-entry/line-origin-model";
 import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/official-reader-preprocessor";
 import { recoverSourceAwarePointSourceLayer } from "../../src/book-entry/source-aware-coordinate";
 import type {
@@ -45,7 +46,7 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		expect(xref.sourceSpan?.start.column).toBe(3);
 	});
 
-	it("exposes column-unmapped through source-aware point recovery", () => {
+	it("reports inserted indentation columns as unmapped through point recovery", () => {
 		const sourceAwareDocument = preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
@@ -59,6 +60,8 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		if (!transformed) {
 			throw new Error("Missing transformed indentation record");
 		}
+		// Parser xrefs begin at the macro token, not in inserted whitespace.
+		// This direct point recovery covers the column-map contract for that whitespace.
 		const recovered = recoverSourceAwarePointSourceLayer(
 			sourceAwareDocument,
 			{
@@ -84,6 +87,87 @@ describe("book-entry official Reader source coordinate recovery", () => {
 				line: 1,
 			}),
 		);
+	});
+
+	it("omits precise source coordinates for generated control lines", () => {
+		const sourceAwareDocument = preprocessBookEntryWithOfficialReader({
+			adapter: createAsciidoctorAdapter(),
+			sourcePath: entryPath,
+			documentRoot: fixtureRoot,
+		});
+		const generated = sourceAwareDocument.lines.find(
+			(line) => line.kind === "generated-control",
+		);
+		if (!generated) {
+			throw new Error("Missing generated control record");
+		}
+		const recovered = recoverSourceAwarePointSourceLayer(
+			sourceAwareDocument,
+			{
+				start: { line: generated.logicalLine, column: 1 },
+				end: { line: generated.logicalLine, column: 1 },
+			},
+			"",
+		);
+
+		expect(recovered.ok).toBe(false);
+		if (recovered.ok) {
+			throw new Error("Expected generated control line to be unmapped");
+		}
+		expect(recovered.diagnostic).toEqual(
+			expect.objectContaining({
+				code: "source-coordinate.generated-line",
+				level: "warning",
+			}),
+		);
+		expect(recovered.sourceLayer).toBeUndefined();
+		expect(recovered).not.toHaveProperty("relativePath");
+		expect(recovered).not.toHaveProperty("sourceSpan");
+	});
+
+	it("omits precise source coordinates for degraded lines", () => {
+		const sourceAwareDocument: SourceAwareLogicalDocument = {
+			entryPath: "/virtual/book.adoc",
+			documentRoot: "/virtual",
+			logicalText: "degraded",
+			lines: [
+				{
+					kind: "degraded",
+					logicalLine: 1,
+					text: "degraded",
+					evidence: {},
+					diagnostic: {
+						level: "warning",
+						code: "source-coordinate.degraded-line",
+						message: "Degraded line fixture.",
+					},
+				},
+			],
+			sourceFiles: [],
+			diagnostics: [],
+		};
+		const recovered = recoverSourceAwarePointSourceLayer(
+			sourceAwareDocument,
+			{
+				start: { line: 1, column: 1 },
+				end: { line: 1, column: 1 },
+			},
+			"",
+		);
+
+		expect(recovered.ok).toBe(false);
+		if (recovered.ok) {
+			throw new Error("Expected degraded line to be unmapped");
+		}
+		expect(recovered.diagnostic).toEqual(
+			expect.objectContaining({
+				code: "source-coordinate.degraded-line",
+				level: "warning",
+			}),
+		);
+		expect(recovered.sourceLayer).toBeUndefined();
+		expect(recovered).not.toHaveProperty("relativePath");
+		expect(recovered).not.toHaveProperty("sourceSpan");
 	});
 
 	it("emits multi-source diagnostics and omits listing raw for source block snippet includes", () => {
