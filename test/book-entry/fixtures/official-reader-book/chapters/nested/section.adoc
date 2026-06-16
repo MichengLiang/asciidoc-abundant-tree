@@ -1,0 +1,3 @@
+=== Nested Section
+
+Nested xref:preface[Preface].

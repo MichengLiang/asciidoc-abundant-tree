@@ -111,7 +111,7 @@ This chapter owns the target section.
 		expect(anchor.source?.relativePath).toBe(chapterRelativePath);
 		expect(anchor.sourceSpan?.start.line).toBe(8);
 		expect(target.source?.relativePath).toBe(targetRelativePath);
-		expect(target.sourceSpan?.start.line).toBe(3);
+		expect(target.sourceSpan?.start.line).toBe(4);
 		expect(paragraph.source?.relativePath).toBe(chapterRelativePath);
 	});
 
@@ -163,7 +163,7 @@ This chapter owns the target section.
 		expect(document.toolDiagnostics).toEqual(
 			expect.arrayContaining([
 				expect.objectContaining({
-					code: "source-recovery.cross-origin-block",
+					code: "block-origin.multi-source-span",
 					level: "warning",
 				}),
 			]),
@@ -191,7 +191,7 @@ This chapter owns the target section.
 
 		expect(singleFileDocument.mode).toBe("single-file");
 		expect(singleFileSection.source?.relativePath).toBeUndefined();
-		expect(singleFileSection.source?.sourceSpan?.start.line).toBe(26);
+		expect(singleFileSection.source?.sourceSpan?.start.line).toBe(24);
 	});
 });
 

@@ -3,6 +3,10 @@ import {
 	logicalSourceForLineTable,
 	recoverOriginPointSourceLayer,
 } from "./book-entry/origin-coordinate";
+import {
+	recoverSourceAwarePointSourceLayer,
+	sourceAwareDocumentForLineTable,
+} from "./book-entry/source-aware-coordinate";
 import { parseMacroArguments } from "./macro-argument-parser";
 import type {
 	AnchorOccurrenceNode,
@@ -82,27 +86,95 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 		}
 	}
 
+	const sourceAwareDocument = sourceAwareDocumentForLineTable(
+		options.lineTable,
+	);
 	const logicalSource = logicalSourceForLineTable(options.lineTable);
-	const recoveredXrefs = logicalSource
-		? recoverInlineOrigins(
+	const recoveredXrefs = sourceAwareDocument
+		? recoverSourceAwareInlineOrigins(
 				xrefOccurrences,
-				logicalSource,
+				sourceAwareDocument,
 				options.toolDiagnostics,
 			)
-		: xrefOccurrences;
-	const recoveredAnchors = logicalSource
-		? recoverInlineOrigins(
+		: logicalSource
+			? recoverInlineOrigins(
+					xrefOccurrences,
+					logicalSource,
+					options.toolDiagnostics,
+				)
+			: xrefOccurrences;
+	const recoveredAnchors = sourceAwareDocument
+		? recoverSourceAwareInlineOrigins(
 				anchorOccurrences,
-				logicalSource,
+				sourceAwareDocument,
 				options.toolDiagnostics,
 			)
-		: anchorOccurrences;
+		: logicalSource
+			? recoverInlineOrigins(
+					anchorOccurrences,
+					logicalSource,
+					options.toolDiagnostics,
+				)
+			: anchorOccurrences;
 
 	return {
 		xrefOccurrences: dedupeOccurrences(recoveredXrefs).sort(compareSourceSpans),
 		anchorOccurrences:
 			dedupeOccurrences(recoveredAnchors).sort(compareSourceSpans),
 	};
+}
+
+function recoverSourceAwareInlineOrigins<
+	T extends {
+		raw: string;
+		sourceSpan?: SourceSpan;
+		source?: {
+			raw?: string;
+			line?: number;
+			sourceSpan?: SourceSpan;
+			relativePath?: string;
+		};
+	},
+>(
+	occurrences: T[],
+	sourceAwareDocument: NonNullable<
+		ReturnType<typeof sourceAwareDocumentForLineTable>
+	>,
+	toolDiagnostics: ToolDiagnostic[] | undefined,
+): T[] {
+	const recoveredOccurrences: T[] = [];
+	for (const occurrence of occurrences) {
+		if (!occurrence.sourceSpan) {
+			recoveredOccurrences.push(occurrence);
+			continue;
+		}
+		const recovered = recoverSourceAwarePointSourceLayer(
+			sourceAwareDocument,
+			occurrence.sourceSpan,
+			occurrence.raw,
+		);
+		if (!recovered.ok) {
+			toolDiagnostics?.push(recovered.diagnostic);
+			if (recovered.sourceLayer) {
+				delete occurrence.sourceSpan;
+				occurrence.source = {
+					...occurrence.source,
+					...recovered.sourceLayer,
+				};
+			}
+			recoveredOccurrences.push(occurrence);
+			continue;
+		}
+		if (recovered.sourceSpan) {
+			occurrence.sourceSpan = recovered.sourceSpan;
+		}
+		occurrence.source = {
+			...occurrence.source,
+			...recovered.sourceLayer,
+		};
+		recoveredOccurrences.push(occurrence);
+	}
+	return recoveredOccurrences;
 }
 
 function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {

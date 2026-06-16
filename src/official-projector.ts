@@ -3,11 +3,16 @@ import type {
 	AsciidoctorBlock,
 } from "./asciidoctor-adapter";
 import { addTarget, applyOfficialBindings } from "./binding-merge";
+import type { SourceAwareLogicalDocument } from "./book-entry/line-origin-model";
 import type { LogicalSource } from "./book-entry/model";
 import {
 	logicalSourceForLineTable,
 	recoverOriginSourceLayer,
 } from "./book-entry/origin-coordinate";
+import {
+	recoverSourceAwareSourceLayer,
+	sourceAwareDocumentForLineTable,
+} from "./book-entry/source-aware-coordinate";
 import type { MetadataSurface } from "./metadata-parser";
 import type {
 	AbundantNode,
@@ -61,6 +66,7 @@ type ProjectContext = {
 	adapter: OfficialProjectionAdapter;
 	targets: TargetNode[];
 	logicalSource?: LogicalSource;
+	sourceAwareDocument?: SourceAwareLogicalDocument;
 };
 
 type OfficialProjectionAdapter = Pick<AsciidoctorAdapter, "resolveXrefBinding">;
@@ -81,6 +87,9 @@ export function projectOfficialDocument(options: {
 	adapter: OfficialProjectionAdapter;
 }): { children: AbundantNode[]; targets: TargetNode[] } {
 	const targets: TargetNode[] = [];
+	const sourceAwareDocument = sourceAwareDocumentForLineTable(
+		options.lineTable,
+	);
 	const logicalSource = logicalSourceForLineTable(options.lineTable);
 	const context: ProjectContext = definedObject({
 		officialDocument: options.officialDocument,
@@ -98,7 +107,8 @@ export function projectOfficialDocument(options: {
 		sectionByBlock: options.sectionByBlock,
 		adapter: options.adapter,
 		targets,
-		logicalSource,
+		sourceAwareDocument,
+		...(logicalSource ? { logicalSource } : {}),
 	}) as ProjectContext;
 
 	return {
@@ -516,8 +526,22 @@ function descriptionPartSourceLayer(
 	sourceSpan: SourceSpan,
 	diagnosticContext: string,
 ): SourceLayer | undefined {
-	if (!context.logicalSource) {
+	if (!context.logicalSource && !context.sourceAwareDocument) {
 		return { span, sourceSpan };
+	}
+	if (context.sourceAwareDocument) {
+		const recovered = recoverSourceAwareSourceLayer(
+			context.sourceAwareDocument,
+			span,
+			{
+				logicalSourceSpan: sourceSpan,
+				diagnosticContext,
+			},
+		);
+		return recovered.ok ? recovered.sourceLayer : undefined;
+	}
+	if (!context.logicalSource) {
+		return undefined;
 	}
 	const recovered = recoverOriginSourceLayer(context.logicalSource, span, {
 		logicalSourceSpan: sourceSpan,
@@ -901,7 +925,7 @@ function blockSourceLayer(
 	fallbackSpan: { startLine: number; endLine: number },
 	diagnosticContext: string,
 ): SourceLayer | undefined {
-	if (!context.logicalSource) {
+	if (!context.logicalSource && !context.sourceAwareDocument) {
 		const sourceSpan = sourceSpanFromLineSpan(context.lineTable, fallbackSpan);
 		return sourceSpan
 			? {
@@ -916,6 +940,21 @@ function blockSourceLayer(
 	const logicalSourceSpan = sameLineSpan(fallbackSpan, interval.span)
 		? interval.sourceSpan
 		: undefined;
+	if (context.sourceAwareDocument) {
+		const recovered = recoverSourceAwareSourceLayer(
+			context.sourceAwareDocument,
+			fallbackSpan,
+			{
+				logicalSourceSpan,
+				raw: true,
+				diagnosticContext,
+			},
+		);
+		return recovered.ok ? recovered.sourceLayer : undefined;
+	}
+	if (!context.logicalSource) {
+		return undefined;
+	}
 	const recovered = recoverOriginSourceLayer(
 		context.logicalSource,
 		fallbackSpan,
@@ -939,8 +978,22 @@ function originLineSpan(
 	context: ProjectContext,
 	span: { startLine: number; endLine: number } | undefined,
 ): { startLine: number; endLine: number } | undefined {
-	if (!span || !context.logicalSource) {
+	if (!span || (!context.logicalSource && !context.sourceAwareDocument)) {
 		return span;
+	}
+	if (context.sourceAwareDocument) {
+		const recovered = recoverSourceAwareSourceLayer(
+			context.sourceAwareDocument,
+			span,
+			{
+				raw: false,
+				diagnosticContext: "block content",
+			},
+		);
+		return recovered.ok ? recovered.lineSpan : undefined;
+	}
+	if (!context.logicalSource) {
+		return undefined;
 	}
 	const recovered = recoverOriginSourceLayer(context.logicalSource, span, {
 		raw: false,
@@ -984,7 +1037,7 @@ function collectOccurrencesInSpan<T extends { source?: SourceLayer }>(
 	logicalSpan: { startLine: number; endLine: number },
 	source: SourceLayer | undefined,
 ): T[] {
-	if (!context.logicalSource) {
+	if (!context.logicalSource && !context.sourceAwareDocument) {
 		return collectOccurrencesInLineRange(
 			groupedByLine,
 			logicalSpan.startLine,

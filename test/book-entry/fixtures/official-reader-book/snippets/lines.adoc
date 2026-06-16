@@ -1,0 +1,5 @@
+Line one.
+xref:preface[Preface from line two].
+Line three.
+Line four.
+xref:preface[Preface from line five].

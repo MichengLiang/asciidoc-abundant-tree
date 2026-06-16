@@ -1,4 +1,5 @@
 import type { LogicalSource } from "./book-entry/model";
+import { bindPendingSourceAwareDocumentToLineTable } from "./book-entry/source-aware-coordinate";
 import type { LineSpan, SourceSpan } from "./model";
 
 export type SourceLine = {
@@ -50,6 +51,7 @@ export function buildLineTable(source: string): LineTable {
 	if (pending?.length === 0) {
 		pendingLogicalSourcesByText.delete(source);
 	}
+	bindPendingSourceAwareDocumentToLineTable(lineTable);
 	return lineTable;
 }
 

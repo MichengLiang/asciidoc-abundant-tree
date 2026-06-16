@@ -1,0 +1,10 @@
+== Snippet Chapter
+
+[source,js]
+----
+include::../examples/minimal-tool.mjs[tag=main]
+----
+
+include::../snippets/indented.adoc[indent=2]
+
+include::../snippets/inserted-column-xref.adoc[indent=2]

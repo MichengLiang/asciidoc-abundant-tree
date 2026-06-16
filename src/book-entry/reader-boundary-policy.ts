@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import type { BookEntryDiagnostic } from "./diagnostics";
 import { parseIncludeAttributes } from "./include-attribute-model";
 import {
@@ -23,11 +23,15 @@ export function readerPreprocessingOptions(options: {
 }): {
 	readonly sourcePath: string;
 	readonly baseDir: string;
+	readonly jailDir: string;
 	readonly attributes?: Record<string, unknown> | undefined;
 } {
+	const sourcePath = resolve(options.sourcePath);
+	const documentRoot = normalizeDocumentRoot(options.documentRoot);
 	return {
-		sourcePath: resolve(options.sourcePath),
-		baseDir: normalizeDocumentRoot(options.documentRoot),
+		sourcePath,
+		baseDir: dirname(sourcePath),
+		jailDir: documentRoot,
 		...(options.attributes ? { attributes: options.attributes } : {}),
 	};
 }

@@ -1,0 +1,5 @@
+Outside tagged selection.
+// tag::main[]
+Tagged xref:preface[Tagged Preface].
+// end::main[]
+Outside again.

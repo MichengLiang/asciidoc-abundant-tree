@@ -1,7 +1,6 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
-import { buildLogicalSource } from "../../src/book-entry/logical-source-builder";
 import type { AbundantNode, SectionNode } from "../../src/model";
 import { childBlocksOf } from "../../src/official-block-utils";
 import { parseAbundantTree } from "../../src/parser";
@@ -13,10 +12,6 @@ const entryPath = join(simpleBookRoot, "book.adoc");
 
 describe("book-entry parser integration", () => {
 	it("parses book-entry logical text into a standard AbundantDocument", () => {
-		const logicalSource = buildLogicalSource({
-			sourcePath: entryPath,
-			documentRoot,
-		});
 		const document = parseAbundantTree({
 			sourcePath: entryPath,
 			mode: "book-entry",
@@ -29,7 +24,9 @@ describe("book-entry parser integration", () => {
 		expect(document.kind).toBe("document");
 		expect(document.mode).toBe("book-entry");
 		expect(document.sourcePath).toBe(entryPath);
-		expect(document.sourceText).toBe(logicalSource.logicalText);
+		expect(document.sourceText).toContain(
+			":book-entry-shared-attribute: shared attribute value from include",
+		);
 		expect(document.sourceText).not.toContain(
 			"include::chapters/01-entry-origin.adoc[]",
 		);

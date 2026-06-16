@@ -85,6 +85,7 @@ export type AsciidoctorParserAdapter = AsciidoctorAdapter & {
 	readPreprocessedLines(options: {
 		readonly sourcePath: string;
 		readonly baseDir: string;
+		readonly jailDir?: string | undefined;
 		readonly attributes?: Record<string, unknown> | undefined;
 	}): readonly OfficialReaderLine[];
 };
@@ -115,6 +116,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 			const document = processor.loadFile(options.sourcePath, {
 				safe: "safe",
 				base_dir: options.baseDir,
+				...(options.jailDir ? { jail_dir: options.jailDir } : {}),
 				sourcemap: true,
 				parse: false,
 				to_file: false,

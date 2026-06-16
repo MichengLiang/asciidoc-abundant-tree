@@ -1,11 +1,19 @@
 import { basename, isAbsolute, join, normalize, resolve } from "node:path";
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
+import type { SourceAwareLogicalDocument } from "./book-entry/line-origin-model";
 import {
 	logicalSourceForLineTable,
 	recoverOriginSourceLayer,
 	recoverSectionSourceLayer,
 	recoverTitleSpan,
 } from "./book-entry/origin-coordinate";
+import {
+	recoverSourceAwareSectionSourceLayer,
+	recoverSourceAwareSourceLayer,
+	recoverSourceAwareTitleSpan,
+	sourceAwareDocumentForLineTable,
+	sourceScopeFromSourceAwareInterval,
+} from "./book-entry/source-aware-coordinate";
 import {
 	assignContainingSectionIdsFromSourceScope,
 	buildSourceScopeIndex,
@@ -70,6 +78,9 @@ export function projectSourceSurfaces(options: {
 	const mainSourcePath = options.sourcePath
 		? normalize(resolve(options.sourcePath))
 		: undefined;
+	const sourceAwareDocument = sourceAwareDocumentForLineTable(
+		options.lineTable,
+	);
 	const logicalSource = logicalSourceForLineTable(options.lineTable);
 
 	for (const surface of blockSurfaces) {
@@ -109,14 +120,25 @@ export function projectSourceSurfaces(options: {
 		}
 		toolDiagnostics.push(...interval.diagnostics);
 		if (
-			logicalSource &&
+			(sourceAwareDocument || logicalSource) &&
 			["paragraph", "listing", "table"].includes(surface.context ?? "")
 		) {
-			const recovered = recoverOriginSourceLayer(logicalSource, interval.span, {
-				logicalSourceSpan: interval.sourceSpan,
-				raw: true,
-				diagnosticContext: `${surface.context} block`,
-			});
+			const recovered = sourceAwareDocument
+				? recoverSourceAwareSourceLayer(sourceAwareDocument, interval.span, {
+						logicalSourceSpan: interval.sourceSpan,
+						raw: true,
+						diagnosticContext: `${surface.context} block`,
+					})
+				: logicalSource
+					? recoverOriginSourceLayer(logicalSource, interval.span, {
+							logicalSourceSpan: interval.sourceSpan,
+							raw: true,
+							diagnosticContext: `${surface.context} block`,
+						})
+					: undefined;
+			if (!recovered) {
+				continue;
+			}
 			if (!recovered.ok) {
 				toolDiagnostics.push(recovered.diagnostic);
 			}
@@ -132,10 +154,12 @@ export function projectSourceSurfaces(options: {
 		options.lineTable,
 		toolDiagnostics,
 		logicalSource,
+		sourceAwareDocument,
 	);
-	const sectionByLine = logicalSource
-		? new Map<number, SectionNode>()
-		: mapSectionScope(sections, options.lineTable.lines.length);
+	const sectionByLine =
+		logicalSource || sourceAwareDocument
+			? new Map<number, SectionNode>()
+			: mapSectionScope(sections, options.lineTable.lines.length);
 	const { xrefOccurrences, anchorOccurrences } =
 		scanInlineOccurrencesInOfficialBlocks({
 			lineTable: options.lineTable,
@@ -144,7 +168,7 @@ export function projectSourceSurfaces(options: {
 			toolDiagnostics,
 		});
 	let sectionScopeIndex: SourceScopeIndex | undefined;
-	if (logicalSource) {
+	if (logicalSource || sourceAwareDocument) {
 		sectionScopeIndex = buildSourceScopeIndex(sections);
 		assignContainingSectionIdsFromSourceScope(
 			xrefOccurrences,
@@ -238,6 +262,7 @@ function buildSectionSurfaces(
 	lineTable: LineTable,
 	toolDiagnostics: ToolDiagnostic[],
 	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
+	sourceAwareDocument: SourceAwareLogicalDocument | undefined,
 ): {
 	sections: SectionNode[];
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
@@ -248,6 +273,7 @@ function buildSectionSurfaces(
 		blockSurfaces,
 		intervalByBlock,
 		logicalSource,
+		sourceAwareDocument,
 	);
 
 	for (const surface of blockSurfaces) {
@@ -268,6 +294,7 @@ function buildSectionSurfaces(
 		const currentBoundary = originHeadingBoundaryForSection(
 			originHeadingBoundaryIndex,
 			logicalSource,
+			sourceAwareDocument,
 			sourceLine,
 			interval.span.startLine,
 		);
@@ -275,15 +302,23 @@ function buildSectionSurfaces(
 			originHeadingBoundaryIndex,
 			currentBoundary,
 		);
-		const recoveredSource = logicalSource
-			? recoverSectionSourceLayer(
-					logicalSource,
+		const recoveredSource = sourceAwareDocument
+			? recoverSourceAwareSectionSourceLayer(
+					sourceAwareDocument,
 					sourceLine,
 					interval.span.startLine,
 					interval.titleSpan,
 					nextBoundary?.sliceStartLine,
 				)
-			: undefined;
+			: logicalSource
+				? recoverSectionSourceLayer(
+						logicalSource,
+						sourceLine,
+						interval.span.startLine,
+						interval.titleSpan,
+						nextBoundary?.sliceStartLine,
+					)
+				: undefined;
 		if (recoveredSource && !recoveredSource.ok) {
 			toolDiagnostics.push(recoveredSource.diagnostic);
 		}
@@ -306,9 +341,11 @@ function buildSectionSurfaces(
 			? recoveredSource.sourceLayer.span
 			: interval.span;
 		const titleSpan =
-			logicalSource && recoveredSource?.ok
-				? recoverTitleSpan(logicalSource, interval.titleSpan)
-				: interval.titleSpan;
+			sourceAwareDocument && recoveredSource?.ok
+				? recoverSourceAwareTitleSpan(sourceAwareDocument, interval.titleSpan)
+				: logicalSource && recoveredSource?.ok
+					? recoverTitleSpan(logicalSource, interval.titleSpan)
+					: interval.titleSpan;
 		const metadata = interval.metadata;
 		const ids = metadata.flatMap((entry) => entry.ids);
 		const officialId = surface.id;
@@ -338,12 +375,20 @@ function buildSectionSurfaces(
 			}),
 			children: [],
 		}) as SectionNode;
-		if (logicalSource) {
-			const sourceScope = sectionSourceScopeFromLogicalInterval(
-				logicalSource,
-				interval.span,
-				sourceLine,
-			);
+		if (logicalSource || sourceAwareDocument) {
+			const sourceScope = sourceAwareDocument
+				? sourceScopeFromSourceAwareInterval(
+						sourceAwareDocument,
+						interval.span,
+						sourceLine,
+					)
+				: logicalSource
+					? sectionSourceScopeFromLogicalInterval(
+							logicalSource,
+							interval.span,
+							sourceLine,
+						)
+					: undefined;
 			if (sourceScope) {
 				registerSectionSourceScope(section, sourceScope);
 			}
@@ -359,8 +404,9 @@ function buildOriginHeadingBoundaryIndex(
 	blockSurfaces: readonly OfficialBlockSurface[],
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
 	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
+	sourceAwareDocument: SourceAwareLogicalDocument | undefined,
 ): OriginHeadingBoundaryIndex | undefined {
-	if (!logicalSource) {
+	if (!logicalSource && !sourceAwareDocument) {
 		return undefined;
 	}
 	const grouped = new Map<string, OriginHeadingBoundary[]>();
@@ -376,12 +422,17 @@ function buildOriginHeadingBoundaryIndex(
 		if (logicalHeadingLine === undefined || !interval) {
 			continue;
 		}
-		const headingOrigin = logicalSource.lineOrigins[logicalHeadingLine - 1];
+		const headingOrigin = sourceAwareDocument
+			? sourceAwareOriginForLine(sourceAwareDocument, logicalHeadingLine)
+			: logicalSource?.lineOrigins[logicalHeadingLine - 1];
 		if (!headingOrigin) {
 			continue;
 		}
 		const metadataOrigin =
-			logicalSource.lineOrigins[interval.span.startLine - 1] ?? headingOrigin;
+			(sourceAwareDocument
+				? sourceAwareOriginForLine(sourceAwareDocument, interval.span.startLine)
+				: logicalSource?.lineOrigins[interval.span.startLine - 1]) ??
+			headingOrigin;
 		const sliceStartLine =
 			metadataOrigin.relativePath === headingOrigin.relativePath
 				? metadataOrigin.sourceLine
@@ -409,18 +460,24 @@ function buildOriginHeadingBoundaryIndex(
 function originHeadingBoundaryForSection(
 	index: OriginHeadingBoundaryIndex | undefined,
 	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
+	sourceAwareDocument: SourceAwareLogicalDocument | undefined,
 	logicalHeadingLine: number,
 	logicalMetadataStartLine: number,
 ): OriginHeadingBoundary | undefined {
-	if (!index || !logicalSource) {
+	if (!index || (!logicalSource && !sourceAwareDocument)) {
 		return undefined;
 	}
-	const headingOrigin = logicalSource.lineOrigins[logicalHeadingLine - 1];
+	const headingOrigin = sourceAwareDocument
+		? sourceAwareOriginForLine(sourceAwareDocument, logicalHeadingLine)
+		: logicalSource?.lineOrigins[logicalHeadingLine - 1];
 	if (!headingOrigin) {
 		return undefined;
 	}
 	const metadataOrigin =
-		logicalSource.lineOrigins[logicalMetadataStartLine - 1] ?? headingOrigin;
+		(sourceAwareDocument
+			? sourceAwareOriginForLine(sourceAwareDocument, logicalMetadataStartLine)
+			: logicalSource?.lineOrigins[logicalMetadataStartLine - 1]) ??
+		headingOrigin;
 	const sliceStartLine =
 		metadataOrigin.relativePath === headingOrigin.relativePath
 			? metadataOrigin.sourceLine
@@ -479,6 +536,22 @@ function sectionSourceScopeFromLogicalInterval(
 		startLine: headingOrigin.sourceLine,
 		endLine,
 	};
+}
+
+function sourceAwareOriginForLine(
+	document: SourceAwareLogicalDocument,
+	logicalLine: number,
+):
+	| {
+			readonly relativePath: string;
+			readonly sourceLine: number;
+	  }
+	| undefined {
+	const record = document.lines[logicalLine - 1];
+	if (!record || !("origin" in record)) {
+		return undefined;
+	}
+	return record.origin;
 }
 
 function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {

@@ -190,9 +190,9 @@ describe("cli error handling", () => {
 		expect(result.stderr).toContain("Include target file does not exist");
 	});
 
-	it("reports unsupported book-entry include attrlists on stderr only", () => {
+	it("reports unmapped book-entry include attrlists on stderr only", () => {
 		const result = runCli([
-			join(bookEntryFixtureRoot, "negative/unsupported-tag.adoc"),
+			join(bookEntryFixtureRoot, "negative/unmapped-attr.adoc"),
 			"--mode",
 			"book-entry",
 			"--document-root",
@@ -203,8 +203,8 @@ describe("cli error handling", () => {
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
-		expect(result.stderr).toContain("include.unsupported-attrlist");
-		expect(result.stderr).toContain("tag=main");
+		expect(result.stderr).toContain("include.attrlist-unmapped");
+		expect(result.stderr).toContain("foo");
 	});
 
 	it("does not accept rdf, ttl, or turtle aliases", () => {

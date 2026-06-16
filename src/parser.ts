@@ -1,7 +1,9 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createAsciidoctorAdapter } from "./asciidoctor-adapter";
-import { buildLogicalSource } from "./book-entry/logical-source-builder";
+import { constructionError } from "./book-entry/diagnostics";
+import { preprocessBookEntryWithOfficialReader } from "./book-entry/official-reader-preprocessor";
+import { registerSourceAwareDocumentForRecovery } from "./book-entry/source-aware-coordinate";
 import type { AbundantDocument, ParseAbundantTreeOptions } from "./model";
 import { parseAsciidoctorDocument } from "./parser-core";
 import { buildLineTable } from "./source-lines";
@@ -16,18 +18,30 @@ export function parseAbundantTree(
 		if (!options.documentRoot) {
 			throw new Error("Book-entry mode requires documentRoot.");
 		}
-		const logicalSource = buildLogicalSource({
+		const sourceAwareDocument = preprocessBookEntryWithOfficialReader({
+			adapter,
 			sourcePath,
 			documentRoot: options.documentRoot,
 		});
-		const lineTable = buildLineTable(logicalSource.logicalText);
+		const constructionDiagnostic = sourceAwareDocument.diagnostics.find(
+			(diagnostic) => diagnostic.level === "error",
+		);
+		if (constructionDiagnostic) {
+			throw constructionError(
+				constructionDiagnostic.code,
+				constructionDiagnostic.message,
+				constructionDiagnostic.source,
+			);
+		}
+		registerSourceAwareDocumentForRecovery(sourceAwareDocument);
+		const lineTable = buildLineTable(sourceAwareDocument.logicalText);
 		return parseAsciidoctorDocument({
-			officialDocument: adapter.loadSource(logicalSource.logicalText),
+			officialDocument: adapter.loadSource(sourceAwareDocument.logicalText),
 			adapter,
 			lineTable,
 			sourcePath,
-			sourceText: logicalSource.logicalText,
-			sourceFiles: logicalSource.sourceFiles.map((sourceFile) => ({
+			sourceText: sourceAwareDocument.logicalText,
+			sourceFiles: sourceAwareDocument.sourceFiles.map((sourceFile) => ({
 				relativePath: sourceFile.relativePath,
 				raw: sourceFile.text,
 			})),

@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import type {
 	AsciidoctorParserAdapter,
 	OfficialReaderLine,
@@ -9,6 +9,7 @@ import {
 	createIndentOffsetColumnMap,
 } from "./column-map";
 import type { BookEntryDiagnostic } from "./diagnostics";
+import { constructionError } from "./diagnostics";
 import {
 	firstSelectionSurface,
 	hasLeveloffsetSurface,
@@ -61,11 +62,81 @@ type PreprocessorState = {
 	readonly records: LogicalLineRecord[];
 	readonly diagnostics: BookEntryDiagnostic[];
 	readonly optionalIncludes: IncludeDirectiveEvidence[];
+	readonly includeStack: string[];
 	officialIndex: number;
 };
 
 const includeDirectivePattern =
 	/^(?<indent>\s*)(?<escape>\\?)include::(?<target>[^[]+)\[(?<attrlist>[^\]]*)\]\s*$/u;
+
+function validateIncludeGraph(
+	absolutePath: string,
+	documentRoot: string,
+	stack: string[],
+): void {
+	const cycleStart = stack.indexOf(absolutePath);
+	if (cycleStart !== -1) {
+		const cycle = [...stack.slice(cycleStart), absolutePath];
+		throw constructionError(
+			"include.cycle",
+			`Include graph contains a cycle: ${cycle.join(" -> ")}.`,
+		);
+	}
+	const nextStack = [...stack, absolutePath];
+	for (const line of authoredTextLines(readFileSync(absolutePath, "utf8"))) {
+		const directive = parseReaderIncludeDirective(line);
+		if (!directive || directive.escaped) {
+			continue;
+		}
+		const attributes = parseIncludeAttributes(directive.attrlist);
+		if (attributes.classification === "unmapped") {
+			continue;
+		}
+		if (isUriTarget(directive.target) || directive.target.includes("{")) {
+			throwDiagnostic(
+				classifyReaderBoundaryDiagnostic({
+					target: directive.target,
+					attrlist: directive.attrlist,
+					containingFilePath: absolutePath,
+					documentRoot,
+					missing: false,
+				}),
+			);
+		}
+		const includePath = resolveIncludeTarget(absolutePath, directive.target);
+		try {
+			relativePathWithinDocumentRoot(documentRoot, includePath);
+		} catch {
+			throwDiagnostic(
+				classifyReaderBoundaryDiagnostic({
+					target: directive.target,
+					attrlist: directive.attrlist,
+					containingFilePath: absolutePath,
+					documentRoot,
+					missing: false,
+				}),
+			);
+		}
+		if (!existsSync(includePath)) {
+			if (hasOptionalSurface(attributes)) {
+				continue;
+			}
+			throwDiagnostic(
+				classifyReaderBoundaryDiagnostic({
+					target: directive.target,
+					attrlist: directive.attrlist,
+					containingFilePath: absolutePath,
+					documentRoot,
+					missing: true,
+				}),
+			);
+		}
+		if (firstSelectionSurface(attributes)) {
+			continue;
+		}
+		validateIncludeGraph(includePath, documentRoot, nextStack);
+	}
+}
 
 export function preprocessBookEntryWithOfficialReader(
 	options: PreprocessBookEntryOptions,
@@ -73,6 +144,13 @@ export function preprocessBookEntryWithOfficialReader(
 	const entryPath = resolveEntryPath(options.sourcePath);
 	const documentRoot = normalizeDocumentRoot(options.documentRoot);
 	relativePathWithinDocumentRoot(documentRoot, entryPath);
+	if (!existsSync(entryPath)) {
+		throw constructionError(
+			"entry.missing-source",
+			`Entry source file does not exist: ${entryPath}.`,
+		);
+	}
+	validateIncludeGraph(entryPath, documentRoot, []);
 	const officialLines = options.adapter.readPreprocessedLines(
 		readerPreprocessingOptions({
 			sourcePath: entryPath,
@@ -87,6 +165,7 @@ export function preprocessBookEntryWithOfficialReader(
 		records: [],
 		diagnostics: [],
 		optionalIncludes: [],
+		includeStack: [],
 		officialIndex: 0,
 	};
 
@@ -112,18 +191,31 @@ function appendSourceFile(
 	absolutePath: string,
 	state: PreprocessorState,
 ): void {
+	const existingIndex = state.includeStack.indexOf(absolutePath);
+	if (existingIndex !== -1) {
+		const cycle = [...state.includeStack.slice(existingIndex), absolutePath];
+		throw constructionError(
+			"include.cycle",
+			`Include graph contains a cycle: ${cycle.join(" -> ")}.`,
+		);
+	}
+	state.includeStack.push(absolutePath);
 	const sourceFile = state.sourceSet.registerFile(absolutePath);
-	for (const line of authoredLines(sourceFile)) {
-		const directive = parseReaderIncludeDirective(line.text);
-		if (!directive) {
-			appendPhysicalLine(sourceFile, line, state);
-			continue;
+	try {
+		for (const line of authoredLines(sourceFile)) {
+			const directive = parseReaderIncludeDirective(line.text);
+			if (!directive) {
+				appendPhysicalLine(sourceFile, line, state);
+				continue;
+			}
+			if (directive.escaped) {
+				appendEscapedIncludeLine(sourceFile, line, state);
+				continue;
+			}
+			appendIncludeDirective(sourceFile, line, directive, state);
 		}
-		if (directive.escaped) {
-			appendEscapedIncludeLine(sourceFile, line, state);
-			continue;
-		}
-		appendIncludeDirective(sourceFile, line, directive, state);
+	} finally {
+		state.includeStack.pop();
 	}
 }
 
@@ -140,7 +232,7 @@ function appendIncludeDirective(
 		return;
 	}
 	if (isUriTarget(directive.target) || directive.target.includes("{")) {
-		state.diagnostics.push(
+		throwDiagnostic(
 			classifyReaderBoundaryDiagnostic({
 				target: directive.target,
 				attrlist: directive.attrlist,
@@ -149,7 +241,6 @@ function appendIncludeDirective(
 				missing: false,
 			}),
 		);
-		return;
 	}
 
 	const includePath = resolveIncludeTarget(
@@ -159,7 +250,7 @@ function appendIncludeDirective(
 	try {
 		relativePathWithinDocumentRoot(state.documentRoot, includePath);
 	} catch {
-		state.diagnostics.push(
+		throwDiagnostic(
 			classifyReaderBoundaryDiagnostic({
 				target: directive.target,
 				attrlist: directive.attrlist,
@@ -168,7 +259,6 @@ function appendIncludeDirective(
 				missing: false,
 			}),
 		);
-		return;
 	}
 	if (!existsSync(includePath)) {
 		if (hasOptionalSurface(attributes)) {
@@ -176,7 +266,7 @@ function appendIncludeDirective(
 				includeEvidence(containingFile, line.number, directive, attributes.raw),
 			);
 		} else {
-			state.diagnostics.push(
+			throwDiagnostic(
 				classifyReaderBoundaryDiagnostic({
 					target: directive.target,
 					attrlist: directive.attrlist,
@@ -209,6 +299,14 @@ function appendIncludeDirective(
 	if (hasLeveloffsetSurface(attributes)) {
 		consumeGeneratedTailForInclude(state);
 	}
+}
+
+function throwDiagnostic(diagnostic: BookEntryDiagnostic): never {
+	throw constructionError(
+		diagnostic.code,
+		diagnostic.message,
+		diagnostic.source,
+	);
 }
 
 function includeEvidence(
@@ -351,7 +449,7 @@ function appendEscapedIncludeLine(
 	line: SourceLine,
 	state: PreprocessorState,
 ): void {
-	const official = consumeOfficialLine(state);
+	const official = consumeEscapedIncludeOfficialLine(state);
 	state.records.push({
 		kind: "source-preserving",
 		logicalLine: state.records.length + 1,
@@ -396,7 +494,11 @@ function consumeGeneratedTailForInclude(state: PreprocessorState): void {
 		if (!next || !(next.text === "" || next.text.startsWith(":leveloffset"))) {
 			break;
 		}
-		appendGeneratedControl(consumeOfficialLine(state)?.text ?? "", state);
+		const official = consumeOfficialLine(state);
+		if (official?.text.startsWith(":leveloffset")) {
+			appendGeneratedControl(official.text, state);
+			break;
+		}
 	}
 }
 
@@ -443,6 +545,18 @@ function consumeOfficialLine(
 	return official;
 }
 
+function consumeEscapedIncludeOfficialLine(
+	state: PreprocessorState,
+): OfficialReaderLine | undefined {
+	const first = consumeOfficialLine(state);
+	const second = state.officialLines[state.officialIndex];
+	if (first?.text === "\\" && second?.text.startsWith("include::")) {
+		state.officialIndex += 1;
+		return { ...second, text: second.text };
+	}
+	return first;
+}
+
 function parseReaderIncludeDirective(
 	line: string,
 ): IncludeDirective | undefined {
@@ -465,4 +579,12 @@ function authoredLines(sourceFile: SourceFileRecord): readonly SourceLine[] {
 		return sourceFile.lineTable.lines.slice(0, -1);
 	}
 	return sourceFile.lineTable.lines;
+}
+
+function authoredTextLines(sourceText: string): readonly string[] {
+	const lines = sourceText.split(/\r?\n/u);
+	if (sourceText.endsWith("\n") && lines.at(-1) === "") {
+		return lines.slice(0, -1);
+	}
+	return lines;
 }

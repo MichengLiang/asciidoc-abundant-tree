@@ -1,0 +1,14 @@
+== Main Chapter
+
+Main paragraph xref:preface[Preface].
+
+include::nested/section.adoc[]
+
+include::../snippets/tagged-xref.adoc[tag=main]
+
+include::../snippets/lines.adoc[lines="1..2,5"]
+
+[source,js]
+----
+include::../examples/minimal-tool.mjs[tag=main]
+----

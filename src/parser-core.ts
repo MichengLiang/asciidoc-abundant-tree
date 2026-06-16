@@ -3,6 +3,10 @@ import type {
 	AsciidoctorBlock,
 } from "./asciidoctor-adapter";
 import { addAnchorTargets, bindXrefs } from "./binding-merge";
+import {
+	recoverSourceAwareDocumentTitleSourceLayer,
+	sourceAwareDocumentForLineTable,
+} from "./book-entry/source-aware-coordinate";
 import type { AbundantDocument, AsciidoctorLayer, ParserInfo } from "./model";
 import { definedObject } from "./object-utils";
 import { projectOfficialDocument } from "./official-projector";
@@ -47,6 +51,7 @@ export function parseAsciidoctorDocument(
 		sourceSurfaces.anchorOccurrences,
 	);
 	bindXrefs(sourceSurfaces.xrefOccurrences, officialProjection.targets);
+	const titleSource = documentTitleSource(input.lineTable);
 
 	return {
 		kind: "document",
@@ -60,10 +65,7 @@ export function parseAsciidoctorDocument(
 		title: {
 			kind: "title",
 			text: input.officialDocument.getDocumentTitle?.() ?? "",
-			source: {
-				line: 1,
-				sourceSpan: spanForLineText(input.lineTable, 1, 1),
-			},
+			source: titleSource,
 			asciidoctor: definedObject({
 				context: input.officialDocument.getContext?.(),
 				nodeName: input.officialDocument.getNodeName?.(),
@@ -74,6 +76,24 @@ export function parseAsciidoctorDocument(
 		xrefOccurrences: sourceSurfaces.xrefOccurrences,
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
 		toolDiagnostics: sourceSurfaces.toolDiagnostics,
+	};
+}
+
+function documentTitleSource(lineTable: LineTable) {
+	const sourceSpan = spanForLineText(lineTable, 1, 1);
+	const sourceAwareDocument = sourceAwareDocumentForLineTable(lineTable);
+	if (sourceAwareDocument) {
+		const recovered = recoverSourceAwareDocumentTitleSourceLayer(
+			sourceAwareDocument,
+			sourceSpan,
+		);
+		if (recovered?.sourceLayer) {
+			return recovered.sourceLayer;
+		}
+	}
+	return {
+		line: 1,
+		sourceSpan,
 	};
 }
 

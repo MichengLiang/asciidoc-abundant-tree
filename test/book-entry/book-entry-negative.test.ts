@@ -43,20 +43,28 @@ describe("book-entry negative construction contracts", () => {
 		);
 	});
 
-	it("fails when an include directive uses an unsupported tag attrlist", () => {
-		expectConstructionError(
-			() => parseNegativeFixture("unsupported-tag.adoc"),
-			"include.unsupported-attrlist",
-			[/Include directive uses unsupported attrlist 'tag=main'\./],
-		);
+	it("does not treat tag attrlists as unsupported in active book-entry parsing", () => {
+		const document = parseAbundantTree({
+			sourcePath: join(fixtureRoot, "simple-book/book.adoc"),
+			mode: "book-entry",
+			documentRoot: fixtureRoot,
+		});
+
+		expect(
+			document.toolDiagnostics.map((diagnostic) => diagnostic.code),
+		).not.toContain("include.unsupported-attrlist");
 	});
 
-	it("fails when an include directive uses an unsupported lines attrlist", () => {
-		expectConstructionError(
-			() => parseNegativeFixture("unsupported-lines.adoc"),
-			"include.unsupported-attrlist",
-			[/Include directive uses unsupported attrlist 'lines=1\.\.4'\./],
-		);
+	it("does not treat lines attrlists as unsupported in active book-entry parsing", () => {
+		const document = parseAbundantTree({
+			sourcePath: join(fixtureRoot, "simple-book/book.adoc"),
+			mode: "book-entry",
+			documentRoot: fixtureRoot,
+		});
+
+		expect(
+			document.toolDiagnostics.map((diagnostic) => diagnostic.code),
+		).not.toContain("include.unsupported-attrlist");
 	});
 
 	it("fails before reading an include path outside documentRoot", () => {
