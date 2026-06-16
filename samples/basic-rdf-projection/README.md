@@ -47,6 +47,8 @@ uv run samples/basic-rdf-projection/consume_projection.py
 
 订单处理流程先执行 xref:stock-check[库存校验, rel=requires, weight=0.7]，然后把结果写入交接说明。
 
+// 如果元数据的值很长也可以分多行标注
+[apple=true]
 [#stock-check.rule, status=active]
 == 库存校验
 
@@ -86,7 +88,7 @@ WHERE order_id = :order_id;
 <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#activity> a prov:Activity, aat:ProjectionActivity;
     prov:used <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source>.
 <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l1-o0> a aat:Heading;
-    aat:containsDirectly <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>, <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l27-o0>, <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0>;
+    aat:containsDirectly <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>, <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l29-o0>, <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0>;
     aat:contentEndLine 3;
     aat:contentStartLine 3;
     aat:documentOrder 1;
@@ -101,20 +103,22 @@ WHERE order_id = :order_id;
 """;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
     aat:startLine 1.
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0> a aat:Heading;
+<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0> a aat:Heading;
     aat:addressLabel "stock-check", "stock-query-example";
+    aat:apple "true";
     aat:childOrder 2;
-    aat:containsDirectly <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l23-o0>;
-    aat:contentEndLine 21;
-    aat:contentStartLine 13;
+    aat:containsDirectly <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l25-o0>;
+    aat:contentEndLine 23;
+    aat:contentStartLine 15;
     aat:documentOrder 3;
-    aat:endLine 22;
+    aat:endLine 24;
     aat:headingLevel 1;
-    aat:headingLine 11;
+    aat:headingLine 13;
     aat:headline "库存校验";
-    aat:metadataEndLine 10;
-    aat:metadataStartLine 10;
-    aat:raw """[#stock-check.rule, status=active]
+    aat:metadataEndLine 12;
+    aat:metadataStartLine 11;
+    aat:raw """[apple=true]
+[#stock-check.rule, status=active]
 == 库存校验
 
 库存校验规则描述订单进入履约前需要读取的库存快照。
@@ -130,17 +134,17 @@ WHERE order_id = :order_id;
 """;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
     aat:role "rule";
-    aat:startLine 10;
+    aat:startLine 11;
     aat:status "active".
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l23-o0> a aat:Heading;
+<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l25-o0> a aat:Heading;
     aat:childOrder 1;
-    aat:contentEndLine 25;
-    aat:contentStartLine 25;
+    aat:contentEndLine 27;
+    aat:contentStartLine 27;
     aat:documentOrder 4;
-    aat:endLine 26;
+    aat:endLine 28;
     aat:generatedAddressLabel "_缺货处理";
     aat:headingLevel 2;
-    aat:headingLine 23;
+    aat:headingLine 25;
     aat:headline "缺货处理";
     aat:raw """=== 缺货处理
 
@@ -148,19 +152,19 @@ WHERE order_id = :order_id;
 
 """;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:startLine 23.
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l27-o0> a aat:Heading;
+    aat:startLine 25.
+<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l29-o0> a aat:Heading;
     aat:addressLabel "handoff-note";
     aat:childOrder 3;
-    aat:contentEndLine 32;
-    aat:contentStartLine 30;
+    aat:contentEndLine 34;
+    aat:contentStartLine 32;
     aat:documentOrder 5;
-    aat:endLine 33;
+    aat:endLine 35;
     aat:headingLevel 1;
-    aat:headingLine 28;
+    aat:headingLine 30;
     aat:headline "交接说明";
-    aat:metadataEndLine 27;
-    aat:metadataStartLine 27;
+    aat:metadataEndLine 29;
+    aat:metadataStartLine 29;
     aat:raw """[#handoff-note.note, status=active]
 == 交接说明
 
@@ -169,19 +173,19 @@ WHERE order_id = :order_id;
 交接说明也用 xref:stock-check[] 展示默认 `aat:references` 关系。
 
 """;
-    aat:references <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
+    aat:references <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
     aat:role "note";
-    aat:startLine 27;
+    aat:startLine 29;
     aat:status "active";
-    rel:documents <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>.
+    rel:documents <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>.
 <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0> a aat:Heading;
     aat:addressLabel "order-flow";
     aat:childOrder 1;
-    aat:contentEndLine 8;
+    aat:contentEndLine 10;
     aat:contentStartLine 8;
     aat:documentOrder 2;
-    aat:endLine 9;
+    aat:endLine 10;
     aat:headingLevel 1;
     aat:headingLine 6;
     aat:headline "订单处理流程";
@@ -193,23 +197,24 @@ WHERE order_id = :order_id;
 
 订单处理流程先执行 xref:stock-check[库存校验, rel=requires, weight=0.7]，然后把结果写入交接说明。
 
+// 如果元数据的值很长也可以分多行标注
 """;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
     aat:role "process";
     aat:startLine 5;
     aat:status "draft";
-    rel:requires <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>.
+    rel:requires <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>.
 <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#projection> a prov:Entity, aat:HeadingProjection;
     prov:hadPrimarySource <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source>;
     prov:wasDerivedFrom <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source>;
     prov:wasGeneratedBy <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#activity>.
 <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source> a prov:Entity, aat:AsciiDocSourceDocument;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc".
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l30-c7-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l27-o0> rel:documents <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>)>>;
+<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l32-c7-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l29-o0> rel:documents <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>)>>;
     a aat:XrefEdge;
     aat:displayLabel "库存查询示例";
     aat:endColumn 54;
-    aat:endLine 30;
+    aat:endLine 32;
     aat:officialHref "#stock-query-example";
     aat:officialReftext "库存查询示例";
     aat:officialResolvedId "stock-query-example";
@@ -217,31 +222,31 @@ WHERE order_id = :order_id;
     aat:raw "xref:stock-query-example[库存查询示例, rel=documents]";
     aat:rel "documents";
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:sourceHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l27-o0>;
+    aat:sourceHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l29-o0>;
     aat:sourceSelector "handoff-note";
     aat:startColumn 7;
-    aat:startLine 30;
+    aat:startLine 32;
     aat:syntax "macro";
-    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
+    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>;
     aat:targetSelector "stock-query-example".
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l32-c8-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l27-o0> aat:references <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>)>>;
+<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l34-c8-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l29-o0> aat:references <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>)>>;
     a aat:XrefEdge;
     aat:endColumn 26;
-    aat:endLine 32;
+    aat:endLine 34;
     aat:officialHref "#stock-check";
     aat:officialReftext "库存校验";
     aat:officialResolvedId "stock-check";
     aat:officialResolvedType "section";
     aat:raw "xref:stock-check[]";
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:sourceHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l27-o0>;
+    aat:sourceHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l29-o0>;
     aat:sourceSelector "handoff-note";
     aat:startColumn 8;
-    aat:startLine 32;
+    aat:startLine 34;
     aat:syntax "macro";
-    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
+    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>;
     aat:targetSelector "stock-check".
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l8-c11-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0> rel:requires <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>)>>;
+<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l8-c11-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0> rel:requires <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>)>>;
     a aat:XrefEdge;
     aat:displayLabel "库存校验";
     aat:endColumn 59;
@@ -258,7 +263,7 @@ WHERE order_id = :order_id;
     aat:startColumn 11;
     aat:startLine 8;
     aat:syntax "macro";
-    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
+    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l11-o0>;
     aat:targetSelector "stock-check";
     aat:weight "0.7".
 ```

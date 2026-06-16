@@ -7,6 +7,8 @@
 
 订单处理流程先执行 xref:stock-check[库存校验, rel=requires, weight=0.7]，然后把结果写入交接说明。
 
+// 如果元数据的值很长也可以分多行标注
+[apple=true]
 [#stock-check.rule, status=active]
 == 库存校验
 
