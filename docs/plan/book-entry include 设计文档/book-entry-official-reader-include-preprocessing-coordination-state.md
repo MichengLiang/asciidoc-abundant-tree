@@ -1,6 +1,6 @@
 # Book-Entry Official Reader Include Preprocessing Coordination State
 
-Last updated: 2026-06-16 23:55:00 CST.
+Last updated: 2026-06-17 00:27:00 CST.
 
 ## Role Boundary
 
@@ -119,11 +119,49 @@ Goal: route book-entry parsing through the official Reader source-aware document
 
 Required deliverables include parser integration tests, source-coordinate tests, generated/degraded line behavior, block multi-source diagnostics, and compatibility with existing source surfaces.
 
-Status: ready for dispatch.
+Status: accepted after coordinator review.
+
+Implementation commits:
+
+```text
+89d899a0483d7dc33faaab685886cac27f5b27ed Route book-entry parser through official Reader recovery
+59c1cb206b4679dc37f22b1b08449410669df60e Add source-aware recovery diagnostic contract tests
+```
+
+Coordinator review findings resolved:
+
+- The first Batch 2 submission lacked explicit recovery tests for parser positions on generated control lines. The worker added a fixture-backed `source-coordinate.generated-line` recovery test.
+- The first Batch 2 submission lacked degraded-line coordinate recovery coverage. The worker added a minimal `SourceAwareLogicalDocument` recovery test for `source-coordinate.degraded-line`.
+- The inserted-indentation column test now states that direct point recovery is used because parser xref occurrences start at macro tokens, not generated whitespace.
+
+Coordinator verification on current HEAD after the fixes:
+
+```bash
+pnpm vitest run test/book-entry/official-reader-parser-integration.test.ts test/book-entry/official-reader-source-coordinate.test.ts test/book-entry test/parser-include-source-map.test.ts test/rdf12-projection/book-entry-coordinate.test.ts test/rdf12-projection/public-api.test.ts
+# 21 files / 133 tests passed before the follow-up; 21 files / 135 tests passed after the follow-up per worker report
+
+pnpm vitest run test/book-entry/official-reader-source-coordinate.test.ts
+# 1 file / 7 tests passed
+
+pnpm typecheck
+# passed
+
+pnpm lint
+# passed
+
+pnpm test
+# 60 files / 442 tests passed
+```
+
+Known hardening risk:
+
+- Full and affected tests pass, but negative fixtures currently emit official Asciidoctor stderr warning/error lines before construction errors are asserted. Batch 4 must decide whether to suppress/capture this noise for CI signal quality.
 
 ### Batch 3: RDF12 Reconstruction and CLI Acceptance
 
 Goal: prove source reconstruction and CLI behavior for the official-reader fixture, including full raw source files and no parser-safe logical text reconstruction leakage.
+
+Status: ready for dispatch.
 
 ### Batch 4: Full Regression, Workspace Fixture, and Final Hardening
 
@@ -131,4 +169,4 @@ Goal: run the full acceptance command set, verify the workspace page-map failure
 
 ## Current Dispatch
 
-Batch 1 is accepted. Batch 2 is the next dispatch.
+Batch 1 and Batch 2 are accepted. Batch 3 is the next dispatch.
