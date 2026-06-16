@@ -131,13 +131,15 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 			}
 			const lines: OfficialReaderLine[] = [];
 			while (true) {
+				const before = readerCursorEvidence(reader.getCursor?.());
 				const text = reader.readLine();
 				if (text === undefined || text === null) {
 					break;
 				}
+				const after = readerCursorEvidence(reader.getCursor?.());
 				lines.push({
 					text,
-					cursor: readerCursorEvidence(reader.getCursor?.()),
+					cursor: cursorForReturnedReaderLine(before, after),
 				});
 			}
 			return lines;
@@ -207,6 +209,28 @@ function definedReaderCursor(cursor: ReaderLineCursor): ReaderLineCursor {
 			? { lineNumber: cursor.lineNumber }
 			: {}),
 	};
+}
+
+function cursorForReturnedReaderLine(
+	before: ReaderLineCursor,
+	after: ReaderLineCursor,
+): ReaderLineCursor {
+	if (
+		before.file === after.file &&
+		before.lineNumber !== undefined &&
+		after.lineNumber === before.lineNumber + 1
+	) {
+		return before;
+	}
+	// The first line emitted from an include is only discoverable after Reader
+	// enters the target file; the post-read cursor then points one line ahead.
+	if (after.lineNumber !== undefined && after.lineNumber > 1) {
+		return definedReaderCursor({
+			...after,
+			lineNumber: after.lineNumber - 1,
+		});
+	}
+	return before;
 }
 
 function hasRuntimeInlineFactory(value: unknown): value is ReturnType<
