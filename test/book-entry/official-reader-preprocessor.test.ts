@@ -125,6 +125,33 @@ describe("book-entry official Reader preprocessor", () => {
 		expect(selectedSourceLines(document, "lines.adoc")).toEqual([1, 2, 3, 8]);
 	});
 
+	it("does not treat unmapped include attributes as source contributions", () => {
+		const entryPath = writeFixture(
+			"unmapped/book.adoc",
+			"include::chapter.adoc[foo=bar]\n",
+		);
+		writeFixture("unmapped/chapter.adoc", "included\n");
+
+		const document = preprocessBookEntryWithOfficialReader({
+			adapter: createAsciidoctorAdapter(),
+			sourcePath: entryPath,
+			documentRoot: join(fixtureRoot, "unmapped"),
+		});
+
+		expect(document.logicalText).not.toContain("included");
+		expect(document.diagnostics).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					level: "error",
+					code: "include.attrlist-unmapped",
+				}),
+			]),
+		);
+		expect(document.sourceFiles.map((file) => file.relativePath)).toEqual([
+			"book.adoc",
+		]);
+	});
+
 	it("records indentation transforms, leveloffset controls, optional missing includes, and escaped includes", () => {
 		const entryPath = writeFixture(
 			"surfaces/book.adoc",
@@ -161,11 +188,13 @@ describe("book-entry official Reader preprocessor", () => {
 		);
 		expect(document.logicalText).toContain("\\include::escaped.adoc[]");
 		expect(document.logicalText).not.toContain("must not appear");
-		expect(document.diagnostics).toEqual(
-			expect.arrayContaining([
-				expect.objectContaining({ code: "include.optional-target-missing" }),
-			]),
-		);
+		expect(document.optionalIncludes).toEqual([
+			expect.objectContaining({
+				relativePath: "book.adoc",
+				sourceLine: 3,
+				target: "missing.adoc",
+			}),
+		]);
 	});
 });
 

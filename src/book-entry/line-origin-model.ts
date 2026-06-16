@@ -94,12 +94,16 @@ export type SourceAwareLogicalDocument = {
 	readonly lines: readonly LogicalLineRecord[];
 	readonly sourceFiles: readonly SourceFileRecord[];
 	readonly diagnostics: readonly BookEntryDiagnostic[];
+	readonly optionalIncludes?: readonly IncludeDirectiveEvidence[] | undefined;
 };
 
 export function assertSourceAwareLogicalDocumentInvariants(
 	document: SourceAwareLogicalDocument,
 ): void {
-	const logicalLineCount = document.logicalText.split(/\r?\n/u).length;
+	const logicalLineCount =
+		document.logicalText === "" && document.lines.length === 0
+			? 0
+			: document.logicalText.split(/\r?\n/u).length;
 	if (logicalLineCount !== document.lines.length) {
 		throw constructionError(
 			"logical-line-record.count-mismatch",

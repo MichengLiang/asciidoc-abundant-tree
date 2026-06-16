@@ -55,7 +55,7 @@ describe("book-entry reader boundary policy", () => {
 		);
 	});
 
-	it("classifies missing required and optional include targets", () => {
+	it("classifies missing required include targets", () => {
 		const required = classifyReaderBoundaryDiagnostic({
 			target: "missing.adoc",
 			attrlist: "",
@@ -63,19 +63,9 @@ describe("book-entry reader boundary policy", () => {
 			documentRoot: fixtureRoot,
 			missing: true,
 		});
-		const optional = classifyReaderBoundaryDiagnostic({
-			target: "missing.adoc",
-			attrlist: "opts=optional",
-			containingFilePath: join(fixtureRoot, "book.adoc"),
-			documentRoot: fixtureRoot,
-			missing: true,
-		});
 
 		expect(required).toEqual(
 			expect.objectContaining({ code: "include.missing-target" }),
-		);
-		expect(optional).toEqual(
-			expect.objectContaining({ code: "include.optional-target-missing" }),
 		);
 	});
 

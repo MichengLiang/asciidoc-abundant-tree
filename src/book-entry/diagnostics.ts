@@ -10,7 +10,6 @@ export type BookEntryConstructionErrorCode =
 	| "include.uri-target-unsupported"
 	| "include.official-reader-error"
 	| "include.target-unresolved-attribute"
-	| "include.optional-target-missing"
 	| "logical-line-record.count-mismatch"
 	| "logical-line-origin.count-mismatch"
 	| "line-origin.source-file-missing"

@@ -60,16 +60,6 @@ export function classifyReaderBoundaryDiagnostic(
 		};
 	}
 	const attributes = parseIncludeAttributes(input.attrlist);
-	if (
-		input.missing &&
-		attributes.surfaces.some((surface) => surface.kind === "optional")
-	) {
-		return {
-			level: "warning",
-			code: "include.optional-target-missing",
-			message: `Optional include target does not exist: ${resolved}.`,
-		};
-	}
 	if (!input.missing && attributes.classification === "unmapped") {
 		return {
 			level: "error",

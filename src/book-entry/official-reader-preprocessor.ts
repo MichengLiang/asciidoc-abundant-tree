@@ -22,6 +22,7 @@ import {
 } from "./include-selection-mapper";
 import {
 	assertSourceAwareLogicalDocumentInvariants,
+	type IncludeDirectiveEvidence,
 	type LogicalLineRecord,
 	type SourceAwareLogicalDocument,
 	type SourceFileRecord,
@@ -59,6 +60,7 @@ type PreprocessorState = {
 	readonly sourceSet: ReturnType<typeof createSourceSet>;
 	readonly records: LogicalLineRecord[];
 	readonly diagnostics: BookEntryDiagnostic[];
+	readonly optionalIncludes: IncludeDirectiveEvidence[];
 	officialIndex: number;
 };
 
@@ -84,6 +86,7 @@ export function preprocessBookEntryWithOfficialReader(
 		sourceSet: createSourceSet({ documentRoot }),
 		records: [],
 		diagnostics: [],
+		optionalIncludes: [],
 		officialIndex: 0,
 	};
 
@@ -97,6 +100,9 @@ export function preprocessBookEntryWithOfficialReader(
 		lines: safe.lineRecords,
 		sourceFiles: state.sourceSet.records(),
 		diagnostics: state.diagnostics,
+		...(state.optionalIncludes.length > 0
+			? { optionalIncludes: state.optionalIncludes }
+			: {}),
 	};
 	assertSourceAwareLogicalDocumentInvariants(document);
 	return document;
@@ -117,17 +123,22 @@ function appendSourceFile(
 			appendEscapedIncludeLine(sourceFile, line, state);
 			continue;
 		}
-		appendIncludeDirective(sourceFile, directive, state);
+		appendIncludeDirective(sourceFile, line, directive, state);
 	}
 }
 
 function appendIncludeDirective(
 	containingFile: SourceFileRecord,
+	line: SourceLine,
 	directive: IncludeDirective,
 	state: PreprocessorState,
 ): void {
 	const attributes = parseIncludeAttributes(directive.attrlist);
 	state.diagnostics.push(...attributes.diagnostics);
+	if (attributes.classification === "unmapped") {
+		discardRejectedIncludeOutput(containingFile, directive, state);
+		return;
+	}
 	if (isUriTarget(directive.target) || directive.target.includes("{")) {
 		state.diagnostics.push(
 			classifyReaderBoundaryDiagnostic({
@@ -160,15 +171,21 @@ function appendIncludeDirective(
 		return;
 	}
 	if (!existsSync(includePath)) {
-		state.diagnostics.push(
-			classifyReaderBoundaryDiagnostic({
-				target: directive.target,
-				attrlist: directive.attrlist,
-				containingFilePath: containingFile.absolutePath,
-				documentRoot: state.documentRoot,
-				missing: true,
-			}),
-		);
+		if (hasOptionalSurface(attributes)) {
+			state.optionalIncludes.push(
+				includeEvidence(containingFile, line.number, directive, attributes.raw),
+			);
+		} else {
+			state.diagnostics.push(
+				classifyReaderBoundaryDiagnostic({
+					target: directive.target,
+					attrlist: directive.attrlist,
+					containingFilePath: containingFile.absolutePath,
+					documentRoot: state.documentRoot,
+					missing: true,
+				}),
+			);
+		}
 		return;
 	}
 
@@ -192,8 +209,38 @@ function appendIncludeDirective(
 	if (hasLeveloffsetSurface(attributes)) {
 		consumeGeneratedTailForInclude(state);
 	}
-	if (hasOptionalSurface(attributes)) {
-		return;
+}
+
+function includeEvidence(
+	containingFile: SourceFileRecord,
+	sourceLine: number,
+	directive: IncludeDirective,
+	attrlist: string,
+): IncludeDirectiveEvidence {
+	return {
+		absolutePath: containingFile.absolutePath,
+		relativePath: containingFile.relativePath,
+		sourceLine,
+		target: directive.target,
+		attrlist,
+	};
+}
+
+function discardRejectedIncludeOutput(
+	containingFile: SourceFileRecord,
+	directive: IncludeDirective,
+	state: PreprocessorState,
+): void {
+	const includePath = resolveIncludeTarget(
+		containingFile.absolutePath,
+		directive.target,
+	);
+	while (state.officialIndex < state.officialLines.length) {
+		const next = state.officialLines[state.officialIndex];
+		if (!next || next.cursor.file !== includePath) {
+			break;
+		}
+		state.officialIndex += 1;
 	}
 }
 
@@ -205,7 +252,7 @@ function appendFullFileInclude(
 	for (const line of authoredLines(targetFile)) {
 		const directive = parseReaderIncludeDirective(line.text);
 		if (directive && !directive.escaped) {
-			appendIncludeDirective(targetFile, directive, state);
+			appendIncludeDirective(targetFile, line, directive, state);
 			continue;
 		}
 		appendIncludedPhysicalLine(targetFile, line, indent, undefined, state);
