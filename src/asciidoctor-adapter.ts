@@ -50,6 +50,18 @@ export type OfficialXrefBinding = {
 	reftext?: string | undefined;
 };
 
+export type ReaderLineCursor = {
+	readonly file?: string | undefined;
+	readonly directory?: string | undefined;
+	readonly path?: string | undefined;
+	readonly lineNumber?: number | undefined;
+};
+
+export type OfficialReaderLine = {
+	readonly text: string;
+	readonly cursor: ReaderLineCursor;
+};
+
 export type AsciidoctorAdapter = {
 	parserVersion: string;
 	loadFile(sourcePath: string): AsciidoctorBlock;
@@ -70,6 +82,11 @@ export type AsciidoctorAdapter = {
 
 export type AsciidoctorParserAdapter = AsciidoctorAdapter & {
 	loadSource(sourceText: string): AsciidoctorBlock;
+	readPreprocessedLines(options: {
+		readonly sourcePath: string;
+		readonly baseDir: string;
+		readonly attributes?: Record<string, unknown> | undefined;
+	}): readonly OfficialReaderLine[];
 };
 
 export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
@@ -93,6 +110,37 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				sourcemap: true,
 				to_file: false,
 			}) as AsciidoctorBlock;
+		},
+		readPreprocessedLines(options) {
+			const document = processor.loadFile(options.sourcePath, {
+				safe: "safe",
+				base_dir: options.baseDir,
+				sourcemap: true,
+				parse: false,
+				to_file: false,
+				attributes: options.attributes ?? {},
+			}) as AsciidoctorBlock & {
+				getReader?: () => {
+					readLine: () => string | undefined | null;
+					getCursor?: () => unknown;
+				};
+			};
+			const reader = document.getReader?.();
+			if (!reader) {
+				throw new Error("Asciidoctor document does not expose a Reader.");
+			}
+			const lines: OfficialReaderLine[] = [];
+			while (true) {
+				const text = reader.readLine();
+				if (text === undefined || text === null) {
+					break;
+				}
+				lines.push({
+					text,
+					cursor: readerCursorEvidence(reader.getCursor?.()),
+				});
+			}
+			return lines;
 		},
 		extractAnchorBindings(html) {
 			return extractAnchorBindings(parseFragment(html));
@@ -127,6 +175,37 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				reftext: anchor.text,
 			};
 		},
+	};
+}
+
+function readerCursorEvidence(cursor: unknown): ReaderLineCursor {
+	if (!hasProperties(cursor)) {
+		return {};
+	}
+	return definedReaderCursor({
+		file: typeof cursor.getFile === "function" ? cursor.getFile() : undefined,
+		directory:
+			typeof cursor.getDirectory === "function"
+				? cursor.getDirectory()
+				: undefined,
+		path: typeof cursor.getPath === "function" ? cursor.getPath() : undefined,
+		lineNumber:
+			typeof cursor.getLineNumber === "function"
+				? cursor.getLineNumber()
+				: undefined,
+	});
+}
+
+function definedReaderCursor(cursor: ReaderLineCursor): ReaderLineCursor {
+	return {
+		...(typeof cursor.file === "string" ? { file: cursor.file } : {}),
+		...(typeof cursor.directory === "string"
+			? { directory: cursor.directory }
+			: {}),
+		...(typeof cursor.path === "string" ? { path: cursor.path } : {}),
+		...(typeof cursor.lineNumber === "number"
+			? { lineNumber: cursor.lineNumber }
+			: {}),
 	};
 }
 
