@@ -14,6 +14,14 @@ import { iriTerm } from "../src/rdf12-projection/terms";
 const projectRoot = process.cwd();
 const bookEntryFixtureRoot = join(projectRoot, "test/book-entry/fixtures");
 const bookEntryPath = join(bookEntryFixtureRoot, "simple-book/book.adoc");
+const officialReaderFixtureRoot = join(
+	projectRoot,
+	"test/book-entry/fixtures/official-reader-book",
+);
+const officialReaderBookEntryPath = join(
+	officialReaderFixtureRoot,
+	"book.adoc",
+);
 
 describe("cli", () => {
 	it("shows help text", () => {
@@ -107,6 +115,44 @@ describe("cli", () => {
 		expect(sourceRelativePath(sectionByTitle(json, "Xref Origin"))).toBe(
 			"simple-book/chapters/01-entry-origin.adoc",
 		);
+	});
+
+	it("prints official Reader book-entry JSON with tagged include reconstruction", () => {
+		const result = runCli([
+			officialReaderBookEntryPath,
+			"--mode",
+			"book-entry",
+			"--document-root",
+			officialReaderFixtureRoot,
+			"--format",
+			"json",
+		]);
+		const json = JSON.parse(result.stdout);
+		const diagnostics = JSON.stringify(json.toolDiagnostics ?? []);
+
+		expect(result.code).toBe(0);
+		expect(result.stderr).toBe("");
+		expect(sectionTitles(json)).toEqual(
+			expect.arrayContaining(["Main Chapter", "Snippet Chapter"]),
+		);
+		expect(listingContents(json)).toEqual(
+			expect.arrayContaining([
+				expect.stringContaining("export function describeBook"),
+			]),
+		);
+		expect(sourceFileRawByRelativePath(json)).toEqual(
+			expect.objectContaining({
+				"book.adoc": expect.stringContaining(
+					"include::chapters/01-main.adoc[leveloffset=+1]",
+				),
+				"chapters/01-main.adoc": expect.stringContaining(
+					"include::../examples/minimal-tool.mjs[tag=main]",
+				),
+				"examples/minimal-tool.mjs": expect.stringContaining("// tag::main[]"),
+				"snippets/lines.adoc": expect.stringContaining("Line four."),
+			}),
+		);
+		expect(diagnostics).not.toContain("include.unsupported-attrlist");
 	});
 
 	it("prints book-entry pretty tree through explicit book-entry mode", () => {
@@ -450,6 +496,44 @@ function collectSections(
 		result.push(...collectSections(children));
 	}
 	return result;
+}
+
+function listingContents(document: {
+	readonly children?: readonly Record<string, unknown>[];
+}): string[] {
+	return collectNodes(document.children ?? [], "listing").flatMap((node) =>
+		typeof node.content === "string" ? [node.content] : [],
+	);
+}
+
+function collectNodes(
+	nodes: readonly Record<string, unknown>[],
+	kind: string,
+): Record<string, unknown>[] {
+	const result: Record<string, unknown>[] = [];
+	for (const node of nodes) {
+		if (node.kind === kind) {
+			result.push(node);
+		}
+		const children = Array.isArray(node.children)
+			? (node.children as Record<string, unknown>[])
+			: [];
+		result.push(...collectNodes(children, kind));
+	}
+	return result;
+}
+
+function sourceFileRawByRelativePath(document: {
+	readonly sourceFiles?: readonly Record<string, unknown>[];
+}): Record<string, string> {
+	return Object.fromEntries(
+		(document.sourceFiles ?? []).flatMap((sourceFile) =>
+			typeof sourceFile.relativePath === "string" &&
+			typeof sourceFile.raw === "string"
+				? [[sourceFile.relativePath, sourceFile.raw]]
+				: [],
+		),
+	);
 }
 
 function sourceRelativePath(section: JsonSection): string | undefined {
