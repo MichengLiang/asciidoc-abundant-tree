@@ -18,7 +18,7 @@
 
 直接包含不表达传递闭包。若 `root` 直接包含 `运力规则`，且 `运力规则` 直接包含 `我是3级标题`，则 `root` 不直接包含 `我是3级标题`。
 
-直接包含只连接标题节点。标题节点不通过 `aat:containsDirectly` 指向段落、listing、table、payload、label 或普通属性。
+直接包含只连接标题节点。标题节点不通过 `aat:containsDirectly` 指向段落、listing、table、source value block、raw value object、label 或普通属性。
 
 顶层标题没有父标题。若源文档存在一个等号 document title，该标题可以作为其它顶层 section 的父标题。若源文档没有可作为父级的等号标题，多个顶层标题之间不生成虚构 document heading；它们通过 `aat:documentOrder` 保持全局阅读顺序。
 

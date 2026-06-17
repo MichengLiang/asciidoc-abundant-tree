@@ -1,0 +1,199 @@
+[#field-and-complex-property]
+== 字段与复杂属性
+
+字段是 heading node 或 xref edge evidence 上的谓词。字段值可以是 string literal，也可以是 raw value object。
+
+literal field 保存源表面的 scalar value。complex property 保存源表面的 raw value object。二者使用同一套 field predicate 规则。
+
+=== Literal Field
+
+标题 attrlist named attributes 直接投影为标题节点 literal fields。
+
+[source,asciidoc]
+----
+[#delivery.policy, status=active, owner=ops]
+== 配送策略
+----
+
+投影为：
+
+[source,turtle]
+----
+:heading-l5-o0
+  aat:role "policy" ;
+  aat:status "active" ;
+  aat:owner "ops" .
+----
+
+xref named attributes 在未绑定 source value block id 时投影为 xref edge evidence literal fields。
+
+[source,asciidoc]
+----
+xref:capacity[运力规则, rel=depends-on, weight=0.8]
+----
+
+投影为：
+
+[source,turtle]
+----
+:xref-edge-l8-c8-o0
+  aat:rel "depends-on" ;
+  aat:weight "0.8" .
+----
+
+literal field 不触发业务解释。`aat:role`、`aat:status`、`aat:owner`、`aat:weight` 只是源文档表面字段的 RDF 表达。下游消费者可以解释这些字段，也可以忽略这些字段。
+
+字段名映射必须确定。字段名是合法 IRI local name 时，谓词 IRI 为 `aat:<fieldName>`。字段名包含不能直接进入 prefixed name 的字符时，投影器使用稳定的 IRI-safe 编码；同一字段名在同一投影配置下得到同一谓词 IRI。
+
+`rel` 是 xref relation control field。它决定主 relation triple 的谓词，并可作为 `aat:rel` 保留。`rel` 不参与 source value id matching。
+
+=== Raw Value Object
+
+raw value object 是 complex property 的值。raw value object 保存 source value block 的 raw、format、source coordinate 和 binding evidence。
+
+raw value object 保存以下事实：
+
+[horizontal]
+`aat:format`:: source value block 的 source block language。
+`aat:raw`:: source value block body 原文。
+`aat:relativePath`、`aat:startLine`、`aat:endLine`:: source value block 的完整源文件行范围。
+`aat:contentStartLine`、`aat:contentEndLine`:: source value block body 的源文件行范围。
+`aat:forSelector`:: heading complex property 使用非空 selector binding 时保存的 heading selector。
+`aat:sourceValueId`:: xref edge complex property 使用 source value id binding 时保存的 source value id。
+
+raw value object 不保存字段名、结构分类标记或下游模型名。字段名由 heading node 或 xref edge evidence 指向 raw value object 的 field predicate 表达。raw value object 的 raw 作为 opaque literal 保存。schema validation 与 raw 内部字段解释属于下游消费者。
+
+=== Heading Complex Property
+
+带 `for` 或 `forSelector` marker 的 source value block 表达 heading complex property。该 block 的 property role 是字段名。source block language 是 format。block body 是 raw。
+
+带值 marker 查询 xref:heading-node[标题节点] 定义的 heading projection label space。绑定目标来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，不输出 heading complex property。
+
+无值 marker 表达 source ownership binding。投影器使用 source value block 的源位置，找到覆盖该 block 起始行的最内层 heading node，并把 complex property 写到该 heading node。源位置无法确定 owning heading 时，不输出 heading complex property。
+
+property role 必须稳定给出一个字段名。没有 property role 或有多个 property roles 的 source value block 不输出 heading complex property。
+
+[source,asciidoc]
+------
+[.policy-risk-profile, for=delivery]
+[source,json]
+----
+{
+  "owner": {
+    "team": "ops",
+    "fallback": "manual-review"
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["weather", "capacity"]
+  }
+}
+----
+------
+
+投影为：
+
+[source,turtle]
+----
+:heading-l5-o0 aat:policy-risk-profile :value-l10-o0 .
+
+:value-l10-o0 aat:forSelector "delivery" ;
+  aat:format "json" ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 10 ;
+  aat:endLine 23 ;
+  aat:contentStartLine 13 ;
+  aat:contentEndLine 22 ;
+  aat:raw """{
+  "owner": {
+    "team": "ops",
+    "fallback": "manual-review"
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["weather", "capacity"]
+  }
+}""" .
+----
+
+无值 `for` 使用源位置归属 owning heading：
+
+[source,asciidoc]
+------
+[.review-playbook, for]
+[source,yaml]
+----
+review_team: quality-ops
+steps:
+  - check latest exception report
+----
+------
+
+该 source value block 已经由 `for` 字段声明为 heading complex property candidate。投影器按源位置确定 owning heading，并通过 `aat:review-playbook` 连接 raw value object。无值 marker 不输出 `aat:forSelector`。
+
+=== Xref Edge Complex Property
+
+xref edge complex property 由 xref named attribute 和 source value block 共同表达。attribute key 是字段名。attribute value 唯一匹配 source value block id 时，字段值是 raw value object。
+
+[source,asciidoc]
+------
+xref:capacity[运力规则, rel=depends-on, relation-evidence=rel-delivery-capacity]
+
+[#rel-delivery-capacity]
+[source,yaml]
+----
+reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true
+----
+------
+
+投影为：
+
+[source,turtle]
+----
+:xref-edge-l8-c8-o0 aat:relation-evidence :value-l25-o0 .
+
+:value-l25-o0 aat:sourceValueId "rel-delivery-capacity" ;
+  aat:format "yaml" ;
+  aat:relativePath "samples/structural-payload.adoc" ;
+  aat:startLine 25 ;
+  aat:endLine 37 ;
+  aat:contentStartLine 28 ;
+  aat:contentEndLine 36 ;
+  aat:raw """reason:
+  type: risk-control
+  signals:
+    - weather
+    - capacity
+  description: 配送策略需要读取运力规则来决定是否降级。
+edge:
+  direction: outbound
+  required: true""" .
+----
+
+edge complex property 归属于 xref edge evidence。它不归属于 source heading，也不归属于 target heading。
+
+一个 xref edge evidence 可以拥有多个 complex properties。每个匹配的 attribute 产生一个 field predicate。attribute value 未匹配 source value block id 或多义匹配 source value block id 时，该 attribute 按 literal field 输出。
+
+=== Opaque Raw
+
+raw value object 的 raw 作为 opaque literal 保存。JSON、YAML、TOML、XML 或其它格式内部字段由下游消费者解释。
+
+raw value object 必须保存 raw、relative path、完整 line span 和 content line span。format 来自 source block language。heading selector binding 使用 `aat:forSelector` 保存 selector。xref edge source value binding 使用 `aat:sourceValueId` 保存 source value id。
+
+raw value object 是 complex property 的值。公共查询通过所属 heading node 或 xref edge evidence 上的 field predicate 取得 raw value object。标题结构遍历由 heading node、`aat:containsDirectly`、`aat:childOrder` 和 `aat:documentOrder` 承担；relation triple 的端点由 source heading 与 target heading 承担。
+
+source value block 的本地 target ID 可以成为所属标题节点的 address label。该 address label 只用于寻址标题节点，不改变 raw value object 的 complex property 身份。
+
+=== Format
+
+format 表达 raw 的源文本语法。该事实来自 source block language：`[source,json]` 的 format 是 `json`，`[source,yaml]` 的 format 是 `yaml`。source block 没有 language 时，raw value object 不输出 `aat:format`；投影器不通过 raw 内容猜测格式。
+
+field predicate 与 format 是正交事实。`aat:policy-risk-profile` 或 `aat:relation-evidence` 表达下游模型入口；`json` 或 `yaml` 表达 raw 的文本语法。下游消费者按 field predicate 选择模型，按 format 解析 raw。

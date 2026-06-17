@@ -9,16 +9,16 @@ xref 所在的标题切片决定边的 source heading。
 
 [source,asciidoc]
 ----
-配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]。
 ----
 
 该 xref 位于 `配送策略` 标题切片中，因此 source heading 是 `配送策略`。
 
 === Target Heading
 
-xref target 是 selector。selector 在标题投影 label 空间中绑定。标题投影 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成；xref target 不绑定到 role、普通字段谓词、xref display label、raw 文本或标题节点 IRI。
+xref target 是 selector。selector 在标题投影 label 空间中绑定。标题投影 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成；xref target 不绑定到 role、字段谓词、xref display label、raw 文本或标题节点 IRI。
 
-`aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。selector 指向 listing、table、block、inline anchor 或 payload block 的本地 target ID 时，target heading 是该 target ID 所属的标题节点。
+`aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。selector 指向 listing、table、block、inline anchor 或 source value block 的本地 target ID 时，target heading 是该 target ID 所属的标题节点。
 
 `capacity` 绑定到 address label 为 `capacity` 的标题节点。因此上例的 target heading 是 `运力规则`。
 
@@ -80,7 +80,7 @@ xref:capacity[运力规则, rel=depends-on]
 
 === 边证据
 
-交叉引用边证据保存该边在源文档中的出现点、属性和 payload。边证据不是标题节点。
+交叉引用边证据保存该边在源文档中的出现点、字段和 official resolved facts。边证据不是标题节点。
 
 边证据 IRI 使用 `xref-edge-l<startLine>-c<startColumn>-o<ordinal>` local id。`startLine` 和 `startColumn` 来自 xref occurrence 的起点。相同行列出现多个 xref 时，`ordinal` 按源文档顺序从 `0` 递增；无冲突时使用 `0`。
 
@@ -100,17 +100,17 @@ xref:capacity[运力规则, rel=depends-on]
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;
   aat:weight "0.8" ;
-  aat:payloadSelector "rel-delivery" ;
-  aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]" ;
+  aat:relation-evidence :value-l25-o0 ;
+  aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 8 ;
   aat:endLine 8 ;
   aat:startColumn 8 ;
-  aat:endColumn 77 .
+  aat:endColumn 96 .
 ----
 
-普通 xref named attributes 直接使用 `aat:` 命名空间下同名谓词。示例中的 `weight=0.8` 投影为 `aat:weight "0.8"`。字段值按源文档表面值保存为 string literal。
+普通 xref named attributes 使用 `aat:` 命名空间下同名 field predicate。示例中的 `weight=0.8` 投影为 `aat:weight "0.8"`。字段值按源文档表面值保存为 string literal。
 
-`payload` 是控制字段，用于绑定边 payload。它不重复作为普通属性。边证据使用 `aat:payloadSelector` 保存该 selector 字符串，并在唯一匹配 source payload id 时使用 `aat:payload` 连接边 payload object。
+xref edge complex property 也使用 field predicate。示例中的 `relation-evidence=rel-delivery-capacity` 匹配 source value block id 时，边证据输出 `aat:relation-evidence :value-l25-o0`。raw value object 保存该 source value block 的 raw、format、source coordinates 和 `aat:sourceValueId`。
 
-xref target selector 和 xref payload selector 使用不同绑定空间。xref target selector 查询 heading projection label space；xref payload selector 查询 source payload id space。相同字符串在两个字段中出现时，由字段语境决定解释。
+同一个 xref edge evidence 可以拥有多个 complex properties。每个 xref named attribute 的 key 是字段名；value 唯一匹配 source value block id 时，该字段值是 raw value object。未匹配或多义匹配时，该字段值是 string literal。

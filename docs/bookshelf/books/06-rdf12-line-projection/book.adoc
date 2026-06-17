@@ -33,14 +33,14 @@ include::chapters/03-heading-slice.adoc[]
 
 include::chapters/04-structure-edges.adoc[]
 
-= 第三部：引用、属性与载荷
+= 第三部：引用、字段与复杂属性
 
 [partintro]
-这一部定义交叉引用边、直接属性谓词、节点 payload 和边 payload。
+这一部定义交叉引用边、literal field、heading complex property 和 xref edge complex property。
 
 include::chapters/05-xref-edge.adoc[]
 
-include::chapters/06-payload-and-attribute.adoc[]
+include::chapters/06-field-and-complex-property.adoc[]
 
 = 第四部：查询与验收
 

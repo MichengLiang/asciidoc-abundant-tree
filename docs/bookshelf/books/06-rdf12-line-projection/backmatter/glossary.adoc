@@ -17,25 +17,29 @@ structure edge:: 标题节点之间的直接父子结构边。`aat:containsDirec
 
 xref edge:: 由标题切片中的交叉引用创建的非层级关系边。
 
-xref edge evidence:: 保存 xref raw、source heading、target heading、target selector、属性、payload 和回源坐标的边证据 resource。
+xref edge evidence:: 保存 xref raw、source heading、target heading、target selector、字段、官方解析事实、RDF 1.2 reifier 和回源坐标的边证据 resource。
 
-payload:: 归属于 heading node 或 xref edge evidence 的复杂属性值。payload 保存 payload kind、payload role、format、raw、绑定事实和回源坐标，不展开内部结构，不作为 heading node、structure edge endpoint 或 xref target heading。只有由 selector 显式指向的 payload block 才保存 source payload id。
+field predicate:: 由源表面的字段名映射得到的 `aat:<name>` 谓词。字段名不能直接作为 prefixed local name 时，投影器使用稳定的 IRI-safe 编码。
 
-payload block:: 源文档中承载 payload raw 的 listing block。payload block 通过 `for` 或 `forSelector` 成为节点 payload，或通过 source payload id 被 xref `payload` selector 选中成为边 payload。payload block 自身不创建 RDF 结构节点。
+literal field:: 值为 string literal 的字段。标题 metadata named attribute 和未绑定 source value block 的 xref named attribute 产生 literal field。
 
-source payload id:: payload block 在源文档中的手动 ID。source payload id 是 selector binding fact，不是 payload object 的 RDF identity，也不是 payload role。边 payload 需要 source payload id；节点 payload 不要求 source payload id。
+complex property:: 值为 raw value object 的字段。heading node 和 xref edge evidence 都可以拥有 complex property。
 
-payload role:: payload block 的 role token。payload role 是作者与下游消费者约定的 schema 或 model label，例如 `banana` 或 `pear`。payload role 不决定 payload kind，不绑定 heading，不选择边 payload。
+raw value object:: 保存 source value block 的 raw、format、source coordinate 和 binding evidence 的 RDF resource。raw value object 不展开 raw 内部字段，不作为 heading node，不参与标题结构边，不作为 xref target heading。
 
-payload format:: payload block 的 source block language。`[source,json]` 的 payload format 是 `json`；`[source,yaml]` 的 payload format 是 `yaml`。
+source value block:: 源文档中承载 raw value 的 listing/source block。source value block 只有在 heading complex property 或 xref edge complex property 规则匹配时进入 RDF 图，并以 raw value object 的形式出现。
 
-direct attribute predicate:: 由源文档 named attribute 映射得到的 `aat:<name>` 谓词。该谓词表达源文档表面字段，不触发业务解释。标题 `#id`、role token、xref `rel` 和 xref `payload` 是专门字段，不按普通字段谓词处理。
+source value id:: source value block 的本地 ID。xref edge complex property 使用 xref named attribute value 匹配 source value id。source value id 是 binding evidence，不是字段名，不是 raw value object 的 RDF identity。source value id 作为本地非标题 target ID 时归属为 owning heading 的 address label。
+
+property role:: heading complex property source block 上承担字段名职责的 role token。property role 通过 field predicate 成为 heading node 上的 complex property 谓词。
+
+format:: raw value object 的源文本语法。format 来自 source block language，例如 `[source,json]` 输出 `aat:format "json"`，`[source,yaml]` 输出 `aat:format "yaml"`。
 
 local target:: source document 内可由 AsciiDoc xref 寻址的 target catalog entry。local target 可以是 section、listing、table、block、inline anchor 或未知类型 target。
 
-selector:: 用于绑定目标的字符串。xref target selector 和节点 payload binding marker 的非空值查询 heading projection label space；xref `payload` selector 查询 source payload id space。无值 node payload binding marker 不是 selector，它按 payload block 源位置归属 owning heading。
+selector:: 用于绑定 heading node 的字符串。xref target selector 和带值 heading complex property marker 查询 heading projection label space。无值 heading complex property marker 不是 selector，它按 source value block 源位置归属 owning heading。
 
-node payload binding marker:: listing block attrlist 中的 `for` 或 `forSelector` 字段。该字段的存在使 listing block 成为节点 payload；字段有非空值时，该值是 heading selector；字段无值时，payload block 按源位置归属 owning heading。
+heading complex property marker:: source value block attrlist 中的 `for` 或 `forSelector` 字段。该字段的存在使 source value block 成为 heading complex property candidate；字段有非空值时，该值是 heading selector；字段无值时，source value block 按源位置归属 owning heading。
 
 address label:: 标题投影图中可寻址到 heading node 的作者声明 label。address label 来自标题自身手动 ID，或来自归属到该标题切片的本地非标题 target ID。
 

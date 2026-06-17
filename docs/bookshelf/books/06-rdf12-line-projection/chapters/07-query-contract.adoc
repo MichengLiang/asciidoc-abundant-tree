@@ -148,26 +148,6 @@ SELECT ?edge ?selector ?candidate WHERE {
 
 多义边不生成主 relation triple。
 
-=== 查找边 Payload
-
-[source,sparql]
-----
-SELECT ?payload ?selector ?role ?payloadRaw ?format ?start ?end WHERE {
-  ?source aat:addressLabel "delivery" .
-  ?target aat:addressLabel "capacity" .
-  ?edge a aat:XrefEdge ;
-        rdf:reifies <<( ?source rel:depends-on ?target )>> ;
-        aat:payloadSelector ?selector ;
-        aat:payload ?payload .
-  ?payload aat:payloadKind "edge" ;
-           aat:role ?role ;
-           aat:format ?format ;
-           aat:raw ?payloadRaw ;
-           aat:startLine ?start ;
-           aat:endLine ?end .
-}
-----
-
 === 按直接字段查找标题
 
 [source,sparql]
@@ -184,44 +164,69 @@ SELECT ?heading ?headline ?start ?end WHERE {
 
 直接字段谓词表达源文档表面字段。该查询不要求投影器解释 `policy` 或 `active` 的业务含义。
 
-=== 查找节点 Payload
+=== 读取 Heading Complex Property
+
+消费者按 field predicate 读取 heading complex property。
 
 [source,sparql]
 ----
-SELECT ?payload ?role ?payloadRaw ?format ?start ?end WHERE {
+SELECT ?raw ?format ?path ?start ?end WHERE {
   ?heading aat:addressLabel "delivery" ;
-           aat:payload ?payload .
-  ?payload aat:payloadKind "node" ;
-           aat:role ?role ;
-           aat:format ?format ;
-           aat:raw ?payloadRaw ;
-           aat:startLine ?start ;
-           aat:endLine ?end .
+           aat:policy-risk-profile ?value .
+  ?value aat:raw ?raw ;
+         aat:format ?format ;
+         aat:relativePath ?path ;
+         aat:startLine ?start ;
+         aat:endLine ?end .
 }
 ----
 
-=== 按 Payload Role 查找载荷
+`aat:policy-risk-profile` 是下游模型入口。raw value object 保存 raw、format 和 source coordinate。查询不需要枚举机制字段或过滤 role。
 
-payload role 是作者与下游消费者约定的 schema 或 model label。消费者可以按 role 选择需要解析的 payload raw。
+冷链样例中的标题复杂属性查询使用业务字段名：
 
 [source,sparql]
 ----
-SELECT ?heading ?payload ?raw WHERE {
-  ?heading aat:payload ?payload .
-  ?payload aat:payloadKind "node" ;
-           aat:role "banana" ;
-           aat:raw ?raw .
+SELECT ?configRaw ?playbookRaw WHERE {
+  ?heading aat:addressLabel "cold-chain-release" ;
+           aat:release-policy-config ?config ;
+           aat:review-playbook ?playbook .
+  ?config aat:format "json" ;
+          aat:raw ?configRaw .
+  ?playbook aat:format "yaml" ;
+            aat:raw ?playbookRaw .
 }
 ----
 
+=== 读取 Xref Edge Complex Property
+
+消费者按 xref edge evidence 上的 field predicate 读取 edge complex property。
+
 [source,sparql]
 ----
-SELECT ?edge ?payload ?raw WHERE {
+SELECT ?raw ?format ?path ?start ?end WHERE {
+  ?source aat:addressLabel "delivery" .
+  ?target aat:addressLabel "capacity" .
   ?edge a aat:XrefEdge ;
-        aat:payload ?payload .
-  ?payload aat:payloadKind "edge" ;
-           aat:role "pear" ;
-           aat:raw ?raw .
+        rdf:reifies <<( ?source rel:depends-on ?target )>> ;
+        aat:relation-evidence ?value .
+  ?value aat:raw ?raw ;
+         aat:format ?format ;
+         aat:relativePath ?path ;
+         aat:startLine ?start ;
+         aat:endLine ?end .
+}
+----
+
+冷链样例中的边复杂属性查询使用 `aat:dependency-evidence`：
+
+[source,sparql]
+----
+SELECT ?raw WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:dependency-evidence ?evidence .
+  ?evidence aat:format "yaml" ;
+            aat:raw ?raw .
 }
 ----
 

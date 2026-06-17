@@ -142,6 +142,8 @@ xref edge complex property 使用 xref named attribute value 匹配 source value
 
 source value id 是 binding evidence，不是字段名，不是 raw value object 的 RDF identity。
 
+source value id 仍属于本地非标题 target id。该 id 按 local target alias 规则归属到 owning heading 的 `aat:addressLabel`。普通 xref target selector 使用该 id 时绑定 owning heading；xref named attribute value 使用该 id 时绑定 raw value object。两个绑定由字段语境区分。
+
 ### 2.7 Property Role
 
 property role 是 heading complex property source block 上承担字段名职责的 role token。
@@ -260,7 +262,13 @@ const xrefControlAttributes = new Set(["rel", "payload"]);
 
 目标实现把该文件重构为复杂属性与 raw value object 投影。目标输出不包含 `aat:payload`、`aat:payloadKind`、`aat:role`、`aat:payloadId`。
 
-### 3.5 `samples/cold-chain-payload/consume_payloads.py`
+### 3.5 `metadata-parser.ts`
+
+`src/metadata-parser.ts` 决定 attrlist 中 role、id、named attribute 和无值 attribute 的运行时形态。
+
+目标实现必须确认 `[.review-playbook, for]` 在 `MetadataNode.attributes` 中保留 `for` marker presence。若当前解析结果不能区分 marker presence 与 absence，开发者必须修正 metadata parsing，并为无值 `for`、带值 `for=...` 和带值 `forSelector=...` 增加测试。
+
+### 3.6 `samples/cold-chain-payload/consume_payloads.py`
 
 当前冷链消费脚本通过以下查询形态读取 heading node payload：
 
@@ -285,11 +293,11 @@ const xrefControlAttributes = new Set(["rel", "payload"]);
 ?edge aat:dependency-evidence ?dependencyEvidence .
 ```
 
-### 3.6 6 号书与公共 README
+### 3.7 6 号书与公共 README
 
-`docs/bookshelf/books/06-rdf12-line-projection` 当前已经把 payload 归入复杂属性方向，但其公共 RDF 形状仍围绕 `aat:payload`、`aat:payloadKind`、`aat:role` 和 payload selector。
+`docs/bookshelf/books/06-rdf12-line-projection` 是 RDF12 heading projection 的规范书。该书表达 complex property / raw value object 对象模型，不承担当前实现状态记录。
 
-目标书籍表达复杂属性模型。书中对象语言使用 complex property、raw value object、source value block、source value id、property role、field predicate。
+书中对象语言使用 complex property、raw value object、source value block、source value id、property role、field predicate。书中不得把 `aat:payload`、`aat:payloadKind`、`aat:role` 或 payload selector 作为复杂属性公共查询模型。
 
 `README.md` 和 `samples/cold-chain-payload/README.md` 必须与 6 号书保持一致。
 
@@ -407,14 +415,7 @@ risk_level: high""" ;
 一个 xref edge evidence 可以拥有多个 complex properties：
 
 ```asciidoc
-xref:temperature-audit[
-  温控审计规则,
-  rel=depends-on,
-  weight=0.9,
-  dependency-evidence=rel-release-temperature-audit,
-  risk-assessment=rel-release-risk,
-  review-procedure=rel-release-review
-]
+xref:temperature-audit[温控审计规则, rel=depends-on, weight=0.9, dependency-evidence=rel-release-temperature-audit, risk-assessment=rel-release-risk, review-procedure=rel-release-review]
 ```
 
 投影：
@@ -427,6 +428,8 @@ xref:temperature-audit[
 ```
 
 未绑定 source value block id 的 xref named attribute 输出 literal field。投影器不诊断作者意图。
+
+xref target selector 与 xref named attribute value 使用不同语境。`xref:rel-release-temperature-audit[...]` 作为 xref target selector 时查询 heading projection label space；`dependency-evidence=rel-release-temperature-audit` 作为 xref named attribute 时查询 source value id。相同字符串可以同时作为 owning heading 的 address label 和 raw value object 的 source value id。
 
 ### 4.4 Raw Opacity
 
@@ -519,7 +522,7 @@ source value block 不需要 `.dependency-evidence` role。属性名已经由 xr
 
 `samples/structural-payload.adoc` 使用业务字段名，不使用占位水果名。
 
-推荐表面：
+目标表面：
 
 ```asciidoc
 [#delivery.policy, status=active, owner=ops]
@@ -636,7 +639,7 @@ steps:
     aat:raw "xref:temperature-audit[温控审计规则, rel=depends-on, weight=0.9, dependency-evidence=rel-release-temperature-audit]" .
 ```
 
-The relation triple and RDF 1.2 reifier remain part of xref edge projection:
+relation triple 与 RDF 1.2 reifier 仍属于 xref edge projection：
 
 ```ttl
 :heading-l5-o0 rel:depends-on :heading-l55-o0 .
@@ -695,6 +698,8 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
 * metadata roles。
 * metadata attributes。
 
+index 只收集具有 block source span、raw content 和 source relative path 的 listing/source blocks。缺少 source span 或 raw content 的 block 不能产生 raw value object。
+
 source value block index 不判断 block 是否进入 RDF 图。index 只提供匹配所需的 source facts。
 
 ### 7.2 Heading Complex Property Matching
@@ -743,6 +748,8 @@ xref occurrence 的 named attributes 按以下规则处理。
 * attribute value 匹配多个 source value blocks 时，输出 literal field。
 
 投影器不输出诊断。投影器不判断作者意图。匹配成立则输出 complex property；匹配不成立则输出 literal field。
+
+xref named attribute 的处理范围不包括 positional label。xref display label 继续输出为 `aat:displayLabel`，不参与 source value id matching。
 
 ### 7.4 Source Value Id Matching
 
@@ -824,10 +831,10 @@ xref named attributes 不能在 `attributes.ts` 中全部提前输出 literal，
 
 删除:
 
-* reading `payload` as control attribute。
-* outputting `aat:payloadSelector`。
+* 读取 `payload` 作为 control attribute。
+* 输出 `aat:payloadSelector`。
 
-`rel` remains the only xref named attribute consumed by xref relation mapping.
+`rel` 是唯一由 xref relation mapping 消费的 xref named attribute。
 
 ### 8.4 `src/rdf12-projection/field-predicate.ts`
 
@@ -840,13 +847,19 @@ xref named attributes 不能在 `attributes.ts` 中全部提前输出 literal，
 * xref edge literal fields。
 * xref edge complex property fields。
 
-### 8.5 `src/rdf12-projection/heading-ownership.ts`
+### 8.5 `src/metadata-parser.ts`
+
+开发者必须验证 attrlist 无值字段的解析结果。`[.review-playbook, for]` 必须在 metadata attributes 中保留 `for` 的存在事实。实现不得把 marker absence、empty selector 和 source ownership marker 混为同一个字符串。
+
+若 parser 当前不能提供该事实，开发者必须修改 parser，并更新 parser 或 metadata 相关测试。该修改不得改变 id、role、style、language 和普通 named attribute 的既有语义。
+
+### 8.6 `src/rdf12-projection/heading-ownership.ts`
 
 source ownership heading complex property 使用 `findInnermostHeadingBySourceLine()`。
 
 该 helper 已服务 source line ownership。实现者不得复制另一套 ownership 逻辑。
 
-### 8.6 `samples/cold-chain-payload/consume_payloads.py`
+### 8.7 `samples/cold-chain-payload/consume_payloads.py`
 
 脚本按 field predicate 查询 raw value objects。
 
@@ -856,7 +869,7 @@ source ownership heading complex property 使用 `findInnermostHeadingBySourceLi
 
 脚本不再按 `aat:payload` 枚举 node values。脚本不再读取 raw value object 上的 `aat:role`。
 
-### 8.7 `src/animation-yaml-export`
+### 8.8 `src/animation-yaml-export`
 
 `animation-yaml-export` 若读取 RDF12 complex data，必须改为 field predicate 查询。它不得依赖 `aat:payload`、`aat:payloadKind` 或 raw value object `aat:role`。
 
@@ -883,6 +896,7 @@ source ownership heading complex property 使用 `findInnermostHeadingBySourceLi
 
 * `[.review-playbook, for]` 输出 `heading aat:review-playbook value`。
 * raw value object 不输出 `aat:forSelector`。
+* marker absence、empty selector 和 source ownership marker 不被混同。
 
 必须覆盖 invalid heading complex property candidates:
 
@@ -940,6 +954,8 @@ source ownership heading complex property 使用 `findInnermostHeadingBySourceLi
 
 删除或改写 `payloadSelector` 相关断言。目标 xref edge 不输出 `aat:payloadSelector`。
 
+保留或增加 source value id 作为 local target alias 的断言。普通 xref target selector 指向 source value id 时，`targetHeading` 是 owning heading；xref named attribute value 指向同一 source value id 时，输出 xref edge complex property。
+
 ### 9.4 `test/rdf12-projection/payload.acceptance.test.ts`
 
 该测试按 canonical sample 验收 complex property：
@@ -977,7 +993,7 @@ SELECT ?raw ?format WHERE {
 }
 ```
 
-Tests must not query `aat:payload`, `aat:payloadKind`, `aat:role`, or `aat:payloadSelector`.
+测试不得查询 `aat:payload`、`aat:payloadKind`、`aat:role` 或 `aat:payloadSelector`。
 
 ### 9.6 `test/rdf12-projection/heading-projection.acceptance.test.ts`
 
@@ -1068,7 +1084,7 @@ README 使用 complex property / raw value object 对象语言。README 不把 `
 
 ### 10.4 `samples/rdf12-projection-preview.adoc`
 
-README preview sample 与当前 complex property surface 一致。
+README preview sample 与目标 complex property surface 一致。
 
 ### 10.5 `README.md`
 
@@ -1092,10 +1108,12 @@ README 示例不得使用 `payload=`、`aat:payload`、`aat:payloadSelector`、`
 
 * `frontmatter/preface.adoc`
 * `backmatter/glossary.adoc`
+* `book.adoc`
 * `chapters/01-projection-object.adoc`
 * `chapters/02-heading-node.adoc`
+* `chapters/04-structure-edges.adoc`
 * `chapters/05-xref-edge.adoc`
-* `chapters/06-payload-and-attribute.adoc`
+* `chapters/06-field-and-complex-property.adoc`
 * `chapters/07-query-contract.adoc`
 * `chapters/08-worked-example.adoc`
 
@@ -1169,6 +1187,9 @@ pnpm build
 - [ ] selector-bound heading raw value object 输出 `aat:forSelector`。
 - [ ] source-owned heading raw value object 不输出 `aat:forSelector`。
 - [ ] xref edge raw value object 输出 `aat:sourceValueId`。
+- [ ] source value id 继续作为 local target alias 归属 owning heading。
+- [ ] 普通 xref target selector 指向 source value id 时绑定 owning heading。
+- [ ] xref named attribute value 指向 source value id 时绑定 raw value object。
 - [ ] raw value object 不输出 `aat:role`。
 - [ ] raw value object 不输出 `aat:payloadKind`。
 - [ ] raw value object 不输出 `aat:payloadId`。
@@ -1234,7 +1255,9 @@ feat: project rdf12 complex properties as named raw values
 提交时只提交本任务涉及路径。存在新文件时先 stage 新文件，再使用限定路径提交：
 
 ```bash
-git add docs/plan/RDF12-heading-and-xref-complex-property-design.md
+git add "docs/plan/RDF12 payload相关设计/RDF12-heading-and-xref-complex-property-design.md"
+git add docs/bookshelf/books/06-rdf12-line-projection/chapters/06-field-and-complex-property.adoc
+git add -u docs/bookshelf/books/06-rdf12-line-projection
 git commit --only -m "feat: project rdf12 complex properties as named raw values" -- <paths>
 ```
 

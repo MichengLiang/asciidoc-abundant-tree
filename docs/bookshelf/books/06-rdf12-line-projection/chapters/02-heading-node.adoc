@@ -144,6 +144,8 @@ named attributes 直接使用 `aat:` 命名空间下同名谓词。字段值作�
 
 `#id` 不投影为 `aat:id`。它投影为 `aat:addressLabel`。点号 role token 不投影为字段名谓词。它投影为 `aat:role`。named attribute 才进入 `aat:<fieldName>` 谓词。
 
+标题 complex property 也使用同一套字段名映射。标题 complex property 的字段名来自 source value block 的 property role，字段值是 raw value object。标题 metadata role 仍只表达标题角色，不表达 complex property 字段名。
+
 === 重复 label
 
 重复 headline 合法。重复 address label 按源文档事实保留。按重复 label 查询时，结果可以包含多个标题节点。投影器不为重复 label 虚构唯一绑定。

@@ -1,9 +1,9 @@
 [#projection-object]
 == 投影对象
 
-标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。该图描述标题节点、标题之间的结构边、标题切片中的交叉引用边，以及归属于节点或边的属性与 payload。
+标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。该图描述 heading node、heading node 之间的 structure edge、标题切片中的 xref edge evidence，以及归属于 heading node 或 xref edge evidence 的字段。
 
-标题投影图的输入事实来自 source document 以及解析器恢复出的标题、标题层级、标题 metadata、本地 target catalog、xref occurrence、listing block 表面和 source location。投影器只在 listing block 满足节点 payload 或边 payload 规则时把它解释为 payload block。投影器不重新解释 payload 内部结构，不执行业务 lint，不把普通段落或 block 提升为节点。
+标题投影图的输入事实来自 source document 以及解析器恢复出的标题、标题层级、标题 metadata、本地 target catalog、xref occurrence、listing/source block 表面和 source location。投影器只在 source value block 满足 heading complex property 或 xref edge complex property 规则时创建 raw value object。投影器不解释 raw 内部结构，不执行业务 lint，不把普通段落或 block 提升为结构节点。
 
 === RDF 坐标
 
@@ -26,21 +26,21 @@
 
 === 构成性对象
 
-标题投影图只承诺两类结构查询资源：
+标题投影图承诺两类结构查询资源：
 
 [horizontal]
 标题节点:: 由源文档中的等号标题创建。标题节点是文档结构、阅读、回源和递归查询的单位。
-交叉引用边证据:: 由标题切片中的 xref 创建。边证据保存关系边的 raw、位置、属性、payload 和 RDF 1.2 reifier 关系。
+交叉引用边证据:: 由标题切片中的 xref 创建。边证据保存关系边的 raw、位置、字段、官方解析事实和 RDF 1.2 reifier 关系。
 
-标题投影图的其它结构事实归属于这两类资源。标题属性归属于标题节点。节点 payload 归属于标题节点。xref 普通属性归属于交叉引用边证据。xref payload 归属于交叉引用边证据。来源坐标归属于可回源的节点、边证据和 payload。
+标题投影图的其它事实归属于这两类资源。标题字段归属于 heading node。xref edge 字段归属于 xref edge evidence。来源坐标归属于可回源的 heading node、xref edge evidence 和 raw value object。
 
 source document、projection 和 projection activity 是 provenance 资源。它们描述图从哪份源文件派生、由哪次投影活动生成。它们不属于标题节点集合，也不参与标题层级边。
 
-payload object 是复杂属性值。节点 payload 通过 `aat:payload` 归属于 heading node；边 payload 通过 `aat:payload` 归属于 xref edge evidence。payload object 保存 payload kind、payload role、format、raw、绑定事实和回源坐标。payload object 不作为标题层级、标题顺序、relation triple 或 xref target binding 的结构资源。
+raw value object 是 complex property 的值。heading complex property 通过 field predicate 归属于 heading node；xref edge complex property 通过 field predicate 归属于 xref edge evidence。raw value object 保存 raw、format、binding evidence 和回源坐标。raw value object 不作为标题层级、标题顺序、relation triple 或 xref target binding 的结构资源。
 
-payload object 的 RDF identity 由投影器生成。payload block 的手动 ID 只在 selector 需要指向该 block 时成为 source payload id。source payload id 是绑定事实，不是 payload object 的 RDF identity，也不是 payload role。节点 payload 不要求 source payload id；边 payload 需要 source payload id，因为 xref edge evidence 使用 `payload` selector 指向它。
+raw value object 的 RDF identity 由投影器生成。source value block 的手动 ID 只在 xref edge complex property 通过 named attribute value 指向该 block 时成为 `aat:sourceValueId`。source value id 是绑定事实，不是 raw value object 的 RDF identity，也不是字段名。
 
-标题投影图把 payload raw 作为 opaque literal 保存。payload role 和 payload format 为下游解释 raw 提供源表面线索；payload schema validation 与 payload 内部字段解释属于下游消费者。
+标题投影图把 raw value object 的 raw 作为 opaque literal 保存。field predicate 和 format 为下游解释 raw 提供源表面线索；schema validation 与 raw 内部字段解释属于下游消费者。
 
 本地非标题 target 的 ID 是标题节点的地址事实。该 ID 归属为覆盖 target source span 的标题节点的 `aat:addressLabel`，不创建结构节点，不参与标题层级边，也不作为 relation triple 的端点。
 
@@ -54,30 +54,30 @@ payload object 的 RDF identity 由投影器生成。payload block 的手动 ID 
 * 沿标题层级边递归读取子标题，并按 `aat:childOrder` 排序同父 direct children。
 * 按 `aat:documentOrder` 读取全局 preorder 标题序列。
 * 查看标题节点发出的交叉引用边。
-* 读取标题节点的直接属性和节点 payload。
-* 读取边证据的直接属性、边 payload 和 xref raw。
-* 通过 payload role 与 payload format 选择下游 payload 解析路径。
+* 读取 heading node 上的 literal fields 和 complex properties。
+* 读取 xref edge evidence 上的 literal fields、complex properties 和 xref raw。
+* 通过 field predicate 与 format 选择下游 raw 解析路径。
 * 从查询结果回到源文件行范围。
 
 公共图单位必须服务这些动作。不能服务这些动作的结构不进入标题投影图的核心对象。
 
 === 完整性
 
-标题节点提供阅读单位。标题层级边提供递归阅读路径。`aat:childOrder` 提供同父 direct children 的局部顺序。`aat:documentOrder` 提供全局 preorder。交叉引用边提供作者显式写出的非层级关系。payload 提供复杂属性承载面。回源坐标提供读取和修改闭环。
+标题节点提供阅读单位。标题层级边提供递归阅读路径。`aat:childOrder` 提供同父 direct children 的局部顺序。`aat:documentOrder` 提供全局 preorder。交叉引用边提供作者显式写出的非层级关系。字段提供标题和边证据上的查询面。raw value object 提供复杂字段值的 raw 承载面。回源坐标提供读取和修改闭环。
 
-这些对象共同构成标题投影图。标题投影图以标题为结构单位，并以标题切片、标题层级、交叉引用、payload 和回源坐标满足阅读、遍历、关系查询和源文件修改动作。
+这些对象共同构成标题投影图。标题投影图以标题为结构单位，并以标题切片、标题层级、交叉引用、字段、raw value object 和回源坐标满足阅读、遍历、关系查询、复杂值消费和源文件修改动作。
 
 === 排除边界
 
-段落、listing、table、inline anchor、label、surface attribute 和 payload block 不创建结构节点。它们可以作为标题 raw、属性来源、payload 来源、绑定证据、address label 来源或回源事实出现。
+段落、listing、table、inline anchor、label、surface attribute 和 source value block 不创建结构节点。它们可以作为标题 raw、字段来源、raw value source、binding evidence、address label 来源或回源事实出现。
 
 本地非标题 target 的 ID 投影为所属标题节点的 `aat:addressLabel`。该投影不表示源文档标题表面声明了该 ID，只表示该 ID 在标题投影图中寻址到该标题节点。
 
-payload 内部 JSON、YAML、TOML、XML 或其它格式作为 raw literal 保留。payload raw 的内部解释属于读取 payload 的下游消费者。
+raw value object 内部 JSON、YAML、TOML、XML 或其它格式作为 raw literal 保留。raw 的内部解释属于读取该字段的下游消费者。
 
-payload format 来自 source block language。该字段表达 payload raw 的源文本语法。
+raw value object 的 format 来自 source block language。该字段表达 raw 的源文本语法。
 
-payload kind 由绑定机制决定，不由 role token 决定。节点 payload 由 `for` 或 `forSelector` 字段决定；边 payload 由 xref `payload` selector 和 source payload id 决定。payload role 表达作者与下游消费者约定的 schema 或 model label。
+heading complex property 由带 `for` 或 `forSelector` marker 的 source value block 产生。字段名来自该 block 的 property role。xref edge complex property 由 xref named attribute 产生。字段名来自 attribute key；attribute value 唯一匹配 source value id 时，字段值是 raw value object；未匹配或多义匹配时，字段值是 string literal。
 
 === 来源与回源
 
@@ -97,6 +97,6 @@ payload kind 由绑定机制决定，不由 role token 决定。节点 payload �
   prov:used :source-doc .
 ----
 
-`aat:relativePath` 使用 `/` 作为路径分隔符。该路径相对于调用方给定的 document root。每个可回源的 heading、xref edge evidence 和 payload 都必须保存自身的 `aat:relativePath` 以及自己的 line span。
+`aat:relativePath` 使用 `/` 作为路径分隔符。该路径相对于调用方给定的 document root。每个可回源的 heading、xref edge evidence 和 raw value object 都必须保存自身的 `aat:relativePath` 以及自己的 line span。
 
 包含 source file reconstruction surface 的 RDF12 输出通过 `aat:sourceFile` 连接 source document 与 `aat:SourceFile`。`aat:SourceFile` 使用 `aat:relativePath` 标识 source file，并使用 `aat:raw` 保存该 source file 的完整原始文本。
