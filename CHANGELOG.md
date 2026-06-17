@@ -6,6 +6,29 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.16 - 2026-06-17
+
+### Added
+
+- Added the official Reader book-entry include preprocessing pipeline for local book roots, using `@asciidoctor/core` Reader output as the include text authority while preserving package-owned source-coordinate evidence.
+- Added source-aware logical line records for source-preserving, selected-source, transformed-source, generated-control, and degraded logical lines, with column maps for indented include output.
+- Added support for mapped include surfaces in book-entry mode: full-file includes, `tag`, `tags`, `lines`, `indent`, `leveloffset`, `opts=optional`, and escaped include directives.
+- Added official-reader book fixtures and regression coverage for tagged source-block includes, nested includes, level offsets, escaped includes, optional missing includes, source coordinate recovery, RDF 1.2 source reconstruction, and CLI JSON output.
+
+### Changed
+
+- Switched active `mode: "book-entry"` parsing from the legacy full-file logical-source builder to the official Reader preprocessing path.
+- Source reconstruction now emits the original author-owned source files from the source set, including complete tagged and line-range targets, instead of leaking parser-safe logical text.
+- Book-entry preprocessing now prevalidates include boundaries against `documentRoot` before running the Reader pass, allowing legal ancestor-style includes inside the document root without noisy Asciidoctor safe-mode stderr output.
+- Expanded coverage for source recovery, official block projection, RDF 1.2 projection edges, Turtle serialization, and animation YAML export so the package-level coverage gate passes with branch coverage above the configured threshold.
+
+### Fixed
+
+- Fixed tagged and line-range source includes inside source blocks so book-entry parsing succeeds and listing content comes from the selected target lines.
+- Fixed source coordinates for selected, non-contiguous, and indented include output, including column-unmapped diagnostics for inserted indentation columns.
+- Fixed multi-source block raw recovery so blocks spanning author files emit `block-origin.multi-source-span` instead of fake raw coordinates.
+- Fixed RDF 1.2 source-file projection for official-reader book entries so optional missing targets, generated control lines, escaped include targets, and parser-safe logical text are not reconstructed as source files.
+
 ## 0.1.15 - 2026-06-16
 
 ### Changed
