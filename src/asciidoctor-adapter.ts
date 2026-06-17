@@ -114,7 +114,10 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 		},
 		readPreprocessedLines(options) {
 			const document = processor.loadFile(options.sourcePath, {
-				safe: "safe",
+				// Book-entry preprocessing prevalidates every local include against its
+				// documentRoot. The Reader still needs unsafe mode here because Asciidoctor
+				// safe mode treats legal `..` includes inside that root as jail ancestors.
+				safe: "unsafe",
 				base_dir: options.baseDir,
 				...(options.jailDir ? { jail_dir: options.jailDir } : {}),
 				sourcemap: true,
