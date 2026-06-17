@@ -99,53 +99,73 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
 
 ## RDF12 Turtle 摘要
 
+下面是实际 Turtle 输出的摘录，不是可直接提交给 Turtle parser 的完整输出。`{document-hash}` 表示 CLI 按源文档路径计算出的 64 位十六进制 document key；当前样例的一次实际值是 `6133abcc6b1d0264191cad9fc3a3bb659b7f42a7f119bf1c6fc3a47571245ad0`。摘录省略 provenance、root heading、完整 heading raw、official xref evidence、未在摘录中使用的 prefix 和部分 source coordinate 字段；raw literal 中的 `...` 只表示摘录省略，不属于实际 raw 内容。未省略的谓词、line number、field predicate 和 raw value object 关系应与实际输出一致。
+
 ```ttl
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
-<urn:aat:doc:...#heading-l5-o0> a aat:Heading;
+<urn:aat:doc:{document-hash}#heading-l5-o0> a aat:Heading;
     aat:addressLabel "cold-chain-release", "rel-release-temperature-audit";
     aat:headline "冷链出库放行策略";
     aat:owner "quality-ops";
-    aat:release-policy-config <urn:aat:doc:...#payload-l10-o0>;
-    aat:review-playbook <urn:aat:doc:...#payload-l34-o0>;
+    aat:release-policy-config <urn:aat:doc:{document-hash}#payload-l10-o0>;
+    aat:review-playbook <urn:aat:doc:{document-hash}#payload-l34-o0>;
     aat:role "policy";
     aat:status "active";
-    rel:depends-on <urn:aat:doc:...#heading-l55-o0>.
+    rel:depends-on <urn:aat:doc:{document-hash}#heading-l55-o0>.
 
-<urn:aat:doc:...#payload-l10-o0> aat:contentEndLine 31;
+<urn:aat:doc:{document-hash}#payload-l10-o0> aat:contentEndLine 31;
     aat:contentStartLine 13;
     aat:endLine 32;
     aat:forSelector "cold-chain-release";
     aat:format "json";
-    aat:raw "{ ... }";
+    aat:raw """{
+  "temperatureWindowCelsius": {
+    "min": 2,
+    "max": 8
+  },
+  "checks": [
+    ...
+  ],
+  "manualReviewWhen": ["sensor_gap", "route_exception"]
+}""";
     aat:relativePath "samples/cold-chain-payload/cold-chain-release.adoc";
     aat:startLine 10.
 
-<urn:aat:doc:...#payload-l34-o0> aat:contentEndLine 41;
+<urn:aat:doc:{document-hash}#payload-l34-o0> aat:contentEndLine 41;
     aat:contentStartLine 37;
     aat:endLine 42;
     aat:format "yaml";
-    aat:raw "review_team: quality-ops\nsteps:\n  - check last temperature checkpoint\n  - compare shipment route exception log\n  - approve only when both records agree";
+    aat:raw """review_team: quality-ops
+steps:
+  - check last temperature checkpoint
+  - compare shipment route exception log
+  - approve only when both records agree""";
     aat:relativePath "samples/cold-chain-payload/cold-chain-release.adoc";
     aat:startLine 34.
 
-<urn:aat:doc:...#payload-l44-o0> aat:contentEndLine 52;
+<urn:aat:doc:{document-hash}#payload-l44-o0> aat:contentEndLine 52;
     aat:contentStartLine 47;
     aat:endLine 53;
     aat:format "yaml";
-    aat:raw "source: quality-sop-2026\nrequired_signals:\n  - temperature_checkpoint\n  - route_exception_log\nrisk_level: high\nreason: 放行策略必须读取温控审计结果，才能判断冷链药品是否允许出库。";
+    aat:raw """source: quality-sop-2026
+required_signals:
+  - temperature_checkpoint
+  - route_exception_log
+risk_level: high
+reason: 放行策略必须读取温控审计结果，才能判断冷链药品是否允许出库。""";
     aat:relativePath "samples/cold-chain-payload/cold-chain-release.adoc";
     aat:sourceValueId "rel-release-temperature-audit";
     aat:startLine 44.
 
-<urn:aat:doc:...#xref-edge-l8-c12-o0> rdf:reifies <<(<urn:aat:doc:...#heading-l5-o0> rel:depends-on <urn:aat:doc:...#heading-l55-o0>)>>;
+<urn:aat:doc:{document-hash}#xref-edge-l8-c12-o0> rdf:reifies <<(<urn:aat:doc:{document-hash}#heading-l5-o0> rel:depends-on <urn:aat:doc:{document-hash}#heading-l55-o0>)>>;
     a aat:XrefEdge;
-    aat:dependency-evidence <urn:aat:doc:...#payload-l44-o0>;
+    aat:dependency-evidence <urn:aat:doc:{document-hash}#payload-l44-o0>;
     aat:rel "depends-on";
-    aat:sourceHeading <urn:aat:doc:...#heading-l5-o0>;
-    aat:targetHeading <urn:aat:doc:...#heading-l55-o0>;
+    aat:sourceHeading <urn:aat:doc:{document-hash}#heading-l5-o0>;
+    aat:targetHeading <urn:aat:doc:{document-hash}#heading-l55-o0>;
     aat:targetSelector "temperature-audit";
     aat:weight "0.9".
 ```
