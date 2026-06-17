@@ -1,6 +1,6 @@
 # Book-Entry Official Reader Include Preprocessing Coordination State
 
-Last updated: 2026-06-17 00:27:00 CST.
+Last updated: 2026-06-17 10:10:00 CST.
 
 ## Role Boundary
 
@@ -161,12 +161,47 @@ Known hardening risk:
 
 Goal: prove source reconstruction and CLI behavior for the official-reader fixture, including full raw source files and no parser-safe logical text reconstruction leakage.
 
-Status: ready for dispatch.
+Status: accepted after coordinator review.
+
+Implementation commit:
+
+```text
+65568a879ec528f28dbac2fed912ef2ba6364fad Prove official Reader RDF12 source reconstruction
+```
+
+Coordinator verification on current HEAD:
+
+```bash
+pnpm vitest run test/rdf12-projection/book-entry-official-reader-source-reconstruction.test.ts test/rdf12-projection/book-entry-coordinate.test.ts test/rdf12-projection/public-api.test.ts test/cli.test.ts
+# 4 files / 46 tests passed
+
+pnpm typecheck
+# passed
+
+pnpm lint
+# passed
+
+pnpm build
+# passed
+
+node dist/cli.mjs test/book-entry/fixtures/official-reader-book/book.adoc --mode book-entry --document-root test/book-entry/fixtures/official-reader-book --format json
+# passed with JSON checks for included chapters, tagged listing, sourceFiles, and absence of include.unsupported-attrlist
+
+pnpm smoke:cli
+# passed
+```
+
+Coordinator review notes:
+
+- RDF12 tests inspect structured `aat:SourceFile` graph resources and verify authored raw files, full tagged target raw, full line-range target raw, and absence of optional missing/escaped target/generated control/parser-safe logical text resources.
+- CLI JSON test verifies included sections, tagged listing content, source reconstruction entries, and absence of unsupported-attrlist diagnostics for supported include attributes.
 
 ### Batch 4: Full Regression, Workspace Fixture, and Final Hardening
 
 Goal: run the full acceptance command set, verify the workspace page-map failure class, remove transitional dead code if appropriate, and close any design gaps.
 
+Status: ready for dispatch.
+
 ## Current Dispatch
 
-Batch 1 and Batch 2 are accepted. Batch 3 is the next dispatch.
+Batch 1, Batch 2, and Batch 3 are accepted. Batch 4 is the next dispatch.
