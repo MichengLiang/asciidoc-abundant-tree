@@ -1,0 +1,1658 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#activity> a prov:Activity, aat:ProjectionActivity;
+    prov:used <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#source>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l1-o0> a aat:Heading;
+    aat:containsDirectly <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l10-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l124-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l14-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l18-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l23-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l3-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l97-o0>;
+    aat:documentOrder 1;
+    aat:endLine 2;
+    aat:headingLevel 0;
+    aat:headingLine 1;
+    aat:headline "红楼梦结构图谱";
+    aat:raw """= 红楼梦结构图谱
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:startLine 1.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l10-o0> a aat:Heading;
+    aat:childOrder 2;
+    aat:contentEndLine 12;
+    aat:contentStartLine 12;
+    aat:documentOrder 3;
+    aat:endLine 13;
+    aat:generatedAddressLabel "_神瑛侍者";
+    aat:headingLevel 1;
+    aat:headingLine 11;
+    aat:headline "神瑛侍者";
+    aat:metadataEndLine 10;
+    aat:metadataStartLine 10;
+    aat:raw """[.metaphysical]
+== 神瑛侍者
+曾在灵河岸边浇灌仙草。后凡心偶炽，下凡造历幻缘。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "metaphysical";
+    aat:startLine 10.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l103-o0> a aat:Heading;
+    aat:childOrder 1;
+    aat:contentEndLine 105;
+    aat:contentStartLine 105;
+    aat:documentOrder 22;
+    aat:endLine 106;
+    aat:generatedAddressLabel "_贾敬";
+    aat:generation "3";
+    aat:headingLevel 2;
+    aat:headingLine 104;
+    aat:headline "贾敬";
+    aat:metadataEndLine 103;
+    aat:metadataStartLine 103;
+    aat:raw """[.person, generation=3]
+=== 贾敬
+沉迷修道炼丹，完全放弃对宁国府的管理。其子为 xref:贾珍[rel=kinship, type=son]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 103;
+    rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l107-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l107-o0> a aat:Heading;
+    aat:childOrder 2;
+    aat:contentEndLine 110;
+    aat:contentStartLine 109;
+    aat:documentOrder 23;
+    aat:endLine 111;
+    aat:generatedAddressLabel "_贾珍";
+    aat:generation "4";
+    aat:headingLevel 2;
+    aat:headingLine 108;
+    aat:headline "贾珍";
+    aat:metadataEndLine 107;
+    aat:metadataStartLine 107;
+    aat:raw """[.person, generation=4]
+=== 贾珍
+宁国府现任当家人，贾氏族长。骄奢淫逸，导致宁府“除了那两个石头狮子干净，只怕连猫儿狗儿都不干净”。
+其妻为 xref:尤氏[rel=spouse, status=primary]。其子为 xref:贾蓉[rel=kinship, type=son]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 107;
+    rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l112-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l112-o0> a aat:Heading;
+    aat:childOrder 3;
+    aat:contentEndLine 114;
+    aat:contentStartLine 114;
+    aat:documentOrder 24;
+    aat:endLine 115;
+    aat:generatedAddressLabel "_贾蓉";
+    aat:generation "5";
+    aat:headingLevel 2;
+    aat:headingLine 113;
+    aat:headline "贾蓉";
+    aat:metadataEndLine 112;
+    aat:metadataStartLine 112;
+    aat:raw """[.person, generation=5]
+=== 贾蓉
+贾珍之子。其首任妻子为 xref:秦可卿[rel=spouse, status=primary]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 112;
+    rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l116-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l116-o0> a aat:Heading;
+    aat:childOrder 4;
+    aat:contentEndLine 122;
+    aat:contentStartLine 118;
+    aat:documentOrder 25;
+    aat:endLine 123;
+    aat:generatedAddressLabel "_秦可卿";
+    aat:generation "5";
+    aat:headingLevel 2;
+    aat:headingLine 117;
+    aat:headline "秦可卿";
+    aat:metadataEndLine 116;
+    aat:metadataStartLine 116;
+    aat:raw """[.person, generation=5]
+=== 秦可卿
+// ==========================================
+// 第四卷：大观园空间与丫鬟生态
+// ==========================================
+
+贾蓉之妻。其行事温柔和平，但早逝。临终前曾托梦给 xref:王熙凤[rel=enlighten]，预言贾府的衰败并提出保全宗族之策。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 116;
+    rel:enlighten <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l124-o0> a aat:Heading;
+    aat:childOrder 7;
+    aat:containsDirectly <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l138-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l143-o0>;
+    aat:contentEndLine 126;
+    aat:contentStartLine 126;
+    aat:documentOrder 26;
+    aat:endLine 127;
+    aat:generatedAddressLabel "_大观园";
+    aat:headingLevel 1;
+    aat:headingLine 125;
+    aat:headline "大观园";
+    aat:metadataEndLine 124;
+    aat:metadataStartLine 124;
+    aat:raw """[.location]
+== 大观园
+为元春省亲而建造的巨大皇家园林，后成为少男少女的封闭式乌托邦。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "location";
+    aat:startLine 124.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0> a aat:Heading;
+    aat:childOrder 1;
+    aat:contentEndLine 136;
+    aat:contentStartLine 130;
+    aat:documentOrder 27;
+    aat:endLine 137;
+    aat:generatedAddressLabel "_怡红院";
+    aat:headingLevel 2;
+    aat:headingLine 129;
+    aat:headline "怡红院";
+    aat:metadataEndLine 128;
+    aat:metadataStartLine 128;
+    aat:raw """[.location]
+=== 怡红院
+大观园内一处院落。xref:贾宝玉[rel=reside-in] 居于此。
+其内部形成了复杂的主仆生态。
+核心服务者包括：
+
+* xref:花袭人[rel=serve, target=贾宝玉, level=primary]（暗中投靠了 xref:wang-furen-rong[王夫人, rel=loyalty]）
+* xref:晴雯[rel=serve, target=贾宝玉, level=primary]（性格反叛，最终被迫害致死）
+* xref:麝月[rel=serve, target=贾宝玉, level=secondary]
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "location";
+    aat:startLine 128;
+    rel:loyalty <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l138-o0> a aat:Heading;
+    aat:childOrder 2;
+    aat:contentEndLine 141;
+    aat:contentStartLine 140;
+    aat:documentOrder 28;
+    aat:endLine 142;
+    aat:generatedAddressLabel "_潇湘馆";
+    aat:headingLevel 2;
+    aat:headingLine 139;
+    aat:headline "潇湘馆";
+    aat:metadataEndLine 138;
+    aat:metadataStartLine 138;
+    aat:raw """[.location]
+=== 潇湘馆
+大观园内种满翠竹的幽静院落。xref:林黛玉[rel=reside-in] 居于此。
+贴身丫鬟为 xref:紫鹃[rel=serve, target=林黛玉, level=primary]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "location";
+    aat:startLine 138;
+    rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l14-o0> a aat:Heading;
+    aat:childOrder 3;
+    aat:contentEndLine 16;
+    aat:contentStartLine 16;
+    aat:documentOrder 4;
+    aat:endLine 17;
+    aat:generatedAddressLabel "_绛珠仙草";
+    aat:headingLevel 1;
+    aat:headingLine 15;
+    aat:headline "绛珠仙草";
+    aat:metadataEndLine 14;
+    aat:metadataStartLine 14;
+    aat:raw """[.metaphysical]
+== 绛珠仙草
+受神瑛侍者甘露之惠，得换人形。为报灌溉之恩，下凡将一生所有的眼泪还他。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "metaphysical";
+    aat:startLine 14.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l143-o0> a aat:Heading;
+    aat:childOrder 3;
+    aat:contentEndLine 145;
+    aat:contentStartLine 145;
+    aat:documentOrder 29;
+    aat:endLine 146;
+    aat:generatedAddressLabel "_蘅芜苑";
+    aat:headingLevel 2;
+    aat:headingLine 144;
+    aat:headline "蘅芜苑";
+    aat:metadataEndLine 143;
+    aat:metadataStartLine 143;
+    aat:raw """[.location]
+=== 蘅芜苑
+大观园内无花少叶、以香草为主的院落。xref:薛宝钗[rel=reside-in] 居于此。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "location";
+    aat:startLine 143;
+    rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0> a aat:Heading;
+    aat:childOrder 8;
+    aat:contentEndLine 150;
+    aat:contentStartLine 149;
+    aat:documentOrder 30;
+    aat:endLine 151;
+    aat:generatedAddressLabel "_薛宝钗";
+    aat:generation "4";
+    aat:headingLevel 1;
+    aat:headingLine 148;
+    aat:headline "薛宝钗";
+    aat:metadataEndLine 147;
+    aat:metadataStartLine 147;
+    aat:raw """[.person, generation=4]
+== 薛宝钗
+寄居贾府的皇商薛家之女。八面玲珑，信奉封建礼教。
+她最终与 xref:贾宝玉[rel=spouse, status=primary] 完成了“金玉良缘”的谶言，但这直接导致了 xref:林黛玉[rel=cause-death] 的悲剧。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 147;
+    rel:cause-death <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0> a aat:Heading;
+    aat:addressLabel "event-baoyu-beaten";
+    aat:childOrder 9;
+    aat:contentEndLine 164;
+    aat:contentStartLine 154;
+    aat:documentOrder 31;
+    aat:endLine 165;
+    aat:headingLevel 1;
+    aat:headingLine 153;
+    aat:headline "宝玉挨打";
+    aat:metadataEndLine 152;
+    aat:metadataStartLine 152;
+    aat:raw """[#event-baoyu-beaten.event]
+== 宝玉挨打
+// ==========================================
+// 第五卷：核心因果事件流
+// ==========================================
+// 【动态建模】：事件作为枢纽节点，连接人物、空间与因果。
+
+贾政对贾宝玉进行的一次极端暴力惩戒。
+起因涉及：结交优伶蒋玉菡、金钏儿跳井事件。
+
+* 发起者：xref:贾政[rel=participate, role=initiator]
+* 受害者：xref:贾宝玉[rel=participate, role=victim]
+* 庇护者：xref:贾母[rel=participate, role=intervener] 与 xref:wang-furen-rong[王夫人, rel=participate, role=intervener] 强制终止了惩戒。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "event";
+    aat:startLine 152;
+    rel:participate <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l48-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0> a aat:Heading;
+    aat:addressLabel "event-raid-on-garden";
+    aat:childOrder 10;
+    aat:contentEndLine 174;
+    aat:contentStartLine 168;
+    aat:documentOrder 32;
+    aat:endLine 175;
+    aat:headingLevel 1;
+    aat:headingLine 167;
+    aat:headline "抄检大观园";
+    aat:metadataEndLine 166;
+    aat:metadataStartLine 166;
+    aat:raw """[#event-raid-on-garden.event]
+== 抄检大观园
+贾府内部自相残杀的标志性转折点，标志着大观园乌托邦的破灭。
+
+* 导火索：在大观园内发现违禁物品“绣春囊”。
+* 决策者：xref:wang-furen-rong[王夫人, rel=participate, role=initiator]
+* 执行者：xref:王熙凤[rel=participate, role=executor]
+* 受害节点：直接导致了 xref:晴雯[rel=cause-death] 的死亡，以及 xref:司棋[rel=cause-expel] 等人被逐。
+* 结果：加速了 xref:荣国府[rel=cause-decline] 的全面崩溃。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "event";
+    aat:startLine 166;
+    rel:cause-decline <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l23-o0>;
+    rel:participate <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l18-o0> a aat:Heading;
+    aat:childOrder 4;
+    aat:contentEndLine 20;
+    aat:contentStartLine 20;
+    aat:documentOrder 5;
+    aat:endLine 22;
+    aat:generatedAddressLabel "_补天顽石";
+    aat:headingLevel 1;
+    aat:headingLine 19;
+    aat:headline "补天顽石";
+    aat:metadataEndLine 18;
+    aat:metadataStartLine 18;
+    aat:raw """[.metaphysical]
+== 补天顽石
+女娲炼石补天遗下的唯一一块未用之石。被茫茫大士、渺渺真人携入红尘。
+
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "metaphysical";
+    aat:startLine 18.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l23-o0> a aat:Heading;
+    aat:childOrder 5;
+    aat:containsDirectly <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l29-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l33-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l48-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l58-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l62-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l66-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l70-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l81-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:contentEndLine 27;
+    aat:contentStartLine 25;
+    aat:documentOrder 6;
+    aat:endLine 28;
+    aat:generatedAddressLabel "_荣国府";
+    aat:headingLevel 1;
+    aat:headingLine 24;
+    aat:headline "荣国府";
+    aat:metadataEndLine 23;
+    aat:metadataStartLine 23;
+    aat:raw """[.clan]
+== 荣国府
+// ==========================================
+// 第二卷：荣国府宗法网络
+// ==========================================
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "clan";
+    aat:startLine 23.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l29-o0> a aat:Heading;
+    aat:childOrder 1;
+    aat:contentEndLine 31;
+    aat:contentStartLine 31;
+    aat:documentOrder 7;
+    aat:endLine 32;
+    aat:generatedAddressLabel "_贾源";
+    aat:generation "1";
+    aat:headingLevel 2;
+    aat:headingLine 30;
+    aat:headline "贾源";
+    aat:metadataEndLine 29;
+    aat:metadataStartLine 29;
+    aat:raw """[.person, generation=1]
+=== 贾源
+荣国公，贾府基业的开创者。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 29.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l3-o0> a aat:Heading;
+    aat:childOrder 1;
+    aat:contentEndLine 8;
+    aat:contentStartLine 5;
+    aat:documentOrder 2;
+    aat:endLine 9;
+    aat:generatedAddressLabel "_警幻仙子";
+    aat:headingLevel 1;
+    aat:headingLine 4;
+    aat:headline "警幻仙子";
+    aat:metadataEndLine 3;
+    aat:metadataStartLine 3;
+    aat:raw """[.metaphysical]
+== 警幻仙子
+// ==========================================
+// 第一卷：太虚幻境与神话本源
+// ==========================================
+太虚幻境之主，司人间之风情月债，掌尘世之女怨男痴。她试图通过梦境向 xref:贾宝玉[rel=enlighten] 揭示命运的虚无。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "metaphysical";
+    aat:startLine 3;
+    rel:enlighten <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l33-o0> a aat:Heading;
+    aat:childOrder 2;
+    aat:contentEndLine 35;
+    aat:contentStartLine 35;
+    aat:documentOrder 8;
+    aat:endLine 36;
+    aat:generatedAddressLabel "_贾代善";
+    aat:generation "2";
+    aat:headingLevel 2;
+    aat:headingLine 34;
+    aat:headline "贾代善";
+    aat:metadataEndLine 33;
+    aat:metadataStartLine 33;
+    aat:raw """[.person, generation=2]
+=== 贾代善
+贾源之子。其妻为 xref:贾母[rel=spouse, status=primary]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 33;
+    rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0> a aat:Heading;
+    aat:childOrder 3;
+    aat:contentEndLine 40;
+    aat:contentStartLine 39;
+    aat:documentOrder 9;
+    aat:endLine 41;
+    aat:generatedAddressLabel "_贾母";
+    aat:generation "2";
+    aat:headingLevel 2;
+    aat:headingLine 38;
+    aat:headline "贾母";
+    aat:metadataEndLine 37;
+    aat:metadataStartLine 37;
+    aat:raw """[.person, generation=2]
+=== 贾母
+史侯家的小姐，史太君。荣国府的最高血缘与权力中枢。
+其子嗣包括 xref:贾赦[rel=kinship, type=son]、xref:贾政[rel=kinship, type=son]、xref:贾敏[rel=kinship, type=daughter]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 37;
+    rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l48-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l62-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0> a aat:Heading;
+    aat:childOrder 4;
+    aat:contentEndLine 46;
+    aat:contentStartLine 44;
+    aat:documentOrder 10;
+    aat:endLine 47;
+    aat:generatedAddressLabel "_贾赦";
+    aat:generation "3";
+    aat:headingLevel 2;
+    aat:headingLine 43;
+    aat:headline "贾赦";
+    aat:metadataEndLine 42;
+    aat:metadataStartLine 42;
+    aat:raw """[.person, generation=3]
+=== 贾赦
+贾母长子，世袭一等将军。为人好色贪婪。
+其妻为 xref:邢夫人[rel=spouse, status=primary]。
+其子为 xref:贾琏[rel=kinship, type=son]；其女为 xref:贾迎春[rel=kinship, type=daughter]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 42;
+    rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l81-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l48-o0> a aat:Heading;
+    aat:childOrder 5;
+    aat:contentEndLine 50;
+    aat:contentStartLine 50;
+    aat:documentOrder 11;
+    aat:endLine 51;
+    aat:generatedAddressLabel "_贾政";
+    aat:generation "3";
+    aat:headingLevel 2;
+    aat:headingLine 49;
+    aat:headline "贾政";
+    aat:metadataEndLine 48;
+    aat:metadataStartLine 48;
+    aat:raw """[.person, generation=3]
+=== 贾政
+贾母次子，工部员外郎，封建正统道德的化身。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 48.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0> a aat:Heading;
+    aat:addressLabel "wang-furen-rong";
+    aat:childOrder 6;
+    aat:contentEndLine 56;
+    aat:contentStartLine 54;
+    aat:documentOrder 12;
+    aat:endLine 57;
+    aat:generation "3";
+    aat:headingLevel 2;
+    aat:headingLine 53;
+    aat:headline "王夫人";
+    aat:metadataEndLine 52;
+    aat:metadataStartLine 52;
+    aat:raw """[#wang-furen-rong.person, generation=3]
+=== 王夫人
+贾政之妻，金陵王家出身。
+她对大观园的统治具有绝对威权，并极其厌恶 xref:林黛玉[rel=dislike] 与 xref:晴雯[rel=dislike]。
+她的子嗣包括 xref:贾珠[rel=kinship, type=son]、xref:贾元春[rel=kinship, type=daughter]、xref:贾宝玉[rel=kinship, type=son]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 52;
+    rel:dislike <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l66-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l70-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l58-o0> a aat:Heading;
+    aat:childOrder 7;
+    aat:contentEndLine 60;
+    aat:contentStartLine 60;
+    aat:documentOrder 13;
+    aat:endLine 61;
+    aat:generatedAddressLabel "_赵姨娘";
+    aat:generation "3";
+    aat:headingLevel 2;
+    aat:headingLine 59;
+    aat:headline "赵姨娘";
+    aat:metadataEndLine 58;
+    aat:metadataStartLine 58;
+    aat:raw """[.person, generation=3]
+=== 赵姨娘
+贾政之妾。育有 xref:贾探春[rel=kinship, type=daughter] 与 xref:贾环[rel=kinship, type=son]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 58.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l62-o0> a aat:Heading;
+    aat:childOrder 8;
+    aat:contentEndLine 64;
+    aat:contentStartLine 64;
+    aat:documentOrder 14;
+    aat:endLine 65;
+    aat:generatedAddressLabel "_贾敏";
+    aat:generation "3";
+    aat:headingLevel 2;
+    aat:headingLine 63;
+    aat:headline "贾敏";
+    aat:metadataEndLine 62;
+    aat:metadataStartLine 62;
+    aat:raw """[.person, generation=3]
+=== 贾敏
+贾母之女。嫁与林如海，育有 xref:林黛玉[rel=kinship, type=daughter]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 62;
+    rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l66-o0> a aat:Heading;
+    aat:childOrder 9;
+    aat:contentEndLine 68;
+    aat:contentStartLine 68;
+    aat:documentOrder 15;
+    aat:endLine 69;
+    aat:generatedAddressLabel "_贾珠";
+    aat:generation "4";
+    aat:headingLevel 2;
+    aat:headingLine 67;
+    aat:headline "贾珠";
+    aat:metadataEndLine 66;
+    aat:metadataStartLine 66;
+    aat:raw """[.person, generation=4]
+=== 贾珠
+贾政与王夫人长子，早夭。其妻为 xref:李纨[rel=spouse, status=primary]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 66.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l70-o0> a aat:Heading;
+    aat:childOrder 10;
+    aat:contentEndLine 72;
+    aat:contentStartLine 72;
+    aat:documentOrder 16;
+    aat:endLine 73;
+    aat:generatedAddressLabel "_贾元春";
+    aat:generation "4";
+    aat:headingLevel 2;
+    aat:headingLine 71;
+    aat:headline "贾元春";
+    aat:metadataEndLine 70;
+    aat:metadataStartLine 70;
+    aat:raw """[.person, generation=4]
+=== 贾元春
+贾政与王夫人长女。入宫为妃，其晋升直接促成了 xref:大观园[rel=cause] 的修建。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 70;
+    rel:cause <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l124-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0> a aat:Heading;
+    aat:childOrder 11;
+    aat:contentEndLine 79;
+    aat:contentStartLine 76;
+    aat:documentOrder 17;
+    aat:endLine 80;
+    aat:generatedAddressLabel "_贾宝玉";
+    aat:generation "4";
+    aat:headingLevel 2;
+    aat:headingLine 75;
+    aat:headline "贾宝玉";
+    aat:metadataEndLine 74;
+    aat:metadataStartLine 74;
+    aat:raw """[.person, generation=4]
+=== 贾宝玉
+荣国府的核心节点。他是 xref:神瑛侍者[rel=incarnation] 的现世化身。
+出生时口衔 xref:通灵宝玉[rel=possess]。
+他居于大观园中的 xref:怡红院[rel=reside-in]。
+他深爱着 xref:林黛玉[rel=love, reciprocal=true]，但最终依附于宗法安排，与 xref:薛宝钗[rel=spouse, status=primary] 成婚。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 74;
+    rel:incarnation <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l10-o0>;
+    rel:love <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>;
+    rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l81-o0> a aat:Heading;
+    aat:childOrder 12;
+    aat:contentEndLine 84;
+    aat:contentStartLine 83;
+    aat:documentOrder 18;
+    aat:endLine 85;
+    aat:generatedAddressLabel "_贾琏";
+    aat:generation "4";
+    aat:headingLevel 2;
+    aat:headingLine 82;
+    aat:headline "贾琏";
+    aat:metadataEndLine 81;
+    aat:metadataStartLine 81;
+    aat:raw """[.person, generation=4]
+=== 贾琏
+贾赦之子，荣国府的实际庶务管理者。
+其妻为 xref:王熙凤[rel=spouse, status=primary]。他与 xref:尤二姐[rel=spouse, status=concubine] 发生过私情。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 81;
+    rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0> a aat:Heading;
+    aat:childOrder 13;
+    aat:contentEndLine 89;
+    aat:contentStartLine 88;
+    aat:documentOrder 19;
+    aat:endLine 90;
+    aat:generatedAddressLabel "_王熙凤";
+    aat:generation "4";
+    aat:headingLevel 2;
+    aat:headingLine 87;
+    aat:headline "王熙凤";
+    aat:metadataEndLine 86;
+    aat:metadataStartLine 86;
+    aat:raw """[.person, generation=4]
+=== 王熙凤
+荣国府的实际内务掌权者，金陵王家出身（王夫人内侄女）。
+性格泼辣，手段极其冷酷。其贴身大丫鬟为 xref:平儿[rel=serve, level=primary]。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 86.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0> a aat:Heading;
+    aat:childOrder 14;
+    aat:contentEndLine 95;
+    aat:contentStartLine 93;
+    aat:documentOrder 20;
+    aat:endLine 96;
+    aat:generatedAddressLabel "_林黛玉";
+    aat:generation "4";
+    aat:headingLevel 2;
+    aat:headingLine 92;
+    aat:headline "林黛玉";
+    aat:metadataEndLine 91;
+    aat:metadataStartLine 91;
+    aat:raw """[.person, generation=4]
+=== 林黛玉
+寄居荣国府的表小姐。她是 xref:绛珠仙草[rel=incarnation] 的现世化身。
+居于 xref:潇湘馆[rel=reside-in]。
+她来到人间的唯一目的，是向 xref:贾宝玉[rel=love, action=repay-tears] 还泪。
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 91;
+    rel:incarnation <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l14-o0>;
+    rel:love <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l138-o0>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l97-o0> a aat:Heading;
+    aat:childOrder 6;
+    aat:containsDirectly <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l103-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l107-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l112-o0>, <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l116-o0>;
+    aat:contentEndLine 101;
+    aat:contentStartLine 99;
+    aat:documentOrder 21;
+    aat:endLine 102;
+    aat:generatedAddressLabel "_宁国府";
+    aat:headingLevel 1;
+    aat:headingLine 98;
+    aat:headline "宁国府";
+    aat:metadataEndLine 97;
+    aat:metadataStartLine 97;
+    aat:raw """[.clan]
+== 宁国府
+// ==========================================
+// 第三卷：宁国府世系
+// ==========================================
+
+""";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "clan";
+    aat:startLine 97.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#projection> a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#source>;
+    prov:wasDerivedFrom <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#source>;
+    prov:wasGeneratedBy <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#activity>.
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#source> a prov:Entity, aat:AsciiDocSourceDocument;
+    aat:relativePath "红楼梦结构图谱.adoc".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l105-c24-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l103-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l107-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 54;
+    aat:endLine 105;
+    aat:officialHref "#_贾珍";
+    aat:officialReftext "贾珍";
+    aat:officialResolvedId "_贾珍";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾珍[rel=kinship, type=son]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l103-o0>;
+    aat:sourceSelector "_贾敬";
+    aat:startColumn 24;
+    aat:startLine 105;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l107-o0>;
+    aat:targetSelector "贾珍";
+    aat:type "son".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l110-c45-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l107-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l112-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 75;
+    aat:endLine 110;
+    aat:officialHref "#_贾蓉";
+    aat:officialReftext "贾蓉";
+    aat:officialResolvedId "_贾蓉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾蓉[rel=kinship, type=son]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l107-o0>;
+    aat:sourceSelector "_贾珍";
+    aat:startColumn 45;
+    aat:startLine 110;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l112-o0>;
+    aat:targetSelector "贾蓉";
+    aat:type "son".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l110-c5-o0> a aat:XrefEdge;
+    aat:endColumn 40;
+    aat:endLine 110;
+    aat:officialHref "#尤氏";
+    aat:officialReftext "[尤氏]";
+    aat:officialResolvedId "尤氏";
+    aat:raw "xref:尤氏[rel=spouse, status=primary]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l107-o0>;
+    aat:sourceSelector "_贾珍";
+    aat:startColumn 5;
+    aat:startLine 110;
+    aat:status "primary";
+    aat:syntax "macro";
+    aat:targetSelector "尤氏".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l114-c13-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l112-o0> rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l116-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 49;
+    aat:endLine 114;
+    aat:officialHref "#_秦可卿";
+    aat:officialReftext "秦可卿";
+    aat:officialResolvedId "_秦可卿";
+    aat:officialResolvedType "section";
+    aat:raw "xref:秦可卿[rel=spouse, status=primary]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l112-o0>;
+    aat:sourceSelector "_贾蓉";
+    aat:startColumn 13;
+    aat:startLine 114;
+    aat:status "primary";
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l116-o0>;
+    aat:targetSelector "秦可卿".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l122-c26-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l116-o0> rel:enlighten <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 49;
+    aat:endLine 122;
+    aat:officialHref "#_王熙凤";
+    aat:officialReftext "王熙凤";
+    aat:officialResolvedId "_王熙凤";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王熙凤[rel=enlighten]";
+    aat:rel "enlighten";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l116-o0>;
+    aat:sourceSelector "_秦可卿";
+    aat:startColumn 26;
+    aat:startLine 122;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>;
+    aat:targetSelector "王熙凤".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l130-c10-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0> rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 33;
+    aat:endLine 130;
+    aat:officialHref "#_贾宝玉";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "_贾宝玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[rel=reside-in]";
+    aat:rel "reside-in";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>;
+    aat:sourceSelector "_怡红院";
+    aat:startColumn 10;
+    aat:startLine 130;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:targetSelector "贾宝玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l134-c3-o0> a aat:XrefEdge;
+    aat:endColumn 49;
+    aat:endLine 134;
+    aat:level "primary";
+    aat:raw "xref:花袭人[rel=serve, target=贾宝玉, level=primary]";
+    aat:rel "serve";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>;
+    aat:sourceSelector "_怡红院";
+    aat:startColumn 3;
+    aat:startLine 134;
+    aat:syntax "macro";
+    aat:targetSelector "花袭人";
+    aat:target "贾宝玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l134-c56-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0> rel:loyalty <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 94;
+    aat:endLine 134;
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wang-furen-rong";
+    aat:officialResolvedType "section";
+    aat:raw "xref:wang-furen-rong[王夫人, rel=loyalty]";
+    aat:rel "loyalty";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>;
+    aat:sourceSelector "_怡红院";
+    aat:startColumn 56;
+    aat:startLine 134;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    aat:targetSelector "wang-furen-rong".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l135-c3-o0> a aat:XrefEdge;
+    aat:endColumn 48;
+    aat:endLine 135;
+    aat:level "primary";
+    aat:raw "xref:晴雯[rel=serve, target=贾宝玉, level=primary]";
+    aat:rel "serve";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>;
+    aat:sourceSelector "_怡红院";
+    aat:startColumn 3;
+    aat:startLine 135;
+    aat:syntax "macro";
+    aat:targetSelector "晴雯";
+    aat:target "贾宝玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l136-c3-o0> a aat:XrefEdge;
+    aat:endColumn 50;
+    aat:endLine 136;
+    aat:level "secondary";
+    aat:raw "xref:麝月[rel=serve, target=贾宝玉, level=secondary]";
+    aat:rel "serve";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>;
+    aat:sourceSelector "_怡红院";
+    aat:startColumn 3;
+    aat:startLine 136;
+    aat:syntax "macro";
+    aat:targetSelector "麝月";
+    aat:target "贾宝玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l140-c15-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l138-o0> rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 38;
+    aat:endLine 140;
+    aat:officialHref "#_林黛玉";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "_林黛玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[rel=reside-in]";
+    aat:rel "reside-in";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l138-o0>;
+    aat:sourceSelector "_潇湘馆";
+    aat:startColumn 15;
+    aat:startLine 140;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:targetSelector "林黛玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l141-c7-o0> a aat:XrefEdge;
+    aat:endColumn 52;
+    aat:endLine 141;
+    aat:level "primary";
+    aat:officialHref "#紫鹃";
+    aat:officialReftext "[紫鹃]";
+    aat:officialResolvedId "紫鹃";
+    aat:raw "xref:紫鹃[rel=serve, target=林黛玉, level=primary]";
+    aat:rel "serve";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l138-o0>;
+    aat:sourceSelector "_潇湘馆";
+    aat:startColumn 7;
+    aat:startLine 141;
+    aat:syntax "macro";
+    aat:targetSelector "紫鹃";
+    aat:target "林黛玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l145-c19-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l143-o0> rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 42;
+    aat:endLine 145;
+    aat:officialHref "#_薛宝钗";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "_薛宝钗";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[rel=reside-in]";
+    aat:rel "reside-in";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l143-o0>;
+    aat:sourceSelector "_蘅芜苑";
+    aat:startColumn 19;
+    aat:startLine 145;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>;
+    aat:targetSelector "薛宝钗".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l150-c6-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0> rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 42;
+    aat:endLine 150;
+    aat:officialHref "#_贾宝玉";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "_贾宝玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[rel=spouse, status=primary]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>;
+    aat:sourceSelector "_薛宝钗";
+    aat:startColumn 6;
+    aat:startLine 150;
+    aat:status "primary";
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:targetSelector "贾宝玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l150-c64-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0> rel:cause-death <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 89;
+    aat:endLine 150;
+    aat:officialHref "#_林黛玉";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "_林黛玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[rel=cause-death]";
+    aat:rel "cause-death";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>;
+    aat:sourceSelector "_薛宝钗";
+    aat:startColumn 64;
+    aat:startLine 150;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:targetSelector "林黛玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l162-c7-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0> rel:participate <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l48-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 47;
+    aat:endLine 162;
+    aat:raw "xref:贾政[rel=participate, role=initiator]";
+    aat:rel "participate";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "initiator";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0>;
+    aat:sourceSelector "event-baoyu-beaten";
+    aat:startColumn 7;
+    aat:startLine 162;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l48-o0>;
+    aat:targetSelector "贾政".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l163-c7-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0> rel:participate <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 45;
+    aat:endLine 163;
+    aat:raw "xref:贾宝玉[rel=participate, role=victim]";
+    aat:rel "participate";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "victim";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0>;
+    aat:sourceSelector "event-baoyu-beaten";
+    aat:startColumn 7;
+    aat:startLine 163;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:targetSelector "贾宝玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l164-c51-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0> rel:participate <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 110;
+    aat:endLine 164;
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wang-furen-rong";
+    aat:officialResolvedType "section";
+    aat:raw "xref:wang-furen-rong[王夫人, rel=participate, role=intervener]";
+    aat:rel "participate";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "intervener";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0>;
+    aat:sourceSelector "event-baoyu-beaten";
+    aat:startColumn 51;
+    aat:startLine 164;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    aat:targetSelector "wang-furen-rong".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l164-c7-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0> rel:participate <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 48;
+    aat:endLine 164;
+    aat:raw "xref:贾母[rel=participate, role=intervener]";
+    aat:rel "participate";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "intervener";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l152-o0>;
+    aat:sourceSelector "event-baoyu-beaten";
+    aat:startColumn 7;
+    aat:startLine 164;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>;
+    aat:targetSelector "贾母".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l171-c7-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0> rel:participate <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 65;
+    aat:endLine 171;
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wang-furen-rong";
+    aat:officialResolvedType "section";
+    aat:raw "xref:wang-furen-rong[王夫人, rel=participate, role=initiator]";
+    aat:rel "participate";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "initiator";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0>;
+    aat:sourceSelector "event-raid-on-garden";
+    aat:startColumn 7;
+    aat:startLine 171;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    aat:targetSelector "wang-furen-rong".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l172-c7-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0> rel:participate <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 47;
+    aat:endLine 172;
+    aat:raw "xref:王熙凤[rel=participate, role=executor]";
+    aat:rel "participate";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:role "executor";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0>;
+    aat:sourceSelector "event-raid-on-garden";
+    aat:startColumn 7;
+    aat:startLine 172;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>;
+    aat:targetSelector "王熙凤".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l173-c14-o0> a aat:XrefEdge;
+    aat:endColumn 38;
+    aat:endLine 173;
+    aat:raw "xref:晴雯[rel=cause-death]";
+    aat:rel "cause-death";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0>;
+    aat:sourceSelector "event-raid-on-garden";
+    aat:startColumn 14;
+    aat:startLine 173;
+    aat:syntax "macro";
+    aat:targetSelector "晴雯".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l173-c46-o0> a aat:XrefEdge;
+    aat:endColumn 70;
+    aat:endLine 173;
+    aat:raw "xref:司棋[rel=cause-expel]";
+    aat:rel "cause-expel";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0>;
+    aat:sourceSelector "event-raid-on-garden";
+    aat:startColumn 46;
+    aat:startLine 173;
+    aat:syntax "macro";
+    aat:targetSelector "司棋".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l174-c10-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0> rel:cause-decline <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l23-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 37;
+    aat:endLine 174;
+    aat:raw "xref:荣国府[rel=cause-decline]";
+    aat:rel "cause-decline";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l166-o0>;
+    aat:sourceSelector "event-raid-on-garden";
+    aat:startColumn 10;
+    aat:startLine 174;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l23-o0>;
+    aat:targetSelector "荣国府".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l35-c10-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l33-o0> rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 45;
+    aat:endLine 35;
+    aat:officialHref "#_贾母";
+    aat:officialReftext "贾母";
+    aat:officialResolvedId "_贾母";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾母[rel=spouse, status=primary]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l33-o0>;
+    aat:sourceSelector "_贾代善";
+    aat:startColumn 10;
+    aat:startLine 35;
+    aat:status "primary";
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>;
+    aat:targetSelector "贾母".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l40-c38-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l48-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 68;
+    aat:endLine 40;
+    aat:officialHref "#_贾政";
+    aat:officialReftext "贾政";
+    aat:officialResolvedId "_贾政";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾政[rel=kinship, type=son]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>;
+    aat:sourceSelector "_贾母";
+    aat:startColumn 38;
+    aat:startLine 40;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l48-o0>;
+    aat:targetSelector "贾政";
+    aat:type "son".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l40-c69-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l62-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 104;
+    aat:endLine 40;
+    aat:officialHref "#_贾敏";
+    aat:officialReftext "贾敏";
+    aat:officialResolvedId "_贾敏";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾敏[rel=kinship, type=daughter]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>;
+    aat:sourceSelector "_贾母";
+    aat:startColumn 69;
+    aat:startLine 40;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l62-o0>;
+    aat:targetSelector "贾敏";
+    aat:type "daughter".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l40-c7-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 37;
+    aat:endLine 40;
+    aat:officialHref "#_贾赦";
+    aat:officialReftext "贾赦";
+    aat:officialResolvedId "_贾赦";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾赦[rel=kinship, type=son]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l37-o0>;
+    aat:sourceSelector "_贾母";
+    aat:startColumn 7;
+    aat:startLine 40;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0>;
+    aat:targetSelector "贾赦";
+    aat:type "son".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l45-c5-o0> a aat:XrefEdge;
+    aat:endColumn 41;
+    aat:endLine 45;
+    aat:officialHref "#邢夫人";
+    aat:officialReftext "[邢夫人]";
+    aat:officialResolvedId "邢夫人";
+    aat:raw "xref:邢夫人[rel=spouse, status=primary]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0>;
+    aat:sourceSelector "_贾赦";
+    aat:startColumn 5;
+    aat:startLine 45;
+    aat:status "primary";
+    aat:syntax "macro";
+    aat:targetSelector "邢夫人".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l46-c40-o0> a aat:XrefEdge;
+    aat:endColumn 76;
+    aat:endLine 46;
+    aat:officialHref "#贾迎春";
+    aat:officialReftext "[贾迎春]";
+    aat:officialResolvedId "贾迎春";
+    aat:raw "xref:贾迎春[rel=kinship, type=daughter]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0>;
+    aat:sourceSelector "_贾赦";
+    aat:startColumn 40;
+    aat:startLine 46;
+    aat:syntax "macro";
+    aat:targetSelector "贾迎春";
+    aat:type "daughter".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l46-c5-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l81-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 35;
+    aat:endLine 46;
+    aat:officialHref "#_贾琏";
+    aat:officialReftext "贾琏";
+    aat:officialResolvedId "_贾琏";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾琏[rel=kinship, type=son]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l42-o0>;
+    aat:sourceSelector "_贾赦";
+    aat:startColumn 5;
+    aat:startLine 46;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l81-o0>;
+    aat:targetSelector "贾琏";
+    aat:type "son".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l55-c22-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0> rel:dislike <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 43;
+    aat:endLine 55;
+    aat:officialHref "#_林黛玉";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "_林黛玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[rel=dislike]";
+    aat:rel "dislike";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    aat:sourceSelector "wang-furen-rong";
+    aat:startColumn 22;
+    aat:startLine 55;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:targetSelector "林黛玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l55-c46-o0> a aat:XrefEdge;
+    aat:endColumn 66;
+    aat:endLine 55;
+    aat:officialHref "#晴雯";
+    aat:officialReftext "[晴雯]";
+    aat:officialResolvedId "晴雯";
+    aat:raw "xref:晴雯[rel=dislike]";
+    aat:rel "dislike";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    aat:sourceSelector "wang-furen-rong";
+    aat:startColumn 46;
+    aat:startLine 55;
+    aat:syntax "macro";
+    aat:targetSelector "晴雯".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l56-c39-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l70-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 75;
+    aat:endLine 56;
+    aat:officialHref "#_贾元春";
+    aat:officialReftext "贾元春";
+    aat:officialResolvedId "_贾元春";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾元春[rel=kinship, type=daughter]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    aat:sourceSelector "wang-furen-rong";
+    aat:startColumn 39;
+    aat:startLine 56;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l70-o0>;
+    aat:targetSelector "贾元春";
+    aat:type "daughter".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l56-c76-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 107;
+    aat:endLine 56;
+    aat:officialHref "#_贾宝玉";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "_贾宝玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[rel=kinship, type=son]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    aat:sourceSelector "wang-furen-rong";
+    aat:startColumn 76;
+    aat:startLine 56;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:targetSelector "贾宝玉";
+    aat:type "son".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l56-c8-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l66-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 38;
+    aat:endLine 56;
+    aat:officialHref "#_贾珠";
+    aat:officialReftext "贾珠";
+    aat:officialResolvedId "_贾珠";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾珠[rel=kinship, type=son]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l52-o0>;
+    aat:sourceSelector "wang-furen-rong";
+    aat:startColumn 8;
+    aat:startLine 56;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l66-o0>;
+    aat:targetSelector "贾珠";
+    aat:type "son".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l60-c48-o0> a aat:XrefEdge;
+    aat:endColumn 78;
+    aat:endLine 60;
+    aat:officialHref "#贾环";
+    aat:officialReftext "[贾环]";
+    aat:officialResolvedId "贾环";
+    aat:raw "xref:贾环[rel=kinship, type=son]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l58-o0>;
+    aat:sourceSelector "_赵姨娘";
+    aat:startColumn 48;
+    aat:startLine 60;
+    aat:syntax "macro";
+    aat:targetSelector "贾环";
+    aat:type "son".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l60-c9-o0> a aat:XrefEdge;
+    aat:endColumn 45;
+    aat:endLine 60;
+    aat:officialHref "#贾探春";
+    aat:officialReftext "[贾探春]";
+    aat:officialResolvedId "贾探春";
+    aat:raw "xref:贾探春[rel=kinship, type=daughter]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l58-o0>;
+    aat:sourceSelector "_赵姨娘";
+    aat:startColumn 9;
+    aat:startLine 60;
+    aat:syntax "macro";
+    aat:targetSelector "贾探春";
+    aat:type "daughter".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l64-c15-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l62-o0> rel:kinship <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 51;
+    aat:endLine 64;
+    aat:officialHref "#_林黛玉";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "_林黛玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[rel=kinship, type=daughter]";
+    aat:rel "kinship";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l62-o0>;
+    aat:sourceSelector "_贾敏";
+    aat:startColumn 15;
+    aat:startLine 64;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:targetSelector "林黛玉";
+    aat:type "daughter".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l68-c17-o0> a aat:XrefEdge;
+    aat:endColumn 52;
+    aat:endLine 68;
+    aat:officialHref "#李纨";
+    aat:officialReftext "[李纨]";
+    aat:officialResolvedId "李纨";
+    aat:raw "xref:李纨[rel=spouse, status=primary]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l66-o0>;
+    aat:sourceSelector "_贾珠";
+    aat:startColumn 17;
+    aat:startLine 68;
+    aat:status "primary";
+    aat:syntax "macro";
+    aat:targetSelector "李纨".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l72-c24-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l70-o0> rel:cause <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l124-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 43;
+    aat:endLine 72;
+    aat:officialHref "#_大观园";
+    aat:officialReftext "大观园";
+    aat:officialResolvedId "_大观园";
+    aat:officialResolvedType "section";
+    aat:raw "xref:大观园[rel=cause]";
+    aat:rel "cause";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l70-o0>;
+    aat:sourceSelector "_贾元春";
+    aat:startColumn 24;
+    aat:startLine 72;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l124-o0>;
+    aat:targetSelector "大观园".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l76-c13-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0> rel:incarnation <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l10-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 39;
+    aat:endLine 76;
+    aat:officialHref "#_神瑛侍者";
+    aat:officialReftext "神瑛侍者";
+    aat:officialResolvedId "_神瑛侍者";
+    aat:officialResolvedType "section";
+    aat:raw "xref:神瑛侍者[rel=incarnation]";
+    aat:rel "incarnation";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:sourceSelector "_贾宝玉";
+    aat:startColumn 13;
+    aat:startLine 76;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l10-o0>;
+    aat:targetSelector "神瑛侍者".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l77-c7-o0> a aat:XrefEdge;
+    aat:endColumn 29;
+    aat:endLine 77;
+    aat:officialHref "#通灵宝玉";
+    aat:officialReftext "[通灵宝玉]";
+    aat:officialResolvedId "通灵宝玉";
+    aat:raw "xref:通灵宝玉[rel=possess]";
+    aat:rel "possess";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:sourceSelector "_贾宝玉";
+    aat:startColumn 7;
+    aat:startLine 77;
+    aat:syntax "macro";
+    aat:targetSelector "通灵宝玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l78-c10-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0> rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 33;
+    aat:endLine 78;
+    aat:officialHref "#_怡红院";
+    aat:officialReftext "怡红院";
+    aat:officialResolvedId "_怡红院";
+    aat:officialResolvedType "section";
+    aat:raw "xref:怡红院[rel=reside-in]";
+    aat:rel "reside-in";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:sourceSelector "_贾宝玉";
+    aat:startColumn 10;
+    aat:startLine 78;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l128-o0>;
+    aat:targetSelector "怡红院".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l79-c55-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0> rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 91;
+    aat:endLine 79;
+    aat:officialHref "#_薛宝钗";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "_薛宝钗";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[rel=spouse, status=primary]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:sourceSelector "_贾宝玉";
+    aat:startColumn 55;
+    aat:startLine 79;
+    aat:status "primary";
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l147-o0>;
+    aat:targetSelector "薛宝钗".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l79-c6-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0> rel:love <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 41;
+    aat:endLine 79;
+    aat:officialHref "#_林黛玉";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "_林黛玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[rel=love, reciprocal=true]";
+    aat:reciprocal "true";
+    aat:rel "love";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:sourceSelector "_贾宝玉";
+    aat:startColumn 6;
+    aat:startLine 79;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:targetSelector "林黛玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l8-c35-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l3-o0> rel:enlighten <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 58;
+    aat:endLine 8;
+    aat:officialHref "#_贾宝玉";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "_贾宝玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[rel=enlighten]";
+    aat:rel "enlighten";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l3-o0>;
+    aat:sourceSelector "_警幻仙子";
+    aat:startColumn 35;
+    aat:startLine 8;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:targetSelector "贾宝玉".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l84-c45-o0> a aat:XrefEdge;
+    aat:endColumn 83;
+    aat:endLine 84;
+    aat:officialHref "#尤二姐";
+    aat:officialReftext "[尤二姐]";
+    aat:officialResolvedId "尤二姐";
+    aat:raw "xref:尤二姐[rel=spouse, status=concubine]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l81-o0>;
+    aat:sourceSelector "_贾琏";
+    aat:startColumn 45;
+    aat:startLine 84;
+    aat:status "concubine";
+    aat:syntax "macro";
+    aat:targetSelector "尤二姐".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l84-c5-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l81-o0> rel:spouse <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 41;
+    aat:endLine 84;
+    aat:officialHref "#_王熙凤";
+    aat:officialReftext "王熙凤";
+    aat:officialResolvedId "_王熙凤";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王熙凤[rel=spouse, status=primary]";
+    aat:rel "spouse";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l81-o0>;
+    aat:sourceSelector "_贾琏";
+    aat:startColumn 5;
+    aat:startLine 84;
+    aat:status "primary";
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>;
+    aat:targetSelector "王熙凤".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l89-c21-o0> a aat:XrefEdge;
+    aat:endColumn 54;
+    aat:endLine 89;
+    aat:level "primary";
+    aat:officialHref "#平儿";
+    aat:officialReftext "[平儿]";
+    aat:officialResolvedId "平儿";
+    aat:raw "xref:平儿[rel=serve, level=primary]";
+    aat:rel "serve";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l86-o0>;
+    aat:sourceSelector "_王熙凤";
+    aat:startColumn 21;
+    aat:startLine 89;
+    aat:syntax "macro";
+    aat:targetSelector "平儿".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l93-c14-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0> rel:incarnation <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l14-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 40;
+    aat:endLine 93;
+    aat:officialHref "#_绛珠仙草";
+    aat:officialReftext "绛珠仙草";
+    aat:officialResolvedId "_绛珠仙草";
+    aat:officialResolvedType "section";
+    aat:raw "xref:绛珠仙草[rel=incarnation]";
+    aat:rel "incarnation";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:sourceSelector "_林黛玉";
+    aat:startColumn 14;
+    aat:startLine 93;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l14-o0>;
+    aat:targetSelector "绛珠仙草".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l94-c4-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0> rel:reside-in <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l138-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 27;
+    aat:endLine 94;
+    aat:officialHref "#_潇湘馆";
+    aat:officialReftext "潇湘馆";
+    aat:officialResolvedId "_潇湘馆";
+    aat:officialResolvedType "section";
+    aat:raw "xref:潇湘馆[rel=reside-in]";
+    aat:rel "reside-in";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:sourceSelector "_林黛玉";
+    aat:startColumn 4;
+    aat:startLine 94;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l138-o0>;
+    aat:targetSelector "潇湘馆".
+<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#xref-edge-l95-c15-o0> rdf:reifies <<(<urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0> rel:love <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>)>>;
+    a aat:XrefEdge;
+    aat:action "repay-tears";
+    aat:endColumn 53;
+    aat:endLine 95;
+    aat:officialHref "#_贾宝玉";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "_贾宝玉";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[rel=love, action=repay-tears]";
+    aat:rel "love";
+    aat:relativePath "红楼梦结构图谱.adoc";
+    aat:sourceHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l91-o0>;
+    aat:sourceSelector "_林黛玉";
+    aat:startColumn 15;
+    aat:startLine 95;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:6718943a5a553f839a956b046c039475f8a5aa8c1d93edbe1b554522354ac42f#heading-l74-o0>;
+    aat:targetSelector "贾宝玉".

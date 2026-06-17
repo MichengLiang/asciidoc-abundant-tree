@@ -1,0 +1,174 @@
+= 红楼梦结构图谱
+
+[.metaphysical]
+== 警幻仙子
+// ==========================================
+// 第一卷：太虚幻境与神话本源
+// ==========================================
+太虚幻境之主，司人间之风情月债，掌尘世之女怨男痴。她试图通过梦境向 xref:贾宝玉[rel=enlighten] 揭示命运的虚无。
+
+[.metaphysical]
+== 神瑛侍者
+曾在灵河岸边浇灌仙草。后凡心偶炽，下凡造历幻缘。
+
+[.metaphysical]
+== 绛珠仙草
+受神瑛侍者甘露之惠，得换人形。为报灌溉之恩，下凡将一生所有的眼泪还他。
+
+[.metaphysical]
+== 补天顽石
+女娲炼石补天遗下的唯一一块未用之石。被茫茫大士、渺渺真人携入红尘。
+
+
+[.clan]
+== 荣国府
+// ==========================================
+// 第二卷：荣国府宗法网络
+// ==========================================
+
+[.person, generation=1]
+=== 贾源
+荣国公，贾府基业的开创者。
+
+[.person, generation=2]
+=== 贾代善
+贾源之子。其妻为 xref:贾母[rel=spouse, status=primary]。
+
+[.person, generation=2]
+=== 贾母
+史侯家的小姐，史太君。荣国府的最高血缘与权力中枢。
+其子嗣包括 xref:贾赦[rel=kinship, type=son]、xref:贾政[rel=kinship, type=son]、xref:贾敏[rel=kinship, type=daughter]。
+
+[.person, generation=3]
+=== 贾赦
+贾母长子，世袭一等将军。为人好色贪婪。
+其妻为 xref:邢夫人[rel=spouse, status=primary]。
+其子为 xref:贾琏[rel=kinship, type=son]；其女为 xref:贾迎春[rel=kinship, type=daughter]。
+
+[.person, generation=3]
+=== 贾政
+贾母次子，工部员外郎，封建正统道德的化身。
+
+[#wang-furen-rong.person, generation=3]
+=== 王夫人
+贾政之妻，金陵王家出身。
+她对大观园的统治具有绝对威权，并极其厌恶 xref:林黛玉[rel=dislike] 与 xref:晴雯[rel=dislike]。
+她的子嗣包括 xref:贾珠[rel=kinship, type=son]、xref:贾元春[rel=kinship, type=daughter]、xref:贾宝玉[rel=kinship, type=son]。
+
+[.person, generation=3]
+=== 赵姨娘
+贾政之妾。育有 xref:贾探春[rel=kinship, type=daughter] 与 xref:贾环[rel=kinship, type=son]。
+
+[.person, generation=3]
+=== 贾敏
+贾母之女。嫁与林如海，育有 xref:林黛玉[rel=kinship, type=daughter]。
+
+[.person, generation=4]
+=== 贾珠
+贾政与王夫人长子，早夭。其妻为 xref:李纨[rel=spouse, status=primary]。
+
+[.person, generation=4]
+=== 贾元春
+贾政与王夫人长女。入宫为妃，其晋升直接促成了 xref:大观园[rel=cause] 的修建。
+
+[.person, generation=4]
+=== 贾宝玉
+荣国府的核心节点。他是 xref:神瑛侍者[rel=incarnation] 的现世化身。
+出生时口衔 xref:通灵宝玉[rel=possess]。
+他居于大观园中的 xref:怡红院[rel=reside-in]。
+他深爱着 xref:林黛玉[rel=love, reciprocal=true]，但最终依附于宗法安排，与 xref:薛宝钗[rel=spouse, status=primary] 成婚。
+
+[.person, generation=4]
+=== 贾琏
+贾赦之子，荣国府的实际庶务管理者。
+其妻为 xref:王熙凤[rel=spouse, status=primary]。他与 xref:尤二姐[rel=spouse, status=concubine] 发生过私情。
+
+[.person, generation=4]
+=== 王熙凤
+荣国府的实际内务掌权者，金陵王家出身（王夫人内侄女）。
+性格泼辣，手段极其冷酷。其贴身大丫鬟为 xref:平儿[rel=serve, level=primary]。
+
+[.person, generation=4]
+=== 林黛玉
+寄居荣国府的表小姐。她是 xref:绛珠仙草[rel=incarnation] 的现世化身。
+居于 xref:潇湘馆[rel=reside-in]。
+她来到人间的唯一目的，是向 xref:贾宝玉[rel=love, action=repay-tears] 还泪。
+
+[.clan]
+== 宁国府
+// ==========================================
+// 第三卷：宁国府世系
+// ==========================================
+
+[.person, generation=3]
+=== 贾敬
+沉迷修道炼丹，完全放弃对宁国府的管理。其子为 xref:贾珍[rel=kinship, type=son]。
+
+[.person, generation=4]
+=== 贾珍
+宁国府现任当家人，贾氏族长。骄奢淫逸，导致宁府“除了那两个石头狮子干净，只怕连猫儿狗儿都不干净”。
+其妻为 xref:尤氏[rel=spouse, status=primary]。其子为 xref:贾蓉[rel=kinship, type=son]。
+
+[.person, generation=5]
+=== 贾蓉
+贾珍之子。其首任妻子为 xref:秦可卿[rel=spouse, status=primary]。
+
+[.person, generation=5]
+=== 秦可卿
+// ==========================================
+// 第四卷：大观园空间与丫鬟生态
+// ==========================================
+
+贾蓉之妻。其行事温柔和平，但早逝。临终前曾托梦给 xref:王熙凤[rel=enlighten]，预言贾府的衰败并提出保全宗族之策。
+
+[.location]
+== 大观园
+为元春省亲而建造的巨大皇家园林，后成为少男少女的封闭式乌托邦。
+
+[.location]
+=== 怡红院
+大观园内一处院落。xref:贾宝玉[rel=reside-in] 居于此。
+其内部形成了复杂的主仆生态。
+核心服务者包括：
+
+* xref:花袭人[rel=serve, target=贾宝玉, level=primary]（暗中投靠了 xref:wang-furen-rong[王夫人, rel=loyalty]）
+* xref:晴雯[rel=serve, target=贾宝玉, level=primary]（性格反叛，最终被迫害致死）
+* xref:麝月[rel=serve, target=贾宝玉, level=secondary]
+
+[.location]
+=== 潇湘馆
+大观园内种满翠竹的幽静院落。xref:林黛玉[rel=reside-in] 居于此。
+贴身丫鬟为 xref:紫鹃[rel=serve, target=林黛玉, level=primary]。
+
+[.location]
+=== 蘅芜苑
+大观园内无花少叶、以香草为主的院落。xref:薛宝钗[rel=reside-in] 居于此。
+
+[.person, generation=4]
+== 薛宝钗
+寄居贾府的皇商薛家之女。八面玲珑，信奉封建礼教。
+她最终与 xref:贾宝玉[rel=spouse, status=primary] 完成了“金玉良缘”的谶言，但这直接导致了 xref:林黛玉[rel=cause-death] 的悲剧。
+
+[#event-baoyu-beaten.event]
+== 宝玉挨打
+// ==========================================
+// 第五卷：核心因果事件流
+// ==========================================
+// 【动态建模】：事件作为枢纽节点，连接人物、空间与因果。
+
+贾政对贾宝玉进行的一次极端暴力惩戒。
+起因涉及：结交优伶蒋玉菡、金钏儿跳井事件。
+
+* 发起者：xref:贾政[rel=participate, role=initiator]
+* 受害者：xref:贾宝玉[rel=participate, role=victim]
+* 庇护者：xref:贾母[rel=participate, role=intervener] 与 xref:wang-furen-rong[王夫人, rel=participate, role=intervener] 强制终止了惩戒。
+
+[#event-raid-on-garden.event]
+== 抄检大观园
+贾府内部自相残杀的标志性转折点，标志着大观园乌托邦的破灭。
+
+* 导火索：在大观园内发现违禁物品“绣春囊”。
+* 决策者：xref:wang-furen-rong[王夫人, rel=participate, role=initiator]
+* 执行者：xref:王熙凤[rel=participate, role=executor]
+* 受害节点：直接导致了 xref:晴雯[rel=cause-death] 的死亡，以及 xref:司棋[rel=cause-expel] 等人被逐。
+* 结果：加速了 xref:荣国府[rel=cause-decline] 的全面崩溃。
