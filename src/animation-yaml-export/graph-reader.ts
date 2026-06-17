@@ -31,6 +31,14 @@ const SOURCE_REF_RELS = new Set([
 	"evidenced-by",
 ]);
 
+const PAYLOAD_FIELD_PREDICATES = new Set([
+	"animation-payload",
+	"choice-payload",
+	"scene-payload",
+	"shot-payload",
+	"visual-payload",
+]);
+
 const STRUCTURAL_AAT_FIELDS = new Set([
 	"addressLabel",
 	"candidateHeading",
@@ -47,13 +55,10 @@ const STRUCTURAL_AAT_FIELDS = new Set([
 	"officialReftext",
 	"officialResolvedId",
 	"officialResolvedType",
-	"payload",
-	"payloadId",
-	"payloadKind",
-	"payloadSelector",
 	"raw",
 	"relativePath",
 	"role",
+	"sourceValueId",
 	"sourceHeading",
 	"sourceSelector",
 	"startLine",
@@ -259,18 +264,13 @@ function readNodePayload(input: {
 	readonly heading: Rdf12IriTerm;
 	readonly warnings: ExportWarning[];
 }): unknown {
-	const payload = input.graph.match({
-		subject: input.heading,
-		predicate: aat("payload"),
-	})[0]?.object;
-	if (payload?.termType !== "iri") {
+	const payload = rawValueObjectField(input.graph, input.heading);
+	if (payload === undefined) {
 		return undefined;
 	}
 
-	const payloadId =
-		firstLiteral(input.graph, payload, aat("payloadId")) ?? payload.value;
 	return parsePayloadRaw({
-		payloadId,
+		nodeId: payload.value,
 		...optionalProperty(
 			"format",
 			firstLiteral(input.graph, payload, aat("format")),
@@ -278,6 +278,35 @@ function readNodePayload(input: {
 		...optionalProperty("raw", firstLiteral(input.graph, payload, aat("raw"))),
 		warnings: input.warnings,
 	});
+}
+
+function rawValueObjectField(
+	graph: Rdf12Graph,
+	heading: Rdf12IriTerm,
+): Rdf12IriTerm | undefined {
+	const candidates = graph
+		.match({ subject: heading })
+		.flatMap((triple) => {
+			if (triple.object.termType !== "iri") {
+				return [];
+			}
+			const fieldName = fieldNameFromAatPredicate(triple.predicate);
+			if (
+				fieldName === undefined ||
+				STRUCTURAL_AAT_FIELDS.has(fieldName) ||
+				!PAYLOAD_FIELD_PREDICATES.has(fieldName)
+			) {
+				return [];
+			}
+			return hasRawValueFacts(graph, triple.object) ? [triple.object] : [];
+		})
+		.toSorted((left, right) => left.value.localeCompare(right.value));
+
+	return candidates[0];
+}
+
+function hasRawValueFacts(graph: Rdf12Graph, subject: Rdf12IriTerm): boolean {
+	return firstLiteral(graph, subject, aat("raw")) !== undefined;
 }
 
 function readScriptElements(

@@ -7,9 +7,9 @@
 [#delivery.policy, status=active, owner=ops]
 == 配送策略
 
-配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]。
 
-[.banana, for=delivery]
+[.policy-risk-profile, for=delivery]
 [source,json]
 ----
 {
@@ -24,7 +24,7 @@
 }
 ----
 
-[#rel-delivery.pear]
+[#rel-delivery-capacity]
 [source,yaml]
 ----
 reason:
@@ -60,10 +60,10 @@ edge:
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#activity> a prov:Activity, aat:ProjectionActivity;
-    prov:used <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#source>.
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l1-o0> a aat:Heading;
-    aat:containsDirectly <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l39-o0>, <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l5-o0>;
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#activity> a prov:Activity, aat:ProjectionActivity;
+    prov:used <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#source>.
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l1-o0> a aat:Heading;
+    aat:containsDirectly <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l39-o0>, <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l5-o0>;
     aat:contentEndLine 3;
     aat:contentStartLine 3;
     aat:documentOrder 1;
@@ -76,12 +76,12 @@ edge:
 一段摘要
 
 """;
-    aat:relativePath "structural-payload.adoc";
+    aat:relativePath "samples/structural-payload.adoc";
     aat:startLine 1.
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l39-o0> a aat:Heading;
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l39-o0> a aat:Heading;
     aat:addressLabel "capacity";
     aat:childOrder 2;
-    aat:containsDirectly <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l44-o0>;
+    aat:containsDirectly <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l44-o0>;
     aat:contentEndLine 42;
     aat:contentStartLine 42;
     aat:documentOrder 3;
@@ -97,11 +97,11 @@ edge:
 运力规则描述系统在不同运力条件下如何判断配送策略是否需要降级。
 
 """;
-    aat:relativePath "structural-payload.adoc";
+    aat:relativePath "samples/structural-payload.adoc";
     aat:role "rule";
     aat:startLine 39;
     aat:status "active".
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l44-o0> a aat:Heading;
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l44-o0> a aat:Heading;
     aat:childOrder 1;
     aat:contentEndLine 46;
     aat:contentStartLine 46;
@@ -116,10 +116,10 @@ edge:
 123
 
 """;
-    aat:relativePath "structural-payload.adoc";
+    aat:relativePath "samples/structural-payload.adoc";
     aat:startLine 44.
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l5-o0> a aat:Heading;
-    aat:addressLabel "delivery", "rel-delivery";
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l5-o0> a aat:Heading;
+    aat:addressLabel "delivery", "rel-delivery-capacity";
     aat:childOrder 1;
     aat:contentEndLine 37;
     aat:contentStartLine 8;
@@ -131,13 +131,13 @@ edge:
     aat:metadataEndLine 5;
     aat:metadataStartLine 5;
     aat:owner "ops";
-    aat:payload <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#payload-l10-o0>;
+    aat:policy-risk-profile <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l10-o0>;
     aat:raw """[#delivery.policy, status=active, owner=ops]
 == 配送策略
 
-配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]。
 
-[.banana, for=delivery]
+[.policy-risk-profile, for=delivery]
 [source,json]
 ----
 {
@@ -152,7 +152,7 @@ edge:
 }
 ----
 
-[#rel-delivery.pear]
+[#rel-delivery-capacity]
 [source,yaml]
 ----
 reason:
@@ -167,17 +167,16 @@ edge:
 ----
 
 """;
-    aat:relativePath "structural-payload.adoc";
+    aat:relativePath "samples/structural-payload.adoc";
     aat:role "policy";
     aat:startLine 5;
     aat:status "active";
-    rel:depends-on <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l39-o0>.
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#payload-l10-o0> aat:contentEndLine 22;
+    rel:depends-on <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l39-o0>.
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l10-o0> aat:contentEndLine 22;
     aat:contentStartLine 13;
     aat:endLine 23;
     aat:forSelector "delivery";
     aat:format "json";
-    aat:payloadKind "node";
     aat:raw """{
   "owner": {
     "team": "ops",
@@ -188,15 +187,12 @@ edge:
     "signals": ["weather", "capacity"]
   }
 }""";
-    aat:relativePath "structural-payload.adoc";
-    aat:role "banana";
+    aat:relativePath "samples/structural-payload.adoc";
     aat:startLine 10.
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#payload-l25-o0> aat:contentEndLine 36;
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l25-o0> aat:contentEndLine 36;
     aat:contentStartLine 28;
     aat:endLine 37;
     aat:format "yaml";
-    aat:payloadId "rel-delivery";
-    aat:payloadKind "edge";
     aat:raw """reason:
   type: risk-control
   signals:
@@ -206,37 +202,35 @@ edge:
 edge:
   direction: outbound
   required: true""";
-    aat:relativePath "structural-payload.adoc";
-    aat:role "pear";
+    aat:relativePath "samples/structural-payload.adoc";
+    aat:sourceValueId "rel-delivery-capacity";
     aat:startLine 25.
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#projection> a prov:Entity, aat:HeadingProjection;
-    prov:hadPrimarySource <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#source>;
-    prov:wasDerivedFrom <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#source>;
-    prov:wasGeneratedBy <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#activity>.
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#source> a prov:Entity, aat:AsciiDocSourceDocument;
-    aat:relativePath "structural-payload.adoc".
-<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#xref-edge-l8-c8-o0> rdf:reifies <<(<urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l5-o0> rel:depends-on <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l39-o0>)>>;
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#projection> a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#source>;
+    prov:wasDerivedFrom <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#source>;
+    prov:wasGeneratedBy <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#activity>.
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#source> a prov:Entity, aat:AsciiDocSourceDocument;
+    aat:relativePath "samples/structural-payload.adoc".
+<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#xref-edge-l8-c8-o0> rdf:reifies <<(<urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l5-o0> rel:depends-on <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l39-o0>)>>;
     a aat:XrefEdge;
     aat:displayLabel "运力规则";
-    aat:endColumn 77;
+    aat:endColumn 96;
     aat:endLine 8;
     aat:officialHref "#capacity";
     aat:officialReftext "运力规则";
     aat:officialResolvedId "capacity";
     aat:officialResolvedType "section";
-    aat:payloadSelector "rel-delivery";
-    aat:payload <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#payload-l25-o0>;
-    aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]";
+    aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]";
     aat:rel "depends-on";
-    aat:relativePath "structural-payload.adoc";
-    aat:sourceHeading <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l5-o0>;
+    aat:relation-evidence <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l25-o0>;
+    aat:relativePath "samples/structural-payload.adoc";
+    aat:sourceHeading <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l5-o0>;
     aat:sourceSelector "delivery";
     aat:startColumn 8;
     aat:startLine 8;
     aat:syntax "macro";
-    aat:targetHeading <urn:aat:doc:4ce7bcc996e66f6a23b34d1317f1fa5768cef29978f8ddb95480596373da2ea2#heading-l39-o0>;
+    aat:targetHeading <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l39-o0>;
     aat:targetSelector "capacity";
     aat:weight "0.8".
-
 
 ```

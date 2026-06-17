@@ -321,8 +321,7 @@ describe("animation YAML export", () => {
 		add(graph, scene, "relativePath", "book.adoc");
 		add(graph, scene, "startLine", integerLiteral(7));
 		add(graph, scene, "endLine", integerLiteral(9));
-		graph.add(rdf12Triple(scene, aat("payload"), payload));
-		add(graph, payload, "payloadId", "scene-payload");
+		graph.add(rdf12Triple(scene, aat("scene-payload"), payload));
 		add(graph, payload, "format", "toml");
 		add(graph, payload, "raw", "unsupported = true");
 		addRelation(graph, scene, "adapted-from", source);
@@ -385,7 +384,7 @@ describe("animation YAML export", () => {
 		expect(warnings).toEqual([
 			expect.objectContaining({
 				code: "payload_format_unsupported",
-				node: "scene-payload",
+				node: "urn:test#payload",
 			}),
 		]);
 	});
@@ -451,7 +450,7 @@ describe("animation YAML export", () => {
 
 		expect(
 			parsePayloadRaw({
-				payloadId: "json",
+				nodeId: "json",
 				format: "JSON",
 				raw: '{"ok":true}',
 				warnings,
@@ -459,7 +458,7 @@ describe("animation YAML export", () => {
 		).toEqual({ ok: true });
 		expect(
 			parsePayloadRaw({
-				payloadId: "yaml",
+				nodeId: "yaml",
 				format: "yml",
 				raw: "items:\n  - one\n",
 				warnings,
@@ -467,14 +466,14 @@ describe("animation YAML export", () => {
 		).toEqual({ items: ["one"] });
 		expect(
 			parsePayloadRaw({
-				payloadId: "missing",
+				nodeId: "missing",
 				format: "json",
 				warnings,
 			}),
 		).toBeUndefined();
 		expect(
 			parsePayloadRaw({
-				payloadId: "bad-json",
+				nodeId: "bad-json",
 				format: "json",
 				raw: '{"broken":',
 				warnings,
@@ -485,14 +484,14 @@ describe("animation YAML export", () => {
 		});
 		expect(
 			parsePayloadRaw({
-				payloadId: "unknown-format",
+				nodeId: "unknown-format",
 				raw: "bad: [",
 				warnings,
 			}),
 		).toEqual({ raw: "bad: [" });
 		expect(
 			parsePayloadRaw({
-				payloadId: "unsupported",
+				nodeId: "unsupported",
 				format: "toml",
 				raw: "name = 'demo'",
 				warnings,
@@ -530,10 +529,17 @@ function expectProfilePayloadHasNoSourcePayloadId(): void {
 		projection.graph,
 		"profile-animation-main",
 	);
-	const payload = onlyObjectIri(projection.graph, profile, aat("payload"));
+	const payload = onlyObjectIri(
+		projection.graph,
+		profile,
+		aat("animation-payload"),
+	);
 
 	expect(
 		projection.graph.match({ subject: payload, predicate: aat("payloadId") }),
+	).toHaveLength(0);
+	expect(
+		projection.graph.match({ subject: profile, predicate: aat("payload") }),
 	).toHaveLength(0);
 	expect(
 		projection.graph.match({ subject: payload, predicate: aat("raw") }),

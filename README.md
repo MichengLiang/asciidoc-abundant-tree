@@ -33,7 +33,7 @@ The primary artifact is the TypeScript object. Pretty text, JSON, RDF 1.2 Turtle
 - Generated book source: [`docs/bookshelf/build/adoc/books/06-rdf12-line-projection.adoc`](./docs/bookshelf/build/adoc/books/06-rdf12-line-projection.adoc)
 - Compact preview sample: [`samples/rdf12-projection-preview.adoc`](./samples/rdf12-projection-preview.adoc)
 - Basic RDF toolchain sample: [`samples/basic-rdf-projection/README.md`](./samples/basic-rdf-projection/README.md)
-- Payload consumer sample: [`samples/cold-chain-payload/README.md`](./samples/cold-chain-payload/README.md)
+- Complex property consumer sample: [`samples/cold-chain-payload/README.md`](./samples/cold-chain-payload/README.md)
 - Book-entry sample: [`samples/book-entry-demo/book.adoc`](./samples/book-entry-demo/book.adoc)
 - Source: [`docs/bookshelf`](./docs/bookshelf/)
 
@@ -65,15 +65,15 @@ The `rdf12` projection derives an RDF 1.2 graph from an `AbundantDocument`. The 
 
 Projection resources use deterministic IRIs generated from the document coordinate system, not author strings or ordering facts. Heading nodes expose their label space directly through `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`. Query code can use those fields to find headings, then read `relativePath`, `startLine`, and `endLine` for source inspection or patching.
 
-The graph includes source document provenance, heading nodes, direct heading containment, same-parent child order, global heading preorder, selector binding, xref edge evidence, RDF 1.2 reifiers for resolved xref relations, direct field predicates, and payload complex property objects. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder. Source coordinate fields such as `relativePath`, `startLine`, `endLine`, `headingLine`, and `raw` describe the origin source location and slice; they are not a heading order fallback. Xref edges keep raw selectors, payload selectors, and official Asciidoctor evidence as separate facts. Attribute lists such as `[#delivery.policy, status=active]` preserve the explicit ID as `aat:addressLabel`, `.policy` as `aat:role`, and named fields as direct `aat:` predicates such as `aat:status`.
+The graph includes source document provenance, heading nodes, direct heading containment, same-parent child order, global heading preorder, selector binding, xref edge evidence, RDF 1.2 reifiers for resolved xref relations, direct field predicates, and raw value objects. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder. Source coordinate fields such as `relativePath`, `startLine`, `endLine`, `headingLine`, and `raw` describe the origin source location and slice; they are not a heading order fallback. Xref edges keep raw selectors and official Asciidoctor evidence as separate facts. Attribute lists such as `[#delivery.policy, status=active]` preserve the explicit ID as `aat:addressLabel`, `.policy` as `aat:role`, and named fields as direct `aat:` predicates such as `aat:status`.
 
-Local non-heading target IDs from listings, tables, blocks, inline anchors, and payload blocks become `aat:addressLabel` values on the owning heading. They participate in the heading label space without creating listing, table, block, anchor, or payload-block structure resources.
+Local non-heading target IDs from listings, tables, blocks, inline anchors, and source value blocks become `aat:addressLabel` values on the owning heading. They participate in the heading label space without creating listing, table, block, anchor, or source-value-block structure resources.
 
 The RDF 1.2 heading projection does not emit `aat:previousSibling`. Consumers that need ordered document trees should read `aat:containsDirectly`, sort each parent’s direct children by numeric `aat:childOrder`, and use numeric `aat:documentOrder` for whole-document preorder. IRI lexical order, Turtle textual order, `relativePath`, and source line values are not ordering contracts.
 
-Node payloads use a `for` or `forSelector` marker to bind an opaque payload object to a heading through `aat:payload`. A marker with a selector value queries the heading label space; a no-value marker binds by source ownership. Node payloads do not require source payload IDs. Edge payloads use the xref control field `payload=<payload-id>` and a listing source payload ID to bind an opaque payload object to xref edge evidence through `aat:payload`. Payload role comes from metadata role tokens such as `.banana` or `.pear`; role tokens do not determine payload kind. Payload format comes from the source block language such as `[source,json]` or `[source,yaml]`; `data=` is not a payload format control field. Payload raw is an opaque literal and is not expanded into business RDF predicates.
+Heading complex properties use a `for` or `forSelector` marker to bind a raw value object to a heading through a field predicate. A marker with a selector value queries the heading label space; a no-value marker binds by source ownership. Edge complex properties use a named xref attribute such as `relation-evidence=<source-value-id>` and a source value block id to bind a raw value object to xref edge evidence through a field predicate. Field names come from source roles or xref named attribute keys; they determine the public query entry. Raw value format comes from the source block language such as `[source,json]` or `[source,yaml]`; raw value objects preserve raw text and source coordinates without separate kind, id, or role predicates. Raw value objects are opaque and are not expanded into business RDF predicates.
 
-Ordinary xref target selectors and xref payload selectors use separate spaces. The xref target selector queries `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`; the xref payload selector queries source payload IDs. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and `payload` is retained as `aat:payloadSelector`; neither is emitted as a legacy surface-attribute resource.
+Ordinary xref target selectors and xref field values use separate spaces. The xref target selector queries `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`; a named xref attribute value queries source value ids. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and xref named attribute keys become field predicates; neither is emitted as a legacy surface-attribute resource.
 
 JSON-LD output is a frontend-friendly projection of the same RDF graph. RDF 1.2 triple terms are represented as structured `rdf12:TripleTerm` objects rather than flattened strings.
 
@@ -87,15 +87,15 @@ Source AsciiDoc:
 [#delivery.policy, status=active]
 == 配送策略
 
-配送策略依赖 xref:capacity[运力规则, rel=depends-on, payload=rel-delivery]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, relation-evidence=rel-delivery-capacity]。
 
-[.banana, for=delivery]
+[.policy-risk-profile, for=delivery]
 [source,json]
 ----
 {"owner":{"team":"ops"},"risk":{"signals":["capacity"]}}
 ----
 
-[#rel-delivery.pear]
+[#rel-delivery-capacity]
 [source,yaml]
 ----
 reason: risk-control
@@ -117,15 +117,13 @@ Projected Turtle:
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
 <urn:aat:doc:...#heading-l3-o0> a aat:Heading;
-    aat:addressLabel "delivery", "rel-delivery";
+    aat:addressLabel "delivery", "rel-delivery-capacity";
     aat:headline "配送策略";
     aat:role "policy";
-    aat:payload <urn:aat:doc:...#payload-l8-o0>;
+    aat:policy-risk-profile <urn:aat:doc:...#payload-l8-o0>;
     rel:depends-on <urn:aat:doc:...#heading-l22-o0>.
 
-<urn:aat:doc:...#payload-l8-o0> aat:payloadKind "node";
-    aat:role "banana";
-    aat:forSelector "delivery";
+<urn:aat:doc:...#payload-l8-o0> aat:forSelector "delivery";
     aat:format "json";
     aat:raw "{\"owner\":{\"team\":\"ops\"},\"risk\":{\"signals\":[\"capacity\"]}}".
 
@@ -134,18 +132,15 @@ Projected Turtle:
     aat:sourceHeading <urn:aat:doc:...#heading-l3-o0>;
     aat:targetHeading <urn:aat:doc:...#heading-l22-o0>;
     aat:targetSelector "capacity";
-    aat:payloadSelector "rel-delivery";
-    aat:payload <urn:aat:doc:...#payload-l14-o0>;
+    aat:relation-evidence <urn:aat:doc:...#payload-l14-o0>;
     aat:rel "depends-on".
 
-<urn:aat:doc:...#payload-l14-o0> aat:payloadKind "edge";
-    aat:payloadId "rel-delivery";
-    aat:role "pear";
+<urn:aat:doc:...#payload-l14-o0> aat:sourceValueId "rel-delivery-capacity";
     aat:format "yaml";
     aat:raw "reason: risk-control\nsignals:\n  - capacity".
 ```
 
-Release validation covers the RDF projection with semantic graph comparison, Turtle roundtrip checks, JSON-LD shape checks, selector ambiguity cases, source-span boundary cases, payload binding rules, relation predicate fallback, and CLI `rdf12` / `rdf12-json-ld` smoke output.
+Release validation covers the RDF projection with semantic graph comparison, Turtle roundtrip checks, JSON-LD shape checks, selector ambiguity cases, source-span boundary cases, complex property binding rules, relation predicate fallback, and CLI `rdf12` / `rdf12-json-ld` smoke output.
 
 ## Current Boundaries
 
@@ -156,7 +151,7 @@ This package is intentionally narrow.
 - It does not validate interdocument xref targets by opening other files.
 - It does not expose a complete inline CST.
 - It does not lint prose style.
-- It does not interpret payload raw text or expand payload data into a business RDF graph.
+- It does not interpret raw value text or expand raw value data into a business RDF graph.
 - It does not generate HTML, PDF, EPUB, or a static site.
 - It does not replace Asciidoctor; it uses Asciidoctor as the official parser and resolver layer.
 
@@ -271,7 +266,7 @@ const jsonLd = projection.jsonLd;
 
 `parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.
 
-The public `rdf12(document, options)` call returns one projection result containing `graph`, `ttl`, and `jsonLd`. The `graph` is the project-owned RDF 1.2 graph model; the Turtle 1.2 text in `ttl` preserves RDF 1.2 reifier semantics by writing `rdf:reifies` objects as triple terms, not string literals. The JSON-LD text in `jsonLd` preserves the same triple-term structure with explicit `rdf12:TripleTerm` objects. The projection is for source-aware query contracts: it records heading slices, xref edge evidence, direct field predicates, and opaque payload raw text, but it does not lint documents, validate cross-file targets, or interpret payload raw content.
+The public `rdf12(document, options)` call returns one projection result containing `graph`, `ttl`, and `jsonLd`. The `graph` is the project-owned RDF 1.2 graph model; the Turtle 1.2 text in `ttl` preserves RDF 1.2 reifier semantics by writing `rdf:reifies` objects as triple terms, not string literals. The JSON-LD text in `jsonLd` preserves the same triple-term structure with explicit `rdf12:TripleTerm` objects. The projection is for source-aware query contracts: it records heading slices, xref edge evidence, direct field predicates, and opaque raw value text, but it does not lint documents, validate cross-file targets, or interpret raw value content.
 
 ## Object Layers
 

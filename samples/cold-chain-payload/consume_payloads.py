@@ -54,7 +54,7 @@ class DependencyEvidence(BaseModel):
     reason: str
 
 
-PAYLOAD_MODELS: dict[str, type[BaseModel]] = {
+FIELD_MODELS: dict[str, type[BaseModel]] = {
     "release-policy-config": ReleasePolicyConfig,
     "review-playbook": ReviewPlaybook,
     "dependency-evidence": DependencyEvidence,
@@ -67,7 +67,7 @@ def main() -> None:
     ttl = project_sample(repo_root, sample_path)
     store = load_turtle(ttl)
 
-    print("RDF12 cold-chain payload report")
+    print("RDF12 cold-chain complex property report")
     print(f"Triples: {len(store)}")
     print()
     print_policy_report(store)
@@ -122,25 +122,23 @@ def print_policy_report(store: Store) -> None:
     )
     print(f"Policy: cold-chain-release / {value(heading['headline'])}")
 
-    for payload in store.query(
-        """
-        PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
-        SELECT ?payload ?role ?format ?raw WHERE {
-          ?heading aat:addressLabel "cold-chain-release" ;
-                   aat:payload ?payload .
-          ?payload aat:payloadKind "node" ;
-                   aat:role ?role ;
-                   aat:format ?format ;
-                   aat:raw ?raw .
-        }
-        ORDER BY ?payload
-        """
-    ):
-        role = value(payload["role"])
-        payload_format = value(payload["format"])
-        parsed = parse_payload(role, payload_format, value(payload["raw"]))
-        print(f"  node payload {role} [{payload_format}]")
-        print_payload_summary(parsed)
+    for field in ("release-policy-config", "review-playbook"):
+        row = one(
+            store,
+            f"""
+            PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+            SELECT ?format ?raw WHERE {{
+              ?heading aat:addressLabel "cold-chain-release" ;
+                       aat:{field} ?value .
+              ?value aat:format ?format ;
+                     aat:raw ?raw .
+            }}
+            """,
+        )
+        raw_format = value(row["format"])
+        parsed = parse_field_value(field, raw_format, value(row["raw"]))
+        print(f"  heading field {field} [{raw_format}]")
+        print_field_summary(parsed)
 
 
 def print_relation_report(store: Store) -> None:
@@ -148,31 +146,32 @@ def print_relation_report(store: Store) -> None:
         store,
         """
         PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
-        SELECT ?sourceHeadline ?targetHeadline ?selector ?role ?format ?raw WHERE {
+        SELECT ?sourceHeadline ?targetHeadline ?sourceValueId ?format ?raw WHERE {
           ?edge aat:sourceHeading ?source ;
                 aat:targetHeading ?target ;
-                aat:payloadSelector ?selector ;
-                aat:payload ?payload .
+                aat:dependency-evidence ?value .
           ?source aat:headline ?sourceHeadline .
           ?target aat:headline ?targetHeadline .
-          ?payload aat:payloadKind "edge" ;
-                   aat:role ?role ;
-                   aat:format ?format ;
-                   aat:raw ?raw .
+          ?value aat:sourceValueId ?sourceValueId ;
+                 aat:format ?format ;
+                 aat:raw ?raw .
         }
         """
     )
-    role = value(edge["role"])
-    payload_format = value(edge["format"])
-    evidence = parse_payload(role, payload_format, value(edge["raw"]))
+    raw_format = value(edge["format"])
+    evidence = parse_field_value(
+        "dependency-evidence",
+        raw_format,
+        value(edge["raw"]),
+    )
     print(
         "Relation: "
         f"{value(edge['sourceHeadline'])} --depends-on--> "
         f"{value(edge['targetHeadline'])}"
     )
-    print(f"  payload selector: {value(edge['selector'])}")
-    print(f"  edge payload {role} [{payload_format}]")
-    print_payload_summary(evidence)
+    print(f"  source value id: {value(edge['sourceValueId'])}")
+    print(f"  edge field dependency-evidence [{raw_format}]")
+    print_field_summary(evidence)
 
 
 def print_alias_report(store: Store) -> None:
@@ -191,34 +190,34 @@ def print_alias_report(store: Store) -> None:
         print(f"  {value(row['label'])} -> {value(row['headline'])}")
 
 
-def parse_payload(role: str, payload_format: str, raw: str) -> BaseModel:
-    model = PAYLOAD_MODELS[role]
-    data = parse_raw(payload_format, raw)
+def parse_field_value(field_name: str, raw_format: str, raw: str) -> BaseModel:
+    model = FIELD_MODELS[field_name]
+    data = parse_raw(raw_format, raw)
     try:
         return model.model_validate(data)
     except ValidationError as error:
-        raise RuntimeError(f"{role} payload failed validation: {error}") from error
+        raise RuntimeError(f"{field_name} raw value failed validation: {error}") from error
 
 
-def parse_raw(payload_format: str, raw: str) -> Any:
-    match payload_format:
+def parse_raw(raw_format: str, raw: str) -> Any:
+    match raw_format:
         case "json":
             return json.loads(raw)
         case "yaml" | "yml":
             return yaml.safe_load(raw)
         case _:
-            raise RuntimeError(f"Unsupported payload format: {payload_format}")
+            raise RuntimeError(f"Unsupported raw value format: {raw_format}")
 
 
-def print_payload_summary(payload: BaseModel) -> None:
-    match payload:
+def print_field_summary(field_value: BaseModel) -> None:
+    match field_value:
         case ReleasePolicyConfig():
-            window = payload.temperature_window_celsius
+            window = field_value.temperature_window_celsius
             required_checks = [
-                check.code for check in payload.checks if check.required
+                check.code for check in field_value.checks if check.required
             ]
             signal_fields = sorted(
-                {signal for check in payload.checks for signal in check.signals}
+                {signal for check in field_value.checks for signal in check.signals}
             )
             print(
                 f"    temperature window: {window.min}..{window.max} C"
@@ -227,18 +226,18 @@ def print_payload_summary(payload: BaseModel) -> None:
             print("    signal fields: " + ", ".join(signal_fields))
             print(
                 "    manual review when: "
-                + ", ".join(payload.manual_review_when)
+                + ", ".join(field_value.manual_review_when)
             )
         case ReviewPlaybook():
-            print(f"    review team: {payload.review_team}")
-            print(f"    steps: {len(payload.steps)}")
+            print(f"    review team: {field_value.review_team}")
+            print(f"    steps: {len(field_value.steps)}")
         case DependencyEvidence():
-            print(f"    source: {payload.source}")
-            print(f"    risk level: {payload.risk_level}")
+            print(f"    source: {field_value.source}")
+            print(f"    risk level: {field_value.risk_level}")
             print(
-                "    required signals: " + ", ".join(payload.required_signals)
+                "    required signals: " + ", ".join(field_value.required_signals)
             )
-            print(f"    reason: {payload.reason}")
+            print(f"    reason: {field_value.reason}")
 
 
 def one(store: Store, query: str):

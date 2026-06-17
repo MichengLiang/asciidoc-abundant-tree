@@ -3,15 +3,15 @@
 [#delivery.policy, status=active]
 == 配送策略
 
-配送策略依赖 xref:capacity[运力规则, rel=depends-on, payload=rel-delivery]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, relation-evidence=rel-delivery-capacity]。
 
-[.banana, for=delivery]
+[.policy-risk-profile, for=delivery]
 [source,json]
 ----
 {"owner":{"team":"ops"},"risk":{"signals":["capacity"]}}
 ----
 
-[#rel-delivery.pear]
+[#rel-delivery-capacity]
 [source,yaml]
 ----
 reason: risk-control

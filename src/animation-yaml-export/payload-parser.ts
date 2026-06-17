@@ -7,7 +7,7 @@ export type ExportWarning = {
 };
 
 export function parsePayloadRaw(input: {
-	readonly payloadId: string;
+	readonly nodeId: string;
 	readonly format?: string;
 	readonly raw?: string;
 	readonly warnings: ExportWarning[];
@@ -27,7 +27,7 @@ export function parsePayloadRaw(input: {
 		}
 		input.warnings.push({
 			code: "payload_format_unsupported",
-			node: input.payloadId,
+			node: input.nodeId,
 			message: `Unsupported payload format: ${input.format ?? "unknown"}`,
 		});
 		return { raw: input.raw };
@@ -35,7 +35,7 @@ export function parsePayloadRaw(input: {
 		const message = error instanceof Error ? error.message : "Unknown error";
 		input.warnings.push({
 			code: "payload_parse_failed",
-			node: input.payloadId,
+			node: input.nodeId,
 			message: `Failed to parse ${format ?? "unknown"} payload: ${message}`,
 		});
 		return {

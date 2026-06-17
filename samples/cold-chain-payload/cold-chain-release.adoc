@@ -1,11 +1,11 @@
 = 冷链放行示例
 
-这个示例展示 RDF12 heading projection 如何把节点 payload、边 payload、xref evidence 和本地非标题 target alias 保留为可查询事实。节点 payload 使用小型嵌套 JSON 表达放行策略配置；投影图保存 payload raw 与绑定事实，字段解释由下游消费者完成。
+这个示例展示 RDF12 heading projection 如何把 heading complex property、xref edge complex property、xref evidence 和本地非标题 target alias 保留为可查询事实。复杂属性使用 source value block 承载 raw JSON/YAML；投影图通过字段谓词连接 raw value object，字段解释由下游消费者完成。
 
 [#cold-chain-release.policy, status=active, owner=quality-ops]
 == 冷链出库放行策略
 
-冷链出库放行策略依赖 xref:temperature-audit[温控审计规则, rel=depends-on, weight=0.9, payload=rel-release-temperature-audit]。
+冷链出库放行策略依赖 xref:temperature-audit[温控审计规则, rel=depends-on, weight=0.9, dependency-evidence=rel-release-temperature-audit]。
 
 [.release-policy-config, for=cold-chain-release]
 [source,json]
@@ -41,7 +41,7 @@ steps:
   - approve only when both records agree
 ----
 
-[#rel-release-temperature-audit.dependency-evidence]
+[#rel-release-temperature-audit]
 [source,yaml]
 ----
 source: quality-sop-2026
