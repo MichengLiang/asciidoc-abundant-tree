@@ -1,6 +1,6 @@
 = 冷链放行示例
 
-这个示例展示 RDF12 heading projection 如何把节点 payload、边 payload、xref evidence 和本地非标题 target alias 保留为可查询事实。
+这个示例展示 RDF12 heading projection 如何把节点 payload、边 payload、xref evidence 和本地非标题 target alias 保留为可查询事实。节点 payload 使用小型嵌套 JSON 表达放行策略配置；投影图保存 payload raw 与绑定事实，字段解释由下游消费者完成。
 
 [#cold-chain-release.policy, status=active, owner=quality-ops]
 == 冷链出库放行策略
@@ -11,8 +11,22 @@
 [source,json]
 ----
 {
-  "temperatureWindowCelsius": [2, 8],
-  "maxOfflineMinutes": 12,
+  "temperatureWindowCelsius": {
+    "min": 2,
+    "max": 8
+  },
+  "checks": [
+    {
+      "code": "temperature_checkpoint",
+      "required": true,
+      "signals": ["checkpoint_id", "temperature_celsius", "recorded_at"]
+    },
+    {
+      "code": "route_exception_log",
+      "required": true,
+      "signals": ["route_id", "exception_code"]
+    }
+  ],
   "manualReviewWhen": ["sensor_gap", "route_exception"]
 }
 ----

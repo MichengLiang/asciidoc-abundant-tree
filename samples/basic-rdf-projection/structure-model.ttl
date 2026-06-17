@@ -1,0 +1,32 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix ex: <https://micheng.dev/ns/structure-model#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
+ex:ModeledHeading a rdfs:Class;
+    rdfs:label "Modeled heading".
+
+ex:ProcessHeading a rdfs:Class;
+    rdfs:label "Process heading";
+    rdfs:subClassOf ex:ModeledHeading;
+    ex:roleName "process".
+
+ex:RuleHeading a rdfs:Class;
+    rdfs:label "Rule heading";
+    rdfs:subClassOf ex:ModeledHeading;
+    ex:roleName "rule".
+
+ex:EvidenceHeading a rdfs:Class;
+    rdfs:label "Evidence heading";
+    rdfs:subClassOf ex:ModeledHeading;
+    ex:roleName "evidence".
+
+ex:dependency a rdf:Property;
+    rdfs:label "dependency".
+
+ex:evidenceLink a rdf:Property;
+    rdfs:label "evidence link".
+
+rel:requires rdfs:subPropertyOf ex:dependency.
+rel:documents rdfs:subPropertyOf ex:evidenceLink.

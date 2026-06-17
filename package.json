@@ -32,9 +32,17 @@
 	"files": [
 		"dist",
 		"samples/*.adoc",
+		"samples/basic-rdf-projection/*.adoc",
+		"samples/basic-rdf-projection/*.md",
+		"samples/basic-rdf-projection/*.mjs",
+		"samples/basic-rdf-projection/*.py",
+		"samples/basic-rdf-projection/*.ttl",
 		"samples/book-entry-demo/*.adoc",
 		"samples/book-entry-demo/assets/*.adoc",
-		"samples/book-entry-demo/chapters/*.adoc"
+		"samples/book-entry-demo/chapters/*.adoc",
+		"samples/cold-chain-payload/*.adoc",
+		"samples/cold-chain-payload/*.md",
+		"samples/cold-chain-payload/*.py"
 	],
 	"sideEffects": false,
 	"keywords": [
@@ -79,7 +87,10 @@
 		"@types/n3": "^1.26.1",
 		"@types/node": "^25.9.1",
 		"@vitest/coverage-v8": "^4.1.5",
+		"@zazuko/env-node": "^3.0.0",
+		"oxigraph": "^0.5.8",
 		"publint": "^0.3.18",
+		"rdf-validate-shacl": "^0.6.5",
 		"tsdown": "^0.22.1",
 		"tsx": "^4.21.0",
 		"typescript": "^6.0.3",

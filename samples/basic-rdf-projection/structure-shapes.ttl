@@ -1,0 +1,83 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix ex: <https://micheng.dev/ns/structure-model#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+ex:HeadingShape a sh:NodeShape;
+    sh:targetClass aat:Heading;
+    sh:property [
+        sh:path aat:headline;
+        sh:minCount 1;
+        sh:datatype xsd:string;
+        sh:message "heading must expose a headline"
+    ];
+    sh:property [
+        sh:path aat:headingLine;
+        sh:minCount 1;
+        sh:datatype xsd:integer;
+        sh:message "heading must expose its source heading line"
+    ];
+    sh:property [
+        sh:path aat:relativePath;
+        sh:minCount 1;
+        sh:datatype xsd:string;
+        sh:message "heading must expose its source relative path"
+    ].
+
+ex:ProcessShape a sh:NodeShape;
+    sh:targetClass ex:ProcessHeading;
+    sh:property [
+        sh:path aat:owner;
+        sh:minCount 1;
+        sh:datatype xsd:string;
+        sh:message "process heading must declare owner"
+    ];
+    sh:property [
+        sh:path aat:status;
+        sh:minCount 1;
+        sh:in ("draft" "active");
+        sh:message "process heading status must be draft or active"
+    ];
+    sh:property [
+        sh:path rel:requires;
+        sh:minCount 1;
+        sh:class ex:RuleHeading;
+        sh:message "process heading must require at least one rule heading"
+    ].
+
+ex:RuleShape a sh:NodeShape;
+    sh:targetClass ex:RuleHeading;
+    sh:property [
+        sh:path aat:priority;
+        sh:minCount 1;
+        sh:in ("normal" "high");
+        sh:message "rule heading priority must be normal or high"
+    ];
+    sh:property [
+        sh:path aat:status;
+        sh:minCount 1;
+        sh:hasValue "active";
+        sh:message "rule heading status must be active"
+    ];
+    sh:property [
+        sh:path [ sh:inversePath rel:requires ];
+        sh:minCount 1;
+        sh:class ex:ProcessHeading;
+        sh:message "rule heading must be required by at least one process heading"
+    ].
+
+ex:EvidenceShape a sh:NodeShape;
+    sh:targetClass ex:EvidenceHeading;
+    sh:property [
+        sh:path aat:status;
+        sh:minCount 1;
+        sh:hasValue "active";
+        sh:message "evidence heading status must be active"
+    ];
+    sh:property [
+        sh:path rel:documents;
+        sh:minCount 1;
+        sh:class ex:RuleHeading;
+        sh:message "evidence heading must document at least one rule heading"
+    ].

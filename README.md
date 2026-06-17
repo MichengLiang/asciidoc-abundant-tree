@@ -32,6 +32,8 @@ The primary artifact is the TypeScript object. Pretty text, JSON, RDF 1.2 Turtle
 - RDF 1.2 heading projection specification: [AsciiDoc `AbundantDocument` 到 RDF 1.2 标题投影图规约](https://michengliang.github.io/asciidoc-abundant-tree/books/06-rdf12-line-projection/book.html)
 - Generated book source: [`docs/bookshelf/build/adoc/books/06-rdf12-line-projection.adoc`](./docs/bookshelf/build/adoc/books/06-rdf12-line-projection.adoc)
 - Compact preview sample: [`samples/rdf12-projection-preview.adoc`](./samples/rdf12-projection-preview.adoc)
+- Basic RDF toolchain sample: [`samples/basic-rdf-projection/README.md`](./samples/basic-rdf-projection/README.md)
+- Payload consumer sample: [`samples/cold-chain-payload/README.md`](./samples/cold-chain-payload/README.md)
 - Book-entry sample: [`samples/book-entry-demo/book.adoc`](./samples/book-entry-demo/book.adoc)
 - Source: [`docs/bookshelf`](./docs/bookshelf/)
 

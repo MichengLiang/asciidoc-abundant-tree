@@ -21,13 +21,24 @@ from pyoxigraph import RdfFormat, Store
 SAMPLE_FILE = "cold-chain-release.adoc"
 
 
+class TemperatureWindow(BaseModel):
+    min: int
+    max: int
+
+
+class CheckRule(BaseModel):
+    code: str
+    required: bool
+    signals: list[str]
+
+
 class ReleasePolicyConfig(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    temperature_window_celsius: tuple[int, int] = Field(
+    temperature_window_celsius: TemperatureWindow = Field(
         alias="temperatureWindowCelsius"
     )
-    max_offline_minutes: int = Field(alias="maxOfflineMinutes")
+    checks: list[CheckRule]
     manual_review_when: list[str] = Field(alias="manualReviewWhen")
 
 
@@ -202,9 +213,18 @@ def parse_raw(payload_format: str, raw: str) -> Any:
 def print_payload_summary(payload: BaseModel) -> None:
     match payload:
         case ReleasePolicyConfig():
-            low, high = payload.temperature_window_celsius
-            print(f"    temperature window: {low}..{high} C")
-            print(f"    max offline minutes: {payload.max_offline_minutes}")
+            window = payload.temperature_window_celsius
+            required_checks = [
+                check.code for check in payload.checks if check.required
+            ]
+            signal_fields = sorted(
+                {signal for check in payload.checks for signal in check.signals}
+            )
+            print(
+                f"    temperature window: {window.min}..{window.max} C"
+            )
+            print("    required checks: " + ", ".join(required_checks))
+            print("    signal fields: " + ", ".join(signal_fields))
             print(
                 "    manual review when: "
                 + ", ".join(payload.manual_review_when)

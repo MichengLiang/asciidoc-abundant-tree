@@ -156,7 +156,7 @@ def print_local_aliases(store: Store) -> None:
         SELECT ?label ?headline WHERE {
           ?heading aat:headline ?headline ;
                    aat:addressLabel ?label .
-          FILTER(?label IN ("stock-query-example"))
+          FILTER(?label IN ("rule-query-example"))
         }
         ORDER BY ?label
         """

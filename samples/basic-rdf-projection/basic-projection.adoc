@@ -1,34 +1,34 @@
 = 基础 RDF 投影示例
 
-这个示例展示 RDF12 heading projection 的基础查询面：标题树、地址标签、直接属性、交叉引用边证据和本地 target 归属。
+这个示例是一个小型结构夹具，用来展示 RDF12 heading projection 的基础查询面：标题树、地址标签、直接属性、交叉引用边证据和本地 target 归属。
 
-[#order-flow.process, status=draft, owner=ops-docs]
-== 订单处理流程
+[#structure-example.process, status=draft, owner=docs-team]
+== 结构示例
 
-订单处理流程先执行 xref:stock-check[库存校验, rel=requires, weight=0.7]，然后把结果写入交接说明。
+结构示例要求 xref:required-rule[约束规则, rel=requires, weight=0.7]，并把关系证据写入说明节点。
 
 // 如果元数据的值很长也可以分多行标注
-[apple=true]
-[#stock-check.rule, status=active]
-== 库存校验
+[priority=normal]
+[#required-rule.rule, status=active]
+== 约束规则
 
-库存校验规则描述订单进入履约前需要读取的库存快照。
+约束规则展示 role、status、priority 和入边约束如何进入下游 shape。
 
-[#stock-query-example]
+[#rule-query-example]
 [source,sql]
 ----
-SELECT sku, available_qty
-FROM inventory_snapshot
-WHERE order_id = :order_id;
+SELECT subject, predicate, object
+FROM projected_graph
+WHERE role = 'rule';
 ----
 
-=== 缺货处理
+=== 生成标签节点
 
-缺货处理标题使用生成 address label 进入 heading label space。
+这个标题没有手写 ID，用来展示 generated address label 进入 heading label space。
 
-[#handoff-note.note, status=active]
-== 交接说明
+[#evidence-note.evidence, status=active]
+== 关系证据说明
 
-交接说明用 xref:stock-query-example[库存查询示例, rel=documents] 指向库存校验章节里的 listing target。
+关系证据说明用 xref:rule-query-example[规则查询示例, rel=documents] 指向约束规则章节里的 listing target。
 
-交接说明也用 xref:stock-check[] 展示默认 `aat:references` 关系。
+关系证据说明也用 xref:required-rule[] 展示默认 `aat:references` 关系。
