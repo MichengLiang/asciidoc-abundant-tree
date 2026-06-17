@@ -36,10 +36,12 @@ describe("book-entry reader boundary policy", () => {
 		const options = readerPreprocessingOptions({
 			sourcePath,
 			documentRoot,
+			attributes: { "source-highlighter": "rouge" },
 		});
 
 		expect(options.baseDir).toBe(join(documentRoot, "books/example"));
 		expect(options.jailDir).toBe(documentRoot);
+		expect(options.attributes).toEqual({ "source-highlighter": "rouge" });
 	});
 
 	it("expands legal ancestor includes inside documentRoot without stderr noise", () => {
@@ -109,6 +111,26 @@ describe("book-entry reader boundary policy", () => {
 
 		expect(required).toEqual(
 			expect.objectContaining({ code: "include.missing-target" }),
+		);
+	});
+
+	it("classifies existing mapped includes with official Reader errors as generic official errors", () => {
+		const entryPath = writePolicyFixture(
+			"official-error/book.adoc",
+			"include::chapter.adoc[tag=main]\n",
+		);
+		writePolicyFixture("official-error/chapter.adoc", "untagged\n");
+
+		expect(
+			classifyReaderBoundaryDiagnostic({
+				target: "chapter.adoc",
+				attrlist: "tag=main",
+				containingFilePath: entryPath,
+				documentRoot: join(fixtureRoot, "official-error"),
+				missing: false,
+			}),
+		).toEqual(
+			expect.objectContaining({ code: "include.official-reader-error" }),
 		);
 	});
 

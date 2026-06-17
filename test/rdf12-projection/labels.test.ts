@@ -1,9 +1,16 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import type { SectionNode } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
-import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
+import {
+	createRdf12Graph,
+	type Rdf12Graph,
+	rdf12Triple,
+} from "../../src/rdf12-projection/graph";
+import { projectLabels } from "../../src/rdf12-projection/labels";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
+import { createRdf12NodeIndex } from "../../src/rdf12-projection/node-index";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm, type Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
@@ -205,6 +212,66 @@ describe("rdf12 heading label space", () => {
 			aatTerm("addressLabel"),
 			stringLiteral("delivery-policy"),
 		);
+	});
+
+	it("omits empty heading labels and unowned local target aliases", () => {
+		const graph = createRdf12Graph();
+		const nodeIndex = createRdf12NodeIndex();
+		const emptySection: SectionNode = {
+			kind: "section",
+			level: 1,
+			ids: [""],
+			title: "",
+			idOrigin: "source",
+		};
+		nodeIndex.set({
+			kind: "section",
+			node: emptySection,
+			iri: iriTerm("urn:test#empty-heading"),
+			localId: "empty-heading",
+			documentOrder: 1,
+			relativePath: "book.adoc",
+			sourceStartLine: 10,
+			sourceEndLine: 12,
+			startLine: 10,
+			endLine: 12,
+			targetType: "section",
+		});
+
+		const catalog = projectLabels({
+			graph,
+			document: {
+				kind: "document",
+				sourcePath: "book.adoc",
+				mode: "book-entry",
+				parser: { name: "@asciidoctor/core", version: "test" },
+				children: [],
+				targets: [
+					{
+						kind: "target",
+						id: "before-heading",
+						targetType: "inline-anchor",
+						idOrigin: "source",
+						source: { relativePath: "book.adoc" },
+						sourceSpan: {
+							start: { line: 3, column: 1 },
+							end: { line: 3, column: 18 },
+						},
+					},
+				],
+				xrefOccurrences: [],
+				anchorOccurrences: [],
+				toolDiagnostics: [],
+			},
+			baseIri: "https://example.invalid/",
+			documentKey: "book",
+			documentIri: iriTerm("urn:test#document"),
+			relativePath: "book.adoc",
+			nodeIndex,
+		});
+
+		expect(catalog.entries()).toEqual([]);
+		expect(graph.match({ predicate: aatTerm("addressLabel") })).toEqual([]);
 	});
 });
 

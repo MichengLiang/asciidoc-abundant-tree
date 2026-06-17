@@ -3,6 +3,8 @@ import type {
 	AsciidoctorAdapter,
 	AsciidoctorBlock,
 } from "../src/asciidoctor-adapter";
+import type { LogicalSource } from "../src/book-entry/model";
+import { registerLogicalSourceForRecovery } from "../src/book-entry/origin-coordinate";
 import { projectOfficialDocument } from "../src/official-projector";
 import { buildLineTable } from "../src/source-lines";
 import { projectSourceSurfaces } from "../src/source-surfaces";
@@ -288,6 +290,33 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.xrefOccurrences).toEqual([]);
 	});
 
+	it("diagnoses external unknown official blocks with both context and source-location warnings", () => {
+		const unknown = makeBlock("mystery", 1, {
+			directory: "/virtual/include",
+			file: "included.adoc",
+			source: "External unknown <<target>> should not be scanned.",
+		});
+
+		const surfaces = projectSourceSurfaces({
+			officialDocument: makeDocument([unknown]),
+			lineTable: buildLineTable(
+				"External unknown <<target>> should not be scanned.",
+			),
+			sourcePath: "/virtual/main.adoc",
+		});
+
+		expect(surfaces.toolDiagnostics).toEqual([
+			expect.objectContaining({
+				code: "official-block-context.unknown",
+			}),
+			expect.objectContaining({
+				code: "source-location.external-file",
+				message: expect.stringContaining("included.adoc"),
+			}),
+		]);
+		expect(surfaces.xrefOccurrences).toEqual([]);
+	});
+
 	it("does not project unknown official block contexts into document children", () => {
 		const paragraph = makeBlock("paragraph", 2, {
 			source: "Nested paragraph should remain hidden.",
@@ -357,6 +386,105 @@ describe("projectSourceSurfaces", () => {
 		expect(projected.children).toEqual([]);
 		expect(projected.targets).toEqual([]);
 	});
+
+	it("uses transitional logical source recovery for sections and block raw without source-aware records", () => {
+		const logicalSource = makeLogicalSource();
+		registerLogicalSourceForRecovery(logicalSource);
+		const lineTable = buildLineTable(logicalSource.logicalText);
+		const paragraph = makeBlock("paragraph", 3, {
+			source: "Body <<target>>.",
+		});
+		const section = makeBlock("section", 2, {
+			id: "legacy-section",
+			title: "Legacy Section",
+			children: [paragraph],
+		});
+		const officialDocument = makeDocument([section]);
+
+		const surfaces = projectSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
+		const projected = projectOfficialDocument({
+			officialDocument,
+			lineTable,
+			sections: surfaces.sections,
+			sectionByLine: surfaces.sectionByLine,
+			xrefOccurrences: surfaces.xrefOccurrences,
+			anchorOccurrences: surfaces.anchorOccurrences,
+			intervalByBlock: surfaces.intervalByBlock,
+			sectionByBlock: surfaces.sectionByBlock,
+			projectableBlocks: surfaces.projectableBlocks,
+			containerFallbackBlocks: surfaces.containerFallbackBlocks,
+			adapter: fakeAdapter(),
+		});
+
+		expect(surfaces.sections).toEqual([
+			expect.objectContaining({
+				idOrigin: "source",
+				ids: ["legacy-section"],
+				line: 2,
+				source: expect.objectContaining({
+					relativePath: "chapter.adoc",
+					raw: "[#legacy-section]\n== Legacy Section\nBody <<target>>.\n",
+					span: { startLine: 1, endLine: 3 },
+				}),
+			}),
+		]);
+		expect(surfaces.sectionScopeIndex?.candidates).toEqual([
+			expect.objectContaining({
+				relativePath: "chapter.adoc",
+				startLine: 2,
+				endLine: 3,
+				section: surfaces.sections[0],
+			}),
+		]);
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "section",
+				children: [
+					expect.objectContaining({
+						kind: "paragraph",
+						source: expect.objectContaining({
+							relativePath: "chapter.adoc",
+							raw: "Body <<target>>.\n",
+							span: { startLine: 3, endLine: 3 },
+						}),
+						children: [
+							expect.objectContaining({
+								kind: "xref",
+								source: expect.objectContaining({
+									relativePath: "chapter.adoc",
+								}),
+							}),
+						],
+					}),
+				],
+			}),
+		]);
+		expect(surfaces.toolDiagnostics).toEqual([]);
+	});
+
+	it("maps single-file section scopes using span, line, and full-document fallbacks", () => {
+		const first = makeBlock("section", 1, {
+			id: "first",
+			title: "First",
+		});
+		const second = makeBlock("section", 3, {
+			id: "second",
+			title: "Second",
+		});
+		const officialDocument = makeDocument([first, second]);
+		const lineTable = buildLineTable(
+			["== First", "first body", "== Second", "second body"].join("\n"),
+		);
+		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+
+		expect(surfaces.sectionByLine.get(1)?.ids).toEqual(["first"]);
+		expect(surfaces.sectionByLine.get(2)?.ids).toEqual(["first"]);
+		expect(surfaces.sectionByLine.get(3)?.ids).toEqual(["second"]);
+		expect(surfaces.sectionByLine.get(4)?.ids).toEqual(["second"]);
+	});
 });
 
 function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
@@ -411,5 +539,47 @@ function fakeAdapter(): AsciidoctorAdapter {
 		extractAnchorBindings: () => [],
 		resolveXrefTarget: () => undefined,
 		resolveXrefBinding: () => undefined,
+	};
+}
+
+function makeLogicalSource(): LogicalSource {
+	const sourceText = "[#legacy-section]\n== Legacy Section\nBody <<target>>.";
+	const sourceFile = {
+		absolutePath: "/virtual/chapter.adoc",
+		relativePath: "chapter.adoc",
+		text: sourceText,
+		lineTable: buildLineTable(sourceText),
+	};
+	return {
+		entryPath: "/virtual/book.adoc",
+		documentRoot: "/virtual",
+		logicalText: sourceText,
+		sourceFiles: [sourceFile],
+		lineOrigins: [
+			{
+				logicalLine: 1,
+				absolutePath: sourceFile.absolutePath,
+				relativePath: sourceFile.relativePath,
+				sourceLine: 1,
+			},
+			{
+				logicalLine: 2,
+				absolutePath: sourceFile.absolutePath,
+				relativePath: sourceFile.relativePath,
+				sourceLine: 2,
+			},
+			{
+				logicalLine: 3,
+				absolutePath: sourceFile.absolutePath,
+				relativePath: sourceFile.relativePath,
+				sourceLine: 3,
+			},
+			{
+				logicalLine: 4,
+				absolutePath: sourceFile.absolutePath,
+				relativePath: sourceFile.relativePath,
+				sourceLine: 4,
+			},
+		],
 	};
 }

@@ -11,6 +11,11 @@ describe("book-entry column map", () => {
 		expect(lookupOriginColumn(createIdentityColumnMap(), 7)).toBe(7);
 	});
 
+	it("does not map invalid logical columns", () => {
+		expect(lookupOriginColumn(createIdentityColumnMap(), 0)).toBeUndefined();
+		expect(lookupOriginColumn(createIdentityColumnMap(), -1)).toBeUndefined();
+	});
+
 	it("maps indented content columns back to origin columns", () => {
 		const map = createIndentOffsetColumnMap({
 			insertedColumns: 2,

@@ -1,7 +1,18 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import type {
+	AbundantDocument,
+	ListingNode,
+	ParagraphNode,
+	SectionNode,
+	TableNode,
+} from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
+import {
+	resolveDocumentTitleHeadingSlice,
+	resolveHeadingSlice,
+} from "../../src/rdf12-projection/heading-slice";
 import {
 	integerLiteral,
 	stringLiteral,
@@ -204,6 +215,239 @@ NOTE: Admonition paragraph.
 		expect(raw).not.toMatch(/\|===\n\n\n\n\n\|===/u);
 		expectNumberTriple(projection.graph, tableSection, "contentStartLine", 5);
 		expectNumberTriple(projection.graph, tableSection, "contentEndLine", 11);
+	});
+
+	it("returns no heading slice when a section has no line or title span", () => {
+		expect(
+			resolveHeadingSlice({
+				kind: "section",
+				level: 1,
+				ids: [],
+				title: "Unlocated",
+				idOrigin: "unknown",
+				children: [],
+			}),
+		).toBeUndefined();
+	});
+
+	it("uses titleSpan fallback and omits invalid child-only content spans before heading content", () => {
+		const paragraph: ParagraphNode = {
+			kind: "paragraph",
+			text: "before",
+			source: {
+				span: { startLine: 1, endLine: 1 },
+			},
+		};
+		const section: SectionNode = {
+			kind: "section",
+			level: 1,
+			ids: [],
+			title: "Fallback",
+			titleSpan: {
+				start: { line: 4, column: 4 },
+				end: { line: 4, column: 12 },
+			},
+			span: { startLine: 4, endLine: 4 },
+			idOrigin: "unknown",
+			children: [paragraph],
+		};
+
+		expect(resolveHeadingSlice(section)).toEqual({
+			span: { startLine: 4, endLine: 4 },
+			headingLine: 4,
+			raw: "== Fallback\n",
+		});
+	});
+
+	it("builds fallback heading raw from metadata, paragraph, listing, and ignores nested sections", () => {
+		const listing: ListingNode = {
+			kind: "listing",
+			ids: [],
+			metadata: [
+				{
+					kind: "metadata",
+					metadataKind: "attrlist",
+					raw: "[source,js]",
+					line: 6,
+				},
+			],
+			span: { startLine: 6, endLine: 10 },
+			contentSpan: { startLine: 8, endLine: 9 },
+			content: "console.log(1);\nconsole.log(2);",
+		};
+		const paragraph: ParagraphNode = {
+			kind: "paragraph",
+			text: "Body text",
+			source: {
+				span: { startLine: 4, endLine: 4 },
+			},
+		};
+		const table: TableNode = {
+			kind: "table",
+			ids: [],
+			span: { startLine: 12, endLine: 14 },
+		};
+		const childSection: SectionNode = {
+			kind: "section",
+			level: 2,
+			ids: [],
+			title: "Nested",
+			line: 16,
+			span: { startLine: 16, endLine: 17 },
+			idOrigin: "unknown",
+			children: [],
+		};
+		const section: SectionNode = {
+			kind: "section",
+			level: 1,
+			ids: [],
+			title: "Fallback Raw",
+			line: 3,
+			span: { startLine: 2, endLine: 17 },
+			metadata: [
+				{
+					kind: "metadata",
+					metadataKind: "id",
+					raw: "[#fallback]",
+					line: 2,
+				},
+			],
+			idOrigin: "source",
+			children: [paragraph, listing, table, childSection],
+		};
+
+		const slice = resolveHeadingSlice(section);
+
+		expect(slice).toEqual({
+			span: { startLine: 2, endLine: 15 },
+			headingLine: 3,
+			metadataSpan: { startLine: 2, endLine: 2 },
+			contentSpan: { startLine: 4, endLine: 14 },
+			raw: [
+				"[#fallback]",
+				"== Fallback Raw",
+				"Body text",
+				"",
+				"[source,js]",
+				"----",
+				"console.log(1);",
+				"console.log(2);",
+				"----",
+				"",
+				"",
+				"",
+				"",
+				"",
+				"",
+			].join("\n"),
+		});
+	});
+
+	it("uses origin source raw slices and derives content span from nonblank raw lines", () => {
+		const section: SectionNode = {
+			kind: "section",
+			level: 1,
+			ids: [],
+			title: "Origin Raw",
+			line: 5,
+			idOrigin: "source",
+			source: {
+				relativePath: "chapter.adoc",
+				span: { startLine: 4, endLine: 8 },
+				raw: "[#origin]\n== Origin Raw\n\nbody\n\n",
+			},
+			children: [],
+		};
+
+		expect(resolveHeadingSlice(section)).toEqual({
+			span: { startLine: 4, endLine: 8 },
+			headingLine: 5,
+			metadataSpan: { startLine: 4, endLine: 4 },
+			contentSpan: { startLine: 7, endLine: 7 },
+			raw: "[#origin]\n== Origin Raw\n\nbody\n\n",
+		});
+	});
+
+	it("falls back to synthetic document title raw when source text is unavailable and handles missing titles", () => {
+		const titled: AbundantDocument = {
+			kind: "document",
+			sourcePath: "book.adoc",
+			parser: { name: "@asciidoctor/core", version: "test" },
+			mode: "single-file",
+			title: {
+				kind: "title",
+				text: "Book",
+				source: { line: 1 },
+			},
+			children: [],
+			targets: [],
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			toolDiagnostics: [],
+		};
+		const { title: _title, ...untitled } = titled;
+
+		expect(resolveDocumentTitleHeadingSlice(titled, {})).toEqual({
+			span: { startLine: 1, endLine: 1 },
+			headingLine: 1,
+			raw: "= Book\n",
+		});
+		expect(
+			resolveDocumentTitleHeadingSlice(untitled, {
+				sourceText: "= Book\n",
+			}),
+		).toBeUndefined();
+	});
+
+	it("uses child section metadata to stop document title raw before the first section", () => {
+		const document: AbundantDocument = {
+			kind: "document",
+			sourcePath: "book.adoc",
+			parser: { name: "@asciidoctor/core", version: "test" },
+			mode: "single-file",
+			title: {
+				kind: "title",
+				text: "Book",
+				source: { line: 1 },
+			},
+			children: [
+				{
+					kind: "section",
+					level: 1,
+					ids: [],
+					title: "First",
+					titleSpan: {
+						start: { line: 5, column: 4 },
+						end: { line: 5, column: 9 },
+					},
+					metadata: [
+						{
+							kind: "metadata",
+							metadataKind: "id",
+							raw: "[#first]",
+							line: 4,
+						},
+					],
+					idOrigin: "source",
+					children: [],
+				},
+			],
+			targets: [],
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			toolDiagnostics: [],
+		};
+
+		expect(
+			resolveDocumentTitleHeadingSlice(document, {
+				sourceText: "= Book\n\npreamble\n\n[#first]\n== First\n",
+			}),
+		).toEqual({
+			span: { startLine: 1, endLine: 3 },
+			headingLine: 1,
+			contentSpan: { startLine: 3, endLine: 3 },
+			raw: "= Book\n\npreamble\n",
+		});
 	});
 });
 

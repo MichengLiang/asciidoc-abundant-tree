@@ -1,15 +1,21 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
+import type { SourceAwareLogicalDocument } from "../src/book-entry/line-origin-model";
+import type { LogicalSource } from "../src/book-entry/model";
+import { registerLogicalSourceForRecovery } from "../src/book-entry/origin-coordinate";
+import { registerSourceAwareDocumentForRecovery } from "../src/book-entry/source-aware-coordinate";
 import { scanInlineOccurrencesInOfficialBlocks } from "../src/inline-occurrence-scanner";
 import type {
 	AnchorOccurrenceNode,
 	SectionNode,
+	ToolDiagnostic,
 	XrefOccurrenceNode,
 } from "../src/model";
 import {
 	projectOfficialDocument,
 	rowsFromTable,
 } from "../src/official-projector";
+import type { SourceInterval } from "../src/source-interval-resolver";
 import { buildLineTable } from "../src/source-lines";
 
 describe("official-projector helpers", () => {
@@ -618,6 +624,336 @@ describe("official-projector helpers", () => {
 			"second-id",
 		]);
 	});
+
+	it("uses official ids for section nodes when source metadata has no authored id", () => {
+		const sectionBlock = makeSectionBlock("Official Id", "official-id", 2);
+		const section = makeSectionNode("Official Id", "", 2);
+		section.ids = [];
+		const sectionByBlock = new WeakMap<AsciidoctorBlock, SectionNode>([
+			[sectionBlock, section],
+		]);
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [sectionBlock],
+			},
+			lineTable: buildLineTable("= Probe\n== Official Id\n"),
+			sections: [section],
+			sectionByLine: new Map([[2, section]]),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap(),
+			sectionByBlock,
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "section",
+				ids: ["official-id"],
+				idOrigin: "source",
+			}),
+		]);
+		expect(projected.targets).toEqual([
+			expect.objectContaining({
+				id: "official-id",
+				targetType: "section",
+				idOrigin: "source",
+			}),
+		]);
+	});
+
+	it("falls back to single-line dlist and listing projections when intervals are absent", () => {
+		const termBlock = {
+			getContext: () => "dlist",
+			getNodeName: () => "dlist",
+			getText: () => "Term",
+		} satisfies AsciidoctorBlock;
+		const descriptionBlock = {
+			getBlocks: () => [],
+			getContext: () => "paragraph",
+			getNodeName: () => "paragraph",
+			getText: () => "Description",
+		} satisfies AsciidoctorBlock;
+		const dlistBlock = {
+			getBlocks: () => [[[termBlock], descriptionBlock]],
+			getContext: () => "dlist",
+			getId: () => "fallback-dlist",
+			getNodeName: () => "dlist",
+			getSourceLocation: () => ({
+				getLineNumber: () => 2,
+			}),
+		} satisfies AsciidoctorBlock;
+		const listingBlock = {
+			getBlocks: () => [],
+			getContext: () => "listing",
+			getNodeName: () => "listing",
+			getSourceLocation: () => ({
+				getLineNumber: () => 3,
+			}),
+			getStyle: () => "literal",
+		} satisfies AsciidoctorBlock;
+		const lineTable = buildLineTable(
+			["= Probe", "Term:: Description", "----", "fallback code", "----"].join(
+				"\n",
+			),
+		);
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [dlistBlock, listingBlock],
+			},
+			lineTable,
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [],
+			anchorOccurrences: [],
+			intervalByBlock: new WeakMap([
+				[
+					listingBlock,
+					{
+						blockStartLine: 3,
+						metadata: [],
+						contentSpan: { startLine: 4, endLine: 4 },
+						span: { startLine: 3, endLine: 5 },
+						diagnostics: [],
+					},
+				],
+			]),
+			sectionByBlock: new WeakMap(),
+			adapter: fakeAdapter(),
+		});
+
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "descriptionList",
+				ids: ["fallback-dlist"],
+				span: { startLine: 2, endLine: 2 },
+				contentSpan: { startLine: 2, endLine: 2 },
+				items: [
+					expect.objectContaining({
+						terms: [expect.objectContaining({ text: "Term" })],
+						description: expect.objectContaining({ text: "Description" }),
+					}),
+				],
+			}),
+			expect.objectContaining({
+				kind: "listing",
+				content: "fallback code",
+				style: "literal",
+			}),
+		]);
+	});
+
+	it("projects description lists with term and description source slices, filtered inline children, and official ids", () => {
+		const termBlock = {
+			getContext: () => "dlist",
+			getNodeName: () => "dlist",
+			getSourceLocation: () => ({
+				getLineNumber: () => 2,
+			}),
+			getText: () => "Term",
+		} satisfies AsciidoctorBlock;
+		const descriptionBlock = {
+			getBlocks: () => [],
+			getContext: () => "paragraph",
+			getNodeName: () => "paragraph",
+			getSourceLocation: () => ({
+				getLineNumber: () => 2,
+			}),
+			getText: () => "Description <<inside>> [[inside-anchor]]",
+		} satisfies AsciidoctorBlock;
+		const secondTermBlock = {
+			getContext: () => "dlist",
+			getNodeName: () => "dlist",
+			getText: () => "Synthetic Term",
+		} satisfies AsciidoctorBlock;
+		const dlistBlock = {
+			getBlocks: () => [
+				[[termBlock], descriptionBlock],
+				[[secondTermBlock], undefined],
+			],
+			getContext: () => "dlist",
+			getId: () => "official-dlist",
+			getNodeName: () => "dlist",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+			getStyle: () => "horizontal",
+			getTitle: () => "Glossary",
+		} satisfies AsciidoctorBlock;
+		const lineTable = buildLineTable(
+			[
+				".Glossary",
+				"Term:: Description <<inside>> [[inside-anchor]]",
+				"outside <<outside>> [[outside-anchor]]",
+			].join("\n"),
+		);
+		const intervalByBlock = new WeakMap<AsciidoctorBlock, SourceInterval>([
+			[
+				dlistBlock,
+				{
+					blockStartLine: 1,
+					metadata: [],
+					contentSpan: { startLine: 2, endLine: 2 },
+					span: { startLine: 1, endLine: 2 },
+					diagnostics: [],
+				},
+			],
+			[
+				termBlock,
+				{
+					blockStartLine: 2,
+					metadata: [],
+					contentSpan: { startLine: 2, endLine: 2 },
+					span: { startLine: 2, endLine: 2 },
+					diagnostics: [],
+				},
+			],
+			[
+				descriptionBlock,
+				{
+					blockStartLine: 2,
+					metadata: [],
+					contentSpan: { startLine: 2, endLine: 2 },
+					span: { startLine: 2, endLine: 2 },
+					diagnostics: [],
+				},
+			],
+		]);
+		const insideXref: XrefOccurrenceNode = {
+			kind: "xref",
+			syntax: "shorthand",
+			raw: "<<inside>>",
+			target: "inside",
+			sourceSpan: {
+				start: { line: 2, column: 20 },
+				end: { line: 2, column: 30 },
+			},
+		};
+		const outsideXref: XrefOccurrenceNode = {
+			kind: "xref",
+			syntax: "shorthand",
+			raw: "<<outside>>",
+			target: "outside",
+			sourceSpan: {
+				start: { line: 3, column: 9 },
+				end: { line: 3, column: 20 },
+			},
+		};
+		const insideAnchor: AnchorOccurrenceNode = {
+			kind: "anchor",
+			syntax: "double-bracket",
+			raw: "[[inside-anchor]]",
+			ids: ["inside-anchor"],
+			sourceSpan: {
+				start: { line: 2, column: 31 },
+				end: { line: 2, column: 48 },
+			},
+		};
+		const duplicateAnchor: AnchorOccurrenceNode = {
+			...insideAnchor,
+		};
+		const outsideAnchor: AnchorOccurrenceNode = {
+			kind: "anchor",
+			syntax: "double-bracket",
+			raw: "[[outside-anchor]]",
+			ids: ["outside-anchor"],
+			sourceSpan: {
+				start: { line: 3, column: 21 },
+				end: { line: 3, column: 39 },
+			},
+		};
+
+		const projected = projectOfficialDocument({
+			officialDocument: {
+				getBlocks: () => [dlistBlock],
+			},
+			lineTable,
+			sections: [],
+			sectionByLine: new Map(),
+			xrefOccurrences: [insideXref, outsideXref],
+			anchorOccurrences: [insideAnchor, duplicateAnchor, outsideAnchor],
+			intervalByBlock,
+			sectionByBlock: new WeakMap(),
+			adapter: {
+				...fakeAdapter(),
+				resolveXrefBinding: () => ({
+					href: "#inside",
+					resolvedId: "inside",
+					reftext: "Inside",
+				}),
+			},
+		});
+
+		expect(projected.children).toEqual([
+			expect.objectContaining({
+				kind: "descriptionList",
+				ids: ["official-dlist"],
+				title: "Glossary",
+				style: "horizontal",
+				contentSpan: { startLine: 2, endLine: 2 },
+				items: [
+					expect.objectContaining({
+						span: { startLine: 2, endLine: 2 },
+						terms: [
+							expect.objectContaining({
+								kind: "descriptionTerm",
+								text: "Term",
+								sourceSpan: {
+									start: { line: 2, column: 1 },
+									end: { line: 2, column: 5 },
+								},
+								children: [],
+							}),
+						],
+						description: expect.objectContaining({
+							kind: "description",
+							text: "Description > [[inside-anchor]]",
+							sourceSpan: {
+								start: { line: 2, column: 8 },
+								end: { line: 2, column: 48 },
+							},
+							children: [
+								expect.objectContaining({
+									kind: "xref",
+									raw: "<<inside>>",
+									asciidoctor: expect.objectContaining({
+										resolvedId: "inside",
+									}),
+								}),
+								expect.objectContaining({
+									kind: "anchor",
+									raw: "[[inside-anchor]]",
+								}),
+							],
+						}),
+					}),
+					expect.objectContaining({
+						terms: [
+							expect.objectContaining({
+								text: "Synthetic Term",
+							}),
+						],
+					}),
+				],
+			}),
+		]);
+		const descriptionList = projected.children[0];
+		if (descriptionList?.kind !== "descriptionList") {
+			throw new Error("Expected description list projection");
+		}
+		const secondTerm = descriptionList.items[1]?.terms[0];
+		expect(secondTerm).not.toHaveProperty("source");
+		expect(secondTerm).not.toHaveProperty("sourceSpan");
+		expect(projected.targets).toEqual([
+			expect.objectContaining({
+				id: "official-dlist",
+				targetType: "block",
+				title: "Glossary",
+			}),
+		]);
+	});
 });
 
 describe("official table inline scanning", () => {
@@ -1179,6 +1515,157 @@ describe("official table inline scanning", () => {
 			"<<single-line-only>>",
 		]);
 	});
+
+	it("recovers source-aware inline origins and reports unmapped inserted columns with fallback source layer", () => {
+		const sourceAwareDocument = makeInlineSourceAwareDocument();
+		registerSourceAwareDocumentForRecovery(sourceAwareDocument);
+		const lineTable = buildLineTable(sourceAwareDocument.logicalText);
+		const paragraphBlock = {
+			getContext: () => "paragraph",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+		} satisfies AsciidoctorBlock;
+		const diagnostics: ToolDiagnostic[] = [];
+
+		const { xrefOccurrences, anchorOccurrences } =
+			scanInlineOccurrencesInOfficialBlocks({
+				lineTable,
+				blockSurfaces: [
+					{
+						block: paragraphBlock,
+						context: "paragraph",
+						nodeName: "paragraph",
+						level: undefined,
+						title: undefined,
+						id: undefined,
+						sourceLine: 1,
+						children: [],
+						indexInParent: 0,
+					},
+				],
+				intervalByBlock: new WeakMap([
+					[
+						paragraphBlock,
+						{
+							blockStartLine: 1,
+							metadata: [],
+							contentSpan: { startLine: 1, endLine: 3 },
+							span: { startLine: 1, endLine: 3 },
+							diagnostics: [],
+						},
+					],
+				]),
+				toolDiagnostics: diagnostics,
+			});
+
+		expect(
+			xrefOccurrences.find((xref) => xref.raw === "xref:target[Label]"),
+		).toEqual(
+			expect.objectContaining({
+				sourceSpan: {
+					start: { line: 1, column: 1 },
+					end: { line: 1, column: 19 },
+				},
+				source: expect.objectContaining({
+					relativePath: "chapter.adoc",
+					line: 1,
+				}),
+			}),
+		);
+		const indentedXref = xrefOccurrences.find(
+			(xref) => xref.raw === "xref:indented[Indented]",
+		);
+		expect(indentedXref).toEqual(
+			expect.objectContaining({
+				source: expect.objectContaining({
+					relativePath: "chapter.adoc",
+					line: 2,
+					raw: "xref:indented[Indented]",
+				}),
+			}),
+		);
+		expect(indentedXref).not.toHaveProperty("sourceSpan");
+		expect(anchorOccurrences).toEqual([
+			expect.objectContaining({
+				raw: "[[anchor]]",
+				sourceSpan: {
+					start: { line: 3, column: 1 },
+					end: { line: 3, column: 11 },
+				},
+				source: expect.objectContaining({
+					relativePath: "chapter.adoc",
+					line: 3,
+				}),
+			}),
+		]);
+		expect(diagnostics).toEqual([
+			expect.objectContaining({
+				code: "source-coordinate.column-unmapped",
+			}),
+		]);
+	});
+
+	it("keeps legacy inline occurrences when origin recovery fails and records diagnostics", () => {
+		const logicalSource = makeInlineLogicalSource();
+		registerLogicalSourceForRecovery(logicalSource);
+		const lineTable = buildLineTable(logicalSource.logicalText);
+		const paragraphBlock = {
+			getContext: () => "paragraph",
+			getSourceLocation: () => ({
+				getLineNumber: () => 1,
+			}),
+		} satisfies AsciidoctorBlock;
+		const diagnostics: ToolDiagnostic[] = [];
+
+		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			lineTable,
+			blockSurfaces: [
+				{
+					block: paragraphBlock,
+					context: "paragraph",
+					nodeName: "paragraph",
+					level: undefined,
+					title: undefined,
+					id: undefined,
+					sourceLine: 1,
+					children: [],
+					indexInParent: 0,
+				},
+			],
+			intervalByBlock: new WeakMap([
+				[
+					paragraphBlock,
+					{
+						blockStartLine: 1,
+						metadata: [],
+						contentSpan: { startLine: 1, endLine: 1 },
+						span: { startLine: 1, endLine: 1 },
+						diagnostics: [],
+					},
+				],
+			]),
+			toolDiagnostics: diagnostics,
+		});
+
+		expect(xrefOccurrences).toEqual([
+			expect.objectContaining({
+				raw: "xref:missing[Missing]",
+				sourceSpan: {
+					start: { line: 1, column: 1 },
+					end: { line: 1, column: 22 },
+				},
+				source: expect.objectContaining({
+					line: 1,
+				}),
+			}),
+		]);
+		expect(diagnostics).toEqual([
+			expect.objectContaining({
+				code: "source-recovery.logical-interval-unmapped",
+			}),
+		]);
+	});
 });
 
 function makeSectionBlock(
@@ -1219,5 +1706,82 @@ function fakeAdapter() {
 		extractAnchorBindings: () => [],
 		resolveXrefTarget: () => undefined,
 		resolveXrefBinding: () => undefined,
+	};
+}
+
+function makeInlineSourceAwareDocument(): SourceAwareLogicalDocument {
+	const sourceText = [
+		"xref:target[Label]",
+		"xref:indented[Indented]",
+		"[[anchor]]",
+	].join("\n");
+	const sourceFile = {
+		absolutePath: "/virtual/chapter.adoc",
+		relativePath: "chapter.adoc",
+		text: sourceText,
+		lineTable: buildLineTable(sourceText),
+	};
+	return {
+		entryPath: "/virtual/book.adoc",
+		documentRoot: "/virtual",
+		logicalText: [
+			"xref:target[Label]",
+			" xref:indented[Indented]",
+			"[[anchor]]",
+		].join("\n"),
+		sourceFiles: [sourceFile],
+		diagnostics: [],
+		lines: [
+			{
+				kind: "source-preserving",
+				logicalLine: 1,
+				text: "xref:target[Label]",
+				origin: {
+					absolutePath: sourceFile.absolutePath,
+					relativePath: sourceFile.relativePath,
+					sourceLine: 1,
+				},
+				columnMap: { kind: "identity" },
+			},
+			{
+				kind: "transformed-source",
+				logicalLine: 2,
+				text: " xref:indented[Indented]",
+				originText: "xref:indented[Indented]",
+				origin: {
+					absolutePath: sourceFile.absolutePath,
+					relativePath: sourceFile.relativePath,
+					sourceLine: 2,
+				},
+				transform: { kind: "indent", columns: 1 },
+				columnMap: {
+					kind: "offset",
+					logicalStartColumn: 3,
+					originStartColumn: 1,
+				},
+			},
+			{
+				kind: "source-preserving",
+				logicalLine: 3,
+				text: "[[anchor]]",
+				origin: {
+					absolutePath: sourceFile.absolutePath,
+					relativePath: sourceFile.relativePath,
+					sourceLine: 3,
+				},
+				columnMap: { kind: "identity" },
+			},
+		],
+	};
+}
+
+function makeInlineLogicalSource(): LogicalSource {
+	const sourceText = "xref:missing[Missing]";
+	return {
+		entryPath: "/virtual/book.adoc",
+		documentRoot: "/virtual",
+		logicalText: sourceText,
+		sourceFiles: [],
+		lineOrigins: [],
 	};
 }

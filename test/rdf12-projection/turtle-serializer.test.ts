@@ -1,5 +1,6 @@
 import { performance } from "node:perf_hooks";
-import { describe, expect, it } from "vitest";
+import { Writer } from "n3";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
 	createRdf12Graph,
 	type Rdf12Graph,
@@ -17,6 +18,10 @@ import { iriTerm } from "../../src/rdf12-projection/terms";
 import { serializeRdf12ProjectionToTurtle } from "../../src/rdf12-projection/turtle-serializer";
 
 describe("rdf12 Turtle serialization", () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
 	it("serializes a basic project graph as Turtle with prefixes and triple terms", () => {
 		const projection = testProjection();
 		const turtle = serializeRdf12ProjectionToTurtle(projection);
@@ -144,6 +149,82 @@ describe("rdf12 Turtle serialization", () => {
 		expect(elapsedMs).toBeLessThan(1000);
 		expect(countLongRawLiteralOpenings(turtle)).toBeGreaterThanOrEqual(100);
 		expect(parsed.size).toBe(projection.graph.size);
+	});
+
+	it("propagates Writer errors instead of returning partial Turtle", () => {
+		const error = new Error("writer failed");
+		vi.spyOn(Writer.prototype, "end").mockImplementation((callback) => {
+			callback?.(error, "");
+			return undefined as never;
+		});
+
+		expect(() => serializeRdf12ProjectionToTurtle(rawProjection([]))).toThrow(
+			error,
+		);
+	});
+
+	it("rewrites only unsuffixed multiline aat:raw literals in Writer output", () => {
+		const writerOutput = [
+			"@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .",
+			'<urn:test#s> aat:raw "first\\nsecond" .',
+			'<urn:test#typed> aat:raw "typed\\nvalue"^^<urn:datatype> .',
+			'<urn:test#lang> aat:raw "lang\\nvalue"@en .',
+			'<urn:test#headline> aat:headline "headline\\nvalue" .',
+			'<urn:test#iri-aat:raw> <urn:p> "object" .',
+			'<urn:test#quoted> <urn:p> "aat:raw \\"not predicate\\"" .',
+			'<urn:test#long> <urn:p> """aat:raw "not predicate" """ .',
+			"",
+		].join("\n");
+		vi.spyOn(Writer.prototype, "end").mockImplementation((callback) => {
+			callback?.(undefined as unknown as Error, writerOutput);
+			return undefined as never;
+		});
+
+		const turtle = serializeRdf12ProjectionToTurtle(rawProjection([]));
+
+		expect(turtle).toContain('aat:raw """first\nsecond"""');
+		expect(turtle).toContain('aat:raw "typed\\nvalue"^^<urn:datatype>');
+		expect(turtle).toContain('aat:raw "lang\\nvalue"@en');
+		expect(turtle).toContain('aat:headline "headline\\nvalue"');
+		expect(turtle).toContain('"aat:raw \\"not predicate\\""');
+		expect(turtle).toContain('"""aat:raw "not predicate" """');
+	});
+
+	it("preserves malformed raw literals when escape decoding cannot prove a safe rewrite", () => {
+		const writerOutput = [
+			"@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .",
+			'<urn:test#bad> aat:raw "bad\\qescape\\nvalue" .',
+			'<urn:test#unterminated-iri aat:raw "still\\ninside" .',
+			"",
+		].join("\n");
+		vi.spyOn(Writer.prototype, "end").mockImplementation((callback) => {
+			callback?.(undefined as unknown as Error, writerOutput);
+			return undefined as never;
+		});
+
+		const turtle = serializeRdf12ProjectionToTurtle(rawProjection([]));
+
+		expect(turtle).toContain('aat:raw "bad\\qescape\\nvalue"');
+		expect(turtle).toContain("<urn:test#unterminated-iri aat:raw");
+		expect(countLongRawLiteralOpenings(turtle)).toBe(0);
+	});
+
+	it("decodes Turtle escapes and re-escapes control characters in readable raw literals", () => {
+		const writerOutput = [
+			"@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .",
+			'<urn:test#escaped> aat:raw "\\t\\b\\n\\r\\f\\"\\\'\\\\\\u0041\\U00000042\\u0001" .',
+			'<urn:test#quote-delimiter> aat:raw "before \\"\\"\\" after\\n" .',
+			"",
+		].join("\n");
+		vi.spyOn(Writer.prototype, "end").mockImplementation((callback) => {
+			callback?.(undefined as unknown as Error, writerOutput);
+			return undefined as never;
+		});
+
+		const turtle = serializeRdf12ProjectionToTurtle(rawProjection([]));
+
+		expect(turtle).toContain('aat:raw """\\t\\b\n\\r\\f"\'\\\\AB\\u0001"""');
+		expect(turtle).toContain("aat:raw '''before \"\"\" after\n'''");
 	});
 });
 

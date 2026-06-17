@@ -1,6 +1,6 @@
 # Book-Entry Official Reader Include Preprocessing Coordination State
 
-Last updated: 2026-06-17 10:10:00 CST.
+Last updated: 2026-06-17 10:54:04 CST.
 
 ## Role Boundary
 
@@ -200,7 +200,7 @@ Coordinator review notes:
 
 Goal: run the full acceptance command set, verify the workspace page-map failure class, remove transitional dead code if appropriate, and close any design gaps.
 
-Status: implemented, pending coordinator review with one explicit coverage concern.
+Status: implemented; coverage remediation completed after coordinator review.
 
 Implementation commit: recorded by worker final response after commit creation.
 
@@ -259,7 +259,7 @@ node dist/cli.mjs test/book-entry/fixtures/official-reader-book/book.adoc --mode
 # passed with JSON checks for included chapter, tagged listing, sourceFiles, and absence of include.unsupported-attrlist
 ```
 
-Coverage command result:
+Initial coverage command result:
 
 ```bash
 pnpm test:coverage
@@ -282,8 +282,35 @@ Transitional code review:
 
 Remaining known risk:
 
-- Final acceptance is blocked by the configured global branch coverage threshold unless the coordinator accepts the true recorded coverage failure as an out-of-scope pre-existing project-wide condition or assigns a separate coverage-focused batch.
+- The Batch 4 hardening commit did not meet the configured global branch threshold; the follow-up coverage remediation batch adds behavior tests instead of changing coverage thresholds or exclusions.
+
+### Batch 4 Follow-up: Coverage Remediation
+
+Goal: make the design-required `pnpm test:coverage` acceptance command pass without lowering thresholds, excluding files, or adding assertion-free execution tests.
+
+Status: implemented, pending coordinator review.
+
+Coverage remediation changes:
+
+- Added direct source-aware coordinate recovery tests for cross-file spans, out-of-range logical lines, generated/degraded block spans, document title recovery, section recovery failure, and missing source-file evidence.
+- Added official Reader/source-set tests for source registration dedupe, missing target omission, legal ancestor include preprocessing, attribute parsing boundaries, and Reader adapter xref binding behavior.
+- Added behavior tests for existing high-impact branch gaps in official block utilities, official projector fallback paths, source surfaces, RDF12 heading slice/ownership/labels, Turtle serializer rewrite/error behavior, animation YAML graph/payload/CLI/yaml shaping, and RDF12 public API explicit `sourceText`.
+- Added a column-map invalid logical column test to cover the unmapped primitive boundary.
+
+Follow-up verification:
+
+```bash
+pnpm test:coverage
+# passed, 65 files / 498 tests
+# statements 96.22%, branches 90.02%, functions 99.23%, lines 96.17%
+
+pnpm lint
+# passed, Biome checked 163 files
+
+pnpm typecheck
+# passed
+```
 
 ## Current Dispatch
 
-Batch 1, Batch 2, and Batch 3 are accepted. Batch 4 implementation is ready for coordinator review, with the coverage concern recorded above.
+Batch 1, Batch 2, and Batch 3 are accepted. Batch 4 hardening is partially accepted, and the coverage remediation follow-up is ready for coordinator review.

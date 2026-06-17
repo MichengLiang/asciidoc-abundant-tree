@@ -82,6 +82,42 @@ describe("book-entry official Reader preprocessor", () => {
 		);
 	});
 
+	it("parses positional, quoted, and value-less include attributes structurally", () => {
+		expect(parseIncludeAttributes("tag").surfaces).toEqual([]);
+		expect(parseIncludeAttributes("tags").surfaces).toEqual([]);
+		expect(parseIncludeAttributes("lines").surfaces).toEqual([]);
+		expect(parseIncludeAttributes("leveloffset").surfaces).toEqual([]);
+		expect(parseIncludeAttributes("indent").surfaces).toEqual([]);
+		expect(parseIncludeAttributes("indent=abc").surfaces).toEqual([]);
+		expect(parseIncludeAttributes("opts").surfaces).toEqual([]);
+		expect(parseIncludeAttributes("opts=optional;nowrap").surfaces).toEqual([
+			{ kind: "optional" },
+		]);
+		expect(parseIncludeAttributes("opts=nowrap").surfaces).toEqual([]);
+		expect(parseIncludeAttributes("tag='main,part',lines=\"1..3,8\"")).toEqual(
+			expect.objectContaining({
+				classification: "mapped",
+				entries: [
+					{ name: "tag", value: "main,part" },
+					{ name: "lines", value: "1..3,8" },
+				],
+				surfaces: [
+					{ kind: "tag", name: "main,part" },
+					{ kind: "lines", expression: "1..3,8" },
+				],
+			}),
+		);
+		expect(parseIncludeAttributes("flag")).toEqual(
+			expect.objectContaining({
+				classification: "unmapped",
+				entries: [{ name: "flag", value: true }],
+				diagnostics: [
+					expect.objectContaining({ code: "include.attrlist-unmapped" }),
+				],
+			}),
+		);
+	});
+
 	it("records tag, tags, and line-range selected source origins", () => {
 		const entryPath = writeFixture(
 			"selection/book.adoc",

@@ -70,6 +70,32 @@ describe("rdf12 public API", () => {
 		).toBe(true);
 	});
 
+	it("honors explicit sourceText when projecting raw heading slices", () => {
+		const structuralPayloadPath = join(
+			projectRoot,
+			"samples/structural-payload.adoc",
+		);
+		const sourceText = `= supplied root
+
+supplied body
+`;
+		const document = parseAbundantTree({ sourcePath: structuralPayloadPath });
+		const result = rdf12(document, { documentRoot: projectRoot, sourceText });
+		const root = iriTerm(
+			`${result.documentIri.slice(0, result.documentIri.indexOf("#"))}#heading-l1-o0`,
+		);
+
+		expect(
+			result.graph.has(
+				rdf12Triple(
+					root,
+					iriTerm(`${namespaces.aat}raw`),
+					stringLiteral(`${sourceText}\n`),
+				),
+			),
+		).toBe(true);
+	});
+
 	it("returns JSON-LD from the single public rdf12 call", () => {
 		const document = parseAbundantTree({ sourcePath });
 		const result = rdf12(document, {

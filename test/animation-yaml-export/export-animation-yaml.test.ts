@@ -6,12 +6,20 @@ import {
 	exportAnimationYaml,
 	runAnimationYamlCli,
 } from "../../src/animation-yaml-export/cli";
+import { readBusinessNodes } from "../../src/animation-yaml-export/graph-reader";
+import { parsePayloadRaw } from "../../src/animation-yaml-export/payload-parser";
+import { makeAnimationYamlDocument } from "../../src/animation-yaml-export/yaml-shape";
 import { parseAbundantTree, rdf12 } from "../../src/index";
-import type {
-	Rdf12Graph,
-	Rdf12IriTerm,
+import {
+	createRdf12Graph,
+	type Rdf12Graph,
+	type Rdf12IriTerm,
+	rdf12Triple,
 } from "../../src/rdf12-projection/graph";
-import { stringLiteral } from "../../src/rdf12-projection/literals";
+import {
+	integerLiteral,
+	stringLiteral,
+} from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { iriTerm } from "../../src/rdf12-projection/terms";
 
@@ -253,6 +261,260 @@ describe("animation YAML export", () => {
 		expect(yaml.script.scenes[0].id).toBe("scene-riverbank-rabbit");
 		expect(yaml.storyboard.shots[0].id).toBe("shot-rabbit-watch");
 	});
+
+	it("defaults CLI documentRoot to the input file directory", () => {
+		const result = runAnimationYamlCli([fixtureBook]);
+		const yaml = parse(result.stdout);
+
+		expect(result.code).toBe(0);
+		expect(result.stderr).toBe("");
+		expect(yaml.metadata.document_root).toBe(fixtureRoot);
+		expect(yaml.script.scenes[0].id).toBe("scene-riverbank-rabbit");
+	});
+
+	it("reports CLI help and argument errors without attempting export", () => {
+		expect(runAnimationYamlCli(["--help"])).toEqual({
+			code: 0,
+			stdout: expect.stringContaining("animation-yaml-export <book.adoc>"),
+			stderr: "",
+		});
+		expect(runAnimationYamlCli([])).toEqual({
+			code: 1,
+			stdout: "",
+			stderr: expect.stringContaining("Missing input file."),
+		});
+		expect(runAnimationYamlCli(["book.adoc", "--document-root"])).toEqual({
+			code: 1,
+			stdout: "",
+			stderr: "--document-root requires a value",
+		});
+		expect(runAnimationYamlCli(["book.adoc", "--unknown"])).toEqual({
+			code: 1,
+			stdout: "",
+			stderr: "Unknown argument: --unknown",
+		});
+		expect(runAnimationYamlCli(["book.adoc", "extra.adoc"])).toEqual({
+			code: 1,
+			stdout: "",
+			stderr: "Unexpected extra argument: extra.adoc",
+		});
+	});
+
+	it("normalizes business graph nodes, relations, source refs, payload warnings, and script elements", () => {
+		const graph = createRdf12Graph();
+		const scene = heading("scene-generated");
+		const location = heading("loc-primary");
+		const secondaryLocation = heading("loc-secondary");
+		const source = heading("source-event");
+		const character = heading("char-alice");
+		const payload = iriTerm("urn:test#payload");
+		const warnings: Array<{ code: string; node?: string; message: string }> =
+			[];
+
+		add(graph, scene, "role", "animation-scene");
+		add(graph, scene, "generatedAddressLabel", "scene-generated");
+		add(graph, scene, "headline", "Scene From Graph");
+		add(graph, scene, "sequence", integerLiteral(2));
+		add(graph, scene, "field-status", "draft");
+		add(graph, scene, "field-assigned-to", "director");
+		add(graph, scene, "field-ready", "false");
+		add(graph, scene, "relativePath", "book.adoc");
+		add(graph, scene, "startLine", integerLiteral(7));
+		add(graph, scene, "endLine", integerLiteral(9));
+		graph.add(rdf12Triple(scene, aat("payload"), payload));
+		add(graph, payload, "payloadId", "scene-payload");
+		add(graph, payload, "format", "toml");
+		add(graph, payload, "raw", "unsupported = true");
+		addRelation(graph, scene, "adapted-from", source);
+		addRelation(graph, scene, "located-at", location);
+		addRelation(graph, scene, "located-at", secondaryLocation);
+		addRelation(graph, scene, "features-character", character);
+		add(graph, location, "role", "location");
+		add(graph, location, "addressLabel", "loc-primary");
+		add(graph, secondaryLocation, "addressLabel", "loc-secondary");
+		add(graph, source, "addressLabel", "source-event");
+		add(graph, character, "addressLabel", "char-alice");
+
+		const nodes = readBusinessNodes({
+			graph,
+			scriptTextById: new Map([["scene-generated", "INT. ROOM - NIGHT"]]),
+			warnings,
+		});
+
+		const sceneNode = nodes.find((node) => node.id === "scene-generated");
+		expect(sceneNode).toEqual(
+			expect.objectContaining({
+				id: "scene-generated",
+				role: "animation-scene",
+				title: "Scene From Graph",
+				status: "draft",
+				sequence: 2,
+				assigned_to: "director",
+				fields: expect.objectContaining({
+					ready: false,
+					status: "draft",
+				}),
+				source: {
+					path: "book.adoc",
+					start_line: 7,
+					end_line: 9,
+				},
+				payload: { raw: "unsupported = true" },
+				source_refs: {
+					adapted_from: ["source-event"],
+				},
+				environment: "loc-primary",
+				locations: ["loc-secondary"],
+				characters: ["char-alice"],
+				relations: expect.objectContaining({
+					adapted_from: ["source-event"],
+					located_at: ["loc-primary", "loc-secondary"],
+				}),
+				elements: [{ type: "raw_script", text: "INT. ROOM - NIGHT" }],
+			}),
+		);
+		expect(nodes).toContainEqual(
+			expect.objectContaining({
+				id: "loc-primary",
+				role: "location",
+			}),
+		);
+		expect(nodes.find((node) => node.id === "loc-primary")).not.toHaveProperty(
+			"locations",
+		);
+		expect(warnings).toEqual([
+			expect.objectContaining({
+				code: "payload_format_unsupported",
+				node: "scene-payload",
+			}),
+		]);
+	});
+
+	it("sorts exported YAML buckets by order, source location, and tracks unconsumed roles", () => {
+		const document = makeAnimationYamlDocument({
+			sourceBook: "book.adoc",
+			documentRoot: fixtureRoot,
+			warnings: [{ code: "fixture" }],
+			nodes: [
+				{
+					id: "late",
+					role: "beat",
+					source: { path: "b.adoc", start_line: 2 },
+				},
+				{
+					id: "ordered",
+					role: "beat",
+					order: 1,
+					source: { path: "z.adoc", start_line: 99 },
+				},
+				{
+					id: "early",
+					role: "beat",
+					source: { path: "a.adoc", start_line: 20 },
+				},
+				{
+					id: "tie-a",
+					role: "beat",
+					source: { path: "a.adoc", start_line: 5 },
+				},
+				{
+					id: "profile",
+					role: "adaptation-profile",
+				},
+				{
+					id: "custom-1",
+					role: "custom-role",
+				},
+				{
+					id: "custom-2",
+					role: "custom-role",
+				},
+			],
+		});
+
+		expect(document.adaptation_profile?.id).toBe("profile");
+		expect(document.structure.beats.map((node) => node.id)).toEqual([
+			"ordered",
+			"tie-a",
+			"early",
+			"late",
+		]);
+		expect(document.metadata.warnings).toEqual([{ code: "fixture" }]);
+		expect(document.metadata.unconsumed_role_counts).toEqual({
+			"custom-role": 2,
+		});
+	});
+
+	it("parses supported payload formats and records parse failures", () => {
+		const warnings: Array<{ code: string; node?: string; message: string }> =
+			[];
+
+		expect(
+			parsePayloadRaw({
+				payloadId: "json",
+				format: "JSON",
+				raw: '{"ok":true}',
+				warnings,
+			}),
+		).toEqual({ ok: true });
+		expect(
+			parsePayloadRaw({
+				payloadId: "yaml",
+				format: "yml",
+				raw: "items:\n  - one\n",
+				warnings,
+			}),
+		).toEqual({ items: ["one"] });
+		expect(
+			parsePayloadRaw({
+				payloadId: "missing",
+				format: "json",
+				warnings,
+			}),
+		).toBeUndefined();
+		expect(
+			parsePayloadRaw({
+				payloadId: "bad-json",
+				format: "json",
+				raw: '{"broken":',
+				warnings,
+			}),
+		).toEqual({
+			raw: '{"broken":',
+			parse_error: expect.any(String),
+		});
+		expect(
+			parsePayloadRaw({
+				payloadId: "unknown-format",
+				raw: "bad: [",
+				warnings,
+			}),
+		).toEqual({ raw: "bad: [" });
+		expect(
+			parsePayloadRaw({
+				payloadId: "unsupported",
+				format: "toml",
+				raw: "name = 'demo'",
+				warnings,
+			}),
+		).toEqual({ raw: "name = 'demo'" });
+		expect(warnings).toEqual([
+			expect.objectContaining({
+				code: "payload_parse_failed",
+				node: "bad-json",
+			}),
+			{
+				code: "payload_format_unsupported",
+				node: "unknown-format",
+				message: "Unsupported payload format: unknown",
+			},
+			expect.objectContaining({
+				code: "payload_format_unsupported",
+				node: "unsupported",
+				message: "Unsupported payload format: toml",
+			}),
+		]);
+	});
 });
 
 function expectProfilePayloadHasNoSourcePayloadId(): void {
@@ -310,4 +572,31 @@ function onlyObjectIri(
 
 function aat(localName: string): Rdf12IriTerm {
 	return iriTerm(`${namespaces.aat}${localName}`);
+}
+
+function rel(localName: string): Rdf12IriTerm {
+	return iriTerm(`${namespaces.rel}${localName}`);
+}
+
+function heading(localId: string): Rdf12IriTerm {
+	return iriTerm(`urn:test#${localId}`);
+}
+
+function add(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	value: string | ReturnType<typeof integerLiteral>,
+): void {
+	const object = typeof value === "string" ? stringLiteral(value) : value;
+	graph.add(rdf12Triple(subject, aat(predicateLocalName), object));
+}
+
+function addRelation(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	relLocalName: string,
+	object: Rdf12IriTerm,
+): void {
+	graph.add(rdf12Triple(subject, rel(relLocalName), object));
 }
