@@ -129,7 +129,7 @@ Port:: 8080
 			projection.graph,
 			deliveryPolicy,
 			"addressLabel",
-			"rel-delivery",
+			"rel-delivery-capacity",
 		);
 		expectNumberTriple(projection.graph, deliveryPolicy, "headingLevel", 1);
 		expectNumberTriple(projection.graph, deliveryPolicy, "startLine", 5);

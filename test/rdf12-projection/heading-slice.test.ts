@@ -63,9 +63,9 @@ describe("rdf12 heading slices", () => {
 			`[#delivery.policy, status=active, owner=ops]
 == 配送策略
 
-配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]。
 
-[.banana, for=delivery]
+[.policy-risk-profile, for=delivery]
 [source,json]
 ----
 {
@@ -80,7 +80,7 @@ describe("rdf12 heading slices", () => {
 }
 ----
 
-[#rel-delivery.pear]
+[#rel-delivery-capacity]
 [source,yaml]
 ----
 reason:

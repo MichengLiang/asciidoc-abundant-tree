@@ -212,12 +212,16 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
-	it("projects payload resource relativePath from the payload owner origin file", () => {
+	it("projects raw value object relativePath from the value owner origin file", () => {
 		const projection = rdf12(bookEntryPayloadDocument(), {
 			documentRoot: fixtureRoot,
 		});
 		const heading = headingByHeadline(projection.graph, "Chapter");
-		const payload = objectIri(projection.graph, heading, aatTerm("payload"));
+		const payload = objectIri(
+			projection.graph,
+			heading,
+			aatTerm("policy-risk-profile"),
+		);
 
 		expectLiteralValue(
 			projection.graph,
@@ -375,9 +379,9 @@ function bookEntryPayloadDocument(): AbundantDocument {
 							{
 								kind: "metadata",
 								metadataKind: "attrlist",
-								raw: "[.banana, for=chapter]",
+								raw: "[.policy-risk-profile, for=chapter]",
 								line: 5,
-								roles: ["banana"],
+								roles: ["policy-risk-profile"],
 								attributes: { for: "chapter" },
 							},
 						],

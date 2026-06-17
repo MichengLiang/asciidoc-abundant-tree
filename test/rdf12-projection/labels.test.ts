@@ -132,15 +132,16 @@ describe("rdf12 heading label space", () => {
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const [relDeliveryOwner] =
-			payloadProjection.labelCatalog.owners("rel-delivery");
+		const [relDeliveryOwner] = payloadProjection.labelCatalog.owners(
+			"rel-delivery-capacity",
+		);
 
 		expect(relDeliveryOwner?.value).toContain("#heading-l5-o0");
 		expectLiteralValue(
 			payloadProjection.graph,
 			relDeliveryOwner ?? iriTerm("urn:missing"),
 			aatTerm("addressLabel"),
-			"rel-delivery",
+			"rel-delivery-capacity",
 		);
 	});
 
@@ -159,8 +160,12 @@ describe("rdf12 heading label space", () => {
 		);
 
 		expect(payloadProjection.labelCatalog.owners("policy")).toEqual([]);
-		expect(payloadProjection.labelCatalog.owners("banana")).toEqual([]);
-		expect(payloadProjection.labelCatalog.owners("pear")).toEqual([]);
+		expect(
+			payloadProjection.labelCatalog.owners("policy-risk-profile"),
+		).toEqual([]);
+		expect(payloadProjection.labelCatalog.owners("relation-evidence")).toEqual(
+			[],
+		);
 	});
 
 	it("does not use label values in heading IRIs", () => {

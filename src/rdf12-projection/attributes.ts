@@ -1,9 +1,4 @@
-import type {
-	AbundantDocument,
-	AbundantNode,
-	MetadataNode,
-	XrefOccurrenceNode,
-} from "../model";
+import type { AbundantDocument, AbundantNode, MetadataNode } from "../model";
 import { fieldPredicate } from "./field-predicate";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
@@ -22,16 +17,11 @@ export type ProjectSurfaceAttributesInput = {
 	readonly xrefIndex: Rdf12XrefIndex;
 };
 
-const xrefControlAttributes = new Set(["rel", "payload"]);
-
 export function projectSurfaceAttributes(
 	input: ProjectSurfaceAttributesInput,
 ): void {
 	for (const node of input.document.children) {
 		projectNodeAttributes(input.graph, input.nodeIndex, node);
-	}
-	for (const entry of input.xrefIndex.entries()) {
-		projectXrefAttributes(input.graph, entry.iri, entry.node);
 	}
 }
 
@@ -70,23 +60,6 @@ function projectHeadingMetadataAttributes(
 		for (const [name, value] of Object.entries(item.attributes)) {
 			addFieldTriple(graph, owner, name, String(value));
 		}
-	}
-}
-
-function projectXrefAttributes(
-	graph: Rdf12Graph,
-	owner: Rdf12IriTerm,
-	xref: XrefOccurrenceNode,
-): void {
-	if (xref.attributes === undefined) {
-		return;
-	}
-
-	for (const [name, value] of Object.entries(xref.attributes)) {
-		if (xrefControlAttributes.has(name)) {
-			continue;
-		}
-		addFieldTriple(graph, owner, name, String(value));
 	}
 }
 

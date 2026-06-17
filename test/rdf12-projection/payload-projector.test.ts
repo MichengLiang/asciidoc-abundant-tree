@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type {
 	AbundantDocument,
 	ListingNode,
+	MetadataNode,
 	XrefOccurrenceNode,
 } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
@@ -19,43 +20,46 @@ import { writeFixture } from "../helpers";
 const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
 
-describe("rdf12 payload projection", () => {
-	it("projects no-id node payloads from for selectors and connects the heading", () => {
+describe("rdf12 complex property projection", () => {
+	it("projects selector-bound heading complex properties as field predicates", () => {
 		const projection = projectAbundantDocumentToRdf12(
-			nodePayloadDocument({
+			headingValueDocument({
 				attributes: { for: "delivery" },
-				role: "banana",
+				roles: ["release-policy-config"],
 				language: "json",
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const headingIri = heading(projection.documentIri, "heading-l1-o0");
-		const payload = onlyPayloadForOwner(projection.graph, headingIri);
+		const delivery = heading(projection.documentIri, "heading-l1-o0");
+		const value = onlyIriObject(
+			projection.graph,
+			delivery,
+			"release-policy-config",
+		);
 
-		expectLiteral(projection.graph, payload, "payloadKind", "node");
-		expectLiteral(projection.graph, payload, "role", "banana");
-		expectLiteral(projection.graph, payload, "forSelector", "delivery");
-		expectLiteral(projection.graph, payload, "format", "json");
-		expectLiteral(projection.graph, payload, "raw", '{"owner":"ops"}');
-		expectLineSpan(projection.graph, payload, 4, 8);
-		expectInteger(projection.graph, payload, "contentStartLine", 7);
-		expectInteger(projection.graph, payload, "contentEndLine", 7);
-		expectNoLiteralPredicate(projection.graph, payload, "payloadId");
-		expectNoLegacyPayloadContract(projection.graph);
+		expectTriple(projection.graph, delivery, "release-policy-config", value);
+		expectLiteral(projection.graph, value, "forSelector", "delivery");
+		expectLiteral(projection.graph, value, "format", "json");
+		expectLiteral(projection.graph, value, "raw", '{"owner":"ops"}');
+		expectLineSpan(projection.graph, value, 4, 8);
+		expectInteger(projection.graph, value, "contentStartLine", 7);
+		expectInteger(projection.graph, value, "contentEndLine", 7);
+		expectForbiddenRawValueFields(projection.graph, value);
+		expectForbiddenPublicPayloadPredicates(projection.graph);
 	});
 
-	it("binds no-value for markers by source owner without writing an empty selector", () => {
+	it("binds no-value heading markers by source owner without an empty selector", () => {
 		const path = writeFixture(
-			"rdf12-no-value-for-payload.adoc",
+			"rdf12-no-value-for-complex-property.adoc",
 			`= Probe
 
 [#delivery]
 == Delivery
 
-[.banana, for]
-[source,json]
+[.review-playbook, for]
+[source,yaml]
 ----
-{"owner":"ops"}
+review_team: quality-ops
 ----
 `,
 		);
@@ -63,193 +67,226 @@ describe("rdf12 payload projection", () => {
 			parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
-		const [headingIri] = projection.labelCatalog.owners("delivery");
-		const payload = onlyPayloadForOwner(
+		const [delivery] = projection.labelCatalog.owners("delivery");
+		const value = onlyIriObject(
 			projection.graph,
-			headingIri ?? iriTerm("urn:missing-heading"),
+			delivery ?? iriTerm("urn:missing-heading"),
+			"review-playbook",
 		);
 
-		expectLiteral(projection.graph, payload, "payloadKind", "node");
-		expectLiteral(projection.graph, payload, "role", "banana");
-		expectLiteral(projection.graph, payload, "format", "json");
+		expectLiteral(projection.graph, value, "format", "yaml");
+		expectLiteral(projection.graph, value, "raw", "review_team: quality-ops");
+		expectNoPredicate(projection.graph, value, "forSelector");
+		expectForbiddenRawValueFields(projection.graph, value);
+	});
+
+	it("keeps marker absence, empty selector, and source ownership distinct", () => {
+		const absent = projectAbundantDocumentToRdf12(
+			headingValueDocument({
+				attributes: {},
+				roles: ["review-playbook"],
+			}),
+			{ documentRoot: projectRoot },
+		);
 		expect(
-			projection.graph.match({
-				subject: payload,
-				predicate: aat("forSelector"),
-			}),
+			absent.graph.match({ predicate: aat("review-playbook") }),
 		).toHaveLength(0);
-		expectNoLiteralPredicate(projection.graph, payload, "payloadId");
-	});
 
-	it("keeps unresolved and ambiguous node payload selectors unconnected", () => {
-		const unresolved = projectAbundantDocumentToRdf12(
-			nodePayloadDocument({
-				attributes: { forSelector: "missing" },
-				role: "banana",
+		const emptySelector = projectAbundantDocumentToRdf12(
+			headingValueDocument({
+				attributes: { for: "" },
+				roles: ["review-playbook"],
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const unresolvedPayload = onlyPayloadByKind(unresolved.graph, "node");
-		expectLiteral(
-			unresolved.graph,
-			unresolvedPayload,
-			"forSelector",
-			"missing",
+		const delivery = heading(emptySelector.documentIri, "heading-l1-o0");
+		const value = onlyIriObject(
+			emptySelector.graph,
+			delivery,
+			"review-playbook",
 		);
-		expectNoPayloadOwner(unresolved.graph, unresolvedPayload);
+		expectNoPredicate(emptySelector.graph, value, "forSelector");
 
-		const ambiguous = projectAbundantDocumentToRdf12(
-			ambiguousNodePayloadDocument(),
+		const explicitOwner = projectAbundantDocumentToRdf12(
+			headingValueDocument({
+				attributes: { for: true },
+				roles: ["review-playbook"],
+			}),
 			{ documentRoot: projectRoot },
 		);
-		const ambiguousPayload = onlyPayloadByKind(ambiguous.graph, "node");
-		expectLiteral(
-			ambiguous.graph,
-			ambiguousPayload,
-			"forSelector",
-			"duplicate",
+		const ownerValue = onlyIriObject(
+			explicitOwner.graph,
+			heading(explicitOwner.documentIri, "heading-l1-o0"),
+			"review-playbook",
 		);
-		expectNoPayloadOwner(ambiguous.graph, ambiguousPayload);
+		expectNoPredicate(explicitOwner.graph, ownerValue, "forSelector");
 	});
 
-	it("does not treat role-only or source-only listings as node payloads", () => {
+	it("does not project invalid heading complex property candidates", () => {
 		for (const document of [
-			roleOnlyListingDocument(),
-			sourceOnlyListingDocument(),
+			headingValueDocument({
+				attributes: {},
+				roles: ["role-only"],
+			}),
+			headingValueDocument({
+				attributes: {},
+				roles: [],
+			}),
+			headingValueDocument({
+				attributes: { for: "delivery" },
+				roles: [],
+			}),
+			headingValueDocument({
+				attributes: { for: "delivery" },
+				roles: ["first", "second"],
+			}),
+			headingValueDocument({
+				attributes: { for: "missing" },
+				roles: ["release-policy-config"],
+			}),
+			ambiguousHeadingValueDocument(),
 		]) {
 			const projection = projectAbundantDocumentToRdf12(document, {
 				documentRoot: projectRoot,
 			});
 
+			expect(projection.graph.match({ predicate: aat("first") })).toHaveLength(
+				0,
+			);
+			expect(projection.graph.match({ predicate: aat("second") })).toHaveLength(
+				0,
+			);
 			expect(
-				projection.graph.match({ predicate: aat("payloadKind") }),
+				projection.graph.match({ predicate: aat("release-policy-config") }),
 			).toHaveLength(0);
 			expect(
-				projection.graph.match({ predicate: aat("payload") }),
+				projection.graph.match({ predicate: aat("review-playbook") }),
 			).toHaveLength(0);
 		}
 	});
 
-	it("projects edge payloads from xref payload selectors and source payload ids", () => {
-		const projection = projectAbundantDocumentToRdf12(edgePayloadDocument(), {
+	it("projects xref edge complex properties from named attributes bound to source value ids", () => {
+		const projection = projectAbundantDocumentToRdf12(edgeValueDocument(), {
 			documentRoot: projectRoot,
 		});
 		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
-		const payload = onlyPayloadForOwner(projection.graph, edge);
+		const value = onlyIriObject(projection.graph, edge, "dependency-evidence");
 
-		expectLiteral(projection.graph, payload, "payloadKind", "edge");
-		expectLiteral(projection.graph, payload, "payloadId", "rel-delivery");
-		expectLiteral(projection.graph, payload, "role", "pear");
-		expectLiteral(projection.graph, payload, "format", "yaml");
-		expectLiteral(projection.graph, payload, "raw", "reason: risk-control");
-		expectLineSpan(projection.graph, payload, 8, 12);
-		expectNoTriple(
-			projection.graph,
-			heading(projection.documentIri, "heading-l1-o0"),
-			"payload",
-			payload,
-		);
-		expectNoTriple(
-			projection.graph,
-			heading(projection.documentIri, "heading-l5-o0"),
-			"payload",
-			payload,
-		);
+		expectTriple(projection.graph, edge, "dependency-evidence", value);
+		expectLiteral(projection.graph, value, "sourceValueId", "rel-delivery");
+		expectLiteral(projection.graph, value, "format", "yaml");
+		expectLiteral(projection.graph, value, "raw", "reason: risk-control");
+		expectLineSpan(projection.graph, value, 8, 12);
+		expectInteger(projection.graph, value, "contentStartLine", 11);
+		expectInteger(projection.graph, value, "contentEndLine", 11);
+		expectForbiddenRawValueFields(projection.graph, value);
+		expectNoPredicate(projection.graph, edge, "payload");
+		expectNoPredicate(projection.graph, edge, "payloadSelector");
 	});
 
-	it("emits all source payload ids when an edge selector matches one alias", () => {
-		const projection = projectAbundantDocumentToRdf12(
-			edgePayloadDocument({
-				payloadIds: ["primary", "alias"],
-				payloadSelector: "alias",
-			}),
-			{ documentRoot: projectRoot },
-		);
-		const payload = onlyPayloadByKind(projection.graph, "edge");
-
-		expectLiteral(projection.graph, payload, "payloadId", "primary");
-		expectLiteral(projection.graph, payload, "payloadId", "alias");
-		expectTriple(
-			projection.graph,
-			onlyResourceOfType(projection.graph, "XrefEdge"),
-			"payload",
-			payload,
-		);
-	});
-
-	it("deduplicates repeated source payload ids on the same edge payload object", () => {
-		const projection = projectAbundantDocumentToRdf12(
-			edgePayloadDocument({
-				payloadIds: ["rel-delivery", "rel-delivery"],
-				payloadSelector: "rel-delivery",
-			}),
-			{ documentRoot: projectRoot },
-		);
-		const payload = onlyPayloadByKind(projection.graph, "edge");
-
-		expectTriple(
-			projection.graph,
-			onlyResourceOfType(projection.graph, "XrefEdge"),
-			"payload",
-			payload,
-		);
-	});
-
-	it("does not connect unmatched or ambiguous edge payload selectors", () => {
+	it("falls back to xref literal fields for unmatched and ambiguous source value ids", () => {
 		const unmatched = projectAbundantDocumentToRdf12(
-			edgePayloadDocument({
-				payloadIds: ["other"],
-				payloadSelector: "missing",
+			edgeValueDocument({
+				attributes: {
+					"dependency-evidence": "missing-source-value",
+					weight: "0.8",
+				},
 			}),
 			{ documentRoot: projectRoot },
 		);
 		const unmatchedEdge = onlyResourceOfType(unmatched.graph, "XrefEdge");
-		expect(
-			unmatched.graph.match({
-				subject: unmatchedEdge,
-				predicate: aat("payload"),
-			}),
-		).toHaveLength(0);
+		expectLiteral(
+			unmatched.graph,
+			unmatchedEdge,
+			"dependency-evidence",
+			"missing-source-value",
+		);
+		expectLiteral(unmatched.graph, unmatchedEdge, "weight", "0.8");
+		expectNoIriObjects(unmatched.graph, unmatchedEdge, "dependency-evidence");
 
 		const ambiguous = projectAbundantDocumentToRdf12(
-			ambiguousEdgePayloadDocument(),
-			{
-				documentRoot: projectRoot,
-			},
+			ambiguousEdgeValueDocument(),
+			{ documentRoot: projectRoot },
 		);
 		const ambiguousEdge = onlyResourceOfType(ambiguous.graph, "XrefEdge");
-		expect(
-			ambiguous.graph.match({
-				subject: ambiguousEdge,
-				predicate: aat("payload"),
-			}),
-		).toHaveLength(0);
+		expectLiteral(
+			ambiguous.graph,
+			ambiguousEdge,
+			"dependency-evidence",
+			"rel-delivery",
+		);
+		expectNoIriObjects(ambiguous.graph, ambiguousEdge, "dependency-evidence");
 	});
 
-	it("derives payload format only from listing language", () => {
+	it("projects multiple xref edge complex properties on the same edge", () => {
 		const projection = projectAbundantDocumentToRdf12(
-			nodePayloadDocument({
+			edgeValueDocument({
+				attributes: {
+					"dependency-evidence": "rel-delivery",
+					"risk-assessment": "rel-risk",
+					"review-procedure": "rel-review",
+					weight: "0.8",
+				},
+				sourceValues: [
+					sourceValueListing({
+						id: "rel-delivery",
+						startLine: 8,
+						contentLine: 11,
+						content: "dependency: true",
+					}),
+					sourceValueListing({
+						id: "rel-risk",
+						startLine: 14,
+						contentLine: 17,
+						content: "risk: high",
+					}),
+					sourceValueListing({
+						id: "rel-review",
+						startLine: 20,
+						contentLine: 23,
+						content: "review: required",
+					}),
+				],
+			}),
+			{ documentRoot: projectRoot },
+		);
+		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
+
+		for (const [field, id] of [
+			["dependency-evidence", "rel-delivery"],
+			["risk-assessment", "rel-risk"],
+			["review-procedure", "rel-review"],
+		] as const) {
+			const value = onlyIriObject(projection.graph, edge, field);
+			expectLiteral(projection.graph, value, "sourceValueId", id);
+		}
+		expectLiteral(projection.graph, edge, "weight", "0.8");
+	});
+
+	it("derives raw value format only from listing language", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			headingValueDocument({
 				attributes: { for: "delivery", data: "toml" },
-				role: "banana",
+				roles: ["release-policy-config"],
 				language: "yaml",
 				content: "enabled: true",
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const payload = onlyPayloadByKind(projection.graph, "node");
+		const value = onlyIriObject(
+			projection.graph,
+			heading(projection.documentIri, "heading-l1-o0"),
+			"release-policy-config",
+		);
 
-		expectLiteral(projection.graph, payload, "format", "yaml");
-		expect(
-			projection.graph.has(
-				rdf12Triple(payload, aat("format"), stringLiteral("toml")),
-			),
-		).toBe(false);
+		expectLiteral(projection.graph, value, "format", "yaml");
+		expectNoLiteral(projection.graph, value, "format", "toml");
 	});
 });
 
-function nodePayloadDocument(input: {
+function headingValueDocument(input: {
 	readonly attributes: Record<string, string | boolean>;
-	readonly role?: string;
+	readonly roles: readonly string[];
 	readonly language?: string;
 	readonly content?: string;
 }): AbundantDocument {
@@ -257,12 +294,12 @@ function nodePayloadDocument(input: {
 		...baseDocument(),
 		children: [
 			sectionNode(1, "delivery", "Delivery", [
-				payloadListing({
+				sourceValueListing({
 					startLine: 4,
 					contentLine: 7,
 					content: input.content ?? '{"owner":"ops"}',
 					attributes: input.attributes,
-					...(input.role !== undefined ? { role: input.role } : {}),
+					roles: input.roles,
 					...(input.language !== undefined ? { language: input.language } : {}),
 				}),
 			]),
@@ -270,66 +307,35 @@ function nodePayloadDocument(input: {
 	};
 }
 
-function ambiguousNodePayloadDocument(): AbundantDocument {
+function ambiguousHeadingValueDocument(): AbundantDocument {
 	return {
 		...baseDocument(),
 		children: [
 			sectionNode(1, "duplicate", "First"),
 			sectionNode(4, "duplicate", "Second"),
-			payloadListing({
+			sourceValueListing({
 				startLine: 8,
 				contentLine: 11,
 				content: '{"ambiguous":true}',
 				attributes: { for: "duplicate" },
-				role: "banana",
+				roles: ["release-policy-config"],
 			}),
 		],
 	};
 }
 
-function roleOnlyListingDocument(): AbundantDocument {
-	return {
-		...baseDocument(),
-		children: [
-			sectionNode(1, "delivery", "Delivery", [
-				payloadListing({
-					startLine: 4,
-					contentLine: 7,
-					content: '{"roleOnly":true}',
-					attributes: {},
-					role: "banana",
-				}),
-			]),
-		],
-	};
-}
-
-function sourceOnlyListingDocument(): AbundantDocument {
-	return {
-		...baseDocument(),
-		children: [
-			sectionNode(1, "delivery", "Delivery", [
-				payloadListing({
-					startLine: 4,
-					contentLine: 7,
-					content: '{"sourceOnly":true}',
-					attributes: {},
-					language: "json",
-				}),
-			]),
-		],
-	};
-}
-
-function edgePayloadDocument(
+function edgeValueDocument(
 	input: {
-		readonly payloadSelector?: string;
-		readonly payloadIds?: readonly string[];
+		readonly attributes?: Record<string, string>;
+		readonly sourceValues?: readonly ListingNode[];
 	} = {},
 ): AbundantDocument {
-	const payloadSelector = input.payloadSelector ?? "rel-delivery";
-	const payloadIds = input.payloadIds ?? ["rel-delivery"];
-	const xref = xrefNode(payloadSelector);
+	const xref = xrefNode(
+		input.attributes ?? {
+			"dependency-evidence": "rel-delivery",
+			weight: "0.8",
+		},
+	);
 
 	return {
 		...baseDocument(),
@@ -341,15 +347,14 @@ function edgePayloadDocument(
 					source: { span: { startLine: 4, endLine: 4 } },
 					children: [xref],
 				},
-				payloadListing({
-					id: payloadIds,
-					startLine: 8,
-					contentLine: 11,
-					content: "reason: risk-control",
-					attributes: {},
-					role: "pear",
-					language: "yaml",
-				}),
+				...(input.sourceValues ?? [
+					sourceValueListing({
+						id: "rel-delivery",
+						startLine: 8,
+						contentLine: 11,
+						content: "reason: risk-control",
+					}),
+				]),
 			]),
 			sectionNode(5, "capacity", "Capacity"),
 		],
@@ -357,42 +362,24 @@ function edgePayloadDocument(
 	};
 }
 
-function ambiguousEdgePayloadDocument(): AbundantDocument {
-	const xref = xrefNode("rel-delivery");
-
-	return {
-		...baseDocument(),
-		children: [
-			sectionNode(1, "delivery", "Delivery", [
-				{
-					kind: "paragraph",
-					text: "See capacity.",
-					source: { span: { startLine: 4, endLine: 4 } },
-					children: [xref],
-				},
-				payloadListing({
-					id: "rel-delivery",
-					startLine: 8,
-					contentLine: 11,
-					content: "first: true",
-					attributes: {},
-					role: "pear",
-					language: "yaml",
-				}),
-				payloadListing({
-					id: "rel-delivery",
-					startLine: 14,
-					contentLine: 17,
-					content: "second: true",
-					attributes: {},
-					role: "pear",
-					language: "yaml",
-				}),
-			]),
-			sectionNode(5, "capacity", "Capacity"),
+function ambiguousEdgeValueDocument(): AbundantDocument {
+	return edgeValueDocument({
+		attributes: { "dependency-evidence": "rel-delivery" },
+		sourceValues: [
+			sourceValueListing({
+				id: "rel-delivery",
+				startLine: 8,
+				contentLine: 11,
+				content: "first: true",
+			}),
+			sourceValueListing({
+				id: "rel-delivery",
+				startLine: 14,
+				contentLine: 17,
+				content: "second: true",
+			}),
 		],
-		xrefOccurrences: [xref],
-	};
+	});
 }
 
 function baseDocument(): AbundantDocument {
@@ -421,7 +408,7 @@ function sectionNode(
 		ids: [id],
 		title,
 		idOrigin: "source",
-		span: { startLine, endLine: startLine + 1 },
+		span: { startLine, endLine: startLine + 20 },
 		metadata: [
 			{
 				kind: "metadata",
@@ -439,13 +426,13 @@ function sectionNode(
 	};
 }
 
-function payloadListing(input: {
+function sourceValueListing(input: {
 	readonly id?: string | readonly string[];
 	readonly startLine: number;
 	readonly contentLine: number;
 	readonly content: string;
-	readonly attributes: Record<string, string | boolean>;
-	readonly role?: string;
+	readonly attributes?: Record<string, string | boolean>;
+	readonly roles?: readonly string[];
 	readonly language?: string;
 }): ListingNode {
 	const ids =
@@ -454,13 +441,13 @@ function payloadListing(input: {
 			: typeof input.id === "string"
 				? [input.id]
 				: [...input.id];
-	const rolePart = input.role === undefined ? "" : `.${input.role}`;
+	const roles = [...(input.roles ?? [])];
 
 	return {
 		kind: "listing",
 		ids,
 		style: "source",
-		language: input.language ?? "json",
+		language: input.language ?? "yaml",
 		span: { startLine: input.startLine, endLine: input.startLine + 4 },
 		metadataSpan: { startLine: input.startLine, endLine: input.startLine + 2 },
 		contentSpan: {
@@ -480,33 +467,47 @@ function payloadListing(input: {
 							ids,
 						},
 					]),
-			{
-				kind: "metadata",
-				metadataKind: "attrlist",
-				raw: `[source${rolePart}]`,
+			attrlistMetadata({
 				line: input.startLine + 1,
-				roles: input.role === undefined ? [] : [input.role],
-				attributes: input.attributes,
-			},
+				roles,
+				attributes: input.attributes ?? {},
+			}),
 		],
 	};
 }
 
-function xrefNode(payloadSelector: string): XrefOccurrenceNode {
+function attrlistMetadata(input: {
+	readonly line: number;
+	readonly roles: readonly string[];
+	readonly attributes: Record<string, string | boolean>;
+}): MetadataNode {
+	return {
+		kind: "metadata",
+		metadataKind: "attrlist",
+		raw: "[source]",
+		line: input.line,
+		roles: [...input.roles],
+		attributes: input.attributes,
+	};
+}
+
+function xrefNode(attributes: Record<string, string>): XrefOccurrenceNode {
 	return {
 		kind: "xref",
 		syntax: "macro",
-		raw: `xref:capacity[Capacity, rel=depends-on, payload=${payloadSelector}]`,
+		raw: `xref:capacity[Capacity, rel=depends-on, ${Object.entries(attributes)
+			.map(([name, value]) => `${name}=${value}`)
+			.join(", ")}]`,
 		target: "capacity",
 		label: "Capacity",
 		attributes: {
 			rel: "depends-on",
-			payload: payloadSelector,
+			...attributes,
 		},
 		containingSectionId: "delivery",
 		sourceSpan: {
 			start: { line: 4, column: 1 },
-			end: { line: 4, column: 60 },
+			end: { line: 4, column: 90 },
 		},
 	};
 }
@@ -532,55 +533,33 @@ function onlyResourceOfType(
 	return resources[0] ?? iriTerm("urn:missing-resource");
 }
 
-function onlyPayloadForOwner(
+function onlyIriObject(
 	graph: Rdf12Graph,
-	owner: Rdf12IriTerm,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
 ): Rdf12IriTerm {
-	const payloads = graph
+	const values = graph
 		.match({
-			subject: owner,
-			predicate: aat("payload"),
+			subject,
+			predicate: aat(predicateLocalName),
 		})
 		.map((triple) => triple.object)
 		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
 
-	expect(payloads).toHaveLength(1);
-	return payloads[0] ?? iriTerm("urn:missing-payload");
+	expect(values).toHaveLength(1);
+	return values[0] ?? iriTerm("urn:missing-value");
 }
 
-function onlyPayloadByKind(
+function expectNoIriObjects(
 	graph: Rdf12Graph,
-	kind: "node" | "edge",
-): Rdf12IriTerm {
-	const payloads = graph
-		.match({
-			predicate: aat("payloadKind"),
-			object: stringLiteral(kind),
-		})
-		.map((triple) => triple.subject);
-
-	expect(payloads).toHaveLength(1);
-	return payloads[0] ?? iriTerm("urn:missing-payload");
-}
-
-function expectNoPayloadOwner(graph: Rdf12Graph, payload: Rdf12IriTerm): void {
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+): void {
 	expect(
-		graph.match({
-			predicate: aat("payload"),
-			object: payload,
-		}),
+		graph
+			.match({ subject, predicate: aat(predicateLocalName) })
+			.filter((triple) => triple.object.termType === "iri"),
 	).toHaveLength(0);
-}
-
-function expectNoLegacyPayloadContract(graph: Rdf12Graph): void {
-	expect(
-		graph.match({
-			predicate: rdf("type"),
-			object: aat("PayloadBlock"),
-		}),
-	).toHaveLength(0);
-	expect(graph.match({ predicate: aat("hasPayload") })).toHaveLength(0);
-	expect(graph.match({ predicate: aat("payloadOf") })).toHaveLength(0);
 }
 
 function expectTriple(
@@ -591,17 +570,6 @@ function expectTriple(
 ): void {
 	expect(graph.has(rdf12Triple(subject, aat(predicateLocalName), object))).toBe(
 		true,
-	);
-}
-
-function expectNoTriple(
-	graph: Rdf12Graph,
-	subject: Rdf12IriTerm,
-	predicateLocalName: string,
-	object: Rdf12IriTerm,
-): void {
-	expect(graph.has(rdf12Triple(subject, aat(predicateLocalName), object))).toBe(
-		false,
 	);
 }
 
@@ -618,7 +586,20 @@ function expectLiteral(
 	).toBe(true);
 }
 
-function expectNoLiteralPredicate(
+function expectNoLiteral(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+	value: string,
+): void {
+	expect(
+		graph.has(
+			rdf12Triple(subject, aat(predicateLocalName), stringLiteral(value)),
+		),
+	).toBe(false);
+}
+
+function expectNoPredicate(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
 	predicateLocalName: string,
@@ -653,6 +634,27 @@ function expectInteger(
 			rdf12Triple(subject, aat(predicateLocalName), integerLiteral(value)),
 		),
 	).toBe(true);
+}
+
+function expectForbiddenRawValueFields(
+	graph: Rdf12Graph,
+	value: Rdf12IriTerm,
+): void {
+	for (const predicate of ["payloadKind", "role", "payloadId"]) {
+		expectNoPredicate(graph, value, predicate);
+	}
+	expect(graph.has(rdf12Triple(value, rdf("type"), aat("PayloadBlock")))).toBe(
+		false,
+	);
+	expect(graph.has(rdf12Triple(value, rdf("type"), aat("Heading")))).toBe(
+		false,
+	);
+}
+
+function expectForbiddenPublicPayloadPredicates(graph: Rdf12Graph): void {
+	for (const predicate of ["payload", "payloadSelector"]) {
+		expect(graph.match({ predicate: aat(predicate) })).toHaveLength(0);
+	}
 }
 
 function aat(localName: string): Rdf12IriTerm {

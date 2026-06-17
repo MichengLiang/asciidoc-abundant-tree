@@ -172,16 +172,14 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		expectStringTriple(projection.graph, deliveryPolicy, "status", "active");
 		expectStringTriple(projection.graph, deliveryPolicy, "owner", "ops");
 		expectStringTriple(projection.graph, edge, "weight", "0.8");
-		expectStringTriple(
-			projection.graph,
-			edge,
-			"payloadSelector",
-			"rel-delivery",
-		);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.aat}payloadSelector`),
+			}),
+		).toHaveLength(0);
 		expect(
 			projection.graph.match({
 				predicate: iriTerm(`${namespaces.aat}payload`),
-				object: stringLiteral("rel-delivery"),
 			}),
 		).toHaveLength(0);
 		expect(

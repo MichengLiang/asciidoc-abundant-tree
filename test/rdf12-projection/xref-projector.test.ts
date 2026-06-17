@@ -1,6 +1,10 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { AbundantDocument, XrefOccurrenceNode } from "../../src/model";
+import type {
+	AbundantDocument,
+	ListingNode,
+	XrefOccurrenceNode,
+} from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
@@ -257,7 +261,7 @@ describe("rdf12 xref edge projection", () => {
 		}
 	});
 
-	it("does not use xref payload selectors as target bindings", () => {
+	it("does not use ordinary xref named attributes as target bindings", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			payloadSelectorOnlyDocument(),
 			{
@@ -272,7 +276,8 @@ describe("rdf12 xref edge projection", () => {
 			"targetSelector",
 			"missing-target",
 		);
-		expectStringTriple(projection.graph, edge, "payloadSelector", "delivery");
+		expectStringTriple(projection.graph, edge, "payload", "delivery");
+		expectStringTriple(projection.graph, edge, "payloadSelector", undefined);
 		expect(
 			projection.graph.match({
 				subject: iriTerm(edge),
@@ -285,6 +290,53 @@ describe("rdf12 xref edge projection", () => {
 				predicate: iriTerm(`${namespaces.rdf}reifies`),
 			}),
 		).toHaveLength(0);
+	});
+
+	it("separates source value id use as local target alias from xref complex property binding", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			sourceValueIdAliasDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
+		const delivery = heading(projection.documentIri, "heading-l1-o0");
+		const capacity = heading(projection.documentIri, "heading-l20-o0");
+		const aliasTargetEdge = edgeForSelector(
+			projection.graph,
+			"rel-delivery-capacity",
+			"#xref-edge-l4-c1-o0",
+		);
+		const complexPropertyEdge = edgeForSelector(
+			projection.graph,
+			"capacity",
+			"#xref-edge-l5-c1-o0",
+		);
+		const evidence = onlyObjectIri(
+			projection.graph,
+			complexPropertyEdge,
+			"dependency-evidence",
+		);
+
+		expectTriple(projection.graph, aliasTargetEdge, "sourceHeading", delivery);
+		expectTriple(projection.graph, aliasTargetEdge, "targetHeading", delivery);
+		expectTriple(
+			projection.graph,
+			complexPropertyEdge,
+			"targetHeading",
+			capacity,
+		);
+		expectTriple(
+			projection.graph,
+			complexPropertyEdge,
+			"dependency-evidence",
+			evidence,
+		);
+		expectStringTriple(
+			projection.graph,
+			evidence.value,
+			"sourceValueId",
+			"rel-delivery-capacity",
+		);
 	});
 
 	it("keeps unresolved selectors as edge evidence without relation triples", () => {
@@ -431,7 +483,7 @@ describe("rdf12 xref edge projection", () => {
 		expectTripleTerm(projection.graph, edge, relation);
 	});
 
-	it("maps rel control fields and preserves payload selectors", () => {
+	it("maps rel control fields without payload selector projection", () => {
 		const projection = projectAbundantDocumentToRdf12(relPayloadDocument(), {
 			documentRoot: projectRoot,
 		});
@@ -443,12 +495,7 @@ describe("rdf12 xref edge projection", () => {
 
 		expectStringTriple(projection.graph, edge, "rel", "depends-on");
 		expectStringTriple(projection.graph, edge, "displayLabel", "Target");
-		expectStringTriple(
-			projection.graph,
-			edge,
-			"payloadSelector",
-			"payload-one",
-		);
+		expectStringTriple(projection.graph, edge, "payloadSelector", undefined);
 		expect(projection.graph.has(relation)).toBe(true);
 		expectTripleTerm(projection.graph, edge, relation);
 		expect(
@@ -532,8 +579,14 @@ describe("rdf12 xref edge projection", () => {
 		expectStringTriple(
 			projection.graph,
 			onlyXrefEdge(projection.graph),
-			"payloadSelector",
+			"payload",
 			"rel-delivery-capacity",
+		);
+		expectStringTriple(
+			projection.graph,
+			onlyXrefEdge(projection.graph),
+			"payloadSelector",
+			undefined,
 		);
 	});
 
@@ -694,6 +747,23 @@ function expectTripleTerm(
 			predicate: iriTerm(`${namespaces.rdf}reifies`),
 		})[0]?.object.termType,
 	).toBe("triple");
+}
+
+function onlyObjectIri(
+	graph: Rdf12Graph,
+	subject: string,
+	predicateLocalName: string,
+): Rdf12IriTerm {
+	const objects = graph
+		.match({
+			subject: iriTerm(subject),
+			predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+		})
+		.map((triple) => triple.object)
+		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
+
+	expect(objects).toHaveLength(1);
+	return objects[0] ?? iriTerm("urn:missing-object");
 }
 
 function expectStringTriple(
@@ -918,6 +988,104 @@ function documentTitlePreambleXrefDocument(): AbundantDocument {
 				],
 			},
 			sectionNode(5, "target", "Target"),
+		],
+	};
+}
+
+function sourceValueIdAliasDocument(): AbundantDocument {
+	const aliasTargetXref: XrefOccurrenceNode = {
+		kind: "xref",
+		syntax: "macro",
+		raw: "xref:rel-delivery-capacity[Evidence target]",
+		target: "rel-delivery-capacity",
+		label: "Evidence target",
+		containingSectionId: "delivery",
+		attributes: {},
+		sourceSpan: {
+			start: { line: 4, column: 1 },
+			end: { line: 4, column: 42 },
+		},
+	};
+	const complexPropertyXref: XrefOccurrenceNode = {
+		kind: "xref",
+		syntax: "macro",
+		raw: "xref:capacity[Capacity, dependency-evidence=rel-delivery-capacity]",
+		target: "capacity",
+		label: "Capacity",
+		containingSectionId: "delivery",
+		attributes: {
+			"dependency-evidence": "rel-delivery-capacity",
+		},
+		sourceSpan: {
+			start: { line: 5, column: 1 },
+			end: { line: 5, column: 70 },
+		},
+	};
+
+	return {
+		...baseDocument(),
+		children: [
+			sectionNode(
+				1,
+				"delivery",
+				"Delivery",
+				[
+					{
+						kind: "paragraph",
+						text: "Alias target and complex property target.",
+						source: { span: { startLine: 4, endLine: 5 } },
+						children: [aliasTargetXref, complexPropertyXref],
+					},
+					sourceValueListing("rel-delivery-capacity", 8, 11),
+				],
+				18,
+			),
+			sectionNode(20, "capacity", "Capacity"),
+		],
+		xrefOccurrences: [aliasTargetXref, complexPropertyXref],
+		targets: [
+			{
+				kind: "target",
+				id: "rel-delivery-capacity",
+				targetType: "listing",
+				idOrigin: "source",
+				sourceSpan: {
+					start: { line: 8, column: 1 },
+					end: { line: 8, column: 25 },
+				},
+			},
+		],
+	};
+}
+
+function sourceValueListing(
+	id: string,
+	startLine: number,
+	contentLine: number,
+): ListingNode {
+	return {
+		kind: "listing",
+		ids: [id],
+		style: "source",
+		language: "yaml",
+		span: { startLine, endLine: startLine + 4 },
+		contentSpan: { startLine: contentLine, endLine: contentLine },
+		content: "evidence: true",
+		metadata: [
+			{
+				kind: "metadata",
+				metadataKind: "id",
+				raw: `[#${id}]`,
+				line: startLine,
+				ids: [id],
+			},
+			{
+				kind: "metadata",
+				metadataKind: "attrlist",
+				raw: "[source,yaml]",
+				line: startLine + 1,
+				attributes: { style: "source", language: "yaml" },
+			},
 		],
 	};
 }

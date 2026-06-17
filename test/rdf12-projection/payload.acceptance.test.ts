@@ -16,8 +16,8 @@ const structuralPayloadPath = join(
 	"samples/structural-payload.adoc",
 );
 
-describe("rdf12 payload query contract acceptance", () => {
-	it("binds node and xref payloads as complex properties", () => {
+describe("rdf12 raw value query contract acceptance", () => {
+	it("binds heading and xref raw values as named complex properties", () => {
 		const projection = structuralPayloadProjection();
 		const deliveryPolicy = onlyHeadingForAddressLabel(
 			projection.graph,
@@ -28,51 +28,82 @@ describe("rdf12 payload query contract acceptance", () => {
 			"capacity",
 		);
 		const xrefEdge = onlyXrefEdge(projection.graph);
-		const nodePayload = onlyObjectIri(
+		const policyRiskProfile = onlyObjectIri(
 			projection.graph,
 			deliveryPolicy,
-			"payload",
+			"policy-risk-profile",
 		);
-		const edgePayload = onlyObjectIri(projection.graph, xrefEdge, "payload");
+		const relationEvidence = onlyObjectIri(
+			projection.graph,
+			xrefEdge,
+			"relation-evidence",
+		);
 
-		expectTriple(projection.graph, deliveryPolicy, "payload", nodePayload);
-		expectTriple(projection.graph, xrefEdge, "payload", edgePayload);
-		expectNoTriple(projection.graph, deliveryPolicy, "payload", edgePayload);
-		expectNoTriple(projection.graph, capacityRule, "payload", edgePayload);
+		expectTriple(
+			projection.graph,
+			deliveryPolicy,
+			"policy-risk-profile",
+			policyRiskProfile,
+		);
+		expectTriple(
+			projection.graph,
+			xrefEdge,
+			"relation-evidence",
+			relationEvidence,
+		);
+		expectNoTriple(
+			projection.graph,
+			deliveryPolicy,
+			"relation-evidence",
+			relationEvidence,
+		);
+		expectNoTriple(
+			projection.graph,
+			capacityRule,
+			"relation-evidence",
+			relationEvidence,
+		);
 		expectLiteral(
 			projection.graph,
 			deliveryPolicy,
 			"addressLabel",
-			"rel-delivery",
+			"rel-delivery-capacity",
 		);
 		expectNoLegacyPayloadContract(projection.graph);
 	});
 
-	it("projects payload object facts and keeps payload raw opaque", () => {
+	it("projects raw value object facts and keeps raw opaque", () => {
 		const projection = structuralPayloadProjection();
 		const deliveryPolicy = onlyHeadingForAddressLabel(
 			projection.graph,
 			"delivery",
 		);
 		const xrefEdge = onlyXrefEdge(projection.graph);
-		const nodePayload = onlyObjectIri(
+		const policyRiskProfile = onlyObjectIri(
 			projection.graph,
 			deliveryPolicy,
-			"payload",
+			"policy-risk-profile",
 		);
-		const edgePayload = onlyObjectIri(projection.graph, xrefEdge, "payload");
+		const relationEvidence = onlyObjectIri(
+			projection.graph,
+			xrefEdge,
+			"relation-evidence",
+		);
 
-		expectLiteral(projection.graph, nodePayload, "payloadKind", "node");
-		expectLiteral(projection.graph, nodePayload, "role", "banana");
-		expectLiteral(projection.graph, nodePayload, "forSelector", "delivery");
-		expectLiteral(projection.graph, nodePayload, "format", "json");
-		expectNoLiteral(projection.graph, nodePayload, "payloadId");
-		expectLineSpan(projection.graph, nodePayload, 10, 23);
-		expectInteger(projection.graph, nodePayload, "contentStartLine", 13);
-		expectInteger(projection.graph, nodePayload, "contentEndLine", 22);
+		expectForbiddenRawValueFields(projection.graph, policyRiskProfile);
 		expectLiteral(
 			projection.graph,
-			nodePayload,
+			policyRiskProfile,
+			"forSelector",
+			"delivery",
+		);
+		expectLiteral(projection.graph, policyRiskProfile, "format", "json");
+		expectLineSpan(projection.graph, policyRiskProfile, 10, 23);
+		expectInteger(projection.graph, policyRiskProfile, "contentStartLine", 13);
+		expectInteger(projection.graph, policyRiskProfile, "contentEndLine", 22);
+		expectLiteral(
+			projection.graph,
+			policyRiskProfile,
 			"raw",
 			`{
   "owner": {
@@ -85,16 +116,20 @@ describe("rdf12 payload query contract acceptance", () => {
   }
 }`,
 		);
-		expectLiteral(projection.graph, edgePayload, "payloadKind", "edge");
-		expectLiteral(projection.graph, edgePayload, "payloadId", "rel-delivery");
-		expectLiteral(projection.graph, edgePayload, "role", "pear");
-		expectLiteral(projection.graph, edgePayload, "format", "yaml");
-		expectLineSpan(projection.graph, edgePayload, 25, 37);
-		expectInteger(projection.graph, edgePayload, "contentStartLine", 28);
-		expectInteger(projection.graph, edgePayload, "contentEndLine", 36);
+		expectForbiddenRawValueFields(projection.graph, relationEvidence);
 		expectLiteral(
 			projection.graph,
-			edgePayload,
+			relationEvidence,
+			"sourceValueId",
+			"rel-delivery-capacity",
+		);
+		expectLiteral(projection.graph, relationEvidence, "format", "yaml");
+		expectLineSpan(projection.graph, relationEvidence, 25, 37);
+		expectInteger(projection.graph, relationEvidence, "contentStartLine", 28);
+		expectInteger(projection.graph, relationEvidence, "contentEndLine", 36);
+		expectLiteral(
+			projection.graph,
+			relationEvidence,
 			"raw",
 			`reason:
   type: risk-control
@@ -109,29 +144,33 @@ edge:
 
 		for (const predicate of ["owner", "risk", "reason", "edge"].map(aat)) {
 			expect(
-				projection.graph.match({ subject: nodePayload, predicate }),
+				projection.graph.match({ subject: policyRiskProfile, predicate }),
 			).toHaveLength(0);
 			expect(
-				projection.graph.match({ subject: edgePayload, predicate }),
+				projection.graph.match({ subject: relationEvidence, predicate }),
 			).toHaveLength(0);
 		}
 	});
 
-	it("does not make payload objects into structure or xref target nodes", () => {
+	it("does not make raw value objects into structure or xref target nodes", () => {
 		const projection = structuralPayloadProjection();
 		const deliveryPolicy = onlyHeadingForAddressLabel(
 			projection.graph,
 			"delivery",
 		);
 		const xrefEdge = onlyXrefEdge(projection.graph);
-		const nodePayload = onlyObjectIri(
+		const policyRiskProfile = onlyObjectIri(
 			projection.graph,
 			deliveryPolicy,
-			"payload",
+			"policy-risk-profile",
 		);
-		const edgePayload = onlyObjectIri(projection.graph, xrefEdge, "payload");
+		const relationEvidence = onlyObjectIri(
+			projection.graph,
+			xrefEdge,
+			"relation-evidence",
+		);
 
-		for (const payload of [nodePayload, edgePayload]) {
+		for (const payload of [policyRiskProfile, relationEvidence]) {
 			expect(
 				projection.graph.has(rdf12Triple(payload, rdf("type"), aat("Heading"))),
 			).toBe(false);
@@ -223,6 +262,8 @@ function expectNoLegacyPayloadContract(graph: Rdf12Graph): void {
 	).toHaveLength(0);
 	expect(graph.match({ predicate: aat("hasPayload") })).toHaveLength(0);
 	expect(graph.match({ predicate: aat("payloadOf") })).toHaveLength(0);
+	expect(graph.match({ predicate: aat("payload") })).toHaveLength(0);
+	expect(graph.match({ predicate: aat("payloadSelector") })).toHaveLength(0);
 }
 
 function expectTriple(
@@ -260,17 +301,16 @@ function expectLiteral(
 	).toBe(true);
 }
 
-function expectNoLiteral(
+function expectForbiddenRawValueFields(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
 ): void {
+	for (const predicate of ["payloadKind", "role", "payloadId"].map(aat)) {
+		expect(graph.match({ subject, predicate })).toHaveLength(0);
+	}
 	expect(
-		graph.match({
-			subject,
-			predicate: aat(predicateLocalName),
-		}),
-	).toHaveLength(0);
+		graph.has(rdf12Triple(subject, rdf("type"), aat("PayloadBlock"))),
+	).toBe(false);
 }
 
 function expectLineSpan(

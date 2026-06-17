@@ -48,7 +48,13 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		).not.toThrow();
 		expectResourceTypeCount(parsed, aatTerm("Heading"), 4);
 		expectHeadingByAddressLabel(parsed, "delivery", "配送策略", 5, 38);
-		expectHeadingByAddressLabel(parsed, "rel-delivery", "配送策略", 5, 38);
+		expectHeadingByAddressLabel(
+			parsed,
+			"rel-delivery-capacity",
+			"配送策略",
+			5,
+			38,
+		);
 		expectHeadingByHeadline(parsed, "运力规则", 39, 43);
 		expectHeadingRaw(
 			parsed,
@@ -131,7 +137,7 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectTriple(graph, edge, aatTerm("weight"), stringLiteral("0.8"));
 	});
 
-	it("exposes node and edge payload complex properties", () => {
+	it("exposes heading and xref edge complex properties through field predicates", () => {
 		const result = rdf12(
 			parseAbundantTree({ sourcePath: structuralPayloadPath }),
 			{
@@ -141,7 +147,6 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		const graph = parseTurtleToRdf12Graph(result.ttl);
 		const heading = headingLookupFromGraph(graph);
 		const deliveryPolicy = heading("配送策略");
-		const capacityRule = heading("运力规则");
 		const edge = graph.match({
 			predicate: aatTerm("sourceHeading"),
 			object: deliveryPolicy,
@@ -149,48 +154,52 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		if (edge === undefined) {
 			throw new Error("expected delivery policy xref edge");
 		}
-		const nodePayload = onlyObjectIri(
+		const policyRiskProfile = onlyObjectIri(
 			graph,
 			deliveryPolicy,
-			aatTerm("payload"),
+			aatTerm("policy-risk-profile"),
 		);
-		const edgePayload = onlyObjectIri(graph, edge, aatTerm("payload"));
+		const relationEvidence = onlyObjectIri(
+			graph,
+			edge,
+			aatTerm("relation-evidence"),
+		);
 
-		expectTriple(graph, deliveryPolicy, aatTerm("payload"), nodePayload);
-		expectTriple(graph, edge, aatTerm("payload"), edgePayload);
-		expect(
-			graph.has(rdf12Triple(capacityRule, aatTerm("payload"), edgePayload)),
-		).toBe(false);
 		expectTriple(
 			graph,
-			nodePayload,
-			aatTerm("payloadKind"),
-			stringLiteral("node"),
+			deliveryPolicy,
+			aatTerm("policy-risk-profile"),
+			policyRiskProfile,
 		);
-		expectTriple(graph, nodePayload, aatTerm("role"), stringLiteral("banana"));
+		expectTriple(graph, edge, aatTerm("relation-evidence"), relationEvidence);
 		expectTriple(
 			graph,
-			nodePayload,
+			policyRiskProfile,
 			aatTerm("forSelector"),
 			stringLiteral("delivery"),
 		);
 		expect(
-			graph.match({ subject: nodePayload, predicate: aatTerm("payloadId") }),
+			graph.match({ subject: policyRiskProfile, predicate: aatTerm("role") }),
 		).toHaveLength(0);
 		expectTriple(
 			graph,
-			edgePayload,
-			aatTerm("payloadKind"),
-			stringLiteral("edge"),
+			relationEvidence,
+			aatTerm("format"),
+			stringLiteral("yaml"),
 		);
-		expectTriple(graph, edgePayload, aatTerm("role"), stringLiteral("pear"));
-		expectTriple(graph, edgePayload, aatTerm("format"), stringLiteral("yaml"));
 		expectTriple(
 			graph,
-			edgePayload,
-			aatTerm("payloadId"),
-			stringLiteral("rel-delivery"),
+			relationEvidence,
+			aatTerm("sourceValueId"),
+			stringLiteral("rel-delivery-capacity"),
 		);
+		for (const subject of [policyRiskProfile, relationEvidence]) {
+			for (const predicate of ["payloadKind", "role", "payloadId"].map(
+				aatTerm,
+			)) {
+				expect(graph.match({ subject, predicate })).toHaveLength(0);
+			}
+		}
 	});
 
 	it("supports direct field predicate queries on headings", () => {
@@ -256,6 +265,8 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			"hasLabel",
 			"hasPayload",
 			"payloadOf",
+			"payload",
+			"payloadSelector",
 			"sourceNode",
 			"targetNode",
 			"rawRel",

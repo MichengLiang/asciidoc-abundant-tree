@@ -127,7 +127,6 @@ function projectXref(
 	const sourceHeading = writeSourceBinding(context, xrefIri, xref);
 	const targetHeading = writeTargetBinding(context, xrefIri, xref);
 	const rawRel = stringAttribute(xref.attributes, "rel");
-	const payloadSelector = stringAttribute(xref.attributes, "payload");
 	const predicateMapping = mapRelationPredicate(
 		rawRel,
 		context.options.relationPrefixMap,
@@ -135,9 +134,6 @@ function projectXref(
 
 	if (predicateMapping.rawRel !== undefined) {
 		addStringTriple(context.graph, xrefIri, "rel", predicateMapping.rawRel);
-	}
-	if (payloadSelector !== undefined) {
-		addStringTriple(context.graph, xrefIri, "payloadSelector", payloadSelector);
 	}
 	if (
 		sourceHeading !== undefined &&
