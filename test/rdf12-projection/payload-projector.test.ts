@@ -263,6 +263,63 @@ review_team: quality-ops
 		expectLiteral(projection.graph, edge, "weight", "0.8");
 	});
 
+	it("reuses one raw value object when multiple xref edges bind the same source value id", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			twoEdgeSharedValueDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const [firstEdge, secondEdge] = xrefEdgesInOrder(projection.graph);
+		const firstValue = onlyIriObject(
+			projection.graph,
+			firstEdge ?? iriTerm("urn:missing-first-edge"),
+			"dependency-evidence",
+		);
+		const secondValue = onlyIriObject(
+			projection.graph,
+			secondEdge ?? iriTerm("urn:missing-second-edge"),
+			"dependency-evidence",
+		);
+
+		expect(firstValue).toEqual(secondValue);
+		expect(
+			projection.graph.match({
+				predicate: aat("sourceValueId"),
+				object: stringLiteral("rel-delivery"),
+			}),
+		).toHaveLength(1);
+	});
+
+	it("reuses one raw value object when two fields on one xref bind the same source value id", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			edgeValueDocument({
+				attributes: {
+					"dependency-evidence": "rel-delivery",
+					"review-procedure": "rel-delivery",
+				},
+			}),
+			{ documentRoot: projectRoot },
+		);
+		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
+		const dependencyEvidence = onlyIriObject(
+			projection.graph,
+			edge,
+			"dependency-evidence",
+		);
+		const reviewProcedure = onlyIriObject(
+			projection.graph,
+			edge,
+			"review-procedure",
+		);
+
+		expect(dependencyEvidence).toEqual(reviewProcedure);
+		expect(
+			projection.graph.match({
+				predicate: aat("sourceValueId"),
+				object: stringLiteral("rel-delivery"),
+			}),
+		).toHaveLength(1);
+	});
+
 	it("derives raw value format only from listing language", () => {
 		const projection = projectAbundantDocumentToRdf12(
 			headingValueDocument({
@@ -382,6 +439,33 @@ function ambiguousEdgeValueDocument(): AbundantDocument {
 	});
 }
 
+function twoEdgeSharedValueDocument(): AbundantDocument {
+	const firstXref = xrefNode({ "dependency-evidence": "rel-delivery" }, 4);
+	const secondXref = xrefNode({ "dependency-evidence": "rel-delivery" }, 5);
+
+	return {
+		...baseDocument(),
+		children: [
+			sectionNode(1, "delivery", "Delivery", [
+				{
+					kind: "paragraph",
+					text: "See capacity twice.",
+					source: { span: { startLine: 4, endLine: 5 } },
+					children: [firstXref, secondXref],
+				},
+				sourceValueListing({
+					id: "rel-delivery",
+					startLine: 8,
+					contentLine: 11,
+					content: "reason: risk-control",
+				}),
+			]),
+			sectionNode(20, "capacity", "Capacity"),
+		],
+		xrefOccurrences: [firstXref, secondXref],
+	};
+}
+
 function baseDocument(): AbundantDocument {
 	return {
 		kind: "document",
@@ -491,7 +575,10 @@ function attrlistMetadata(input: {
 	};
 }
 
-function xrefNode(attributes: Record<string, string>): XrefOccurrenceNode {
+function xrefNode(
+	attributes: Record<string, string>,
+	line = 4,
+): XrefOccurrenceNode {
 	return {
 		kind: "xref",
 		syntax: "macro",
@@ -506,8 +593,8 @@ function xrefNode(attributes: Record<string, string>): XrefOccurrenceNode {
 		},
 		containingSectionId: "delivery",
 		sourceSpan: {
-			start: { line: 4, column: 1 },
-			end: { line: 4, column: 90 },
+			start: { line, column: 1 },
+			end: { line, column: 90 },
 		},
 	};
 }
@@ -531,6 +618,38 @@ function onlyResourceOfType(
 
 	expect(resources).toHaveLength(1);
 	return resources[0] ?? iriTerm("urn:missing-resource");
+}
+
+function xrefEdgesInOrder(graph: Rdf12Graph): Rdf12IriTerm[] {
+	return graph
+		.match({
+			predicate: rdf("type"),
+			object: aat("XrefEdge"),
+		})
+		.map((triple) => triple.subject)
+		.toSorted((left, right) => {
+			return (
+				Number(literalValue(graph, left, "startLine")) -
+				Number(literalValue(graph, right, "startLine"))
+			);
+		});
+}
+
+function literalValue(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateLocalName: string,
+): string {
+	const [value] = graph
+		.match({ subject, predicate: aat(predicateLocalName) })
+		.flatMap((triple) =>
+			triple.object.termType === "literal" ? [triple.object.value] : [],
+		);
+
+	if (value === undefined) {
+		throw new Error(`expected literal ${predicateLocalName}`);
+	}
+	return value;
 }
 
 function onlyIriObject(

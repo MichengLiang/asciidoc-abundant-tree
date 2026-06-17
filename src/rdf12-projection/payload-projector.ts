@@ -44,6 +44,7 @@ type ComplexPropertyProjectorContext = ProjectPayloadBlocksInput & {
 		string,
 		readonly SourceValueBlockEntry[]
 	>;
+	readonly rawValueBySourceValue: WeakMap<SourceValueBlockEntry, Rdf12IriTerm>;
 };
 
 type SourceValueBlockEntry = {
@@ -73,6 +74,7 @@ export function projectPayloadBlocks(input: ProjectPayloadBlocksInput): void {
 		ordinalAllocator: createOrdinalAllocator(),
 		sourceValues,
 		sourceValuesById: indexSourceValuesById(sourceValues),
+		rawValueBySourceValue: new WeakMap(),
 	};
 
 	for (const entry of sourceValues) {
@@ -172,7 +174,7 @@ function projectHeadingComplexProperty(
 	if (owner === undefined) {
 		return;
 	}
-	const value = createRawValueObject(context, entry);
+	const value = rawValueObjectFor(context, entry);
 
 	context.graph.add(rdf12Triple(owner, fieldPredicate(fieldName), value));
 	if (marker.kind === "selector") {
@@ -214,7 +216,7 @@ function projectXrefFields(
 			continue;
 		}
 
-		const rawValueObject = createRawValueObject(context, sourceValue);
+		const rawValueObject = rawValueObjectFor(context, sourceValue);
 		context.graph.add(
 			rdf12Triple(entry.iri, fieldPredicate(fieldName), rawValueObject),
 		);
@@ -228,6 +230,20 @@ function uniqueSourceValueForId(
 ): SourceValueBlockEntry | undefined {
 	const matches = context.sourceValuesById.get(id) ?? [];
 	return matches.length === 1 ? matches[0] : undefined;
+}
+
+function rawValueObjectFor(
+	context: ComplexPropertyProjectorContext,
+	entry: SourceValueBlockEntry,
+): Rdf12IriTerm {
+	const existing = context.rawValueBySourceValue.get(entry);
+	if (existing !== undefined) {
+		return existing;
+	}
+
+	const value = createRawValueObject(context, entry);
+	context.rawValueBySourceValue.set(entry, value);
+	return value;
 }
 
 function createRawValueObject(
