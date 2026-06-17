@@ -6,6 +6,20 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.17 - 2026-06-17
+
+### Changed
+
+- Changed RDF 1.2 complex data projection so heading nodes and xref edge evidence expose complex properties through field predicates instead of the generic `aat:payload` query path.
+- Updated the canonical cold-chain sample, structural projection sample, README documentation, 06 RDF12 specification book, and cold-chain consumer script to use complex property and raw value object terminology.
+- Updated animation YAML export fixtures and query contracts to consume raw value objects through business field predicates such as `aat:policy-risk-profile`, `aat:relation-evidence`, `aat:release-policy-config`, `aat:review-playbook`, and `aat:dependency-evidence`.
+
+### Fixed
+
+- Removed public RDF emission of `aat:payload`, `aat:payloadSelector`, `aat:payloadKind`, raw value object `aat:role`, and `aat:payloadId` from the complex property query contract.
+- Added xref named-attribute matching for source value ids, including literal fallback for unmatched or ambiguous values and support for multiple complex properties on the same xref edge evidence.
+- Preserved source value ids as local non-heading target aliases for owning headings while keeping xref target selector binding separate from xref complex property source-value binding.
+
 ## 0.1.16 - 2026-06-17
 
 ### Added
