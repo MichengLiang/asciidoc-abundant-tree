@@ -1,6 +1,6 @@
 # Book-Entry Official Reader Include Preprocessing Coordination State
 
-Last updated: 2026-06-17 10:54:04 CST.
+Last updated: 2026-06-17 10:58:00 CST.
 
 ## Role Boundary
 
@@ -200,7 +200,7 @@ Coordinator review notes:
 
 Goal: run the full acceptance command set, verify the workspace page-map failure class, remove transitional dead code if appropriate, and close any design gaps.
 
-Status: implemented; coverage remediation completed after coordinator review.
+Status: accepted after coordinator review and coverage remediation.
 
 Implementation commit: recorded by worker final response after commit creation.
 
@@ -218,7 +218,14 @@ fd -a 'asciidoc-multi-book-workspace|multi-book|page-map' /home/t103o/workbench 
 # found /home/t103o/workbench/notes/关于AsciiDoc/asciidoc-multi-book-workspace/
 ```
 
-The found workspace does not contain an `asciidoc-abundant-tree` dependency or page-map build script. The worker therefore used the current package's built CLI against the real workspace book that contains the original failure-class fixture:
+The found workspace does not contain an `asciidoc-abundant-tree` dependency, page-map build script, or abundant-tree integration point. The coordinator confirmed this with a bounded search:
+
+```bash
+rg 'page-map|pageMap|reader page|asciidoc-abundant-tree|abundant' /home/t103o/workbench/notes/关于AsciiDoc/asciidoc-multi-book-workspace --glob '!node_modules/**' --glob '!build/**'
+# no matches
+```
+
+The current package's built CLI was therefore used against the real workspace book that contains the original failure-class fixture:
 
 ```bash
 pnpm build
@@ -259,6 +266,36 @@ node dist/cli.mjs test/book-entry/fixtures/official-reader-book/book.adoc --mode
 # passed with JSON checks for included chapter, tagged listing, sourceFiles, and absence of include.unsupported-attrlist
 ```
 
+Coordinator verification:
+
+```bash
+pnpm lint
+# passed, Biome checked 163 files
+
+pnpm typecheck
+# passed
+
+pnpm test
+# passed, 65 files / 498 tests; stderr output was clean
+
+pnpm build
+# passed, dist/cli.mjs produced
+
+pnpm smoke:cli
+# passed
+
+node dist/cli.mjs test/book-entry/fixtures/official-reader-book/book.adoc --mode book-entry --document-root test/book-entry/fixtures/official-reader-book --format json
+# passed with JSON checks for included chapters, tagged listing content, sourceFiles, and no include.unsupported-attrlist
+
+node dist/cli.mjs /home/t103o/workbench/notes/关于AsciiDoc/asciidoc-multi-book-workspace/books/03-technical-book-workflow/book.adoc --mode book-entry --document-root /home/t103o/workbench/notes/关于AsciiDoc/asciidoc-multi-book-workspace --format json
+# passed with JSON checks:
+# parseSucceeded true
+# chapterWithSourceBlock true
+# taggedListingContent true
+# multiSourceListingContract true
+# noUnsupportedAttrlist true
+```
+
 Initial coverage command result:
 
 ```bash
@@ -288,7 +325,7 @@ Remaining known risk:
 
 Goal: make the design-required `pnpm test:coverage` acceptance command pass without lowering thresholds, excluding files, or adding assertion-free execution tests.
 
-Status: implemented, pending coordinator review.
+Status: accepted after coordinator review.
 
 Coverage remediation changes:
 
@@ -311,6 +348,14 @@ pnpm typecheck
 # passed
 ```
 
+Coordinator verification:
+
+```bash
+pnpm test:coverage
+# passed, 65 files / 498 tests
+# statements 96.22%, branches 90.02%, functions 99.23%, lines 96.17%
+```
+
 ## Current Dispatch
 
-Batch 1, Batch 2, and Batch 3 are accepted. Batch 4 hardening is partially accepted, and the coverage remediation follow-up is ready for coordinator review.
+All implementation batches are accepted. The design acceptance command set has passed on current HEAD, with workspace failure-class evidence recorded above.
