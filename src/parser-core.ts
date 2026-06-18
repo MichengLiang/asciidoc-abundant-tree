@@ -7,6 +7,7 @@ import {
 	recoverSourceAwareDocumentTitleSourceLayer,
 	sourceAwareDocumentForLineTable,
 } from "./book-entry/source-aware-coordinate";
+import { attachHeadingDescriptionMetadata } from "./heading-description-metadata";
 import type { AbundantDocument, AsciidoctorLayer, ParserInfo } from "./model";
 import { definedObject } from "./object-utils";
 import { projectOfficialDocument } from "./official-projector";
@@ -53,7 +54,7 @@ export function parseAsciidoctorDocument(
 	bindXrefs(sourceSurfaces.xrefOccurrences, officialProjection.targets);
 	const titleSource = documentTitleSource(input.lineTable);
 
-	return {
+	const document: AbundantDocument = {
 		kind: "document",
 		sourcePath: input.sourcePath,
 		sourceText: input.sourceText,
@@ -77,6 +78,7 @@ export function parseAsciidoctorDocument(
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
 		toolDiagnostics: sourceSurfaces.toolDiagnostics,
 	};
+	return attachHeadingDescriptionMetadata(document);
 }
 
 function documentTitleSource(lineTable: LineTable) {

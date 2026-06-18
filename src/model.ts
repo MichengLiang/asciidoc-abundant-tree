@@ -89,6 +89,7 @@ export type SectionNode = NodeBase & {
 	titleSpan?: SourceSpan;
 	idOrigin: "source" | "asciidoctor-generated" | "unknown";
 	metadata?: MetadataNode[];
+	descriptionMetadata?: HeadingDescriptionMetadataNode;
 };
 
 export type ParagraphNode = NodeBase & {
@@ -153,6 +154,20 @@ export type DescriptionNode = NodeBase & {
 	sourceSpan?: SourceSpan;
 };
 
+export type HeadingDescriptionMetadataNode = NodeBase & {
+	kind: "headingDescriptionMetadata";
+	fields: Record<string, string>;
+	entries: HeadingDescriptionMetadataEntry[];
+	source?: SourceLayer;
+};
+
+export type HeadingDescriptionMetadataEntry = {
+	key: string;
+	value: string;
+	term: DescriptionTermNode;
+	description?: DescriptionNode;
+};
+
 export type XrefOccurrenceNode = NodeBase & {
 	kind: "xref";
 	syntax: "shorthand" | "macro";
@@ -205,6 +220,7 @@ export type AbundantNode =
 	| DescriptionListItemNode
 	| DescriptionTermNode
 	| DescriptionNode
+	| HeadingDescriptionMetadataNode
 	| MetadataNode
 	| XrefOccurrenceNode
 	| AnchorOccurrenceNode
