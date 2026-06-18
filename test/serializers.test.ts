@@ -102,6 +102,50 @@ describe("serializers", () => {
 		);
 	});
 
+	it("formats heading description metadata before children", () => {
+		const headingDescriptionDocument = documentWithDescriptionMetadata({
+			kind: "paragraph",
+			text: "正文",
+		});
+		const output = formatAbundantTree(headingDescriptionDocument);
+		const json = serializeAbundantTreeToJson(headingDescriptionDocument);
+
+		expect(output.indexOf("        metadata[]")).toBeLessThan(
+			output.indexOf("        <headingDescriptionMetadata>"),
+		);
+		expect(output.indexOf("        <headingDescriptionMetadata>")).toBeLessThan(
+			output.indexOf("        children[]"),
+		);
+		const section = json.children[0];
+		expect(section?.kind).toBe("section");
+		if (section?.kind !== "section") {
+			throw new Error("missing section");
+		}
+		expect(section.descriptionMetadata?.fields).toEqual({
+			color: "red",
+			description: "Line one.\nLine two.",
+		});
+	});
+
+	it("formats multiline heading description metadata fields as indented body lines", () => {
+		const output = formatAbundantTree(
+			documentWithDescriptionMetadata({
+				kind: "paragraph",
+				text: "正文",
+			}),
+		);
+
+		expect(output).not.toContain('description="Line one.\n');
+		expect(output).toContain(
+			[
+				'                <fields color="red">',
+				"                    description:",
+				"                        Line one.",
+				"                        Line two.",
+			].join("\n"),
+		);
+	});
+
 	it("prints one sourceSpan when a node source layer carries the same span", () => {
 		const sourceSpan = {
 			start: { line: 10, column: 100 },
@@ -311,4 +355,53 @@ describe("serializers", () => {
 
 function acceptSourceSpan(span: SourceSpan): SourceSpan {
 	return span;
+}
+
+function documentWithDescriptionMetadata(
+	child: AbundantDocument["children"][number],
+): AbundantDocument {
+	const term = {
+		kind: "descriptionTerm" as const,
+		text: "color",
+	};
+	const description = {
+		kind: "description" as const,
+		text: "red",
+	};
+	return {
+		...document,
+		children: [
+			{
+				kind: "section",
+				level: 1,
+				ids: ["apple"],
+				title: "大苹果",
+				idOrigin: "source",
+				metadata: [
+					{
+						kind: "metadata",
+						metadataKind: "attrlist",
+						raw: "[type=fruit]",
+						attributes: { type: "fruit" },
+					},
+				],
+				descriptionMetadata: {
+					kind: "headingDescriptionMetadata",
+					fields: {
+						color: "red",
+						description: "Line one.\nLine two.",
+					},
+					entries: [
+						{
+							key: "color",
+							value: "red",
+							term,
+							description,
+						},
+					],
+				},
+				children: [child],
+			},
+		],
+	};
 }
