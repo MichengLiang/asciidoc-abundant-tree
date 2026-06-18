@@ -2,6 +2,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { AbundantDocument, ListingNode } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
+import { fieldPredicate } from "../../src/rdf12-projection/field-predicate";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
@@ -88,6 +89,80 @@ describe("rdf12 direct field predicate projection", () => {
 			edge,
 			`${namespaces.aat}field-9priority`,
 			"urgent",
+		);
+		expectNoPublicAttributeResources(projection.graph);
+	});
+
+	it("projects heading description metadata fields as direct predicates", () => {
+		const path = writeFixture(
+			"rdf12-heading-description-metadata.adoc",
+			`= Probe
+
+== 大苹果
+
+颜色:: 红色
+描述::
+第一行
+第二行
+`,
+		);
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({ sourcePath: path }),
+			{ documentRoot: projectRoot },
+		);
+		const heading = onlyHeadingWithLiteral(
+			projection.graph,
+			"headline",
+			"大苹果",
+		);
+
+		expectTripleWithPredicateIri(
+			projection.graph,
+			heading,
+			fieldPredicate("颜色").value,
+			"红色",
+		);
+		expectTripleWithPredicateIri(
+			projection.graph,
+			heading,
+			fieldPredicate("描述").value,
+			"第一行\n第二行",
+		);
+		expectNoPublicAttributeResources(projection.graph);
+	});
+
+	it("does not project nested failed heading description metadata fields", () => {
+		const path = writeFixture(
+			"rdf12-heading-description-metadata-nested.adoc",
+			`= Probe
+
+== Nested
+
+fruits:: 2个
+pear::: 3个
+`,
+		);
+		const projection = projectAbundantDocumentToRdf12(
+			parseAbundantTree({ sourcePath: path }),
+			{ documentRoot: projectRoot },
+		);
+		const heading = onlyHeadingWithLiteral(
+			projection.graph,
+			"headline",
+			"Nested",
+		);
+
+		expectNoTripleWithPredicateIri(
+			projection.graph,
+			heading,
+			fieldPredicate("fruits").value,
+			"2个",
+		);
+		expectNoTripleWithPredicateIri(
+			projection.graph,
+			heading,
+			fieldPredicate("pear").value,
+			"3个",
 		);
 		expectNoPublicAttributeResources(projection.graph);
 	});
@@ -338,6 +413,19 @@ function expectTripleWithPredicateIri(
 			rdf12Triple(subject, iriTerm(predicateIri), stringLiteral(value)),
 		),
 	).toBe(true);
+}
+
+function expectNoTripleWithPredicateIri(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	predicateIri: string,
+	value: string,
+): void {
+	expect(
+		graph.has(
+			rdf12Triple(subject, iriTerm(predicateIri), stringLiteral(value)),
+		),
+	).toBe(false);
 }
 
 function expectNoPublicAttributeResources(graph: Rdf12Graph): void {

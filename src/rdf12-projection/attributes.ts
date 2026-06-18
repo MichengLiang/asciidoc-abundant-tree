@@ -32,6 +32,7 @@ function projectNodeAttributes(
 ): void {
 	if (node.kind === "section") {
 		projectHeadingMetadataAttributes(graph, nodeIndex, node, node.metadata);
+		projectHeadingDescriptionMetadataAttributes(graph, nodeIndex, node);
 	}
 
 	for (const child of node.children ?? []) {
@@ -60,6 +61,26 @@ function projectHeadingMetadataAttributes(
 		for (const [name, value] of Object.entries(item.attributes)) {
 			addFieldTriple(graph, owner, name, String(value));
 		}
+	}
+}
+
+function projectHeadingDescriptionMetadataAttributes(
+	graph: Rdf12Graph,
+	nodeIndex: Rdf12NodeIndex,
+	node: AbundantNode,
+): void {
+	if (node.kind !== "section") {
+		return;
+	}
+	const owner = nodeIndex.get(node);
+	if (owner === undefined) {
+		return;
+	}
+
+	for (const [name, value] of Object.entries(
+		node.descriptionMetadata?.fields ?? {},
+	)) {
+		addFieldTriple(graph, owner, name, value);
 	}
 }
 
