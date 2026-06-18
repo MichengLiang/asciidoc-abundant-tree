@@ -1,0 +1,2057 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#activity> a prov:Activity, aat:ProjectionActivity;
+    prov:used <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#source>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l1-o0> a aat:Heading;
+    aat:containsDirectly <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l13-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l166-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l182-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l226-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l235-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l275-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l288-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l338-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l361-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l413-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l428-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l444-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l74-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l87-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:contentEndLine 11;
+    aat:contentStartLine 2;
+    aat:documentOrder 1;
+    aat:endLine 12;
+    aat:headingLevel 0;
+    aat:headingLine 1;
+    aat:headline "红楼梦人物志";
+    aat:raw """= 红楼梦人物志
+弥澄亮
+v0.2, 2026-05
+:doctype: article
+:idprefix:
+:idseparator: -
+:toc: left
+
+本文以 AsciiDoc 结构化写作的方式，梳理《红楼梦》核心人物及其关系。
+每个二级标题是一个人物，xref 宏承载人物之间的语义关系（rel=），
+投影工具可自动提取为知识图谱。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 1.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0> a aat:Heading;
+    aat:addressLabel "jialian";
+    aat:childOrder 8;
+    aat:contentEndLine 140;
+    aat:contentStartLine 130;
+    aat:documentOrder 9;
+    aat:endLine 141;
+    aat:faction "荣国府";
+    aat:gender "男";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 128;
+    aat:headline "贾琏";
+    aat:metadataEndLine 127;
+    aat:metadataStartLine 127;
+    aat:raw """[#jialian.section, faction=荣国府, gender=男, generation=第四代]
+== 贾琏
+
+荣国府长房长孙，捐了个同知。
+为人精明能干，却好色成性。
+与 xref:王熙凤[王熙凤, rel=married-to, weight=0.5] 是"凤姐琏二爷"，
+夫妻二人掌管荣国府内务。
+
+他偷娶尤二姐为外室，被王熙凤发现后设法逼死尤二姐，
+这是全书最残忍的情节之一。
+贾琏对此怀恨在心，夫妻关系名存实亡。
+
+他与 xref:贾宝玉[贾宝玉, rel=brother-of, weight=0.3] 是堂兄弟，
+性格截然不同——一个务实，一个务虚。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 127;
+    rel:brother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l13-o0> a aat:Heading;
+    aat:childOrder 1;
+    aat:contentEndLine 23;
+    aat:contentStartLine 15;
+    aat:documentOrder 2;
+    aat:endLine 24;
+    aat:generatedAddressLabel "贾府概况";
+    aat:headingLevel 1;
+    aat:headingLine 13;
+    aat:headline "贾府概况";
+    aat:raw """== 贾府概况
+
+贾府分宁、荣二公之后，以荣国府为主线。
+府中四代人，从贾母的慈威并施，到宝玉的叛逆出走，
+写尽了一个钟鸣鼎食之家由盛转衰的全过程。
+
+宁国府一支以贾珍为首，荒淫无度，先一步败落。
+荣国府则在贾母的庇护下多撑了几年，
+最终也难逃抄家之运。
+
+// 荣国府 · 第二代
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 13.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0> a aat:Heading;
+    aat:addressLabel "wangxifeng";
+    aat:childOrder 9;
+    aat:contentEndLine 164;
+    aat:contentStartLine 145;
+    aat:documentOrder 10;
+    aat:endLine 165;
+    aat:faction "荣国府";
+    aat:gender "女";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 143;
+    aat:headline "王熙凤";
+    aat:metadataEndLine 142;
+    aat:metadataStartLine 142;
+    aat:raw """[#wangxifeng.section, faction=荣国府, gender=女, generation=第四代]
+== 王熙凤
+
+荣国府的实际管家人，人称"凤辣子"。
+xref:王夫人[王夫人, rel=niece-of, weight=0.6] 的内侄女，
+xref:贾琏[贾琏, rel=married-to, weight=0.5] 的妻子。
+
+她精明能干、八面玲珑，把偌大一个荣国府打理得井井有条。
+"协理宁国府"一回最见她的才干——
+秦可卿去世后她受命料理丧事，事无巨细，安排得妥妥帖帖。
+
+但她也心狠手辣。
+"弄权铁槛寺"中她收受贿赂，拆散一对有情人，逼得两条人命。
+尤二姐之死更是她一手导演——
+先哄骗尤二姐进府，再借秋桐之手百般折磨，最终逼其吞金自尽。
+
+她是 xref:贾母[贾母, rel=granddaughter-in-law-of, weight=0.6] 最得力的帮手，
+贾母的起居饮食都由她安排。
+但贾母去世后，她失去了靠山，在府中日渐孤立。
+
+与 xref:贾琏[贾琏, rel=married-to, weight=0.5] 的夫妻关系从恩爱走向反目。
+她的判词"机关算尽太聪明，反算了卿卿性命"，
+道尽了这个人物的悲剧。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 142;
+    rel:granddaughter-in-law-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>;
+    rel:niece-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l166-o0> a aat:Heading;
+    aat:addressLabel "jiayuanchun";
+    aat:childOrder 10;
+    aat:contentEndLine 180;
+    aat:contentStartLine 169;
+    aat:documentOrder 11;
+    aat:endLine 181;
+    aat:faction "荣国府";
+    aat:gender "女";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 167;
+    aat:headline "贾元春";
+    aat:metadataEndLine 166;
+    aat:metadataStartLine 166;
+    aat:raw """[#jiayuanchun.section, faction=荣国府, gender=女, generation=第四代]
+== 贾元春
+
+贾政与王夫人的长女，入宫为妃。
+省亲一回是全书最华丽的场景——
+大观园就是为她省亲而建，耗资巨大。
+
+元春在宫中并不快乐。
+她说当日既送我到那不得见人的去处，
+道尽了深宫寂寞。
+她的死讯传来，贾府上下一片哀恸，
+也预示着贾家最大的靠山轰然倒塌。
+
+与 xref:贾宝玉[贾宝玉, rel=sister-of, weight=0.7] 兄妹情深，
+宝玉的名字就是她取的。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 166;
+    rel:sister-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l182-o0> a aat:Heading;
+    aat:addressLabel "jiabaochai";
+    aat:childOrder 11;
+    aat:contentEndLine 193;
+    aat:contentStartLine 185;
+    aat:documentOrder 12;
+    aat:endLine 194;
+    aat:faction "荣国府";
+    aat:gender "男";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 183;
+    aat:headline "贾兰";
+    aat:metadataEndLine 182;
+    aat:metadataStartLine 182;
+    aat:raw """[#jiabaochai.section, faction=荣国府, gender=男, generation=第四代]
+== 贾兰
+
+贾珠之子，李纨之子。
+父亲早亡，由母亲独自抚养长大。
+他勤奋好学，一心想通过科举重振家业。
+
+与 xref:贾宝玉[贾宝玉, rel=brother-of-paternal-cousin, weight=0.3] 是堂叔侄，
+性格天差地别——宝玉厌学，贾兰苦读。
+最终贾兰中举，算是贾家衰败后的一缕曙光。
+
+// 荣国府 · 丫鬟
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 182;
+    rel:brother-of-paternal-cousin <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0> a aat:Heading;
+    aat:addressLabel "xiren";
+    aat:childOrder 12;
+    aat:contentEndLine 209;
+    aat:contentStartLine 198;
+    aat:documentOrder 13;
+    aat:endLine 210;
+    aat:faction "荣国府";
+    aat:gender "女";
+    aat:generation "丫鬟";
+    aat:headingLevel 1;
+    aat:headingLine 196;
+    aat:headline "袭人";
+    aat:metadataEndLine 195;
+    aat:metadataStartLine 195;
+    aat:raw """[#xiren.section, faction=荣国府, gender=女, generation=丫鬟]
+== 袭人
+
+贾宝玉的首席丫鬟，本名花珍珠。
+温柔和顺，忠心耿耿，是宝玉身边最稳重的人。
+她与宝玉有肌肤之亲（"贾宝玉初试云雨情"一回），
+暗中已被视为宝玉的准姨娘。
+
+袭人深谙为人处世之道，
+在王夫人面前进言，建议将宝玉搬出大观园，
+得到王夫人的赏识。
+但这也让她在宝玉房中的处境微妙——
+xref:晴雯[晴雯, rel=rival-servant, weight=0.5] 就曾当面嘲讽她"哈巴狗"。
+
+她最终嫁给了蒋玉菡，算是丫鬟中结局较好的。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 195;
+    rel:rival-servant <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0> a aat:Heading;
+    aat:addressLabel "qingwen";
+    aat:childOrder 13;
+    aat:contentEndLine 224;
+    aat:contentStartLine 214;
+    aat:documentOrder 14;
+    aat:endLine 225;
+    aat:faction "荣国府";
+    aat:gender "女";
+    aat:generation "丫鬟";
+    aat:headingLevel 1;
+    aat:headingLine 212;
+    aat:headline "晴雯";
+    aat:metadataEndLine 211;
+    aat:metadataStartLine 211;
+    aat:raw """[#qingwen.section, faction=荣国府, gender=女, generation=丫鬟]
+== 晴雯
+
+贾宝玉房中丫鬟，容貌为大观园丫鬟之冠。
+性格刚烈，口齿伶俐，"撕扇子作千金一笑"是她最生动的场景。
+
+她与 xref:袭人[袭人, rel=rival-servant, weight=0.5] 性格截然相反——
+袭人柔顺，晴雯刚烈；袭人世故，晴雯天真。
+王夫人嫌她"轻狂"，在抄检大观园时将她撵出。
+晴雯回家后不久病死，年仅十六岁。
+
+宝玉为她写了《芙蓉女儿诔》，
+"其为质则金玉不足喻其贵，其为性则冰雪不足喻其洁"，
+是全书最感人的祭文。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 211;
+    rel:rival-servant <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l226-o0> a aat:Heading;
+    aat:addressLabel "yuanyang";
+    aat:childOrder 14;
+    aat:contentEndLine 233;
+    aat:contentStartLine 229;
+    aat:documentOrder 15;
+    aat:endLine 234;
+    aat:faction "荣国府";
+    aat:gender "女";
+    aat:generation "丫鬟";
+    aat:headingLevel 1;
+    aat:headingLine 227;
+    aat:headline "鸳鸯";
+    aat:metadataEndLine 226;
+    aat:metadataStartLine 226;
+    aat:raw """[#yuanyang.section, faction=荣国府, gender=女, generation=丫鬟]
+== 鸳鸯
+
+贾母的首席大丫鬟，贾母须臾离不得她。
+贾赦想纳她为妾，她宁死不从，在贾母面前断发明志。
+贾母去世后，她自缢殉主，是全书中最有骨气的丫鬟。
+
+// 薛家
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 226.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l235-o0> a aat:Heading;
+    aat:addressLabel "xueyiniang";
+    aat:childOrder 15;
+    aat:contentEndLine 250;
+    aat:contentStartLine 238;
+    aat:documentOrder 16;
+    aat:endLine 251;
+    aat:faction "薛家";
+    aat:gender "女";
+    aat:generation "第三代";
+    aat:headingLevel 1;
+    aat:headingLine 236;
+    aat:headline "薛姨妈";
+    aat:metadataEndLine 235;
+    aat:metadataStartLine 235;
+    aat:raw """[#xueyiniang.section, faction=薛家, gender=女, generation=第三代]
+== 薛姨妈
+
+薛宝钗之母，王夫人的亲妹妹。
+薛家是皇商，"珍珠如土金如铁"，
+但到了薛姨妈这一代已经大不如前。
+她带着一双儿女进京，寄居贾府梨香院。
+
+薛姨妈性格温厚，不像姐姐王夫人那样严厉。
+她对 xref:薛宝钗[薛宝钗, rel=mother-of, weight=0.9] 教养有方，
+养出了一个端庄贤淑的女儿。
+对 xref:薛蟠[薛蟠, rel=mother-of, weight=0.5] 则过于溺爱，
+纵得他无法无天。
+
+她与 xref:王夫人[王夫人, rel=sister-of, weight=0.7] 姐妹感情深厚，
+两人心照不宣地推动"金玉良缘"。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 235;
+    rel:mother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l275-o0>;
+    rel:sister-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0> a aat:Heading;
+    aat:addressLabel "jiamu";
+    aat:childOrder 2;
+    aat:contentEndLine 41;
+    aat:contentStartLine 28;
+    aat:documentOrder 3;
+    aat:endLine 42;
+    aat:faction "荣国府";
+    aat:gender "女";
+    aat:generation "第二代";
+    aat:headingLevel 1;
+    aat:headingLine 26;
+    aat:headline "贾母";
+    aat:metadataEndLine 25;
+    aat:metadataStartLine 25;
+    aat:raw """[#jiamu.section, faction=荣国府, gender=女, generation=第二代]
+== 贾母
+
+贾府的定海神针，人称"老祖宗"。
+史侯之女，嫁入贾家后主持荣国府数十年。
+年事虽高，心思通透，府中大小事务逃不过她的眼。
+
+她最疼爱 xref:贾宝玉[贾宝玉, rel=grandmother-of, weight=0.9]，
+为此不惜与 xref:贾政[贾政, rel=mother-of, weight=0.5] 的严厉管教对着干。
+xref:林黛玉[林黛玉, rel=grandmother-of, weight=0.85] 是她嫡亲外孙女，
+自幼接来身边教养，疼爱有加。
+
+贾母善于享乐，听戏、赏花、摆宴样样精通。
+她主持的元宵夜宴、中秋赏月，是全书最热闹的场景。
+但这份热闹底下，藏着她对家族前途的隐忧。
+
+// 荣国府 · 第三代
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 25;
+    rel:grandmother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    rel:mother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0> a aat:Heading;
+    aat:addressLabel "xuebaochai";
+    aat:childOrder 16;
+    aat:contentEndLine 273;
+    aat:contentStartLine 255;
+    aat:documentOrder 17;
+    aat:endLine 274;
+    aat:faction "薛家";
+    aat:gender "女";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 253;
+    aat:headline "薛宝钗";
+    aat:metadataEndLine 252;
+    aat:metadataStartLine 252;
+    aat:raw """[#xuebaochai.section, faction=薛家, gender=女, generation=第四代]
+== 薛宝钗
+
+薛姨妈之女，薛蟠之妹。
+品格端方，容貌丰美，是大观园中最符合世俗标准的大家闺秀。
+她佩戴金锁，上头的字与宝玉通灵宝玉上的字恰好是一对——
+这就是"金玉良缘"的由来。
+
+宝钗博学多才，诗才不在黛玉之下。
+"蘅芜苑夜拟菊花题"一回中，
+她与史湘云深夜商议诗题，展现了不凡的学识。
+但她也有务实的一面——
+她劝宝玉留心仕途经济，被宝玉当场下逐客令。
+
+与 xref:林黛玉[林黛玉, rel=rival-in-love, weight=0.8] 的关系最耐人寻味。
+两人从最初的暗中较劲，到后来的惺惺相惜，
+"金兰契互剖金兰语"一回中两人推心置腹，成为知己。
+最终宝钗嫁给了宝玉，却得不到他的心，
+守着一个心如死灰的丈夫，同样是悲剧。
+
+与 xref:贾宝玉[贾宝玉, rel=married-to, weight=0.6] 的婚姻是全书最大的讽刺——
+得到了人，得不到心。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 252;
+    rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    rel:rival-in-love <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l275-o0> a aat:Heading;
+    aat:addressLabel "xuepan";
+    aat:childOrder 17;
+    aat:contentEndLine 286;
+    aat:contentStartLine 278;
+    aat:documentOrder 18;
+    aat:endLine 287;
+    aat:faction "薛家";
+    aat:gender "男";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 276;
+    aat:headline "薛蟠";
+    aat:metadataEndLine 275;
+    aat:metadataStartLine 275;
+    aat:raw """[#xuepan.section, faction=薛家, gender=男, generation=第四代]
+== 薛蟠
+
+薛姨妈之子，宝钗之兄。
+人称"呆霸王"，是全书中最典型的纨绔子弟。
+他打死冯渊，抢走香菱（甄英莲），
+靠贾府的关系才摆平了官司——这就是"葫芦僧判断葫芦案"。
+
+薛蟠粗鄙不堪，在学堂里闹出许多丑事。
+但他对妹妹 xref:薛宝钗[薛宝钗, rel=brother-of, weight=0.4] 还算有几分兄妹情。
+他娶了夏金桂，婚后被悍妻拿捏得死死的，
+算是因果报应。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 275;
+    rel:brother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l288-o0> a aat:Heading;
+    aat:addressLabel "xiangling";
+    aat:childOrder 18;
+    aat:contentEndLine 301;
+    aat:contentStartLine 291;
+    aat:documentOrder 19;
+    aat:endLine 302;
+    aat:faction "薛家";
+    aat:gender "女";
+    aat:generation "丫鬟";
+    aat:headingLevel 1;
+    aat:headingLine 289;
+    aat:headline "香菱";
+    aat:metadataEndLine 288;
+    aat:metadataStartLine 288;
+    aat:raw """[#xiangling.section, faction=薛家, gender=女, generation=丫鬟]
+== 香菱
+
+本名甄英莲，甄士隐之女。
+幼年被拐，几经辗转被薛蟠强买为妾。
+她生得清秀，性情温婉，跟 xref:薛宝钗[薛宝钗, rel=serves, weight=0.5] 学诗，
+"慕雅女雅集苦吟诗"一回写她痴迷诗的样子十分动人。
+
+香菱是全书中最令人怜惜的人物之一——
+从乡宦之女沦为奴婢，命运对她太不公。
+她的判词"根并荷花一茎香，平生遭际实堪伤"，
+道尽了她的一生。
+
+// 林家
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 288;
+    rel:serves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0> a aat:Heading;
+    aat:addressLabel "lindaiyu";
+    aat:childOrder 19;
+    aat:contentEndLine 336;
+    aat:contentStartLine 306;
+    aat:documentOrder 20;
+    aat:endLine 337;
+    aat:faction "林家";
+    aat:gender "女";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 304;
+    aat:headline "林黛玉";
+    aat:metadataEndLine 303;
+    aat:metadataStartLine 303;
+    aat:raw """[#lindaiyu.section, faction=林家, gender=女, generation=第四代]
+== 林黛玉
+
+全书女主角，苏州人氏。
+父亲林如海是巡盐御史，母亲贾敏是贾母最疼爱的女儿。
+父母双亡后，她寄居贾府，从此再未回过故乡。
+
+黛玉才情冠绝大观园。
+"林潇湘魁夺菊花诗"一回中，
+她的《咏菊》《问菊》《菊梦》三首夺魁，
+连宝钗都自叹不如。
+她的《葬花吟》"花谢花飞花满天，红消香断有谁怜"
+是全书最脍炙人口的诗篇。
+
+与 xref:贾宝玉[贾宝玉, rel=loves, weight=0.95] 的爱情是全书主线。
+两人初见时便有"这个妹妹我曾见过的"之感——
+这是"木石前盟"的前世因缘。
+他们共读《西厢》、同葬落花，
+在大观园的桃花树下度过了最美好的时光。
+
+但黛玉体弱多病，又多愁善感。
+她的眼泪是为还宝玉前世的灌溉之恩而来——
+"欠泪的，泪已尽"，泪尽之日便是她离世之时。
+
+xref:王夫人[王夫人, rel=disliked-by, weight=0.7] 对她不甚喜欢，
+xref:薛宝钗[薛宝钗, rel=rival-in-love, weight=0.8] 是她最大的情敌。
+最终在宝玉成婚之夜，黛玉焚稿断痴情，泪尽而亡。
+"宝玉，宝玉，你好——"是她最后的话，未说完便咽了气。
+
+xref:贾母[贾母, rel=granddaughter-of, weight=0.85] 是她的外祖母，
+是她在贾府最大的依靠。
+但贾母最终也未能成全她和宝玉。
+
+// 史家
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 303;
+    rel:disliked-by <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    rel:granddaughter-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    rel:loves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    rel:rival-in-love <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l338-o0> a aat:Heading;
+    aat:addressLabel "shixiangyun";
+    aat:childOrder 20;
+    aat:contentEndLine 359;
+    aat:contentStartLine 341;
+    aat:documentOrder 21;
+    aat:endLine 360;
+    aat:faction "史家";
+    aat:gender "女";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 339;
+    aat:headline "史湘云";
+    aat:metadataEndLine 338;
+    aat:metadataStartLine 338;
+    aat:raw """[#shixiangyun.section, faction=史家, gender=女, generation=第四代]
+== 史湘云
+
+贾母的侄孙女，史侯家的小姐。
+自幼父母双亡，由叔叔抚养长大。
+她性格豪爽，大大咧咧，是大观园中最开朗的姑娘。
+
+"憨湘云醉眠芍药裀"是全书最美的场景之一——
+她喝醉了酒，躺在石凳上睡着了，
+芍药花飞了一身，蜂围蝶绕。
+她还有咬舌的毛病，把"二哥哥"叫成"爱哥哥"，
+宝玉听了只是笑。
+
+她与 xref:林黛玉[林黛玉, rel=cousin, weight=0.5] 是表亲，
+两人同住过一段时间，感情不错。
+她也擅长作诗，与 xref:薛宝钗[薛宝钗, rel=poetry-friend, weight=0.6] 交好，
+两人常一起切磋诗艺。
+
+史湘云的结局众说纷纭，
+但"因麒麟伏白首双星"暗示她后来嫁了个如意郎君。
+
+// 大观园外
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 338;
+    rel:cousin <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    rel:poetry-friend <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l361-o0> a aat:Heading;
+    aat:addressLabel "qinkeqing";
+    aat:childOrder 21;
+    aat:contentEndLine 379;
+    aat:contentStartLine 364;
+    aat:documentOrder 22;
+    aat:endLine 380;
+    aat:faction "宁国府";
+    aat:gender "女";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 362;
+    aat:headline "秦可卿";
+    aat:metadataEndLine 361;
+    aat:metadataStartLine 361;
+    aat:raw """[#qinkeqing.section, faction=宁国府, gender=女, generation=第四代]
+== 秦可卿
+
+宁国府贾蓉之妻，"金陵十二钗"中最早去世的人物。
+她生得袅娜纤巧，行事温柔和平，
+贾母都赞她是重孙媳中第一个得意之人。
+
+但她的身世成谜——
+从养生堂抱来的弃婴，却嫁入了宁国府这样的豪门。
+她的房间陈设极尽奢华，暗示着某种不寻常的来历。
+
+秦可卿托梦王熙凤，劝她"月满则亏，水满则溢"，
+要及早为家族留退路。
+这番话极有远见，可惜王熙凤并未听进去。
+
+她与公公 xref:贾珍[贾珍, rel=scandal-with, weight=0.9] 的暧昧关系
+是全书中最大的丑闻之一（"秦可卿淫丧天香楼"）。
+她的葬礼奢华无比，用的是义忠亲王老千岁的棺材，
+暗示着背后有不可告人的秘密。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 361;
+    rel:scandal-with <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0> a aat:Heading;
+    aat:addressLabel "jiashen";
+    aat:childOrder 22;
+    aat:contentEndLine 398;
+    aat:contentStartLine 384;
+    aat:documentOrder 23;
+    aat:endLine 399;
+    aat:faction "宁国府";
+    aat:gender "男";
+    aat:generation "第三代";
+    aat:headingLevel 1;
+    aat:headingLine 382;
+    aat:headline "贾珍";
+    aat:metadataEndLine 381;
+    aat:metadataStartLine 381;
+    aat:raw """[#jiashen.section, faction=宁国府, gender=男, generation=第三代]
+== 贾珍
+
+宁国府当家人，贾敬之子。
+袭了三品将军之爵，却不务正业，
+整日与狐朋狗友饮酒作乐。
+
+他与 xref:秦可卿[秦可卿, rel=scandal-with, weight=0.9] 的丑闻
+是宁国府最大的污点。
+秦可卿死后他"哭得泪人一般"，
+超出了公公对儿媳应有的悲痛程度。
+
+贾珍还霸占了 xref:尤二姐[尤二姐, rel=harasses, weight=0.6] 和
+xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
+与贾蓉父子麀聚，荒淫无度。
+宁国府最终先一步被抄家，正是"箕裘颓堕皆从敬，家事消亡首罪宁"。
+
+// 尤氏姐妹
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 381;
+    rel:harasses <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l413-o0>;
+    rel:scandal-with <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l361-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0> a aat:Heading;
+    aat:addressLabel "youerjie";
+    aat:childOrder 23;
+    aat:contentEndLine 411;
+    aat:contentStartLine 403;
+    aat:documentOrder 24;
+    aat:endLine 412;
+    aat:faction "尤家";
+    aat:gender "女";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 401;
+    aat:headline "尤二姐";
+    aat:metadataEndLine 400;
+    aat:metadataStartLine 400;
+    aat:raw """[#youerjie.section, faction=尤家, gender=女, generation=第四代]
+== 尤二姐
+
+尤氏继母带来的女儿，容貌标致。
+她先与贾珍有染，后被 xref:贾琏[贾琏, rel=concubine-of, weight=0.7] 偷娶为外室。
+王熙凤得知后，将她骗入大观园，
+借秋桐之手百般折磨，最终逼她吞金自尽。
+
+尤二姐的悲剧在于她太天真——
+她以为进了贾府就能安生过日子，
+没想到 xref:王熙凤[rel=destroyed-by, weight=0.9] 会置她于死地。
+她死时腹中还有胎儿，一尸两命。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 400;
+    rel:concubine-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>;
+    rel:destroyed-by <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l413-o0> a aat:Heading;
+    aat:addressLabel "yousanjie";
+    aat:childOrder 24;
+    aat:contentEndLine 426;
+    aat:contentStartLine 416;
+    aat:documentOrder 25;
+    aat:endLine 427;
+    aat:faction "尤家";
+    aat:gender "女";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 414;
+    aat:headline "尤三姐";
+    aat:metadataEndLine 413;
+    aat:metadataStartLine 413;
+    aat:raw """[#yousanjie.section, faction=尤家, gender=女, generation=第四代]
+== 尤三姐
+
+尤二姐之妹，性格刚烈。
+她虽然也曾与贾珍厮混，却立誓要嫁给自己看中的人。
+她看中的是柳湘莲，非他不嫁。
+
+但柳湘莲听信了关于她品行不端的传言，
+上门退婚。尤三姐当场拔剑自刎，
+以死明志。
+"揉碎桃花红满地，玉山倾倒再难扶"——
+这是全书中最惨烈的死亡场景之一。
+
+// 金陵十二钗 · 正册之外
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 413.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l428-o0> a aat:Heading;
+    aat:addressLabel "miaoyu";
+    aat:childOrder 25;
+    aat:contentEndLine 442;
+    aat:contentStartLine 431;
+    aat:documentOrder 26;
+    aat:endLine 443;
+    aat:faction "大观园";
+    aat:gender "女";
+    aat:generation "出家人";
+    aat:headingLevel 1;
+    aat:headingLine 429;
+    aat:headline "妙玉";
+    aat:metadataEndLine 428;
+    aat:metadataStartLine 428;
+    aat:raw """[#miaoyu.section, faction=大观园, gender=女, generation=出家人]
+== 妙玉
+
+栊翠庵的带发修行尼姑。
+出身官宦世家，因体弱多病而出家。
+她才华出众，诗才不凡，
+"凹晶馆联诗悲寂寞"一回中与黛玉、湘云联诗，
+写出了"寒塘渡鹤影，冷月葬花魂"的千古名句。
+
+妙玉孤傲清高，连刘姥姥用过的茶杯她都嫌脏要扔掉。
+但她的结局却是全书中最悲惨的——
+"可怜金玉质，终陷淖泥中"，
+暗示她最终沦落风尘。
+
+// 刘姥姥
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 428.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0> a aat:Heading;
+    aat:addressLabel "jiazheng";
+    aat:childOrder 3;
+    aat:contentEndLine 58;
+    aat:contentStartLine 46;
+    aat:documentOrder 4;
+    aat:endLine 59;
+    aat:faction "荣国府";
+    aat:gender "男";
+    aat:generation "第三代";
+    aat:headingLevel 1;
+    aat:headingLine 44;
+    aat:headline "贾政";
+    aat:metadataEndLine 43;
+    aat:metadataStartLine 43;
+    aat:raw """[#jiazheng.section, faction=荣国府, gender=男, generation=第三代]
+== 贾政
+
+荣国府二老爷，工部员外郎。
+为人方正古板，一心望子成龙。
+对 xref:贾宝玉[贾宝玉, rel=father-of, weight=0.3] 管教极严，
+动辄训斥，曾将宝玉打得皮开肉绽（"不肖种种大承笞挞"一回）。
+
+贾政其实文才平平，却偏爱附庸风雅，
+养了一群清客相公谈诗论文。
+他内心对宝玉的聪慧并非不知，只是恨铁不成钢。
+
+与 xref:王夫人[王夫人, rel=married-to, weight=0.5] 夫妻多年，
+感情平淡，相敬如宾。
+xref:贾母[贾母, rel=son-of, weight=0.5] 是他的母亲，
+他在母亲面前始终恭顺，不敢违拗。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 43;
+    rel:father-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    rel:son-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l444-o0> a aat:Heading;
+    aat:addressLabel "liulaolao";
+    aat:childOrder 26;
+    aat:contentEndLine 458;
+    aat:contentStartLine 447;
+    aat:documentOrder 27;
+    aat:endLine 459;
+    aat:faction "乡野";
+    aat:gender "女";
+    aat:generation "老一辈";
+    aat:headingLevel 1;
+    aat:headingLine 445;
+    aat:headline "刘姥姥";
+    aat:metadataEndLine 444;
+    aat:metadataStartLine 444;
+    aat:raw """[#liulaolao.section, faction=乡野, gender=女, generation=老一辈]
+== 刘姥姥
+
+乡下老妪，与贾府八竿子打不着的远亲。
+她三进荣国府，是全书结构上最重要的线索人物。
+
+一进荣国府时她小心翼翼，打秋风求接济。
+二进荣国府时她装疯卖傻，逗得贾母开怀大笑——
+"刘姥姥进大观园"的典故就出于此。
+三进荣国府时贾府已经败落，
+她仗义营救了 xref:巧姐[巧姐, rel=rescues, weight=0.9]，
+报答了当年的恩情。
+
+刘姥姥看似粗鄙，实则大智若愚。
+她的存在，是对贾府奢靡生活最辛辣的对照。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 444.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0> a aat:Heading;
+    aat:addressLabel "wangfuren";
+    aat:childOrder 4;
+    aat:contentEndLine 72;
+    aat:contentStartLine 63;
+    aat:documentOrder 5;
+    aat:endLine 73;
+    aat:faction "荣国府";
+    aat:gender "女";
+    aat:generation "第三代";
+    aat:headingLevel 1;
+    aat:headingLine 61;
+    aat:headline "王夫人";
+    aat:metadataEndLine 60;
+    aat:metadataStartLine 60;
+    aat:raw """[#wangfuren.section, faction=荣国府, gender=女, generation=第三代]
+== 王夫人
+
+贾政之妻，宝玉之母。
+出身金陵王家，与 xref:王熙凤[王熙凤, rel=aunt-of, weight=0.6] 是姑侄。
+为人木讷老实，不善言辞，但心地并不慈善。
+她抄检大观园、撵走晴雯，手段狠辣。
+
+王夫人吃斋念佛，看似与世无争，
+实则对 xref:林黛玉[林黛玉, rel=dislikes, weight=0.7] 颇有成见，
+认为她体弱多病、性情乖张，不宜做宝玉的妻子。
+她更属意 xref:薛宝钗[薛宝钗, rel=Prefers-as-daughter-in-law, weight=0.8]，
+因为宝钗性格稳重，符合她心中贤妻的标准。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 60;
+    rel:Prefers-as-daughter-in-law <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    rel:aunt-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    rel:dislikes <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l74-o0> a aat:Heading;
+    aat:addressLabel "jiashu";
+    aat:childOrder 5;
+    aat:contentEndLine 85;
+    aat:contentStartLine 77;
+    aat:documentOrder 6;
+    aat:endLine 86;
+    aat:faction "荣国府";
+    aat:gender "男";
+    aat:generation "第三代";
+    aat:headingLevel 1;
+    aat:headingLine 75;
+    aat:headline "贾赦";
+    aat:metadataEndLine 74;
+    aat:metadataStartLine 74;
+    aat:raw """[#jiashu.section, faction=荣国府, gender=男, generation=第三代]
+== 贾赦
+
+荣国府大老爷，贾母长子。
+袭了一等将军的爵位，却不务正业，
+整日与小妾喝酒取乐。
+他曾想纳 xref:鸳鸯[鸳鸯, rel=desires, weight=0.4] 为妾，
+被贾母痛斥一顿。
+
+贾赦与 xref:贾政[贾政, rel=brother-of, weight=0.3] 兄弟不和，
+表面上维持着体面，暗地里各怀心思。
+他与 xref:邢夫人[邢夫人, rel=married-to, weight=0.4] 夫妻关系冷淡。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 74;
+    rel:brother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>;
+    rel:desires <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l226-o0>;
+    rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l87-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l87-o0> a aat:Heading;
+    aat:addressLabel "xingfuren";
+    aat:childOrder 6;
+    aat:contentEndLine 95;
+    aat:contentStartLine 90;
+    aat:documentOrder 7;
+    aat:endLine 96;
+    aat:faction "荣国府";
+    aat:gender "女";
+    aat:generation "第三代";
+    aat:headingLevel 1;
+    aat:headingLine 88;
+    aat:headline "邢夫人";
+    aat:metadataEndLine 87;
+    aat:metadataStartLine 87;
+    aat:raw """[#xingfuren.section, faction=荣国府, gender=女, generation=第三代]
+== 邢夫人
+
+贾赦继室，贾琏继母。
+出身寒微，嫁入贾府后处处小心。
+她为人刻薄小气，不得人心。
+在抄检大观园一事上推波助澜，与 xref:王夫人[王夫人, rel=sister-in-law-rival, weight=0.5] 暗中较劲。
+
+// 荣国府 · 第四代
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 87;
+    rel:sister-in-law-rival <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> a aat:Heading;
+    aat:addressLabel "jiabaoyu";
+    aat:childOrder 7;
+    aat:contentEndLine 125;
+    aat:contentStartLine 100;
+    aat:documentOrder 8;
+    aat:endLine 126;
+    aat:faction "荣国府";
+    aat:gender "男";
+    aat:generation "第四代";
+    aat:headingLevel 1;
+    aat:headingLine 98;
+    aat:headline "贾宝玉";
+    aat:metadataEndLine 97;
+    aat:metadataStartLine 97;
+    aat:raw """[#jiabaoyu.section, faction=荣国府, gender=男, generation=第四代]
+== 贾宝玉
+
+全书核心人物，衔玉而生。
+那块通灵宝玉是他的命根子，也是全书最重要的意象。
+他天性聪颖，却厌恶仕途经济学问，
+偏爱在内帷厮混，被贾政视为"不肖子"。
+
+与 xref:林黛玉[林黛玉, rel=loves, weight=0.95] 的爱情是全书主线。
+两人从"木石前盟"到"泪尽而亡"，写尽了有情人不得终成眷属的悲剧。
+他对黛玉说过"你放心"三个字，是全书最动人的告白。
+
+然而命运弄人，他最终娶了 xref:薛宝钗[薛宝钗, rel=married-to, weight=0.6]。
+这场婚姻是 xref:王夫人[王夫人, rel=mother-of, weight=0.5] 和
+xref:王熙凤[王熙凤, rel=cousin-of, weight=0.4] 合谋的"调包计"。
+宝玉直到揭盖头才发现新娘不是黛玉，由此心灰意冷。
+
+身边最亲近的丫鬟是 xref:袭人[袭人, rel=serves, weight=0.7] 和
+xref:晴雯[晴雯, rel=serves, weight=0.6]。
+晴雯被撵出大观园后病死，宝玉写了《芙蓉女儿诔》悼念她，
+这篇祭文是全书最华彩的骈文之一。
+
+他与 xref:贾母[贾母, rel=grandson-of, weight=0.9] 的祖孙情深，
+贾母在世时是他最大的庇护。
+与 xref:贾政[贾母, rel=son-of, weight=0.3] 的父子关系则充满张力。
+
+最终，宝玉在中举之后悬崖撒手，遁入空门。
+xref:贾兰[贾兰, rel=brother-of-paternal-cousin, weight=0.3] 是他侄子，
+后来金榜题名，算是给贾家留了一线希望。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 97;
+    rel:brother-of-paternal-cousin <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l182-o0>;
+    rel:cousin-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    rel:grandson-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    rel:loves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    rel:mother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    rel:serves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0>, <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0>;
+    rel:son-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#projection> a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#source>;
+    prov:wasDerivedFrom <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#source>;
+    prov:wasGeneratedBy <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#activity>.
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#source> a prov:Entity, aat:AsciiDocSourceDocument;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l105-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:loves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "林黛玉";
+    aat:endColumn 40;
+    aat:endLine 105;
+    aat:officialHref "#lindaiyu";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "lindaiyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[林黛玉, rel=loves, weight=0.95]";
+    aat:rel "loves";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 3;
+    aat:startLine 105;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:targetSelector "林黛玉";
+    aat:weight "0.95".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l109-c14-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "薛宝钗";
+    aat:endColumn 55;
+    aat:endLine 109;
+    aat:officialHref "#xuebaochai";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "xuebaochai";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[薛宝钗, rel=married-to, weight=0.6]";
+    aat:rel "married-to";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 14;
+    aat:startLine 109;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:targetSelector "薛宝钗";
+    aat:weight "0.6".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l110-c7-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:mother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 47;
+    aat:endLine 110;
+    aat:officialHref "#wangfuren";
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wangfuren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王夫人[王夫人, rel=mother-of, weight=0.5]";
+    aat:rel "mother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 7;
+    aat:startLine 110;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:targetSelector "王夫人";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l111-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:cousin-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王熙凤";
+    aat:endColumn 41;
+    aat:endLine 111;
+    aat:officialHref "#wangxifeng";
+    aat:officialReftext "王熙凤";
+    aat:officialResolvedId "wangxifeng";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王熙凤[王熙凤, rel=cousin-of, weight=0.4]";
+    aat:rel "cousin-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 1;
+    aat:startLine 111;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    aat:targetSelector "王熙凤";
+    aat:weight "0.4".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l114-c11-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:serves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "袭人";
+    aat:endColumn 46;
+    aat:endLine 114;
+    aat:officialHref "#xiren";
+    aat:officialReftext "袭人";
+    aat:officialResolvedId "xiren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:袭人[袭人, rel=serves, weight=0.7]";
+    aat:rel "serves";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 11;
+    aat:startLine 114;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0>;
+    aat:targetSelector "袭人";
+    aat:weight "0.7".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l115-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:serves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "晴雯";
+    aat:endColumn 36;
+    aat:endLine 115;
+    aat:officialHref "#qingwen";
+    aat:officialReftext "晴雯";
+    aat:officialResolvedId "qingwen";
+    aat:officialResolvedType "section";
+    aat:raw "xref:晴雯[晴雯, rel=serves, weight=0.6]";
+    aat:rel "serves";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 1;
+    aat:startLine 115;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0>;
+    aat:targetSelector "晴雯";
+    aat:weight "0.6".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l119-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:grandson-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾母";
+    aat:endColumn 44;
+    aat:endLine 119;
+    aat:officialHref "#jiamu";
+    aat:officialReftext "贾母";
+    aat:officialResolvedId "jiamu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾母[贾母, rel=grandson-of, weight=0.9]";
+    aat:rel "grandson-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 4;
+    aat:startLine 119;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    aat:targetSelector "贾母";
+    aat:weight "0.9".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l121-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:son-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾母";
+    aat:endColumn 38;
+    aat:endLine 121;
+    aat:officialHref "#jiazheng";
+    aat:officialReftext "贾母";
+    aat:officialResolvedId "jiazheng";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾政[贾母, rel=son-of, weight=0.3]";
+    aat:rel "son-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 3;
+    aat:startLine 121;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>;
+    aat:targetSelector "贾政";
+    aat:weight "0.3".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l124-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0> rel:brother-of-paternal-cousin <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l182-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾兰";
+    aat:endColumn 56;
+    aat:endLine 124;
+    aat:officialHref "#jiabaochai";
+    aat:officialReftext "贾兰";
+    aat:officialResolvedId "jiabaochai";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾兰[贾兰, rel=brother-of-paternal-cousin, weight=0.3]";
+    aat:rel "brother-of-paternal-cousin";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:sourceSelector "jiabaoyu";
+    aat:startColumn 1;
+    aat:startLine 124;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l182-o0>;
+    aat:targetSelector "贾兰";
+    aat:weight "0.3".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l132-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0> rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王熙凤";
+    aat:endColumn 44;
+    aat:endLine 132;
+    aat:officialHref "#wangxifeng";
+    aat:officialReftext "王熙凤";
+    aat:officialResolvedId "wangxifeng";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王熙凤[王熙凤, rel=married-to, weight=0.5]";
+    aat:rel "married-to";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>;
+    aat:sourceSelector "jialian";
+    aat:startColumn 3;
+    aat:startLine 132;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    aat:targetSelector "王熙凤";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l139-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0> rel:brother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾宝玉";
+    aat:endColumn 45;
+    aat:endLine 139;
+    aat:officialHref "#jiabaoyu";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "jiabaoyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[贾宝玉, rel=brother-of, weight=0.3]";
+    aat:rel "brother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>;
+    aat:sourceSelector "jialian";
+    aat:startColumn 4;
+    aat:startLine 139;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:targetSelector "贾宝玉";
+    aat:weight "0.3".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l146-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0> rel:niece-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 40;
+    aat:endLine 146;
+    aat:officialHref "#wangfuren";
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wangfuren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王夫人[王夫人, rel=niece-of, weight=0.6]";
+    aat:rel "niece-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    aat:sourceSelector "wangxifeng";
+    aat:startColumn 1;
+    aat:startLine 146;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:targetSelector "王夫人";
+    aat:weight "0.6".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l147-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0> rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾琏";
+    aat:endColumn 40;
+    aat:endLine 147;
+    aat:officialHref "#jialian";
+    aat:officialReftext "贾琏";
+    aat:officialResolvedId "jialian";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾琏[贾琏, rel=married-to, weight=0.5]";
+    aat:rel "married-to";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    aat:sourceSelector "wangxifeng";
+    aat:startColumn 1;
+    aat:startLine 147;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>;
+    aat:targetSelector "贾琏";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l158-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0> rel:granddaughter-in-law-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾母";
+    aat:endColumn 56;
+    aat:endLine 158;
+    aat:officialHref "#jiamu";
+    aat:officialReftext "贾母";
+    aat:officialResolvedId "jiamu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾母[贾母, rel=granddaughter-in-law-of, weight=0.6]";
+    aat:rel "granddaughter-in-law-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    aat:sourceSelector "wangxifeng";
+    aat:startColumn 4;
+    aat:startLine 158;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    aat:targetSelector "贾母";
+    aat:weight "0.6".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l162-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0> rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾琏";
+    aat:endColumn 42;
+    aat:endLine 162;
+    aat:officialHref "#jialian";
+    aat:officialReftext "贾琏";
+    aat:officialResolvedId "jialian";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾琏[贾琏, rel=married-to, weight=0.5]";
+    aat:rel "married-to";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    aat:sourceSelector "wangxifeng";
+    aat:startColumn 3;
+    aat:startLine 162;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>;
+    aat:targetSelector "贾琏";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l179-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l166-o0> rel:sister-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾宝玉";
+    aat:endColumn 43;
+    aat:endLine 179;
+    aat:officialHref "#jiabaoyu";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "jiabaoyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[贾宝玉, rel=sister-of, weight=0.7]";
+    aat:rel "sister-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l166-o0>;
+    aat:sourceSelector "jiayuanchun";
+    aat:startColumn 3;
+    aat:startLine 179;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:targetSelector "贾宝玉";
+    aat:weight "0.7".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l189-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l182-o0> rel:brother-of-paternal-cousin <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾宝玉";
+    aat:endColumn 60;
+    aat:endLine 189;
+    aat:officialHref "#jiabaoyu";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "jiabaoyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[贾宝玉, rel=brother-of-paternal-cousin, weight=0.3]";
+    aat:rel "brother-of-paternal-cousin";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l182-o0>;
+    aat:sourceSelector "jiabaochai";
+    aat:startColumn 3;
+    aat:startLine 189;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:targetSelector "贾宝玉";
+    aat:weight "0.3".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l207-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0> rel:rival-servant <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "晴雯";
+    aat:endColumn 43;
+    aat:endLine 207;
+    aat:officialHref "#qingwen";
+    aat:officialReftext "晴雯";
+    aat:officialResolvedId "qingwen";
+    aat:officialResolvedType "section";
+    aat:raw "xref:晴雯[晴雯, rel=rival-servant, weight=0.5]";
+    aat:rel "rival-servant";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0>;
+    aat:sourceSelector "xiren";
+    aat:startColumn 1;
+    aat:startLine 207;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0>;
+    aat:targetSelector "晴雯";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l217-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0> rel:rival-servant <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "袭人";
+    aat:endColumn 46;
+    aat:endLine 217;
+    aat:officialHref "#xiren";
+    aat:officialReftext "袭人";
+    aat:officialResolvedId "xiren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:袭人[袭人, rel=rival-servant, weight=0.5]";
+    aat:rel "rival-servant";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l211-o0>;
+    aat:sourceSelector "qingwen";
+    aat:startColumn 4;
+    aat:startLine 217;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l195-o0>;
+    aat:targetSelector "袭人";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l244-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l235-o0> rel:mother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "薛宝钗";
+    aat:endColumn 44;
+    aat:endLine 244;
+    aat:officialHref "#xuebaochai";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "xuebaochai";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[薛宝钗, rel=mother-of, weight=0.9]";
+    aat:rel "mother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l235-o0>;
+    aat:sourceSelector "xueyiniang";
+    aat:startColumn 4;
+    aat:startLine 244;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:targetSelector "薛宝钗";
+    aat:weight "0.9".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l246-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l235-o0> rel:mother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l275-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "薛蟠";
+    aat:endColumn 41;
+    aat:endLine 246;
+    aat:officialHref "#xuepan";
+    aat:officialReftext "薛蟠";
+    aat:officialResolvedId "xuepan";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛蟠[薛蟠, rel=mother-of, weight=0.5]";
+    aat:rel "mother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l235-o0>;
+    aat:sourceSelector "xueyiniang";
+    aat:startColumn 3;
+    aat:startLine 246;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l275-o0>;
+    aat:targetSelector "薛蟠";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l249-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l235-o0> rel:sister-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 44;
+    aat:endLine 249;
+    aat:officialHref "#wangfuren";
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wangfuren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王夫人[王夫人, rel=sister-of, weight=0.7]";
+    aat:rel "sister-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l235-o0>;
+    aat:sourceSelector "xueyiniang";
+    aat:startColumn 4;
+    aat:startLine 249;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:targetSelector "王夫人";
+    aat:weight "0.7".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l266-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0> rel:rival-in-love <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "林黛玉";
+    aat:endColumn 47;
+    aat:endLine 266;
+    aat:officialHref "#lindaiyu";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "lindaiyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[林黛玉, rel=rival-in-love, weight=0.8]";
+    aat:rel "rival-in-love";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:sourceSelector "xuebaochai";
+    aat:startColumn 3;
+    aat:startLine 266;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:targetSelector "林黛玉";
+    aat:weight "0.8".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l272-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0> rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾宝玉";
+    aat:endColumn 44;
+    aat:endLine 272;
+    aat:officialHref "#jiabaoyu";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "jiabaoyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[贾宝玉, rel=married-to, weight=0.6]";
+    aat:rel "married-to";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:sourceSelector "xuebaochai";
+    aat:startColumn 3;
+    aat:startLine 272;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:targetSelector "贾宝玉";
+    aat:weight "0.6".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l284-c7-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l275-o0> rel:brother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "薛宝钗";
+    aat:endColumn 48;
+    aat:endLine 284;
+    aat:officialHref "#xuebaochai";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "xuebaochai";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[薛宝钗, rel=brother-of, weight=0.4]";
+    aat:rel "brother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l275-o0>;
+    aat:sourceSelector "xuepan";
+    aat:startColumn 7;
+    aat:startLine 284;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:targetSelector "薛宝钗";
+    aat:weight "0.4".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l293-c14-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l288-o0> rel:serves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "薛宝钗";
+    aat:endColumn 51;
+    aat:endLine 293;
+    aat:officialHref "#xuebaochai";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "xuebaochai";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[薛宝钗, rel=serves, weight=0.5]";
+    aat:rel "serves";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l288-o0>;
+    aat:sourceSelector "xiangling";
+    aat:startColumn 14;
+    aat:startLine 293;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:targetSelector "薛宝钗";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l317-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0> rel:loves <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾宝玉";
+    aat:endColumn 40;
+    aat:endLine 317;
+    aat:officialHref "#jiabaoyu";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "jiabaoyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[贾宝玉, rel=loves, weight=0.95]";
+    aat:rel "loves";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:sourceSelector "lindaiyu";
+    aat:startColumn 3;
+    aat:startLine 317;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:targetSelector "贾宝玉";
+    aat:weight "0.95".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l32-c6-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0> rel:grandmother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾宝玉";
+    aat:endColumn 51;
+    aat:endLine 32;
+    aat:officialHref "#jiabaoyu";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "jiabaoyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[贾宝玉, rel=grandmother-of, weight=0.9]";
+    aat:rel "grandmother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    aat:sourceSelector "jiamu";
+    aat:startColumn 6;
+    aat:startLine 32;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:targetSelector "贾宝玉";
+    aat:weight "0.9".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l327-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0> rel:disliked-by <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 43;
+    aat:endLine 327;
+    aat:officialHref "#wangfuren";
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wangfuren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王夫人[王夫人, rel=disliked-by, weight=0.7]";
+    aat:rel "disliked-by";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:sourceSelector "lindaiyu";
+    aat:startColumn 1;
+    aat:startLine 327;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:targetSelector "王夫人";
+    aat:weight "0.7".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l328-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0> rel:rival-in-love <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "薛宝钗";
+    aat:endColumn 45;
+    aat:endLine 328;
+    aat:officialHref "#xuebaochai";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "xuebaochai";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[薛宝钗, rel=rival-in-love, weight=0.8]";
+    aat:rel "rival-in-love";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:sourceSelector "lindaiyu";
+    aat:startColumn 1;
+    aat:startLine 328;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:targetSelector "薛宝钗";
+    aat:weight "0.8".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l33-c7-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0> rel:mother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾政";
+    aat:endColumn 45;
+    aat:endLine 33;
+    aat:officialHref "#jiazheng";
+    aat:officialReftext "贾政";
+    aat:officialResolvedId "jiazheng";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾政[贾政, rel=mother-of, weight=0.5]";
+    aat:rel "mother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    aat:sourceSelector "jiamu";
+    aat:startColumn 7;
+    aat:startLine 33;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>;
+    aat:targetSelector "贾政";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l332-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0> rel:granddaughter-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾母";
+    aat:endColumn 47;
+    aat:endLine 332;
+    aat:officialHref "#jiamu";
+    aat:officialReftext "贾母";
+    aat:officialResolvedId "jiamu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾母[贾母, rel=granddaughter-of, weight=0.85]";
+    aat:rel "granddaughter-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:sourceSelector "lindaiyu";
+    aat:startColumn 1;
+    aat:startLine 332;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    aat:targetSelector "贾母";
+    aat:weight "0.85".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l34-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0> rel:grandmother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "林黛玉";
+    aat:endColumn 47;
+    aat:endLine 34;
+    aat:officialHref "#lindaiyu";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "lindaiyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[林黛玉, rel=grandmother-of, weight=0.85]";
+    aat:rel "grandmother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    aat:sourceSelector "jiamu";
+    aat:startColumn 1;
+    aat:startLine 34;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:targetSelector "林黛玉";
+    aat:weight "0.85".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l351-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l338-o0> rel:cousin <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "林黛玉";
+    aat:endColumn 41;
+    aat:endLine 351;
+    aat:officialHref "#lindaiyu";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "lindaiyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[林黛玉, rel=cousin, weight=0.5]";
+    aat:rel "cousin";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l338-o0>;
+    aat:sourceSelector "shixiangyun";
+    aat:startColumn 4;
+    aat:startLine 351;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:targetSelector "林黛玉";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l353-c10-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l338-o0> rel:poetry-friend <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "薛宝钗";
+    aat:endColumn 54;
+    aat:endLine 353;
+    aat:officialHref "#xuebaochai";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "xuebaochai";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[薛宝钗, rel=poetry-friend, weight=0.6]";
+    aat:rel "poetry-friend";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l338-o0>;
+    aat:sourceSelector "shixiangyun";
+    aat:startColumn 10;
+    aat:startLine 353;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:targetSelector "薛宝钗";
+    aat:weight "0.6".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l376-c6-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l361-o0> rel:scandal-with <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾珍";
+    aat:endColumn 47;
+    aat:endLine 376;
+    aat:officialHref "#jiashen";
+    aat:officialReftext "贾珍";
+    aat:officialResolvedId "jiashen";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾珍[贾珍, rel=scandal-with, weight=0.9]";
+    aat:rel "scandal-with";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l361-o0>;
+    aat:sourceSelector "qinkeqing";
+    aat:startColumn 6;
+    aat:startLine 376;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0>;
+    aat:targetSelector "贾珍";
+    aat:weight "0.9".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l388-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0> rel:scandal-with <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l361-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "秦可卿";
+    aat:endColumn 47;
+    aat:endLine 388;
+    aat:officialHref "#qinkeqing";
+    aat:officialReftext "秦可卿";
+    aat:officialResolvedId "qinkeqing";
+    aat:officialResolvedType "section";
+    aat:raw "xref:秦可卿[秦可卿, rel=scandal-with, weight=0.9]";
+    aat:rel "scandal-with";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0>;
+    aat:sourceSelector "jiashen";
+    aat:startColumn 4;
+    aat:startLine 388;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l361-o0>;
+    aat:targetSelector "秦可卿";
+    aat:weight "0.9".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l393-c8-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0> rel:harasses <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "尤二姐";
+    aat:endColumn 47;
+    aat:endLine 393;
+    aat:officialHref "#youerjie";
+    aat:officialReftext "尤二姐";
+    aat:officialResolvedId "youerjie";
+    aat:officialResolvedType "section";
+    aat:raw "xref:尤二姐[尤二姐, rel=harasses, weight=0.6]";
+    aat:rel "harasses";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0>;
+    aat:sourceSelector "jiashen";
+    aat:startColumn 8;
+    aat:startLine 393;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0>;
+    aat:targetSelector "尤二姐";
+    aat:weight "0.6".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l394-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0> rel:harasses <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l413-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "尤三姐";
+    aat:endColumn 40;
+    aat:endLine 394;
+    aat:officialHref "#yousanjie";
+    aat:officialReftext "尤三姐";
+    aat:officialResolvedId "yousanjie";
+    aat:officialResolvedType "section";
+    aat:raw "xref:尤三姐[尤三姐, rel=harasses, weight=0.4]";
+    aat:rel "harasses";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l381-o0>;
+    aat:sourceSelector "jiashen";
+    aat:startColumn 1;
+    aat:startLine 394;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l413-o0>;
+    aat:targetSelector "尤三姐";
+    aat:weight "0.4".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l404-c12-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0> rel:concubine-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾琏";
+    aat:endColumn 53;
+    aat:endLine 404;
+    aat:officialHref "#jialian";
+    aat:officialReftext "贾琏";
+    aat:officialResolvedId "jialian";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾琏[贾琏, rel=concubine-of, weight=0.7]";
+    aat:rel "concubine-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0>;
+    aat:sourceSelector "youerjie";
+    aat:startColumn 12;
+    aat:startLine 404;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l127-o0>;
+    aat:targetSelector "贾琏";
+    aat:weight "0.7".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l410-c5-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0> rel:destroyed-by <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>)>>;
+    a aat:XrefEdge;
+    aat:endColumn 43;
+    aat:endLine 410;
+    aat:officialHref "#wangxifeng";
+    aat:officialReftext "王熙凤";
+    aat:officialResolvedId "wangxifeng";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王熙凤[rel=destroyed-by, weight=0.9]";
+    aat:rel "destroyed-by";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l400-o0>;
+    aat:sourceSelector "youerjie";
+    aat:startColumn 5;
+    aat:startLine 410;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    aat:targetSelector "王熙凤";
+    aat:weight "0.9".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l454-c8-o0> a aat:XrefEdge;
+    aat:displayLabel "巧姐";
+    aat:endColumn 44;
+    aat:endLine 454;
+    aat:officialHref "#巧姐";
+    aat:officialReftext "巧姐";
+    aat:officialResolvedId "巧姐";
+    aat:raw "xref:巧姐[巧姐, rel=rescues, weight=0.9]";
+    aat:rel "rescues";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l444-o0>;
+    aat:sourceSelector "liulaolao";
+    aat:startColumn 8;
+    aat:startLine 454;
+    aat:syntax "macro";
+    aat:targetSelector "巧姐";
+    aat:weight "0.9".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l48-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0> rel:father-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾宝玉";
+    aat:endColumn 43;
+    aat:endLine 48;
+    aat:officialHref "#jiabaoyu";
+    aat:officialReftext "贾宝玉";
+    aat:officialResolvedId "jiabaoyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾宝玉[贾宝玉, rel=father-of, weight=0.3]";
+    aat:rel "father-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>;
+    aat:sourceSelector "jiazheng";
+    aat:startColumn 3;
+    aat:startLine 48;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l97-o0>;
+    aat:targetSelector "贾宝玉";
+    aat:weight "0.3".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l55-c3-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0> rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 44;
+    aat:endLine 55;
+    aat:officialHref "#wangfuren";
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wangfuren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王夫人[王夫人, rel=married-to, weight=0.5]";
+    aat:rel "married-to";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>;
+    aat:sourceSelector "jiazheng";
+    aat:startColumn 3;
+    aat:startLine 55;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:targetSelector "王夫人";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l57-c1-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0> rel:son-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾母";
+    aat:endColumn 36;
+    aat:endLine 57;
+    aat:officialHref "#jiamu";
+    aat:officialReftext "贾母";
+    aat:officialResolvedId "jiamu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾母[贾母, rel=son-of, weight=0.5]";
+    aat:rel "son-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>;
+    aat:sourceSelector "jiazheng";
+    aat:startColumn 1;
+    aat:startLine 57;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l25-o0>;
+    aat:targetSelector "贾母";
+    aat:weight "0.5".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l64-c10-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0> rel:aunt-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王熙凤";
+    aat:endColumn 48;
+    aat:endLine 64;
+    aat:officialHref "#wangxifeng";
+    aat:officialReftext "王熙凤";
+    aat:officialResolvedId "wangxifeng";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王熙凤[王熙凤, rel=aunt-of, weight=0.6]";
+    aat:rel "aunt-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:sourceSelector "wangfuren";
+    aat:startColumn 10;
+    aat:startLine 64;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l142-o0>;
+    aat:targetSelector "王熙凤";
+    aat:weight "0.6".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l69-c5-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0> rel:dislikes <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "林黛玉";
+    aat:endColumn 44;
+    aat:endLine 69;
+    aat:officialHref "#lindaiyu";
+    aat:officialReftext "林黛玉";
+    aat:officialResolvedId "lindaiyu";
+    aat:officialResolvedType "section";
+    aat:raw "xref:林黛玉[林黛玉, rel=dislikes, weight=0.7]";
+    aat:rel "dislikes";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:sourceSelector "wangfuren";
+    aat:startColumn 5;
+    aat:startLine 69;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l303-o0>;
+    aat:targetSelector "林黛玉";
+    aat:weight "0.7".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l71-c6-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0> rel:Prefers-as-daughter-in-law <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "薛宝钗";
+    aat:endColumn 63;
+    aat:endLine 71;
+    aat:officialHref "#xuebaochai";
+    aat:officialReftext "薛宝钗";
+    aat:officialResolvedId "xuebaochai";
+    aat:officialResolvedType "section";
+    aat:raw "xref:薛宝钗[薛宝钗, rel=Prefers-as-daughter-in-law, weight=0.8]";
+    aat:rel "Prefers-as-daughter-in-law";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:sourceSelector "wangfuren";
+    aat:startColumn 6;
+    aat:startLine 71;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l252-o0>;
+    aat:targetSelector "薛宝钗";
+    aat:weight "0.8".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l80-c6-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l74-o0> rel:desires <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l226-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "鸳鸯";
+    aat:endColumn 42;
+    aat:endLine 80;
+    aat:officialHref "#yuanyang";
+    aat:officialReftext "鸳鸯";
+    aat:officialResolvedId "yuanyang";
+    aat:officialResolvedType "section";
+    aat:raw "xref:鸳鸯[鸳鸯, rel=desires, weight=0.4]";
+    aat:rel "desires";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l74-o0>;
+    aat:sourceSelector "jiashu";
+    aat:startColumn 6;
+    aat:startLine 80;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l226-o0>;
+    aat:targetSelector "鸳鸯";
+    aat:weight "0.4".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l83-c5-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l74-o0> rel:brother-of <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "贾政";
+    aat:endColumn 44;
+    aat:endLine 83;
+    aat:officialHref "#jiazheng";
+    aat:officialReftext "贾政";
+    aat:officialResolvedId "jiazheng";
+    aat:officialResolvedType "section";
+    aat:raw "xref:贾政[贾政, rel=brother-of, weight=0.3]";
+    aat:rel "brother-of";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l74-o0>;
+    aat:sourceSelector "jiashu";
+    aat:startColumn 5;
+    aat:startLine 83;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l43-o0>;
+    aat:targetSelector "贾政";
+    aat:weight "0.3".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l85-c4-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l74-o0> rel:married-to <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l87-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "邢夫人";
+    aat:endColumn 45;
+    aat:endLine 85;
+    aat:officialHref "#xingfuren";
+    aat:officialReftext "邢夫人";
+    aat:officialResolvedId "xingfuren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:邢夫人[邢夫人, rel=married-to, weight=0.4]";
+    aat:rel "married-to";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l74-o0>;
+    aat:sourceSelector "jiashu";
+    aat:startColumn 4;
+    aat:startLine 85;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l87-o0>;
+    aat:targetSelector "邢夫人";
+    aat:weight "0.4".
+<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#xref-edge-l93-c17-o0> rdf:reifies <<(<urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l87-o0> rel:sister-in-law-rival <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "王夫人";
+    aat:endColumn 67;
+    aat:endLine 93;
+    aat:officialHref "#wangfuren";
+    aat:officialReftext "王夫人";
+    aat:officialResolvedId "wangfuren";
+    aat:officialResolvedType "section";
+    aat:raw "xref:王夫人[王夫人, rel=sister-in-law-rival, weight=0.5]";
+    aat:rel "sister-in-law-rival";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:sourceHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l87-o0>;
+    aat:sourceSelector "xingfuren";
+    aat:startColumn 17;
+    aat:startLine 93;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:5cafab1e50a33cba4f3b9e54a0c8435144b993a3786eb6b169171004f4ddeceb#heading-l60-o0>;
+    aat:targetSelector "王夫人";
+    aat:weight "0.5".

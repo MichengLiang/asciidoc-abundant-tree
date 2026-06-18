@@ -42,7 +42,11 @@
 		"samples/book-entry-demo/chapters/*.adoc",
 		"samples/cold-chain-payload/*.adoc",
 		"samples/cold-chain-payload/*.md",
-		"samples/cold-chain-payload/*.py"
+		"samples/cold-chain-payload/*.py",
+		"samples/dream-of-red-chamber-rdf-projection/*.adoc",
+		"samples/dream-of-red-chamber-rdf-projection/*.md",
+		"samples/dream-of-red-chamber-rdf-projection/*.py",
+		"samples/dream-of-red-chamber-rdf-projection/*.ttl"
 	],
 	"sideEffects": false,
 	"keywords": [
