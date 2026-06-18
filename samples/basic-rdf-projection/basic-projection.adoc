@@ -7,10 +7,13 @@
 
 结构示例要求 xref:required-rule[约束规则, rel=requires, weight=0.7]，并把关系证据写入说明节点。
 
-// 如果元数据的值很长也可以分多行标注
-[priority=normal]
 [#required-rule.rule, status=active]
 == 约束规则
+
+priority:: normal
+summary::
+约束规则集中说明结构示例必须满足的条件。
+多行说明保留为同一个标题字段。
 
 约束规则展示 role、status、priority 和入边约束如何进入下游 shape。
 
