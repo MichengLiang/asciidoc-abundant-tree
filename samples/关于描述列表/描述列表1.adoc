@@ -1,0 +1,24 @@
+= 我的笔记
+:apple: 
+
+下面是系统的配置参数：
+
+Host:: 127.0.0.1
+Port:: 8080
+Timeout:: 3000ms
+
+系统总配置 (System Configuration)::
+这里定义了整个后台运行环境的基础参数。
+
+数据库 (Database):::
+主数据的存储节点配置。
+主机地址 (Host):::: 192.168.1.100
+端口号 (Port):::: 5432
+连接池 (Connection Pool)::::
+初始大小 (Initial Size);; 10
+最大活跃数 (Max Active);; 200
+
+缓存中间件 (Cache):::
+用于加速高频数据的读取。
+引擎 (Engine):::: Redis
+集群模式 (Cluster Mode):::: 启用 (true)
