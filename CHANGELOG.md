@@ -6,6 +6,23 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.18 - 2026-06-18
+
+### Added
+
+- Added heading description metadata attachment for flat leading AsciiDoc description lists under sections, exposing natural single-line and multiline title metadata through `SectionNode.descriptionMetadata`.
+- Added RDF 1.2 direct field projection for heading description metadata fields, so description list entries such as `priority:: normal` and multiline `summary::` values appear on heading resources alongside attrlist fields.
+- Added heading description metadata samples and implementation notes under `samples/关于描述列表/`, and included those sample documents in the npm package files.
+
+### Changed
+
+- Updated the basic RDF projection sample to demonstrate title metadata written as the first continuous description list under a heading, including regenerated Turtle, SHACL, Python consumer, and Oxigraph output records.
+- Ordered pretty tree output so `descriptionMetadata` appears before ordinary section children, keeping absorbed description list metadata visible near heading metadata.
+
+### Fixed
+
+- Preserved decorated or structurally attached description lists as ordinary content instead of absorbing them as heading metadata.
+
 ## 0.1.17 - 2026-06-17
 
 ### Changed
