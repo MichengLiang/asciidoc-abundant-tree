@@ -203,6 +203,72 @@ pear::: 3个
 		expect(section.children?.[0]?.kind).toBe("descriptionList");
 	});
 
+	it("does not absorb decorated leading description lists with block metadata", () => {
+		const path = writeFixture(
+			"heading-description-metadata-decorated-list.adoc",
+			`= Probe
+
+== Decorated
+
+[#terms]
+.Terms
+[horizontal,labelwidth=25,itemwidth=75]
+Term:: Description.
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = onlySection(document, "Decorated");
+
+		expect(section.descriptionMetadata).toBeUndefined();
+		expect(section.children?.[0]).toEqual(
+			expect.objectContaining({
+				kind: "descriptionList",
+				ids: ["terms"],
+				title: "Terms",
+				style: "horizontal",
+			}),
+		);
+	});
+
+	it("does not absorb leading description lists with structural attached children", () => {
+		const path = writeFixture(
+			"heading-description-metadata-attached-listing.adoc",
+			`= Probe
+
+== Attached
+
+Term::
++
+----
+attached block
+----
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = onlySection(document, "Attached");
+
+		expect(section.descriptionMetadata).toBeUndefined();
+		expect(section.children?.[0]).toEqual(
+			expect.objectContaining({
+				kind: "descriptionList",
+				items: [
+					expect.objectContaining({
+						description: expect.objectContaining({
+							children: [
+								expect.objectContaining({
+									kind: "listing",
+									content: "attached block",
+								}),
+							],
+						}),
+					}),
+				],
+			}),
+		);
+	});
+
 	it("attaches child section metadata only to the child section", () => {
 		const path = writeFixture(
 			"heading-description-metadata-child-section.adoc",

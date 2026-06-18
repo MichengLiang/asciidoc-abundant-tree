@@ -95,33 +95,19 @@ describe("book-entry parser integration", () => {
 		const glossary = collectSections(document.children).find(
 			(section) => section.title === "Glossary Origin",
 		);
-		const list = glossary?.children?.find(
-			(node) => node.kind === "descriptionList",
-		) as DescriptionListView | undefined;
+		const metadata = glossary?.descriptionMetadata;
 
-		expect(list?.source?.relativePath).toBe(
+		expect(metadata?.source?.relativePath).toBe(
 			"simple-book/backmatter/glossary.adoc",
 		);
-		expect(list?.items[0]?.terms[0]?.source?.relativePath).toBe(
+		expect(metadata?.entries[0]?.term.source?.relativePath).toBe(
 			"simple-book/backmatter/glossary.adoc",
 		);
-		expect(list?.items[0]?.description?.source?.relativePath).toBe(
+		expect(metadata?.entries[0]?.description?.source?.relativePath).toBe(
 			"simple-book/backmatter/glossary.adoc",
 		);
 	});
 });
-
-type DescriptionListView = AbundantNode & {
-	kind: "descriptionList";
-	items: Array<{
-		description?: {
-			source?: { relativePath?: string };
-		};
-		terms: Array<{
-			source?: { relativePath?: string };
-		}>;
-	}>;
-};
 
 function collectSections(nodes: readonly AbundantNode[]): SectionNode[] {
 	const result: SectionNode[] = [];

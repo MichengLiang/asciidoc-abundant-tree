@@ -31,6 +31,7 @@ function attachInSection(section: SectionNode): void {
 
 	if (
 		run.length > 0 &&
+		run.every(isPlainHeadingMetadataList) &&
 		!run.some((list) =>
 			(list.items ?? []).some((item) => containsNestedDescriptionList(item)),
 		)
@@ -53,6 +54,26 @@ function leadingDescriptionListRun(
 		run.push(child);
 	}
 	return run;
+}
+
+function isPlainHeadingMetadataList(list: DescriptionListNode): boolean {
+	if (
+		list.ids.length > 0 ||
+		list.title !== undefined ||
+		list.style !== undefined ||
+		(list.metadata?.length ?? 0) > 0
+	) {
+		return false;
+	}
+	return list.items.every(
+		(item) =>
+			item.description === undefined ||
+			(item.description.children ?? []).every(isInlineOccurrenceNode),
+	);
+}
+
+function isInlineOccurrenceNode(node: AbundantNode): boolean {
+	return node.kind === "xref" || node.kind === "anchor";
 }
 
 function containsNestedDescriptionList(node: AbundantNode): boolean {
