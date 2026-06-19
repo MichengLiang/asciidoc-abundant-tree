@@ -1,4 +1,11 @@
-import type { AbundantDocument, AbundantNode, MetadataNode } from "../model";
+import type {
+	AbundantDocument,
+	AbundantNode,
+	MetadataNode,
+	SectionNode,
+	SourceSpan,
+} from "../model";
+import { definedObject } from "../object-utils";
 import { fieldPredicate } from "./field-predicate";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
@@ -17,71 +24,147 @@ export type ProjectSurfaceAttributesInput = {
 	readonly xrefIndex: Rdf12XrefIndex;
 };
 
+type HeadingFieldFact = {
+	readonly owner: SectionNode;
+	readonly field: string;
+	readonly value: string;
+	readonly sourceKind:
+		| "attrlist-role"
+		| "attrlist-attribute"
+		| "description-metadata"
+		| "heading-inline-metadata";
+	readonly sourceSpan?: SourceSpan;
+};
+
 export function projectSurfaceAttributes(
 	input: ProjectSurfaceAttributesInput,
 ): void {
-	for (const node of input.document.children) {
-		projectNodeAttributes(input.graph, input.nodeIndex, node);
+	for (const fact of collectHeadingFieldFacts(
+		input.document,
+		input.nodeIndex,
+	)) {
+		const owner = input.nodeIndex.get(fact.owner);
+		if (owner === undefined) {
+			continue;
+		}
+		addFieldTriple(input.graph, owner, fact.field, fact.value);
 	}
 }
 
-function projectNodeAttributes(
-	graph: Rdf12Graph,
+function collectHeadingFieldFacts(
+	document: AbundantDocument,
 	nodeIndex: Rdf12NodeIndex,
+): HeadingFieldFact[] {
+	const facts: HeadingFieldFact[] = [];
+	for (const node of document.children) {
+		collectNodeHeadingFieldFacts(facts, node);
+	}
+	facts.push(...headingInlineMetadataFacts(document, nodeIndex));
+	return facts;
+}
+
+function collectNodeHeadingFieldFacts(
+	facts: HeadingFieldFact[],
 	node: AbundantNode,
 ): void {
 	if (node.kind === "section") {
-		projectHeadingMetadataAttributes(graph, nodeIndex, node, node.metadata);
-		projectHeadingDescriptionMetadataAttributes(graph, nodeIndex, node);
+		facts.push(...headingMetadataFacts(node, node.metadata));
+		facts.push(...headingDescriptionMetadataFacts(node));
 	}
 
 	for (const child of node.children ?? []) {
-		projectNodeAttributes(graph, nodeIndex, child);
+		collectNodeHeadingFieldFacts(facts, child);
 	}
 }
 
-function projectHeadingMetadataAttributes(
-	graph: Rdf12Graph,
-	nodeIndex: Rdf12NodeIndex,
-	node: AbundantNode,
+function headingMetadataFacts(
+	owner: SectionNode,
 	metadata: readonly MetadataNode[] | undefined,
-): void {
-	const owner = nodeIndex.get(node);
-	if (owner === undefined) {
-		return;
-	}
-
+): HeadingFieldFact[] {
+	const facts: HeadingFieldFact[] = [];
 	for (const item of metadata ?? []) {
 		for (const role of item.roles ?? []) {
-			addFieldTriple(graph, owner, "role", role);
+			facts.push(
+				definedObject({
+					owner,
+					field: "role",
+					value: role,
+					sourceKind: "attrlist-role",
+					sourceSpan: item.source?.sourceSpan,
+				}) as HeadingFieldFact,
+			);
 		}
 		if (item.metadataKind !== "attrlist" || item.attributes === undefined) {
 			continue;
 		}
 		for (const [name, value] of Object.entries(item.attributes)) {
-			addFieldTriple(graph, owner, name, String(value));
+			facts.push(
+				definedObject({
+					owner,
+					field: name,
+					value: String(value),
+					sourceKind: "attrlist-attribute",
+					sourceSpan: item.source?.sourceSpan,
+				}) as HeadingFieldFact,
+			);
 		}
 	}
+	return facts;
 }
 
-function projectHeadingDescriptionMetadataAttributes(
-	graph: Rdf12Graph,
-	nodeIndex: Rdf12NodeIndex,
-	node: AbundantNode,
-): void {
-	if (node.kind !== "section") {
-		return;
-	}
-	const owner = nodeIndex.get(node);
-	if (owner === undefined) {
-		return;
-	}
+function headingDescriptionMetadataFacts(
+	owner: SectionNode,
+): HeadingFieldFact[] {
+	return (owner.descriptionMetadata?.entries ?? []).map(
+		(entry) =>
+			definedObject({
+				owner,
+				field: entry.key,
+				value: entry.value,
+				sourceKind: "description-metadata",
+				sourceSpan: entry.term.sourceSpan,
+			}) as HeadingFieldFact,
+	);
+}
 
-	for (const [name, value] of Object.entries(
-		node.descriptionMetadata?.fields ?? {},
-	)) {
-		addFieldTriple(graph, owner, name, value);
+function headingInlineMetadataFacts(
+	document: AbundantDocument,
+	nodeIndex: Rdf12NodeIndex,
+): HeadingFieldFact[] {
+	const sectionById = sectionBySourceId(nodeIndex);
+	return document.headingInlineMetadataOccurrences.flatMap((occurrence) => {
+		if (occurrence.containingSectionId === undefined) {
+			return [];
+		}
+		const owner = sectionById.get(occurrence.containingSectionId);
+		if (!owner) {
+			return [];
+		}
+		return [
+			definedObject({
+				owner,
+				field: occurrence.field,
+				value: occurrence.value,
+				sourceKind: "heading-inline-metadata" as const,
+				sourceSpan: occurrence.sourceSpan,
+			}) as HeadingFieldFact,
+		];
+	});
+}
+
+function sectionBySourceId(
+	nodeIndex: Rdf12NodeIndex,
+): Map<string, SectionNode> {
+	const sections = new Map<string, SectionNode>();
+	for (const entry of nodeIndex.entries()) {
+		if (entry.kind !== "section") {
+			continue;
+		}
+		for (const id of entry.node.ids) {
+			sections.set(id, entry.node);
+		}
 	}
+	return sections;
 }
 
 function addFieldTriple(
