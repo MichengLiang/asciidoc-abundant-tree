@@ -215,4 +215,24 @@ Visible hmeta:status[active].
 			document.headingInlineMetadataOccurrences.map((item) => item.value),
 		).toEqual(["active"]);
 	});
+
+	it("does not scan block titles or metadata ranges as hmeta surfaces", () => {
+		const path = writeFixture(
+			"heading-inline-metadata-metadata-ranges.adoc",
+			`= Probe
+
+.Block title hmeta:status[title]
+Paragraph hmeta:status[body].
+
+[#s.hmeta:role[metadata]]
+== S
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+
+		expect(
+			document.headingInlineMetadataOccurrences.map((item) => item.raw),
+		).toEqual(["hmeta:status[body]"]);
+	});
 });

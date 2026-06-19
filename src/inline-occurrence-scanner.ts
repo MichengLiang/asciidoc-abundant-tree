@@ -52,6 +52,15 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 			continue;
 		}
 		if (hasDiagnosticPolicyAncestor(surface)) {
+			if (isPreambleParagraph(surface)) {
+				scanHeadingInlineMetadataRange(
+					options.lineTable,
+					interval.contentSpan?.startLine ?? interval.span.startLine,
+					interval.contentSpan?.endLine ?? interval.span.endLine,
+					headingInlineMetadataOccurrences,
+					options.toolDiagnostics,
+				);
+			}
 			continue;
 		}
 		if (interval.metadataSpan) {
@@ -61,8 +70,6 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 				interval.metadataSpan.endLine,
 				xrefOccurrences,
 				anchorOccurrences,
-				headingInlineMetadataOccurrences,
-				options.toolDiagnostics,
 			);
 		}
 		const span = interval.contentSpan ?? interval.span;
@@ -214,6 +221,12 @@ function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
 		current = current.parent;
 	}
 	return false;
+}
+
+function isPreambleParagraph(surface: OfficialBlockSurface): boolean {
+	return (
+		surface.context === "paragraph" && surface.parent?.context === "preamble"
+	);
 }
 
 function scansMacroSubstitutedContent(surface: OfficialBlockSurface): boolean {
@@ -620,8 +633,6 @@ function scanMetadataRange(
 	endLine: number,
 	xrefOccurrences: XrefOccurrenceNode[],
 	anchorOccurrences: AnchorOccurrenceNode[],
-	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
-	toolDiagnostics: ToolDiagnostic[] | undefined,
 ): void {
 	for (let lineNumber = startLine; lineNumber <= endLine; lineNumber += 1) {
 		const line = lineTable.lines[lineNumber - 1];
@@ -632,6 +643,21 @@ function scanMetadataRange(
 			scanXrefMatches(lineTable, line, xrefOccurrences);
 		}
 		scanAnchorMatches(lineTable, line, anchorOccurrences);
+	}
+}
+
+function scanHeadingInlineMetadataRange(
+	lineTable: LineTable,
+	startLine: number,
+	endLine: number,
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
+	toolDiagnostics: ToolDiagnostic[] | undefined,
+): void {
+	for (let lineNumber = startLine; lineNumber <= endLine; lineNumber += 1) {
+		const line = lineTable.lines[lineNumber - 1];
+		if (!line) {
+			continue;
+		}
 		scanHeadingInlineMetadataMatches(
 			lineTable,
 			line,
