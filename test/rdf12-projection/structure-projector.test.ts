@@ -264,6 +264,7 @@ function virtualDocumentWithTitle(): AbundantDocument {
 		targets: [],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }

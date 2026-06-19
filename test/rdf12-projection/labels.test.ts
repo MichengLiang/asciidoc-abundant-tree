@@ -266,6 +266,7 @@ describe("rdf12 heading label space", () => {
 				],
 				xrefOccurrences: [],
 				anchorOccurrences: [],
+				headingInlineMetadataOccurrences: [],
 				toolDiagnostics: [],
 			},
 			baseIri: "https://example.invalid/",

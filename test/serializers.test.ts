@@ -31,6 +31,7 @@ const document: AbundantDocument = {
 	targets: [],
 	xrefOccurrences: [],
 	anchorOccurrences: [],
+	headingInlineMetadataOccurrences: [],
 	toolDiagnostics: [],
 };
 

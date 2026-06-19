@@ -244,6 +244,7 @@ function documentWithoutTitleHeading(): AbundantDocument {
 		targets: [],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }

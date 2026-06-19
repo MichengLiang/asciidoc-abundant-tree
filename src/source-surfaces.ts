@@ -26,6 +26,7 @@ import {
 } from "./inline-occurrence-scanner";
 import type {
 	AnchorOccurrenceNode,
+	HeadingInlineMetadataOccurrenceNode,
 	SectionNode,
 	TargetType,
 	ToolDiagnostic,
@@ -50,6 +51,7 @@ export type SourceSurfaces = {
 	sections: SectionNode[];
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 	sectionByLine: Map<number, SectionNode>;
 	sectionScopeIndex?: SourceScopeIndex;
 	toolDiagnostics: ToolDiagnostic[];
@@ -160,25 +162,30 @@ export function projectSourceSurfaces(options: {
 		logicalSource || sourceAwareDocument
 			? new Map<number, SectionNode>()
 			: mapSectionScope(sections, options.lineTable.lines.length);
-	const { xrefOccurrences, anchorOccurrences } =
-		scanInlineOccurrencesInOfficialBlocks({
-			lineTable: options.lineTable,
-			blockSurfaces,
-			intervalByBlock,
-			toolDiagnostics,
-		});
+	const {
+		xrefOccurrences,
+		anchorOccurrences,
+		headingInlineMetadataOccurrences,
+	} = scanInlineOccurrencesInOfficialBlocks({
+		lineTable: options.lineTable,
+		blockSurfaces,
+		intervalByBlock,
+		toolDiagnostics,
+	});
 	let sectionScopeIndex: SourceScopeIndex | undefined;
 	if (logicalSource || sourceAwareDocument) {
 		sectionScopeIndex = buildSourceScopeIndex(sections);
 		assignContainingSectionIdsFromSourceScope(
 			xrefOccurrences,
 			anchorOccurrences,
+			headingInlineMetadataOccurrences,
 			sectionScopeIndex,
 		);
 	} else {
 		assignContainingSectionIds(
 			xrefOccurrences,
 			anchorOccurrences,
+			headingInlineMetadataOccurrences,
 			sectionByLine,
 		);
 	}
@@ -192,6 +199,7 @@ export function projectSourceSurfaces(options: {
 		sections,
 		xrefOccurrences,
 		anchorOccurrences,
+		headingInlineMetadataOccurrences,
 		sectionByLine,
 		...(sectionScopeIndex ? { sectionScopeIndex } : {}),
 		toolDiagnostics,

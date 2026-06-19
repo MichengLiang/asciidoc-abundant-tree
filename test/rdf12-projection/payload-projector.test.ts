@@ -476,6 +476,7 @@ function baseDocument(): AbundantDocument {
 		targets: [],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }

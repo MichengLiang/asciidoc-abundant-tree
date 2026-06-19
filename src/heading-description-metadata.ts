@@ -73,7 +73,11 @@ function isPlainHeadingMetadataList(list: DescriptionListNode): boolean {
 }
 
 function isInlineOccurrenceNode(node: AbundantNode): boolean {
-	return node.kind === "xref" || node.kind === "anchor";
+	return (
+		node.kind === "xref" ||
+		node.kind === "anchor" ||
+		node.kind === "headingInlineMetadata"
+	);
 }
 
 function containsNestedDescriptionList(node: AbundantNode): boolean {

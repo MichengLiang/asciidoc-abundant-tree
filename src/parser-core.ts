@@ -40,6 +40,8 @@ export function parseAsciidoctorDocument(
 		sectionByLine: sourceSurfaces.sectionByLine,
 		xrefOccurrences: sourceSurfaces.xrefOccurrences,
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
+		headingInlineMetadataOccurrences:
+			sourceSurfaces.headingInlineMetadataOccurrences,
 		intervalByBlock: sourceSurfaces.intervalByBlock,
 		projectableBlocks: sourceSurfaces.projectableBlocks,
 		containerFallbackBlocks: sourceSurfaces.containerFallbackBlocks,
@@ -76,6 +78,8 @@ export function parseAsciidoctorDocument(
 		targets: officialProjection.targets,
 		xrefOccurrences: sourceSurfaces.xrefOccurrences,
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
+		headingInlineMetadataOccurrences:
+			sourceSurfaces.headingInlineMetadataOccurrences,
 		toolDiagnostics: sourceSurfaces.toolDiagnostics,
 	};
 	return attachHeadingDescriptionMetadata(document);

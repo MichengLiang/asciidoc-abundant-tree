@@ -129,7 +129,7 @@ describe("book-entry source scope index", () => {
 			},
 		};
 
-		assignContainingSectionIdsFromSourceScope([xref], [anchor], index);
+		assignContainingSectionIdsFromSourceScope([xref], [anchor], [], index);
 
 		expect(xref.containingSectionId).toBe("xref-origin");
 		expect(anchor.containingSectionId).toBe("xref-origin");

@@ -256,6 +256,7 @@ function duplicateDocument(): AbundantDocument {
 		targets: [],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }
@@ -324,6 +325,7 @@ function ambiguousTargetAliasDocument(): AbundantDocument {
 		],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }
@@ -381,6 +383,7 @@ function repeatedAliasDocument(): AbundantDocument {
 		],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }
@@ -416,6 +419,7 @@ function xrefDisplayDocument(): AbundantDocument {
 		targets: [],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }

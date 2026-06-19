@@ -99,6 +99,7 @@ describe("heading tree projection", () => {
 			targets: [],
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			toolDiagnostics: [],
 		};
 

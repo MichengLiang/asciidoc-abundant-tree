@@ -1,5 +1,6 @@
 import type {
 	AnchorOccurrenceNode,
+	HeadingInlineMetadataOccurrenceNode,
 	SectionNode,
 	XrefOccurrenceNode,
 } from "../model";
@@ -107,9 +108,14 @@ export function lookupContainingSection(
 export function assignContainingSectionIdsFromSourceScope(
 	xrefs: XrefOccurrenceNode[],
 	anchors: AnchorOccurrenceNode[],
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
 	index: SourceScopeIndex,
 ): void {
-	for (const occurrence of [...xrefs, ...anchors]) {
+	for (const occurrence of [
+		...xrefs,
+		...anchors,
+		...headingInlineMetadataOccurrences,
+	]) {
 		const sectionId = lookupContainingSection(index, occurrence)?.ids[0];
 		if (sectionId !== undefined) {
 			occurrence.containingSectionId = sectionId;

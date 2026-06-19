@@ -192,6 +192,17 @@ export type AnchorOccurrenceNode = NodeBase & {
 	anchorScope?: "inline" | "block";
 };
 
+export type HeadingInlineMetadataOccurrenceNode = NodeBase & {
+	kind: "headingInlineMetadata";
+	syntax: "macro";
+	raw: string;
+	field: string;
+	value: string;
+	label?: string;
+	sourceSpan?: SourceSpan;
+	containingSectionId?: string;
+};
+
 export type TargetNode = NodeBase & {
 	kind: "target";
 	id: string;
@@ -224,6 +235,7 @@ export type AbundantNode =
 	| MetadataNode
 	| XrefOccurrenceNode
 	| AnchorOccurrenceNode
+	| HeadingInlineMetadataOccurrenceNode
 	| TargetNode
 	| TitleNode
 	| TextNode
@@ -241,6 +253,7 @@ export type AbundantDocument = {
 	targets: TargetNode[];
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 	toolDiagnostics: ToolDiagnostic[];
 };
 

@@ -399,6 +399,7 @@ function bookEntryPayloadDocument(): AbundantDocument {
 		targets: [],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }
@@ -442,6 +443,7 @@ function bookEntryXrefWithoutOriginDocument(): AbundantDocument {
 		targets: [],
 		xrefOccurrences: [],
 		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
 }

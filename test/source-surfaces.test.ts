@@ -172,6 +172,8 @@ describe("projectSourceSurfaces", () => {
 			sectionByLine: surfaces.sectionByLine,
 			xrefOccurrences: surfaces.xrefOccurrences,
 			anchorOccurrences: surfaces.anchorOccurrences,
+			headingInlineMetadataOccurrences:
+				surfaces.headingInlineMetadataOccurrences,
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
 			adapter: fakeAdapter(),
@@ -338,6 +340,8 @@ describe("projectSourceSurfaces", () => {
 			sectionByLine: surfaces.sectionByLine,
 			xrefOccurrences: surfaces.xrefOccurrences,
 			anchorOccurrences: surfaces.anchorOccurrences,
+			headingInlineMetadataOccurrences:
+				surfaces.headingInlineMetadataOccurrences,
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
 			adapter: fakeAdapter(),
@@ -368,6 +372,8 @@ describe("projectSourceSurfaces", () => {
 			sectionByLine: surfaces.sectionByLine,
 			xrefOccurrences: surfaces.xrefOccurrences,
 			anchorOccurrences: surfaces.anchorOccurrences,
+			headingInlineMetadataOccurrences:
+				surfaces.headingInlineMetadataOccurrences,
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
 			adapter: fakeAdapter(),
@@ -412,6 +418,8 @@ describe("projectSourceSurfaces", () => {
 			sectionByLine: surfaces.sectionByLine,
 			xrefOccurrences: surfaces.xrefOccurrences,
 			anchorOccurrences: surfaces.anchorOccurrences,
+			headingInlineMetadataOccurrences:
+				surfaces.headingInlineMetadataOccurrences,
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
 			projectableBlocks: surfaces.projectableBlocks,

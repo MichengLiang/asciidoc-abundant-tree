@@ -7,9 +7,11 @@ import {
 	recoverSourceAwarePointSourceLayer,
 	sourceAwareDocumentForLineTable,
 } from "./book-entry/source-aware-coordinate";
+import { interpretHeadingInlineMetadataAttributes } from "./heading-inline-metadata";
 import { parseMacroArguments } from "./macro-argument-parser";
 import type {
 	AnchorOccurrenceNode,
+	HeadingInlineMetadataOccurrenceNode,
 	LineSpan,
 	SectionNode,
 	SourceSpan,
@@ -27,6 +29,7 @@ const shorthandXrefPattern = /<<([^>,]+)(?:,\s*([^>]+))?>>/gu;
 const macroXrefPattern = /xref:([^\s[]+)\[([^\]]*)\]/gu;
 const anchorPattern =
 	/\[\[([^,\]]+)(?:,([^\]]+))?\]\]|anchor:([^\s[]+)\[([^\]]*)\]/gu;
+const headingInlineMetadataPattern = /hmeta:([^\s[]+)\[([^\]]*)\]/gu;
 
 export function scanInlineOccurrencesInOfficialBlocks(options: {
 	lineTable: LineTable;
@@ -36,9 +39,12 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 }): {
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 } {
 	const xrefOccurrences: XrefOccurrenceNode[] = [];
 	const anchorOccurrences: AnchorOccurrenceNode[] = [];
+	const headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[] =
+		[];
 
 	for (const surface of options.blockSurfaces) {
 		const interval = options.intervalByBlock.get(surface.block);
@@ -55,6 +61,8 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 				interval.metadataSpan.endLine,
 				xrefOccurrences,
 				anchorOccurrences,
+				headingInlineMetadataOccurrences,
+				options.toolDiagnostics,
 			);
 		}
 		const span = interval.contentSpan ?? interval.span;
@@ -73,6 +81,8 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 				span.endLine,
 				xrefOccurrences,
 				anchorOccurrences,
+				headingInlineMetadataOccurrences,
+				options.toolDiagnostics,
 			);
 		} else {
 			scanInlineRange(
@@ -81,6 +91,8 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 				span.endLine,
 				xrefOccurrences,
 				anchorOccurrences,
+				headingInlineMetadataOccurrences,
+				options.toolDiagnostics,
 				descendantUnscannableRanges(surface, options.intervalByBlock),
 			);
 		}
@@ -116,11 +128,27 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 					options.toolDiagnostics,
 				)
 			: anchorOccurrences;
+	const recoveredHeadingInlineMetadata = sourceAwareDocument
+		? recoverSourceAwareInlineOrigins(
+				headingInlineMetadataOccurrences,
+				sourceAwareDocument,
+				options.toolDiagnostics,
+			)
+		: logicalSource
+			? recoverInlineOrigins(
+					headingInlineMetadataOccurrences,
+					logicalSource,
+					options.toolDiagnostics,
+				)
+			: headingInlineMetadataOccurrences;
 
 	return {
 		xrefOccurrences: dedupeOccurrences(recoveredXrefs).sort(compareSourceSpans),
 		anchorOccurrences:
 			dedupeOccurrences(recoveredAnchors).sort(compareSourceSpans),
+		headingInlineMetadataOccurrences: dedupeOccurrences(
+			recoveredHeadingInlineMetadata,
+		).sort(compareSourceSpans),
 	};
 }
 
@@ -201,9 +229,14 @@ function scansMacroSubstitutedContent(surface: OfficialBlockSurface): boolean {
 export function assignContainingSectionIds(
 	xrefs: XrefOccurrenceNode[],
 	anchors: AnchorOccurrenceNode[],
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
 	sectionByLine: Map<number, SectionNode>,
 ): void {
-	for (const occurrence of [...xrefs, ...anchors]) {
+	for (const occurrence of [
+		...xrefs,
+		...anchors,
+		...headingInlineMetadataOccurrences,
+	]) {
 		const line = occurrence.sourceSpan?.start.line;
 		const sectionId =
 			line === undefined ? undefined : sectionByLine.get(line)?.ids[0];
@@ -318,6 +351,8 @@ function scanInlineRange(
 	endLine: number,
 	xrefOccurrences: XrefOccurrenceNode[],
 	anchorOccurrences: AnchorOccurrenceNode[],
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
+	toolDiagnostics: ToolDiagnostic[] | undefined,
 	skipRanges: LineRange[] = [],
 ): void {
 	for (let lineNumber = startLine; lineNumber <= endLine; lineNumber += 1) {
@@ -330,6 +365,12 @@ function scanInlineRange(
 		}
 		scanXrefMatches(lineTable, line, xrefOccurrences);
 		scanAnchorMatches(lineTable, line, anchorOccurrences);
+		scanHeadingInlineMetadataMatches(
+			lineTable,
+			line,
+			headingInlineMetadataOccurrences,
+			toolDiagnostics,
+		);
 	}
 }
 
@@ -391,6 +432,8 @@ function scanTableInlineRange(
 	_endLine: number,
 	xrefOccurrences: XrefOccurrenceNode[],
 	anchorOccurrences: AnchorOccurrenceNode[],
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
+	toolDiagnostics: ToolDiagnostic[] | undefined,
 ): void {
 	for (const range of mergeLineSpans(collectTableScannableRanges(block))) {
 		scanInlineRange(
@@ -399,6 +442,8 @@ function scanTableInlineRange(
 			range.endLine,
 			xrefOccurrences,
 			anchorOccurrences,
+			headingInlineMetadataOccurrences,
+			toolDiagnostics,
 		);
 	}
 }
@@ -575,6 +620,8 @@ function scanMetadataRange(
 	endLine: number,
 	xrefOccurrences: XrefOccurrenceNode[],
 	anchorOccurrences: AnchorOccurrenceNode[],
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
+	toolDiagnostics: ToolDiagnostic[] | undefined,
 ): void {
 	for (let lineNumber = startLine; lineNumber <= endLine; lineNumber += 1) {
 		const line = lineTable.lines[lineNumber - 1];
@@ -585,6 +632,12 @@ function scanMetadataRange(
 			scanXrefMatches(lineTable, line, xrefOccurrences);
 		}
 		scanAnchorMatches(lineTable, line, anchorOccurrences);
+		scanHeadingInlineMetadataMatches(
+			lineTable,
+			line,
+			headingInlineMetadataOccurrences,
+			toolDiagnostics,
+		);
 	}
 }
 
@@ -626,6 +679,56 @@ function scanAnchorMatches(
 					sourceSpan,
 				},
 			}) as AnchorOccurrenceNode,
+		);
+	}
+}
+
+function scanHeadingInlineMetadataMatches(
+	lineTable: LineTable,
+	line: SourceLine,
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
+	toolDiagnostics: ToolDiagnostic[] | undefined,
+): void {
+	for (const match of line.text.matchAll(headingInlineMetadataPattern)) {
+		if (match.index === undefined || !match[1]) {
+			continue;
+		}
+		const raw = match[0];
+		const field = match[1].trim();
+		const sourceSpan = sourceSpanForRange(
+			lineTable,
+			line.number,
+			match.index,
+			raw,
+		);
+		const interpreted = interpretHeadingInlineMetadataAttributes(
+			field,
+			match[2] ?? "",
+		);
+		if (!interpreted.ok) {
+			toolDiagnostics?.push({
+				level: "warning",
+				code: "heading-inline-metadata.missing-value",
+				message: `Heading inline metadata macro '${raw}' is missing a value.`,
+				source: sourceSpan,
+			});
+			continue;
+		}
+		headingInlineMetadataOccurrences.push(
+			definedObject({
+				kind: "headingInlineMetadata",
+				syntax: "macro",
+				raw,
+				field: interpreted.field,
+				value: interpreted.value,
+				label: interpreted.label,
+				sourceSpan,
+				source: {
+					raw,
+					line: line.number,
+					sourceSpan,
+				},
+			}) as HeadingInlineMetadataOccurrenceNode,
 		);
 	}
 }

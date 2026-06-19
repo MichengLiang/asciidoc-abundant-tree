@@ -98,6 +98,8 @@ include::included-secure.adoc[]
 			sectionByLine: surfaces.sectionByLine,
 			xrefOccurrences: surfaces.xrefOccurrences,
 			anchorOccurrences: surfaces.anchorOccurrences,
+			headingInlineMetadataOccurrences:
+				surfaces.headingInlineMetadataOccurrences,
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
 			projectableBlocks: surfaces.projectableBlocks,

@@ -22,6 +22,7 @@ import type {
 	DescriptionListNode,
 	DescriptionNode,
 	DescriptionTermNode,
+	HeadingInlineMetadataOccurrenceNode,
 	ListingNode,
 	ParagraphNode,
 	SectionNode,
@@ -56,8 +57,13 @@ type ProjectContext = {
 	sectionByLine: Map<number, SectionNode>;
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 	xrefsByLine: Map<number, XrefOccurrenceNode[]>;
 	anchorsByLine: Map<number, AnchorOccurrenceNode[]>;
+	headingInlineMetadataByLine: Map<
+		number,
+		HeadingInlineMetadataOccurrenceNode[]
+	>;
 	usedAnchorKeys: Set<string>;
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
@@ -80,6 +86,7 @@ export function projectOfficialDocument(options: {
 	sectionByLine: Map<number, SectionNode>;
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
@@ -98,8 +105,12 @@ export function projectOfficialDocument(options: {
 		sectionByLine: options.sectionByLine,
 		xrefOccurrences: options.xrefOccurrences,
 		anchorOccurrences: options.anchorOccurrences,
+		headingInlineMetadataOccurrences: options.headingInlineMetadataOccurrences,
 		xrefsByLine: groupByLine(options.xrefOccurrences),
 		anchorsByLine: groupByLine(options.anchorOccurrences),
+		headingInlineMetadataByLine: groupByLine(
+			options.headingInlineMetadataOccurrences,
+		),
 		usedAnchorKeys: new Set(),
 		intervalByBlock: options.intervalByBlock,
 		projectableBlocks: options.projectableBlocks,
@@ -366,6 +377,11 @@ function buildDescriptionTerm(
 				return true;
 			})
 		: [];
+	const headingInlineMetadata = span
+		? collectHeadingInlineMetadataInSpan(context, span, source).filter(
+				(occurrence) => isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
+			)
+		: [];
 	applyOfficialBindings(
 		xrefs,
 		xrefs.map((xref) =>
@@ -382,7 +398,9 @@ function buildDescriptionTerm(
 			context: block.getContext?.(),
 			nodeName: block.getNodeName?.(),
 		}) as AsciidoctorLayer,
-		children: [...xrefs, ...anchors].sort(compareNodesBySource),
+		children: [...xrefs, ...anchors, ...headingInlineMetadata].sort(
+			compareNodesBySource,
+		),
 	}) as DescriptionTermNode;
 }
 
@@ -426,6 +444,11 @@ function buildDescription(
 				return true;
 			})
 		: [];
+	const headingInlineMetadata = span
+		? collectHeadingInlineMetadataInSpan(context, span, source).filter(
+				(occurrence) => isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
+			)
+		: [];
 	applyOfficialBindings(
 		xrefs,
 		xrefs.map((xref) =>
@@ -435,6 +458,7 @@ function buildDescription(
 	const children = [
 		...xrefs,
 		...anchors,
+		...headingInlineMetadata,
 		...childBlocksOf(block).flatMap((child) =>
 			toNodes(buildNode(child, context)),
 		),
@@ -691,6 +715,11 @@ function buildParagraph(
 			return true;
 		},
 	);
+	const headingInlineMetadata = collectHeadingInlineMetadataInSpan(
+		context,
+		contentSpan,
+		source,
+	);
 	applyOfficialBindings(
 		xrefs,
 		xrefs.map((xref) =>
@@ -714,7 +743,9 @@ function buildParagraph(
 		).join("\n"),
 		source,
 		asciidoctor,
-		children: [...xrefs, ...anchors].sort(compareNodesBySource),
+		children: [...xrefs, ...anchors, ...headingInlineMetadata].sort(
+			compareNodesBySource,
+		),
 	} as ParagraphNode;
 
 	registerOfficialBlockTarget(context, block, {
@@ -838,6 +869,11 @@ function buildTable(
 		context.usedAnchorKeys.add(key);
 		return true;
 	});
+	const tableHeadingInlineMetadata = collectHeadingInlineMetadataInSpan(
+		context,
+		tableContentSpan,
+		source,
+	);
 	applyOfficialBindings(
 		tableXrefs,
 		tableXrefs.map((xref) =>
@@ -860,7 +896,11 @@ function buildTable(
 			resolvedType: "table",
 			reftext: block.getTitle?.(),
 		}) as AsciidoctorLayer,
-		children: [...tableXrefs, ...tableAnchors].sort(compareNodesBySource),
+		children: [
+			...tableXrefs,
+			...tableAnchors,
+			...tableHeadingInlineMetadata,
+		].sort(compareNodesBySource),
 	}) as TableNode;
 
 	const officialId = block.getId?.();
@@ -1025,6 +1065,20 @@ function collectAnchorsInSpan(
 		context,
 		context.anchorsByLine,
 		context.anchorOccurrences,
+		logicalSpan,
+		source,
+	);
+}
+
+function collectHeadingInlineMetadataInSpan(
+	context: ProjectContext,
+	logicalSpan: { startLine: number; endLine: number },
+	source: SourceLayer | undefined,
+): HeadingInlineMetadataOccurrenceNode[] {
+	return collectOccurrencesInSpan(
+		context,
+		context.headingInlineMetadataByLine,
+		context.headingInlineMetadataOccurrences,
 		logicalSpan,
 		source,
 	);

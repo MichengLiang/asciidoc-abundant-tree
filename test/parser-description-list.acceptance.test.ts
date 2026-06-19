@@ -327,6 +327,143 @@ See <<target>>.
 			}),
 		]);
 	});
+
+	it("scans hmeta in description terms once and attaches it to the term", () => {
+		const path = writeFixture(
+			"description-list-hmeta-term.adoc",
+			`= Probe
+
+[#rule]
+== Rule
+
+Intro paragraph.
+
+Status hmeta:status[active, label=生效]:: Description.
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = document.children.find((node) => node.kind === "section") as
+			| { children?: unknown[] }
+			| undefined;
+		const list = onlyDescriptionList(section?.children ?? []);
+
+		expect(document.headingInlineMetadataOccurrences).toHaveLength(1);
+		expect(list.items[0]?.terms[0]?.children).toEqual([
+			expect.objectContaining({
+				kind: "headingInlineMetadata",
+				field: "status",
+				value: "active",
+			}),
+		]);
+		expect(list.items[0]?.description?.children ?? []).toEqual([]);
+	});
+
+	it("scans hmeta in description text once and attaches it to the description", () => {
+		const path = writeFixture(
+			"description-list-hmeta-description.adoc",
+			`= Probe
+
+[#rule]
+== Rule
+
+Intro paragraph.
+
+Status:: hmeta:status[active, label=生效] description.
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = document.children.find((node) => node.kind === "section") as
+			| { children?: unknown[] }
+			| undefined;
+		const list = onlyDescriptionList(section?.children ?? []);
+
+		expect(document.headingInlineMetadataOccurrences).toHaveLength(1);
+		expect(list.items[0]?.terms[0]?.children ?? []).toEqual([]);
+		expect(list.items[0]?.description?.children).toEqual([
+			expect.objectContaining({
+				kind: "headingInlineMetadata",
+				field: "status",
+				value: "active",
+			}),
+		]);
+	});
+
+	it("does not scan hmeta inside listings attached to descriptions", () => {
+		const path = writeFixture(
+			"description-list-attached-listing-hmeta.adoc",
+			`= Probe
+
+[#rule]
+== Rule
+
+Term::
++
+----
+hmeta:status[not-scanned]
+----
+
+Visible hmeta:status[active].
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = document.children.find((node) => node.kind === "section") as
+			| { children?: unknown[] }
+			| undefined;
+		const list = onlyDescriptionList(section?.children ?? []);
+
+		expect(
+			document.headingInlineMetadataOccurrences.map((item) => item.value),
+		).toEqual(["active"]);
+		expect(list.items[0]?.description?.children).toEqual([
+			expect.objectContaining({
+				kind: "listing",
+				content: "hmeta:status[not-scanned]",
+			}),
+		]);
+	});
+
+	it("keeps leading description metadata absorbable with hmeta children", () => {
+		const path = writeFixture(
+			"description-metadata-hmeta-absorbable.adoc",
+			`= Probe
+
+[#rule]
+== Rule
+
+status hmeta:status[active]:: active
+
+Body paragraph.
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = document.children.find((node) => node.kind === "section") as
+			| {
+					descriptionMetadata?: {
+						entries?: Array<{ key: string; value: string }>;
+					};
+					children?: Array<{ kind?: string }>;
+			  }
+			| undefined;
+
+		expect(section?.descriptionMetadata?.entries).toEqual([
+			expect.objectContaining({
+				key: "status hmeta:status[active]",
+				value: "active",
+			}),
+		]);
+		expect(section?.children?.map((node) => node.kind)).toEqual(["paragraph"]);
+		expect(document.headingInlineMetadataOccurrences).toEqual([
+			expect.objectContaining({
+				field: "status",
+				value: "active",
+				containingSectionId: "rule",
+			}),
+		]);
+	});
 });
 
 describe("document header boundary around description lists", () => {

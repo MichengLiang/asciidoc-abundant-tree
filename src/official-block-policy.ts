@@ -8,6 +8,7 @@ export function officialBlockPolicy(
 		case "dlist":
 		case "list_item":
 		case "paragraph":
+		case "preamble":
 		case "table":
 		case "verse":
 			return "scan";

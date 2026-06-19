@@ -383,6 +383,7 @@ NOTE: Admonition paragraph.
 			targets: [],
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			toolDiagnostics: [],
 		};
 		const { title: _title, ...untitled } = titled;
@@ -435,6 +436,7 @@ NOTE: Admonition paragraph.
 			targets: [],
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			toolDiagnostics: [],
 		};
 

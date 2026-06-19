@@ -61,6 +61,7 @@ describe("book-entry source-mapped logical document contract", () => {
 				},
 			],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			toolDiagnostics: [],
 		};
 

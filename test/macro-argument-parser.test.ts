@@ -26,6 +26,28 @@ describe("parseMacroArguments", () => {
 				payload: "x",
 			},
 		});
+		expect(parseMacroArguments("active, label=生效")).toEqual({
+			positional: ["active"],
+			named: {
+				label: "生效",
+			},
+		});
+		expect(parseMacroArguments("value=active, label=生效")).toEqual({
+			positional: [],
+			named: {
+				value: "active",
+				label: "生效",
+			},
+		});
+	});
+
+	it("keeps quoted comma values together and removes surrounding quotes", () => {
+		expect(parseMacroArguments('"hello, world", label="你好，世界"')).toEqual({
+			positional: ["hello, world"],
+			named: {
+				label: "你好，世界",
+			},
+		});
 	});
 
 	it("keeps bare tokens positional and preserves named empty string values", () => {
@@ -39,6 +61,19 @@ describe("parseMacroArguments", () => {
 			positional: ["苹果", "flag"],
 			named: {
 				empty: "",
+			},
+		});
+		expect(parseMacroArguments("value=, label=空")).toEqual({
+			positional: [],
+			named: {
+				value: "",
+				label: "空",
+			},
+		});
+		expect(parseMacroArguments("label=空")).toEqual({
+			positional: [],
+			named: {
+				label: "空",
 			},
 		});
 	});

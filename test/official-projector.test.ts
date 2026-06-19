@@ -58,6 +58,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
 			adapter: fakeAdapter(),
@@ -112,6 +113,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [duplicateAnchor, duplicateAnchor],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap([
 				[
 					paragraphBlock,
@@ -147,6 +149,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
 			adapter: fakeAdapter(),
@@ -176,6 +179,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
 			projectableBlocks: new WeakSet(),
@@ -205,6 +209,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap([
 				[
 					paragraphBlock,
@@ -257,6 +262,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap([
 				[
 					openBlock,
@@ -315,6 +321,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap([
 				[
 					openBlock,
@@ -352,6 +359,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
 			adapter: fakeAdapter(),
@@ -387,6 +395,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
 			adapter: fakeAdapter(),
@@ -436,6 +445,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
 			adapter: fakeAdapter(),
@@ -487,6 +497,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
 			adapter: fakeAdapter(),
@@ -544,6 +555,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [xref],
 			anchorOccurrences: [duplicateAnchor, duplicateAnchor],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap([
 				[
 					tableBlock,
@@ -609,6 +621,7 @@ describe("official-projector helpers", () => {
 			]),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock,
 			adapter: fakeAdapter(),
@@ -642,6 +655,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map([[2, section]]),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock,
 			adapter: fakeAdapter(),
@@ -708,6 +722,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [],
 			anchorOccurrences: [],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap([
 				[
 					listingBlock,
@@ -874,6 +889,7 @@ describe("official-projector helpers", () => {
 			sectionByLine: new Map(),
 			xrefOccurrences: [insideXref, outsideXref],
 			anchorOccurrences: [insideAnchor, duplicateAnchor, outsideAnchor],
+			headingInlineMetadataOccurrences: [],
 			intervalByBlock,
 			sectionByBlock: new WeakMap(),
 			adapter: {
