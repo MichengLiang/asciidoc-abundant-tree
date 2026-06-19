@@ -551,7 +551,11 @@ function descriptionPartSourceLayer(
 	diagnosticContext: string,
 ): SourceLayer | undefined {
 	if (!context.logicalSource && !context.sourceAwareDocument) {
-		return { span, sourceSpan };
+		return definedObject({
+			span,
+			sourceSpan,
+			raw: sourceTextForSpan(context, sourceSpan),
+		}) as SourceLayer;
 	}
 	if (context.sourceAwareDocument) {
 		const recovered = recoverSourceAwareSourceLayer(
@@ -572,6 +576,18 @@ function descriptionPartSourceLayer(
 		diagnosticContext,
 	});
 	return recovered.ok ? recovered.sourceLayer : undefined;
+}
+
+function sourceTextForSpan(
+	context: ProjectContext,
+	sourceSpan: SourceSpan,
+): string | undefined {
+	if (sourceSpan.start.line !== sourceSpan.end.line) {
+		return undefined;
+	}
+	return Array.from(lineText(context.lineTable, sourceSpan.start.line))
+		.slice(sourceSpan.start.column - 1, sourceSpan.end.column - 1)
+		.join("");
 }
 
 function isOccurrenceInsideSourceSpan(

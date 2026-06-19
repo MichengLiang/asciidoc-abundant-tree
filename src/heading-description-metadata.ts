@@ -121,7 +121,7 @@ function entriesFromRun(
 			for (const term of item.terms) {
 				entries.push(
 					definedObject({
-						key: term.text,
+						key: descriptionMetadataTermKey(term),
 						value,
 						term,
 						description: item.description,
@@ -131,6 +131,25 @@ function entriesFromRun(
 		}
 	}
 	return entries;
+}
+
+function descriptionMetadataTermKey(
+	term: HeadingDescriptionMetadataEntry["term"],
+) {
+	const raw = term.source?.raw;
+	const sourceSpan = term.sourceSpan;
+	if (!raw || !sourceSpan || sourceSpan.start.line !== sourceSpan.end.line) {
+		return term.text;
+	}
+
+	const [line] = raw.split(/\r?\n/u);
+	if (line === undefined) {
+		return term.text;
+	}
+
+	return Array.from(line)
+		.slice(sourceSpan.start.column - 1, sourceSpan.end.column - 1)
+		.join("");
 }
 
 function mergeRunSource(
