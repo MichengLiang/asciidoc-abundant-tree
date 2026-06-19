@@ -464,6 +464,53 @@ Body paragraph.
 			}),
 		]);
 	});
+
+	it("keeps raw description metadata term keys when hmeta has a label", () => {
+		const path = writeFixture(
+			"description-metadata-hmeta-labeled-key.adoc",
+			`= Probe
+
+[#rule]
+== Rule
+
+status hmeta:status[active, label=生效]:: active
+
+Body paragraph.
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = document.children.find((node) => node.kind === "section") as
+			| {
+					descriptionMetadata?: {
+						entries?: Array<{
+							key: string;
+							value: string;
+							term?: { text?: string };
+						}>;
+					};
+			  }
+			| undefined;
+		const entry = section?.descriptionMetadata?.entries?.[0];
+
+		expect(entry).toEqual(
+			expect.objectContaining({
+				key: "status hmeta:status[active, label=生效]",
+				value: "active",
+			}),
+		);
+		// The term text is reader-facing conversion output; metadata keys stay tied
+		// to the raw source term so label display cannot rewrite structural facts.
+		expect(entry?.term?.text).toBe("status 生效");
+		expect(document.headingInlineMetadataOccurrences).toEqual([
+			expect.objectContaining({
+				field: "status",
+				value: "active",
+				label: "生效",
+				containingSectionId: "rule",
+			}),
+		]);
+	});
 });
 
 describe("document header boundary around description lists", () => {
