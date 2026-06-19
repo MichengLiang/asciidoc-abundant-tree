@@ -1,0 +1,10 @@
+graph TD
+  %% 家庭食材与菜谱知识库：组成层级 + 描述列表字段：classification
+  N3["鸡蛋\nstorage=冷藏"]
+  N1["番茄\nstorage=常温"]
+  N5["食材"]
+  N4["家常菜"]
+  N2["番茄炒蛋\ndifficulty=简单\nserving=2人份"]
+  N1 -->|is-a| N5
+  N2 -->|is-a| N4
+  N3 -->|is-a| N5

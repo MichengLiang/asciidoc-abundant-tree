@@ -1,0 +1,12 @@
+graph TD
+  %% 冷链药品运输知识库：规则约束层级 + attrlist 字段：overview
+  N2["批次运输任务CT-2026-0618\nstatus=active\ntemperature=2-8C"]
+  N5["疫苗箱A17"]
+  N3["温度记录仪T09\nsampleInterval=5分钟"]
+  N4["温度偏离处置流程"]
+  N1["2-8C温控规则"]
+  N1 -->|triggers condition=超温超过15分钟| N4
+  N2 -->|governed-by| N1
+  N2 -->|has-part| N3
+  N2 -->|has-part| N5
+  N3 -->|monitors confidence=0.98| N5

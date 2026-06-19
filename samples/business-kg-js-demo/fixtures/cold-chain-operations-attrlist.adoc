@@ -1,0 +1,22 @@
+= 冷链药品运输知识库
+
+== 建模约定
+本文档约定：标题层级解释为 `governed-by`。显式 `xref` 的 `rel` 是业务边谓词。xref named attributes 是边属性。节点业务字段集中写在标题前 attrlist。
+
+[.policy, minTemperature=2C, maxTemperature=8C, allowedExcursion=15分钟]
+== 2-8C温控规则
+超出允许偏离时触发 xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]。
+
+[.shipment, status=active, origin=上海仓, destination=福州医院药房, temperature=2-8C]
+=== 批次运输任务CT-2026-0618
+包含 xref:疫苗箱A17[rel=has-part] 和 xref:温度记录仪T09[rel=has-part]。
+
+[.payload, sku=VAC-A, quantity=120]
+== 疫苗箱A17
+
+[.sensor, sampleInterval=5分钟]
+== 温度记录仪T09
+监控 xref:疫苗箱A17[rel=monitors, confidence=0.98]。
+
+[.process, trigger=连续超温]
+== 温度偏离处置流程

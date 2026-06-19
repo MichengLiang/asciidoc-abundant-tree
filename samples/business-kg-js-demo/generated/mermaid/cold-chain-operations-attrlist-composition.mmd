@@ -1,0 +1,7 @@
+graph TD
+  %% 冷链药品运输知识库：规则约束层级 + attrlist 字段：composition
+  N1["批次运输任务CT-2026-0618\nstatus=active\ntemperature=2-8C"]
+  N3["疫苗箱A17"]
+  N2["温度记录仪T09\nsampleInterval=5分钟"]
+  N1 -->|has-part| N2
+  N1 -->|has-part| N3

@@ -1,0 +1,37 @@
+= 家庭食材与菜谱知识库
+
+== 建模约定
+本文档约定：标题层级解释为 `part-of`。显式 `xref` 的 `rel` 是业务边谓词。标题下第一个扁平描述列表是节点业务字段。
+
+== 番茄炒蛋
+role:: recipe
+serving:: 2人份
+difficulty:: 简单
+summary:: 一道由番茄和鸡蛋组成的家常菜。
+
+属于 xref:家常菜[rel=is-a]。
+
+=== 鸡蛋
+role:: ingredient
+storage:: 冷藏
+allergen:: 蛋类
+protein:: 高
+
+属于 xref:食材[rel=is-a]。
+
+=== 番茄
+role:: ingredient
+storage:: 常温
+flavor:: 酸甜
+
+属于 xref:食材[rel=is-a]。
+
+=== 炒制步骤
+role:: step
+estimatedTime:: 5分钟
+
+== 食材
+role:: category
+
+== 家常菜
+role:: category
