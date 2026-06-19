@@ -1,139 +1,107 @@
 {
-  "fixture": "cold-chain-operations-attrlist",
-  "hierarchy": {
-    "relation": "governed-by",
-    "direction": "child-to-parent",
-    "description": "标题层级表示规则约束，子标题受父标题约束。"
-  },
-  "nodes": [
-    {
-      "label": "批次运输任务CT-2026-0618",
-      "roles": [
-        "shipment"
-      ],
-      "fields": {
-        "destination": [
-          "福州医院药房"
-        ],
-        "origin": [
-          "上海仓"
-        ],
-        "status": [
-          "active"
-        ],
-        "temperature": [
-          "2-8C"
-        ]
-      },
-      "line": "11"
-    },
-    {
-      "label": "疫苗箱A17",
-      "roles": [
-        "payload"
-      ],
-      "fields": {
-        "quantity": [
-          "120"
-        ],
-        "sku": [
-          "VAC-A"
-        ]
-      },
-      "line": "15"
-    },
-    {
-      "label": "温度记录仪T09",
-      "roles": [
-        "sensor"
-      ],
-      "fields": {
-        "sampleInterval": [
-          "5分钟"
-        ]
-      },
-      "line": "18"
-    },
-    {
-      "label": "温度偏离处置流程",
-      "roles": [
-        "process"
-      ],
-      "fields": {
-        "trigger": [
-          "连续超温"
-        ]
-      },
-      "line": "22"
-    },
-    {
-      "label": "2-8C温控规则",
-      "roles": [
-        "policy"
-      ],
-      "fields": {
-        "allowedExcursion": [
-          "15分钟"
-        ],
-        "maxTemperature": [
-          "8C"
-        ],
-        "minTemperature": [
-          "2C"
-        ]
-      },
-      "line": "7"
-    }
-  ],
-  "edges": [
-    {
-      "source": "2-8C温控规则",
-      "relation": "triggers",
-      "target": "温度偏离处置流程",
-      "attributes": {
-        "condition": "超温超过15分钟"
-      },
-      "origin": "explicit-xref",
-      "line": "8",
-      "raw": "xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]"
-    },
-    {
-      "source": "批次运输任务CT-2026-0618",
-      "relation": "governed-by",
-      "target": "2-8C温控规则",
-      "attributes": {},
-      "origin": "hierarchy-policy",
-      "line": "11",
-      "raw": "2-8C温控规则 containsDirectly 批次运输任务CT-2026-0618"
-    },
-    {
-      "source": "批次运输任务CT-2026-0618",
-      "relation": "has-part",
-      "target": "温度记录仪T09",
-      "attributes": {},
-      "origin": "explicit-xref",
-      "line": "12",
-      "raw": "xref:温度记录仪T09[rel=has-part]"
-    },
-    {
-      "source": "批次运输任务CT-2026-0618",
-      "relation": "has-part",
-      "target": "疫苗箱A17",
-      "attributes": {},
-      "origin": "explicit-xref",
-      "line": "12",
-      "raw": "xref:疫苗箱A17[rel=has-part]"
-    },
-    {
-      "source": "温度记录仪T09",
-      "relation": "monitors",
-      "target": "疫苗箱A17",
-      "attributes": {
-        "confidence": "0.98"
-      },
-      "origin": "explicit-xref",
-      "line": "19",
-      "raw": "xref:疫苗箱A17[rel=monitors, confidence=0.98]"
-    }
-  ]
+	"fixture": "cold-chain-operations-attrlist",
+	"hierarchy": {
+		"relation": "governed-by",
+		"direction": "child-to-parent",
+		"description": "标题层级表示规则约束，子标题受父标题约束。"
+	},
+	"nodes": [
+		{
+			"label": "批次运输任务CT-2026-0618",
+			"roles": ["shipment"],
+			"fields": {
+				"destination": ["福州医院药房"],
+				"origin": ["上海仓"],
+				"status": ["active"],
+				"temperature": ["2-8C"]
+			},
+			"line": "11"
+		},
+		{
+			"label": "疫苗箱A17",
+			"roles": ["payload"],
+			"fields": {
+				"quantity": ["120"],
+				"sku": ["VAC-A"]
+			},
+			"line": "15"
+		},
+		{
+			"label": "温度记录仪T09",
+			"roles": ["sensor"],
+			"fields": {
+				"sampleInterval": ["5分钟"]
+			},
+			"line": "18"
+		},
+		{
+			"label": "温度偏离处置流程",
+			"roles": ["process"],
+			"fields": {
+				"trigger": ["连续超温"]
+			},
+			"line": "22"
+		},
+		{
+			"label": "2-8C温控规则",
+			"roles": ["policy"],
+			"fields": {
+				"allowedExcursion": ["15分钟"],
+				"maxTemperature": ["8C"],
+				"minTemperature": ["2C"]
+			},
+			"line": "7"
+		}
+	],
+	"edges": [
+		{
+			"source": "2-8C温控规则",
+			"relation": "triggers",
+			"target": "温度偏离处置流程",
+			"attributes": {
+				"condition": "超温超过15分钟"
+			},
+			"origin": "explicit-xref",
+			"line": "8",
+			"raw": "xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]"
+		},
+		{
+			"source": "批次运输任务CT-2026-0618",
+			"relation": "governed-by",
+			"target": "2-8C温控规则",
+			"attributes": {},
+			"origin": "hierarchy-policy",
+			"line": "11",
+			"raw": "2-8C温控规则 containsDirectly 批次运输任务CT-2026-0618"
+		},
+		{
+			"source": "批次运输任务CT-2026-0618",
+			"relation": "has-part",
+			"target": "温度记录仪T09",
+			"attributes": {},
+			"origin": "explicit-xref",
+			"line": "12",
+			"raw": "xref:温度记录仪T09[rel=has-part]"
+		},
+		{
+			"source": "批次运输任务CT-2026-0618",
+			"relation": "has-part",
+			"target": "疫苗箱A17",
+			"attributes": {},
+			"origin": "explicit-xref",
+			"line": "12",
+			"raw": "xref:疫苗箱A17[rel=has-part]"
+		},
+		{
+			"source": "温度记录仪T09",
+			"relation": "monitors",
+			"target": "疫苗箱A17",
+			"attributes": {
+				"confidence": "0.98"
+			},
+			"origin": "explicit-xref",
+			"line": "19",
+			"raw": "xref:疫苗箱A17[rel=monitors, confidence=0.98]"
+		}
+	]
 }
