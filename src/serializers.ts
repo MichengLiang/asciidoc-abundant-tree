@@ -132,6 +132,7 @@ function orderedChildKeys(object: Record<string, unknown>): string[] {
 		"targets",
 		"xrefOccurrences",
 		"anchorOccurrences",
+		"headingInlineMetadataOccurrences",
 		"toolDiagnostics",
 	].filter((key) => keys.includes(key));
 	const rest = keys

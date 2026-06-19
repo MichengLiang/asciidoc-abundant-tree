@@ -1,5 +1,6 @@
 import createAsciidoctor from "@asciidoctor/core";
 import { type DefaultTreeAdapterMap, parseFragment } from "parse5";
+import { interpretHeadingInlineMetadataAttributes } from "./heading-inline-metadata";
 
 export type AsciidoctorBlock = {
 	getAttributes?: () => Record<string, unknown>;
@@ -42,6 +43,10 @@ type RuntimeInlineFactory = {
 	): {
 		convert: () => string;
 	};
+};
+
+type RuntimeExtensionFactory = {
+	create(): unknown;
 };
 
 export type OfficialXrefBinding = {
@@ -95,6 +100,13 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 	if (!hasRuntimeInlineFactory(processor)) {
 		throw new Error("Asciidoctor runtime does not expose Inline.create");
 	}
+	if (!hasRuntimeExtensionFactory(processor)) {
+		throw new Error("Asciidoctor runtime does not expose Extensions.create");
+	}
+	const extensionRegistry = createExtensionRegistry(processor);
+	const loadExtensionRegistry = extensionRegistry as NonNullable<
+		NonNullable<Parameters<typeof processor.load>[1]>["extension_registry"]
+	>;
 
 	return {
 		parserVersion: processor.getVersion(),
@@ -103,6 +115,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				safe: "secure",
 				sourcemap: true,
 				to_file: false,
+				extension_registry: loadExtensionRegistry,
 			}) as AsciidoctorBlock;
 		},
 		loadSource(sourceText) {
@@ -110,6 +123,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				safe: "secure",
 				sourcemap: true,
 				to_file: false,
+				extension_registry: loadExtensionRegistry,
 			}) as AsciidoctorBlock;
 		},
 		readPreprocessedLines(options) {
@@ -124,6 +138,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				parse: false,
 				to_file: false,
 				attributes: options.attributes ?? {},
+				extension_registry: loadExtensionRegistry,
 			}) as AsciidoctorBlock & {
 				getReader?: () => {
 					readLine: () => string | undefined | null;
@@ -183,6 +198,44 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 			};
 		},
 	};
+}
+
+function createExtensionRegistry(
+	processor: ReturnType<typeof createAsciidoctor> & {
+		Extensions: RuntimeExtensionFactory;
+	},
+): unknown {
+	const registry = processor.Extensions.create();
+	if (!hasProperties(registry) || typeof registry.inlineMacro !== "function") {
+		throw new Error(
+			"Asciidoctor extension registry cannot register inline macros",
+		);
+	}
+	registry.inlineMacro("hmeta", function (this: unknown) {
+		if (!isInlineMacroRegistration(this)) {
+			throw new Error("Asciidoctor inline macro registration is unavailable");
+		}
+		this.positionalAttributes("value");
+		this.process(
+			(
+				parent: AsciidoctorBlock,
+				target: string,
+				attributes: Record<string, unknown>,
+			) => {
+				const interpreted = interpretHeadingInlineMetadataAttributes(
+					target,
+					attributes,
+				);
+				return this.createInline(
+					parent,
+					"quoted",
+					interpreted.ok ? interpreted.displayText : target,
+					{ type: "mark" },
+				);
+			},
+		);
+	});
+	return registry;
 }
 
 function readerCursorEvidence(cursor: unknown): ReaderLineCursor {
@@ -247,6 +300,30 @@ function hasRuntimeInlineFactory(value: unknown): value is ReturnType<
 		return false;
 	}
 	return typeof value.Inline.create === "function";
+}
+
+function hasRuntimeExtensionFactory(value: unknown): value is ReturnType<
+	typeof createAsciidoctor
+> & {
+	Extensions: RuntimeExtensionFactory;
+} {
+	if (!hasProperties(value) || !hasProperties(value.Extensions)) {
+		return false;
+	}
+	return typeof value.Extensions.create === "function";
+}
+
+function isInlineMacroRegistration(value: unknown): value is {
+	positionalAttributes: (...names: string[]) => void;
+	process: (callback: unknown) => void;
+	createInline: RuntimeInlineFactory["create"];
+} {
+	return (
+		hasProperties(value) &&
+		typeof value.positionalAttributes === "function" &&
+		typeof value.process === "function" &&
+		typeof value.createInline === "function"
+	);
 }
 
 function resolveXrefReftext(
