@@ -13,6 +13,7 @@
 			"!**/dist",
 			"!coverage",
 			"!docs/bookshelf/build",
+			"!docs/关于D2/probes",
 			"!node_modules",
 			"!pnpm-lock.yaml",
 			"!tmp",
