@@ -266,6 +266,21 @@ const jsonLd = projection.jsonLd;
 
 `parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.
 
+Browser tools that already hold AsciiDoc source text can use the browser-safe subpath:
+
+```ts
+import { parseAbundantTreeFromSource } from "asciidoc-abundant-tree/browser";
+
+const document = parseAbundantTreeFromSource({
+	sourceText,
+	sourcePath: "document.adoc",
+});
+```
+
+`parseAbundantTreeFromSource` is the `sourceText -> AbundantDocument` API. `sourcePath` is a source identity and display coordinate for diagnostics, source surfaces, and frontend views; when omitted, it defaults to `document.adoc`.
+
+Frontend graph and projection tools, including `projection-teacher` style consumers, should treat `AbundantDocument` as the upstream fact object. Graphs, teaching views, audits, and other projections are downstream derived data.
+
 The public `rdf12(document, options)` call returns one projection result containing `graph`, `ttl`, and `jsonLd`. The `graph` is the project-owned RDF 1.2 graph model; the Turtle 1.2 text in `ttl` preserves RDF 1.2 reifier semantics by writing `rdf:reifies` objects as triple terms, not string literals. The JSON-LD text in `jsonLd` preserves the same triple-term structure with explicit `rdf12:TripleTerm` objects. The projection is for source-aware query contracts: it records heading slices, xref edge evidence, direct field predicates, and opaque raw value text, but it does not lint documents, validate cross-file targets, or interpret raw value content.
 
 ## Object Layers
