@@ -81,6 +81,7 @@
 		"format": "biome check --write --vcs-use-ignore-file=false .",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run",
+		"test:browser": "node test/browser-smoke/run-browser-smoke.mjs",
 		"test:coverage": "vitest run --coverage",
 		"pack:check": "pnpm build && publint && npm pack --dry-run",
 		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format rdf12 >/dev/null && node dist/cli.mjs samples/reference-links.adoc --format rdf12-json-ld >/dev/null && node dist/cli.mjs samples/book-entry-demo/book.adoc --mode book-entry --document-root samples/book-entry-demo --format json >/dev/null",
