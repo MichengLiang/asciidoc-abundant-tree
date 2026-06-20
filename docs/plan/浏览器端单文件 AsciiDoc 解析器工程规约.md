@@ -2,7 +2,7 @@
 
 本文定义 `asciidoc-abundant-tree` 的浏览器端单文件解析公共 API。该 API 接收 AsciiDoc 源字符串，运行于浏览器运行时，返回主模型 `AbundantDocument`，供前端工具读取结构节点、节点属性、xref 边、边属性、target binding 和源坐标。
 
-本文面向接手实现的开发者。读者通过本文获得完整对象定义、当前代码事实、目标状态、公共契约、实现边界、黑盒测试对象、完成标准和优秀标准。读者不需要从聊天记录、前端教学 demo 或 CLI 使用说明中反推目标。
+本文面向接手实现的开发者。读者通过本文获得完整对象定义、当前代码事实、目标状态、公共契约、实现边界、黑盒测试对象、完成标准和优秀标准。本文提供开发该对象所需的目标上下文。
 
 ## 1. 当前对象
 
@@ -10,7 +10,7 @@
 
 该 API 的输入是一个完整 AsciiDoc 源字符串。该 API 的输出是 `AbundantDocument`。该输出必须保留主解析器的单文件结构语义：document title、section、paragraph、listing、table、description list、metadata、target catalog、anchor occurrence、xref occurrence、heading inline metadata occurrence、official Asciidoctor binding、source span、line span、raw source surface 和 tool diagnostics。
 
-前端消费者通过该 API 把内存中的 AsciiDoc 文本转化为结构对象。前端消费者从结构对象继续投影图、表格、检查报告、编辑器标注或交互视图。解析器不直接承担前端图布局职责；图布局是 `AbundantDocument` 的下游投影。
+前端消费者通过该 API 把内存中的 AsciiDoc 文本转化为结构对象。前端消费者从结构对象继续投影图、表格、检查报告、编辑器标注或交互视图。解析器的输出面是 `AbundantDocument`；图布局读取 `AbundantDocument` 后生成下游视图。
 
 ### 1.1 对象名称
 
@@ -32,7 +32,7 @@ asciidoc-abundant-tree/browser
 
 ### 1.2 构成性条件
 
-缺少以下任一条件，该对象不成立：
+该对象成立需要同时满足以下条件：
 
 - 调用者以 `sourceText: string` 提供完整 AsciiDoc 文本。
 - API 在真实浏览器页面中可导入、可调用、可返回。
@@ -48,11 +48,11 @@ asciidoc-abundant-tree/browser
 
 这个摩擦产生三个直接后果。
 
-第一，前端工具无法消费主解析器事实。现有前端教学项目只能在 `apps/projection-teacher/src/projection.ts` 中手写正则行扫描器。该扫描器形成的节点和边不是 `asciidoc-abundant-tree` 主模型事实。
+第一，前端工具缺少主解析器事实输入。现有前端教学项目在 `apps/projection-teacher/src/projection.ts` 中使用手写正则行扫描器。该扫描器形成的节点和边属于教学投影事实。
 
 第二，同一份 AsciiDoc 文本在 Node 工具和浏览器工具中没有共同解析契约。Node 侧通过 `parseAbundantTree({ sourcePath })` 得到主模型；浏览器侧没有等价的 `sourceText -> AbundantDocument` 入口。
 
-第三，前端图、审计和编辑器定位无法稳定依赖主模型字段。消费者需要节点、节点属性、xref 边、边属性、target binding 和 source span；手写教学扫描器只能覆盖局部语法，不能承担完整主解析语义。
+第三，前端图、审计和编辑器定位缺少主模型字段作为稳定事实源。消费者需要节点、节点属性、xref 边、边属性、target binding 和 source span；手写教学扫描器只覆盖局部语法。
 
 要解决的问题是：为浏览器前端提供一个公共 API，使内存中的单文件 AsciiDoc 源字符串进入主解析器，并返回可由前端工具直接消费的 `AbundantDocument`。
 
@@ -69,7 +69,7 @@ asciidoc-abundant-tree/browser
 - Web Worker 中运行的文档分析器。
 - Vite、React、Vue、Svelte 或原生 Web 应用中的分析模块。
 
-这些消费者共同特征是：文本已经存在于浏览器内存中，消费者需要结构对象，而不是 HTML 渲染结果。
+这些消费者共同特征是：文本已经存在于浏览器内存中，消费者需要可分析结构对象。
 
 ### 3.2 当前行动轨迹
 
@@ -77,7 +77,7 @@ asciidoc-abundant-tree/browser
 
 `projectTeachingGraph()` 位于 `apps/projection-teacher/src/projection.ts`。该函数用正则和行扫描识别标题、属性列表、xref、description list 和 hmeta。它不调用 `parseAbundantTree()`，不调用 `createAsciidoctorAdapter()`，也不消费 `AbundantDocument`。
 
-因此，当前前端教学项目的数据来源已经是浏览器文本输入，但它的解析事实来源不是主解析器。它只能形成教学图，不能作为完整主解析语义的依据。
+因此，当前前端教学项目的数据来源已经是浏览器文本输入，但它的解析事实来源是教学扫描器。它形成的是教学图。
 
 ### 3.3 目标行动轨迹
 
@@ -91,7 +91,7 @@ textarea / editor / worker message
   -> frontend graph projection / audit view / editor markers
 ```
 
-目标状态下，`projection-teacher` 或其他前端消费者不再手写 AsciiDoc 结构解析。消费者读取主模型：
+目标状态下，`projection-teacher` 或其他前端消费者把 `AbundantDocument` 作为解析事实源。消费者读取主模型：
 
 - 从 `document.children` 获取结构节点。
 - 从 `document.targets` 获取可绑定 target。
@@ -142,7 +142,7 @@ export type ParseAbundantTreeOptions =
 	  };
 ```
 
-该类型没有 `sourceText` 字段。前端消费者不能通过当前公开类型直接传入内存字符串。
+该类型没有 `sourceText` 字段。当前公开类型没有表达内存字符串输入的调用形态。
 
 ### 4.3 内部存在 sourceText 解析构件
 
@@ -196,7 +196,7 @@ Vite 构建成功，但构建日志报告多个 Node 内建模块被 externalize
 (0 , Qi.resolve) is not a function
 ```
 
-该错误对应 `node:path.resolve` 在浏览器 bundle 中不可调用。该探针证明当前公开解析入口不能作为浏览器单文件 sourceText API 使用。
+该错误对应 `node:path.resolve` 在浏览器 bundle 中不可调用。该探针证明当前公开解析入口不满足浏览器单文件 sourceText API 的运行条件。
 
 ### 4.6 Asciidoctor browser runtime 接口差异
 
@@ -215,7 +215,7 @@ Node 条件下 `createAsciidoctor().getVersion()` 存在并返回 `3.0.4`。Brow
 
 当前 `src/asciidoctor-adapter.ts` 在创建 adapter 时读取 `processor.getVersion()`。该假设阻断 browser runtime。
 
-### 4.7 前端教学项目不是主解析器证明
+### 4.7 前端教学项目证明前端消费场景
 
 `apps/projection-teacher/src/App.tsx` 从 textarea 读取字符串，并调用：
 
@@ -225,7 +225,7 @@ const projection = useMemo(() => projectTeachingGraph(source), [source]);
 
 `projectTeachingGraph()` 位于 `apps/projection-teacher/src/projection.ts`。该文件没有导入 `src/index.ts`、`src/parser.ts`、`src/asciidoctor-adapter.ts` 或 `@asciidoctor/core`。该教学项目证明前端消费场景存在，不证明主解析器已在浏览器运行。
 
-### 4.8 前端教学项目当前构建状态
+### 4.8 前端教学项目当前代码状态
 
 运行：
 
@@ -233,9 +233,21 @@ const projection = useMemo(() => projectTeachingGraph(source), [source]);
 pnpm --filter projection-teacher build
 ```
 
-当前失败原因是 TypeScript 严格类型错误，包括 `TeachingEdge.tsx` 的 optional property 精确类型问题、`projection.ts` 的 possibly undefined 问题和 `PendingAttrList.role` 类型问题。
+当前通过。构建输出包含 Vite 大 chunk warning，原因是前端教学应用 bundle 超过 Vite 500 kB 提示阈值；该 warning 不改变构建通过事实。
 
-该事实说明前端教学项目本身也需要清理，但这不是浏览器单文件主解析器对象的核心实现路径。
+`apps/projection-teacher/src/App.tsx` 仍然从 textarea 读取 `source`，并调用 `projectTeachingGraph(source)`。`apps/projection-teacher/src/projection.ts` 仍然使用手写正则和行扫描形成 teaching graph。该状态证明前端消费场景可构建，不证明主解析器已在浏览器运行。
+
+### 4.9 当前门禁命令快照
+
+当前仓库验证结果如下：
+
+- `pnpm typecheck` 通过。
+- `pnpm build` 通过，当前 `tsdown.config.ts` 只构建 `src/index.ts`、`src/cli.ts` 和 `src/animation-yaml-export/cli.ts`，构建目标为 Node。
+- `pnpm test` 通过，当前测试结果为 71 个 test file、556 个 test 通过。
+- `pnpm --filter projection-teacher build` 通过。
+- `pnpm lint` 当前失败，失败点位于 `docs/关于D2/probes/*.html` 的 Biome 规则检查，包括 SVG title、`forEach` callback return 和字符串拼接样式问题。
+
+上述 `pnpm lint` 失败点不属于浏览器端单文件 parser 对象。实现提交声明完成时，根门禁仍然必须达到第 13 节命令全部通过；如果无关文件继续污染根 lint，提交说明必须把无关失败移出本任务提交面，或先由对应任务清理根 lint。
 
 ## 5. 目标状态
 
@@ -255,12 +267,13 @@ pnpm --filter projection-teacher build
     "./browser": {
       "types": "./dist/browser.d.mts",
       "import": "./dist/browser.mjs"
-    }
+    },
+    "./package.json": "./package.json"
   }
 }
 ```
 
-`./browser` 子路径必须存在。`./browser` 子路径只导出浏览器单文件解析所需对象。构建产物文件名必须与 `package.json` 中的 `types` 和 `import` 字段一致。
+`./browser` 子路径必须存在。该子路径导出浏览器单文件解析公共面。构建产物文件名必须与 `package.json` 中的 `types` 和 `import` 字段一致。现有 `.` export、`./package.json` export 和 CLI bin 指向保持可用。
 
 ### 5.2 公共调用状态
 
@@ -310,7 +323,7 @@ const document = parseAbundantTreeFromSource({
 - xref label 和 attributes 形成 edge properties。
 - sourceSpan 形成编辑器定位。
 
-`apps/projection-teacher` 的迁移目标是 `AbundantDocument -> TeachingProjection`，迁移后不再维护与主解析器分离的 AsciiDoc 正则解析事实源。
+`apps/projection-teacher` 的迁移目标是 `AbundantDocument -> TeachingProjection`。迁移后，教学图的解析事实源统一为主模型。
 
 ## 6. 公共 API 契约
 
@@ -325,7 +338,7 @@ export type ParseAbundantTreeFromSourceOptions = {
 };
 ```
 
-`sourceText` 是完整 AsciiDoc 源文本。调用者拥有该文本。解析器不得从 `sourcePath` 读取文本。
+`sourceText` 是完整 AsciiDoc 源文本。调用者拥有该文本。浏览器 parser 的文本输入来自该字段。
 
 `sourcePath` 是 source identity。它参与 `AbundantDocument.sourcePath`、diagnostic label、source surface label 和前端展示。调用者未提供时，解析器使用稳定虚拟 source identity `document.adoc`。
 
@@ -337,17 +350,17 @@ export type ParseAbundantTreeFromSourceOptions = {
 AbundantDocument
 ```
 
-输出对象必须复用 `src/model.ts` 的主模型。不得为浏览器入口发明一套弱化 AST。
+输出对象必须复用 `src/model.ts` 的主模型。浏览器入口返回的 AST 与 Node 单文件 parser 的核心消费字段同构。
 
 ### 6.3 Parser info
 
-`document.parser.name` 固定为 `@asciidoctor/core`。`document.parser.version` 必须是字符串。Browser runtime 无法从 processor 读取版本时，adapter 必须通过包内常量、构建注入值或安全后备值提供版本字符串。版本字段缺失不得阻断 parse。
+`document.parser.name` 固定为 `@asciidoctor/core`。`document.parser.version` 必须是字符串。Browser runtime 缺少 processor version API 时，adapter 必须通过包内常量、构建注入值或安全后备值提供版本字符串。版本字段缺失属于 adapter 缺陷。
 
 ### 6.4 错误与诊断
 
 可恢复的解析观察进入 `toolDiagnostics`。不可构造 document 的情况抛出异常。
 
-`toolDiagnostics` 用于表达 source location 缺失、未知 official block context、source interval recovery 降级等工具诊断。它不替代异常，也不混入 document tree children。
+`toolDiagnostics` 用于表达 source location 缺失、未知 official block context、source interval recovery 降级等工具诊断。异常表示 API 无法构造 document；`toolDiagnostics` 表示 document 已构造但包含可观察诊断。
 
 ### 6.5 Import surface
 
@@ -357,7 +370,7 @@ AbundantDocument
 - `serializeAbundantTreeToJson`
 - 与返回模型相关的 TypeScript 类型
 
-该入口不导出 CLI runner，不导出 Node path/file parser，不导出 animation yaml CLI，不导出需要 Node crypto/path 的 RDF convenience wrapper。
+该入口导出的对象必须位于浏览器单文件解析消费面：`parseAbundantTreeFromSource`、主模型类型和 JSON serializer。入口依赖图由第 8.6 节验收。
 
 ## 7. 数据模型消费规则
 
@@ -392,7 +405,7 @@ listing、table、inline anchor、block target 和 source value block 是消费�
 - source layer 坐标字段。
 - official layer resolved fields。
 
-前端工具不应从标题文本中重新解析属性。属性事实已经在 AST 中。
+前端工具从 AST 读取属性事实。标题文本只作为显示文本和标题语义来源。
 
 ### 7.3 边
 
@@ -409,7 +422,7 @@ listing、table、inline anchor、block target 和 source value block 是消费�
 - `xref.asciidoctor.resolvedId`
 - `document.targets`
 
-resolved local xref 连接到 matching target。unresolved xref 仍然保留为 edge evidence，但其 target node 不可绑定。
+resolved local xref 连接到 matching target。unresolved xref 保留为未绑定 edge evidence。
 
 ### 7.4 边属性
 
@@ -423,7 +436,7 @@ resolved local xref 连接到 matching target。unresolved xref 仍然保留为 
 - `xref.asciidoctor.href`
 - `xref.asciidoctor.resolvedType`
 
-源文档中的 `rel`、`weight`、`relation-evidence` 等 xref named attributes 由 `xref.attributes` 承载。解析器不把这些字段提前折叠成固定 graph schema。
+源文档中的 `rel`、`weight`、`relation-evidence` 等 xref named attributes 由 `xref.attributes` 承载。下游投影函数根据消费场景选择 graph schema。
 
 ### 7.5 源坐标
 
@@ -441,13 +454,15 @@ resolved local xref 连接到 matching target。unresolved xref 仍然保留为 
 | `src/browser-parser.ts` | 实现 `sourceText -> AbundantDocument` 的单文件解析 API。 |
 | `src/asciidoctor-adapter.ts` | 兼容 Node 和 browser Asciidoctor runtime 的公共 adapter。 |
 | `src/source-surfaces.ts` | 接收 source identity helper，保持 source surface projection。 |
-| `src/source-identity.ts` | 提供 Node 和 browser 两个 source identity helper。 |
+| `src/source-identity.ts` | 定义 `SourceIdentityApi` 类型和平台无关工具。 |
+| `src/source-identity-node.ts` | 提供 Node parser 使用的 source identity helper。 |
+| `src/source-identity-browser.ts` | 提供 browser parser 使用的 source identity helper。 |
 | `src/model.ts` | 增加 `ParseAbundantTreeFromSourceOptions` 类型。 |
 | `src/index.ts` | 保持现有 Node/public 主入口；不承载 browser-only API 依赖要求。 |
 | `package.json` | 增加 `./browser` export。 |
-| `tsdown.config.ts` | 增加 browser entry 构建产物。 |
+| `tsdown.config.ts` | 增加 browser entry 构建产物，并保证 browser entry 不继承 Node platform 假设。 |
 | `test/browser-parser.test.ts` | 验证 sourceText parser 的模型语义。 |
-| `test/browser-parser-browser-smoke.test.ts` | 验证真实浏览器导入与调用。 |
+| `test/browser-smoke/` | 验证真实浏览器导入、构建日志和运行结果。 |
 | `apps/projection-teacher/src/projection.ts` | 可迁移为 `AbundantDocument -> TeachingProjection` 的下游投影。 |
 
 ### 8.2 浏览器 parser 控制流
@@ -463,7 +478,7 @@ sourceText
   -> AbundantDocument
 ```
 
-该控制流不得包含 CLI argument parsing、file existence check、file read、process stdout/stderr、RDF digest、Turtle serialization 或 teaching graph layout。
+该控制流的可观察动作只包括解析源文本、建立行表、投影 `AbundantDocument`。CLI 参数、RDF serialization 和 teaching graph layout 分别属于其他入口或下游投影。
 
 ### 8.3 数据流
 
@@ -478,7 +493,7 @@ sourceText
 - `AbundantDocument.sourcePath`
 - source surface label / diagnostic label
 
-`sourcePath` 不控制读取动作。
+`sourcePath` 是 source identity。浏览器 parser 的文本来源始终是 `sourceText`。
 
 `AbundantDocument` 进入前端投影函数。前端投影函数输出 graph view model。graph view model 不回写 parser。
 
@@ -500,13 +515,13 @@ function parserVersion(processor: unknown): string {
 }
 ```
 
-`ASCIIDOCTOR_CORE_VERSION` 来自构建时生成的 package metadata 文件。该常量必须有测试防止与 `package.json` 依赖版本漂移。
+`ASCIIDOCTOR_CORE_VERSION` 来自构建时生成的 package metadata 文件，或来自手写常量文件。该常量必须有测试防止与根 `package.json` 中的 `@asciidoctor/core` 依赖版本漂移。测试读取 `package.json`，解析依赖范围中的版本号，并断言常量与当前锁定主版本兼容。
 
 ### 8.5 Browser-safe path handling
 
 `src/source-surfaces.ts` 当前使用 `basename`、`isAbsolute`、`join`、`normalize`、`resolve`。这些调用用于比较 official source location 与 parsed source file。
 
-浏览器单文件 parser 需要一个 browser-safe source identity helper。该 helper 只处理 source identity 字符串，不承担文件系统语义。
+浏览器单文件 parser 需要一个 browser-safe source identity helper。该 helper 只处理 source identity 字符串。
 
 新增 `src/source-identity.ts`：
 
@@ -520,7 +535,64 @@ export type SourceIdentityApi = {
 };
 ```
 
-`src/source-identity.ts` 导出 `nodeSourceIdentity` 和 `browserSourceIdentity`。`projectSourceSurfaces()` 增加必填参数 `sourceIdentity: SourceIdentityApi`。Node parser 调用 `projectSourceSurfaces()` 时传入 `nodeSourceIdentity`。Browser parser 调用 `projectSourceSurfaces()` 时传入 `browserSourceIdentity`。平台差异只存在于 `src/source-identity.ts`。
+新增 `src/source-identity-node.ts`：
+
+```ts
+import { basename, isAbsolute, join, normalize, resolve } from "node:path";
+import type { SourceIdentityApi } from "./source-identity";
+
+export const nodeSourceIdentity: SourceIdentityApi = {
+	basename,
+	isAbsolute,
+	join,
+	normalize,
+	resolve,
+};
+```
+
+新增 `src/source-identity-browser.ts`：
+
+```ts
+import type { SourceIdentityApi } from "./source-identity";
+
+function normalizeBrowserPath(value: string): string {
+	const parts: string[] = [];
+	const normalizedInput = value.replaceAll("\\", "/");
+	const absolute = normalizedInput.startsWith("/");
+	for (const part of normalizedInput.split("/")) {
+		if (!part || part === ".") continue;
+		if (part === "..") {
+			const previous = parts.at(-1);
+			if (previous && previous !== "..") {
+				parts.pop();
+			} else if (!absolute) {
+				parts.push("..");
+			}
+			continue;
+		}
+		parts.push(part);
+	}
+	return absolute ? `/${parts.join("/")}` : parts.join("/");
+}
+
+export const browserSourceIdentity: SourceIdentityApi = {
+	basename(value) {
+		return normalizeBrowserPath(value).split("/").at(-1) ?? "";
+	},
+	isAbsolute(value) {
+		return value.startsWith("/");
+	},
+	join(left, right) {
+		return normalizeBrowserPath(`${left}/${right}`);
+	},
+	normalize: normalizeBrowserPath,
+	resolve(value) {
+		return normalizeBrowserPath(value);
+	},
+};
+```
+
+`projectSourceSurfaces()` 增加必填参数 `sourceIdentity: SourceIdentityApi`。Node parser 调用链传入 `nodeSourceIdentity`。Browser parser 调用链传入 `browserSourceIdentity`。`src/source-identity.ts` 不导入 Node 内建模块；browser entry 只允许引用 `src/source-identity.ts` 和 `src/source-identity-browser.ts`。
 
 ### 8.6 Browser public entry import graph
 
@@ -534,8 +606,9 @@ export type SourceIdentityApi = {
 - browser parser
 - serializers
 - source surface projection 所需纯 TS 文件
+- source surface projection 所需的 book-entry coordinate recovery 纯 TS helper
 
-不允许依赖：
+禁止依赖：
 
 - `node:fs`
 - `node:path`
@@ -546,11 +619,13 @@ export type SourceIdentityApi = {
 - RDF digest/path coordinate convenience wrapper
 - animation yaml CLI
 
-该列表是入口依赖图验收依据。它不是一般性的“不要使用 Node”口号。
+当前 `src/parser-core.ts` 导入 `book-entry/source-aware-coordinate` 的 document title recovery，`src/source-surfaces.ts` 导入 `book-entry/origin-coordinate`、`book-entry/source-aware-coordinate` 和 `book-entry/source-scope-index` 的 source recovery helper。它们属于 source surface projection 的坐标恢复层。实现允许保留这类纯 TS recovery helper，也允许把单文件与 book-entry recovery 分离为更窄的 helper；两种实现都必须满足 browser entry 可达依赖集合不包含 Node 内建模块和 filesystem preprocessing 入口。
+
+该列表是入口依赖图验收依据。验收对象是 `src/browser.ts` 的可达依赖集合。Reviewer 需要检查构建日志和依赖图，而不是只检查 `src/browser.ts` 文件本身。
 
 ## 9. 黑盒测试对象
 
-黑盒测试从消费者视角观察对象。测试不检查内部函数怎样组织，只检查 public API 是否满足输入输出契约。
+黑盒测试从消费者视角观察对象。public API 的输入输出契约是测试观察面；内部函数组织属于白盒测试范围。
 
 ### 9.1 Fixture
 
@@ -649,7 +724,7 @@ summary::
 - anchor occurrences 一致。
 - tool diagnostic codes 一致。
 
-归一化函数不得删除当前消费者需要的字段。
+归一化函数保留当前消费者需要的字段；它只删除对象引用、运行时路径和测试环境差异。
 
 ### 9.5 Frontend graph consumer test
 
@@ -666,7 +741,7 @@ summary::
 - edge fields 包含 `label=目标节点`、`rel=requires`、`weight=0.7`。
 - edge 保存 sourceSpan 或可回查 sourceSpan。
 
-该测试证明前端消费者能从主 AST 得到节点和边，而不是依赖手写语法扫描。
+该测试证明前端消费者能从主 AST 得到节点和边，解析事实源是浏览器 parser 返回的 `AbundantDocument`。
 
 ## 10. 完成标准
 
@@ -723,15 +798,17 @@ fixture parse 结果必须满足：
 ```bash
 pnpm typecheck
 pnpm lint
+pnpm build
 pnpm test
+pnpm test:browser
 pnpm --filter projection-teacher build
 ```
 
-新增 browser-specific 测试命令时，文档和 `package.json` scripts 必须同步记录。完成时必须提供该命令的通过结果。
+`pnpm test:browser` 是 browser smoke 的固定脚本名。实现提交必须在 `package.json` 中提供该脚本。该脚本至少执行 Vite browser build、Node built-in externalization warning 检查和 Chromium runtime smoke。
 
 ### 10.6 工作树标准
 
-提交前 `git status --short` 只允许出现本任务相关文件。不得混入无关样例、缓存、构建产物或其他项目修改。新文件提交使用 `git commit --only` 前必须先 `git add` 跟踪。
+提交前 `git status --short` 只允许出现本任务相关文件。无关样例、缓存、构建产物和其他项目修改不进入提交。新文件提交使用 `git commit --only` 前必须先 `git add` 跟踪。
 
 ## 11. 优秀标准
 
@@ -743,23 +820,23 @@ pnpm --filter projection-teacher build
 - browser entry 名称表达运行时事实：`./browser`。
 - `sourceText` 表示待解析文本。
 - `sourcePath` 表示 source identity。
-- parser 返回 `AbundantDocument`，不返回教学图。
+- parser 返回 `AbundantDocument`。
 - graph projection 函数的名称表达投影事实：`projectTeachingGraphFromDocument`。
-- diagnostics 保持 diagnostics 身份，不伪装成 tree node。
+- diagnostics 保持 diagnostics 身份，进入 `toolDiagnostics`。
 
 ### 11.2 控制流干净
 
 - browser parser 控制流是一条 sourceText 到 AbundantDocument 的直线。
-- 没有 CLI 分支进入 browser parser。
-- 没有 filesystem 后备分支。
-- 没有正则教学 parser 后备分支。
-- 没有把 RDF projection 作为 browser parse 的必经步骤。
+- CLI 参数解析位于 CLI 入口。
+- filesystem 读取位于 Node parser 或测试 fixture 准备代码。
+- 正则教学 parser 位于教学投影迁移前的现状代码。
+- RDF projection 位于 `AbundantDocument` 的下游消费面。
 - adapter runtime 兼容集中在 adapter 内部。
 
 ### 11.3 数据流干净
 
-- sourceText 不被重新从 sourcePath 读取覆盖。
-- sourcePath 不触发 IO。
+- sourceText 是 browser parser 的唯一文本来源。
+- sourcePath 只承担 source identity 职责。
 - officialDocument 只由 `adapter.loadSource(sourceText)` 创建。
 - lineTable 只由同一份 sourceText 创建。
 - AST 到 graph 的转换发生在下游投影函数。
@@ -783,14 +860,14 @@ pnpm --filter projection-teacher build
 - Node/browser 对照测试验证语义等价。
 - 前端 graph consumer 测试验证消费者动作。
 - fixture 小而完整，覆盖消费者关心字段。
-- 每个回归测试都有明确字段断言，不只断言“不报错”。
+- 每个回归测试都有明确字段断言；运行成功断言只作为附属检查。
 
 ### 11.6 文档干净
 
 - README 或 API 文档中明确展示 sourceText browser usage。
 - 文档示例直接使用 `asciidoc-abundant-tree/browser`。
-- 文档不把 browser parser 描述为 CLI 替代品。
-- 文档不把 teaching graph 描述为 parser 输出。
+- 文档把 browser parser 描述为 `sourceText -> AbundantDocument` 公共 API。
+- 文档把 teaching graph 描述为 `AbundantDocument` 的下游投影。
 - 文档说明 `AbundantDocument` 是上游事实对象，graph 是下游投影。
 
 ## 12. 实现任务设计
@@ -817,6 +894,8 @@ const fixture = `= 浏览器解析夹具
 [#source.policy, status=active, owner=docs]
 == 来源节点
 
+priority:: high
+
 来源节点引用 xref:target.rule[目标节点, rel=requires, weight=0.7]。
 
 [#target.rule, status=draft]
@@ -836,18 +915,21 @@ describe("browser source parser", () => {
 		expect(document.sourceText).toBe(fixture);
 		expect(document.title?.text).toBe("浏览器解析夹具");
 		expect(document.xrefOccurrences).toHaveLength(1);
+		expect(JSON.stringify(document.children)).toContain("来源节点");
+		expect(JSON.stringify(document.children)).toContain("目标节点");
 	});
 });
 ```
 
 该测试在最初会因为 API 不存在而失败。
 
-实现最小 browser parser：
+实现入口红测所需 browser parser：
 
 ```ts
 import { createAsciidoctorAdapter } from "./asciidoctor-adapter";
 import type { AbundantDocument, ParseAbundantTreeFromSourceOptions } from "./model";
 import { parseAsciidoctorDocument } from "./parser-core";
+import { browserSourceIdentity } from "./source-identity-browser";
 import { buildLineTable } from "./source-lines";
 
 const DEFAULT_BROWSER_SOURCE_PATH = "document.adoc";
@@ -866,6 +948,7 @@ export function parseAbundantTreeFromSource(
 		sourcePath,
 		sourceText: options.sourceText,
 		mode: "single-file",
+		sourceIdentity: browserSourceIdentity,
 	});
 }
 ```
@@ -890,6 +973,7 @@ export function parseAbundantTreeFromSource(
 - 把 `processor.getVersion()` 包装成安全函数。
 - 版本后备值来自单一常量。
 - 常量名称为 `ASCIIDOCTOR_CORE_VERSION`.
+- 测试覆盖“processor 没有 getVersion 但有 Inline.create 和 Extensions.create”的对象形态。
 
 ### Task 3：隔离 browser entry 的 Node-only import
 
@@ -897,22 +981,30 @@ export function parseAbundantTreeFromSource(
 
 - 修改 `src/source-surfaces.ts`
 - 新增 `src/source-identity.ts`
+- 新增 `src/source-identity-node.ts`
+- 新增 `src/source-identity-browser.ts`
 - 修改 `src/parser-core.ts`
 - 修改 `src/parser.ts`
 - 修改 `src/browser-parser.ts`
 
 测试目标：
 
-- browser source parser test 不需要 import `node:path`。
-- Vite browser build 不再报告 `source-surfaces.ts` 的 `node:path` externalization。
+- browser source parser test 的 import graph 不包含 `node:path`。
+- Vite browser build 日志保持无 `source-surfaces.ts` 的 `node:path` externalization。
+- `src/browser.ts` 可达依赖集合不包含 `node:fs`、`node:path`、`node:crypto` 或 `node:process`。
+- `src/browser.ts` 可达依赖集合不包含 book-entry filesystem preprocessing 文件。
 
 实现要求：
 
-- 将 source identity 操作抽到 `src/source-identity.ts`。
+- 将 `SourceIdentityApi` 类型放入 `src/source-identity.ts`。
+- 将 Node path 实现放入 `src/source-identity-node.ts`。
+- 将 browser path 实现放入 `src/source-identity-browser.ts`。
 - `projectSourceSurfaces()` 增加必填 `sourceIdentity` 参数。
 - Node parser 使用 `nodeSourceIdentity`。
 - Browser parser 使用 `browserSourceIdentity`。
-- source surface 逻辑保持共享。
+- `src/source-identity.ts` 和 `src/source-identity-browser.ts` 不导入 Node 内建模块。
+- 检查 `parser-core.ts` 和 `source-surfaces.ts` 的可达 book-entry helper；browser entry 只保留坐标恢复所需纯 TS helper。
+- source surface 投影逻辑保持共享。
 
 ### Task 4：增加 package browser export 和 build entry
 
@@ -925,13 +1017,14 @@ export function parseAbundantTreeFromSource(
 
 - `pnpm build` 生成 `dist/browser.mjs` 和 `dist/browser.d.mts`。
 - `publint` 不报告 browser export 类型错误。
-- 浏览器测试 app 从包子路径导入。
+- 浏览器测试 app 从 package 子路径导入。
 
 实现要求：
 
 - `src/browser.ts` 加入 tsdown entry。
-- `package.json` `exports` 加入 `./browser`。
-- 不破坏现有 `.` export 和 CLI bin。
+- `package.json` `exports` 加入 `./browser`，并保留现有 `.` 和 `./package.json` export。
+- 保持现有 CLI bin 指向不变。
+- browser entry 构建配置独立于 Node entries；Node entries 保留 Node platform，browser entry 使用 browser-compatible platform。
 
 ### Task 5：真实浏览器 smoke test
 
@@ -939,6 +1032,7 @@ export function parseAbundantTreeFromSource(
 
 - 新增 `test/browser-smoke/` browser test harness。
 - 修改 `package.json` scripts，增加明确 browser smoke 命令。
+- 本包 devDependencies 声明 `playwright`，browser smoke 脚本从本包依赖解析 Playwright。
 
 测试目标：
 
@@ -950,9 +1044,10 @@ export function parseAbundantTreeFromSource(
 
 实现要求：
 
-- 测试产物写入项目内 `tmp/`，不写系统临时目录。
+- 测试产物写入项目内 `tmp/`。
 - 测试结束清理或让 `tmp/` 保持 disposable。
 - Playwright 由项目脚本调用。
+- 脚本捕获 Vite build 输出并断言 Node built-in externalization warning 不存在。
 
 ### Task 6：Node/browser AST 等价测试
 
@@ -969,7 +1064,7 @@ export function parseAbundantTreeFromSource(
 
 - 临时源文件写入项目 `tmp/` 或测试 fixture 目录。
 - 归一化函数只删除运行环境差异字段。
-- 不用 snapshot 掩盖具体字段；关键字段显式断言。
+- 关键字段使用显式断言。
 
 ### Task 7：前端教学项目迁移消费面
 
@@ -988,7 +1083,8 @@ export function parseAbundantTreeFromSource(
 实现要求：
 
 - 保留 UI 行为。
-- runtime path 删除手写 AsciiDoc parser 事实源。
+- `projection-teacher` 的解析事实源改为 `AbundantDocument`。
+- 若保留教学图字段类型，字段值必须从 `AbundantDocument` 投影得到。
 
 ## 13. 验收命令
 
@@ -997,18 +1093,15 @@ export function parseAbundantTreeFromSource(
 ```bash
 pnpm typecheck
 pnpm lint
-pnpm test
 pnpm build
+pnpm test
+pnpm test:browser
 pnpm --filter projection-teacher build
 ```
 
-新增 browser smoke 后必须运行对应脚本：
+`pnpm test:browser` 是 browser smoke 的固定脚本名。实现提交必须在 `package.json` 中提供该脚本。该脚本至少执行 Vite browser build、Node built-in externalization warning 检查和 Chromium runtime smoke。
 
-```bash
-pnpm test:browser
-```
-
-具体脚本名由实现提交定义，但文档和 `package.json` 必须一致。
+`pnpm build` 放在 `pnpm test` 之前运行，因为 browser smoke 和 package export 检查需要使用构建后的 `dist/browser.mjs` 与 `dist/browser.d.mts`。
 
 ## 14. 自审清单
 
@@ -1017,9 +1110,9 @@ pnpm test:browser
 - [ ] `./browser` export 存在。
 - [ ] browser parser 输入类型包含 `sourceText`。
 - [ ] browser parser 返回 `AbundantDocument`。
-- [ ] browser parser 不读取文件。
-- [ ] browser parser 不经过 CLI。
-- [ ] browser entry 依赖图不含 Node-only import。
+- [ ] browser parser 的文本来源是 `sourceText`。
+- [ ] browser parser 的调用路径来自 browser entry。
+- [ ] browser entry 依赖图保持 browser-safe。
 - [ ] browser runtime smoke 在 Chromium 中通过。
 - [ ] fixture 能解析出 section、metadata、xref、target 和 sourceSpan。
 - [ ] Node/browser 核心 AST 等价测试通过。
@@ -1028,18 +1121,19 @@ pnpm test:browser
 - [ ] `pnpm lint` 通过。
 - [ ] `pnpm test` 通过。
 - [ ] `pnpm build` 通过。
+- [ ] `pnpm test:browser` 通过。
 - [ ] `pnpm --filter projection-teacher build` 通过。
-- [ ] 新增代码没有复制主解析逻辑。
-- [ ] 新增代码没有引入第二套正则 AsciiDoc parser。
-- [ ] 新增代码没有把 graph projection 写进 parser。
-- [ ] 新增代码没有把 diagnostics 写成 tree child。
-- [ ] `git status --short` 不含无关文件。
+- [ ] 新增代码复用 `parseAsciidoctorDocument()` 作为主解析投影逻辑。
+- [ ] 新增代码把 AsciiDoc 解析事实源统一为 `AbundantDocument`。
+- [ ] 新增代码把 graph projection 保持在 parser 下游。
+- [ ] 新增代码把 diagnostics 保持在 `toolDiagnostics`。
+- [ ] `git status --short` 只列出本任务相关文件。
 
 ## 15. 本文档边界
 
-本文档定义浏览器端单文件 sourceText 解析器。本文档不定义 CLI、静态站点构建、文档发布、RDF Turtle 浏览器输出、book-entry 多文件浏览器输入、编辑器 UI 设计或图布局算法。
+本文档的对象是浏览器端单文件 sourceText 解析器。该对象的输入是 AsciiDoc 源字符串，消费者是前端工具链，输出是 `AbundantDocument`，验收面是 browser import、browser runtime、AST 等价和前端图消费。
 
-这些对象拥有不同输入、消费者和验收面。它们不能替代当前对象，也不能作为当前对象未完成时的解释。
+其他项目能力只有在影响上述输入、输出、消费者或验收面时进入本文档。当前代码中的 CLI、RDF、book-entry 和教学应用作为现状证据或消费者场景出现；本文档定义的人工制品仍然是浏览器端单文件 sourceText 解析器。
 
 ## 16. 完成定义
 
