@@ -267,3 +267,8 @@ export type ParseAbundantTreeOptions =
 			mode: "book-entry";
 			documentRoot: string;
 	  };
+
+export type ParseAbundantTreeFromSourceOptions = {
+	readonly sourceText: string;
+	readonly sourcePath?: string;
+};

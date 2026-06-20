@@ -6,8 +6,12 @@ import type {
 import type { LogicalSource } from "../src/book-entry/model";
 import { registerLogicalSourceForRecovery } from "../src/book-entry/origin-coordinate";
 import { projectOfficialDocument } from "../src/official-projector";
+import { nodeSourceIdentity } from "../src/source-identity-node";
 import { buildLineTable } from "../src/source-lines";
-import { projectSourceSurfaces } from "../src/source-surfaces";
+import {
+	projectSourceSurfaces,
+	type SourceSurfaces,
+} from "../src/source-surfaces";
 
 describe("projectSourceSurfaces", () => {
 	it("diagnoses unknown official block contexts and skips their inline content", () => {
@@ -28,7 +32,7 @@ describe("projectSourceSurfaces", () => {
 			].join("\n"),
 		);
 
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -57,7 +61,7 @@ describe("projectSourceSurfaces", () => {
 			].join("\n"),
 		);
 
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -90,7 +94,7 @@ describe("projectSourceSurfaces", () => {
 			"Missing unknown <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -116,7 +120,7 @@ describe("projectSourceSurfaces", () => {
 			"Missing APIs <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -145,7 +149,7 @@ describe("projectSourceSurfaces", () => {
 			"Unknown <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -164,7 +168,7 @@ describe("projectSourceSurfaces", () => {
 		const officialDocument = makeDocument([section]);
 		const lineTable = buildLineTable("== Untargeted\nbody");
 
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 		const projected = projectOfficialDocument({
 			officialDocument,
 			lineTable,
@@ -203,7 +207,7 @@ describe("projectSourceSurfaces", () => {
 		const section = makeBlock("section", 1);
 		const lineTable = buildLineTable("==\nbody");
 
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument: makeDocument([section]),
 			lineTable,
 		});
@@ -229,7 +233,7 @@ describe("projectSourceSurfaces", () => {
 			"External <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument: makeDocument([paragraph]),
 			lineTable,
 			sourcePath: "/virtual/main.adoc",
@@ -251,7 +255,7 @@ describe("projectSourceSurfaces", () => {
 			"External <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument: makeDocument([paragraph]),
 			lineTable,
 			sourcePath: "/virtual/main.adoc",
@@ -276,7 +280,7 @@ describe("projectSourceSurfaces", () => {
 			"External <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument: makeDocument([paragraph]),
 			lineTable,
 			sourcePath: "/virtual/main.adoc",
@@ -299,7 +303,7 @@ describe("projectSourceSurfaces", () => {
 			source: "External unknown <<target>> should not be scanned.",
 		});
 
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument: makeDocument([unknown]),
 			lineTable: buildLineTable(
 				"External unknown <<target>> should not be scanned.",
@@ -331,7 +335,7 @@ describe("projectSourceSurfaces", () => {
 		const lineTable = buildLineTable(
 			"Unknown block source.\nNested paragraph should remain hidden.\n",
 		);
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 
 		const projected = projectOfficialDocument({
 			officialDocument,
@@ -364,7 +368,7 @@ describe("projectSourceSurfaces", () => {
 			["mystery container", "== Hidden Section", "hidden body"].join("\n"),
 		);
 
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 		const projected = projectOfficialDocument({
 			officialDocument,
 			lineTable,
@@ -407,7 +411,7 @@ describe("projectSourceSurfaces", () => {
 		});
 		const officialDocument = makeDocument([section]);
 
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable,
 		});
@@ -486,7 +490,7 @@ describe("projectSourceSurfaces", () => {
 		const lineTable = buildLineTable(
 			["== First", "first body", "== Second", "second body"].join("\n"),
 		);
-		const surfaces = projectSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
 
 		expect(surfaces.sectionByLine.get(1)?.ids).toEqual(["first"]);
 		expect(surfaces.sectionByLine.get(2)?.ids).toEqual(["first"]);
@@ -499,6 +503,15 @@ function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
 	return {
 		getBlocks: () => blocks,
 	};
+}
+
+function projectNodeSourceSurfaces(
+	options: Omit<Parameters<typeof projectSourceSurfaces>[0], "sourceIdentity">,
+): SourceSurfaces {
+	return projectSourceSurfaces({
+		...options,
+		sourceIdentity: nodeSourceIdentity,
+	});
 }
 
 function makeBlock(

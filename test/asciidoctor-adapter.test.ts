@@ -1,6 +1,22 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
-import { createAsciidoctorAdapter } from "../src/asciidoctor-adapter";
+import {
+	ASCIIDOCTOR_CORE_VERSION,
+	createAsciidoctorAdapter,
+	resolveParserVersion,
+} from "../src/asciidoctor-adapter";
+
+describe("Asciidoctor adapter parser version", () => {
+	it("falls back to a stable version when the runtime processor has no getVersion API", () => {
+		const version = resolveParserVersion({
+			Inline: { create: () => ({ convert: () => "" }) },
+			Extensions: { create: () => ({}) },
+		});
+
+		expect(version).toBe(ASCIIDOCTOR_CORE_VERSION);
+		expect(version.length).toBeGreaterThan(0);
+	});
+});
 
 describe("Asciidoctor adapter xref bindings", () => {
 	it("resolves document targets through refs, fallback ids, and interdocument links", () => {

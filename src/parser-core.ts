@@ -11,6 +11,7 @@ import { attachHeadingDescriptionMetadata } from "./heading-description-metadata
 import type { AbundantDocument, AsciidoctorLayer, ParserInfo } from "./model";
 import { definedObject } from "./object-utils";
 import { projectOfficialDocument } from "./official-projector";
+import type { SourceIdentityApi } from "./source-identity";
 import { type LineTable, spanForLineText } from "./source-lines";
 import { projectSourceSurfaces } from "./source-surfaces";
 
@@ -22,6 +23,7 @@ export type ParserCoreInput = {
 	readonly sourceText: string;
 	readonly sourceFiles?: AbundantDocument["sourceFiles"];
 	readonly mode: AbundantDocument["mode"];
+	readonly sourceIdentity: SourceIdentityApi;
 	readonly sourceSurfacePath?: string;
 };
 
@@ -31,6 +33,7 @@ export function parseAsciidoctorDocument(
 	const sourceSurfaces = projectSourceSurfaces({
 		officialDocument: input.officialDocument,
 		lineTable: input.lineTable,
+		sourceIdentity: input.sourceIdentity,
 		...(input.sourceSurfacePath ? { sourcePath: input.sourceSurfacePath } : {}),
 	});
 	const officialProjection = projectOfficialDocument({

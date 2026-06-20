@@ -4,8 +4,12 @@ import { createAsciidoctorAdapter } from "../src/asciidoctor-adapter";
 import { childBlocksOf } from "../src/official-block-utils";
 import { projectOfficialDocument } from "../src/official-projector";
 import { parseAbundantTree } from "../src/parser";
+import { nodeSourceIdentity } from "../src/source-identity-node";
 import { buildLineTable } from "../src/source-lines";
-import { projectSourceSurfaces } from "../src/source-surfaces";
+import {
+	projectSourceSurfaces,
+	type SourceSurfaces,
+} from "../src/source-surfaces";
 import { writeFixture } from "./helpers";
 
 describe("include source map handling", () => {
@@ -53,7 +57,7 @@ include::included-secure.adoc[]
 			title: "Included Section",
 		});
 		const officialDocument = makeDocument([includedSection]);
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable(
 				["= Main", "", "include::included.adoc[]"].join("\n"),
@@ -85,7 +89,7 @@ include::included-secure.adoc[]
 		const lineTable = buildLineTable(
 			["= Main", "include::included.adoc[]"].join("\n"),
 		);
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable,
 			sourcePath: "/virtual/main.adoc",
@@ -123,17 +127,17 @@ include::included-secure.adoc[]
 		});
 		const officialDocument = makeDocument([includedParagraph]);
 
-		const external = projectSourceSurfaces({
+		const external = projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable("= Main\n\ninclude::included.adoc[]\n"),
 			sourcePath: "/virtual/main.adoc",
 		});
-		const sameFile = projectSourceSurfaces({
+		const sameFile = projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable("= Included\nIncluded <<target>>\n"),
 			sourcePath: "/virtual/include/included.adoc",
 		});
-		const noMainPath = projectSourceSurfaces({
+		const noMainPath = projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable("= Included\nIncluded <<target>>\n"),
 		});
@@ -171,7 +175,7 @@ include::included-secure.adoc[]
 			missingFileParagraph,
 		]);
 
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable(
 				[
@@ -195,7 +199,7 @@ include::included-secure.adoc[]
 			file: "included.adoc",
 			source: "Relative-only <<target>>",
 		});
-		const surfaces = projectSourceSurfaces({
+		const surfaces = projectNodeSourceSurfaces({
 			officialDocument: makeDocument([relativeOnlyParagraph]),
 			lineTable: buildLineTable("= Main\nRelative-only <<target>>\n"),
 			sourcePath: "/virtual/main.adoc",
@@ -212,6 +216,15 @@ function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
 	return {
 		getBlocks: () => blocks,
 	};
+}
+
+function projectNodeSourceSurfaces(
+	options: Omit<Parameters<typeof projectSourceSurfaces>[0], "sourceIdentity">,
+): SourceSurfaces {
+	return projectSourceSurfaces({
+		...options,
+		sourceIdentity: nodeSourceIdentity,
+	});
 }
 
 function makeBlock(

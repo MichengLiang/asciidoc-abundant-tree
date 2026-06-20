@@ -49,6 +49,8 @@ type RuntimeExtensionFactory = {
 	create(): unknown;
 };
 
+export const ASCIIDOCTOR_CORE_VERSION = "3.0.4";
+
 export type OfficialXrefBinding = {
 	href?: string | undefined;
 	resolvedId?: string | undefined;
@@ -109,7 +111,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 	>;
 
 	return {
-		parserVersion: processor.getVersion(),
+		parserVersion: resolveParserVersion(processor),
 		loadFile(sourcePath) {
 			return processor.loadFile(sourcePath, {
 				safe: "secure",
@@ -198,6 +200,16 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 			};
 		},
 	};
+}
+
+export function resolveParserVersion(processor: unknown): string {
+	if (hasProperties(processor) && typeof processor.getVersion === "function") {
+		const version = processor.getVersion();
+		if (typeof version === "string" && version.length > 0) {
+			return version;
+		}
+	}
+	return ASCIIDOCTOR_CORE_VERSION;
 }
 
 function createExtensionRegistry(

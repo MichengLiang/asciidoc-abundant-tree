@@ -6,6 +6,7 @@ import { preprocessBookEntryWithOfficialReader } from "./book-entry/official-rea
 import { registerSourceAwareDocumentForRecovery } from "./book-entry/source-aware-coordinate";
 import type { AbundantDocument, ParseAbundantTreeOptions } from "./model";
 import { parseAsciidoctorDocument } from "./parser-core";
+import { nodeSourceIdentity } from "./source-identity-node";
 import { buildLineTable } from "./source-lines";
 
 export function parseAbundantTree(
@@ -46,6 +47,7 @@ export function parseAbundantTree(
 				raw: sourceFile.text,
 			})),
 			mode: "book-entry",
+			sourceIdentity: nodeSourceIdentity,
 		});
 	}
 	if (options.mode !== undefined && options.mode !== "single-file") {
@@ -61,6 +63,7 @@ export function parseAbundantTree(
 		sourcePath,
 		sourceText: source,
 		mode: "single-file",
+		sourceIdentity: nodeSourceIdentity,
 		sourceSurfacePath: sourcePath,
 	});
 }

@@ -1,4 +1,3 @@
-import { basename, isAbsolute, join, normalize, resolve } from "node:path";
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import type { SourceAwareLogicalDocument } from "./book-entry/line-origin-model";
 import {
@@ -36,6 +35,7 @@ import { definedObject } from "./object-utils";
 import { officialBlockPolicy } from "./official-block-policy";
 import type { OfficialBlockSurface } from "./official-block-walker";
 import { walkOfficialBlocks } from "./official-block-walker";
+import type { SourceIdentityApi } from "./source-identity";
 import {
 	resolveSourceInterval,
 	type SourceInterval,
@@ -70,6 +70,7 @@ export { assignContainingSectionIds };
 export function projectSourceSurfaces(options: {
 	officialDocument: AsciidoctorBlock;
 	lineTable: LineTable;
+	sourceIdentity: SourceIdentityApi;
 	sourcePath?: string;
 }): SourceSurfaces {
 	const blockSurfaces = walkOfficialBlocks(options.officialDocument);
@@ -78,7 +79,9 @@ export function projectSourceSurfaces(options: {
 	const containerFallbackBlocks = new WeakSet<AsciidoctorBlock>();
 	const toolDiagnostics: ToolDiagnostic[] = [];
 	const mainSourcePath = options.sourcePath
-		? normalize(resolve(options.sourcePath))
+		? options.sourceIdentity.normalize(
+				options.sourceIdentity.resolve(options.sourcePath),
+			)
 		: undefined;
 	const sourceAwareDocument = sourceAwareDocumentForLineTable(
 		options.lineTable,
@@ -87,14 +90,16 @@ export function projectSourceSurfaces(options: {
 
 	for (const surface of blockSurfaces) {
 		const policy = officialBlockPolicy(surface.context);
-		if (isExternalSourceSurface(surface, mainSourcePath)) {
+		if (
+			isExternalSourceSurface(surface, mainSourcePath, options.sourceIdentity)
+		) {
 			if (policy === "diagnostic") {
 				toolDiagnostics.push(unknownContextDiagnostic(surface));
 			}
 			toolDiagnostics.push({
 				level: "warning",
 				code: "source-location.external-file",
-				message: `Official block source location points outside the parsed source file: ${sourceLocationLabel(surface)}.`,
+				message: `Official block source location points outside the parsed source file: ${sourceLocationLabel(surface, options.sourceIdentity)}.`,
 			});
 			continue;
 		}
@@ -209,34 +214,47 @@ export function projectSourceSurfaces(options: {
 function isExternalSourceSurface(
 	surface: OfficialBlockSurface,
 	mainSourcePath: string | undefined,
+	sourceIdentity: SourceIdentityApi,
 ): boolean {
 	if (!mainSourcePath) {
 		return false;
 	}
-	const sourceFile = sourceFilePath(surface);
-	return sourceFile !== undefined && normalize(sourceFile) !== mainSourcePath;
+	const sourceFile = sourceFilePath(surface, sourceIdentity);
+	return (
+		sourceFile !== undefined &&
+		sourceIdentity.normalize(sourceFile) !== mainSourcePath
+	);
 }
 
-function sourceFilePath(surface: OfficialBlockSurface): string | undefined {
+function sourceFilePath(
+	surface: OfficialBlockSurface,
+	sourceIdentity: SourceIdentityApi,
+): string | undefined {
 	const sourceFile = surface.sourcePath ?? surface.sourceFile;
 	if (!sourceFile) {
 		return undefined;
 	}
-	if (isAbsolute(sourceFile)) {
+	if (sourceIdentity.isAbsolute(sourceFile)) {
 		return sourceFile;
 	}
 	if (surface.sourceDirectory) {
-		return join(surface.sourceDirectory, sourceFile);
+		return sourceIdentity.join(surface.sourceDirectory, sourceFile);
 	}
 	return undefined;
 }
 
-function sourceLocationLabel(surface: OfficialBlockSurface): string {
+function sourceLocationLabel(
+	surface: OfficialBlockSurface,
+	sourceIdentity: SourceIdentityApi,
+): string {
 	return (
 		surface.sourcePath ??
 		surface.sourceFile ??
 		(surface.sourceDirectory
-			? join(surface.sourceDirectory, basename(surface.sourceFile ?? ""))
+			? sourceIdentity.join(
+					surface.sourceDirectory,
+					sourceIdentity.basename(surface.sourceFile ?? ""),
+				)
 			: "unknown source")
 	);
 }
