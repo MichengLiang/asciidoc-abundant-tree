@@ -1,0 +1,102 @@
+import { parseAbundantTreeFromSource } from "asciidoc-abundant-tree/browser";
+import { describe, expect, it } from "vitest";
+import {
+	projectTeachingGraph,
+	projectTeachingGraphFromDocument,
+} from "./projection";
+
+const fixture = `= 浏览器解析夹具
+
+[#source.policy, status=active, owner=docs]
+== 来源节点
+
+priority:: high
+summary::
+来源节点说明第一行。
+来源节点说明第二行。
+
+来源节点引用 xref:target.rule[目标节点, rel=requires, weight=0.7]。
+
+[#target.rule, status=draft]
+== 目标节点
+
+[#target-json]
+[source,json]
+----
+{"kind":"rule","status":"draft"}
+----
+`;
+
+describe("projection teacher document projection", () => {
+	it("projects AbundantDocument sections, metadata, xrefs, and source spans", () => {
+		const document = parseAbundantTreeFromSource({
+			sourceText: fixture,
+			sourcePath: "fixture.adoc",
+		});
+
+		const projection = projectTeachingGraphFromDocument(document);
+		const sourceNode = projection.nodes.find(
+			(node) => node.title === "来源节点",
+		);
+		const targetNode = projection.nodes.find(
+			(node) => node.title === "目标节点",
+		);
+		const edge = projection.edges.find(
+			(edge) =>
+				edge.source === sourceNode?.id && edge.target === targetNode?.id,
+		);
+
+		expect(projection.diagnostics).toEqual([]);
+		expect(sourceNode).toEqual(
+			expect.objectContaining({
+				id: "source",
+				role: "policy",
+				fields: expect.arrayContaining([
+					{ key: "status", value: "active" },
+					{ key: "owner", value: "docs" },
+					{ key: "priority", value: "high" },
+					{
+						key: "summary",
+						value: "来源节点说明第一行。\n来源节点说明第二行。",
+					},
+				]),
+			}),
+		);
+		expect(targetNode).toEqual(
+			expect.objectContaining({
+				id: "target",
+				role: "rule",
+			}),
+		);
+		expect(edge).toEqual(
+			expect.objectContaining({
+				rel: "requires",
+				title: "要求",
+				sourceSpan: expect.objectContaining({
+					start: expect.objectContaining({ line: 11 }),
+				}),
+				fields: expect.arrayContaining([
+					{ key: "label", value: "目标节点" },
+					{ key: "rel", value: "requires" },
+					{ key: "weight", value: "0.7" },
+					{ key: "sourceLine", value: "11" },
+				]),
+			}),
+		);
+	});
+
+	it("keeps the sourceText convenience wrapper on the main parser path", () => {
+		const projection = projectTeachingGraph(fixture);
+
+		expect(projection.nodes.map((node) => node.title)).toEqual(
+			expect.arrayContaining(["来源节点", "目标节点"]),
+		);
+		expect(projection.edges).toEqual([
+			expect.objectContaining({
+				source: "source",
+				target: "target",
+				rel: "requires",
+			}),
+		]);
+	});
+});

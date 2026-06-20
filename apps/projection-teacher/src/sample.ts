@@ -1,0 +1,40 @@
+export const SAMPLE_SOURCE = `= 基础 RDF 投影示例
+
+这个示例是一个小型结构夹具，用来展示 RDF12 heading projection 的基础查询面：标题树、地址标签、直接属性、交叉引用边证据和本地 target 归属。
+
+[#structure-example.process, status=draft, owner=docs-team]
+== 结构示例
+
+结构示例要求 xref:required-rule[约束规则, rel=requires, weight=0.7]，并把关系证据写入说明节点。
+
+[#required-rule.rule, status=active]
+== 约束规则
+
+priority:: normal
+summary::
+约束规则集中说明结构示例必须满足的条件。
+多行说明保留为同一个标题字段。
+
+约束规则当前处于 hmeta:review-state[ready, label=可复核]。
+
+约束规则展示 role、status、priority 和入边约束如何进入下游 shape。
+
+[#rule-query-example]
+[source,sql]
+----
+SELECT subject, predicate, object
+FROM projected_graph
+WHERE role = 'rule';
+----
+
+=== 生成标签节点
+
+这个标题没有手写 ID，用来展示 generated address label 进入 heading label space。
+
+[#evidence-note.evidence, status=active]
+== 关系证据说明
+
+关系证据说明用 xref:rule-query-example[规则查询示例, rel=documents] 指向约束规则章节里的 listing target。
+
+关系证据说明也用 xref:required-rule[] 展示默认 aat:references 关系。
+`;
