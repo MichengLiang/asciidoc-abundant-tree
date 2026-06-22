@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>有向图 · 节点卡片与边卡片</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    background: #f4efe7;
+    color: #3e3329;
+  }
+  h1 {
+    text-align: center;
+    color: #7d4218;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #8b8178;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .graph {
+    position: relative;
+    width: min(1500px, 100%);
+    height: 760px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid #dfd3c2;
+    border-radius: 14px;
+    background: #fffaf3;
+    box-shadow: 0 18px 44px rgba(90, 55, 24, 0.12);
+  }
+  .edge-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .node-card {
+    position: absolute;
+    z-index: 4;
+    width: 220px;
+    min-height: 172px;
+    padding: 16px 18px 14px;
+    border: 2px solid #5d8fc4;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    box-shadow: 0 10px 24px rgba(60, 70, 80, 0.12);
+    cursor: move;
+    user-select: none;
+  }
+  .node-card.kind-woman {
+    border-color: #d67499;
+    background: linear-gradient(180deg, #fff6fa 0%, #ffffff 100%);
+  }
+  .node-title {
+    text-align: center;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #ded3c8;
+    color: #1d63af;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .kind-woman .node-title { color: #bf2f68; }
+  .attrs,
+  .edge-props {
+    display: grid;
+    gap: 5px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 8px;
+  }
+  .key { color: #91877d; }
+  .value {
+    color: #4a4038;
+    font-weight: 600;
+    text-align: right;
+  }
+  .edge-card {
+    position: absolute;
+    z-index: 3;
+    width: 150px;
+    padding: 9px 12px 10px;
+    border: 1.5px solid currentColor;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 8px 18px rgba(60, 50, 40, 0.12);
+    pointer-events: none;
+  }
+  .edge-card::before,
+  .edge-card::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1.5px solid currentColor;
+    transform: translateY(-50%) rotate(45deg);
+  }
+  .edge-card::before {
+    left: -6px;
+    border-top: 0;
+    border-right: 0;
+  }
+  .edge-card::after {
+    right: -6px;
+    border-bottom: 0;
+    border-left: 0;
+  }
+  .edge-card.love { color: #ce6262; }
+  .edge-card.marriage { color: #d8902e; }
+  .edge-card.blood { color: #66a96a; }
+  .edge-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .edge-direction {
+    text-align: center;
+    color: #8b8178;
+    font-size: 11px;
+    margin-bottom: 7px;
+    white-space: nowrap;
+  }
+  .edge-props {
+    padding-top: 7px;
+    border-top: 1px dashed #e6ded5;
+    font-size: 12px;
+  }
+  .edge-props .row {
+    grid-template-columns: 48px 1fr;
+  }
+  .edge-line {
+    fill: none;
+    stroke-width: 2.7;
+    stroke-linecap: round;
+  }
+  .edge-line.love { stroke: #ce6262; }
+  .edge-line.marriage {
+    stroke: #d8902e;
+    stroke-dasharray: 8 6;
+  }
+  .edge-line.blood { stroke: #66a96a; }
+  .edge-halo {
+    fill: none;
+    stroke: #fffaf3;
+    stroke-width: 9;
+    stroke-linecap: round;
+  }
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    margin-top: 18px;
+    color: #746a61;
+    font-size: 13px;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .swatch {
+    width: 26px;
+    height: 3px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+</style>
+</head>
+<body>
+<h1>有向关系图谱 · 节点卡片 + 边卡片</h1>
+<div class="subtitle">节点与边都有主名称和属性；箭头表达方向；边卡片压在线路中部</div>
+
+<div class="graph" id="graph">
+  <svg class="edge-layer" id="edges" viewBox="0 0 1500 760" preserveAspectRatio="none">
+    <defs>
+      <marker id="arrow-love" viewBox="0 0 12 12" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M 1 1 L 11 6 L 1 11 z" fill="#ce6262"></path>
+      </marker>
+      <marker id="arrow-marriage" viewBox="0 0 12 12" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M 1 1 L 11 6 L 1 11 z" fill="#d8902e"></path>
+      </marker>
+      <marker id="arrow-blood" viewBox="0 0 12 12" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M 1 1 L 11 6 L 1 11 z" fill="#66a96a"></path>
+      </marker>
+    </defs>
+  </svg>
+
+  <section class="node-card kind-woman" id="daiyu" style="left: 104px; top: 92px;">
+    <div class="node-title">林黛玉</div>
+    <div class="attrs">
+      <div class="row"><span class="key">辈分</span><span class="value">第三代</span></div>
+      <div class="row"><span class="key">阵营</span><span class="value">姑苏林氏</span></div>
+      <div class="row"><span class="key">身份</span><span class="value">贾母外孙女</span></div>
+      <div class="row"><span class="key">居所</span><span class="value">潇湘馆</span></div>
+      <div class="row"><span class="key">判词</span><span class="value">玉带林中挂</span></div>
+    </div>
+  </section>
+
+  <section class="node-card" id="baoyu" style="left: 620px; top: 82px;">
+    <div class="node-title">贾宝玉</div>
+    <div class="attrs">
+      <div class="row"><span class="key">辈分</span><span class="value">第三代</span></div>
+      <div class="row"><span class="key">阵营</span><span class="value">荣国府</span></div>
+      <div class="row"><span class="key">身份</span><span class="value">贾政次子</span></div>
+      <div class="row"><span class="key">居所</span><span class="value">怡红院</span></div>
+      <div class="row"><span class="key">前身</span><span class="value">神瑛侍者</span></div>
+    </div>
+  </section>
+
+  <section class="node-card kind-woman" id="baochai" style="left: 1110px; top: 106px;">
+    <div class="node-title">薛宝钗</div>
+    <div class="attrs">
+      <div class="row"><span class="key">辈分</span><span class="value">第三代</span></div>
+      <div class="row"><span class="key">阵营</span><span class="value">金陵薛家</span></div>
+      <div class="row"><span class="key">身份</span><span class="value">薛姨妈之女</span></div>
+      <div class="row"><span class="key">居所</span><span class="value">蘅芜苑</span></div>
+      <div class="row"><span class="key">判词</span><span class="value">金簪雪里埋</span></div>
+    </div>
+  </section>
+
+  <section class="node-card kind-woman" id="jiamu" style="left: 640px; top: 470px;">
+    <div class="node-title">贾母</div>
+    <div class="attrs">
+      <div class="row"><span class="key">辈分</span><span class="value">第一代</span></div>
+      <div class="row"><span class="key">阵营</span><span class="value">荣国府</span></div>
+      <div class="row"><span class="key">身份</span><span class="value">贾府老祖宗</span></div>
+      <div class="row"><span class="key">居所</span><span class="value">荣庆堂</span></div>
+      <div class="row"><span class="key">娘家</span><span class="value">金陵世家</span></div>
+    </div>
+  </section>
+
+  <section class="node-card" id="jiazheng" style="left: 170px; top: 472px;">
+    <div class="node-title">贾政</div>
+    <div class="attrs">
+      <div class="row"><span class="key">辈分</span><span class="value">第二代</span></div>
+      <div class="row"><span class="key">阵营</span><span class="value">荣国府</span></div>
+      <div class="row"><span class="key">身份</span><span class="value">贾母次子</span></div>
+      <div class="row"><span class="key">官职</span><span class="value">工部员外郎</span></div>
+      <div class="row"><span class="key">字</span><span class="value">存周</span></div>
+    </div>
+  </section>
+</div>
+
+<div class="legend">
+  <span style="color:#ce6262"><i class="swatch"></i>情感关系</span>
+  <span style="color:#d8902e"><i class="swatch"></i>婚姻关系</span>
+  <span style="color:#66a96a"><i class="swatch"></i>血缘关系</span>
+</div>
+
+<script>
+const relations = [
+  { from: "daiyu", to: "baoyu", title: "相爱", kind: "love", props: { 典故: "木石前盟", 强度: "极深", 结局: "悲剧" } },
+  { from: "baoyu", to: "baochai", title: "婚配", kind: "marriage", props: { 典故: "金玉良缘", 形式: "家族安排", 结局: "守寡" } },
+  { from: "daiyu", to: "jiamu", title: "外孙女", kind: "blood", props: { 血缘: "外孙女", 疼爱: "极高", 立场: "支持木石" } },
+  { from: "baoyu", to: "jiamu", title: "嫡孙", kind: "blood", props: { 血缘: "嫡孙", 疼爱: "最高", 地位: "贾府核心" } },
+  { from: "jiazheng", to: "jiamu", title: "次子", kind: "blood", props: { 血缘: "母子", 关系: "正统母子", 地位: "主政荣国府" } },
+  { from: "baoyu", to: "jiazheng", title: "父子", kind: "blood", props: { 血缘: "父子", 关系: "严父逆子", 期望: "科举仕途" } },
+];
+
+const graph = document.getElementById("graph");
+const svg = document.getElementById("edges");
+
+function rectOf(id) {
+  const graphRect = graph.getBoundingClientRect();
+  const rect = document.getElementById(id).getBoundingClientRect();
+  return {
+    left: rect.left - graphRect.left,
+    top: rect.top - graphRect.top,
+    width: rect.width,
+    height: rect.height,
+    cx: rect.left - graphRect.left + rect.width / 2,
+    cy: rect.top - graphRect.top + rect.height / 2,
+  };
+}
+
+function boundaryPoint(rect, toward) {
+  const dx = toward.x - rect.cx;
+  const dy = toward.y - rect.cy;
+  const scale = Math.min(
+    Math.abs((rect.width / 2) / (dx || 0.001)),
+    Math.abs((rect.height / 2) / (dy || 0.001)),
+  );
+  return { x: rect.cx + dx * scale, y: rect.cy + dy * scale };
+}
+
+function pathBetween(start, end) {
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const distance = Math.hypot(dx, dy);
+  const bend = Math.min(44, distance * 0.14);
+  const nx = -dy / (distance || 1);
+  const ny = dx / (distance || 1);
+  const c1 = { x: start.x + dx * 0.32 + nx * bend, y: start.y + dy * 0.32 + ny * bend };
+  const c2 = { x: start.x + dx * 0.68 + nx * bend, y: start.y + dy * 0.68 + ny * bend };
+  return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${end.x} ${end.y}`;
+}
+
+function makeEdgeCard(rel, mid) {
+  const card = document.createElement("aside");
+  card.className = `edge-card ${rel.kind}`;
+  const props = Object.entries(rel.props)
+    .map(([key, value]) => `<div class="row"><span class="key">${key}</span><span class="value">${value}</span></div>`)
+    .join("");
+  card.innerHTML = `
+    <div class="edge-title">${rel.title}</div>
+    <div class="edge-direction">${rel.from} → ${rel.to}</div>
+    <div class="edge-props">${props}</div>
+  `;
+  card.style.left = `${mid.x}px`;
+  card.style.top = `${mid.y}px`;
+  card.style.transform = "translate(-50%, -50%)";
+  graph.appendChild(card);
+}
+
+function draw() {
+  svg.querySelectorAll("path.edge-line,path.edge-halo").forEach((node) => node.remove());
+  graph.querySelectorAll(".edge-card").forEach((node) => node.remove());
+
+  for (const rel of relations) {
+    const source = rectOf(rel.from);
+    const target = rectOf(rel.to);
+    const start = boundaryPoint(source, { x: target.cx, y: target.cy });
+    const end = boundaryPoint(target, { x: source.cx, y: source.cy });
+    const d = pathBetween(start, end);
+
+    const halo = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    halo.setAttribute("d", d);
+    halo.setAttribute("class", "edge-halo");
+    svg.appendChild(halo);
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", d);
+    path.setAttribute("class", `edge-line ${rel.kind}`);
+    path.setAttribute("marker-end", `url(#arrow-${rel.kind})`);
+    svg.appendChild(path);
+
+    const mid = { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 };
+    makeEdgeCard(rel, mid);
+  }
+}
+
+let dragging = null;
+let offset = { x: 0, y: 0 };
+
+for (const card of graph.querySelectorAll(".node-card")) {
+  card.addEventListener("mousedown", (event) => {
+    dragging = card;
+    const rect = card.getBoundingClientRect();
+    offset = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    event.preventDefault();
+  });
+}
+
+document.addEventListener("mousemove", (event) => {
+  if (!dragging) return;
+  const rect = graph.getBoundingClientRect();
+  dragging.style.left = `${event.clientX - rect.left - offset.x}px`;
+  dragging.style.top = `${event.clientY - rect.top - offset.y}px`;
+  draw();
+});
+document.addEventListener("mouseup", () => { dragging = null; });
+
+window.addEventListener("load", draw);
+window.addEventListener("resize", draw);
+</script>
+</body>
+</html>

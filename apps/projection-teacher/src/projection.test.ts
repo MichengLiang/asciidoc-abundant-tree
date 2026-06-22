@@ -4,6 +4,7 @@ import {
 	projectTeachingGraph,
 	projectTeachingGraphFromDocument,
 } from "./projection";
+import { SAMPLE_SOURCE } from "./sample";
 
 const fixture = `= 浏览器解析夹具
 
@@ -75,13 +76,15 @@ describe("projection teacher document projection", () => {
 				sourceSpan: expect.objectContaining({
 					start: expect.objectContaining({ line: 11 }),
 				}),
-				fields: expect.arrayContaining([
-					{ key: "label", value: "目标节点" },
-					{ key: "rel", value: "requires" },
-					{ key: "weight", value: "0.7" },
-					{ key: "sourceLine", value: "11" },
-				]),
+				fields: expect.arrayContaining([{ key: "weight", value: "0.7" }]),
 			}),
+		);
+		expect(edge?.fields).not.toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ key: "rel" }),
+				expect.objectContaining({ key: "sourceLine" }),
+				expect.objectContaining({ key: "sourceColumn" }),
+			]),
 		);
 	});
 
@@ -98,5 +101,21 @@ describe("projection teacher document projection", () => {
 				rel: "requires",
 			}),
 		]);
+		expect(projection.diagnostics).toEqual([]);
+	});
+
+	it("keeps internal parser warnings out of the user-visible diagnostic strip", () => {
+		const projection = projectTeachingGraph(SAMPLE_SOURCE);
+
+		expect(projection.internalDiagnostics).toEqual(
+			expect.arrayContaining([
+				expect.stringContaining("official-block-context.unknown"),
+			]),
+		);
+		expect(projection.diagnostics).not.toEqual(
+			expect.arrayContaining([
+				expect.stringContaining("official-block-context.unknown"),
+			]),
+		);
 	});
 });

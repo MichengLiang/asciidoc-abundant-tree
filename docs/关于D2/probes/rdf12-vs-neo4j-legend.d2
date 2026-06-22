@@ -1,0 +1,54 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    theme-id: 4
+  }
+}
+
+direction: right
+
+Neo4j: {
+  label: "Neo4j property graph"
+
+  n1: {
+    shape: sql_table
+    label: "(:Person)"
+    id: uuid {constraint: primary_key}
+    name: string
+    labels: "Person, Author"
+  }
+
+  n2: {
+    shape: sql_table
+    label: "(:Book)"
+    id: uuid {constraint: primary_key}
+    title: string
+  }
+
+  n1 -> n2: "[:WROTE {role, confidence}]" {
+    tooltip: "Relationship has a type and its own properties."
+  }
+}
+
+RDF12: {
+  label: "RDF 1.2 graph with reifier"
+
+  s: "ex:author/42"
+  o: "ex:book/9"
+  s -> o: "schema:authorOf"
+
+  r: {
+    shape: sql_table
+    label: "reifier _:t1"
+    rdf:reifies: "<<s schema:authorOf o>>"
+    aat:sourceLine: integer
+    prov:source: iri
+  }
+
+  r -> s: "mentions subject" {
+    style.stroke-dash: 4
+  }
+  r -> o: "mentions object" {
+    style.stroke-dash: 4
+  }
+}

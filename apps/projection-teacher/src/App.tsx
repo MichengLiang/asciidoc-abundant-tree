@@ -3,12 +3,12 @@ import {
 	Controls,
 	type Edge,
 	type EdgeTypes,
-	MarkerType,
 	type Node,
 	type NodeTypes,
 	ReactFlow,
 	useEdgesState,
 	useNodesState,
+	useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useEffect, useMemo, useState } from "react";
@@ -31,6 +31,7 @@ export function App(): React.ReactElement {
 	const projection = useMemo(() => projectTeachingGraph(source), [source]);
 	const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
 	const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+	const { fitView } = useReactFlow();
 
 	useEffect(() => {
 		let cancelled = false;
@@ -40,28 +41,24 @@ export function App(): React.ReactElement {
 		}).then((result) => {
 			if (cancelled) return;
 			setNodes(result.nodes);
-			setEdges(
-				result.edges.map((edge) => ({
-					...edge,
-					markerEnd: {
-						type: MarkerType.ArrowClosed,
-						width: 18,
-						height: 18,
-					},
-				})),
-			);
+			setEdges(result.edges);
+			requestAnimationFrame(() => {
+				if (!cancelled) {
+					void fitView({ padding: 0.16, duration: 180, minZoom: 0.82 });
+				}
+			});
 		});
 		return () => {
 			cancelled = true;
 		};
-	}, [projection, setEdges, setNodes]);
+	}, [fitView, projection, setEdges, setNodes]);
 
 	return (
 		<main className="app-shell">
 			<section className="editor-pane">
 				<header>
 					<h1>AsciiDoc 教学输入</h1>
-					<p>写标题、属性和 xref，右侧即时生成节点卡片与边卡片。</p>
+                    <p>写标题、属性和 xref，右侧即时生成节点与连线。</p>
 				</header>
 				<textarea
 					aria-label="AsciiDoc source"
@@ -95,8 +92,8 @@ export function App(): React.ReactElement {
 					onNodesChange={onNodesChange}
 					onEdgesChange={onEdgesChange}
 					fitView
-					fitViewOptions={{ padding: 0.2 }}
-					minZoom={0.25}
+					fitViewOptions={{ padding: 0.16, minZoom: 0.82 }}
+					minZoom={0.38}
 					maxZoom={1.4}
 					nodesDraggable
 					nodesConnectable={false}

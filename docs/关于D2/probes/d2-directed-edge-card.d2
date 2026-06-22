@@ -1,0 +1,80 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    theme-id: 4
+  }
+}
+
+direction: right
+
+classes: {
+  relationship: {
+    style.stroke-dash: 3
+  }
+  love: {
+    style.stroke: "#ce6262"
+    style.stroke-width: 2
+  }
+  marriage: {
+    style.stroke: "#d8902e"
+    style.stroke-width: 2
+    style.stroke-dash: 5
+  }
+  blood: {
+    style.stroke: "#66a96a"
+    style.stroke-width: 2
+  }
+}
+
+daiyu: {
+  shape: sql_table
+  label: 林黛玉
+  辈分: 第三代
+  阵营: 姑苏林氏
+  身份: 贾母外孙女
+  居所: 潇湘馆
+  判词: 玉带林中挂
+}
+
+baoyu: {
+  shape: sql_table
+  label: 贾宝玉
+  辈分: 第三代
+  阵营: 荣国府
+  身份: 贾政次子
+  居所: 怡红院
+  前身: 神瑛侍者
+}
+
+baochai: {
+  shape: sql_table
+  label: 薛宝钗
+  辈分: 第三代
+  阵营: 金陵薛家
+  身份: 薛姨妈之女
+  居所: 蘅芜苑
+  判词: 金簪雪里埋
+}
+
+love_edge: {
+  shape: sql_table
+  label: 相爱
+  class: relationship
+  典故: 木石前盟
+  强度: 极深
+  结局: 悲剧
+}
+
+marriage_edge: {
+  shape: sql_table
+  label: 婚配
+  class: relationship
+  典故: 金玉良缘
+  形式: 家族安排
+  结局: 守寡
+}
+
+daiyu -> love_edge: "" {class: love}
+love_edge -> baoyu: "" {class: love}
+baoyu -> marriage_edge: "" {class: marriage}
+marriage_edge -> baochai: "" {class: marriage}

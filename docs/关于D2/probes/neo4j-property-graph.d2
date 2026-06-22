@@ -1,0 +1,52 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    theme-id: 4
+  }
+}
+
+classes: {
+  relation: {
+    style.stroke: "#7a4cc2"
+    style.stroke-width: 2
+  }
+  propertyNote: {style.stroke-dash: 3}
+}
+
+Person: {
+  shape: sql_table
+  node_id: uuid {constraint: primary_key}
+  labels: ":Person:Author"
+  name: string
+  born: date
+}
+
+Book: {
+  shape: sql_table
+  node_id: uuid {constraint: primary_key}
+  labels: ":Book"
+  title: string
+  published: integer
+}
+
+Person -> Book: "WROTE" {
+  class: relation
+  tooltip: "Neo4j relationship: type=WROTE; properties={role, confidence, source}"
+}
+
+WROTE_props: {
+  shape: sql_table
+  class: propertyNote
+  edge_id: uuid {constraint: primary_key}
+  type: "WROTE"
+  role: string
+  confidence: float
+  source: string
+}
+
+WROTE_props -> Person: "startNode" {
+  style.stroke-dash: 4
+}
+WROTE_props -> Book: "endNode" {
+  style.stroke-dash: 4
+}

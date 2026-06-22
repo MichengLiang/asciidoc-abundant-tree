@@ -2,6 +2,26 @@
 
 这个目录是一套面向讲解的 RDF12 heading projection 大闭环样例。`dream-of-red-chamber.adoc` 保留了若干刻意设计的问题结构，用来演示审计、定位、现场修复和复查。
 
+## 统一 CLI
+
+可以用 Typer 入口统一调用这套演示命令：
+
+```bash
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py --help
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py run-all
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py health
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py blast-radius 林黛玉
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py neighborhood 王熙凤
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py snapshot
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py restore-source
+```
+
+默认命令会实时投影 `dream-of-red-chamber.adoc`。只想读取预生成 Turtle 时，加 `--snapshot`：
+
+```bash
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py audit --snapshot
+```
+
 ## 推荐演示顺序
 
 从 `01_project_overview.py` 到 `11_restore_source.py` 依次运行。每个脚本顶部 docstring 都写了现场讲法、观众应看什么、下一步运行什么。
@@ -25,6 +45,7 @@ uv run samples/dream-of-red-chamber-rdf-projection/11_restore_source.py
 ## 重新生成 TTL
 
 ```bash
+uv run samples/dream-of-red-chamber-rdf-projection/cli.py snapshot
 pnpm --silent dev samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc --format rdf12 > samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.ttl
 ```
 

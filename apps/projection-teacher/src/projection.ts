@@ -35,6 +35,7 @@ export type TeachingProjection = {
 	readonly nodes: readonly TeachingNode[];
 	readonly edges: readonly TeachingEdge[];
 	readonly diagnostics: readonly string[];
+	readonly internalDiagnostics: readonly string[];
 };
 
 type ProjectionIndex = {
@@ -48,6 +49,10 @@ const REL_LABELS: Record<string, string> = {
 	references: "引用",
 	requires: "要求",
 };
+
+const USER_HIDDEN_DIAGNOSTIC_CODES = new Set([
+	"official-block-context.unknown",
+]);
 
 export function projectTeachingGraph(source: string): TeachingProjection {
 	try {
@@ -64,6 +69,7 @@ export function projectTeachingGraph(source: string): TeachingProjection {
 			diagnostics: [
 				`解析失败: ${error instanceof Error ? error.message : String(error)}`,
 			],
+			internalDiagnostics: [],
 		};
 	}
 }
@@ -74,10 +80,10 @@ export function projectTeachingGraphFromDocument(
 	const sections = collectSections(document.children);
 	const nodes = sections.map(sectionToTeachingNode);
 	const index = buildProjectionIndex(document, sections, nodes);
-	const diagnostics = document.toolDiagnostics.map(
-		(diagnostic) =>
-			`${diagnostic.level} ${diagnostic.code}: ${diagnostic.message}`,
-	);
+	const internalDiagnostics = document.toolDiagnostics.map(formatDiagnostic);
+	const diagnostics = document.toolDiagnostics
+		.filter((diagnostic) => !USER_HIDDEN_DIAGNOSTIC_CODES.has(diagnostic.code))
+		.map(formatDiagnostic);
 	const edges = document.xrefOccurrences.flatMap((xref, indexInDocument) => {
 		const edge = xrefToTeachingEdge(xref, indexInDocument, index, diagnostics);
 		return edge ? [edge] : [];
@@ -87,7 +93,16 @@ export function projectTeachingGraphFromDocument(
 		nodes,
 		edges,
 		diagnostics,
+		internalDiagnostics,
 	};
+}
+
+function formatDiagnostic(diagnostic: {
+	readonly level: string;
+	readonly code: string;
+	readonly message: string;
+}): string {
+	return `${diagnostic.level} ${diagnostic.code}: ${diagnostic.message}`;
 }
 
 function sectionToTeachingNode(section: SectionNode): TeachingNode {
@@ -142,7 +157,7 @@ function xrefToTeachingEdge(
 	}
 
 	const rel = relationForXref(xref);
-	const fields = xrefFields(xref, rel);
+	const fields = xrefFields(xref);
 	return {
 		id: `${source.id}-${rel}-${target.id}-${indexInDocument}`,
 		source: source.id,
@@ -154,18 +169,12 @@ function xrefToTeachingEdge(
 	};
 }
 
-function xrefFields(xref: XrefOccurrenceNode, rel: string): DisplayField[] {
+function xrefFields(xref: XrefOccurrenceNode): DisplayField[] {
 	const fields: DisplayField[] = [];
-	if (xref.label) {
-		appendField(fields, "label", xref.label);
-	}
-	appendField(fields, "rel", rel);
 	for (const [key, value] of Object.entries(xref.attributes ?? {})) {
-		appendField(fields, key, stringifyFieldValue(value));
-	}
-	if (xref.sourceSpan) {
-		appendField(fields, "sourceLine", String(xref.sourceSpan.start.line));
-		appendField(fields, "sourceColumn", String(xref.sourceSpan.start.column));
+		if (key !== "rel") {
+			appendField(fields, key, stringifyFieldValue(value));
+		}
 	}
 	return fields;
 }

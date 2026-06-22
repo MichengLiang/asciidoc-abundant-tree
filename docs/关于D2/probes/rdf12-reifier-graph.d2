@@ -1,0 +1,50 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    theme-id: 4
+  }
+}
+
+classes: {
+  resource: {
+    style.fill: "#f3fbf2"
+    style.stroke: "#2e7d32"
+  }
+  triple: {style.stroke-dash: 3}
+  annotation: {
+    style.stroke: "#d45531"
+    style.stroke-width: 2
+  }
+}
+
+ex_author: "ex:author/42" {
+  class: resource
+  tooltip: "RDF resource IRI"
+}
+
+ex_book: "ex:book/9" {
+  class: resource
+  tooltip: "RDF resource IRI"
+}
+
+ex_author -> ex_book: "schema:authorOf" {
+  class: annotation
+  tooltip: "asserted RDF triple: author schema:authorOf book"
+}
+
+t1: {
+  shape: sql_table
+  class: triple
+  id: "_:t1" {constraint: primary_key}
+  reifies: "ex_author schema:authorOf ex_book"
+  aat_sourceLine: integer
+  prov_wasDerivedFrom: iri
+  confidence: decimal
+}
+
+t1 -> ex_author: "rdf:subject" {
+  style.stroke-dash: 4
+}
+t1 -> ex_book: "rdf:object" {
+  style.stroke-dash: 4
+}

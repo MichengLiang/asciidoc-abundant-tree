@@ -1,0 +1,19 @@
+erDiagram
+%% 实体1：用户表 + 字段属性
+	t_user {
+		int user_id PK "用户ID"
+		varchar username "用户名"
+		int age "年龄"
+		varchar phone "手机号"
+	}
+
+%% 实体2：订单表 + 字段属性
+	t_order {
+		int order_id PK "订单ID"
+		decimal amount "订单金额"
+		varchar status "订单状态"
+		int user_id FK "用户ID"
+	}
+
+%% 关系边：主关系名 + 换行补充边属性
+	t_user ||--o{ t_order : "拥有<br/>【关系属性】<br/>关联时间: datetime<br/>关联类型: 主动创建"
