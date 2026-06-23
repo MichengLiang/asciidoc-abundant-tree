@@ -11,48 +11,48 @@ export function TeachingNode({ data }: NodeProps): React.ReactElement {
 	const node = data as unknown as TeachingNodeData;
 	return (
 		<article className={`teaching-node role-${node.role ?? "default"}`}>
-            <Handle
-                className="teaching-handle teaching-handle--left lane-top handle-reference-in"
-                id="left-top-target"
-                type="target"
-                position={Position.Left}
-            />
-            <Handle
-                className="teaching-handle teaching-handle--left lane-middle handle-flow-out"
-                id="left-middle-source"
-                type="source"
-                position={Position.Left}
-            />
-            <Handle
-                className="teaching-handle teaching-handle--left lane-middle handle-flow-in"
-                id="left-middle-target"
-                type="target"
-                position={Position.Left}
-            />
-            <Handle
-                className="teaching-handle teaching-handle--right lane-top handle-reference-in"
-                id="right-top-target"
-                type="target"
-                position={Position.Right}
-            />
-            <Handle
-                className="teaching-handle teaching-handle--right lane-middle handle-flow-in"
-                id="right-middle-target"
-                type="target"
-                position={Position.Right}
-            />
-            <Handle
-                className="teaching-handle teaching-handle--right lane-middle handle-flow-out"
-                id="right-middle-source"
-                type="source"
-                position={Position.Right}
-            />
-            <Handle
-                className="teaching-handle teaching-handle--left lane-bottom handle-flow-in"
-                id="left-bottom-target"
-                type="target"
-                position={Position.Left}
-            />
+			<Handle
+				className="teaching-handle teaching-handle--left lane-top handle-reference-in"
+				id="left-top-target"
+				type="target"
+				position={Position.Left}
+			/>
+			<Handle
+				className="teaching-handle teaching-handle--left lane-middle handle-flow-out"
+				id="left-middle-source"
+				type="source"
+				position={Position.Left}
+			/>
+			<Handle
+				className="teaching-handle teaching-handle--left lane-middle handle-flow-in"
+				id="left-middle-target"
+				type="target"
+				position={Position.Left}
+			/>
+			<Handle
+				className="teaching-handle teaching-handle--right lane-top handle-reference-in"
+				id="right-top-target"
+				type="target"
+				position={Position.Right}
+			/>
+			<Handle
+				className="teaching-handle teaching-handle--right lane-middle handle-flow-in"
+				id="right-middle-target"
+				type="target"
+				position={Position.Right}
+			/>
+			<Handle
+				className="teaching-handle teaching-handle--right lane-middle handle-flow-out"
+				id="right-middle-source"
+				type="source"
+				position={Position.Right}
+			/>
+			<Handle
+				className="teaching-handle teaching-handle--left lane-bottom handle-flow-in"
+				id="left-bottom-target"
+				type="target"
+				position={Position.Left}
+			/>
 			<header className="teaching-node__header">
 				<strong>{node.title}</strong>
 				{node.role ? (

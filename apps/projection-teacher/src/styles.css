@@ -130,44 +130,44 @@ textarea {
 }
 
 .teaching-handle {
-    width: 8px;
-    height: 8px;
-    border: 2px solid #fffdf8;
-    background: #9fb3c7;
-    box-shadow:
-        0 0 0 1px rgba(56, 88, 121, 0.22),
-        0 1px 4px rgba(56, 88, 121, 0.12);
-    opacity: 0;
+	width: 8px;
+	height: 8px;
+	border: 2px solid #fffdf8;
+	background: #9fb3c7;
+	box-shadow:
+		0 0 0 1px rgba(56, 88, 121, 0.22),
+		0 1px 4px rgba(56, 88, 121, 0.12);
+	opacity: 0;
 }
 
 .teaching-handle--left.react-flow__handle-left {
-    left: -4px;
+	left: -4px;
 }
 
 .teaching-handle--right.react-flow__handle-right {
-    right: -4px;
+	right: -4px;
 }
 
 .handle-flow-out,
 .handle-flow-in {
-    background: #d8902e;
+	background: #d8902e;
 }
 
 .handle-reference-in,
 .handle-reference-out {
-    background: #66a96a;
+	background: #66a96a;
 }
 
 .teaching-handle.lane-top {
-    top: 38px;
+	top: 38px;
 }
 
 .teaching-handle.lane-middle {
-    top: 50%;
+	top: 50%;
 }
 
 .teaching-handle.lane-bottom {
-    top: calc(100% - 30px);
+	top: calc(100% - 30px);
 }
 
 .teaching-node.role-process {
@@ -270,10 +270,10 @@ textarea {
 }
 
 .teaching-edge-path {
-    stroke-width: 3.2;
-    stroke: #958779;
-    fill: none;
-    filter: drop-shadow(0 1px 0 rgba(255, 250, 243, 0.9));
+	stroke-width: 3.2;
+	stroke: #958779;
+	fill: none;
+	filter: drop-shadow(0 1px 0 rgba(255, 250, 243, 0.9));
 }
 
 .teaching-edge-path.rel-requires {
@@ -285,9 +285,9 @@ textarea {
 }
 
 .teaching-edge-path.rel-references {
-    stroke: #66a96a;
-    stroke-dasharray: 5 5;
-    opacity: 0.38;
+	stroke: #66a96a;
+	stroke-dasharray: 5 5;
+	opacity: 0.38;
 }
 
 .teaching-edge-label {
@@ -298,15 +298,15 @@ textarea {
 	max-width: 150px;
 	border: 1px solid currentColor;
 	border-radius: 999px;
-    background: rgba(255, 253, 248, 0.97);
+	background: rgba(255, 253, 248, 0.97);
 	box-shadow: 0 2px 8px rgba(60, 50, 40, 0.1);
 	padding: 3px 7px;
 	color: #746a61;
 	font-size: 10.5px;
 	line-height: 1.2;
-    pointer-events: none;
-    white-space: nowrap;
-    transform-origin: center;
+	pointer-events: none;
+	white-space: nowrap;
+	transform-origin: center;
 }
 
 .teaching-edge-label span {
@@ -330,8 +330,8 @@ textarea {
 }
 
 .teaching-edge-label.rel-references {
-    color: #66a96a;
-    opacity: 0.72;
+	color: #66a96a;
+	opacity: 0.72;
 }
 
 .react-flow__edge-path {

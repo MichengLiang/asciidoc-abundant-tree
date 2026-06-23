@@ -237,9 +237,9 @@ function assertNoHiddenParserWarning(diagnostics) {
 
 function assertCounts(result) {
 	if (
-        result.sectionNodeCount !== 3 ||
-        result.edgeLabelCount !== 2 ||
-        result.edgeCount !== 3
+		result.sectionNodeCount !== 3 ||
+		result.edgeLabelCount !== 2 ||
+		result.edgeCount !== 3
 	) {
 		throw new Error(`Unexpected graph counts: ${JSON.stringify(result)}`);
 	}

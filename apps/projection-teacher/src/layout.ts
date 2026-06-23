@@ -26,15 +26,13 @@ export function nodeHeight(node: TeachingNode): number {
 }
 
 type EdgeHandleSet = {
-    readonly sourceHandle:
-        | "left-middle-source"
-        | "right-middle-source";
-    readonly targetHandle:
-        | "left-top-target"
-        | "left-middle-target"
-        | "left-bottom-target"
-        | "right-middle-target"
-        | "right-top-target";
+	readonly sourceHandle: "left-middle-source" | "right-middle-source";
+	readonly targetHandle:
+		| "left-top-target"
+		| "left-middle-target"
+		| "left-bottom-target"
+		| "right-middle-target"
+		| "right-top-target";
 };
 
 export async function layoutTeachingGraph(input: {
@@ -51,10 +49,10 @@ export async function layoutTeachingGraph(input: {
 			"elk.direction": "RIGHT",
 			"elk.edgeRouting": "ORTHOGONAL",
 			"elk.portConstraints": "FIXED_SIDE",
-            "elk.spacing.nodeNode": "46",
-            "elk.layered.spacing.nodeNodeBetweenLayers": "84",
-            "elk.layered.spacing.edgeNodeBetweenLayers": "28",
-            "elk.layered.spacing.edgeEdgeBetweenLayers": "20",
+			"elk.spacing.nodeNode": "46",
+			"elk.layered.spacing.nodeNodeBetweenLayers": "84",
+			"elk.layered.spacing.edgeNodeBetweenLayers": "28",
+			"elk.layered.spacing.edgeEdgeBetweenLayers": "20",
 			"elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
 			"elk.layered.crossingMinimization.strategy": "LAYER_SWEEP",
 		},
@@ -144,15 +142,15 @@ function elkPortsForNode(node: TeachingNode): {
 	height: number;
 	layoutOptions: { "elk.port.side": "WEST" | "EAST" };
 }[] {
-    return [
-        elkPort(node.id, "left-top-target", "WEST"),
-        elkPort(node.id, "left-middle-target", "WEST"),
-        elkPort(node.id, "left-middle-source", "WEST"),
-        elkPort(node.id, "left-bottom-target", "WEST"),
-        elkPort(node.id, "right-top-target", "EAST"),
-        elkPort(node.id, "right-middle-target", "EAST"),
-        elkPort(node.id, "right-middle-source", "EAST"),
-    ];
+	return [
+		elkPort(node.id, "left-top-target", "WEST"),
+		elkPort(node.id, "left-middle-target", "WEST"),
+		elkPort(node.id, "left-middle-source", "WEST"),
+		elkPort(node.id, "left-bottom-target", "WEST"),
+		elkPort(node.id, "right-top-target", "EAST"),
+		elkPort(node.id, "right-middle-target", "EAST"),
+		elkPort(node.id, "right-middle-source", "EAST"),
+	];
 }
 
 function elkPort(
@@ -189,33 +187,33 @@ function edgeHandles(
 	edge: TeachingEdge,
 	centerXById: ReadonlyMap<string, number>,
 ): EdgeHandleSet {
-    const sourceX = centerXById.get(edge.source) ?? 0;
-    const targetX = centerXById.get(edge.target) ?? sourceX;
-    if (edge.rel === "references") {
-        return {
-            sourceHandle:
-                sourceX <= targetX ? "right-middle-source" : "left-middle-source",
-            targetHandle: sourceX <= targetX ? "left-top-target" : "right-top-target",
-        };
-    }
-    if (edge.rel === "documents") {
-        return {
-            sourceHandle:
-                sourceX <= targetX ? "right-middle-source" : "left-middle-source",
-            targetHandle:
-                sourceX <= targetX ? "left-middle-target" : "right-middle-target",
-        };
-    }
-    if (sourceX <= targetX) {
-        return {
-            sourceHandle: "right-middle-source",
-            targetHandle: "left-middle-target",
-        };
-    }
-    return {
-        sourceHandle: "left-middle-source",
-        targetHandle: "right-top-target",
-    };
+	const sourceX = centerXById.get(edge.source) ?? 0;
+	const targetX = centerXById.get(edge.target) ?? sourceX;
+	if (edge.rel === "references") {
+		return {
+			sourceHandle:
+				sourceX <= targetX ? "right-middle-source" : "left-middle-source",
+			targetHandle: sourceX <= targetX ? "left-top-target" : "right-top-target",
+		};
+	}
+	if (edge.rel === "documents") {
+		return {
+			sourceHandle:
+				sourceX <= targetX ? "right-middle-source" : "left-middle-source",
+			targetHandle:
+				sourceX <= targetX ? "left-middle-target" : "right-middle-target",
+		};
+	}
+	if (sourceX <= targetX) {
+		return {
+			sourceHandle: "right-middle-source",
+			targetHandle: "left-middle-target",
+		};
+	}
+	return {
+		sourceHandle: "left-middle-source",
+		targetHandle: "right-top-target",
+	};
 }
 
 function edgeHandlesFromNodeOrder(
@@ -225,40 +223,40 @@ function edgeHandlesFromNodeOrder(
 	const orderById = new Map(
 		nodes.map((node, index) => [node.id, index] as const),
 	);
-    const sourceOrder = orderById.get(edge.source) ?? 0;
-    const targetOrder = orderById.get(edge.target) ?? sourceOrder;
-    if (edge.rel === "references") {
-        return {
-            sourceHandle:
-                sourceOrder <= targetOrder
-                    ? "right-middle-source"
-                    : "left-middle-source",
-            targetHandle:
-                sourceOrder <= targetOrder ? "left-top-target" : "right-top-target",
-        };
-    }
-    if (edge.rel === "documents") {
-        return {
-            sourceHandle:
-                sourceOrder <= targetOrder
-                    ? "right-middle-source"
-                    : "left-middle-source",
-            targetHandle:
-                sourceOrder <= targetOrder
-                    ? "left-middle-target"
-                    : "right-middle-target",
-        };
-    }
-    if (sourceOrder <= targetOrder) {
-        return {
-            sourceHandle: "right-middle-source",
-            targetHandle: "left-middle-target",
-        };
-    }
-    return {
-        sourceHandle: "left-middle-source",
-        targetHandle: "right-top-target",
-    };
+	const sourceOrder = orderById.get(edge.source) ?? 0;
+	const targetOrder = orderById.get(edge.target) ?? sourceOrder;
+	if (edge.rel === "references") {
+		return {
+			sourceHandle:
+				sourceOrder <= targetOrder
+					? "right-middle-source"
+					: "left-middle-source",
+			targetHandle:
+				sourceOrder <= targetOrder ? "left-top-target" : "right-top-target",
+		};
+	}
+	if (edge.rel === "documents") {
+		return {
+			sourceHandle:
+				sourceOrder <= targetOrder
+					? "right-middle-source"
+					: "left-middle-source",
+			targetHandle:
+				sourceOrder <= targetOrder
+					? "left-middle-target"
+					: "right-middle-target",
+		};
+	}
+	if (sourceOrder <= targetOrder) {
+		return {
+			sourceHandle: "right-middle-source",
+			targetHandle: "left-middle-target",
+		};
+	}
+	return {
+		sourceHandle: "left-middle-source",
+		targetHandle: "right-top-target",
+	};
 }
 
 function edgeColor(rel: string): string {

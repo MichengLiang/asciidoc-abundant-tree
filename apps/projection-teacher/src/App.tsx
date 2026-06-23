@@ -58,7 +58,7 @@ export function App(): React.ReactElement {
 			<section className="editor-pane">
 				<header>
 					<h1>AsciiDoc 教学输入</h1>
-                    <p>写标题、属性和 xref，右侧即时生成节点与连线。</p>
+					<p>写标题、属性和 xref，右侧即时生成节点与连线。</p>
 				</header>
 				<textarea
 					aria-label="AsciiDoc source"
