@@ -6,6 +6,17 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.19 - 2026-06-23
+
+### Added
+
+- Added CLI `--format adoc` output for exporting parser input source directly, including include-expanded logical AsciiDoc source in explicit book-entry mode.
+- Added CLI regression coverage for single-file ADOC passthrough, book-entry merged source export, selected include expansion, and escaped include preservation.
+
+### Fixed
+
+- Fixed projection-teacher Biome formatting so the repository lint gate passes without changing graph teaching behavior.
+
 ## 0.1.18 - 2026-06-18
 
 ### Added
