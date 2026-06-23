@@ -8,7 +8,7 @@ import type { OutputFormat, ParseAbundantTreeOptions } from "./model";
 import { parseAbundantTree } from "./parser";
 import { formatAbundantTree, serializeAbundantTreeToJson } from "./serializers";
 
-type CliOutputFormat = OutputFormat | "rdf12" | "rdf12-json-ld";
+type CliOutputFormat = OutputFormat | "adoc" | "rdf12" | "rdf12-json-ld";
 type CliMode = "single-file" | "book-entry";
 
 export type CliResult = {
@@ -19,12 +19,12 @@ export type CliResult = {
 
 const USAGE = `Usage:
   asciidoc-abundant-tree <file.adoc> [--json]
-  asciidoc-abundant-tree <file.adoc> [--format tree|json|rdf12|rdf12-json-ld]
+  asciidoc-abundant-tree <file.adoc> [--format tree|json|adoc|rdf12|rdf12-json-ld]
   asciidoc-abundant-tree <file.adoc> [--mode single-file|book-entry]
   asciidoc-abundant-tree <file.adoc> [--document-root <root>]
   asciidoc-abundant-tree --help
 
-Default mode is single-file. In book-entry mode, --document-root is the relativePath basis and path boundary; when omitted it defaults to the current working directory. JSON is a machine-friendly projection of the same TypeScript document model. RDF 1.2 output is available as Turtle text or JSON-LD.`;
+Default mode is single-file. In book-entry mode, --document-root is the relativePath basis and path boundary; when omitted it defaults to the current working directory. JSON is a machine-friendly projection of the same TypeScript document model. ADOC output writes the parser input source; in book-entry mode that source is the include-expanded logical document. RDF 1.2 output is available as Turtle text or JSON-LD.`;
 
 export function runCli(args: string[]): CliResult {
 	let parsed: ReturnType<typeof parseArgs>;
@@ -106,6 +106,13 @@ export function runCli(args: string[]): CliResult {
 				stderr: "",
 			};
 		}
+		if (parsed.format === "adoc") {
+			return {
+				code: 0,
+				stdout: document.sourceText ?? "",
+				stderr: "",
+			};
+		}
 		return {
 			code: 0,
 			stdout:
@@ -159,11 +166,12 @@ function parseArgs(args: string[]): {
 			if (
 				next !== "tree" &&
 				next !== "json" &&
+				next !== "adoc" &&
 				next !== "rdf12" &&
 				next !== "rdf12-json-ld"
 			) {
 				throw new Error(
-					`Unsupported format: ${next}. Expected tree, json, rdf12, or rdf12-json-ld.`,
+					`Unsupported format: ${next}. Expected tree, json, adoc, rdf12, or rdf12-json-ld.`,
 				);
 			}
 			format = next;

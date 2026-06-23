@@ -180,6 +180,7 @@ asciidoc-abundant-tree <file.adoc>
 asciidoc-abundant-tree <file.adoc> --json
 asciidoc-abundant-tree <file.adoc> --format tree
 asciidoc-abundant-tree <file.adoc> --format json
+asciidoc-abundant-tree <file.adoc> --format adoc
 asciidoc-abundant-tree <file.adoc> --format rdf12
 asciidoc-abundant-tree <file.adoc> --format rdf12-json-ld
 asciidoc-abundant-tree <file.adoc> --mode book-entry --document-root <root> --format json
@@ -206,6 +207,15 @@ JSON output preserves the same object fields and omits `undefined` values:
 asciidoc-abundant-tree docs/index.adoc --json > tree.json
 ```
 
+ADOC output writes the parser input source directly to stdout. In single-file mode it returns the input file source; in book-entry mode it returns the include-expanded logical document:
+
+```bash
+asciidoc-abundant-tree samples/book-entry-demo/book.adoc \
+  --mode book-entry \
+  --document-root samples/book-entry-demo \
+  --format adoc > book-expanded.adoc
+```
+
 RDF 1.2 output writes Turtle text directly to stdout:
 
 ```bash
@@ -218,7 +228,7 @@ RDF 1.2 JSON-LD output writes the same graph as a JSON document for frontend con
 asciidoc-abundant-tree docs/index.adoc --format rdf12-json-ld > projection.jsonld
 ```
 
-Book-entry mode parses an entry file and supported full-file include directives into one logical document. It is always explicit:
+Book-entry mode parses an entry file and supported include directives into one logical document. It is always explicit:
 
 ```bash
 asciidoc-abundant-tree samples/book-entry-demo/book.adoc \
@@ -229,7 +239,7 @@ asciidoc-abundant-tree samples/book-entry-demo/book.adoc \
 
 When `--document-root` is omitted in book-entry mode, the CLI uses the current working directory. In single-file mode, `--document-root` does not change parser input construction; RDF output still uses it as the projection root.
 
-The demo book keeps the entry file, included chapters, and an assets directory under one sample tree. Its JSON, pretty tree, and RDF 1.2 outputs expose origin `relativePath` values such as `chapters/01-overview.adoc` and `chapters/02-operations.adoc` instead of treating the entry file as the source for every node.
+The demo book keeps the entry file, included chapters, and an assets directory under one sample tree. Its JSON, pretty tree, and RDF 1.2 outputs expose origin `relativePath` values such as `chapters/01-overview.adoc` and `chapters/02-operations.adoc` instead of treating the entry file as the source for every node. Its `--format adoc` output is the same include-expanded logical source used by the parser.
 
 The CLI exposes only `rdf12` and `rdf12-json-ld` for RDF output. It does not accept `rdf`, `ttl`, or `turtle` as public format aliases.
 

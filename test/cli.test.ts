@@ -30,7 +30,9 @@ describe("cli", () => {
 		expect(result.code).toBe(0);
 		expect(result.stdout).toMatch(/asciidoc-abundant-tree <file\.adoc>/);
 		expect(result.stdout).toMatch(/--json/);
-		expect(result.stdout).toMatch(/--format tree\|json\|rdf12\|rdf12-json-ld/);
+		expect(result.stdout).toMatch(
+			/--format tree\|json\|adoc\|rdf12\|rdf12-json-ld/,
+		);
 		expect(result.stdout).toMatch(/--mode single-file\|book-entry/);
 		expect(result.stdout).toMatch(/--document-root <root>/);
 		expect(result.stderr).toBe("");
@@ -88,6 +90,71 @@ describe("cli", () => {
 		]);
 
 		expect(explicitTree).toEqual(defaultTree);
+	});
+
+	it("prints the input source through adoc format in single-file mode", () => {
+		const result = runCli([
+			"samples/book-entry-demo/book.adoc",
+			"--format",
+			"adoc",
+		]);
+
+		expect(result.code).toBe(0);
+		expect(result.stderr).toBe("");
+		expect(result.stdout).toContain("include::chapters/01-overview.adoc[]");
+		expect(result.stdout).toContain("include::chapters/02-operations.adoc[]");
+		expect(result.stdout).not.toContain("[#demo-overview]");
+	});
+
+	it("prints merged include-expanded source through adoc format in book-entry mode", () => {
+		const result = runCli([
+			"samples/book-entry-demo/book.adoc",
+			"--mode",
+			"book-entry",
+			"--document-root",
+			"samples/book-entry-demo",
+			"--format",
+			"adoc",
+		]);
+
+		expect(result.code).toBe(0);
+		expect(result.stderr).toBe("");
+		expect(result.stdout).toContain("= Book Entry Demo");
+		expect(result.stdout).toContain("[#demo-overview]");
+		expect(result.stdout).toContain("[#demo-operations]");
+		expect(result.stdout).toContain("[#demo-checklist]");
+		expect(result.stdout).not.toContain("include::chapters/01-overview.adoc[]");
+		expect(result.stdout).not.toContain(
+			"include::chapters/02-operations.adoc[]",
+		);
+		expect(result.stdout).not.toMatch(/(^|\n)[ \t]*include::/u);
+	});
+
+	it("prints official Reader merged source with selected includes expanded", () => {
+		const result = runCli([
+			officialReaderBookEntryPath,
+			"--mode",
+			"book-entry",
+			"--document-root",
+			officialReaderFixtureRoot,
+			"--format",
+			"adoc",
+		]);
+
+		expect(result.code).toBe(0);
+		expect(result.stderr).toBe("");
+		expect(result.stdout).toContain("export function describeBook");
+		expect(result.stdout).toContain("Line one.");
+		expect(result.stdout).toContain("xref:preface[Preface from line two].");
+		expect(result.stdout).toContain("xref:preface[Preface from line five].");
+		expect(result.stdout).toContain("\\include::escaped-target.adoc[]");
+		expect(result.stdout).not.toContain(
+			"include::../examples/minimal-tool.mjs[tag=main]",
+		);
+		expect(result.stdout).not.toContain(
+			'include::../snippets/lines.adoc[lines="1..2,5"]',
+		);
+		expect(result.stdout).not.toMatch(/(^|\n)[ \t]*include::/u);
 	});
 
 	it("prints book-entry JSON through explicit book-entry mode", () => {
@@ -258,6 +325,7 @@ describe("cli", () => {
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toMatch(/tree/);
 		expect(result.stderr).toMatch(/json/);
+		expect(result.stderr).toMatch(/adoc/);
 		expect(result.stderr).toMatch(/rdf12/);
 	});
 
