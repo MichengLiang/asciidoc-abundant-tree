@@ -1,0 +1,15 @@
+[#case-document-provenance-rag]
+== PDF / Word / RAG Provenance Index
+
+PDF / Word / RAG Provenance Index 展示外部文档细粒度溯源。领域对象是 chunk、段落、页面区域、主张和证据。
+
+[horizontal]
+source:: `cases/080-document-provenance-rag/source/provenance-index.adoc`
+projection:: `projection/provenance-index.ttl`、`projection/provenance-index.jsonld`
+model:: `model/locator-schema.ts`、`model/rag-index.ts`
+reports:: `reports/source-locators.json`、`reports/rag-citations.json`
+views:: `views/evidence-graph.mmd`、`views/pdf-highlight-data.json`
+
+标题节点代表一个 chunk 或证据片段。payload 保存 W3C Web Annotation selector、TextQuoteSelector、TextPositionSelector、PDF page/bbox、Word paraId/bookmark、char offset 和 source file。xref 表达 claim supported-by chunk、chunk extracted-from document、section cites chunk。
+
+读者动作是：在图上查询证据，生成 RAG citation index，并通过 locator 回到 PDF、Word 或网页原文位置。

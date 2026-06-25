@@ -1,0 +1,15 @@
+[#case-cross-book-linking]
+== Cross-book Linking
+
+Cross-book Linking 展示多本书之间的工作区级对齐。领域对象是两个独立 book-entry projection 与一份 workspace alignment。
+
+[horizontal]
+source:: `cases/060-cross-book-linking/source/book-a/`、`source/book-b/`
+projection:: `projection/book-a.ttl`、`projection/book-a.jsonld`、`projection/book-b.ttl`、`projection/book-b.jsonld`、`projection/workspace.ttl`、`projection/workspace.jsonld`
+model:: `model/alignment-policy.ts`
+reports:: `reports/alignment-candidates.json`、`reports/workspace-links.json`
+views:: `views/workspace-links.mmd`
+
+每本书独立生成 projection。workspace policy 按 address label、headline 或显式字段查找候选节点，并生成跨书 relation。跨书边属于 workspace graph，不回写到任一本书的核心 projection。
+
+读者动作是：加载多份 projection，执行 alignment policy，生成跨书候选报告和 workspace TTL。

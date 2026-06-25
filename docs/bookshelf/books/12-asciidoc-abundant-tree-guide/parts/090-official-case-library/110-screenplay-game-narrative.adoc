@@ -1,0 +1,15 @@
+[#case-screenplay-game-narrative]
+== Screenplay and Game Narrative Graph
+
+Screenplay and Game Narrative Graph 展示叙事对象建模。领域对象是角色、场景、节拍、任务、物品、地点和对白分支。
+
+[horizontal]
+source:: `cases/100-screenplay-game-narrative/source/narrative.adoc`
+projection:: `projection/narrative.ttl`、`projection/narrative.jsonld`
+model:: `model/narrative-policy.ts`
+reports:: `reports/continuity.json`、`reports/character-appearances.json`、`reports/quest-dependencies.json`
+views:: `views/branch-graph.mmd`、`views/quest-graph.mmd`
+
+标题节点代表叙事资源。xref 表达 scene features character、beat unlocks quest、quest requires item、dialogue branches-to beat。payload 保存场景元数据、对白块、状态条件和分支条件。
+
+读者动作是：生成连续性报告、角色出场报告、任务依赖图和分支图。

@@ -1,0 +1,48 @@
+== 引言：书稿表面创建资源图
+
+作者写下标题时，同时创建一个可阅读的章节和一个可查询的资源节点。
+
+[source,asciidoc]
+----
+= 投影示例
+
+[#delivery.policy, status=active]
+== 配送策略
+
+配送策略依赖 xref:capacity[运力规则, rel=depends-on]。
+
+[#capacity.rule]
+== 运力规则
+----
+
+这段源文档创建三个 heading node：document title `投影示例`、section `配送策略`、section `运力规则`。`#delivery` 和 `#capacity` 进入 heading label space；`.policy` 与 `.rule` 进入 `aat:role`；`status=active` 进入 heading field；xref 生成从 `配送策略` 到 `运力规则` 的 `rel:depends-on` 边。
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l3-o0> a aat:Heading ;
+  aat:addressLabel "delivery" ;
+  aat:headline "配送策略" ;
+  aat:role "policy" ;
+  aat:status "active" ;
+  rel:depends-on <urn:aat:doc:...#heading-l8-o0> .
+
+<urn:aat:doc:...#heading-l8-o0> a aat:Heading ;
+  aat:addressLabel "capacity" ;
+  aat:headline "运力规则" ;
+  aat:role "rule" .
+----
+
+RDF 1.2 projection 不是另一个作者手写层。它是源书稿的查询表面。Heading node 的 IRI 由投影器按文档坐标生成；作者写下的 ID、生成标签和标题文本作为 label space 进入查询。消费者按 label 查标题，按 relation 查边，按 field 查属性，按 source coordinate 回到源文件。
+
+[source,sparql]
+----
+SELECT ?policy ?target ?path ?line WHERE {
+  ?policy aat:addressLabel "delivery" ;
+          aat:role "policy" ;
+          rel:depends-on ?target ;
+          aat:relativePath ?path ;
+          aat:headingLine ?line .
+}
+----
+
+书稿仍然给人阅读。投影图给程序、查询器、校验器、图数据库、RAG 索引和 code agent 消费。二者共享同一份源文件。

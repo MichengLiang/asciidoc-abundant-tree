@@ -1,0 +1,29 @@
+[#relation-predicate]
+== 关系谓词
+
+`rel` 是 xref 的 relation control field。它选择主 relation triple 的 predicate。
+
+[source,asciidoc]
+----
+xref:capacity[运力规则, rel=depends-on]
+----
+
+普通 token 进入 `rel:` 命名空间：
+
+[source,turtle]
+----
+<urn:aat:doc:guide#heading-l1-c1> aat:addressLabel "delivery" ;
+  rel:depends-on <urn:aat:doc:guide#heading-l4-c1> .
+
+<urn:aat:doc:guide#heading-l4-c1> aat:addressLabel "capacity" .
+----
+
+`rel` 的业务语义由当前书稿或领域模型的受控词表定义。投影器只保存源表面并生成关系谓词。
+
+[horizontal]
+depends-on:: 当前标题的判断、规则或操作以目标标题为依据。
+illustrates:: 当前标题提供目标标题的示例。
+defines:: 当前标题给出目标标题所代表对象的定义。
+constrains:: 当前标题对目标标题的合法写法或范围施加约束。
+is-a:: 当前标题所代表对象属于目标标题所代表类别。
+part-of:: 当前标题所代表对象是目标标题所代表整体的组成部分。

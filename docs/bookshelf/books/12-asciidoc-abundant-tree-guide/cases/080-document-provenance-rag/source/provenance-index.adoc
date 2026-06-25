@@ -1,0 +1,15 @@
+= 文档溯源索引
+
+[#claim-cold-chain.claim]
+== 冷链放行必须读取温度审计
+
+该主张由 xref:chunk-temp-audit[温度审计证据, rel=supported-by] 支撑。
+
+[#chunk-temp-audit.evidence-chunk, sourceFile=report-2026.pdf]
+== 温度审计证据
+
+[.source-locator, for=chunk-temp-audit]
+[source,json]
+----
+{"pdf":{"page":12,"bbox":[120,300,450,80]},"textQuote":{"exact":"温度记录完整后方可放行","prefix":"审计结论：","suffix":"。"}}
+----

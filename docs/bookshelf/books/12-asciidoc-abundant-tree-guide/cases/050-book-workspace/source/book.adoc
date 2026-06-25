@@ -1,0 +1,11 @@
+= Book Workspace Case
+:doctype: book
+
+include::frontmatter/preface.adoc[]
+
+= 第一部：对象
+
+include::parts/010-object/010-object-boundary.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]

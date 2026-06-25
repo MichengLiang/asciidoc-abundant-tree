@@ -1,0 +1,88 @@
+[#first-queryable-graph]
+== 第一张可查询图
+
+一个 AsciiDoc 源文件可以直接生成 RDF 1.2 projection。读者先写源文档，再运行公开 CLI 或 Library API，得到 Turtle 与 JSON-LD。
+
+[source,asciidoc]
+----
+= 配送知识库
+
+[#delivery.policy, status=active, owner=ops]
+== 配送策略
+
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8]。
+
+[#capacity.rule, status=active]
+== 运力规则
+
+priority:: normal
+summary::
+运力规则描述系统在不同运力条件下如何判断配送策略是否降级。
+----
+
+CLI 输出 Turtle：
+
+[source,bash]
+----
+asciidoc-abundant-tree source/delivery.adoc --format rdf12 > projection/delivery.ttl
+----
+
+Library API 输出同一 projection：
+
+[source,typescript]
+----
+import { mkdirSync, writeFileSync } from "node:fs";
+import { parseAbundantTree, rdf12 } from "asciidoc-abundant-tree";
+
+const document = parseAbundantTree({ sourcePath: "source/delivery.adoc" });
+const projection = rdf12(document, { documentRoot: process.cwd() });
+
+mkdirSync("projection", { recursive: true });
+writeFileSync("projection/delivery.ttl", projection.ttl);
+writeFileSync("projection/delivery.jsonld", projection.jsonLd);
+----
+
+投影图包含标题节点、字段、关系边和回源坐标：
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l3-o0> a aat:Heading ;
+  aat:addressLabel "delivery" ;
+  aat:headline "配送策略" ;
+  aat:role "policy" ;
+  aat:status "active" ;
+  aat:owner "ops" ;
+  rel:depends-on <urn:aat:doc:...#heading-l8-o0> ;
+  aat:relativePath "source/delivery.adoc" ;
+  aat:headingLine 4 .
+
+<urn:aat:doc:...#heading-l8-o0> a aat:Heading ;
+  aat:addressLabel "capacity" ;
+  aat:headline "运力规则" ;
+  aat:role "rule" ;
+  aat:status "active" ;
+  aat:priority "normal" ;
+  aat:summary "运力规则描述系统在不同运力条件下如何判断配送策略是否降级。" ;
+  aat:relativePath "source/delivery.adoc" ;
+  aat:headingLine 9 .
+----
+
+示例中的 `urn:aat:doc:...` IRI 由投影器按文档坐标生成。`delivery` 和 `capacity` 是查询 label，不是节点身份。
+
+查询 active policy 的依赖：
+
+[source,sparql]
+----
+SELECT ?policyHeadline ?targetHeadline ?path ?line WHERE {
+  ?policy aat:addressLabel "delivery" ;
+          aat:role "policy" ;
+          aat:status "active" ;
+          aat:headline ?policyHeadline ;
+          rel:depends-on ?target ;
+          aat:relativePath ?path ;
+          aat:headingLine ?line .
+  ?target aat:headline ?targetHeadline .
+}
+----
+
+查询结果中的 `path` 和 `line` 指回源文件。这个闭环是全书章节的基本形状：源表面写出对象，projection 保存图事实，查询返回可回源结果。

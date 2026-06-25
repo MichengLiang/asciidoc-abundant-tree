@@ -1,0 +1,32 @@
+[#local-target-ownership]
+== 本地 Target 归属
+
+本地非标题 target 的 ID 归属为覆盖该 target source span 起始行的最内层 heading node 的 `aat:addressLabel`。listing、table、block、inline anchor 和 source value block 的 ID 都可以成为所属标题节点的 address label。
+
+[source,asciidoc]
+----
+== 查询示例
+
+[#rule-query-example]
+[source,sql]
+----
+SELECT * FROM rules;
+----
+
+== 使用说明
+
+参见 xref:rule-query-example[规则查询示例]。
+----
+
+`rule-query-example` 是 listing 的 ID。projection 不创建 listing node；它把该 ID 作为 `查询示例` 标题节点的 address label。
+
+[source,turtle]
+----
+<urn:aat:doc:guide#heading-l1-c1> a aat:Heading ;
+  aat:headline "查询示例" ;
+  aat:addressLabel "rule-query-example" .
+
+<urn:aat:doc:guide#heading-l9-c1> aat:references <urn:aat:doc:guide#heading-l1-c1> .
+----
+
+target 归属依据 target 的源位置。xref 出现位置只决定 source heading。

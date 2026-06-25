@@ -1,0 +1,6 @@
+= Book A
+
+[#shared-term.concept]
+== 共享术语
+
+Book A 定义共享术语。

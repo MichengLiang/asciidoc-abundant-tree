@@ -1,0 +1,32 @@
+[#heading-as-resource-node]
+== 标题作为资源节点
+
+标题节点由 AsciiDoc 等号标题创建。一个标题节点对应源文档中的一个标题表面，并承担阅读单位、查询单位和回源单位。
+
+[source,asciidoc]
+----
+[#asset-001.photo, status=selected]
+== 雨夜街角参考图
+
+image::assets/rain-street.jpg[]
+
+location:: 福州
+style:: 高对比霓虹
+----
+
+该标题节点可以代表一张图片资产。图片文件仍然保存在文件系统中；标题节点保存资产名称、字段、嵌入关系和回源位置。
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l1-o0> a aat:Heading ;
+  aat:addressLabel "asset-001" ;
+  aat:headline "雨夜街角参考图" ;
+  aat:role "photo" ;
+  aat:status "selected" ;
+  aat:location "福州" ;
+  aat:style "高对比霓虹" .
+----
+
+标题节点不等于文件。文件是字节容器；标题节点是书稿中的资源容器。一个标题节点可以指向图片、PDF、配置片段、代码清单、业务规则、人物、场景、任务、证据段落或外部 URI。字段和 xref 让这些资源进入统一查询面。
+
+标题节点的粒度由消费动作决定。需要被引用、查询、校验、回源或单独维护的对象适合作为标题节点。只服务段落内部表达的句子留在正文中。

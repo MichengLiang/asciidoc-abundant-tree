@@ -1,0 +1,37 @@
+[#logical-document]
+== Logical Document
+
+logical document 是 book-entry mode 构造出的 in-memory AsciiDoc 文本。parser 把它作为一份逻辑 source document 解析。
+
+Entry file：
+
+[source,asciidoc]
+----
+= 第一部：投影对象
+
+\include::chapters/01-projection-object.adoc[]
+----
+
+Chapter file：
+
+[source,asciidoc]
+----
+[#projection-object]
+== 投影对象
+
+本章定义投影对象的输入事实。
+----
+
+Logical text：
+
+[source,asciidoc]
+----
+= 第一部：投影对象
+
+[#projection-object]
+== 投影对象
+
+本章定义投影对象的输入事实。
+----
+
+logical text 服务结构解析。作者编辑对象仍然是 entry file 和 included source files。

@@ -1,0 +1,32 @@
+[#source-aware-report]
+== Source-aware Report
+
+source-aware report 把查询结果转换成可编辑定位信息。报告保存 label、headline、role、fields、edges、raw、relativePath 和 line。
+
+[source,json]
+----
+{
+  "label": "配送策略",
+  "roles": ["policy"],
+  "fields": {
+    "status": ["active"],
+    "owner": ["ops"]
+  },
+  "edges": [
+    {
+      "relation": "depends-on",
+      "target": "运力规则",
+      "line": 6,
+      "raw": "xref:capacity[运力规则, rel=depends-on, weight=0.8]"
+    }
+  ],
+  "source": {
+    "relativePath": "source/delivery.adoc",
+    "headingLine": 4,
+    "startLine": 3,
+    "endLine": 7
+  }
+}
+----
+
+人和 code agent 读取报告后回到源文件。报告不是另一个事实来源；它是 projection facts 的任务视图。

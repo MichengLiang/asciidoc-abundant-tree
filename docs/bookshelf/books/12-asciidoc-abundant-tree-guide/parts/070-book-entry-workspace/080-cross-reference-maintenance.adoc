@@ -1,0 +1,23 @@
+[#cross-reference-maintenance]
+== 交叉引用维护
+
+跨文件书稿仍使用 heading label space 进行 xref binding。source coordinate 指向 origin source file。
+
+[source,asciidoc]
+----
+查询契约见 xref:sparql-query-surface[SPARQL 查询入口]。
+----
+
+xref audit 读取 unresolved、ambiguous 和 unused stable ID。报告记录 source file 与 line：
+
+[source,json]
+----
+{
+  "kind": "unresolved-xref",
+  "selector": "missing-target",
+  "relativePath": "parts/040-xref-and-relations/060-selector-binding.adoc",
+  "line": 18
+}
+----
+
+维护动作从报告返回源文件。projection 不替作者修复源文档。

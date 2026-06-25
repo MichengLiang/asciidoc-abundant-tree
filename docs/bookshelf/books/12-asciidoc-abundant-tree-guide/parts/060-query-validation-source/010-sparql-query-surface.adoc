@@ -1,0 +1,36 @@
+[#sparql-query-surface]
+== SPARQL 查询入口
+
+RDF 1.2 projection 的公共查询面围绕 heading node、xref edge evidence、raw value object 和 source coordinate 展开。
+
+按 address label 查标题：
+
+[source,sparql]
+----
+SELECT ?heading ?headline ?path ?start ?end WHERE {
+  ?heading a aat:Heading ;
+           aat:addressLabel "delivery" ;
+           aat:headline ?headline ;
+           aat:relativePath ?path ;
+           aat:startLine ?start ;
+           aat:endLine ?end .
+}
+----
+
+查标题发出的关系边：
+
+[source,sparql]
+----
+SELECT ?edge ?predicate ?targetHeadline ?line ?raw WHERE {
+  ?source aat:addressLabel "delivery" .
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?source ;
+        aat:targetHeading ?target ;
+        rdf:reifies <<(?source ?predicate ?target)>> ;
+        aat:startLine ?line ;
+        aat:raw ?raw .
+  ?target aat:headline ?targetHeadline .
+}
+----
+
+查询结果中的 source coordinate 是编辑闭环的一部分。

@@ -1,0 +1,10 @@
+graph TD
+  Policy["冷链出库放行策略"]
+  Audit["温控审计规则"]
+  Config["release-policy-config JSON"]
+  Playbook["review-playbook YAML"]
+  Evidence["dependency-evidence YAML"]
+  Policy -->|depends-on weight=0.9| Audit
+  Policy --> Config
+  Policy --> Playbook
+  Policy --> Evidence

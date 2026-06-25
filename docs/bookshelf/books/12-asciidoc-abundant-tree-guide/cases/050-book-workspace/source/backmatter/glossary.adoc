@@ -1,0 +1,5 @@
+[#case-glossary]
+== 术语表
+
+[glossary]
+line origin:: logical line 到 origin source line 的映射。

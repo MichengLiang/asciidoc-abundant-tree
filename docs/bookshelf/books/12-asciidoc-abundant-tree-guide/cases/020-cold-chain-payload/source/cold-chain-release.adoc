@@ -1,0 +1,40 @@
+= 冷链放行示例
+
+[#cold-chain-release.policy, status=active, owner=quality-ops]
+== 冷链出库放行策略
+
+冷链出库放行策略依赖 xref:temperature-audit[温控审计规则, rel=depends-on, weight=0.9, dependency-evidence=rel-release-temperature-audit]。
+
+[.release-policy-config, for=cold-chain-release]
+[source,json]
+----
+{
+  "temperatureWindowCelsius": {"min": 2, "max": 8},
+  "manualReviewWhen": ["sensor_gap", "route_exception"]
+}
+----
+
+[.review-playbook, for]
+[source,yaml]
+----
+review_team: quality-ops
+steps:
+  - check last temperature checkpoint
+  - compare shipment route exception log
+----
+
+[#rel-release-temperature-audit]
+[source,yaml]
+----
+source: quality-sop-2026
+required_signals:
+  - temperature_checkpoint
+  - route_exception_log
+risk_level: high
+reason: 放行策略必须读取温控审计结果，才能判断冷链药品是否允许出库。
+----
+
+[#temperature-audit.rule, status=active]
+== 温控审计规则
+
+温控审计规则定义冷链药品在出库前必须满足的温度记录完整性要求。

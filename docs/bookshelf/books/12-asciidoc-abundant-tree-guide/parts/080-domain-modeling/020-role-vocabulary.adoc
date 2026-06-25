@@ -1,0 +1,16 @@
+[#role-vocabulary]
+== Role 词表设计
+
+role 词表定义节点类型。每个 role 在同一领域模型中保持单一含义。
+
+[source,javascript]
+----
+export const roles = {
+  recipe: "可烹饪菜谱",
+  ingredient: "食材",
+  step: "烹饪步骤",
+  category: "分类节点",
+};
+----
+
+role 词表来自领域对象结构。它不是投影器内置本体。TS/JS consumer 可把 role 映射为 business graph 中的 class 或 node kind。

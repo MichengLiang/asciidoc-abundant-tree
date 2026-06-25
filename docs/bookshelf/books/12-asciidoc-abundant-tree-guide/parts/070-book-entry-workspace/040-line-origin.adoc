@@ -1,0 +1,25 @@
+[#line-origin]
+== Line Origin
+
+line origin 把 logical line 映射到原始 source file 和 source line。它是 book-entry 回源能力的构成性对象。
+
+[source,typescript]
+----
+export type LineOrigin = {
+  logicalLine: number;
+  absolutePath: string;
+  relativePath: string;
+  sourceLine: number;
+};
+----
+
+logical document 是解析表面。line origin 是回源表面。二者同时成立，多文件书稿才能生成整体结构，同时把每个 heading、xref、raw value object 指回原始章节文件。
+
+[source,text]
+----
+logical line 27, column 14
+  -> origin relativePath "chapters/02-operations.adoc"
+  -> origin line 8, column 14
+----
+
+logical text 构造阶段保留非 include 行的文本。列号因此可以从 logical line 映射到 origin line。

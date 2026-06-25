@@ -1,0 +1,15 @@
+[#case-k8s-microservice-graph]
+== K8S Microservice Configuration Graph
+
+K8S Microservice Configuration Graph 展示配置、依赖和生成物的一致性管理。领域对象是 Service、Ingress 和 Database。
+
+[horizontal]
+source:: `cases/090-k8s-microservice-graph/source/services.adoc`
+projection:: `projection/services.ttl`、`projection/services.jsonld`
+model:: `model/k8s-schema.ts`、`model/dependency-report.ts`
+reports:: `reports/dependencies.json`、`reports/blast-radius.json`、`reports/drift-check.json`
+views:: `views/service-dependencies.mmd`、`views/generated-yaml/`
+
+标题节点代表配置对象。payload 保存 Kubernetes YAML 或 adapter schema。xref 表达 service depends-on database 与 ingress routes-to service。
+
+读者动作是：从书稿生成配置视图，查询依赖和爆炸半径，检查源书稿与生成 YAML 的漂移。

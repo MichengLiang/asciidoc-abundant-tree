@@ -1,0 +1,26 @@
+[#business-graph-generation]
+== 业务图生成
+
+business graph 是 TS/JS consumer 从 projection graph 派生出的领域图。生成器读取 heading nodes、fields、xref edge evidence 和 hierarchy policy。
+
+[source,typescript]
+----
+type BusinessNode = {
+  label: string;
+  roles: string[];
+  fields: Record<string, string[]>;
+  line: string;
+};
+
+type BusinessEdge = {
+  source: string;
+  relation: string;
+  target: string;
+  attributes: Record<string, string>;
+  origin: "hierarchy-policy" | "explicit-xref";
+  line?: string;
+  raw?: string;
+};
+----
+
+`origin` 区分业务边来自标题层级解释还是显式 xref。`line` 和 `raw` 让业务图保持回源能力。

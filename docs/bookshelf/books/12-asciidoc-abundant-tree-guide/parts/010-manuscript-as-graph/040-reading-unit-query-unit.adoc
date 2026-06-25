@@ -1,0 +1,37 @@
+[#reading-unit-query-unit]
+== 从阅读单位到查询单位
+
+标题是读者的阅读单位，也是查询者的资源单位。正文中的段落、列表、代码块和图片说明进入标题切片；标题节点通过 `aat:raw` 保存自身切片原文。
+
+[source,asciidoc]
+----
+[#capacity.rule]
+== 运力规则
+
+运力规则描述系统在不同运力条件下如何判断配送策略是否降级。
+
+=== 降级条件
+
+当运力不足且配送时限无法满足时，系统进入降级流程。
+----
+
+`运力规则` 标题节点的 `aat:raw` 保存该标题自身切片。子标题 `降级条件` 的 raw 属于另一个标题节点。读取完整子树时，消费者沿 `aat:containsDirectly` 递归读取子标题，并按 `aat:documentOrder` 排列。
+
+[source,sparql]
+----
+SELECT ?heading ?headline ?raw ?order WHERE {
+  ?root aat:addressLabel "capacity" .
+  {
+    BIND(?root AS ?heading)
+  }
+  UNION {
+    ?root aat:containsDirectly+ ?heading .
+  }
+  ?heading aat:headline ?headline ;
+           aat:raw ?raw ;
+           aat:documentOrder ?order .
+}
+ORDER BY ?order
+----
+
+这个查询把读者看到的章节树变成程序可遍历的资源树。

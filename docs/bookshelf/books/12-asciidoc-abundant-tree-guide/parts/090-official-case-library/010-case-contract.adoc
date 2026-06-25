@@ -1,0 +1,26 @@
+[#case-contract]
+== 案例契约
+
+官方案例是可运行、可查询、可回源的领域闭环。每个案例包含五类目录。
+
+[source,text]
+----
+source/      AsciiDoc 或 book-entry 源书稿
+projection/  RDF 1.2 Turtle 与 JSON-LD
+model/       TS/JS policy、vocabulary、schema、SHACL
+reports/     source-aware JSON / Markdown reports
+views/       面向消费者动作的视图或 adapter 输出
+----
+
+每个案例章节说明领域对象、标题节点粒度、role 词表、rel 词表、field 表面、payload schema、hierarchy policy、TS/JS consumer、输出视图和回源报告。
+
+案例库级报告位于 `cases/reports.case-inventory.json`。它记录每个案例的五类目录、projection 文件格式和文件数量。
+
+案例库检查命令使用公开 npm 包环境和本地案例脚本：
+
+[source,bash]
+----
+pnpm run generate
+----
+
+检查报告服务审查和学习。源书稿仍是作者编辑对象。

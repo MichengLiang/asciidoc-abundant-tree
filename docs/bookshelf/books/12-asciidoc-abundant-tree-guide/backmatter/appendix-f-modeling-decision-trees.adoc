@@ -1,0 +1,57 @@
+[#appendix-modeling-decision-trees]
+= 附录 F：建模决策树
+
+== 标题节点
+
+[source,text]
+----
+1. 当前对象是否需要被引用、查询、校验、回源或单独维护？
+   ├─ 是：创建 heading node。
+   └─ 否：保留为正文内容。
+
+2. 标题文本是否已经是领域内唯一且稳定的标识符？
+   ├─ 是：使用标题文本作为寻址入口。
+   └─ 否：继续判断引用状态。
+
+3. 该标题是否会被长期引用？
+   ├─ 是：声明 stable ID。
+   └─ 否：不声明 stable ID。
+----
+
+== 字段表面
+
+[source,text]
+----
+1. 字段主体是什么？
+   ├─ xref 边证据：写入 xref named attributes。
+   └─ heading node：继续判断字段体积。
+
+2. 字段值是否为 JSON、YAML 或其它复杂 raw？
+   ├─ 是：使用 source value block 表达 complex property。
+   └─ 否：继续判断字段位置。
+
+3. 字段是否需要嵌入正文句子？
+   ├─ 是：使用 hmeta。
+   └─ 否：继续判断字段长度。
+
+4. 字段数量少且值短？
+   ├─ 是：写入标题 attrlist。
+   └─ 否：写入标题下描述列表。
+----
+
+== 层级解释
+
+[source,text]
+----
+1. 标题层级是否表达领域关系？
+   ├─ 是：声明 hierarchy policy。
+   └─ 否：只保留 structure graph。
+
+2. 子标题是否是父标题的组成部分？
+   ├─ 是：使用 child-to-parent part-of。
+   └─ 否：继续判断约束关系。
+
+3. 子标题是否受父标题规则约束？
+   ├─ 是：使用 child-to-parent governed-by。
+   └─ 否：为当前领域声明其它关系或保持结构层。
+----

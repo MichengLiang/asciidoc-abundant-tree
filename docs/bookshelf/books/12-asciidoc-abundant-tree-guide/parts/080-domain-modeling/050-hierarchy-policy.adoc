@@ -1,0 +1,30 @@
+[#hierarchy-policy]
+== Hierarchy Policy
+
+`aat:containsDirectly` 是标题结构事实。领域模型决定它是否生成业务边，以及生成哪种业务边。
+
+菜谱文档把 child-to-parent 层级解释为 `part-of`：
+
+[source,javascript]
+----
+export const recipePolicy = {
+  hierarchy: {
+    relation: "part-of",
+    direction: "child-to-parent",
+  },
+};
+----
+
+冷链文档把 child-to-parent 层级解释为 `governed-by`：
+
+[source,javascript]
+----
+export const coldChainPolicy = {
+  hierarchy: {
+    relation: "governed-by",
+    direction: "child-to-parent",
+  },
+};
+----
+
+同一个 projection fact 可以进入不同业务解释。投影层保持结构事实，业务层承接领域语义。

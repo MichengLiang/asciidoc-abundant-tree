@@ -1,0 +1,7 @@
+== 前言
+
+AsciiDoc 已经是一种成熟的书稿语言。它有标题、章节、交叉引用、属性、描述列表、include、附录、术语表和参考文献。`asciidoc-abundant-tree` 在这个可读书稿表面上建立 source-aware projection，使标题、字段、xref、payload 和行号成为可查询图事实。
+
+本书按对象层级组织。前四部定义源表面到 RDF 1.2 projection 的核心结构；第五、六部定义复杂属性、查询、校验和回源报告；第七部定义 book-entry 多文件书稿；第八部定义领域建模方法；第九部给出官方案例库。
+
+书中的代码采用 TypeScript / JavaScript 主线。Python 示例作为跨语言消费补充出现。案例中的生成物保留 source-aware report，使读者可以从图查询结果回到源文件位置。

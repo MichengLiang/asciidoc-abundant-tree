@@ -1,0 +1,6 @@
+= Book B
+
+[#shared-term.concept]
+== 共享术语
+
+Book B 使用共享术语。

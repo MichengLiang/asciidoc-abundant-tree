@@ -1,0 +1,76 @@
+[#appendix-rdf12-vocabulary-reference]
+= 附录 B：RDF 1.2 投影词表速查
+
+[cols="1,2", options="header"]
+|===
+|谓词或类型 |含义
+
+|`aat:Heading`
+|标题节点类型。
+
+|`aat:XrefEdge`
+|交叉引用边证据类型。
+
+|`aat:AsciiDocSourceDocument`
+|源文档 provenance resource。
+
+|`aat:SourceFile`
+|book-entry source set 中的源文件重建资源。
+
+|`aat:headline`
+|标题文本。
+
+|`aat:addressLabel`
+|可寻址到 heading node 的作者声明 label 或本地 target alias。
+
+|`aat:generatedAddressLabel`
+|投影器恢复的 generated label。
+
+|`aat:role`
+|标题身份字段。
+
+|`aat:containsDirectly`
+|heading node 之间的直接父子结构边。
+
+|`aat:childOrder`
+|同一 parent 的 direct children 中的 1-based 局部顺序。
+
+|`aat:documentOrder`
+|logical heading tree preorder 的 1-based 全局顺序。
+
+|`aat:raw`
+|heading slice 或 raw value object 的源文本。
+
+|`aat:relativePath`
+|相对于 document root 的源文件路径。
+
+|`aat:startLine` / `aat:endLine`
+|源文件闭区间行范围。
+
+|`aat:headingLine`
+|标题行。
+
+|`aat:sourceHeading`
+|xref edge evidence 的 source heading。
+
+|`aat:targetHeading`
+|xref edge evidence 的 target heading。
+
+|`aat:targetSelector`
+|xref 源表面写出的 selector。
+
+|`aat:candidateHeading`
+|多义 selector 命中的候选 heading。
+
+|`aat:format`
+|raw value object 的 source block language。
+
+|`aat:forSelector`
+|heading complex property 的 selector binding 证据。
+
+|`aat:sourceValueId`
+|xref edge complex property 的 source value id binding 证据。
+
+|`rdf:reifies`
+|RDF 1.2 reifier 指向 relation triple term。
+|===

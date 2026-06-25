@@ -1,0 +1,21 @@
+[#edge-fields]
+== 边字段
+
+xref named attributes 投影为 xref edge evidence 上的 fields。字段主体是边证据，不是 source heading，也不是 target heading。
+
+[source,asciidoc]
+----
+配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, condition=旺季]。
+----
+
+投影为：
+
+[source,turtle]
+----
+<urn:aat:doc:guide#xref-edge-l1-c8-o0> a aat:XrefEdge ;
+  aat:rel "depends-on" ;
+  aat:weight "0.8" ;
+  aat:condition "旺季" .
+----
+
+边字段用于表达关系强度、触发条件、置信度、证据编号或其它属于具体 xref occurrence 的信息。

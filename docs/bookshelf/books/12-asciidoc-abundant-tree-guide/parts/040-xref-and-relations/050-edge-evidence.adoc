@@ -1,0 +1,25 @@
+[#edge-evidence]
+== 边证据
+
+xref edge evidence 保存关系边在源文档中的出现点、raw、selector、字段、official resolved facts 和 RDF 1.2 reifier。
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l8-o0> .
+
+<urn:aat:doc:...#xref-edge-l6-c8-o0> a aat:XrefEdge ;
+  rdf:reifies <<(<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l8-o0>)>> ;
+  aat:sourceHeading <urn:aat:doc:...#heading-l3-o0> ;
+  aat:targetHeading <urn:aat:doc:...#heading-l8-o0> ;
+  aat:targetSelector "capacity" ;
+  aat:displayLabel "运力规则" ;
+  aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8]" ;
+  aat:relativePath "source/delivery.adoc" ;
+  aat:startLine 6 ;
+  aat:startColumn 8 ;
+  aat:endLine 6 ;
+  aat:endColumn 58 ;
+  aat:officialResolvedType "section" .
+----
+
+relation triple 让查询者找到关系。edge evidence 让查询者知道这条关系来自哪一个 xref occurrence。回源修改、边属性审计、official binding 检查和 complex property 读取都使用 edge evidence。

@@ -1,0 +1,15 @@
+[#case-book-workspace]
+== Book Workspace
+
+Book Workspace 展示多文件书稿的 source-aware projection。领域对象是一本文档书。
+
+[horizontal]
+source:: `cases/050-book-workspace/source/book.adoc`、`source/frontmatter/`、`source/parts/`、`source/backmatter/`
+projection:: `projection/book.ttl`、`projection/book.jsonld`
+model:: `model/xref-audit.ts`、`model/source-set-report.ts`
+reports:: `reports/source-set.json`、`reports/xref-audit.json`、`reports/index-terms.json`
+views:: `views/book-outline.mmd`
+
+该案例展示 entry file、include graph、logical document、line origin、source set reconstruction surface、frontmatter、parts、chapters、backmatter、glossary、bibliography 和 index。
+
+读者动作是：解析 book-entry，查看每个 heading 的 origin source file，生成书籍大纲，审计 xref 和索引词。

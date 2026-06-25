@@ -1,0 +1,57 @@
+[#appendix-shacl-templates]
+= 附录 E：SHACL 模板
+
+== Heading 基础 Shape
+
+[source,turtle]
+----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix ex: <https://micheng.dev/ns/example-shapes#>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+ex:HeadingShape a sh:NodeShape ;
+  sh:targetClass aat:Heading ;
+  sh:property [
+    sh:path aat:headline ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "heading must expose a headline"
+  ] ;
+  sh:property [
+    sh:path aat:relativePath ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "heading must expose source relative path"
+  ] ;
+  sh:property [
+    sh:path aat:headingLine ;
+    sh:minCount 1 ;
+    sh:datatype xsd:integer ;
+    sh:message "heading must expose heading line"
+  ] .
+----
+
+== Role 约束 Shape
+
+[source,turtle]
+----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix ex: <https://micheng.dev/ns/example-shapes#>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+
+ex:PolicyShape a sh:NodeShape ;
+  sh:targetClass aat:Heading ;
+  sh:property [
+    sh:path aat:role ;
+    sh:hasValue "policy" ;
+    sh:minCount 1 ;
+    sh:message "policy shape applies to headings whose role is policy"
+  ] ;
+  sh:property [
+    sh:path aat:status ;
+    sh:minCount 1 ;
+    sh:in ("draft" "active") ;
+    sh:message "policy heading status must be draft or active"
+  ] .
+----

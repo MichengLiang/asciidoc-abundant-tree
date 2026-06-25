@@ -1,0 +1,18 @@
+[#default-reference]
+== 默认引用
+
+没有 `rel` 的 xref 投影为 `aat:references`。
+
+[source,asciidoc]
+----
+关系证据说明参见 xref:capacity[运力规则]。
+----
+
+投影为：
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l1-o0> aat:references <urn:aat:doc:...#heading-l6-o0> .
+----
+
+`aat:references` 表达普通参见关系。阅读顺序、先读提示和一般文本参照使用默认引用。明确业务关系使用 `rel` 字段。

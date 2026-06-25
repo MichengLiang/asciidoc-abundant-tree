@@ -1,0 +1,15 @@
+[#case-basic-rdf-projection]
+== Basic RDF Projection
+
+Basic RDF Projection 展示投影层核心结构。领域对象是一个小型结构夹具，不引入具体业务语义。
+
+[horizontal]
+source:: `cases/010-basic-rdf-projection/source/basic-projection.adoc`
+projection:: `projection/basic-projection.ttl`、`projection/basic-projection.jsonld`
+model:: `model/structure-model.ttl`、`model/structure-shapes.ttl`、`model/query.mjs`
+reports:: `reports/headings.json`、`reports/xref-evidence.json`、`reports/shacl.md`
+views:: `views/heading-tree.mmd`
+
+该案例覆盖 document title heading、manual address label、generated address label、heading direct fields、role、heading tree、explicit relation、default relation、xref evidence、local target alias、SHACL validation 和 Oxigraph 查询。
+
+读者动作是：查看源文档，生成 projection，按 `aat:documentOrder` 打印标题树，按 `aat:XrefEdge` 读取边证据，按 SHACL shape 检查 role 和字段约束。

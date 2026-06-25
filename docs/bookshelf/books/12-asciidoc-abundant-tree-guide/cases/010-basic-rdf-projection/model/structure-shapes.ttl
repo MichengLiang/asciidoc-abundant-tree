@@ -1,0 +1,23 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix ex: <https://micheng.dev/ns/structure-model#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+ex:HeadingShape a sh:NodeShape;
+  sh:targetClass aat:Heading;
+  sh:property [
+    sh:path aat:headline;
+    sh:minCount 1;
+    sh:datatype xsd:string;
+    sh:message "heading must expose a headline"
+  ].
+
+ex:ProcessShape a sh:NodeShape;
+  sh:targetClass ex:ProcessHeading;
+  sh:property [
+    sh:path rel:requires;
+    sh:minCount 1;
+    sh:class ex:RuleHeading;
+    sh:message "process heading must require a rule heading"
+  ].

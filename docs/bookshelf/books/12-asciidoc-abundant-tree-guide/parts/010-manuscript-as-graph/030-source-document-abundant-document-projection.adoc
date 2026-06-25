@@ -1,0 +1,31 @@
+[#source-document-abundant-document-projection]
+== Source Document、AbundantDocument 与 Projection
+
+`source document` 是作者编辑的 AsciiDoc 文件。`AbundantDocument` 是 `parseAbundantTree` 返回的 TypeScript object model。`projection` 是从 `AbundantDocument` 导出的下游表面。
+
+[source,typescript]
+----
+import {
+  formatAbundantTree,
+  parseAbundantTree,
+  rdf12,
+  serializeAbundantTreeToJson,
+} from "asciidoc-abundant-tree";
+
+const document = parseAbundantTree({ sourcePath: "source/delivery.adoc" });
+
+const pretty = formatAbundantTree(document);
+const json = serializeAbundantTreeToJson(document);
+const projection = rdf12(document, { documentRoot: process.cwd() });
+----
+
+同一份 `AbundantDocument` 可以投影为终端树、JSON、RDF 1.2 Turtle 和 RDF 1.2 JSON-LD。RDF projection 的返回对象包含 `graph`、`ttl` 和 `jsonLd`。
+
+[source,typescript]
+----
+const graph = projection.graph;
+const turtle = projection.ttl;
+const jsonLd = projection.jsonLd;
+----
+
+源文档是事实来源。`AbundantDocument` 保存解析结果、source span、target catalog、xref occurrence 和 official binding。RDF projection 保存面向查询的图事实。消费者修改书稿时，应通过 projection 返回的 source coordinate 回到源文档。

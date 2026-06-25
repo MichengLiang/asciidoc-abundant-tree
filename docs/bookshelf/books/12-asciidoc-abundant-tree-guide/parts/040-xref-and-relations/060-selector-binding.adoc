@@ -1,0 +1,29 @@
+[#selector-binding]
+== Selector Binding
+
+xref target selector 查询 heading label space。命中一个 heading node 时，projection 输出 target heading 和主 relation triple。未命中时，edge evidence 保留 selector 和回源坐标。命中多个 heading node 时，edge evidence 保留候选 heading。
+
+[source,sparql]
+----
+SELECT ?edge ?selector ?path ?line WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:targetSelector ?selector ;
+        aat:relativePath ?path ;
+        aat:startLine ?line .
+  FILTER NOT EXISTS { ?edge aat:targetHeading ?target . }
+  FILTER NOT EXISTS { ?edge aat:candidateHeading ?candidate . }
+}
+----
+
+多义 selector 查询：
+
+[source,sparql]
+----
+SELECT ?edge ?selector ?candidate WHERE {
+  ?edge a aat:XrefEdge ;
+        aat:targetSelector ?selector ;
+        aat:candidateHeading ?candidate .
+}
+----
+
+未绑定和多义绑定是源文档事实。下游 lint 根据项目约定判断是否需要修改源文档。

@@ -1,0 +1,11 @@
+graph TD
+  Rule["2-8C温控规则"]
+  Shipment["批次运输任务CT-2026-0618"]
+  Box["疫苗箱A17"]
+  Sensor["温度记录仪T09"]
+  Process["温度偏离处置流程"]
+  Shipment -->|governed-by| Rule
+  Rule -->|triggers condition=超温超过15分钟| Process
+  Shipment -->|has-part| Box
+  Shipment -->|has-part| Sensor
+  Sensor -->|monitors confidence=0.98| Box

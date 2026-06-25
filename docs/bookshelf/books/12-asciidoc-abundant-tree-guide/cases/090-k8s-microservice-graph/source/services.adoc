@@ -1,0 +1,21 @@
+= K8S 微服务配置图
+
+[#svc-orders.service, port=8080]
+== orders-service
+
+依赖 xref:db-orders[orders-db, rel=depends-on]，并由 xref:ingress-public[public-ingress, rel=routes-to] 暴露。
+
+[.k8s-manifest, for=svc-orders]
+[source,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-service
+----
+
+[#db-orders.database]
+== orders-db
+
+[#ingress-public.ingress]
+== public-ingress

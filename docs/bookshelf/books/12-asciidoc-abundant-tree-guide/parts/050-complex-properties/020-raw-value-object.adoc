@@ -1,0 +1,26 @@
+[#raw-value-object]
+== Raw Value Object
+
+raw value object 保存 source value block 的 raw、format、source coordinate 和 binding evidence。
+
+[source,turtle]
+----
+<urn:aat:doc:cold-chain-release#raw-l10-o0>
+  aat:format "json" ;
+  aat:raw "{\"temperatureWindowCelsius\":{\"min\":2,\"max\":8}}" ;
+  aat:relativePath "source/cold-chain-release.adoc" ;
+  aat:startLine 10 ;
+  aat:endLine 18 ;
+  aat:contentStartLine 13 ;
+  aat:contentEndLine 17 ;
+  aat:forSelector "cold-chain-release" .
+----
+
+raw value object 不保存字段名。字段名由指向它的 field predicate 表达：
+
+[source,turtle]
+----
+<urn:aat:doc:cold-chain-release#heading-l1-c1> aat:release-policy-config <urn:aat:doc:cold-chain-release#raw-l10-o0> .
+----
+
+raw value object 的 raw 是 opaque literal。JSON、YAML、TOML、XML 或其它格式内部字段由下游消费者解释。

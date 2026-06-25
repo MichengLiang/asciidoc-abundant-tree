@@ -1,0 +1,29 @@
+[#entry-file-source-set]
+== Entry File 与 Source Set
+
+entry file 是 book-entry mode 的显式输入。source set 是 entry file 通过受支持 include directive 到达的 source files 集合。
+
+[source,asciidoc]
+----
+= Book Entry Demo
+:doctype: book
+
+\include::chapters/01-overview.adoc[]
+
+\include::chapters/02-operations.adoc[]
+----
+
+`documentRoot` 是 relativePath 基准和路径边界。RDF12 输出为 source set 提供 source file reconstruction surface：
+
+[source,sparql]
+----
+SELECT ?path WHERE {
+  ?sourceDoc a aat:AsciiDocSourceDocument ;
+             aat:sourceFile ?sourceFile .
+  ?sourceFile a aat:SourceFile ;
+              aat:relativePath ?path .
+}
+ORDER BY ?path
+----
+
+source set 包含 entry file 和 included files。只贡献 attributes 或其它非结构节点的 source file 仍属于 source set。

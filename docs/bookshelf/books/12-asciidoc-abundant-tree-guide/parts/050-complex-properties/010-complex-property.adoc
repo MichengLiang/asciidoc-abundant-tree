@@ -1,0 +1,27 @@
+[#complex-property]
+== 复杂属性
+
+complex property 是值为 raw value object 的字段。它把 JSON、YAML 或其它 source block body 挂到 heading node 或 xref edge evidence 上。
+
+[source,asciidoc]
+------
+[.release-policy-config, for=cold-chain-release]
+[source,json]
+----
+{
+  "temperatureWindowCelsius": { "min": 2, "max": 8 },
+  "manualReviewWhen": ["sensor_gap", "route_exception"]
+}
+----
+------
+
+`release-policy-config` 是字段名。`for=cold-chain-release` 绑定目标 heading。`source,json` 提供 raw format。block body 是 raw。
+
+投影图通过字段谓词连接 subject 与 raw value object：
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l3-o0> aat:release-policy-config <urn:aat:doc:...#payload-l10-o0> .
+----
+
+complex property 保留复杂源表面；下游消费者按字段谓词选择模型，按 format 解析 raw。

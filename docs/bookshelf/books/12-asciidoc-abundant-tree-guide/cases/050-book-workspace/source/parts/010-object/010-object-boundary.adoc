@@ -1,0 +1,4 @@
+[#case-object-boundary]
+== 对象边界
+
+对象边界章节链接 xref:case-glossary[术语表]。

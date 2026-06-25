@@ -1,0 +1,25 @@
+[#label-space]
+== 地址空间
+
+heading label space 由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成。xref target selector 和 heading complex property selector 都查询这个 label space。
+
+[source,asciidoc]
+----
+[#delivery.policy]
+== 配送策略
+
+== 运力规则
+----
+
+`配送策略` 标题拥有手写 address label `delivery` 和 headline `配送策略`。`运力规则` 没有手写 ID，projection 为它生成 generated address label。
+
+[source,turtle]
+----
+<urn:aat:doc:guide#heading-l1-c1> aat:addressLabel "delivery" ;
+  aat:headline "配送策略" .
+
+<urn:aat:doc:guide#heading-l4-c1> aat:generatedAddressLabel "_运力规则" ;
+  aat:headline "运力规则" .
+----
+
+selector binding 不查询 role、普通字段、raw、display label 或 heading IRI。重复 label 是源文档事实；查询结果可以包含多个 heading node。

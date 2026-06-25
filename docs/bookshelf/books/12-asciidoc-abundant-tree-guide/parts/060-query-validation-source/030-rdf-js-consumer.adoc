@@ -1,0 +1,24 @@
+[#rdf-js-consumer]
+== RDF/JS 数据读取
+
+TS/JS consumer 可以用 `n3` 读取 Turtle，并用 RDF/JS dataset 查询 projection facts。
+
+[source,typescript]
+----
+import { readFileSync } from "node:fs";
+import { Parser, Store } from "n3";
+
+const ttl = readFileSync("projection/delivery.ttl", "utf8");
+const store = new Store(new Parser({ format: "Turtle" }).parse(ttl));
+
+const AAT = "https://micheng.dev/ns/asciidoc-abundant-tree#";
+const RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
+for (const quad of store.getQuads(null, `${RDF}type`, `${AAT}Heading`, null)) {
+  const headline = store.getObjects(quad.subject, `${AAT}headline`, null)[0];
+  const line = store.getObjects(quad.subject, `${AAT}headingLine`, null)[0];
+  console.log(`${headline?.value} @ line ${line?.value}`);
+}
+----
+
+RDF/JS consumer 适合生成 JSON report、Mermaid 视图、业务 TTL、adapter 输入和 lint 诊断。

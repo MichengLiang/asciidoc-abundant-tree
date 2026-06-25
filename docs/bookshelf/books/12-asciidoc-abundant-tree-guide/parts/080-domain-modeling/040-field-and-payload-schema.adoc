@@ -1,0 +1,29 @@
+[#field-and-payload-schema]
+== Field 与 Payload Schema
+
+field schema 定义节点字段、边字段和 complex property 的下游解释。
+
+[source,javascript]
+----
+export const fieldSchema = {
+  policy: {
+    required: ["minTemperature", "maxTemperature"],
+  },
+  shipment: {
+    required: ["status", "origin", "destination"],
+  },
+};
+----
+
+payload schema 定义 raw value object 的内部结构。消费者按 field predicate 选择 schema，按 format 解析 raw。
+
+[source,typescript]
+----
+const schemas = {
+  "release-policy-config": releasePolicyConfigSchema,
+  "review-playbook": reviewPlaybookSchema,
+  "dependency-evidence": dependencyEvidenceSchema,
+};
+----
+
+schema validation 属于下游模型质量检查。projection 只提供 raw、format、field predicate 和 source coordinate。

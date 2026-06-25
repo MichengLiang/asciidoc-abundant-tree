@@ -1,0 +1,20 @@
+[#frontmatter]
+== Frontmatter
+
+frontmatter 保存读者进入书籍对象所需的出版信息、摘要、前言、致谢和引言。它位于 `book.adoc` 中正文 parts 之前。
+
+[source,asciidoc]
+----
+[abstract]
+\include::frontmatter/abstract.adoc[]
+
+[colophon]
+\include::frontmatter/colophon.adoc[]
+
+[preface]
+\include::frontmatter/preface.adoc[]
+
+\include::frontmatter/introduction.adoc[]
+----
+
+frontmatter 文件参与 source set。其标题、字段和引用同样可以被 projection 和查询消费。

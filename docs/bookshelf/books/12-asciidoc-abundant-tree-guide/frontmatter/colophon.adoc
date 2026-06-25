@@ -1,0 +1,5 @@
+== 版本说明
+
+本书属于 `{series-name}` 书架。书稿使用 book-entry 结构组织，源文件位于 `docs/bookshelf/books/12-asciidoc-abundant-tree-guide/`。
+
+本书示例代码使用公开 npm 包 `asciidoc-abundant-tree`。示例执行入口以包的 Library API 与 CLI 为准；仓库开发命令只出现在维护者语境中。

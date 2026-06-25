@@ -1,0 +1,27 @@
+[#oxigraph-query]
+== Oxigraph 查询
+
+Oxigraph 提供本地 RDF store 与 SPARQL 查询执行。消费者可以加载 projection TTL 与 model TTL，再用 `CONSTRUCT` materialize 下游关系。
+
+[source,typescript]
+----
+import { readFileSync } from "node:fs";
+import { Store } from "oxigraph";
+
+const store = new Store();
+store.load(readFileSync("projection/basic.ttl", "utf8"), { format: "text/turtle" });
+store.load(readFileSync("model/structure-model.ttl", "utf8"), { format: "text/turtle" });
+
+const inferred = store.query(`
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  CONSTRUCT { ?source ?superRelation ?target }
+  WHERE {
+    ?relation rdfs:subPropertyOf ?superRelation .
+    ?source ?relation ?target .
+  }
+`);
+
+for (const quad of inferred) store.add(quad);
+----
+
+这个模式把 projection 中的 `rel:requires`、`rel:documents` 等谓词映射到领域关系，例如 `ex:dependency` 或 `ex:evidenceLink`。

@@ -1,0 +1,18 @@
+= 多模态资产目录
+
+[#project-neon.project]
+== 霓虹街景项目
+
+[#asset-rain-street.photo, path=assets/rain-street.jpg, license=internal]
+=== 雨夜街角参考图
+
+location:: 福州
+tags:: rain, neon, street
+
+[.vision-profile, for=asset-rain-street]
+[source,json]
+----
+{"composition":"low angle street corner","dominantColors":["blue","magenta"],"objects":["umbrella","signboard"]}
+----
+
+该资产用于 xref:project-neon[rel=used-in]。

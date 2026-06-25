@@ -1,0 +1,17 @@
+= 叙事图谱
+
+[#hero.character]
+== 林澈
+
+[#rain-station.scene, location=雨夜车站]
+== 雨夜车站
+
+场景包含 xref:hero[林澈, rel=features]，并解锁 xref:quest-find-ticket[寻找车票, rel=unlocks]。
+
+[#quest-find-ticket.quest]
+== 寻找车票
+
+任务需要 xref:item-ticket[旧车票, rel=requires]。
+
+[#item-ticket.item]
+== 旧车票

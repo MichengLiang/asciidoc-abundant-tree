@@ -1,0 +1,29 @@
+[#xref-relation-edge]
+== Xref 创建关系边
+
+xref 位于某个 heading slice 中。该 heading node 是关系 source。xref target selector 绑定到 heading label space 后，命中的 heading node 是关系 target。
+
+[source,asciidoc]
+----
+[#delivery.policy]
+== 配送策略
+
+配送策略依赖 xref:capacity[运力规则, rel=depends-on]。
+
+[#capacity.rule]
+== 运力规则
+----
+
+投影为：
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l1-o0> rel:depends-on <urn:aat:doc:...#heading-l6-o0> .
+
+<urn:aat:doc:...#xref-edge-l4-c7-o0> a aat:XrefEdge ;
+  aat:sourceHeading <urn:aat:doc:...#heading-l1-o0> ;
+  aat:targetHeading <urn:aat:doc:...#heading-l6-o0> ;
+  aat:targetSelector "capacity" .
+----
+
+relation triple 服务图查询。xref edge evidence 服务回源、审计、边字段和 official binding 查询。

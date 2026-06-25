@@ -1,0 +1,15 @@
+[#case-recipe-knowledge-graph]
+== Recipe Knowledge Graph
+
+Recipe Knowledge Graph 展示亲切领域中的分类关系与组成关系。领域对象是家庭菜谱、食材、步骤和分类。
+
+[horizontal]
+source:: `cases/030-recipe-kg/source/recipe-knowledge.adoc`
+projection:: `projection/recipe-knowledge.ttl`、`projection/recipe-knowledge.jsonld`
+model:: `model/policy.ts`、`model/business-graph.ts`
+reports:: `reports/recipe-graph.json`
+views:: `views/classification.mmd`、`views/composition.mmd`、`views/overview.mmd`
+
+该案例使用描述列表字段表达节点属性。`role:: recipe`、`role:: ingredient`、`role:: step` 和 `role:: category` 定义节点类型。显式 xref 的 `rel=is-a` 生成分类边。hierarchy policy 把 child-to-parent `containsDirectly` 解释为 `part-of`。
+
+读者动作是：从 projection graph 生成 business graph，输出菜谱组成图和分类图。

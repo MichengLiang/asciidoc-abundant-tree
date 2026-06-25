@@ -1,0 +1,15 @@
+[#case-cold-chain-operations-graph]
+== Cold Chain Operations Graph
+
+Cold Chain Operations Graph 展示专业领域中的规则约束、部件组成、监控和触发关系。领域对象是冷链药品运输任务。
+
+[horizontal]
+source:: `cases/040-cold-chain-operations/source/cold-chain-operations.adoc`
+projection:: `projection/cold-chain-operations.ttl`、`projection/cold-chain-operations.jsonld`
+model:: `model/policy.ts`、`model/business-graph.ts`
+reports:: `reports/cold-chain-operations.json`
+views:: `views/rules.mmd`、`views/composition.mmd`、`views/overview.mmd`
+
+该案例使用标题前 attrlist 表达短字段。`.policy`、`.shipment`、`.payload`、`.sensor` 和 `.process` 定义节点类型。xref `rel=triggers`、`rel=has-part` 和 `rel=monitors` 生成显式业务边。xref named attributes 保存 `condition` 和 `confidence` 等边属性。hierarchy policy 把 child-to-parent `containsDirectly` 解释为 `governed-by`。
+
+读者动作是：生成规则视图、组成视图和 overview 视图，并从边报告回到 xref 所在行。

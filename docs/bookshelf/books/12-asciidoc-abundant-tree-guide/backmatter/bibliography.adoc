@@ -1,0 +1,23 @@
+[#bibliography]
+= 参考文献
+
+[bibliography]
+* [[[asciidoctor-docs]]] Asciidoctor Documentation, https://docs.asciidoctor.org/
+* [[[asciidoctor-sections]]] Asciidoctor Docs, Sections, https://docs.asciidoctor.org/asciidoc/latest/sections/
+* [[[asciidoctor-xref]]] Asciidoctor Docs, Cross References, https://docs.asciidoctor.org/asciidoc/latest/macros/xref/
+* [[[asciidoctor-attributes]]] Asciidoctor Docs, Element Attributes, https://docs.asciidoctor.org/asciidoc/latest/attributes/element-attributes/
+* [[[asciidoctor-description-lists]]] Asciidoctor Docs, Description Lists, https://docs.asciidoctor.org/asciidoc/latest/lists/description/
+* [[[rdf12-concepts]]] W3C, RDF 1.2 Concepts and Abstract Data Model, https://www.w3.org/TR/rdf12-concepts/
+* [[[rdf12-turtle]]] W3C, RDF 1.2 Turtle, https://www.w3.org/TR/rdf12-turtle/
+* [[[sparql]]] W3C, SPARQL 1.1 Query Language, https://www.w3.org/TR/sparql11-query/
+* [[[shacl]]] W3C, Shapes Constraint Language (SHACL), https://www.w3.org/TR/shacl/
+* [[[prov-o]]] W3C, PROV-O: The PROV Ontology, https://www.w3.org/TR/prov-o/
+* [[[web-annotation]]] W3C, Web Annotation Data Model, https://www.w3.org/TR/annotation-model/
+* [[[diataxis]]] Daniele Procida, Diátaxis Documentation Framework, https://diataxis.fr/
+* [[[google-style]]] Google Developer Documentation Style Guide, https://developers.google.com/style
+* [[[microsoft-style]]] Microsoft Writing Style Guide, https://learn.microsoft.com/en-us/style-guide/welcome/
+* [[[microsoft-dev-content]]] Microsoft Developer Content Guidance, https://learn.microsoft.com/en-us/style-guide/developer-content/
+* [[[cmos-book-parts]]] The Chicago Manual of Style Online, Books and Journals table of contents, https://www.chicagomanualofstyle.org/book/ed17/part1/ch01/toc.html
+* [[[simon-artificial]]] Herbert A. Simon, _The Sciences of the Artificial_. MIT Press, 1969.
+* [[[zave-jackson-1997]]] Pamela Zave and Michael Jackson, “Four Dark Corners of Requirements Engineering,” _ACM Transactions on Software Engineering and Methodology_, 1997.
+* [[[wegner-1987]]] Daniel M. Wegner, David J. Schneider, Samuel R. Carter III, and Teri L. White, “Paradoxical Effects of Thought Suppression,” _Journal of Personality and Social Psychology_, 1987.

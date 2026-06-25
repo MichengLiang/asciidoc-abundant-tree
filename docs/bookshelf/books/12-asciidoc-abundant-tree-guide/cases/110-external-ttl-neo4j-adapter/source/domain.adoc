@@ -1,0 +1,9 @@
+= 外部图适配示例
+
+[#cold-chain-release.policy]
+== 冷链出库放行策略
+
+该策略对齐外部术语 xref:ext-release-policy[ReleasePolicy, rel=aligns-with]。
+
+[#ext-release-policy.external-term, uri=https://example.org/ontology/ReleasePolicy]
+== ReleasePolicy

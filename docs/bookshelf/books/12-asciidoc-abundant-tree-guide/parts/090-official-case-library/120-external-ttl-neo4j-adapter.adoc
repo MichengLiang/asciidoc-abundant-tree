@@ -1,0 +1,15 @@
+[#case-external-ttl-neo4j-adapter]
+== External TTL and Neo4j Adapter
+
+External TTL and Neo4j Adapter 展示标准图生态与工程图数据库的接入。领域对象是一份书稿 projection、一份外部 TTL 和一份 Neo4j import surface。
+
+[horizontal]
+source:: `cases/110-external-ttl-neo4j-adapter/source/domain.adoc`
+projection:: `projection/domain.ttl`、`projection/domain.jsonld`
+model:: `model/alignment.ts`、`model/neo4j-export.ts`
+reports:: `reports/alignment.json`、`reports/round-trip-source.json`
+views:: `views/alignment.ttl`、`views/neo4j/nodes.csv`、`views/neo4j/relationships.csv`
+
+TS/JS adapter 查询 heading label 与外部 URI 映射，生成 alignment triples，再导出 Neo4j nodes/relationships CSV。回源报告保留业务节点对应的 source heading 与 line。
+
+读者动作是：把书稿录入的资源与已有图谱对齐，并生成图数据库导入面。

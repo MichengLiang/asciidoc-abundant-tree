@@ -1,0 +1,40 @@
+[#heading-complex-property]
+== Heading Complex Property
+
+带 `for` 或 `forSelector` marker 的 source value block 表达 heading complex property。property role 是字段名。
+
+[source,asciidoc]
+------
+[#cold-chain-release.policy]
+== 冷链出库放行策略
+
+[.release-policy-config, for=cold-chain-release]
+[source,json]
+----
+{"temperatureWindowCelsius":{"min":2,"max":8}}
+----
+
+[.review-playbook, for]
+[source,yaml]
+----
+review_team: quality-ops
+steps:
+  - check last temperature checkpoint
+----
+------
+
+带值 `for=cold-chain-release` 查询 heading label space。无值 `for` 使用 source ownership binding，按 source value block 起始行归属最内层 heading node。
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l1-o0>
+  aat:release-policy-config <urn:aat:doc:...#payload-l4-o0> ;
+  aat:review-playbook <urn:aat:doc:...#payload-l10-o0> .
+
+<urn:aat:doc:...#payload-l4-o0> aat:forSelector "cold-chain-release" ;
+  aat:format "json" .
+
+<urn:aat:doc:...#payload-l10-o0> aat:format "yaml" .
+----
+
+property role 必须给出单一字段名。多个 property roles 或缺少 property role 的 source value block 不形成 heading complex property。

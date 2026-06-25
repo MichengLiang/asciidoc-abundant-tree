@@ -1,0 +1,27 @@
+[#glossary]
+= 术语表
+
+[glossary]
+source document:: 作者编辑的 AsciiDoc 源文档。
+AbundantDocument:: `parseAbundantTree` 返回的 TypeScript object model。
+projection:: 从 `AbundantDocument` 导出的下游表面。
+heading node:: 由等号标题创建的 RDF resource。
+headline:: 标题文本。
+heading slice:: 标题节点对应的连续源文本区域。
+heading label space:: `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成的 selector 查询空间。
+address label:: 可寻址到 heading node 的作者声明 label 或本地 target alias。
+generated address label:: 投影器恢复出的标题 label。
+stable ID:: 作者为标题声明的长期寻址 label。
+role:: 标题身份字段。
+literal field:: 值为 string literal 的字段。
+complex property:: 值为 raw value object 的字段。
+raw value object:: 保存 raw、format、source coordinate 和 binding evidence 的 RDF resource。
+xref edge evidence:: 保存 xref raw、source heading、target selector、target heading、fields、official facts 和 reifier 的边证据 resource。
+source coordinate:: relative path、line span、column span 等回源坐标。
+book-entry mode:: 从 entry file 和 include graph 构造 source-mapped logical document 的输入模式。
+logical document:: book-entry mode 构造出的 in-memory AsciiDoc 解析表面。
+line origin:: logical line 到 origin source file 和 source line 的映射。
+source set:: entry file 通过受支持 include directive 到达的 source files 集合。
+business graph:: 下游领域模型从 projection graph 派生出的领域图。
+hierarchy policy:: 解释 `aat:containsDirectly` 是否生成业务边以及生成哪种业务边的领域规则。
+source-aware report:: 带有 source coordinate 的查询、校验或建模报告。

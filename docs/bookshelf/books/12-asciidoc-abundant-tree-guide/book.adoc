@@ -1,0 +1,220 @@
+= AsciiDoc Abundant Tree：用书稿构建可查询知识图谱
+弥澄亮 <t103ooooo@stu.mju.edu.cn>
+v0.1, 2026-06
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:experimental:
+:idprefix:
+:idseparator: -
+:source-highlighter: highlight.js
+
+include::../../shared/attributes.adoc[]
+
+[abstract]
+include::frontmatter/abstract.adoc[]
+
+[colophon]
+include::frontmatter/colophon.adoc[]
+
+[preface]
+include::frontmatter/preface.adoc[]
+
+[acknowledgments]
+include::frontmatter/acknowledgments.adoc[]
+
+include::frontmatter/introduction.adoc[]
+
+= 第一部：书稿即图
+
+[partintro]
+本部从一段 AsciiDoc 源文档进入第一张可查询图，建立标题节点、投影表面和回源坐标的基本对象。
+
+include::parts/010-manuscript-as-graph/010-first-queryable-graph.adoc[]
+
+include::parts/010-manuscript-as-graph/020-heading-as-resource-node.adoc[]
+
+include::parts/010-manuscript-as-graph/030-source-document-abundant-document-projection.adoc[]
+
+include::parts/010-manuscript-as-graph/040-reading-unit-query-unit.adoc[]
+
+= 第二部：标题结构
+
+[partintro]
+本部定义 heading node、heading slice、标题层级边、顺序字段和本地 target 归属。
+
+include::parts/020-heading-structure/010-heading-node.adoc[]
+
+include::parts/020-heading-structure/020-heading-slice.adoc[]
+
+include::parts/020-heading-structure/030-direct-containment.adoc[]
+
+include::parts/020-heading-structure/040-local-and-global-order.adoc[]
+
+include::parts/020-heading-structure/050-local-target-ownership.adoc[]
+
+= 第三部：地址、身份与字段
+
+[partintro]
+本部定义 heading label space、stable ID、role、literal field、描述列表字段和 hmeta 字段。
+
+include::parts/030-identity-and-fields/010-label-space.adoc[]
+
+include::parts/030-identity-and-fields/020-stable-id.adoc[]
+
+include::parts/030-identity-and-fields/030-role-identity.adoc[]
+
+include::parts/030-identity-and-fields/040-attrlist-fields.adoc[]
+
+include::parts/030-identity-and-fields/050-description-list-fields.adoc[]
+
+include::parts/030-identity-and-fields/060-hmeta-inline-fields.adoc[]
+
+include::parts/030-identity-and-fields/070-field-placement.adoc[]
+
+= 第四部：引用与关系
+
+[partintro]
+本部定义 xref、rel、xref edge evidence、边字段和 selector binding。
+
+include::parts/040-xref-and-relations/010-xref-relation-edge.adoc[]
+
+include::parts/040-xref-and-relations/020-default-reference.adoc[]
+
+include::parts/040-xref-and-relations/030-relation-predicate.adoc[]
+
+include::parts/040-xref-and-relations/040-edge-fields.adoc[]
+
+include::parts/040-xref-and-relations/050-edge-evidence.adoc[]
+
+include::parts/040-xref-and-relations/060-selector-binding.adoc[]
+
+= 第五部：复杂属性
+
+[partintro]
+本部定义 complex property、raw value object、heading complex property、xref edge complex property 和 format/schema 消费路径。
+
+include::parts/050-complex-properties/010-complex-property.adoc[]
+
+include::parts/050-complex-properties/020-raw-value-object.adoc[]
+
+include::parts/050-complex-properties/030-heading-complex-property.adoc[]
+
+include::parts/050-complex-properties/040-xref-edge-complex-property.adoc[]
+
+include::parts/050-complex-properties/050-format-and-schema-consumption.adoc[]
+
+include::parts/050-complex-properties/060-cold-chain-release-policy.adoc[]
+
+= 第六部：查询、校验与回源
+
+[partintro]
+本部定义 SPARQL、SHACL、RDF/JS、Oxigraph 和 source-aware report 的消费者动作。
+
+include::parts/060-query-validation-source/010-sparql-query-surface.adoc[]
+
+include::parts/060-query-validation-source/020-shacl-validation.adoc[]
+
+include::parts/060-query-validation-source/030-rdf-js-consumer.adoc[]
+
+include::parts/060-query-validation-source/040-oxigraph-query.adoc[]
+
+include::parts/060-query-validation-source/050-source-aware-report.adoc[]
+
+= 第七部：书稿入口与多文件书
+
+[partintro]
+本部定义 book-entry mode、entry file、source set、logical document、line origin 和书籍物理结构。
+
+include::parts/070-book-entry-workspace/010-book-entry-mode.adoc[]
+
+include::parts/070-book-entry-workspace/020-entry-file-source-set.adoc[]
+
+include::parts/070-book-entry-workspace/030-logical-document.adoc[]
+
+include::parts/070-book-entry-workspace/040-line-origin.adoc[]
+
+include::parts/070-book-entry-workspace/050-frontmatter.adoc[]
+
+include::parts/070-book-entry-workspace/060-parts-and-chapters.adoc[]
+
+include::parts/070-book-entry-workspace/070-backmatter.adoc[]
+
+include::parts/070-book-entry-workspace/080-cross-reference-maintenance.adoc[]
+
+= 第八部：领域建模
+
+[partintro]
+本部定义从 projection graph 到 business graph 的开放建模方法。
+
+include::parts/080-domain-modeling/010-domain-object-to-heading-node.adoc[]
+
+include::parts/080-domain-modeling/020-role-vocabulary.adoc[]
+
+include::parts/080-domain-modeling/030-rel-vocabulary.adoc[]
+
+include::parts/080-domain-modeling/040-field-and-payload-schema.adoc[]
+
+include::parts/080-domain-modeling/050-hierarchy-policy.adoc[]
+
+include::parts/080-domain-modeling/060-business-graph-generation.adoc[]
+
+include::parts/080-domain-modeling/070-model-quality-report.adoc[]
+
+= 第九部：官方案例库
+
+[partintro]
+本部给出可运行、可查询、可回源的官方案例。案例从结构投影开始，逐步进入业务图、外部文档、配置系统和叙事系统。
+
+include::parts/090-official-case-library/010-case-contract.adoc[]
+
+include::parts/090-official-case-library/020-basic-rdf-projection.adoc[]
+
+include::parts/090-official-case-library/030-cold-chain-payload.adoc[]
+
+include::parts/090-official-case-library/040-recipe-knowledge-graph.adoc[]
+
+include::parts/090-official-case-library/050-cold-chain-operations-graph.adoc[]
+
+include::parts/090-official-case-library/060-book-workspace.adoc[]
+
+include::parts/090-official-case-library/070-cross-book-linking.adoc[]
+
+include::parts/090-official-case-library/080-multimodal-asset-catalog.adoc[]
+
+include::parts/090-official-case-library/090-document-provenance-rag.adoc[]
+
+include::parts/090-official-case-library/100-k8s-microservice-graph.adoc[]
+
+include::parts/090-official-case-library/110-screenplay-game-narrative.adoc[]
+
+include::parts/090-official-case-library/120-external-ttl-neo4j-adapter.adoc[]
+
+[appendix]
+include::backmatter/appendix-a-asciidoc-surface-reference.adoc[]
+
+[appendix]
+include::backmatter/appendix-b-rdf12-vocabulary-reference.adoc[]
+
+[appendix]
+include::backmatter/appendix-c-cli-api-reference.adoc[]
+
+[appendix]
+include::backmatter/appendix-d-ts-js-consumer-templates.adoc[]
+
+[appendix]
+include::backmatter/appendix-e-shacl-templates.adoc[]
+
+[appendix]
+include::backmatter/appendix-f-modeling-decision-trees.adoc[]
+
+[glossary]
+include::backmatter/glossary.adoc[]
+
+[bibliography]
+include::backmatter/bibliography.adoc[]
+
+[index]
+include::backmatter/index.adoc[]

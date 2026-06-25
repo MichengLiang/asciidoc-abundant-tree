@@ -1,0 +1,56 @@
+[#appendix-cli-api-reference]
+= 附录 C：CLI 与 Library API
+
+== 安装
+
+[source,bash]
+----
+pnpm add asciidoc-abundant-tree
+----
+
+== CLI
+
+[source,bash]
+----
+asciidoc-abundant-tree <file.adoc>
+asciidoc-abundant-tree <file.adoc> --json
+asciidoc-abundant-tree <file.adoc> --format tree
+asciidoc-abundant-tree <file.adoc> --format json
+asciidoc-abundant-tree <file.adoc> --format adoc
+asciidoc-abundant-tree <file.adoc> --format rdf12
+asciidoc-abundant-tree <file.adoc> --format rdf12-json-ld
+asciidoc-abundant-tree <file.adoc> --mode book-entry --document-root <root> --format rdf12
+----
+
+== Library API
+
+[source,typescript]
+----
+import {
+  formatAbundantTree,
+  parseAbundantTree,
+  rdf12,
+  serializeAbundantTreeToJson,
+} from "asciidoc-abundant-tree";
+
+const document = parseAbundantTree({ sourcePath: "docs/index.adoc" });
+const pretty = formatAbundantTree(document);
+const json = serializeAbundantTreeToJson(document);
+const projection = rdf12(document, { documentRoot: process.cwd() });
+
+const ttl = projection.ttl;
+const jsonLd = projection.jsonLd;
+const graph = projection.graph;
+----
+
+== Browser Subpath
+
+[source,typescript]
+----
+import { parseAbundantTreeFromSource } from "asciidoc-abundant-tree/browser";
+
+const document = parseAbundantTreeFromSource({
+  sourceText,
+  sourcePath: "document.adoc",
+});
+----

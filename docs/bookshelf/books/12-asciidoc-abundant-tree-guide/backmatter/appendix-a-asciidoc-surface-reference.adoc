@@ -1,0 +1,43 @@
+[#appendix-asciidoc-surface-reference]
+= 附录 A：AsciiDoc 投影表面速查
+
+[cols="1,2", options="header"]
+|===
+|源表面 |投影事实
+
+|`= 书名`
+|document title heading，`aat:headingLevel 0`
+
+|`== 标题`
+|heading node，`aat:Heading`
+
+|`[#stable-id]`
+|`aat:addressLabel "stable-id"`
+
+|`[.role]`
+|`aat:role "role"`
+
+|`[key=value]`
+|heading literal field，`aat:key "value"`
+
+|标题下第一个连续描述列表
+|heading literal fields
+
+|`hmeta:field[value, label=显示文本]`
+|heading inline metadata field
+
+|`xref:target[显示文本]`
+|`aat:references` relation 与 xref edge evidence
+
+|`xref:target[显示文本, rel=depends-on]`
+|`rel:depends-on` relation 与 xref edge evidence
+
+|xref named attributes
+|xref edge evidence fields
+
+|`[.field-name, for=selector]` + source block
+|heading complex property
+
+|xref named attribute value 匹配 source value block id
+|xref edge complex property
+|===

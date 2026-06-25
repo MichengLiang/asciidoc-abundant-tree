@@ -1,0 +1,24 @@
+[#shacl-validation]
+== SHACL 校验
+
+SHACL shape graph 把 projection graph 上的事实变成可检查约束。role mapping 可以把 `aat:role` 映射为下游 class assertion。
+
+[source,turtle]
+----
+ex:ProcessShape a sh:NodeShape ;
+  sh:targetClass ex:ProcessHeading ;
+  sh:property [
+    sh:path aat:owner ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "process heading must declare owner"
+  ] ;
+  sh:property [
+    sh:path rel:requires ;
+    sh:minCount 1 ;
+    sh:class ex:RuleHeading ;
+    sh:message "process heading must require at least one rule heading"
+  ] .
+----
+
+校验报告返回 focus node。消费者再从 projection graph 读取该 heading 的 `aat:relativePath`、`aat:headingLine` 和 `aat:headline`，把 violation 定位回源文档。

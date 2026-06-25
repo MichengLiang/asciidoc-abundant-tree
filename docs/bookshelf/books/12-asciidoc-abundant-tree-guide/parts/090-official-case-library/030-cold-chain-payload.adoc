@@ -1,0 +1,15 @@
+[#case-cold-chain-payload]
+== Cold Chain Payload
+
+Cold Chain Payload 展示 complex property 消费闭环。领域对象是冷链药品出库放行策略。
+
+[horizontal]
+source:: `cases/020-cold-chain-payload/source/cold-chain-release.adoc`
+projection:: `projection/cold-chain-release.ttl`、`projection/cold-chain-release.jsonld`
+model:: `model/payload-schema.ts`、`model/consume-payloads.ts`
+reports:: `reports/payload-summary.json`、`reports/source-lines.md`
+views:: `views/release-policy.mmd`
+
+该案例包含三个 complex properties：heading JSON 配置、heading YAML 复核手册、xref edge YAML 依赖证据。TS/JS consumer 按 `aat:release-policy-config`、`aat:review-playbook` 和 `aat:dependency-evidence` 选择 schema，按 `aat:format` 解析 raw。
+
+读者动作是：查询策略 heading，读取 payload raw，执行 schema validation，生成包含 source line 的放行策略报告。

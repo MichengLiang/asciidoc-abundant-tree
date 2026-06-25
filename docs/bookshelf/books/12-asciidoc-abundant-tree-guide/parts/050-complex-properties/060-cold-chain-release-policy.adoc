@@ -1,0 +1,37 @@
+[#cold-chain-release-policy]
+== 冷链放行策略案例
+
+冷链放行策略案例把 heading complex property 与 xref edge complex property 放在同一业务闭环中。
+
+[source,asciidoc]
+----
+[#cold-chain-release.policy, status=active, owner=quality-ops]
+== 冷链出库放行策略
+
+冷链出库放行策略依赖 xref:temperature-audit[
+  温控审计规则,
+  rel=depends-on,
+  weight=0.9,
+  dependency-evidence=rel-release-temperature-audit
+]。
+----
+
+策略 heading 挂载 JSON 配置与 YAML 复核手册；依赖关系边挂载 YAML 证据。消费者查询三个字段：
+
+[source,sparql]
+----
+SELECT ?configRaw ?playbookRaw ?evidenceRaw WHERE {
+  ?policy aat:addressLabel "cold-chain-release" ;
+          aat:release-policy-config ?config ;
+          aat:review-playbook ?playbook .
+  ?config aat:raw ?configRaw .
+  ?playbook aat:raw ?playbookRaw .
+
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?policy ;
+        aat:dependency-evidence ?evidence .
+  ?evidence aat:raw ?evidenceRaw .
+}
+----
+
+报告输出保留策略标题、依赖边、payload field、format、解析摘要和 source line。读者可从报告返回源文档，修改配置、复核手册或依赖证据。

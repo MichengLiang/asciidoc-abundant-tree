@@ -1,0 +1,15 @@
+[#case-multimodal-asset-catalog]
+== Multimodal Asset Catalog
+
+Multimodal Asset Catalog 展示图片和多模态资产管理。领域对象是资产集合、单张图片、人物、地点、项目和视觉特征。
+
+[horizontal]
+source:: `cases/070-multimodal-asset-catalog/source/assets.adoc`
+projection:: `projection/assets.ttl`、`projection/assets.jsonld`
+model:: `model/asset-schema.ts`、`model/asset-report.ts`
+reports:: `reports/asset-index.json`、`reports/duplicate-candidates.json`、`reports/project-usage.json`
+views:: `views/asset-graph.mmd`
+
+标题节点代表资产或资产组。字段保存 file path、hash、createdAt、camera、location、license 和 tags。payload 保存视觉模型输出的 JSON，例如 composition、dominantColors、objects、textRegions 和 styleNotes。xref 表达 depicts、used-in、derived-from 和 part-of 等关系。
+
+读者动作是：用书稿维护资产索引，用多模态模型写回视觉 payload，用图查询生成项目使用报告。

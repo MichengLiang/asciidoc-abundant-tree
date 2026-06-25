@@ -1,0 +1,21 @@
+[#backmatter]
+== Backmatter
+
+backmatter 保存附录、术语表、参考文献和索引。它承担查找、验证、引用和长期维护动作。
+
+[source,asciidoc]
+----
+[appendix]
+\include::backmatter/appendix-a-asciidoc-surface-reference.adoc[]
+
+[glossary]
+\include::backmatter/glossary.adoc[]
+
+[bibliography]
+\include::backmatter/bibliography.adoc[]
+
+[index]
+\include::backmatter/index.adoc[]
+----
+
+附录提供速查和完整参考。术语表固定书内术语。参考文献连接公开标准和书籍传统。索引词服务检索。

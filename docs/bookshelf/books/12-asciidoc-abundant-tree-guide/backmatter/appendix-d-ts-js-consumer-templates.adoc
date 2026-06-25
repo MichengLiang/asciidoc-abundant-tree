@@ -1,0 +1,43 @@
+[#appendix-ts-js-consumer-templates]
+= 附录 D：TS/JS Consumer 模板
+
+== Projection 生成
+
+[source,typescript]
+----
+import { mkdirSync, writeFileSync } from "node:fs";
+import { parseAbundantTree, rdf12 } from "asciidoc-abundant-tree";
+
+const document = parseAbundantTree({ sourcePath: "source/input.adoc" });
+const projection = rdf12(document, { documentRoot: process.cwd() });
+
+mkdirSync("projection", { recursive: true });
+writeFileSync("projection/input.ttl", projection.ttl);
+writeFileSync("projection/input.jsonld", projection.jsonLd);
+----
+
+== Turtle 读取
+
+[source,typescript]
+----
+import { readFileSync } from "node:fs";
+import { Parser, Store } from "n3";
+
+const ttl = readFileSync("projection/input.ttl", "utf8");
+const store = new Store(new Parser({ format: "Turtle" }).parse(ttl));
+----
+
+== Heading Report
+
+[source,typescript]
+----
+const AAT = "https://micheng.dev/ns/asciidoc-abundant-tree#";
+const RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
+const headings = store.getQuads(null, `${RDF}type`, `${AAT}Heading`, null)
+  .map((quad) => ({
+    subject: quad.subject.value,
+    headline: store.getObjects(quad.subject, `${AAT}headline`, null)[0]?.value,
+    line: store.getObjects(quad.subject, `${AAT}headingLine`, null)[0]?.value,
+  }));
+----
