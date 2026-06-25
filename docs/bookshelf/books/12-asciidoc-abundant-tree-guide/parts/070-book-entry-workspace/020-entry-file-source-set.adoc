@@ -29,3 +29,5 @@ ORDER BY ?path
 ----
 
 source set 包含 entry file 和 included files。只贡献 attributes 或其它非结构节点的 source file 仍属于 source set。
+
+同一绝对路径在 source set 中只有一个 file record。重复 include 在 logical document 中出现多次；source file reconstruction surface 仍按 source file identity 保存一份原始文本。

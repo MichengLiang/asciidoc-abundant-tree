@@ -33,6 +33,8 @@ include::frontmatter/acknowledgments.adoc[]
 
 include::frontmatter/introduction.adoc[]
 
+include::frontmatter/reading-paths.adoc[]
+
 = 第一部：书稿即图
 
 [partintro]

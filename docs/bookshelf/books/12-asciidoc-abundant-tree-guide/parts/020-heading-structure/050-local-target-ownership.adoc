@@ -32,3 +32,5 @@ SELECT * FROM rules;
 ----
 
 target 归属依据 target 的源位置。xref 出现位置只决定 source heading。
+
+source span 缺失的本地非标题 target 不形成 address label。同一 address label 归属多个 heading node 时，selector binding 产生多义候选；投影器保留候选，不为该 selector 生成单一 target heading。

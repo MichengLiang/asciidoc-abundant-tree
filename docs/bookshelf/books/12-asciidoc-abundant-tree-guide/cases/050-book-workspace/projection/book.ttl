@@ -1,10 +1,155 @@
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
-<urn:case:book#source> a aat:AsciiDocSourceDocument;
-  aat:sourceFile <urn:case:book#source-book>,
-                 <urn:case:book#source-preface>,
-                 <urn:case:book#source-object>,
-                 <urn:case:book#source-glossary>.
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity> a prov:Activity, aat:ProjectionActivity;
+    prov:used <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source>.
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0> a aat:Heading;
+    aat:containsDirectly <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1>, <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0>;
+    aat:documentOrder 1;
+    aat:endLine 1;
+    aat:headingLevel 0;
+    aat:headingLine 1;
+    aat:headline "Book Workspace Case";
+    aat:raw """= Book Workspace Case
+""";
+    aat:relativePath "book.adoc";
+    aat:startLine 1.
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1> a aat:Heading;
+    aat:childOrder 1;
+    aat:contentEndLine 3;
+    aat:contentStartLine 3;
+    aat:documentOrder 2;
+    aat:endLine 3;
+    aat:generatedAddressLabel "_前言";
+    aat:headingLevel 1;
+    aat:headingLine 1;
+    aat:headline "前言";
+    aat:raw """== 前言
 
-<urn:case:book#source-object> a aat:SourceFile;
-  aat:relativePath "source/parts/010-object/010-object-boundary.adoc".
+本案例展示 book-entry source set、logical document 和 line origin。
+""";
+    aat:relativePath "frontmatter/preface.adoc";
+    aat:startLine 1.
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2> a aat:Heading;
+    aat:addressLabel "case-object-boundary";
+    aat:childOrder 1;
+    aat:contentEndLine 4;
+    aat:contentStartLine 4;
+    aat:documentOrder 4;
+    aat:endLine 4;
+    aat:headingLevel 1;
+    aat:headingLine 2;
+    aat:headline "对象边界";
+    aat:metadataEndLine 1;
+    aat:metadataStartLine 1;
+    aat:raw """[#case-object-boundary]
+== 对象边界
+
+对象边界章节链接 xref:case-glossary[术语表]。
+""";
+    aat:references <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0>;
+    aat:relativePath "parts/010-object/010-object-boundary.adoc";
+    aat:startLine 1.
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0> a aat:Heading;
+    aat:addressLabel "case-glossary";
+    aat:childOrder 2;
+    aat:contentEndLine 5;
+    aat:contentStartLine 4;
+    aat:documentOrder 5;
+    aat:endLine 5;
+    aat:headingLevel 1;
+    aat:headingLine 2;
+    aat:headline "术语表";
+    aat:raw """== 术语表
+
+[glossary]
+line origin:: logical line 到 origin source line 的映射。
+""";
+    aat:relativePath "backmatter/glossary.adoc";
+    aat:startLine 2;
+    aat:style "appendix".
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0> a aat:Heading;
+    aat:childOrder 2;
+    aat:containsDirectly <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2>, <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0>;
+    aat:contentEndLine 11;
+    aat:contentStartLine 8;
+    aat:documentOrder 3;
+    aat:endLine 11;
+    aat:generatedAddressLabel "_第一部对象";
+    aat:headingLevel 0;
+    aat:headingLine 6;
+    aat:headline "第一部：对象";
+    aat:raw """= 第一部：对象
+
+include::parts/010-object/010-object-boundary.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]
+""";
+    aat:relativePath "book.adoc";
+    aat:startLine 6.
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection> a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source>;
+    prov:wasDerivedFrom <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source>;
+    prov:wasGeneratedBy <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity>.
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc> a aat:SourceFile;
+    aat:raw """[#case-glossary]
+== 术语表
+
+[glossary]
+line origin:: logical line 到 origin source line 的映射。
+""";
+    aat:relativePath "backmatter/glossary.adoc".
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc> a aat:SourceFile;
+    aat:raw """= Book Workspace Case
+:doctype: book
+
+include::frontmatter/preface.adoc[]
+
+= 第一部：对象
+
+include::parts/010-object/010-object-boundary.adoc[]
+
+[appendix]
+include::backmatter/glossary.adoc[]
+""";
+    aat:relativePath "book.adoc".
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc> a aat:SourceFile;
+    aat:raw """== 前言
+
+本案例展示 book-entry source set、logical document 和 line origin。
+""";
+    aat:relativePath "frontmatter/preface.adoc".
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc> a aat:SourceFile;
+    aat:raw """[#case-object-boundary]
+== 对象边界
+
+对象边界章节链接 xref:case-glossary[术语表]。
+""";
+    aat:relativePath "parts/010-object/010-object-boundary.adoc".
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source> a prov:Entity, aat:AsciiDocSourceDocument;
+    aat:relativePath "book.adoc";
+    aat:sourceFile <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc>, <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc>, <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc>, <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc>.
+<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0> rdf:reifies <<(<urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2> aat:references <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0>)>>;
+    a aat:XrefEdge;
+    aat:displayLabel "术语表";
+    aat:endColumn 33;
+    aat:endLine 4;
+    aat:officialHref "#case-glossary";
+    aat:officialReftext "术语表";
+    aat:officialResolvedId "case-glossary";
+    aat:officialResolvedType "section";
+    aat:raw "xref:case-glossary[术语表]";
+    aat:relativePath "parts/010-object/010-object-boundary.adoc";
+    aat:sourceHeading <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2>;
+    aat:sourceSelector "case-object-boundary";
+    aat:startColumn 10;
+    aat:startLine 4;
+    aat:syntax "macro";
+    aat:targetHeading <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0>;
+    aat:targetSelector "case-glossary".

@@ -36,4 +36,6 @@ priority:: normal
   aat:contentEndLine 6 .
 ----
 
+`aat:contentStartLine` 和 `aat:contentEndLine` 描述标题行之后的切片内容范围。标题字段是否来自描述列表，由字段投影规则判断；content line span 只保存源文本区域。
+
 行号使用 1-based line number。line span 是闭区间。`aat:raw` 是回源编辑和审计的基础事实。

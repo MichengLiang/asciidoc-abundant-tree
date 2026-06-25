@@ -19,6 +19,8 @@
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
 SELECT ?heading ?headline ?raw ?order WHERE {
   ?root aat:addressLabel "capacity" .
   {

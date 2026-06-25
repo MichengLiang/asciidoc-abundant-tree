@@ -24,3 +24,13 @@ type BusinessEdge = {
 ----
 
 `origin` 区分业务边来自标题层级解释还是显式 xref。`line` 和 `raw` 让业务图保持回源能力。
+
+生成器读取 projection graph 的四类事实：
+
+[horizontal]
+heading node:: 生成 business node，并复制 headline、role、fields 和 source coordinate。
+xref edge evidence:: 生成 explicit business edge，并复制 relation、edge attributes、raw 和 source line。
+`aat:containsDirectly`:: 按 hierarchy policy 生成 hierarchy business edge。
+raw value object:: 按 field predicate 与 format 进入 payload schema validation。
+
+business graph 是领域模型产物。projection graph 保存源表面事实；business graph 保存当前领域解释。

@@ -16,3 +16,13 @@
 ----
 
 质量报告把领域模型规则连接回作者可修改的源表面。它不是投影器错误报告；它属于当前业务模型。
+
+模型质量报告覆盖以下对象：
+
+[horizontal]
+role coverage:: heading node 的 role 是否属于 role 词表。
+required fields:: role 要求的字段是否存在。
+relation endpoint:: rel 词表要求的 source role 与 target role 是否匹配。
+edge fields:: rel 词表要求的 xref named attributes 是否存在。
+payload schema:: raw value object 是否满足对应 field predicate 的 schema。
+hierarchy policy:: 标题层级生成的业务边是否符合当前领域约定。

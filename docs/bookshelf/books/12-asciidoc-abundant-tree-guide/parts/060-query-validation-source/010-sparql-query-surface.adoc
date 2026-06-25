@@ -26,12 +26,13 @@ SELECT ?heading ?headline ?path ?start ?end WHERE {
 PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?edge ?predicate ?targetHeadline ?line ?raw WHERE {
+SELECT ?edge ?predicate ?targetHeadline ?path ?line ?raw WHERE {
   ?source aat:addressLabel "delivery" .
   ?edge a aat:XrefEdge ;
         aat:sourceHeading ?source ;
         aat:targetHeading ?target ;
         rdf:reifies <<(?source ?predicate ?target)>> ;
+        aat:relativePath ?path ;
         aat:startLine ?line ;
         aat:raw ?raw .
   ?target aat:headline ?targetHeadline .

@@ -20,6 +20,6 @@
   aat:owner "ops" .
 ----
 
-字段名映射为 `aat:` 命名空间下的 field predicate。字段值按源文档表面保存为 string literal。投影器不解释 `status`、`owner` 或其它业务字段的领域含义。
+字段名映射为 `aat:` 命名空间下的 field predicate。字段名是合法 IRI local name 时，predicate 为 `aat:<fieldName>`；字段名包含不能直接进入 prefixed name 的字符时，投影器使用稳定的 IRI-safe 编码。字段值按源文档表面保存为 string literal。投影器不解释 `status`、`owner` 或其它业务字段的领域含义。
 
 attrlist 适合少量短字段。字段较多或值需要换行时，使用标题下描述列表字段。

@@ -22,6 +22,8 @@
 
 同一父标题下的 direct children 按 numeric `aat:childOrder` 排序。整篇文档的标题序列按 numeric `aat:documentOrder` 排序。
 
+只有存在父标题的 heading node 输出 `aat:childOrder`。顶层 heading node 没有父标题时，通过 `aat:documentOrder` 进入全局序列。
+
 [source,sparql]
 ----
 PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>

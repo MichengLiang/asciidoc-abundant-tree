@@ -35,3 +35,5 @@ Logical text：
 ----
 
 logical text 服务结构解析。作者编辑对象仍然是 entry file 和 included source files。
+
+include directive line 在 logical text 中被 included file lines 替换。directive line 保留在 entry file 的原始 source text 中，并通过 source file reconstruction surface 回源。logical text 是解析表面，不写入 `build/adoc`，也不成为作者编辑对象。

@@ -14,3 +14,19 @@ export const roles = {
 ----
 
 role 词表来自领域对象结构。它不是投影器内置本体。TS/JS consumer 可把 role 映射为 business graph 中的 class 或 node kind。
+
+role 词表项包含三类事实：role token、领域含义、字段约束。字段约束由业务模型读取，不进入核心 `aat:` 词表。
+
+[source,typescript]
+----
+export const roleVocabulary = {
+  shipment: {
+    label: "运输任务",
+    requiredFields: ["status", "origin", "destination"],
+  },
+  sensor: {
+    label: "传感器",
+    requiredFields: ["sampleInterval"],
+  },
+};
+----

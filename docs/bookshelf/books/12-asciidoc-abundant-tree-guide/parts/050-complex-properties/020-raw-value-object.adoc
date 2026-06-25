@@ -3,6 +3,14 @@
 
 raw value object 保存 source value block 的 raw、format、source coordinate 和 binding evidence。
 
+[horizontal]
+`aat:format`:: source block language。
+`aat:raw`:: source block body 原文。
+`aat:relativePath`、`aat:startLine`、`aat:endLine`:: source value block 的完整源文件行范围。
+`aat:contentStartLine`、`aat:contentEndLine`:: source value block body 的源文件行范围。
+`aat:forSelector`:: heading complex property 使用非空 selector binding 时保存的 heading selector。
+`aat:sourceValueId`:: xref edge complex property 使用 source value id binding 时保存的 source value id。
+
 [source,turtle]
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .

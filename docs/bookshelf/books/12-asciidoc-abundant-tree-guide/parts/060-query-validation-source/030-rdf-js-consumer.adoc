@@ -16,8 +16,9 @@ const RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
 for (const quad of store.getQuads(null, `${RDF}type`, `${AAT}Heading`, null)) {
   const headline = store.getObjects(quad.subject, `${AAT}headline`, null)[0];
+  const path = store.getObjects(quad.subject, `${AAT}relativePath`, null)[0];
   const line = store.getObjects(quad.subject, `${AAT}headingLine`, null)[0];
-  console.log(`${headline?.value} @ line ${line?.value}`);
+  console.log(`${headline?.value} @ ${path?.value}:${line?.value}`);
 }
 ----
 

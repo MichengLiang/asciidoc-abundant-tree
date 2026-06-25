@@ -30,3 +30,5 @@ xref 位于某个 heading slice 中。该 heading node 是关系 source。xref t
 ----
 
 relation triple 服务图查询。xref edge evidence 服务回源、审计、边字段和 official binding 查询。
+
+xref target selector 指向 listing、table、block、inline anchor 或 source value block 的本地 target ID 时，target heading 是该 target ID 所属的 heading node。relation triple 的端点保持为 heading node；被引用的具体 AsciiDoc target 表面由 edge evidence 的 `aat:targetSelector` 和 official resolved facts 表达。

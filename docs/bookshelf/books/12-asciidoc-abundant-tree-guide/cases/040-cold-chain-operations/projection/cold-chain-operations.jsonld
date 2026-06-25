@@ -1,27 +1,3974 @@
 {
   "@context": {
-    "kg": "https://micheng.dev/ns/business-kg-demo#",
+    "aat": "https://micheng.dev/ns/asciidoc-abundant-tree#",
     "rel": "https://micheng.dev/ns/asciidoc-relation#",
-    "nodeKind": "kg:nodeKind",
-    "minTemperature": "kg:minTemperature",
-    "maxTemperature": "kg:maxTemperature",
-    "triggers": { "@id": "rel:triggers", "@type": "@id" },
-    "governedBy": { "@id": "rel:governed-by", "@type": "@id" }
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "rdf12": "https://micheng.dev/ns/asciidoc-abundant-tree/rdf12-json-ld#"
   },
   "@graph": [
     {
-      "@id": "urn:case:cold-chain#policy",
-      "@type": "kg:Node",
-      "nodeKind": "policy",
-      "minTemperature": "2C",
-      "maxTemperature": "8C",
-      "triggers": "urn:case:cold-chain#excursion-process"
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-0",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#activity",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "http://www.w3.org/ns/prov#Activity",
+        "@type": "rdf12:IriTerm"
+      }
     },
     {
-      "@id": "urn:case:cold-chain#shipment",
-      "@type": "kg:Node",
-      "nodeKind": "shipment",
-      "governedBy": "urn:case:cold-chain#policy"
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-1",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#activity",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#ProjectionActivity",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-2",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#activity",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/ns/prov#used",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#source",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-3",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-4",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-5",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-6",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-7",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-8",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-9",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-10",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "2",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-11",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "0",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-12",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-13",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "冷链药品运输知识库",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-14",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "= 冷链药品运输知识库\n\n",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-15",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-16",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l1-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-17",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-18",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-19",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "12",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-20",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "12",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-21",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#destination",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "福州医院药房",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-22",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "4",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-23",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "13",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-24",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_批次运输任务ct_2026_0618",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-25",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "2",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-26",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "11",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-27",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "批次运输任务CT-2026-0618",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-28",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "10",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-29",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "10",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-30",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#origin",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "上海仓",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-31",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "[.shipment, status=active, origin=上海仓, destination=福州医院药房, temperature=2-8C]\n=== 批次运输任务CT-2026-0618\n包含 xref:疫苗箱A17[rel=has-part] 和 xref:温度记录仪T09[rel=has-part]。\n\n",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-32",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-33",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#role",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "shipment",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-34",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "10",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-35",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#status",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "active",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-36",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#temperature",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "2-8C",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-37",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-relation#has-part",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-38",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-relation#has-part",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-39",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-40",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "3",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-41",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "5",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-42",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "16",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-43",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_疫苗箱a17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-44",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-45",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "15",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-46",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "疫苗箱A17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-47",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "14",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-48",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "14",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-49",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#quantity",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "120",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-50",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "[.payload, sku=VAC-A, quantity=120]\n== 疫苗箱A17\n\n",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-51",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-52",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#role",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "payload",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-53",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sku",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "VAC-A",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-54",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "14",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-55",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-56",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "4",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-57",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "19",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-58",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "19",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-59",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "6",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-60",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "20",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-61",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_温度记录仪t09",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-62",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-63",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "18",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-64",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "温度记录仪T09",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-65",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-66",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-67",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "[.sensor, sampleInterval=5分钟]\n== 温度记录仪T09\n监控 xref:疫苗箱A17[rel=monitors, confidence=0.98]。\n\n",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-68",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-69",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#role",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "sensor",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-70",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sampleInterval",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "5分钟",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-71",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-72",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-relation#monitors",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-73",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-74",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "5",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-75",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "7",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-76",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "23",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-77",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_温度偏离处置流程",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-78",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-79",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "22",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-80",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "温度偏离处置流程",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-81",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "21",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-82",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "21",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-83",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "[.process, trigger=连续超温]\n== 温度偏离处置流程\n\n",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-84",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-85",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#role",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "process",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-86",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "21",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-87",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#trigger",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "连续超温",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-88",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-89",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-90",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "4",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-91",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "4",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-92",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "2",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-93",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "5",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-94",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_建模约定",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-95",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-96",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "3",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-97",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "建模约定",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-98",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "== 建模约定\n本文档约定：标题层级解释为 `governed-by`。显式 `xref` 的 `rel` 是业务边谓词。xref named attributes 是边属性。节点业务字段集中写在标题前 attrlist。\n\n",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-99",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-100",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l3-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "3",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-101",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-102",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#allowedExcursion",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "15分钟",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-103",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "2",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-104",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-105",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "8",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-106",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "8",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-107",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "3",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-108",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "9",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-109",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_2_8c温控规则",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-110",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "1",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-111",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "7",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-112",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "2-8C温控规则",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-113",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#maxTemperature",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "8C",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-114",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "6",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-115",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataStartLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "6",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-116",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#minTemperature",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "2C",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-117",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "[.policy, minTemperature=2C, maxTemperature=8C, allowedExcursion=15分钟]\n== 2-8C温控规则\n超出允许偏离时触发 xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]。\n\n",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-118",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-119",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#role",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "policy",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-120",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "6",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-121",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-relation#triggers",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-122",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#projection",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "http://www.w3.org/ns/prov#Entity",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-123",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#projection",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#HeadingProjection",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-124",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#projection",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/ns/prov#hadPrimarySource",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#source",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-125",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#projection",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/ns/prov#wasDerivedFrom",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#source",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-126",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#projection",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/ns/prov#wasGeneratedBy",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#activity",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-127",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#source",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "http://www.w3.org/ns/prov#Entity",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-128",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#source",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#AsciiDocSourceDocument",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-129",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#source",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-130",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:TripleTerm",
+        "triple": {
+          "subject": {
+            "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+            "@type": "rdf12:IriTerm"
+          },
+          "predicate": {
+            "@id": "https://micheng.dev/ns/asciidoc-relation#has-part",
+            "@type": "rdf12:IriTerm"
+          },
+          "object": {
+            "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+            "@type": "rdf12:IriTerm"
+          }
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-131",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#XrefEdge",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-132",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endColumn",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "59",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-133",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "12",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-134",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialHref",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "#_温度记录仪t09",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-135",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialReftext",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "温度记录仪T09",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-136",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedId",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_温度记录仪t09",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-137",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedType",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "section",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-138",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "xref:温度记录仪T09[rel=has-part]",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-139",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#rel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "has-part",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-140",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-141",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceHeading",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-142",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceSelector",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_批次运输任务ct_2026_0618",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-143",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startColumn",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "32",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-144",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "12",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-145",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#syntax",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "macro",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-146",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetHeading",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-147",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c32-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetSelector",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "温度记录仪T09",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-148",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:TripleTerm",
+        "triple": {
+          "subject": {
+            "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+            "@type": "rdf12:IriTerm"
+          },
+          "predicate": {
+            "@id": "https://micheng.dev/ns/asciidoc-relation#has-part",
+            "@type": "rdf12:IriTerm"
+          },
+          "object": {
+            "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+            "@type": "rdf12:IriTerm"
+          }
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-149",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#XrefEdge",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-150",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endColumn",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "29",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-151",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "12",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-152",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialHref",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "#_疫苗箱a17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-153",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialReftext",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "疫苗箱A17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-154",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedId",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_疫苗箱a17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-155",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedType",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "section",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-156",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "xref:疫苗箱A17[rel=has-part]",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-157",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#rel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "has-part",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-158",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-159",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceHeading",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l10-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-160",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceSelector",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_批次运输任务ct_2026_0618",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-161",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startColumn",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "4",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-162",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "12",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-163",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#syntax",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "macro",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-164",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetHeading",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-165",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l12-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetSelector",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "疫苗箱A17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-166",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:TripleTerm",
+        "triple": {
+          "subject": {
+            "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+            "@type": "rdf12:IriTerm"
+          },
+          "predicate": {
+            "@id": "https://micheng.dev/ns/asciidoc-relation#monitors",
+            "@type": "rdf12:IriTerm"
+          },
+          "object": {
+            "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+            "@type": "rdf12:IriTerm"
+          }
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-167",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#XrefEdge",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-168",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#confidence",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "0.98",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-169",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endColumn",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "46",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-170",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "19",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-171",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialHref",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "#_疫苗箱a17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-172",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialReftext",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "疫苗箱A17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-173",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedId",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_疫苗箱a17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-174",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedType",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "section",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-175",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "xref:疫苗箱A17[rel=monitors, confidence=0.98]",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-176",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#rel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "monitors",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-177",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-178",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceHeading",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l17-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-179",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceSelector",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_温度记录仪t09",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-180",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startColumn",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "4",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-181",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "19",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-182",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#syntax",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "macro",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-183",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetHeading",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l14-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-184",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l19-c4-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetSelector",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "疫苗箱A17",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-185",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:TripleTerm",
+        "triple": {
+          "subject": {
+            "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+            "@type": "rdf12:IriTerm"
+          },
+          "predicate": {
+            "@id": "https://micheng.dev/ns/asciidoc-relation#triggers",
+            "@type": "rdf12:IriTerm"
+          },
+          "object": {
+            "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+            "@type": "rdf12:IriTerm"
+          }
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-186",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#XrefEdge",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-187",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#condition",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "超温超过15分钟",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-188",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endColumn",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "58",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-189",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "8",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-190",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialHref",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "#_温度偏离处置流程",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-191",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialReftext",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "温度偏离处置流程",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-192",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedId",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_温度偏离处置流程",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-193",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedType",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "section",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-194",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-195",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#rel",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "triggers",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-196",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-197",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceHeading",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l6-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-198",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceSelector",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "_2_8c温控规则",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-199",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startColumn",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "11",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-200",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "8",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#integer",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-201",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#syntax",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "macro",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-202",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetHeading",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#heading-l21-o0",
+        "@type": "rdf12:IriTerm"
+      }
+    },
+    {
+      "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-203",
+      "@type": "rdf12:Triple",
+      "subject": {
+        "@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
+        "@type": "rdf12:IriTerm"
+      },
+      "predicate": {
+        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetSelector",
+        "@type": "rdf12:IriTerm"
+      },
+      "object": {
+        "@type": "rdf12:LiteralTerm",
+        "@value": "温度偏离处置流程",
+        "datatype": {
+          "@id": "http://www.w3.org/2001/XMLSchema#string",
+          "@type": "rdf12:IriTerm"
+        }
+      }
     }
   ]
 }

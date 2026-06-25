@@ -1,7 +1,7 @@
 [#first-queryable-graph]
 == 第一张可查询图
 
-一个 AsciiDoc 源文件可以直接生成 RDF 1.2 projection。读者先写源文档，再运行公开 CLI 或 Library API，得到 Turtle 与 JSON-LD。
+AsciiDoc 源文件通过公开 CLI 或 Library API 生成 RDF 1.2 projection。生成结果包含 Turtle 与 JSON-LD。
 
 [source,asciidoc]
 ----
@@ -91,4 +91,12 @@ SELECT ?policyHeadline ?targetHeadline ?path ?line WHERE {
 }
 ----
 
-查询结果中的 `path` 和 `line` 指回源文件。这个闭环是全书章节的基本形状：源表面写出对象，projection 保存图事实，查询返回可回源结果。
+查询结果保留业务事实和回源坐标：
+
+[source,text]
+----
+policyHeadline | targetHeadline | path                 | line
+配送策略       | 运力规则       | source/delivery.adoc | 4
+----
+
+`path` 和 `line` 指向 source heading 的源文件位置。这个闭环是全书章节的基本形状：源表面写出对象，projection 保存图事实，查询返回可回源结果。

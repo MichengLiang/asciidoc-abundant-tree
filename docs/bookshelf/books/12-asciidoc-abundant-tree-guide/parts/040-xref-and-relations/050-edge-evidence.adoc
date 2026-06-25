@@ -27,3 +27,5 @@ xref edge evidence 保存关系边在源文档中的出现点、raw、selector�
 ----
 
 relation triple 让查询者找到关系。edge evidence 让查询者知道这条关系来自哪一个 xref occurrence。回源修改、边属性审计、official binding 检查和 complex property 读取都使用 edge evidence。
+
+`aat:startColumn` 和 `aat:endColumn` 使用 1-based Unicode code point column。`aat:startColumn` 是 xref occurrence 的起始列，`aat:endColumn` 是 occurrence 结束后的列位置。

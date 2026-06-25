@@ -25,3 +25,23 @@ for (const quad of inferred) store.add(quad);
 ----
 
 这个模式把 projection 中的 `rel:requires`、`rel:documents` 等谓词映射到领域关系，例如 `ex:dependency` 或 `ex:evidenceLink`。
+
+推导后的领域关系仍然回到 projection graph 取证据：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?sourceHeadline ?targetHeadline ?path ?line ?raw WHERE {
+  ?edge a aat:XrefEdge ;
+        rdf:reifies ?statement ;
+        aat:sourceHeading ?source ;
+        aat:targetHeading ?target ;
+        aat:relativePath ?path ;
+        aat:startLine ?line ;
+        aat:raw ?raw .
+  ?source aat:headline ?sourceHeadline .
+  ?target aat:headline ?targetHeadline .
+}
+----
