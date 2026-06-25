@@ -1,7 +1,7 @@
 [#case-contract]
 == 案例契约
 
-官方案例是可运行、可查询、可回源的领域闭环。每个案例包含五类目录。
+官方案例是可运行、可查询、可回源的建模闭环。案例不是能力广告；它把源书稿、投影、模型、报告和视图放在同一目录中，使读者能看到一个领域对象如何从书稿进入图，再由 TS/JS 程序消费。
 
 [source,text]
 ----
@@ -12,15 +12,21 @@ reports/     source-aware JSON / Markdown reports
 views/       面向消费者动作的视图或 adapter 输出
 ----
 
-每个案例章节说明领域对象、标题节点粒度、role 词表、rel 词表、field 表面、payload schema、hierarchy policy、TS/JS consumer、输出视图和回源报告。
+每个案例章节回答六个问题：
 
-案例库级报告位于 `cases/reports.case-inventory.json`。它记录每个案例的五类目录、projection 文件格式和文件数量。
+[horizontal]
+领域对象:: 这个案例把哪类现实或工程对象放入书稿资源图。
+节点粒度:: 哪些对象成为 heading node，哪些事实成为 field、payload 或正文。
+关系政策:: 哪些 xref relation 是显式业务边，标题层级是否生成业务边。
+消费程序:: TS/JS 如何读取 projection graph，如何解释 role、rel、field 和 payload。
+输出表面:: report、Mermaid、TTL、CSV、YAML 或 adapter data 服务哪个动作。
+回源证据:: 输出如何指回源文件、标题行、xref occurrence 或 source value block。
 
-案例库清单检查命令读取本书案例目录，验证每个案例都包含 `source/`、`projection/`、`model/`、`reports/` 和 `views/`，并检查 projection 目录中存在 Turtle 与 JSON-LD 文件：
+案例库级报告位于 `cases/reports.case-inventory.json`。它记录每个案例的五类目录、projection 文件格式和文件数量。案例库存量检查命令读取本书案例目录，验证每个案例都包含 `source/`、`projection/`、`model/`、`reports/` 和 `views/`，并检查 projection 目录中存在 Turtle 与 JSON-LD 文件：
 
 [source,bash]
 ----
 pnpm run generate
 ----
 
-该命令生成案例库存量报告。各案例的 projection、业务报告和视图是案例产物；源书稿仍是作者编辑对象。
+该命令检查案例目录形状。案例章节本身负责解释源表面、建模政策、消费代码和输出视图之间的关系。

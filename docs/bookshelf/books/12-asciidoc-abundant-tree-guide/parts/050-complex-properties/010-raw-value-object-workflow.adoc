@@ -1,7 +1,7 @@
-[#raw-value-object]
-== Raw Value Object
+[#raw-value-object-workflow]
+== Raw Value Object 工作流
 
-raw value object 保存 source value block 的 raw、format、source coordinate 和 binding evidence。
+复杂信息以 raw value object 的形式进入资源图。raw value object 保存 source value block 的 raw、format、source coordinate 和 binding evidence。它适合承载 JSON 配置、YAML 手册、外部文档 locator、视觉模型输出、Kubernetes manifest 和叙事分支条件。
 
 [horizontal]
 `aat:format`:: source block language。
@@ -35,4 +35,4 @@ raw value object 不保存字段名。字段名由指向它的 field predicate �
 <urn:aat:doc:cold-chain-release#heading-l1-o0> aat:release-policy-config <urn:aat:doc:cold-chain-release#payload-l10-o0> .
 ----
 
-raw value object 的 raw 是 opaque literal。JSON、YAML、TOML、XML 或其它格式内部字段由下游消费者解释。
+raw 是 opaque literal。JSON、YAML、TOML、XML 或其它格式内部字段由下游消费者解释。这个设计让投影层保存源表面事实，让业务 schema 留在 TS/JS、SHACL、adapter 或领域模型中。

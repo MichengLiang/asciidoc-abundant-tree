@@ -1,0 +1,54 @@
+[#address-and-stable-id]
+== 地址空间与稳定寻址
+
+heading label space 由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成。xref target selector 和 heading complex property selector 查询这个 label space。
+
+[source,asciidoc]
+----
+[#delivery.policy]
+== 配送策略
+
+== 运力规则
+----
+
+`配送策略` 标题拥有手写 address label `delivery` 和 headline `配送策略`。`运力规则` 没有手写 ID，projection 为它生成 generated address label。
+
+[source,turtle]
+----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
+<urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "delivery" ;
+  aat:headline "配送策略" .
+
+<urn:aat:doc:guide#heading-l4-o0> aat:generatedAddressLabel "_运力规则" ;
+  aat:headline "运力规则" .
+----
+
+selector binding 查询 label space，不查询 role、普通字段、raw、display label 或 heading IRI。重复 label 是源文档事实；查询结果可以包含多个 heading node。
+
+stable ID 是作者为标题声明的长期寻址 label。写法是标题前 attrlist 中的 `#id`。
+
+[source,asciidoc]
+----
+[#delivery-policy]
+== 配送策略
+----
+
+长期引用且标题文本可能变更或重复的标题使用 stable ID。标题文本本身已经是领域内唯一且稳定的标识符时，标题文本承担寻址职责。
+
+[source,asciidoc]
+----
+[.requirement, category=performance]
+== REQ-2026-0088
+
+系统应在五秒内返回审批记录。
+----
+
+`REQ-2026-0088` 是领域内稳定编号。引用该标题时直接使用标题文本：
+
+[source,asciidoc]
+----
+测试用例 xref:REQ-2026-0088[rel=verifies]。
+----
+
+stable ID 的职责是稳定寻址。作者声明的 ID 由 xref、complex property selector、查询脚本或下游模型消费。没有消费者的手写 ID 只增加维护面；标题没有长期寻址需求时，标题文本和 generated address label 提供当前投影的查询入口。

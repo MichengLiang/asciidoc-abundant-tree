@@ -97,6 +97,7 @@
 		"yaml": "^2.9.0"
 	},
 	"devDependencies": {
+		"@asciidoctor/docbook-converter": "3.0.0",
 		"@biomejs/biome": "^2.4.16",
 		"@types/n3": "^1.26.1",
 		"@types/node": "^25.9.1",

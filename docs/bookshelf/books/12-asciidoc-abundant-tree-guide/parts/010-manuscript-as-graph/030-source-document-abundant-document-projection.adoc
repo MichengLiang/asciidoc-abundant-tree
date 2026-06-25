@@ -1,7 +1,28 @@
 [#source-document-abundant-document-projection]
-== Source Document、AbundantDocument 与 Projection
+== 同一信息的多个表面
 
-`source document` 是作者编辑的 AsciiDoc 文件。`AbundantDocument` 是 `parseAbundantTree` 返回的 TypeScript object model。`projection` 是从 `AbundantDocument` 导出的下游表面。
+`source document` 是作者编辑的 AsciiDoc 文件。`AbundantDocument` 是 `parseAbundantTree` 返回的 TypeScript object model。`projection` 是从 `AbundantDocument` 导出的下游表面。三者不是三份互不相干的数据；它们是同一书稿结构面向不同消费者的表面。
+
+[cols="1,2,2", options="header"]
+|===
+|表面 |消费者 |承担动作
+
+|AsciiDoc source
+|作者、编辑者、code agent
+|阅读、修改、审查、版本管理
+
+|AbundantDocument
+|TypeScript / JavaScript 程序
+|结构遍历、格式化、序列化、投影生成
+
+|RDF 1.2 Turtle / JSON-LD
+|SPARQL、SHACL、RDF/JS、图数据库、adapter
+|查询、校验、关系构造、外部图对齐
+
+|source-aware report
+|人、agent、CI 任务
+|展示任务视图，并指回源文件行号
+|===
 
 [source,typescript]
 ----
@@ -28,4 +49,6 @@ const turtle = projection.ttl;
 const jsonLd = projection.jsonLd;
 ----
 
-源文档是事实来源。`AbundantDocument` 保存解析结果、source span、target catalog、xref occurrence 和 official binding。RDF projection 保存面向查询的图事实。消费者修改书稿时，应通过 projection 返回的 source coordinate 回到源文档。
+源文档是事实来源。`AbundantDocument` 保存解析结果、source span、target catalog、xref occurrence 和 official binding。RDF projection 保存面向查询的图事实。消费者修改书稿时，通过 projection 返回的 source coordinate 回到源文档。
+
+这个多表面关系支撑后续案例。多模态资产目录可以从同一标题节点生成 asset report；PDF 溯源索引可以从 payload 生成高亮数据；K8S 案例可以从 manifest payload 生成 YAML 视图；剧本案例可以从 xref relation 生成任务图。不同输出面服务不同消费者，源书稿仍然是共同编辑对象。

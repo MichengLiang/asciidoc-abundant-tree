@@ -1,7 +1,7 @@
 [#sparql-query-surface]
 == SPARQL 查询入口
 
-RDF 1.2 projection 的公共查询面围绕 heading node、xref edge evidence、raw value object 和 source coordinate 展开。
+RDF 1.2 projection 的公共查询面围绕 heading node、xref edge evidence、raw value object 和 source coordinate 展开。查询不是展示动作；查询结果进入报告、校验、视图、adapter 和回源修改。
 
 按 address label 查标题：
 
@@ -17,6 +17,22 @@ SELECT ?heading ?headline ?path ?start ?end WHERE {
            aat:startLine ?start ;
            aat:endLine ?end .
 }
+----
+
+按 role 和 field 查资源节点：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?policy ?headline ?owner ?line WHERE {
+  ?policy aat:role "policy" ;
+          aat:status "active" ;
+          aat:owner ?owner ;
+          aat:headline ?headline ;
+          aat:headingLine ?line .
+}
+ORDER BY ?headline
 ----
 
 查标题发出的关系边：
@@ -39,4 +55,20 @@ SELECT ?edge ?predicate ?targetHeadline ?path ?line ?raw WHERE {
 }
 ----
 
-查询结果中的 source coordinate 是编辑闭环的一部分。
+查标题挂载的 payload：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?field ?format ?raw ?path ?line WHERE {
+  ?heading aat:addressLabel "cold-chain-release" .
+  ?heading ?field ?payload .
+  ?payload aat:format ?format ;
+           aat:raw ?raw ;
+           aat:relativePath ?path ;
+           aat:startLine ?line .
+}
+----
+
+查询结果中的 source coordinate 是编辑闭环的一部分。报告和 agent 操作应保留 `relativePath`、`headingLine`、`startLine` 或 xref occurrence line，使图查询能够回到源书稿。

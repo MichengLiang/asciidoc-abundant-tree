@@ -10,8 +10,8 @@ parts/
     010-first-queryable-graph.adoc
     020-heading-as-resource-node.adoc
   020-heading-structure/
-    010-heading-node.adoc
-    020-heading-slice.adoc
+    010-resource-node-boundary.adoc
+    020-resource-tree-and-order.adoc
 ----
 
 编排号服务源文件维护。长期引用服务读者和工具链。标题层级必须连续；跨越大跨度章节的指代使用 xref 显式标注。

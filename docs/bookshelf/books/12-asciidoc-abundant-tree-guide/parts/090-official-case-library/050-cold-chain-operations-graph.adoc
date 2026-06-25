@@ -1,7 +1,7 @@
 [#case-cold-chain-operations-graph]
 == Cold Chain Operations Graph
 
-Cold Chain Operations Graph 展示专业领域中的规则约束、部件组成、监控和触发关系。领域对象是冷链药品运输任务。
+Cold Chain Operations Graph 展示专业领域中的规则约束、部件组成、监控和触发关系。领域对象是冷链药品运输任务，模型重点是显式业务边和边属性。
 
 [horizontal]
 source:: `cases/040-cold-chain-operations/source/cold-chain-operations.adoc`
@@ -10,6 +10,21 @@ model:: `model/policy.ts`、`model/business-graph.ts`
 reports:: `reports/cold-chain-operations.json`
 views:: `views/rules.mmd`、`views/composition.mmd`、`views/overview.mmd`
 
-该案例使用标题前 attrlist 表达短字段。`.policy`、`.shipment`、`.payload`、`.sensor` 和 `.process` 定义节点类型。xref `rel=triggers`、`rel=has-part` 和 `rel=monitors` 生成显式业务边。xref named attributes 保存 `condition` 和 `confidence` 等边属性。hierarchy policy 把 child-to-parent `containsDirectly` 解释为 `governed-by`。
+源书稿使用标题前 attrlist 表达短字段：
 
-读者动作是：生成规则视图、组成视图和 overview 视图，并从边报告回到 xref 所在行。
+[source,asciidoc]
+----
+[.policy, minTemperature=2C, maxTemperature=8C, allowedExcursion=15分钟]
+== 2-8C温控规则
+超出允许偏离时触发 xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]。
+
+[.shipment, status=active, origin=上海仓, destination=福州医院药房, temperature=2-8C]
+=== 批次运输任务CT-2026-0618
+包含 xref:疫苗箱A17[rel=has-part] 和 xref:温度记录仪T09[rel=has-part]。
+----
+
+`.policy`、`.shipment`、`.payload`、`.sensor` 和 `.process` 定义节点类型。xref `rel=triggers`、`rel=has-part` 和 `rel=monitors` 生成显式业务边。xref named attributes 保存 `condition` 和 `confidence` 等边属性。hierarchy policy 把 child-to-parent `containsDirectly` 解释为 `governed-by`。
+
+`business-graph.ts` 生成三类视图：rules 图展示规则对流程的触发；composition 图展示运输任务、疫苗箱和温度记录仪的组成；overview 图合并规则、组成、监控和触发关系。报告保留每条业务边的 origin、raw 和 source line。
+
+这个案例把菜谱案例中的开放建模方法推进到专业领域：同样的 heading、field、xref 和 hierarchy policy 可以表达规则约束、部件组成、监控关系和异常处置。

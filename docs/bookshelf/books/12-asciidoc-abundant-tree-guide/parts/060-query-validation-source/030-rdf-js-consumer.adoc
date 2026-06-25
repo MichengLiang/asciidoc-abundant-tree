@@ -1,7 +1,7 @@
 [#rdf-js-consumer]
 == RDF/JS 数据读取
 
-TS/JS consumer 可以用 `n3` 读取 Turtle，并用 RDF/JS dataset 查询 projection facts。
+TS/JS consumer 可以用 `n3` 读取 Turtle，并用 RDF/JS dataset 查询 projection facts。RDF/JS 适合把 projection graph 转成 JSON report、Mermaid 视图、business TTL、adapter 输入和 lint 诊断。
 
 [source,typescript]
 ----
@@ -22,4 +22,22 @@ for (const quad of store.getQuads(null, `${RDF}type`, `${AAT}Heading`, null)) {
 }
 ----
 
-RDF/JS consumer 适合生成 JSON report、Mermaid 视图、业务 TTL、adapter 输入和 lint 诊断。
+consumer 读取图时保留 source coordinate：
+
+[source,typescript]
+----
+function firstObject(subject: unknown, predicate: string): string | undefined {
+  return store.getObjects(subject as never, predicate, null)[0]?.value;
+}
+
+const headings = store.getQuads(null, `${RDF}type`, `${AAT}Heading`, null)
+  .map((quad) => ({
+    id: quad.subject.value,
+    headline: firstObject(quad.subject, `${AAT}headline`),
+    role: firstObject(quad.subject, `${AAT}role`),
+    relativePath: firstObject(quad.subject, `${AAT}relativePath`),
+    headingLine: firstObject(quad.subject, `${AAT}headingLine`),
+  }));
+----
+
+这个结构可以直接写入 source-aware report。业务字段、边字段和 payload schema 在 consumer 层解释；projection graph 继续保存源表面事实。

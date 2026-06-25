@@ -1,7 +1,7 @@
 [#case-book-workspace]
 == Book Workspace
 
-Book Workspace 展示多文件书稿的 source-aware projection。领域对象是一本文档书。
+Book Workspace 展示多文件书稿的 source-aware projection。领域对象是一本文档书；它由 entry file、frontmatter、parts、backmatter 和术语表共同组成。
 
 [horizontal]
 source:: `cases/050-book-workspace/source/book.adoc`、`source/frontmatter/`、`source/parts/`、`source/backmatter/`
@@ -10,6 +10,20 @@ model:: `model/xref-audit.ts`、`model/source-set-report.ts`
 reports:: `reports/source-set.json`、`reports/xref-audit.json`、`reports/index-terms.json`
 views:: `views/book-outline.mmd`
 
-该案例展示 entry file、include graph、logical document、line origin、source set reconstruction surface、frontmatter、parts、chapters、backmatter、glossary、bibliography 和 index。
+entry file 通过 include graph 构造 logical document：
 
-读者动作是：解析 book-entry，查看每个 heading 的 origin source file，生成书籍大纲，审计 xref 和索引词。
+[source,asciidoc]
+----
+= Book Workspace Demo
+:doctype: book
+
+\include::frontmatter/preface.adoc[]
+
+\include::parts/010-object/010-object-boundary.adoc[]
+
+\include::backmatter/glossary.adoc[]
+----
+
+book-entry mode 让消费者在整本书层面查询 heading tree，同时保留每个 heading 的 origin source file 和 origin line。`source-set-report.ts` 读取 source file reconstruction surface，输出参与书稿构造的源文件集合。`xref-audit.ts` 检查 unresolved、ambiguous 和 unused stable ID，报告记录 relativePath 和 line。
+
+该案例展示 frontmatter、parts、chapters、backmatter、glossary、bibliography 和 index 的工程意义：书籍不是散落页面，而是长期可维护、可引用、可索引、可回源的知识人工制品。

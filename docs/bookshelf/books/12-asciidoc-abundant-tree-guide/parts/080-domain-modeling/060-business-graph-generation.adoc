@@ -34,3 +34,12 @@ xref edge evidence:: 生成 explicit business edge，并复制 relation、edge a
 raw value object:: 按 field predicate 与 format 进入 payload schema validation。
 
 business graph 是领域模型产物。projection graph 保存源表面事实；business graph 保存当前领域解释。
+
+生成器的输入和输出保持分层：
+
+[horizontal]
+projection input:: heading nodes、fields、xref edge evidence、raw value objects、source coordinate。
+model input:: role vocabulary、rel vocabulary、field schema、payload schema、hierarchy policy。
+business output:: domain nodes、domain edges、validated payload summaries、views、source-aware reports。
+
+同一 projection graph 可以进入不同 business graph。菜谱模型把层级解释为 `part-of`；冷链模型把层级解释为 `governed-by`；book workspace 模型只把层级保留为书籍结构。业务图的解释力来自模型输入，不来自投影器猜测。

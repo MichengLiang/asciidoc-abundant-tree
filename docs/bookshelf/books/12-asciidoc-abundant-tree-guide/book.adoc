@@ -38,7 +38,7 @@ include::frontmatter/reading-paths.adoc[]
 = 第一部：书稿即图
 
 [partintro]
-本部从一段 AsciiDoc 源文档进入第一张可查询图，建立标题节点、投影表面和回源坐标的基本对象。
+一段 AsciiDoc 源文档可以同时成为读者阅读的章节和程序查询的资源图。本部从最小闭环开始：标题创建节点，字段创建谓词，xref 创建关系，source coordinate 把查询结果带回源文件。
 
 include::parts/010-manuscript-as-graph/010-first-queryable-graph.adoc[]
 
@@ -48,78 +48,47 @@ include::parts/010-manuscript-as-graph/030-source-document-abundant-document-pro
 
 include::parts/010-manuscript-as-graph/040-reading-unit-query-unit.adoc[]
 
-= 第二部：标题结构
+= 第二部：资源节点的表面约定
 
 [partintro]
-本部定义 heading node、heading slice、标题层级边、顺序字段和本地 target 归属。
+heading node 是书稿中的资源节点。本部定义资源节点的范围、层级、地址、身份和字段表面，使标题成为可寻址、可分类、可描述、可维护的图节点。
 
-include::parts/020-heading-structure/010-heading-node.adoc[]
+include::parts/020-heading-structure/010-resource-node-boundary.adoc[]
 
-include::parts/020-heading-structure/020-heading-slice.adoc[]
+include::parts/020-heading-structure/020-resource-tree-and-order.adoc[]
 
-include::parts/020-heading-structure/030-direct-containment.adoc[]
+include::parts/030-identity-and-fields/010-address-and-stable-id.adoc[]
 
-include::parts/020-heading-structure/040-local-and-global-order.adoc[]
+include::parts/030-identity-and-fields/020-role-and-field-surfaces.adoc[]
 
 include::parts/020-heading-structure/050-local-target-ownership.adoc[]
 
-= 第三部：地址、身份与字段
+= 第三部：引用创建关系边
 
 [partintro]
-本部定义 heading label space、stable ID、role、literal field、描述列表字段和 hmeta 字段。
+xref 把阅读中的引用变成资源节点之间的关系边。本部定义 source heading、target heading、relation predicate、edge fields、edge evidence 和 selector binding。
 
-include::parts/030-identity-and-fields/010-label-space.adoc[]
+include::parts/040-xref-and-relations/010-reference-as-relation.adoc[]
 
-include::parts/030-identity-and-fields/020-stable-id.adoc[]
+include::parts/040-xref-and-relations/020-edge-evidence-and-fields.adoc[]
 
-include::parts/030-identity-and-fields/030-role-identity.adoc[]
+include::parts/040-xref-and-relations/030-selector-binding-audit.adoc[]
 
-include::parts/030-identity-and-fields/040-attrlist-fields.adoc[]
-
-include::parts/030-identity-and-fields/050-description-list-fields.adoc[]
-
-include::parts/030-identity-and-fields/060-hmeta-inline-fields.adoc[]
-
-include::parts/030-identity-and-fields/070-field-placement.adoc[]
-
-= 第四部：引用与关系
+= 第四部：复杂信息进入资源图
 
 [partintro]
-本部定义 xref、rel、xref edge evidence、边字段和 selector binding。
+复杂信息以 raw value object 的形式进入资源图。JSON、YAML、locator、模型输出和配置片段保持原始表面，由 field predicate、format 和下游 schema 共同解释。
 
-include::parts/040-xref-and-relations/010-xref-relation-edge.adoc[]
+include::parts/050-complex-properties/010-raw-value-object-workflow.adoc[]
 
-include::parts/040-xref-and-relations/020-default-reference.adoc[]
+include::parts/050-complex-properties/020-heading-and-edge-payloads.adoc[]
 
-include::parts/040-xref-and-relations/030-relation-predicate.adoc[]
+include::parts/050-complex-properties/030-format-schema-and-release-policy.adoc[]
 
-include::parts/040-xref-and-relations/040-edge-fields.adoc[]
-
-include::parts/040-xref-and-relations/050-edge-evidence.adoc[]
-
-include::parts/040-xref-and-relations/060-selector-binding.adoc[]
-
-= 第五部：复杂属性
+= 第五部：查询、校验、报告与回源
 
 [partintro]
-本部定义 complex property、raw value object、heading complex property、xref edge complex property 和 format/schema 消费路径。
-
-include::parts/050-complex-properties/010-complex-property.adoc[]
-
-include::parts/050-complex-properties/020-raw-value-object.adoc[]
-
-include::parts/050-complex-properties/030-heading-complex-property.adoc[]
-
-include::parts/050-complex-properties/040-xref-edge-complex-property.adoc[]
-
-include::parts/050-complex-properties/050-format-and-schema-consumption.adoc[]
-
-include::parts/050-complex-properties/060-cold-chain-release-policy.adoc[]
-
-= 第六部：查询、校验与回源
-
-[partintro]
-本部定义 SPARQL、SHACL、RDF/JS、Oxigraph 和 source-aware report 的消费者动作。
+projection graph 是行动表面。TS/JS、SPARQL、SHACL 和本地图查询把标题、字段、关系、payload 转换为报告、视图和可编辑源文件位置。
 
 include::parts/060-query-validation-source/010-sparql-query-surface.adoc[]
 
@@ -131,10 +100,10 @@ include::parts/060-query-validation-source/040-oxigraph-query.adoc[]
 
 include::parts/060-query-validation-source/050-source-aware-report.adoc[]
 
-= 第七部：书稿入口与多文件书
+= 第六部：书籍作为长期知识人工制品
 
 [partintro]
-本部定义 book-entry mode、entry file、source set、logical document、line origin 和书籍物理结构。
+多文件书稿通过 book-entry mode 构造 logical document，并通过 line origin 回到原始源文件。frontmatter、parts、chapters、backmatter、术语表、参考文献和索引共同维护长期知识对象。
 
 include::parts/070-book-entry-workspace/010-book-entry-mode.adoc[]
 
@@ -152,10 +121,10 @@ include::parts/070-book-entry-workspace/070-backmatter.adoc[]
 
 include::parts/070-book-entry-workspace/080-cross-reference-maintenance.adoc[]
 
-= 第八部：领域建模
+= 第七部：从投影图到领域模型
 
 [partintro]
-本部定义从 projection graph 到 business graph 的开放建模方法。
+projection graph 保存结构事实。领域模型通过 role、rel、field schema、payload schema 和 hierarchy policy 解释这些事实，并生成 business graph、视图和质量报告。
 
 include::parts/080-domain-modeling/010-domain-object-to-heading-node.adoc[]
 
@@ -171,10 +140,10 @@ include::parts/080-domain-modeling/060-business-graph-generation.adoc[]
 
 include::parts/080-domain-modeling/070-model-quality-report.adoc[]
 
-= 第九部：官方案例库
+= 第八部：官方案例库
 
 [partintro]
-本部给出可运行、可查询、可回源的官方案例。案例从结构投影开始，逐步进入业务图、外部文档、配置系统和叙事系统。
+官方案例把前八部的对象放入完整工作场景。每个案例包含源书稿、projection、model、report 和 view，展示源表面如何进入图查询、业务建模、外部适配和回源维护。
 
 include::parts/090-official-case-library/010-case-contract.adoc[]
 

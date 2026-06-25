@@ -1,0 +1,79 @@
+[#format-schema-and-release-policy]
+== Format、Schema 与冷链放行策略
+
+field predicate 与 format 是正交事实。field predicate 选择下游模型；format 选择 raw parser。投影器保存 raw 事实；schema validation、默认值填充、字段解释和业务错误报告属于下游消费者。
+
+[source,typescript]
+----
+import { z } from "zod";
+import YAML from "yaml";
+
+const releasePolicyConfig = z.object({
+  temperatureWindowCelsius: z.object({
+    min: z.number(),
+    max: z.number(),
+  }),
+  manualReviewWhen: z.array(z.string()),
+});
+
+function parseRaw(format: string, raw: string): unknown {
+  if (format === "json") return JSON.parse(raw);
+  if (format === "yaml" || format === "yml") return YAML.parse(raw);
+  throw new Error(`unsupported raw format: ${format}`);
+}
+
+const data = parseRaw(format, raw);
+const config = releasePolicyConfig.parse(data);
+----
+
+冷链放行策略案例把 heading complex property 与 xref edge complex property 放在同一业务闭环中。
+
+[source,asciidoc]
+------
+[#cold-chain-release.policy, status=active, owner=quality-ops]
+== 冷链出库放行策略
+
+冷链出库放行策略依赖 xref:temperature-audit[
+  温控审计规则,
+  rel=depends-on,
+  weight=0.9,
+  dependency-evidence=rel-release-temperature-audit
+]。
+
+[.release-policy-config, for=cold-chain-release]
+[source,json]
+----
+{
+  "temperatureWindowCelsius": { "min": 2, "max": 8 },
+  "manualReviewWhen": ["sensor_gap", "route_exception"]
+}
+----
+
+[#rel-release-temperature-audit]
+[source,yaml]
+----
+source: quality-sop-2026
+risk_level: high
+reason: 放行策略必须读取温控审计结果。
+----
+------
+
+策略 heading 挂载 JSON 配置；依赖关系边挂载 YAML 证据。消费者查询字段谓词，按 `aat:format` 解析 raw，按 schema 生成 source-aware report。
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?configRaw ?evidenceRaw WHERE {
+  ?policy aat:addressLabel "cold-chain-release" ;
+          aat:release-policy-config ?config .
+  ?config aat:raw ?configRaw .
+
+  ?edge a aat:XrefEdge ;
+        aat:sourceHeading ?policy ;
+        aat:dependency-evidence ?evidence .
+  ?evidence aat:raw ?evidenceRaw .
+}
+----
+
+报告输出保留策略标题、依赖边、payload field、format、解析摘要和 source line。读者可从报告返回源文档，修改配置或依赖证据。

@@ -1,7 +1,7 @@
 [#case-document-provenance-rag]
 == PDF / Word / RAG Provenance Index
 
-PDF / Word / RAG Provenance Index 展示外部文档细粒度溯源。领域对象是 chunk、段落、页面区域、主张和证据。
+PDF / Word / RAG Provenance Index 展示外部文档细粒度溯源。领域对象是 claim、chunk、段落、页面区域和证据片段。书稿标题节点不替代外部文件；它为外部文件中的证据建立可查询索引。
 
 [horizontal]
 source:: `cases/080-document-provenance-rag/source/provenance-index.adoc`
@@ -10,6 +10,27 @@ model:: `model/locator-schema.ts`、`model/rag-index.ts`
 reports:: `reports/source-locators.json`、`reports/rag-citations.json`
 views:: `views/evidence-graph.mmd`、`views/pdf-highlight-data.json`
 
-标题节点代表一个 chunk 或证据片段。payload 保存 W3C Web Annotation selector、TextQuoteSelector、TextPositionSelector、PDF page/bbox、Word paraId/bookmark、char offset 和 source file。xref 表达 claim supported-by chunk、chunk extracted-from document、section cites chunk。
+源书稿把主张和证据 chunk 写成 heading node：
 
-读者动作是：在图上查询证据，生成 RAG citation index，并通过 locator 回到 PDF、Word 或网页原文位置。
+[source,asciidoc]
+------
+[#claim-cold-chain.claim]
+== 冷链放行必须读取温度审计
+
+该主张由 xref:chunk-temp-audit[温度审计证据, rel=supported-by] 支撑。
+
+[#chunk-temp-audit.evidence-chunk, sourceFile=report-2026.pdf]
+== 温度审计证据
+
+[.source-locator, for=chunk-temp-audit]
+[source,json]
+----
+{"pdf":{"page":12,"bbox":[120,300,450,80]},"textQuote":{"exact":"温度记录完整后方可放行","prefix":"审计结论：","suffix":"。"}}
+----
+------
+
+payload 保存外部定位结构：PDF page/bbox、TextQuoteSelector、TextPositionSelector、Word paraId/bookmark、char offset 或网页 selector。xref 表达 claim supported-by chunk、chunk extracted-from document、section cites chunk。
+
+`locator-schema.ts` 定义 locator payload 的 schema。`rag-index.ts` 读取 projection，生成 RAG citation index 和 source locator report。`pdf-highlight-data.json` 把图中的 locator 转成前端可用的高亮数据。
+
+这个案例让外部复杂文件进入统一图索引。查询先发生在文本图上；命中证据后，adapter 根据 locator 打开 PDF、Word 或网页原文位置。

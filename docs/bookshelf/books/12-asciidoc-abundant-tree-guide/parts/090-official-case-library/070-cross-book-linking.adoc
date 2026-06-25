@@ -10,6 +10,8 @@ model:: `model/alignment-policy.ts`
 reports:: `reports/alignment-candidates.json`、`reports/workspace-links.json`
 views:: `views/workspace-links.mmd`
 
-每本书独立生成 projection。workspace policy 按 address label、headline 或显式字段查找候选节点，并生成跨书 relation。跨书边属于 workspace graph，不回写到任一本书的核心 projection。
+每本书独立生成 projection。workspace policy 读取多份 projection，按 address label、headline 或显式字段查找候选节点，再生成跨书 relation。跨书边属于 workspace graph，不回写到任一本书的核心 projection。
 
-读者动作是：加载多份 projection，执行 alignment policy，生成跨书候选报告和 workspace TTL。
+这个案例区分两个层次：单书 projection 保存该书的源表面事实；workspace graph 保存多书对齐和跨书关系。TS/JS consumer 是这两个层次之间的建模执行面。
+
+读者动作是：加载多份 projection，执行 alignment policy，生成跨书候选报告和 workspace TTL。报告保留每条候选对齐的来源书、heading label、headline 和匹配依据，使维护者能判断跨书链接是否稳定。

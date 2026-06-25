@@ -15,7 +15,7 @@ xref audit 读取 unresolved、ambiguous 和 unused stable ID。报告记录 sou
 {
   "kind": "unresolved-xref",
   "selector": "missing-target",
-  "relativePath": "parts/040-xref-and-relations/060-selector-binding.adoc",
+  "relativePath": "parts/040-xref-and-relations/030-selector-binding-audit.adoc",
   "line": 18
 }
 ----

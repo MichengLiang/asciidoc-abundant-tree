@@ -1,7 +1,7 @@
 [#source-aware-report]
 == Source-aware Report
 
-source-aware report 把查询结果转换成可编辑定位信息。报告保存 label、headline、role、fields、edges、raw、relativePath 和 line。
+source-aware report 把查询结果转换成可编辑定位信息。报告保存 label、headline、role、fields、edges、raw、relativePath 和 line。它是人、CI、adapter 和 code agent 共用的任务视图。
 
 [source,json]
 ----
@@ -30,3 +30,12 @@ source-aware report 把查询结果转换成可编辑定位信息。报告保存
 ----
 
 人和 code agent 读取报告后回到源文件。报告不是另一个事实来源；它是 projection facts 的任务视图。
+
+报告应保留三类回源入口：
+
+[horizontal]
+heading source:: heading 的 `relativePath`、`headingLine`、`startLine`、`endLine`。
+xref source:: xref edge evidence 的 `relativePath`、`startLine`、`startColumn`、`raw`。
+payload source:: raw value object 的 `relativePath`、`startLine`、`contentStartLine`、`format`。
+
+这三类入口覆盖节点修改、关系修改和复杂值修改。报告消费方不需要猜测源文本位置；它读取 projection facts，再回到作者维护的 AsciiDoc 文件。

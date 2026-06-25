@@ -2,13 +2,18 @@
 = 索引
 
 indexterm2:[heading node]
+indexterm2:[resource node]
 indexterm2:[RDF 1.2 projection]
 indexterm2:[source coordinate]
 indexterm2:[book-entry mode]
 indexterm2:[raw value object]
+indexterm2:[payload schema]
 indexterm2:[xref edge evidence]
 indexterm2:[hierarchy policy]
 indexterm2:[business graph]
 indexterm2:[source-aware report]
+indexterm2:[multimodal asset catalog]
+indexterm2:[RAG provenance]
+indexterm2:[adapter output]
 
 本索引 section 是书后索引入口。正文中的可见索引词和隐藏索引词提供索引来源。

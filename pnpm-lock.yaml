@@ -21,6 +21,9 @@ importers:
         specifier: ^2.9.0
         version: 2.9.0
     devDependencies:
+      '@asciidoctor/docbook-converter':
+        specifier: 3.0.0
+        version: 3.0.0(@asciidoctor/core@3.0.4)
       '@biomejs/biome':
         specifier: ^2.4.16
         version: 2.4.16
@@ -124,6 +127,12 @@ packages:
   '@asciidoctor/core@3.0.4':
     resolution: {integrity: sha512-41SDMi7iRRBViPe0L6VWFTe55bv6HEOJeRqMj5+E5wB1YPdUPuTucL4UAESPZM6OWmn4t/5qM5LusXomFUVwVQ==}
     engines: {node: '>=16', npm: '>=8'}
+
+  '@asciidoctor/docbook-converter@3.0.0':
+    resolution: {integrity: sha512-sJtit+xRs6XOJAzxUCw+Ua+7QgFWRMd4yfUy3Rp1M7wK8640wUvUx4XbWpWFqsxRW+Hk9pJ5cRLafuaF5HJnGQ==}
+    engines: {node: '>=8.11', npm: '>=5.0.0'}
+    peerDependencies:
+      '@asciidoctor/core': '>= 3.0 < 4.0'
 
   '@asciidoctor/opal-runtime@3.0.1':
     resolution: {integrity: sha512-iW7ACahOG0zZft4A/4CqDcc7JX+fWRNjV5tFAVkNCzwZD+EnFolPaUOPYt8jzadc0+Bgd80cQTtRMQnaaV1kkg==}
@@ -2024,6 +2033,10 @@ snapshots:
     dependencies:
       '@asciidoctor/opal-runtime': 3.0.1
       unxhr: 1.2.0
+
+  '@asciidoctor/docbook-converter@3.0.0(@asciidoctor/core@3.0.4)':
+    dependencies:
+      '@asciidoctor/core': 3.0.4
 
   '@asciidoctor/opal-runtime@3.0.1':
     dependencies:

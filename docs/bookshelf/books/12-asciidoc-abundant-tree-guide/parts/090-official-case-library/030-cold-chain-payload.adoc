@@ -1,7 +1,7 @@
 [#case-cold-chain-payload]
 == Cold Chain Payload
 
-Cold Chain Payload 展示 complex property 消费闭环。领域对象是冷链药品出库放行策略。
+Cold Chain Payload 展示 complex property 消费闭环。领域对象是冷链药品出库放行策略；复杂信息包括策略 JSON 配置、复核手册 YAML 和依赖关系 YAML 证据。
 
 [horizontal]
 source:: `cases/020-cold-chain-payload/source/cold-chain-release.adoc`
@@ -10,6 +10,25 @@ model:: `model/payload-schema.ts`、`model/consume-payloads.ts`
 reports:: `reports/payload-summary.json`、`reports/source-lines.md`
 views:: `views/release-policy.mmd`
 
-该案例包含三个 complex properties：heading JSON 配置、heading YAML 复核手册、xref edge YAML 依赖证据。TS/JS consumer 按 `aat:release-policy-config`、`aat:review-playbook` 和 `aat:dependency-evidence` 选择 schema，按 `aat:format` 解析 raw。
+源书稿把策略本身写成 `.policy` heading，并把三段复杂信息挂到节点或边上：
 
-读者动作是：查询策略 heading，读取 payload raw，执行 schema validation，生成包含 source line 的放行策略报告。
+[source,asciidoc]
+------
+[#cold-chain-release.policy, status=active, owner=quality-ops]
+== 冷链出库放行策略
+
+冷链出库放行策略依赖 xref:temperature-audit[温控审计规则, rel=depends-on, weight=0.9, dependency-evidence=rel-release-temperature-audit]。
+
+[.release-policy-config, for=cold-chain-release]
+[source,json]
+----
+{
+  "temperatureWindowCelsius": {"min": 2, "max": 8},
+  "manualReviewWhen": ["sensor_gap", "route_exception"]
+}
+----
+------
+
+`release-policy-config` 和 `review-playbook` 是 heading complex properties；`dependency-evidence` 是 xref edge complex property。TS/JS consumer 按 field predicate 选择 schema，按 `aat:format` 选择 parser，再把解析摘要写入 `payload-summary.json`。
+
+这个案例的关键不是冷链业务本身，而是复杂信息的落位：策略配置属于 heading，依赖证据属于 edge evidence。source-aware report 保存 payload field、format、source line 和解析结果，使作者能回到对应 source value block 修改配置或证据。

@@ -1,7 +1,7 @@
 [#case-multimodal-asset-catalog]
 == Multimodal Asset Catalog
 
-Multimodal Asset Catalog 展示图片和多模态资产管理。领域对象是资产集合、单张图片、人物、地点、项目和视觉特征。
+Multimodal Asset Catalog 展示图片和多模态资产管理。领域对象是资产集合、单张图片、项目和视觉特征。这个案例把“标题作为资源节点”的思想落到文件资产上：图片文件留在文件系统中，标题节点保存语义、字段、视觉 payload 和项目关系。
 
 [horizontal]
 source:: `cases/070-multimodal-asset-catalog/source/assets.adoc`
@@ -10,6 +10,28 @@ model:: `model/asset-schema.ts`、`model/asset-report.ts`
 reports:: `reports/asset-index.json`、`reports/duplicate-candidates.json`、`reports/project-usage.json`
 views:: `views/asset-graph.mmd`
 
-标题节点代表资产或资产组。字段保存 file path、hash、createdAt、camera、location、license 和 tags。payload 保存视觉模型输出的 JSON，例如 composition、dominantColors、objects、textRegions 和 styleNotes。xref 表达 depicts、used-in、derived-from 和 part-of 等关系。
+源书稿把项目和图片都写成 heading node：
 
-读者动作是：用书稿维护资产索引，用多模态模型写回视觉 payload，用图查询生成项目使用报告。
+[source,asciidoc]
+------
+[#project-neon.project]
+== 霓虹街景项目
+
+[#asset-rain-street.photo, path=assets/rain-street.jpg, license=internal]
+=== 雨夜街角参考图
+
+location:: 福州
+tags:: rain, neon, street
+
+[.vision-profile, for=asset-rain-street]
+[source,json]
+----
+{"composition":"low angle street corner","dominantColors":["blue","magenta"],"objects":["umbrella","signboard"]}
+----
+------
+
+`path` 和 `license` 是短字段；`location` 和 `tags` 是描述列表字段；`vision-profile` 是视觉模型输出 payload。xref `rel=used-in` 把图片资产连到项目。后续模型可以继续写入人物、地点、构图、文字区域、色彩、重复候选等结构信息。
+
+`asset-report.ts` 读取 heading nodes、fields、payload raw 和 xref relations，生成 asset index、duplicate candidates 和 project usage report。`asset-graph.mmd` 把项目、资产和关系可视化。
+
+这个案例展示 code agent 的工作优势：资产目录是纯文本，agent 能搜索、patch、运行脚本、读图并把观察结果写回 payload；查询结果仍然能回到源书稿标题和图片路径。

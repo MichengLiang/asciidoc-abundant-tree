@@ -1,0 +1,63 @@
+[#resource-node-boundary]
+== 资源节点的边界
+
+heading node 由 AsciiDoc 等号标题创建。源表面中的 `=`、`==`、`===` 直到 `======` 均创建标题节点。每个标题节点保存标题文本、层级、源文件坐标和标题切片。
+
+[source,asciidoc]
+----
+= 项目知识库
+
+[#delivery.policy, status=active]
+== 配送策略
+
+配送策略描述订单进入配送流程后的规则。
+
+=== 运力约束
+
+运力约束描述配送容量不足时的降级条件。
+----
+
+投影图为每个标题输出 `aat:Heading`、`aat:headline`、`aat:headingLevel`、`aat:documentOrder` 和回源坐标：
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l1-o0> a aat:Heading ;
+  aat:headline "项目知识库" ;
+  aat:headingLevel 0 ;
+  aat:documentOrder 1 .
+
+<urn:aat:doc:...#heading-l3-o0> a aat:Heading ;
+  aat:addressLabel "delivery" ;
+  aat:headline "配送策略" ;
+  aat:role "policy" ;
+  aat:status "active" ;
+  aat:headingLevel 1 ;
+  aat:documentOrder 2 .
+
+<urn:aat:doc:...#heading-l7-o0> a aat:Heading ;
+  aat:headline "运力约束" ;
+  aat:headingLevel 2 ;
+  aat:documentOrder 3 .
+----
+
+heading node 的 IRI 由投影器生成。作者写下的 ID、生成 label 和标题文本进入 label space。查询者先按 label 找到 heading node，再读取该节点的字段、关系、raw 和回源坐标。
+
+heading slice 是标题节点对应的连续源文本区域。切片起点是标题头部 metadata 的第一行；没有 metadata 时，起点是标题行。切片终点是下一个标题切片起点的前一行；没有下一个标题时，终点是源文件末尾。
+
+[source,turtle]
+----
+<urn:aat:doc:...#heading-l3-o0> aat:raw """[#delivery.policy, status=active]
+== 配送策略
+
+配送策略描述订单进入配送流程后的规则。
+""" ;
+  aat:metadataStartLine 3 ;
+  aat:metadataEndLine 3 ;
+  aat:headingLine 4 ;
+  aat:contentStartLine 6 ;
+  aat:contentEndLine 6 .
+----
+
+`aat:raw` 是回源编辑和审计的基础事实。它保存该标题自身切片，不吞并子标题。读取完整子树时，消费者沿 `aat:containsDirectly` 递归读取子标题。
+
+标题节点的边界服务维护动作。查询报告可以指向某个标题的 `relativePath`、`headingLine`、`startLine` 和 `endLine`；agent 可以据此定位源文件中的节点，修改字段、正文、xref 或 payload。

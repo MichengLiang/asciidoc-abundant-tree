@@ -1,0 +1,46 @@
+[#edge-evidence-and-fields]
+== 边字段与边证据
+
+relation triple 让查询者找到关系。xref edge evidence 让查询者知道这条关系来自哪一个 xref occurrence。回源修改、边属性审计、official binding 检查和 complex property 读取都使用 edge evidence。
+
+[source,asciidoc]
+----
+配送策略依赖 xref:capacity[
+  运力规则,
+  rel=depends-on,
+  weight=0.8,
+  condition=旺季
+]。
+----
+
+xref named attributes 投影为 xref edge evidence 上的 fields。字段主体是边证据，不是 source heading，也不是 target heading。
+
+[source,turtle]
+----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l8-o0> .
+
+<urn:aat:doc:...#xref-edge-l6-c8-o0> a aat:XrefEdge ;
+  rdf:reifies <<(<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l8-o0>)>> ;
+  aat:sourceHeading <urn:aat:doc:...#heading-l3-o0> ;
+  aat:targetHeading <urn:aat:doc:...#heading-l8-o0> ;
+  aat:targetSelector "capacity" ;
+  aat:displayLabel "运力规则" ;
+  aat:rel "depends-on" ;
+  aat:weight "0.8" ;
+  aat:condition "旺季" ;
+  aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, condition=旺季]" ;
+  aat:relativePath "source/delivery.adoc" ;
+  aat:startLine 6 ;
+  aat:startColumn 8 ;
+  aat:endLine 6 ;
+  aat:endColumn 68 ;
+  aat:officialResolvedType "section" .
+----
+
+`rdf:reifies` 把 edge evidence 连接到具体 relation triple term。`aat:raw`、`aat:relativePath`、`aat:startLine` 和列坐标让报告回到 xref 出现点。`weight`、`condition`、`confidence`、`evidence-id` 等字段描述的是这一次关系声明，不描述 source heading 或 target heading 本身。
+
+`aat:startColumn` 和 `aat:endColumn` 使用 1-based Unicode code point column。`aat:startColumn` 是 xref occurrence 的起始列，`aat:endColumn` 是 occurrence 结束后的列位置。

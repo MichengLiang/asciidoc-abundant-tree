@@ -1,7 +1,7 @@
 [#case-recipe-knowledge-graph]
 == Recipe Knowledge Graph
 
-Recipe Knowledge Graph 展示亲切领域中的分类关系与组成关系。领域对象是家庭菜谱、食材、步骤和分类。
+Recipe Knowledge Graph 展示亲切领域中的分类关系与组成关系。领域对象是家庭菜谱、食材、步骤和分类。这个案例让读者先在低门槛领域中看到 role、rel、field 和 hierarchy policy 如何生成 business graph。
 
 [horizontal]
 source:: `cases/030-recipe-kg/source/recipe-knowledge.adoc`
@@ -10,6 +10,16 @@ model:: `model/policy.ts`、`model/business-graph.ts`
 reports:: `reports/recipe-graph.json`
 views:: `views/classification.mmd`、`views/composition.mmd`、`views/overview.mmd`
 
-该案例使用描述列表字段表达节点属性。`role:: recipe`、`role:: ingredient`、`role:: step` 和 `role:: category` 定义节点类型。显式 xref 的 `rel=is-a` 生成分类边。hierarchy policy 把 child-to-parent `containsDirectly` 解释为 `part-of`。
+源书稿声明了建模约定：
 
-读者动作是：从 projection graph 生成 business graph，输出菜谱组成图和分类图。
+[source,asciidoc]
+----
+== 建模约定
+本文档约定：标题层级解释为 `part-of`。显式 `xref` 的 `rel` 是业务边谓词。标题下第一个扁平描述列表是节点业务字段。
+----
+
+`番茄炒蛋` 是 `recipe`，`鸡蛋` 和 `番茄` 是 `ingredient`，`炒制步骤` 是 `step`。描述列表字段保存 `serving`、`difficulty`、`storage`、`flavor` 等节点属性。显式 xref 的 `rel=is-a` 生成分类边；标题层级由 `policy.ts` 解释为 child-to-parent `part-of`。
+
+TS/JS consumer 从 projection graph 读取 heading nodes、description fields、xref edge evidence 和 `aat:containsDirectly`，生成 `recipe-graph.json`。视图分成三种：`classification.mmd` 展示菜谱、食材、家常菜等分类关系；`composition.mmd` 展示菜谱由食材和步骤组成；`overview.mmd` 把两类关系放在同一图中。
+
+这个案例建立领域建模的第一条原则：结构图不替领域解释做决定。标题层级只是结构事实；`part-of` 是当前菜谱模型的解释政策。

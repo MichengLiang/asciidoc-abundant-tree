@@ -1,0 +1,61 @@
+[#resource-tree-and-order]
+== 资源树与顺序
+
+`aat:containsDirectly` 表达父标题到直接子标题的结构边。该关系来自 logical heading tree。结构边只连接 heading node；代码块、表格、inline anchor 和 raw value object 通过其它事实归属于 heading node。
+
+[source,asciidoc]
+----
+= 知识库
+
+== 配送策略
+
+=== 运力约束
+
+== 计费策略
+----
+
+投影图输出直接父子关系：
+
+[source,turtle]
+----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
+<urn:aat:doc:guide#heading-l1-o0> aat:containsDirectly <urn:aat:doc:guide#heading-l3-o0> .
+<urn:aat:doc:guide#heading-l1-o0> aat:containsDirectly <urn:aat:doc:guide#heading-l7-o0> .
+<urn:aat:doc:guide#heading-l3-o0> aat:containsDirectly <urn:aat:doc:guide#heading-l5-o0> .
+----
+
+直接包含不表达传递闭包。`知识库` 直接包含 `配送策略` 和 `计费策略`；`知识库` 不直接包含 `运力约束`。
+
+`aat:childOrder` 表达标题在同一 parent 的 direct children 中的 1-based 局部顺序。`aat:documentOrder` 表达标题在 logical heading tree preorder traversal 中的 1-based 全局顺序。
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?child ?headline ?childOrder WHERE {
+  ?parent aat:headline "知识库" .
+  ?parent aat:containsDirectly ?child .
+  ?child aat:headline ?headline ;
+         aat:childOrder ?childOrder .
+}
+ORDER BY ?childOrder
+----
+
+整篇文档的标题序列按 numeric `aat:documentOrder` 排序：
+
+[source,sparql]
+----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
+SELECT ?heading ?headline ?order WHERE {
+  ?heading a aat:Heading ;
+           aat:headline ?headline ;
+           aat:documentOrder ?order .
+}
+ORDER BY ?order
+----
+
+source line、relative path、IRI lexical order 和 Turtle textual order 不承担标题顺序。book-entry 输入中，不同源文件可以拥有相同 origin line number；排序字段来自 logical heading tree。
+
+资源树首先是结构事实。领域模型可以把这棵树解释为业务边，例如菜谱案例中的 child-to-parent `part-of`，或冷链案例中的 child-to-parent `governed-by`。这个解释发生在下游 policy 中，不改变 `aat:containsDirectly` 的结构语义。

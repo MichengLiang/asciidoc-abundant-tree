@@ -36,4 +36,6 @@ SELECT ?heading ?headline ?raw ?order WHERE {
 ORDER BY ?order
 ----
 
-这个查询把读者看到的章节树变成程序可遍历的资源树。
+这个查询把读者看到的章节树变成程序可遍历的资源树。读者按标题进入内容；程序按 heading node、containsDirectly 和 documentOrder 重建同一结构。
+
+阅读单位和查询单位共用同一个边界以后，书稿维护动作变得直接。报告可以说“`运力规则` 缺少 required field”，也可以说“`降级条件` 与 `配送策略` 之间存在未声明关系”。这些诊断都能回到标题节点的源文件位置，而不需要把读者带到另一个数据库对象中。

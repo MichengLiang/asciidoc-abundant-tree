@@ -1,7 +1,11 @@
-[#selector-binding]
-== Selector Binding
+[#selector-binding-audit]
+== Selector Binding 与审计
 
 xref target selector 查询 heading label space。命中一个 heading node 时，projection 输出 target heading 和主 relation triple。未命中时，edge evidence 保留 selector 和回源坐标。命中多个 heading node 时，edge evidence 保留候选 heading。
+
+未绑定和多义绑定是源文档事实。下游 lint 根据项目约定判断是否修改源文档。审计报告必须带 source coordinate，使作者或 agent 能回到 xref 出现点。
+
+未绑定 selector 查询：
 
 [source,sparql]
 ----
@@ -30,4 +34,4 @@ SELECT ?edge ?selector ?candidate WHERE {
 }
 ----
 
-未绑定和多义绑定是源文档事实。下游 lint 根据项目约定判断是否需要修改源文档。
+selector audit 的输出不是另一个事实来源。它是 projection facts 的维护视图。报告记录 `kind`、`selector`、`relativePath`、`line` 和候选节点；修订动作仍然发生在源书稿中。

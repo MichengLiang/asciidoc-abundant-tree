@@ -1,0 +1,62 @@
+[#role-and-field-surfaces]
+== 身份与字段表面
+
+role 写在标题 attrlist 的点号 token 位置。它表达 heading node 在当前书稿或领域模型中的身份。
+
+[source,asciidoc]
+----
+[#delivery.policy, status=active, owner=ops]
+== 配送策略
+
+priority:: high
+summary::
+配送策略定义订单进入配送流程后的降级与复核规则。
+
+配送策略当前处于 hmeta:review-state[ready, label=可复核]。
+----
+
+投影为：
+
+[source,turtle]
+----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
+<urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "delivery" ;
+  aat:role "policy" ;
+  aat:status "active" ;
+  aat:owner "ops" ;
+  aat:priority "high" ;
+  aat:summary "配送策略定义订单进入配送流程后的降级与复核规则。" ;
+  aat:review-state "ready" .
+----
+
+selector binding 使用 heading label space。role 是 heading field，提供筛选、报告和下游模型映射入口。下游模型可以把 role 映射为业务 class，也可以只把它作为普通字段消费。role 词表属于书稿或领域模型；每个 role 在同一模型中保持单一含义。
+
+字段表面由字段主体、字段体积、读者可读性和下游消费动作共同决定。
+
+[cols="1,2,2", options="header"]
+|===
+|字段表面 |源表面 |使用条件
+
+|标题 attrlist
+|`[#delivery.policy, status=active]`
+|字段少，字段值短，字段需要在标题处立即可见。
+
+|标题下描述列表
+|`summary::` 后接字段值
+|字段多，字段值长，字段需要多行文本。
+
+|hmeta
+|`hmeta:review-state[ready, label=可复核]`
+|字段与正文句子共同表达。
+
+|source value block
+|`[.release-policy-config, for=delivery]`
+|字段值是 JSON、YAML、locator 或其它复杂 raw。
+
+|xref named attributes
+|`xref:capacity[rel=depends-on, weight=0.8]`
+|字段主体是关系边证据。
+|===
+
+字段进入公共表面后，应被查询、校验、报告或下游模型消费。字段只服务临时作者记忆时，正文说明比结构字段更合适。字段一旦进入图表面，就成为长期维护对象：role coverage、required field、payload schema、source-aware report 都会消费它。

@@ -1,7 +1,7 @@
 [#case-basic-rdf-projection]
 == Basic RDF Projection
 
-Basic RDF Projection 展示投影层核心结构。领域对象是一个小型结构夹具，不引入具体业务语义。
+Basic RDF Projection 展示投影层核心结构。领域对象是一个小型结构夹具；它只使用标题、字段、xref、local target alias 和 hmeta，避免业务语义抢走投影契约的位置。
 
 [horizontal]
 source:: `cases/010-basic-rdf-projection/source/basic-projection.adoc`
@@ -10,6 +10,28 @@ model:: `model/structure-model.ttl`、`model/structure-shapes.ttl`、`model/quer
 reports:: `reports/headings.json`、`reports/xref-evidence.json`、`reports/shacl.md`
 views:: `views/heading-tree.mmd`
 
+源书稿创建一个 process、一个 rule、一个 generated label 节点和一个 evidence 节点：
+
+[source,asciidoc]
+----
+[#structure-example.process, status=draft, owner=docs-team]
+== 结构示例
+
+结构示例要求 xref:required-rule[约束规则, rel=requires, weight=0.7]。
+
+[#required-rule.rule, status=active]
+== 约束规则
+
+priority:: normal
+summary::
+约束规则集中说明结构示例必须满足的条件。
+多行说明保留为同一个标题字段。
+
+约束规则当前处于 hmeta:review-state[ready, label=可复核]。
+----
+
 该案例覆盖 document title heading、manual address label、generated address label、heading direct fields、role、heading tree、explicit relation、default relation、xref evidence、local target alias、SHACL validation 和 Oxigraph 查询。
 
-读者动作是：查看源文档，生成 projection，按 `aat:documentOrder` 打印标题树，按 `aat:XrefEdge` 读取边证据，按 SHACL shape 检查 role 和字段约束。
+`model/query.mjs` 读取 projection，生成两个报告：`headings.json` 按 `aat:documentOrder` 输出 heading tree；`xref-evidence.json` 输出 xref occurrence 的 raw、selector、relation、source line 和 target heading。`structure-shapes.ttl` 检查 heading 是否暴露 headline、source coordinate 和必需字段。
+
+读者动作是：查看源书稿，生成 projection，按 `aat:documentOrder` 打印标题树，按 `aat:XrefEdge` 读取边证据，按 SHACL shape 检查结构约束。这个案例给后续所有业务案例提供投影层基线。
