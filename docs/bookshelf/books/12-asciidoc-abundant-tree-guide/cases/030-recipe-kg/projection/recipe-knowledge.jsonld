@@ -1,0 +1,26 @@
+{
+  "@context": {
+    "kg": "https://micheng.dev/ns/business-kg-demo#",
+    "rel": "https://micheng.dev/ns/asciidoc-relation#",
+    "nodeKind": "kg:nodeKind",
+    "serving": "kg:serving",
+    "isA": { "@id": "rel:is-a", "@type": "@id" },
+    "partOf": { "@id": "rel:part-of", "@type": "@id" }
+  },
+  "@graph": [
+    {
+      "@id": "urn:case:recipe#tomato-egg",
+      "@type": "kg:Node",
+      "nodeKind": "recipe",
+      "serving": "2人份",
+      "isA": "urn:case:recipe#home-dish"
+    },
+    {
+      "@id": "urn:case:recipe#egg",
+      "@type": "kg:Node",
+      "nodeKind": "ingredient",
+      "partOf": "urn:case:recipe#tomato-egg",
+      "isA": "urn:case:recipe#ingredient"
+    }
+  ]
+}

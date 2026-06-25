@@ -5,6 +5,8 @@ xref target selector 查询 heading label space。命中一个 heading node 时�
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
 SELECT ?edge ?selector ?path ?line WHERE {
   ?edge a aat:XrefEdge ;
         aat:targetSelector ?selector ;
@@ -19,6 +21,8 @@ SELECT ?edge ?selector ?path ?line WHERE {
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
 SELECT ?edge ?selector ?candidate WHERE {
   ?edge a aat:XrefEdge ;
         aat:targetSelector ?selector ;

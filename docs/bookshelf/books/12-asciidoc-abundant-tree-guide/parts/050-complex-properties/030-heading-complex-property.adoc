@@ -27,6 +27,8 @@ steps:
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
 <urn:aat:doc:...#heading-l1-o0>
   aat:release-policy-config <urn:aat:doc:...#payload-l4-o0> ;
   aat:review-playbook <urn:aat:doc:...#payload-l10-o0> .

@@ -1,0 +1,11 @@
+{
+  "@context": {
+    "aat": "https://micheng.dev/ns/asciidoc-abundant-tree#",
+    "headline": "aat:headline",
+    "addressLabel": "aat:addressLabel"
+  },
+  "@id": "urn:case:cross-book#book-a-heading-l3-c1",
+  "@type": "aat:Heading",
+  "headline": "共享术语",
+  "addressLabel": "shared-term"
+}

@@ -1,0 +1,8 @@
+{
+  "@context": {
+    "rel": "https://micheng.dev/ns/asciidoc-relation#",
+    "sameConceptAs": { "@id": "rel:same-concept-as", "@type": "@id" }
+  },
+  "@id": "urn:case:cross-book#book-a-heading-l3-c1",
+  "sameConceptAs": "urn:case:cross-book#book-b-heading-l3-c1"
+}

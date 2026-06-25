@@ -7,6 +7,8 @@ RDF 1.2 projection 的公共查询面围绕 heading node、xref edge evidence、
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
 SELECT ?heading ?headline ?path ?start ?end WHERE {
   ?heading a aat:Heading ;
            aat:addressLabel "delivery" ;
@@ -21,6 +23,9 @@ SELECT ?heading ?headline ?path ?start ?end WHERE {
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT ?edge ?predicate ?targetHeadline ?line ?raw WHERE {
   ?source aat:addressLabel "delivery" .
   ?edge a aat:XrefEdge ;

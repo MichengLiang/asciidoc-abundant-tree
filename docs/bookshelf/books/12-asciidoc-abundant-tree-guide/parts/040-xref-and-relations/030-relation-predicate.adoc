@@ -12,11 +12,16 @@ xref:capacity[运力规则, rel=depends-on]
 
 [source,turtle]
 ----
-<urn:aat:doc:guide#heading-l1-c1> aat:addressLabel "delivery" ;
-  rel:depends-on <urn:aat:doc:guide#heading-l4-c1> .
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
 
-<urn:aat:doc:guide#heading-l4-c1> aat:addressLabel "capacity" .
+<urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "delivery" ;
+  rel:depends-on <urn:aat:doc:guide#heading-l4-o0> .
+
+<urn:aat:doc:guide#heading-l4-o0> aat:addressLabel "capacity" .
 ----
+
+`rel` 值是普通 token 时，predicate 使用 `rel:` 命名空间下的稳定 IRI-safe 映射。`rel` 值是绝对 IRI 时，predicate 使用该 IRI。`rel` 值是已知 CURIE 时，predicate 使用展开后的 IRI。`rel` 不能映射为合法 IRI 时，edge evidence 保留 `aat:rel`，主 relation triple 不生成。
 
 `rel` 的业务语义由当前书稿或领域模型的受控词表定义。投影器只保存源表面并生成关系谓词。
 

@@ -1,0 +1,7 @@
+[
+  {
+    "local": "冷链出库放行策略",
+    "external": "https://example.org/ontology/ReleasePolicy",
+    "relation": "aligns-with"
+  }
+]

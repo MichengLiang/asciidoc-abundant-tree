@@ -1,0 +1,11 @@
+@prefix story: <https://micheng.dev/ns/narrative#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+
+<urn:case:narrative#heading-l6-c1> a story:Scene;
+  story:name "雨夜车站";
+  rel:features <urn:case:narrative#heading-l3-c1>;
+  rel:unlocks <urn:case:narrative#heading-l11-c1>.
+
+<urn:case:narrative#heading-l11-c1> a story:Quest;
+  story:name "寻找车票";
+  rel:requires <urn:case:narrative#heading-l16-c1>.

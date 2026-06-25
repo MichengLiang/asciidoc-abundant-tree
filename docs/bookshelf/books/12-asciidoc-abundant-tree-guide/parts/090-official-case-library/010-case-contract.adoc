@@ -16,11 +16,11 @@ views/       面向消费者动作的视图或 adapter 输出
 
 案例库级报告位于 `cases/reports.case-inventory.json`。它记录每个案例的五类目录、projection 文件格式和文件数量。
 
-案例库检查命令使用公开 npm 包环境和本地案例脚本：
+案例库清单检查命令读取本书案例目录，验证每个案例都包含 `source/`、`projection/`、`model/`、`reports/` 和 `views/`，并检查 projection 目录中存在 Turtle 与 JSON-LD 文件：
 
 [source,bash]
 ----
 pnpm run generate
 ----
 
-检查报告服务审查和学习。源书稿仍是作者编辑对象。
+该命令生成案例库存量报告。各案例的 projection、业务报告和视图是案例产物；源书稿仍是作者编辑对象。

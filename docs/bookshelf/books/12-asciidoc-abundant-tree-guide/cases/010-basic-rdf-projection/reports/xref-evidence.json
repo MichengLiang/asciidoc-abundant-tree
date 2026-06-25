@@ -1,0 +1,9 @@
+[
+  {
+    "source": "结构示例",
+    "relation": "requires",
+    "target": "约束规则",
+    "line": 8,
+    "raw": "xref:required-rule[约束规则, rel=requires, weight=0.7]"
+  }
+]

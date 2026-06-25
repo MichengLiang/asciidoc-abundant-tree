@@ -16,10 +16,12 @@ role 写在标题 attrlist 的点号 token 位置。它表达 heading node 在�
 
 [source,turtle]
 ----
-<urn:aat:doc:guide#heading-l1-c1> aat:addressLabel "delivery" ;
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
+<urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "delivery" ;
   aat:role "policy" .
 
-<urn:aat:doc:guide#heading-l4-c1> aat:addressLabel "capacity" ;
+<urn:aat:doc:guide#heading-l4-o0> aat:addressLabel "capacity" ;
   aat:role "rule" .
 ----
 

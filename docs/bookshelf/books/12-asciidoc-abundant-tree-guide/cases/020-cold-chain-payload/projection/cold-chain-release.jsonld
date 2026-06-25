@@ -1,0 +1,23 @@
+{
+  "@context": {
+    "aat": "https://micheng.dev/ns/asciidoc-abundant-tree#",
+    "rel": "https://micheng.dev/ns/asciidoc-relation#"
+  },
+  "@graph": [
+    {
+      "@id": "urn:case:cold-chain-payload#heading-l3-c1",
+      "@type": "aat:Heading",
+      "aat:addressLabel": "cold-chain-release",
+      "aat:headline": "冷链出库放行策略",
+      "aat:role": "policy",
+      "rel:depends-on": { "@id": "urn:case:cold-chain-payload#heading-l37-c1" }
+    },
+    {
+      "@id": "urn:case:cold-chain-payload#heading-l37-c1",
+      "@type": "aat:Heading",
+      "aat:addressLabel": "temperature-audit",
+      "aat:headline": "温控审计规则",
+      "aat:role": "rule"
+    }
+  ]
+}

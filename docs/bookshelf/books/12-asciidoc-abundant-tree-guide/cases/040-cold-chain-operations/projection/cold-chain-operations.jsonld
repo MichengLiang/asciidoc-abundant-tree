@@ -1,0 +1,27 @@
+{
+  "@context": {
+    "kg": "https://micheng.dev/ns/business-kg-demo#",
+    "rel": "https://micheng.dev/ns/asciidoc-relation#",
+    "nodeKind": "kg:nodeKind",
+    "minTemperature": "kg:minTemperature",
+    "maxTemperature": "kg:maxTemperature",
+    "triggers": { "@id": "rel:triggers", "@type": "@id" },
+    "governedBy": { "@id": "rel:governed-by", "@type": "@id" }
+  },
+  "@graph": [
+    {
+      "@id": "urn:case:cold-chain#policy",
+      "@type": "kg:Node",
+      "nodeKind": "policy",
+      "minTemperature": "2C",
+      "maxTemperature": "8C",
+      "triggers": "urn:case:cold-chain#excursion-process"
+    },
+    {
+      "@id": "urn:case:cold-chain#shipment",
+      "@type": "kg:Node",
+      "nodeKind": "shipment",
+      "governedBy": "urn:case:cold-chain#policy"
+    }
+  ]
+}

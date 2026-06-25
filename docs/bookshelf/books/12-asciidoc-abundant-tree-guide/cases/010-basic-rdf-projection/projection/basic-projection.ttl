@@ -1,0 +1,16 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+
+<urn:case:basic#heading-l3-c1> a aat:Heading;
+  aat:addressLabel "structure-example";
+  aat:headline "结构示例";
+  aat:role "process";
+  aat:status "draft";
+  rel:requires <urn:case:basic#heading-l8-c1>.
+
+<urn:case:basic#heading-l8-c1> a aat:Heading;
+  aat:addressLabel "required-rule", "rule-query-example";
+  aat:headline "约束规则";
+  aat:role "rule";
+  aat:status "active";
+  aat:priority "normal".

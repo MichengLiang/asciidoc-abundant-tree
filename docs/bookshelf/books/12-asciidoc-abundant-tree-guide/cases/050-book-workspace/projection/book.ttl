@@ -1,0 +1,10 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+
+<urn:case:book#source> a aat:AsciiDocSourceDocument;
+  aat:sourceFile <urn:case:book#source-book>,
+                 <urn:case:book#source-preface>,
+                 <urn:case:book#source-object>,
+                 <urn:case:book#source-glossary>.
+
+<urn:case:book#source-object> a aat:SourceFile;
+  aat:relativePath "source/parts/010-object/010-object-boundary.adoc".

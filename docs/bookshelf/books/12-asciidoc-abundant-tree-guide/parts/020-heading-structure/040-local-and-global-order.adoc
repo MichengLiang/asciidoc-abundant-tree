@@ -5,15 +5,17 @@
 
 [source,turtle]
 ----
-<urn:aat:doc:guide#heading-l3-c1> aat:addressLabel "delivery" ;
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
+<urn:aat:doc:guide#heading-l3-o0> aat:addressLabel "delivery" ;
   aat:childOrder 1 ;
   aat:documentOrder 2 .
 
-<urn:aat:doc:guide#heading-l7-c1> aat:addressLabel "billing" ;
+<urn:aat:doc:guide#heading-l7-o0> aat:addressLabel "billing" ;
   aat:childOrder 2 ;
   aat:documentOrder 4 .
 
-<urn:aat:doc:guide#heading-l5-c1> aat:addressLabel "capacity" ;
+<urn:aat:doc:guide#heading-l5-o0> aat:addressLabel "capacity" ;
   aat:childOrder 1 ;
   aat:documentOrder 3 .
 ----
@@ -22,6 +24,8 @@
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
 SELECT ?heading ?headline ?order WHERE {
   ?heading a aat:Heading ;
            aat:headline ?headline ;

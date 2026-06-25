@@ -1,0 +1,10 @@
+{
+  "@context": { "aat": "https://micheng.dev/ns/asciidoc-abundant-tree#" },
+  "@graph": [
+    {
+      "@id": "urn:case:book#source-object",
+      "@type": "aat:SourceFile",
+      "aat:relativePath": "source/parts/010-object/010-object-boundary.adoc"
+    }
+  ]
+}

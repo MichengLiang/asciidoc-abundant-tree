@@ -1,0 +1,8 @@
+{
+  "@context": {
+    "ex": "https://micheng.dev/ns/external-demo#",
+    "alignsWith": { "@id": "ex:aligns-with", "@type": "@id" }
+  },
+  "@id": "urn:case:external#heading-l3-c1",
+  "alignsWith": "https://example.org/ontology/ReleasePolicy"
+}

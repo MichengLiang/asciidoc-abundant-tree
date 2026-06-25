@@ -5,6 +5,9 @@ complex property 是值为 raw value object 的字段。它把 JSON、YAML 或�
 
 [source,asciidoc]
 ------
+[#cold-chain-release.policy]
+== 冷链出库放行策略
+
 [.release-policy-config, for=cold-chain-release]
 [source,json]
 ----
@@ -21,7 +24,9 @@ complex property 是值为 raw value object 的字段。它把 JSON、YAML 或�
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
 <urn:aat:doc:...#heading-l3-o0> aat:release-policy-config <urn:aat:doc:...#payload-l10-o0> .
 ----
 
-complex property 保留复杂源表面；下游消费者按字段谓词选择模型，按 format 解析 raw。
+complex property 保留复杂源表面。heading complex property 归属于 heading node；xref edge complex property 归属于 xref edge evidence。下游消费者按字段谓词选择模型，按 format 解析 raw。

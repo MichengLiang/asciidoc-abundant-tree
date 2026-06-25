@@ -1,0 +1,10 @@
+== 版权页
+
+Copyright © 2026 弥澄亮。
+
+本书随 `asciidoc-abundant-tree` 项目发布。项目源码、示例和包入口以公开仓库与 npm 包为准。
+
+[horizontal]
+源码仓库:: link:https://github.com/MichengLiang/asciidoc-abundant-tree[]
+npm 包:: link:https://www.npmjs.com/package/asciidoc-abundant-tree[]
+许可证:: Apache-2.0

@@ -46,6 +46,9 @@ writeFileSync("projection/delivery.jsonld", projection.jsonLd);
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
+
 <urn:aat:doc:...#heading-l3-o0> a aat:Heading ;
   aat:addressLabel "delivery" ;
   aat:headline "配送策略" ;
@@ -73,6 +76,9 @@ writeFileSync("projection/delivery.jsonld", projection.jsonLd);
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+PREFIX rel: <https://micheng.dev/ns/asciidoc-relation#>
+
 SELECT ?policyHeadline ?targetHeadline ?path ?line WHERE {
   ?policy aat:addressLabel "delivery" ;
           aat:role "policy" ;

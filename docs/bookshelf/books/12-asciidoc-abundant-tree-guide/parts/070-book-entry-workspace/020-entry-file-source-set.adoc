@@ -17,6 +17,8 @@ entry file 是 book-entry mode 的显式输入。source set 是 entry file 通�
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
 SELECT ?path WHERE {
   ?sourceDoc a aat:AsciiDocSourceDocument ;
              aat:sourceFile ?sourceFile .

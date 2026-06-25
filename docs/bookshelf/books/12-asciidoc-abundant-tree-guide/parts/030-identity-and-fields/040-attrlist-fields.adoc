@@ -13,7 +13,9 @@
 
 [source,turtle]
 ----
-<urn:aat:doc:guide#heading-l1-c1> aat:addressLabel "delivery" ;
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
+<urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "delivery" ;
   aat:status "active" ;
   aat:owner "ops" .
 ----

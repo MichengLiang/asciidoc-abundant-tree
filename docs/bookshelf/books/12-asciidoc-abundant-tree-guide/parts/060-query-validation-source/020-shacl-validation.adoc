@@ -5,6 +5,12 @@ SHACL shape graph 把 projection graph 上的事实变成可检查约束。role 
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix ex: <https://micheng.dev/ns/structure-model#> .
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
 ex:ProcessShape a sh:NodeShape ;
   sh:targetClass ex:ProcessHeading ;
   sh:property [
@@ -20,5 +26,7 @@ ex:ProcessShape a sh:NodeShape ;
     sh:message "process heading must require at least one rule heading"
   ] .
 ----
+
+role mapping 是下游模型事实。消费者读取 `aat:role "process"` 后，为对应 heading 添加 `rdf:type ex:ProcessHeading`；SHACL shape 再检查该 class 上的字段和关系约束。
 
 校验报告返回 focus node。消费者再从 projection graph 读取该 heading 的 `aat:relativePath`、`aat:headingLine` 和 `aat:headline`，把 violation 定位回源文档。

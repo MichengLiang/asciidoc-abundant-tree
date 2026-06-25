@@ -1,0 +1,13 @@
+@prefix k8s: <https://micheng.dev/ns/k8s-graph#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+
+<urn:case:k8s#heading-l3-c1> a k8s:Service;
+  k8s:name "orders-service";
+  rel:depends-on <urn:case:k8s#heading-l17-c1>;
+  rel:routes-to <urn:case:k8s#heading-l20-c1>.
+
+<urn:case:k8s#heading-l17-c1> a k8s:Database;
+  k8s:name "orders-db".
+
+<urn:case:k8s#heading-l20-c1> a k8s:Ingress;
+  k8s:name "public-ingress".

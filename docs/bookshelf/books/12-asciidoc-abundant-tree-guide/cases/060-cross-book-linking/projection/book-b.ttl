@@ -1,0 +1,5 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+
+<urn:case:cross-book#book-b-heading-l3-c1> a aat:Heading;
+  aat:headline "共享术语";
+  aat:addressLabel "shared-term".

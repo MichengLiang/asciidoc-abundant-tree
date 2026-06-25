@@ -1,0 +1,151 @@
+{
+  "cases": [
+    {
+      "case": "010-basic-rdf-projection",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/010-basic-rdf-projection/projection/basic-projection.jsonld",
+          "cases/010-basic-rdf-projection/projection/basic-projection.ttl"
+        ]
+      },
+      "fileCount": 10
+    },
+    {
+      "case": "020-cold-chain-payload",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/020-cold-chain-payload/projection/cold-chain-release.jsonld",
+          "cases/020-cold-chain-payload/projection/cold-chain-release.ttl"
+        ]
+      },
+      "fileCount": 8
+    },
+    {
+      "case": "030-recipe-kg",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/030-recipe-kg/projection/recipe-knowledge.jsonld",
+          "cases/030-recipe-kg/projection/recipe-knowledge.ttl"
+        ]
+      },
+      "fileCount": 9
+    },
+    {
+      "case": "040-cold-chain-operations",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/040-cold-chain-operations/projection/cold-chain-operations.jsonld",
+          "cases/040-cold-chain-operations/projection/cold-chain-operations.ttl"
+        ]
+      },
+      "fileCount": 9
+    },
+    {
+      "case": "050-book-workspace",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/050-book-workspace/projection/book.jsonld",
+          "cases/050-book-workspace/projection/book.ttl"
+        ]
+      },
+      "fileCount": 12
+    },
+    {
+      "case": "060-cross-book-linking",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/060-cross-book-linking/projection/book-a.jsonld",
+          "cases/060-cross-book-linking/projection/book-a.ttl",
+          "cases/060-cross-book-linking/projection/book-b.jsonld",
+          "cases/060-cross-book-linking/projection/book-b.ttl",
+          "cases/060-cross-book-linking/projection/workspace.jsonld",
+          "cases/060-cross-book-linking/projection/workspace.ttl"
+        ]
+      },
+      "fileCount": 12
+    },
+    {
+      "case": "070-multimodal-asset-catalog",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/070-multimodal-asset-catalog/projection/assets.jsonld",
+          "cases/070-multimodal-asset-catalog/projection/assets.ttl"
+        ]
+      },
+      "fileCount": 9
+    },
+    {
+      "case": "080-document-provenance-rag",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/080-document-provenance-rag/projection/provenance-index.jsonld",
+          "cases/080-document-provenance-rag/projection/provenance-index.ttl"
+        ]
+      },
+      "fileCount": 9
+    },
+    {
+      "case": "090-k8s-microservice-graph",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/090-k8s-microservice-graph/projection/services.jsonld",
+          "cases/090-k8s-microservice-graph/projection/services.ttl"
+        ]
+      },
+      "fileCount": 10
+    },
+    {
+      "case": "100-screenplay-game-narrative",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/100-screenplay-game-narrative/projection/narrative.jsonld",
+          "cases/100-screenplay-game-narrative/projection/narrative.ttl"
+        ]
+      },
+      "fileCount": 9
+    },
+    {
+      "case": "110-external-ttl-neo4j-adapter",
+      "missingDirs": [],
+      "projection": {
+        "turtle": true,
+        "jsonld": true,
+        "files": [
+          "cases/110-external-ttl-neo4j-adapter/projection/domain.jsonld",
+          "cases/110-external-ttl-neo4j-adapter/projection/domain.ttl"
+        ]
+      },
+      "fileCount": 10
+    }
+  ]
+}

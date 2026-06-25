@@ -1,0 +1,6 @@
+@prefix asset: <https://micheng.dev/ns/asset-catalog#>.
+
+<urn:case:asset#rain-street> a asset:ImageAsset;
+  asset:file "assets/rain-street.jpg";
+  asset:location "福州";
+  asset:tag "雨夜", "霓虹".

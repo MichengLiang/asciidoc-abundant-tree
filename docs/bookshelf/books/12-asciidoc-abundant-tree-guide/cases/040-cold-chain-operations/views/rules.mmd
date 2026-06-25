@@ -1,0 +1,4 @@
+graph TD
+  Policy["2-8C温控规则"] -->|triggers condition=超温超过15分钟| Process["温度偏离处置流程"]
+  Shipment["批次运输任务CT-2026-0618"] -->|governed-by| Policy
+  Sensor["温度记录仪T09"] -->|monitors confidence=0.98| Payload["疫苗箱A17"]

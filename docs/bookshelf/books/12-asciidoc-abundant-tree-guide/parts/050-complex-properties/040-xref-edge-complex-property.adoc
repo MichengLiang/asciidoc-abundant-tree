@@ -24,6 +24,8 @@ reason: 放行策略必须读取温控审计结果。
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
 <urn:aat:doc:...#xref-edge-l3-c12-o0> a aat:XrefEdge ;
   aat:dependency-evidence <urn:aat:doc:...#payload-l9-o0> .
 

@@ -12,6 +12,8 @@
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
 <urn:aat:doc:...#heading-l1-o0> aat:references <urn:aat:doc:...#heading-l6-o0> .
 ----
 

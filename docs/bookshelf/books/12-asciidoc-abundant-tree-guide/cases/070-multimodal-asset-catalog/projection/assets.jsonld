@@ -1,0 +1,13 @@
+{
+  "@context": {
+    "asset": "https://micheng.dev/ns/asset-catalog#",
+    "file": "asset:file",
+    "location": "asset:location",
+    "tag": "asset:tag"
+  },
+  "@id": "urn:case:asset#rain-street",
+  "@type": "asset:ImageAsset",
+  "file": "assets/rain-street.jpg",
+  "location": "福州",
+  "tag": ["雨夜", "霓虹"]
+}

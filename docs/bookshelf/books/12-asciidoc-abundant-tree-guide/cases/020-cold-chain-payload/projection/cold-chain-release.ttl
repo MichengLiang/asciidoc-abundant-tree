@@ -1,0 +1,17 @@
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+
+<urn:case:cold-chain-payload#heading-l3-c1> a aat:Heading;
+  aat:addressLabel "cold-chain-release", "rel-release-temperature-audit";
+  aat:headline "冷链出库放行策略";
+  aat:role "policy";
+  aat:release-policy-config <urn:case:cold-chain-payload#raw-l8-c1>;
+  aat:review-playbook <urn:case:cold-chain-payload#raw-l17-c1>;
+  rel:depends-on <urn:case:cold-chain-payload#heading-l37-c1>.
+
+<urn:case:cold-chain-payload#raw-l8-c1> aat:format "json";
+  aat:forSelector "cold-chain-release";
+  aat:raw "{\"temperatureWindowCelsius\":{\"min\":2,\"max\":8}}".
+
+<urn:case:cold-chain-payload#raw-l17-c1> aat:format "yaml";
+  aat:raw "review_team: quality-ops".

@@ -12,6 +12,8 @@ xref named attributes 投影为 xref edge evidence 上的 fields。字段主体�
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
 <urn:aat:doc:guide#xref-edge-l1-c8-o0> a aat:XrefEdge ;
   aat:rel "depends-on" ;
   aat:weight "0.8" ;

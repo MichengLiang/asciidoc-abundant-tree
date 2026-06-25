@@ -1,0 +1,15 @@
+{
+  "@context": {
+    "story": "https://micheng.dev/ns/narrative#",
+    "rel": "https://micheng.dev/ns/asciidoc-relation#",
+    "name": "story:name",
+    "features": { "@id": "rel:features", "@type": "@id" },
+    "unlocks": { "@id": "rel:unlocks", "@type": "@id" },
+    "requires": { "@id": "rel:requires", "@type": "@id" }
+  },
+  "@id": "urn:case:narrative#heading-l6-c1",
+  "@type": "story:Scene",
+  "name": "雨夜车站",
+  "features": "urn:case:narrative#heading-l3-c1",
+  "unlocks": "urn:case:narrative#heading-l11-c1"
+}

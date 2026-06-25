@@ -1,0 +1,6 @@
+@prefix provx: <https://micheng.dev/ns/document-provenance#>.
+
+<urn:case:rag#chunk-001> a provx:Chunk;
+  provx:sourceFile "docs/report.pdf";
+  provx:page "12";
+  provx:supports <urn:case:rag#claim-001>.

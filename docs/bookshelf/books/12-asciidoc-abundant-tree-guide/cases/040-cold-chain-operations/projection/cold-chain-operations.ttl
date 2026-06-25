@@ -1,0 +1,12 @@
+@prefix kg: <https://micheng.dev/ns/business-kg-demo#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+
+<urn:case:cold-chain#policy> a kg:Node;
+  kg:nodeKind "policy";
+  kg:minTemperature "2C";
+  kg:maxTemperature "8C";
+  rel:triggers <urn:case:cold-chain#excursion-process>.
+
+<urn:case:cold-chain#shipment> a kg:Node;
+  kg:nodeKind "shipment";
+  rel:governed-by <urn:case:cold-chain#policy>.

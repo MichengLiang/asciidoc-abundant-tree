@@ -5,6 +5,9 @@ hmeta inline metadata 把短字段嵌入正文句子。读者看到显示文本�
 
 [source,asciidoc]
 ----
+[.rule]
+== 约束规则
+
 约束规则当前处于 hmeta:review-state[ready, label=可复核]。
 ----
 
@@ -12,7 +15,9 @@ hmeta inline metadata 把短字段嵌入正文句子。读者看到显示文本�
 
 [source,turtle]
 ----
-<urn:aat:doc:guide#heading-l1-c1> aat:role "rule" ;
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
+<urn:aat:doc:guide#heading-l2-o0> aat:role "rule" ;
   aat:review-state "ready" .
 ----
 

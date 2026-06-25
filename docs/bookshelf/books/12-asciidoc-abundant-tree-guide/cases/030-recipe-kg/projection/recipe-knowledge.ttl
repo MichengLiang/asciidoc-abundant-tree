@@ -1,0 +1,12 @@
+@prefix kg: <https://micheng.dev/ns/business-kg-demo#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+
+<urn:case:recipe#tomato-egg> a kg:Node;
+  kg:nodeKind "recipe";
+  kg:serving "2人份";
+  rel:is-a <urn:case:recipe#home-dish>.
+
+<urn:case:recipe#egg> a kg:Node;
+  kg:nodeKind "ingredient";
+  rel:part-of <urn:case:recipe#tomato-egg>;
+  rel:is-a <urn:case:recipe#ingredient>.

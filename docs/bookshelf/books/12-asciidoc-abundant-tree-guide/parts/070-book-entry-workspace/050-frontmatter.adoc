@@ -1,10 +1,16 @@
 [#frontmatter]
 == Frontmatter
 
-frontmatter 保存读者进入书籍对象所需的出版信息、摘要、前言、致谢和引言。它位于 `book.adoc` 中正文 parts 之前。
+frontmatter 保存读者进入书籍对象所需的出版信息、摘要、前言、致谢和引言。它位于 `book.adoc` 中正文 parts 之前。半书名页、标题页和版权页提供书籍身份；摘要和引言提供对象入口；前言记录阅读路径和写作坐标。
 
 [source,asciidoc]
 ----
+include::frontmatter/half-title.adoc[]
+
+include::frontmatter/title-page.adoc[]
+
+include::frontmatter/copyright.adoc[]
+
 [abstract]
 \include::frontmatter/abstract.adoc[]
 

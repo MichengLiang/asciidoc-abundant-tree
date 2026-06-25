@@ -18,6 +18,9 @@ xref 位于某个 heading slice 中。该 heading node 是关系 source。xref t
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
+
 <urn:aat:doc:...#heading-l1-o0> rel:depends-on <urn:aat:doc:...#heading-l6-o0> .
 
 <urn:aat:doc:...#xref-edge-l4-c7-o0> a aat:XrefEdge ;

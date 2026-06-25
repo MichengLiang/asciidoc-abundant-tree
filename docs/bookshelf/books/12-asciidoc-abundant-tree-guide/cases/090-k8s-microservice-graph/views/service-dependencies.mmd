@@ -1,0 +1,3 @@
+graph TD
+  Ingress["public-ingress"] -->|routes-to| Service["orders-service"]
+  Service -->|depends-on| Db["orders-db"]

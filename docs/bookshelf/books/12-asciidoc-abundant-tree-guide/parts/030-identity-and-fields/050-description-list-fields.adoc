@@ -20,7 +20,9 @@ summary::
 
 [source,turtle]
 ----
-<urn:aat:doc:guide#heading-l1-c1> aat:addressLabel "capacity" ;
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+
+<urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "capacity" ;
   aat:priority "normal" ;
   aat:summary "运力规则集中说明配送容量、降级阈值和人工复核条件。\n多行说明保留为同一个字段值。" .
 ----

@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    { "label": "番茄炒蛋", "roles": ["recipe"], "line": "6" },
+    { "label": "鸡蛋", "roles": ["ingredient"], "line": "14" },
+    { "label": "番茄", "roles": ["ingredient"], "line": "22" }
+  ],
+  "edges": [
+    { "source": "鸡蛋", "relation": "part-of", "target": "番茄炒蛋", "origin": "hierarchy-policy", "line": "14" }
+  ]
+}

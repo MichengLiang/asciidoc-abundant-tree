@@ -5,6 +5,10 @@ xref edge evidence 保存关系边在源文档中的出现点、raw、selector�
 
 [source,turtle]
 ----
+@prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
 <urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l8-o0> .
 
 <urn:aat:doc:...#xref-edge-l6-c8-o0> a aat:XrefEdge ;

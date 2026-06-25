@@ -20,6 +20,8 @@
 
 [source,sparql]
 ----
+PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+
 SELECT ?configRaw ?playbookRaw ?evidenceRaw WHERE {
   ?policy aat:addressLabel "cold-chain-release" ;
           aat:release-policy-config ?config ;

@@ -1,0 +1,3 @@
+@prefix ex: <https://micheng.dev/ns/external-demo#>.
+
+<urn:case:external#heading-l3-c1> ex:aligns-with <https://example.org/ontology/ReleasePolicy>.
