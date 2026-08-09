@@ -1,7 +1,7 @@
 [#case-book-workspace]
 == Book Workspace
 
-Book Workspace 展示多文件书稿的 source-aware projection。领域对象是一本文档书；它由 entry file、frontmatter、parts、backmatter 和术语表共同组成。
+Book Workspace 把一本多文件书稿作为投影对象。领域对象是书籍本身：entry file、frontmatter、parts、chapters、backmatter、glossary、bibliography 和 index 共同构成长期知识人工制品。
 
 [horizontal]
 source:: `cases/050-book-workspace/source/book.adoc`、`source/frontmatter/`、`source/parts/`、`source/backmatter/`
@@ -10,20 +10,33 @@ model:: `model/xref-audit.ts`、`model/source-set-report.ts`
 reports:: `reports/source-set.json`、`reports/xref-audit.json`、`reports/index-terms.json`
 views:: `views/book-outline.mmd`
 
-entry file 通过 include graph 构造 logical document：
+=== 源书稿
 
 [source,asciidoc]
 ----
 = Book Workspace Demo
 :doctype: book
 
-\include::frontmatter/preface.adoc[]
+include::frontmatter/preface.adoc[]
 
-\include::parts/010-object/010-object-boundary.adoc[]
+= 第一部：对象
 
-\include::backmatter/glossary.adoc[]
+include::parts/010-object/010-object-boundary.adoc[]
+
+[glossary]
+include::backmatter/glossary.adoc[]
 ----
 
-book-entry mode 让消费者在整本书层面查询 heading tree，同时保留每个 heading 的 origin source file 和 origin line。`source-set-report.ts` 读取 source file reconstruction surface，输出参与书稿构造的源文件集合。`xref-audit.ts` 检查 unresolved、ambiguous 和 unused stable ID，报告记录 relativePath 和 line。
+entry file 保存书籍的整体顺序。included files 保存可维护章节。book-entry mode 构造 logical document，使整本书拥有统一 heading tree；line origin 把每个 logical line 指回原始 source file。
 
-该案例展示 frontmatter、parts、chapters、backmatter、glossary、bibliography 和 index 的工程意义：书籍不是散落页面，而是长期可维护、可引用、可索引、可回源的知识人工制品。
+=== 书籍结构
+
+frontmatter 提供书籍身份、摘要、前言和阅读入口。parts 与 chapters 承担正文论证。backmatter 提供术语表、参考文献、附录和索引。source-order notation 保留插入空间；stable ID 支撑长期 xref；indexterm 支撑书后检索。
+
+=== 输出表面
+
+`source-set-report.ts` 生成 `source-set.json`，列出 entry file 通过 include graph 到达的源文件。`xref-audit.ts` 生成 `xref-audit.json`，检查 unresolved、ambiguous 和 unused stable ID。`book-outline.mmd` 按 `aat:documentOrder` 输出书籍大纲。
+
+=== 回源意义
+
+书籍结构的工程意义在于长期维护：书籍不是散落页面，而是可投影、可审计、可引用、可索引、可回源的知识对象。查询命中某个 heading 后，report 指向 origin source file，而不是 logical document 的临时行号。

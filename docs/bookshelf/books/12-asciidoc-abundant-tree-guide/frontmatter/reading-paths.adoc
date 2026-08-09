@@ -2,12 +2,12 @@
 
 AsciiDoc 作者从第一部读到第四部，先掌握标题节点、字段、引用和复杂属性的源表面，再进入第六部理解多文件书稿组织。
 
-TypeScript / JavaScript 开发者从第一部建立投影闭环，接着阅读第五部的 RDF/JS、SPARQL、SHACL 和报告章节，再进入第八部复制官方案例。
+TypeScript / JavaScript 开发者从第一部建立投影闭环，接着阅读第五部的 RDF/JS、SPARQL、SHACL 和报告章节，再进入第八部复制领域闭环。
 
 领域建模者从第七部开始建立 role、rel、field、payload schema 和 hierarchy policy，再回到第二部到第四部核对每种建模表面的投影规则。
 
 书籍维护者阅读第六部和后置附录，使用 book-entry、frontmatter、parts、chapters、backmatter、术语表、参考文献和索引维护长期书稿。
 
-AI agent 操作者重点阅读第一部、第五部和第八部。source coordinate、source-aware report 和案例目录把查询结果连接到可编辑源文件。
+AI agent 操作者重点阅读第一部、第五部和第八部。source coordinate、source-aware report 和领域闭环目录把查询结果连接到可编辑源文件。
 
 RDF 与知识图谱工程师阅读第二部到第五部，核对 heading node、xref edge evidence、raw value object、RDF 1.2 reifier、SHACL 和 SPARQL 查询面。

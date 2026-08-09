@@ -1,7 +1,7 @@
 [#case-cold-chain-payload]
 == Cold Chain Payload
 
-Cold Chain Payload 展示 complex property 消费闭环。领域对象是冷链药品出库放行策略；复杂信息包括策略 JSON 配置、复核手册 YAML 和依赖关系 YAML 证据。
+Cold Chain Payload 把复杂属性放入一条冷链放行闭环。领域对象是冷链药品出库放行策略；复杂信息包括策略 JSON 配置、复核手册 YAML 和依赖关系 YAML 证据。
 
 [horizontal]
 source:: `cases/020-cold-chain-payload/source/cold-chain-release.adoc`
@@ -10,25 +10,44 @@ model:: `model/payload-schema.ts`、`model/consume-payloads.ts`
 reports:: `reports/payload-summary.json`、`reports/source-lines.md`
 views:: `views/release-policy.mmd`
 
-源书稿把策略本身写成 `.policy` heading，并把三段复杂信息挂到节点或边上：
+=== 源书稿
+
+源书稿把策略标题写成 heading node，把两个复杂字段挂到该节点，把一份依赖证据挂到 xref edge evidence：
 
 [source,asciidoc]
 ------
 [#cold-chain-release.policy, status=active, owner=quality-ops]
 == 冷链出库放行策略
 
-冷链出库放行策略依赖 xref:temperature-audit[温控审计规则, rel=depends-on, weight=0.9, dependency-evidence=rel-release-temperature-audit]。
+冷链出库放行策略依赖 xref:temperature-audit[
+  温控审计规则,
+  rel=depends-on,
+  weight=0.9,
+  dependency-evidence=rel-release-temperature-audit
+]。
 
 [.release-policy-config, for=cold-chain-release]
 [source,json]
 ----
 {
-  "temperatureWindowCelsius": {"min": 2, "max": 8},
+  "temperatureWindowCelsius": { "min": 2, "max": 8 },
   "manualReviewWhen": ["sensor_gap", "route_exception"]
 }
 ----
 ------
 
-`release-policy-config` 和 `review-playbook` 是 heading complex properties；`dependency-evidence` 是 xref edge complex property。TS/JS consumer 按 field predicate 选择 schema，按 `aat:format` 选择 parser，再把解析摘要写入 `payload-summary.json`。
+`release-policy-config` 是 heading complex property。`dependency-evidence` 是 edge complex property。两者都投影为 raw value object；区别在于一个描述策略节点，一个描述依赖关系的证据。
 
-这个案例的关键不是冷链业务本身，而是复杂信息的落位：策略配置属于 heading，依赖证据属于 edge evidence。source-aware report 保存 payload field、format、source line 和解析结果，使作者能回到对应 source value block 修改配置或证据。
+=== Schema 消费
+
+`payload-schema.ts` 定义策略配置、复核手册和依赖证据的结构。`consume-payloads.ts` 按 field predicate 选择 schema，按 `aat:format` 选择 parser，按 source coordinate 把解析结果带回源文档。
+
+字段名和 format 是正交事实。`aat:release-policy-config` 选择业务模型；`aat:format "json"` 选择 parser；`aat:raw` 保存 source block body；`aat:contentStartLine` 和 `aat:contentEndLine` 指向可编辑 payload body。
+
+=== 输出表面
+
+`payload-summary.json` 汇总策略温度窗口、人工复核条件、复核手册步骤和依赖证据风险级别。`source-lines.md` 把每个 payload field、format、summary 和 line span 写成可审查报告。`release-policy.mmd` 把策略、审计规则和 payload 关系画成放行闭环。
+
+=== 回源意义
+
+复杂信息的落位决定回源动作。策略配置属于 heading，依赖证据属于 edge evidence。source-aware report 保存 payload field、format、source line 和解析结果，使作者回到对应 source value block 修改配置、手册或证据。

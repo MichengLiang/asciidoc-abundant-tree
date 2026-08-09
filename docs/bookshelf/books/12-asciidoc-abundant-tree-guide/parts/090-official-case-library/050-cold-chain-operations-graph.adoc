@@ -1,7 +1,7 @@
 [#case-cold-chain-operations-graph]
 == Cold Chain Operations Graph
 
-Cold Chain Operations Graph 展示专业领域中的规则约束、部件组成、监控和触发关系。领域对象是冷链药品运输任务，模型重点是显式业务边和边属性。
+Cold Chain Operations Graph 面向冷链运输规则、运输任务、载荷、传感器和处置流程。模型重点是规则约束、部件组成、监控关系、触发关系和边属性。
 
 [horizontal]
 source:: `cases/040-cold-chain-operations/source/cold-chain-operations.adoc`
@@ -10,21 +10,32 @@ model:: `model/policy.ts`、`model/business-graph.ts`
 reports:: `reports/cold-chain-operations.json`
 views:: `views/rules.mmd`、`views/composition.mmd`、`views/overview.mmd`
 
-源书稿使用标题前 attrlist 表达短字段：
+=== 源书稿
 
 [source,asciidoc]
 ----
-[.policy, minTemperature=2C, maxTemperature=8C, allowedExcursion=15分钟]
+[#temperature-rule.policy, status=active]
 == 2-8C温控规则
-超出允许偏离时触发 xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]。
 
-[.shipment, status=active, origin=上海仓, destination=福州医院药房, temperature=2-8C]
+[#shipment-ct-2026-0618.shipment, status=in-transit]
 === 批次运输任务CT-2026-0618
-包含 xref:疫苗箱A17[rel=has-part] 和 xref:温度记录仪T09[rel=has-part]。
+
+运输任务包含 xref:vaccine-box[疫苗箱, rel=has-part]。
+温度记录仪 xref:temperature-deviation[温度偏离处置流程, rel=triggers, condition=超温超过15分钟]。
 ----
 
-`.policy`、`.shipment`、`.payload`、`.sensor` 和 `.process` 定义节点类型。xref `rel=triggers`、`rel=has-part` 和 `rel=monitors` 生成显式业务边。xref named attributes 保存 `condition` 和 `confidence` 等边属性。hierarchy policy 把 child-to-parent `containsDirectly` 解释为 `governed-by`。
+短字段保存任务状态。xref `rel=has-part` 表达部件组成。xref `rel=triggers` 表达异常触发关系，`condition` 是边字段。标题层级把运输任务置于温控规则之下。
 
-`business-graph.ts` 生成三类视图：rules 图展示规则对流程的触发；composition 图展示运输任务、疫苗箱和温度记录仪的组成；overview 图合并规则、组成、监控和触发关系。报告保留每条业务边的 origin、raw 和 source line。
+=== 建模政策
 
-这个案例把菜谱案例中的开放建模方法推进到专业领域：同样的 heading、field、xref 和 hierarchy policy 可以表达规则约束、部件组成、监控关系和异常处置。
+`policy.ts` 把 child-to-parent 层级解释为 `governed-by`。运输任务在结构上属于温控规则的子标题，在业务图中成为“受温控规则约束”的任务。显式 xref 生成 `has-part`、`monitors` 和 `triggers` 等业务边。
+
+边字段只属于 xref occurrence。`condition=超温超过15分钟` 描述触发边，不描述 source heading，也不描述 target heading。
+
+=== 输出表面
+
+`business-graph.ts` 生成三类视图：`rules.mmd` 表达规则对流程的触发；`composition.mmd` 表达运输任务、疫苗箱和温度记录仪的组成；`overview.mmd` 合并规则、组成、监控和触发关系。报告保留每条业务边的 origin、raw 和 source line。
+
+=== 回源意义
+
+冷链语义来自 role 词表、rel 词表、字段约束和 hierarchy policy。投影图提供统一结构事实；业务图把这些事实解释成冷链操作关系。

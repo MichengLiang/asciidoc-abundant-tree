@@ -1,7 +1,7 @@
 [#case-basic-rdf-projection]
 == Basic RDF Projection
 
-Basic RDF Projection 展示投影层核心结构。领域对象是一个小型结构夹具；它只使用标题、字段、xref、local target alias 和 hmeta，避免业务语义抢走投影契约的位置。
+Basic RDF Projection 是结构基线。标题、字段、xref、local target alias 和 hmeta 共同建立一份投影夹具，使后续业务目录共享同一组底层事实：heading node、field predicate、relation triple、xref edge evidence、source coordinate 和 heading tree order。
 
 [horizontal]
 source:: `cases/010-basic-rdf-projection/source/basic-projection.adoc`
@@ -10,10 +10,14 @@ model:: `model/structure-model.ttl`、`model/structure-shapes.ttl`、`model/quer
 reports:: `reports/headings.json`、`reports/xref-evidence.json`、`reports/shacl.md`
 views:: `views/heading-tree.mmd`
 
+=== 源书稿
+
 源书稿创建一个 process、一个 rule、一个 generated label 节点和一个 evidence 节点：
 
 [source,asciidoc]
 ----
+= Basic Projection
+
 [#structure-example.process, status=draft, owner=docs-team]
 == 结构示例
 
@@ -30,8 +34,18 @@ summary::
 约束规则当前处于 hmeta:review-state[ready, label=可复核]。
 ----
 
-该案例覆盖 document title heading、manual address label、generated address label、heading direct fields、role、heading tree、explicit relation、default relation、xref evidence、local target alias、SHACL validation 和 Oxigraph 查询。
+document title、manual address label、generated address label、role、attrlist field、description list field、hmeta field 和 explicit xref relation 都在这段源表面中出现。后续案例增加领域词表，但不改变这些投影事实的形状。
 
-`model/query.mjs` 读取 projection，生成两个报告：`headings.json` 按 `aat:documentOrder` 输出 heading tree；`xref-evidence.json` 输出 xref occurrence 的 raw、selector、relation、source line 和 target heading。`structure-shapes.ttl` 检查 heading 是否暴露 headline、source coordinate 和必需字段。
+=== 投影事实
 
-读者动作是：查看源书稿，生成 projection，按 `aat:documentOrder` 打印标题树，按 `aat:XrefEdge` 读取边证据，按 SHACL shape 检查结构约束。这个案例给后续所有业务案例提供投影层基线。
+`headings.json` 按 `aat:documentOrder` 输出标题树。`xref-evidence.json` 输出 xref occurrence 的 raw、selector、relation、source line 和 target heading。`heading-tree.mmd` 把同一组 heading order 事实转换成 Mermaid outline。
+
+`structure-shapes.ttl` 检查 heading 是否暴露 headline、source coordinate 和结构字段。SHACL 报告不是业务质量判断；它确认投影层给后续消费者提供了可依赖的公共字段。
+
+=== 消费动作
+
+`model/query.mjs` 读取 projection 后执行两个动作：按 `aat:documentOrder` 打印标题树，按 `aat:XrefEdge` 读取边证据。第一个动作证明章节结构可查询；第二个动作证明关系不是只有 triple，还保留源文档中的出现位置和 raw 表面。
+
+=== 回源意义
+
+后续业务目录中的 role、rel、payload、report 和 view 都回到这里确立的公共事实：标题节点、字段谓词、关系边、边证据和 source coordinate。

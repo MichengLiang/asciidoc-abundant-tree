@@ -2,6 +2,6 @@
 
 AsciiDoc 已经是一种成熟的书稿语言。它有标题、章节、交叉引用、属性、描述列表、include、附录、术语表和参考文献。`asciidoc-abundant-tree` 在这个可读书稿表面上建立 source-aware projection，使标题、字段、xref、payload 和行号成为可查询图事实。
 
-本书按信息进入图的路径组织。第一部从一段源书稿进入第一张可查询图；第二部到第四部定义资源节点、字段、引用和复杂属性；第五部定义查询、校验、报告和回源动作；第六部定义多文件书稿作为长期知识人工制品的组织方式；第七部定义从 projection graph 派生 business graph 的建模方法；第八部给出官方案例库。
+信息进入图的路径从源书稿开始。第一部建立第一张可查询图；第二部到第四部展开资源节点、字段、引用和复杂属性；第五部进入查询、校验、报告和回源动作；第六部进入多文件书稿作为长期知识人工制品的组织方式；第七部进入从 projection graph 派生 business graph 的建模方法；第八部进入领域闭环。
 
-书中的代码采用 TypeScript / JavaScript 主线，并按公开 npm 包的消费方式书写。Python 示例只作为跨语言消费补充出现。案例中的生成物保留 source-aware report，使读者可以从图查询结果回到源文件位置。
+书中的代码采用 TypeScript / JavaScript 主线，并按公开 npm 包的消费方式书写。Python 示例只作为跨语言消费补充出现。领域闭环中的生成物保留 source-aware report，使读者从图查询结果回到源文件位置。

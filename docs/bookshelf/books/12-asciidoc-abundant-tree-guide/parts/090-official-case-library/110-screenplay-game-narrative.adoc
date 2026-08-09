@@ -1,7 +1,7 @@
 [#case-screenplay-game-narrative]
 == Screenplay and Game Narrative Graph
 
-Screenplay and Game Narrative Graph 展示叙事对象建模。领域对象是角色、场景、任务、物品、地点和对白分支。这个案例说明书稿资源图不属于某个单一行业；任何拥有对象、关系、条件和连续性约束的文本工作都能进入同一建模表面。
+Screenplay and Game Narrative Graph 面向角色、场景、任务、物品、地点和对白分支。叙事文本拥有对象、关系、条件和连续性约束，同样能进入标题节点、关系边和 payload 的建模表面。
 
 [horizontal]
 source:: `cases/100-screenplay-game-narrative/source/narrative.adoc`
@@ -10,7 +10,7 @@ model:: `model/narrative-policy.ts`
 reports:: `reports/continuity.json`、`reports/character-appearances.json`、`reports/quest-dependencies.json`
 views:: `views/branch-graph.mmd`、`views/quest-graph.mmd`
 
-源书稿把叙事资源写成 heading node：
+=== 源书稿
 
 [source,asciidoc]
 ----
@@ -28,8 +28,16 @@ views:: `views/branch-graph.mmd`、`views/quest-graph.mmd`
 任务需要 xref:item-ticket[旧车票, rel=requires]。
 ----
 
-role 定义叙事节点类型；xref relation 定义场景出场、任务解锁、物品依赖和分支跳转。payload 可以保存对白块、状态条件、分支条件或镜头元数据。
+role 定义叙事节点类型。xref relation 定义场景出场、任务解锁、物品依赖和分支跳转。payload 保存对白块、状态条件、分支条件或镜头元数据。
 
-`narrative-policy.ts` 读取 projection，生成 continuity report、character appearance report 和 quest dependency report。Mermaid 视图把任务依赖和分支关系拆开，分别服务策划、编剧和实现检查。
+=== 叙事模型
 
-这个案例的重点是连续性维护。书稿仍然可读；图查询能回答某角色在哪些场景出现、某任务依赖哪些物品、某分支是否形成断链。
+`narrative-policy.ts` 读取 projection，生成 continuity report、character appearance report 和 quest dependency report。角色出场来自 `features` relation；任务依赖来自 `requires` relation；分支结构来自 dialogue 或 beat payload。
+
+=== 输出表面
+
+`quest-graph.mmd` 表达任务依赖。`branch-graph.mmd` 表达对话和剧情分支。`character-appearances.json` 查询某角色在哪些场景出现。`continuity.json` 检查任务、物品和分支是否形成断链。
+
+=== 回源意义
+
+书稿仍然是可读叙事文本。图查询回答角色出场、任务依赖、物品要求和分支连续性；报告中的 source coordinate 把断链或缺失条件带回对应场景、任务或对白 payload。

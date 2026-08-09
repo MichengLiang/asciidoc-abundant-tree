@@ -1,7 +1,7 @@
 [#case-k8s-microservice-graph]
 == K8S Microservice Configuration Graph
 
-K8S Microservice Configuration Graph 展示配置、依赖和生成物的一致性管理。领域对象是 Service、Ingress 和 Database。书稿中的标题节点同时承担配置说明、依赖建模和生成物索引。
+K8S Microservice Configuration Graph 面向 Service、Ingress、Database、ConfigMap 和生成 YAML。书稿中的标题节点同时承担配置说明、依赖建模和生成物索引。
 
 [horizontal]
 source:: `cases/090-k8s-microservice-graph/source/services.adoc`
@@ -10,7 +10,7 @@ model:: `model/k8s-schema.ts`、`model/dependency-report.ts`
 reports:: `reports/dependencies.json`、`reports/blast-radius.json`、`reports/drift-check.json`
 views:: `views/service-dependencies.mmd`、`views/generated-yaml/`
 
-源书稿把 service、database 和 ingress 写成 heading node，并把 Kubernetes YAML 放入 payload：
+=== 源书稿
 
 [source,asciidoc]
 ------
@@ -29,6 +29,16 @@ metadata:
 ----
 ------
 
-`k8s-schema.ts` 解释 manifest payload。`dependency-report.ts` 查询 `depends-on`、`routes-to` 和配置节点字段，生成 dependencies、blast radius 和 drift check reports。`views/generated-yaml/` 保存 adapter 输出的 YAML 表面。
+Service 是 heading node。`port` 是短字段。`depends-on` 和 `routes-to` 是显式关系。`k8s-manifest` payload 保存部署工具消费的 YAML 表面。
 
-这个案例展示配置系统的双向约束：书稿是可读配置说明，projection graph 是依赖查询面，adapter output 是部署工具消费面。drift check report 把生成物差异带回源 heading。
+=== 配置模型
+
+`k8s-schema.ts` 解释 manifest payload。`dependency-report.ts` 查询 `depends-on`、`routes-to` 和配置节点字段，生成 dependencies、blast radius 和 drift check reports。
+
+=== 输出表面
+
+`service-dependencies.mmd` 表达服务、Ingress 和 Database 的依赖关系。`views/generated-yaml/` 保存 adapter 输出的 YAML。`drift-check.json` 比较书稿 payload 与生成物，记录差异对应的 source heading。
+
+=== 回源意义
+
+书稿是可读配置说明，projection graph 是依赖查询面，adapter output 是部署工具消费面。drift check report 把生成物差异带回源 heading，使配置说明、生成物和依赖图保持同一回源链。

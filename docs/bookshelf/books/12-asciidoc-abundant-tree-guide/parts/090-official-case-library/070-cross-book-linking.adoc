@@ -1,7 +1,7 @@
 [#case-cross-book-linking]
 == Cross-book Linking
 
-Cross-book Linking 展示多本书之间的工作区级对齐。领域对象是两个独立 book-entry projection 与一份 workspace alignment。
+Cross-book Linking 把多本独立 book-entry projection 放入 workspace graph。领域对象是两本书中的 heading node 以及一份跨书 alignment policy。每本书保持自己的 source set、projection 和回源坐标；workspace 层生成跨书关系。
 
 [horizontal]
 source:: `cases/060-cross-book-linking/source/book-a/`、`source/book-b/`
@@ -10,8 +10,18 @@ model:: `model/alignment-policy.ts`
 reports:: `reports/alignment-candidates.json`、`reports/workspace-links.json`
 views:: `views/workspace-links.mmd`
 
-每本书独立生成 projection。workspace policy 读取多份 projection，按 address label、headline 或显式字段查找候选节点，再生成跨书 relation。跨书边属于 workspace graph，不回写到任一本书的核心 projection。
+=== 源书稿
 
-这个案例区分两个层次：单书 projection 保存该书的源表面事实；workspace graph 保存多书对齐和跨书关系。TS/JS consumer 是这两个层次之间的建模执行面。
+Book A 和 Book B 独立声明各自的 heading labels、headlines 和 fields。它们不共享 entry file，也不共享 source set。workspace policy 读取两份 projection，按 address label、headline 或显式字段查找候选 alignment。
 
-读者动作是：加载多份 projection，执行 alignment policy，生成跨书候选报告和 workspace TTL。报告保留每条候选对齐的来源书、heading label、headline 和匹配依据，使维护者能判断跨书链接是否稳定。
+=== Alignment Policy
+
+`alignment-policy.ts` 定义跨书候选规则。规则可以使用 stable ID、headline、role、外部 URI 字段或人工维护的 mapping field。候选结果进入 `alignment-candidates.json`，确认后的跨书关系进入 `workspace.ttl`。
+
+=== 输出表面
+
+`workspace-links.json` 保存跨书 relation 的 source book、source heading、target book、target heading、relation 和匹配依据。`workspace-links.mmd` 把跨书关系画成维护者可读视图。
+
+=== 回源意义
+
+跨书关系属于 workspace graph。回源报告同时保存两侧 source coordinate，使维护者能回到各自书稿修改 label、headline、mapping field 或关系政策。

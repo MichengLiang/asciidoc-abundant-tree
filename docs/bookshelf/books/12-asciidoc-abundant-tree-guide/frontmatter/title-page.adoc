@@ -3,7 +3,7 @@
 [cols="1,3", frame=none, grid=none]
 |===
 |书名 |AsciiDoc Abundant Tree：用书稿构建可查询知识图谱
-|副标题 |标题节点、RDF 1.2 投影、TS/JS 消费与官方案例库
+|副标题 |标题节点、RDF 1.2 投影、TS/JS 消费与领域闭环
 |作者 |弥澄亮
 |项目 |`asciidoc-abundant-tree`
 |包名 |`asciidoc-abundant-tree`

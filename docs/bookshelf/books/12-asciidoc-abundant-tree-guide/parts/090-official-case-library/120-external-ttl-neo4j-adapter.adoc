@@ -1,7 +1,7 @@
 [#case-external-ttl-neo4j-adapter]
 == External TTL and Neo4j Adapter
 
-External TTL and Neo4j Adapter 展示标准图生态与工程图数据库的接入。领域对象是一份书稿 projection、一份外部 TTL 和一份 Neo4j import surface。
+External TTL and Neo4j Adapter 面向书稿 projection、外部 TTL 和 Neo4j import surface。书稿录入新资源，外部 TTL 提供已有 URI 和本体坐标，adapter 生成工程图数据库的导入表面。
 
 [horizontal]
 source:: `cases/110-external-ttl-neo4j-adapter/source/domain.adoc`
@@ -10,8 +10,18 @@ model:: `model/alignment.ts`、`model/neo4j-export.ts`
 reports:: `reports/alignment.json`、`reports/round-trip-source.json`
 views:: `views/alignment.ttl`、`views/neo4j/nodes.csv`、`views/neo4j/relationships.csv`
 
-书稿 projection 提供 heading label、role、fields、relation edges 和 source coordinate。外部 TTL 提供已有 URI、本体词表或领域关系。`alignment.ts` 查询 heading label 与外部 URI 映射，生成 alignment triples。`neo4j-export.ts` 把对齐后的业务图导出为 Neo4j nodes/relationships CSV。
+=== 输入图
 
-该案例保留两个方向的证据：`alignment.json` 记录书稿节点与外部 URI 的匹配依据；`round-trip-source.json` 记录 Neo4j 节点或关系对应的 source heading 与 line。adapter 输出不是源事实，源书稿和外部 TTL 才是事实来源。
+书稿 projection 提供 heading label、role、fields、relation edges 和 source coordinate。外部 TTL 提供已有 URI、本体词表或领域关系。两份图在 alignment 层连接，不互相吞并。
 
-读者动作是：把书稿录入的资源与已有图谱对齐，生成图数据库导入面，并通过回源报告保持图数据库节点与书稿标题之间的可追溯关系。
+=== Alignment
+
+`alignment.ts` 查询 heading label 与外部 URI 映射，生成 alignment triples。匹配依据保存到 `alignment.json`：source heading、external URI、匹配字段、置信或人工确认状态。
+
+=== Adapter 输出
+
+`neo4j-export.ts` 把对齐后的业务图导出为 Neo4j nodes/relationships CSV。`views/neo4j/nodes.csv` 保存节点属性，`views/neo4j/relationships.csv` 保存关系端点和关系属性。
+
+=== 回源意义
+
+`round-trip-source.json` 记录 Neo4j 节点或关系对应的 source heading 与 line。adapter 输出不是源事实；源书稿和外部 TTL 才是事实来源。图数据库节点需要修改时，报告把维护者带回书稿标题或外部 TTL URI。

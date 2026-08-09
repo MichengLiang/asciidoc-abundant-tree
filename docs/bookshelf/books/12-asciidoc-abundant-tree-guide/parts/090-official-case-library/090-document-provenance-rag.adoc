@@ -1,7 +1,7 @@
 [#case-document-provenance-rag]
 == PDF / Word / RAG Provenance Index
 
-PDF / Word / RAG Provenance Index 展示外部文档细粒度溯源。领域对象是 claim、chunk、段落、页面区域和证据片段。书稿标题节点不替代外部文件；它为外部文件中的证据建立可查询索引。
+PDF / Word / RAG Provenance Index 把外部文档中的证据片段放入可查询图索引。领域对象是 claim、chunk、段落、页面区域和证据片段。书稿标题节点为外部文件中的证据建立名称、关系、locator payload 和回源入口。
 
 [horizontal]
 source:: `cases/080-document-provenance-rag/source/provenance-index.adoc`
@@ -10,7 +10,7 @@ model:: `model/locator-schema.ts`、`model/rag-index.ts`
 reports:: `reports/source-locators.json`、`reports/rag-citations.json`
 views:: `views/evidence-graph.mmd`、`views/pdf-highlight-data.json`
 
-源书稿把主张和证据 chunk 写成 heading node：
+=== 源书稿
 
 [source,asciidoc]
 ------
@@ -29,8 +29,16 @@ views:: `views/evidence-graph.mmd`、`views/pdf-highlight-data.json`
 ----
 ------
 
-payload 保存外部定位结构：PDF page/bbox、TextQuoteSelector、TextPositionSelector、Word paraId/bookmark、char offset 或网页 selector。xref 表达 claim supported-by chunk、chunk extracted-from document、section cites chunk。
+claim 和 evidence chunk 都是 heading node。xref `rel=supported-by` 表达主张和证据关系。`source-locator` payload 保存 PDF page/bbox、TextQuoteSelector、TextPositionSelector、Word paraId/bookmark、char offset 或网页 selector。
 
-`locator-schema.ts` 定义 locator payload 的 schema。`rag-index.ts` 读取 projection，生成 RAG citation index 和 source locator report。`pdf-highlight-data.json` 把图中的 locator 转成前端可用的高亮数据。
+=== Locator Schema
 
-这个案例让外部复杂文件进入统一图索引。查询先发生在文本图上；命中证据后，adapter 根据 locator 打开 PDF、Word 或网页原文位置。
+`locator-schema.ts` 定义 locator payload 的可用形状。PDF locator 使用 page 和 bbox。Word locator 使用 paraId、bookmark 或内容控件 ID。Web/RAG locator 使用 text quote、text position 或 source URL。schema 不替外部文件建模；它保存打开原文所需的定位事实。
+
+=== 输出表面
+
+`rag-index.ts` 读取 projection，生成 `rag-citations.json` 和 `source-locators.json`。`pdf-highlight-data.json` 把图中的 locator 转成前端高亮数据。`evidence-graph.mmd` 表达 claim、chunk 和 source document 的证据关系。
+
+=== 回源意义
+
+查询先发生在文本图上。命中证据后，adapter 根据 locator 打开 PDF、Word 或网页原文位置。书稿保存可维护索引；外部文件保存原始材料；locator payload 把两者连接成可审计证据链。
