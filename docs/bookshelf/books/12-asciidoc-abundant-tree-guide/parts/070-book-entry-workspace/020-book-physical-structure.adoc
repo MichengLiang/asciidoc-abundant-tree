@@ -1,0 +1,67 @@
+[#book-physical-structure]
+== 书籍物理结构
+
+多文件书稿的物理结构承担长期维护。entry file 固定阅读顺序，frontmatter 建立书籍身份，parts 与 chapters 承担正文论证，backmatter 保存速查、术语、引用和索引。
+
+=== Frontmatter
+
+frontmatter 位于正文 parts 之前。半书名页、标题页和版权页提供书籍身份；摘要、前言、致谢、引言和阅读路径提供进入对象的入口。
+
+[source,asciidoc]
+----
+\include::frontmatter/half-title.adoc[]
+
+\include::frontmatter/title-page.adoc[]
+
+\include::frontmatter/copyright.adoc[]
+
+[abstract]
+\include::frontmatter/abstract.adoc[]
+
+[preface]
+\include::frontmatter/preface.adoc[]
+
+\include::frontmatter/introduction.adoc[]
+----
+
+frontmatter 文件参与 source set。其标题、字段和引用同样进入 projection graph。读者检视一本书时，frontmatter 提供书籍对象、责任、版本、阅读路径和入口论题。
+
+=== Parts 与 Chapters
+
+正文使用 parts 与 chapters 组织。源文件路径前缀使用三位数编排号，保留插入空间；标题文本保留语义名称。
+
+[source,text]
+----
+parts/
+  010-manuscript-as-graph/
+    010-first-queryable-graph.adoc
+    020-heading-as-resource-node.adoc
+  020-heading-structure/
+    010-resource-node-boundary.adoc
+    020-resource-tree-and-order.adoc
+----
+
+part 承担大尺度论题。chapter 承担完整论证单元。section 承担 chapter 内部对象推进。文件编号服务源文件维护，标题文本承担读者导航和图查询语义。
+
+标题层级保持连续。跨越大跨度章节的指代使用 xref 显式标注。长期引用标题使用 stable ID；领域内唯一稳定编号或名称可以由标题文本承担寻址职责。
+
+=== Backmatter
+
+backmatter 保存附录、术语表、参考文献和索引。附录提供速查和完整契约；术语表固定书内术语；参考文献连接公开标准、书籍传统和图生态；索引词服务主题检索。
+
+[source,asciidoc]
+----
+[appendix]
+\include::backmatter/appendix-a-asciidoc-surface-reference.adoc[]
+
+[glossary]
+\include::backmatter/glossary.adoc[]
+
+[bibliography]
+\include::backmatter/bibliography.adoc[]
+
+[index]
+\include::backmatter/index.adoc[]
+----
+
+backmatter 不是正文之外的杂项。它让一本书能够被检视、分析、引用、维护和再次投影。

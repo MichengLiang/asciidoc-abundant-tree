@@ -1,0 +1,101 @@
+[#vocabulary-schema-and-hierarchy-policy]
+== 词表、Schema 与层级政策
+
+领域模型把 projection graph 中的结构事实解释为业务图。role 词表定义节点类型，rel 词表定义关系谓词，field schema 定义字段约束，payload schema 定义 raw value object 的内部结构，hierarchy policy 定义标题层级是否生成业务边。
+
+=== Role 词表
+
+role 写在标题 attrlist 的点号 token 位置。role 词表来自领域对象结构；每个 role 在同一领域模型中保持单一含义。
+
+[source,typescript]
+----
+export const roleVocabulary = {
+  recipe: {
+    label: "可烹饪菜谱",
+    requiredFields: ["difficulty"],
+  },
+  ingredient: {
+    label: "食材",
+    requiredFields: ["storage"],
+  },
+  step: {
+    label: "烹饪步骤",
+    requiredFields: ["duration"],
+  },
+};
+----
+
+role 可以映射为 business graph 中的 class 或 node kind。字段约束由业务模型读取，核心 `aat:` 词表只保存源表面事实。
+
+=== Rel 词表
+
+rel 词表定义业务关系谓词。xref 的 `rel` 字段选择关系谓词；TS/JS consumer 解释该谓词在领域图中的含义。
+
+[source,typescript]
+----
+export const relationVocabulary = {
+  "is-a": {
+    label: "分类关系",
+    sourceRole: "recipe",
+    targetRole: "category",
+  },
+  monitors: {
+    label: "监控",
+    sourceRole: "sensor",
+    targetRole: "payload",
+    requiredEdgeFields: ["confidence"],
+  },
+  triggers: {
+    label: "触发",
+    sourceRole: "policy",
+    targetRole: "process",
+    requiredEdgeFields: ["condition"],
+  },
+};
+----
+
+关系谓词描述边。节点身份使用 role。边属性使用 xref named attributes。端点约束检查 source role 与 target role，边字段约束检查 xref edge evidence。
+
+=== Field 与 Payload Schema
+
+field schema 定义节点字段、边字段和 complex property 的下游解释。payload schema 定义 raw value object 的内部结构。
+
+[source,typescript]
+----
+export const fieldSchema = {
+  shipment: {
+    required: ["status", "origin", "destination"],
+  },
+};
+
+export const payloadSchemas = {
+  "release-policy-config": releasePolicyConfigSchema,
+  "review-playbook": reviewPlaybookSchema,
+  "dependency-evidence": dependencyEvidenceSchema,
+};
+----
+
+消费者按 field predicate 选择 schema，按 `aat:format` 解析 raw。schema validation 属于领域模型质量检查。projection 提供 raw、format、field predicate 和 source coordinate。
+
+=== Hierarchy Policy
+
+`aat:containsDirectly` 是标题结构事实。领域模型决定它是否生成业务边，以及生成哪种业务边。
+
+[source,typescript]
+----
+export const recipePolicy = {
+  hierarchy: {
+    relation: "part-of",
+    direction: "child-to-parent",
+  },
+};
+
+export const coldChainPolicy = {
+  hierarchy: {
+    relation: "governed-by",
+    direction: "child-to-parent",
+  },
+};
+----
+
+同一个 projection fact 可以进入不同业务解释。菜谱文档把 child-to-parent 层级解释为 `part-of`；冷链文档把 child-to-parent 层级解释为 `governed-by`；书籍工作区可以只把层级保留为书籍结构。投影层保持结构事实，业务层承接领域语义。
