@@ -91,22 +91,25 @@ export function parseIncludeAttributes(attrlist: string): IncludeAttributes {
 	};
 }
 
-export function firstSelectionSurface(
+// 一条 include 带了几种选取时，官方只用一种：lines 先于 tag，tag 先于 tags；同一个键写了几次，以最后一次
+// 为准（reader.rb 读的是属性表，后写的键覆盖先写的）。
+export function selectionSurface(
 	attributes: IncludeAttributes,
 ):
 	| Extract<IncludeAttributeSurface, { kind: "tag" | "tags" | "lines" }>
 	| undefined {
-	return attributes.surfaces.find(
-		(
-			surface,
-		): surface is Extract<
-			IncludeAttributeSurface,
-			{ kind: "tag" | "tags" | "lines" }
-		> =>
-			surface.kind === "tag" ||
-			surface.kind === "tags" ||
-			surface.kind === "lines",
-	);
+	for (const kind of ["lines", "tag", "tags"] as const) {
+		const chosen = attributes.surfaces.findLast(
+			(
+				surface,
+			): surface is Extract<IncludeAttributeSurface, { kind: typeof kind }> =>
+				surface.kind === kind,
+		);
+		if (chosen) {
+			return chosen;
+		}
+	}
+	return undefined;
 }
 
 export function hasOptionalSurface(attributes: IncludeAttributes): boolean {

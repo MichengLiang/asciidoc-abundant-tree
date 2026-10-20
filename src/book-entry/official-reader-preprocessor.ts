@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import type {
 	AsciidoctorParserAdapter,
 	OfficialReaderLine,
+	ReaderPush,
 } from "../asciidoctor-adapter";
 import type { SourceLine } from "../source-lines";
 import {
@@ -11,11 +12,11 @@ import {
 import type { BookEntryDiagnostic } from "./diagnostics";
 import { constructionError } from "./diagnostics";
 import {
-	firstSelectionSurface,
 	hasLeveloffsetSurface,
 	hasOptionalSurface,
 	indentSurface,
 	parseIncludeAttributes,
+	selectionSurface,
 } from "./include-attribute-model";
 import {
 	type IncludeLineSelector,
@@ -64,6 +65,8 @@ type PreprocessorState = {
 	readonly optionalIncludes: IncludeDirectiveEvidence[];
 	readonly includeStack: string[];
 	officialIndex: number;
+	// 正在登记的那一次官方推入（见 ReaderPush）；进入一次 include 时换成它的推入，读完换回。
+	currentPush: ReaderPush;
 };
 
 const includeDirectivePattern =
@@ -131,7 +134,7 @@ function validateIncludeGraph(
 				}),
 			);
 		}
-		if (firstSelectionSurface(attributes)) {
+		if (selectionSurface(attributes)) {
 			continue;
 		}
 		validateIncludeGraph(includePath, documentRoot, nextStack);
@@ -167,6 +170,7 @@ export function preprocessBookEntryWithOfficialReader(
 		optionalIncludes: [],
 		includeStack: [],
 		officialIndex: 0,
+		currentPush: { id: 0, depth: 0 },
 	};
 
 	appendSourceFile(entryPath, state);
@@ -280,12 +284,16 @@ function appendIncludeDirective(
 	}
 
 	const targetFile = state.sourceSet.registerFile(includePath);
-	const selector = firstSelectionSurface(attributes);
-	consumeGeneratedPreludeForInclude(
-		targetFile,
-		hasLeveloffsetSurface(attributes),
-		state,
-	);
+	const selector = selectionSurface(attributes);
+	const leveloffset = hasLeveloffsetSurface(attributes);
+	// 下一条官方行比当前推入深一层，就是这次 include 的推入；没有这样的行，说明官方这次什么也没推入。
+	const parent = state.currentPush;
+	const first = state.officialLines[state.officialIndex];
+	const own =
+		first && first.push.depth === parent.depth + 1 ? first.push : undefined;
+	const end = own ? pushEnd(own, state) : state.officialIndex;
+	state.currentPush = own ?? parent;
+	consumeGeneratedPreludeForInclude(leveloffset, own, state);
 	if (selector) {
 		appendSelectedInclude(
 			targetFile,
@@ -293,13 +301,39 @@ function appendIncludeDirective(
 			indentSurface(attributes),
 			state,
 			`${containingFile.relativePath}:${line.number}`,
+			own,
+			leveloffset ? generatedTailStart(end, state) : end,
 		);
 	} else {
 		appendFullFileInclude(targetFile, indentSurface(attributes), state);
 	}
-	if (hasLeveloffsetSurface(attributes)) {
+	if (leveloffset) {
 		consumeGeneratedTailForInclude(state);
 	}
+	state.currentPush = parent;
+}
+
+// 一次推入在官方行里止于何处：同一次推入的行，以及嵌套在它里面、更深的推入的行。紧挨着的下一次 include
+// 与它同深而 id 不同，就此分界。
+function pushEnd(own: ReaderPush, state: PreprocessorState): number {
+	let index = state.officialIndex;
+	for (; index < state.officialLines.length; index += 1) {
+		const push = state.officialLines[index]?.push;
+		if (!push || (push.id !== own.id && push.depth <= own.depth)) {
+			break;
+		}
+	}
+	return index;
+}
+
+// leveloffset 的推入末尾是 Reader 补的两行：一个空行与 `:leveloffset!:`（或恢复原值的 `:leveloffset: …`）。
+// 它们不是选中的源行，留给 consumeGeneratedTailForInclude。
+function generatedTailStart(end: number, state: PreprocessorState): number {
+	const last = state.officialLines[end - 1];
+	const beforeLast = state.officialLines[end - 2];
+	return last?.text.startsWith(":leveloffset") && beforeLast?.text === ""
+		? end - 2
+		: end;
 }
 
 function throwDiagnostic(diagnostic: BookEntryDiagnostic): never {
@@ -364,6 +398,8 @@ function appendSelectedInclude(
 	indent: ReturnType<typeof indentSurface>,
 	state: PreprocessorState,
 	includeSite: string,
+	own: ReaderPush | undefined,
+	bodyEnd: number,
 ): void {
 	const selection = mapIncludeSelection(targetFile.text, selector);
 	if (!selection.ok) {
@@ -373,21 +409,9 @@ function appendSelectedInclude(
 		});
 	}
 	// 逐行与官方 Reader 的输出配对，同整份引入一样：选中的行里有 include 时交给 appendIncludeDirective，
-	// 嵌套文件的官方行由它消费。普通行要确认下一条官方行属于这次推入（见 belongsToPush）、文本就是这一行，
-	// 才认它是这一行；选中区域里的条件指令（ifdef 等）被官方吃掉时，文本对不上，不会把后一行认成前一行。
-	const selected = selection.ok ? selection.lines : [];
-	const lastSelected = selected.at(-1);
-	let last: OfficialReaderLine | undefined;
-	const mismatch = (): void =>
-		degradeRestOfPush(
-			targetFile,
-			selector,
-			includeSite,
-			last,
-			lastSelected,
-			state,
-		);
-	for (const sourceLine of selected) {
+	// 嵌套文件的官方行由它消费。普通行要确认下一条官方行出自这次推入、文本就是这一行，才认它是这一行；
+	// 选中区域里的条件指令（ifdef 等）被官方吃掉时，文本对不上，不会把后一行认成前一行。
+	for (const sourceLine of selection.ok ? selection.lines : []) {
 		const line = targetFile.lineTable.lines[sourceLine - 1];
 		const directive = line && parseReaderIncludeDirective(line.text);
 		if (line && directive && !directive.escaped) {
@@ -397,14 +421,15 @@ function appendSelectedInclude(
 		const official = state.officialLines[state.officialIndex];
 		if (
 			!line ||
-			!belongsToPush(targetFile.absolutePath, last, lastSelected, official) ||
+			!official ||
+			state.officialIndex >= bodyEnd ||
+			official.push.id !== own?.id ||
 			!sameLine(official.text, line.text, indent)
 		) {
-			mismatch();
+			degradeRestOfPush(targetFile, selector, includeSite, bodyEnd, state);
 			return;
 		}
 		state.officialIndex += 1;
-		last = official;
 		appendIncludedPhysicalLine(
 			targetFile,
 			line,
@@ -414,39 +439,22 @@ function appendSelectedInclude(
 			official,
 		);
 	}
-	const next = state.officialLines[state.officialIndex];
-	if (belongsToPush(targetFile.absolutePath, last, lastSelected, next)) {
-		mismatch();
+	if (state.officialIndex < bodyEnd) {
+		degradeRestOfPush(targetFile, selector, includeSite, bodyEnd, state);
 	}
 }
 
-// 算出的选中行与官方输出对不上时，这次推入剩下的行不知道各自来自哪里：登记为 degraded，坐标保持缺失，
-// 而不是逐行硬配——硬配会让这一段之后的每一行都错位（10 号书「选取引入」）。
-// 只收这个文件自己的行：对不上之后，选中区域里若还有嵌套 include，它的行不在这里，会留给后面的记录；
-// 那要条件指令与嵌套 include 同处一个选中区域才会出现。
+// 算出的选中行与官方输出对不上时，这次推入余下的行（连同嵌套在里面的推入）不知道各自来自哪里：登记为
+// degraded，坐标保持缺失，而不是逐行硬配——硬配会让这一段之后的每一行都错位（10 号书「选取引入」）。
 function degradeRestOfPush(
 	targetFile: SourceFileRecord,
 	selector: IncludeLineSelector,
 	includeSite: string,
-	last: OfficialReaderLine | undefined,
-	lastSelected: number | undefined,
+	bodyEnd: number,
 	state: PreprocessorState,
 ): void {
-	const rest: OfficialReaderLine[] = [];
-	for (
-		let next = state.officialLines[state.officialIndex];
-		next &&
-		belongsToPush(
-			targetFile.absolutePath,
-			rest.at(-1) ?? last,
-			lastSelected,
-			next,
-		);
-		next = state.officialLines[state.officialIndex]
-	) {
-		rest.push(next);
-		state.officialIndex += 1;
-	}
+	const rest = state.officialLines.slice(state.officialIndex, bodyEnd);
+	state.officialIndex = Math.max(state.officialIndex, bodyEnd);
 	const diagnostic: BookEntryDiagnostic = {
 		level: "warning",
 		code: "origin-map.selection-mismatch",
@@ -470,39 +478,17 @@ function selectorSurface(selector: IncludeLineSelector): string {
 		: `${selector.kind}=${selector.expression}`;
 }
 
+// 官方 Reader 读 AsciiDoc 文件时去掉行尾空白，所以只比到行尾空白之前；indent 改的是行首。
 function sameLine(
 	officialText: string,
 	sourceText: string,
 	indent: ReturnType<typeof indentSurface>,
 ): boolean {
+	const official = officialText.trimEnd();
+	const source = sourceText.trimEnd();
 	return indent
-		? officialText.trimStart() === sourceText.trimStart()
-		: officialText === sourceText;
-}
-
-// 一条官方行属于这次推入：游标（经适配器校正）指向被引入的文件，行号比上一行大，且不超过最后一条
-// 选中的源行。Asciidoctor 一次推入的行号从第一条选中行起算，每读一行加一，被条件指令吃掉的行也算
-// （reader.rb：“not accounting for skipped lines in reader line numbering”）；读过的行数不超过选中的行数，
-// 所以行号递增、不越过最后一条选中行，有空隙时只会少算。紧挨着再引入同一个文件时，下一次推入从它
-// 自己的首行重新起算，违反其中一条，就此分界。
-function belongsToPush(
-	absolutePath: string,
-	previous: OfficialReaderLine | undefined,
-	lastSelected: number | undefined,
-	next: OfficialReaderLine | undefined,
-): next is OfficialReaderLine {
-	if (next?.cursor.file !== absolutePath) {
-		return false;
-	}
-	const before = previous?.cursor.lineNumber;
-	const after = next.cursor.lineNumber;
-	if (after === undefined) {
-		return true;
-	}
-	return (
-		(before === undefined || after > before) &&
-		(lastSelected === undefined || after <= lastSelected)
-	);
+		? official.trimStart() === source.trimStart()
+		: official === source;
 }
 
 function appendPhysicalLine(
@@ -592,27 +578,26 @@ function appendEscapedIncludeLine(
 	});
 }
 
+// leveloffset 的推入开头是 Reader 补的两行：`:leveloffset: …` 与一个空行（reader.rb push_include）。只认这两行，
+// 不按“文件第一个非空行”判停：选取的首行本身可以是空行，被当成补出来的行吃掉，整段就错开一行。
 function consumeGeneratedPreludeForInclude(
-	targetFile: SourceFileRecord,
 	hasLeveloffset: boolean,
+	own: ReaderPush | undefined,
 	state: PreprocessorState,
 ): void {
-	if (!hasLeveloffset) {
+	const first = state.officialLines[state.officialIndex];
+	if (
+		!hasLeveloffset ||
+		!own ||
+		first?.push.id !== own.id ||
+		!first.text.startsWith(":leveloffset")
+	) {
 		return;
 	}
-	const firstAuthored = authoredLines(targetFile).find(
-		(line) => line.text !== "",
-	);
-	while (state.officialIndex < state.officialLines.length) {
-		const next = state.officialLines[state.officialIndex];
-		if (!next || next.text === firstAuthored?.text) {
-			break;
-		}
-		if (next.text.startsWith(":leveloffset") || next.text === "") {
-			appendGeneratedControl(consumeOfficialLine(state)?.text ?? "", state);
-			continue;
-		}
-		break;
+	appendGeneratedControl(consumeOfficialLine(state)?.text ?? "", state);
+	const blank = state.officialLines[state.officialIndex];
+	if (blank?.push.id === own.id && blank.text === "") {
+		appendGeneratedControl(consumeOfficialLine(state)?.text ?? "", state);
 	}
 }
 

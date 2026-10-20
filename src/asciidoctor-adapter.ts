@@ -67,6 +67,16 @@ export type ReaderLineCursor = {
 export type OfficialReaderLine = {
 	readonly text: string;
 	readonly cursor: ReaderLineCursor;
+	readonly push: ReaderPush;
+};
+
+// 这一行出自官方 Reader 的哪一次推入。include 每展开一次，Reader 就把当时的状态压进 include_stack，压进去的
+// 帧对象每次都是新的，所以以栈顶帧的身份区分推入：紧挨着两次引入同一个文件也分得开，leveloffset 补的前后
+// 两行也落在这次推入里。行号不能拿来分界：一次推入的行号从首条选中行逐行累加，选取有空隙时就对不上源行。
+// depth 是 include_stack 的深度，根文档为 0、id 为 0。
+export type ReaderPush = {
+	readonly id: number;
+	readonly depth: number;
 };
 
 export type AsciidoctorAdapter = {
@@ -145,6 +155,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				getReader?: () => {
 					readLine: () => string | undefined | null;
 					getCursor?: () => unknown;
+					include_stack?: readonly object[];
 				};
 			};
 			const reader = document.getReader?.();
@@ -152,6 +163,8 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				throw new Error("Asciidoctor document does not expose a Reader.");
 			}
 			const lines: OfficialReaderLine[] = [];
+			const pushIds = new WeakMap<object, number>();
+			let pushes = 0;
 			while (true) {
 				const before = readerCursorEvidence(reader.getCursor?.());
 				const text = reader.readLine();
@@ -159,9 +172,20 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 					break;
 				}
 				const after = readerCursorEvidence(reader.getCursor?.());
+				// 读完这一行之后的栈就是这一行所在的推入：Reader 在读下一行时才弹出读尽的推入。
+				const stack = reader.include_stack ?? [];
+				const frame = stack.at(-1);
+				if (frame && !pushIds.has(frame)) {
+					pushes += 1;
+					pushIds.set(frame, pushes);
+				}
 				lines.push({
 					text,
 					cursor: cursorForReturnedReaderLine(before, after),
+					push: {
+						id: frame ? (pushIds.get(frame) ?? 0) : 0,
+						depth: stack.length,
+					},
 				});
 			}
 			return lines;

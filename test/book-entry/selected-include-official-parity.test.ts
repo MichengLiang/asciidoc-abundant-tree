@@ -4,10 +4,11 @@ import createAsciidoctor from "@asciidoctor/core";
 import { describe, expect, it } from "vitest";
 import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
 import {
-	firstSelectionSurface,
 	parseIncludeAttributes,
+	selectionSurface,
 } from "../../src/book-entry/include-attribute-model";
 import { mapIncludeSelection } from "../../src/book-entry/include-selection-mapper";
+import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/official-reader-preprocessor";
 import { parseAbundantTree } from "../../src/index";
 import type { SectionNode } from "../../src/model";
 
@@ -74,6 +75,11 @@ const selectors = [
 	"lines=1;3;5",
 	'lines="1,3"',
 	"lines=3..1",
+	"lines=",
+	"lines=1;3;",
+	"lines=1_0",
+	"tag=x,lines=1..2",
+	"tag=x,tag=y",
 ];
 
 describe("selected include parity with the official Reader", () => {
@@ -95,7 +101,7 @@ describe("selected include parity with the official Reader", () => {
 					.filter((line) => line.cursor.file === sourcePath)
 					.map((line) => line.text);
 				// 走与预处理器相同的 attrlist 解析：`tags=x,z` 里的逗号先分开属性，官方只拿到 `tags=x`。
-				const selector = firstSelectionSurface(parseIncludeAttributes(surface));
+				const selector = selectionSurface(parseIncludeAttributes(surface));
 				if (!selector) {
 					throw new Error(`not a selection surface: ${surface}`);
 				}
@@ -227,5 +233,174 @@ describe("source coordinates after a selected include", () => {
 				),
 			}),
 		);
+	});
+
+	it("keeps a nested include after a dropped conditional out of the coordinates", () => {
+		const root = join(fixtureRoot, "conditional-then-nested");
+		const entry = writeFixture(
+			"conditional-then-nested/book.adoc",
+			"= T\n:doctype: book\n\ninclude::part.adoc[tag=x]\n\n== B\n\nbody\n",
+		);
+		writeFixture(
+			"conditional-then-nested/part.adoc",
+			"// tag::x[]\nbefore\nifdef::never[]\nhidden\nendif::[]\ninclude::nested.adoc[]\nafter\n// end::x[]\n",
+		);
+		writeFixture("conditional-then-nested/nested.adoc", "n1\n");
+
+		const document = preprocessBookEntryWithOfficialReader({
+			adapter: createAsciidoctorAdapter(),
+			sourcePath: entry,
+			documentRoot: root,
+		});
+		const record = (text: string) =>
+			document.lines.find((line) => line.text === text);
+
+		expect(record("n1")?.kind).toBe("degraded");
+		expect(record("after")?.kind).toBe("degraded");
+		expect(record("== B")).toEqual(
+			expect.objectContaining({
+				origin: expect.objectContaining({
+					relativePath: "book.adoc",
+					sourceLine: 6,
+				}),
+			}),
+		);
+	});
+
+	it("does not take Reader's leveloffset lines for selected lines when the selection has gaps", () => {
+		const root = join(fixtureRoot, "leveloffset-gap");
+		const entry = writeFixture(
+			"leveloffset-gap/book.adoc",
+			"= T\n\ninclude::part.adoc[tag=x,leveloffset=+1]\n\n== After\n\nbody\n",
+		);
+		writeFixture(
+			"leveloffset-gap/part.adoc",
+			"intro\n// tag::x[]\n== X1\nx1\n// tag::y[]\ny1\n// end::y[]\nx2\n// end::x[]\ntail\n",
+		);
+
+		const document = preprocessBookEntryWithOfficialReader({
+			adapter: createAsciidoctorAdapter(),
+			sourcePath: entry,
+			documentRoot: root,
+		});
+		const origins = document.lines.flatMap((line) =>
+			"origin" in line
+				? [`${line.text}@${line.origin.relativePath}:${line.origin.sourceLine}`]
+				: [],
+		);
+
+		expect(origins).toEqual(
+			expect.arrayContaining([
+				"== X1@part.adoc:3",
+				"x2@part.adoc:8",
+				"== After@book.adoc:5",
+				"body@book.adoc:7",
+			]),
+		);
+		expect(document.lines.filter((line) => line.text === "body")).toHaveLength(
+			1,
+		);
+		expect(document.diagnostics).toEqual([]);
+	});
+
+	it("keeps a selection that starts with a blank line under leveloffset", () => {
+		const root = join(fixtureRoot, "leveloffset-blank");
+		const entry = writeFixture(
+			"leveloffset-blank/book.adoc",
+			"= T\n\ninclude::part.adoc[tag=x,leveloffset=+1]\n\n== After\n",
+		);
+		writeFixture(
+			"leveloffset-blank/part.adoc",
+			"// tag::x[]\n\n== X\n// end::x[]\n",
+		);
+
+		const document = parseAbundantTree({
+			sourcePath: entry,
+			mode: "book-entry",
+			documentRoot: root,
+		});
+		const titles = headings(document).map((heading) => [
+			heading.title,
+			heading.source?.relativePath,
+			heading.line,
+		]);
+
+		expect(titles).toEqual([
+			["X", "part.adoc", 3],
+			["After", "book.adoc", 5],
+		]);
+	});
+});
+
+describe("adjacent selected includes of the same file", () => {
+	// 紧挨着的几条 include（中间没有外层文件的行）只能靠官方 Reader 的推入身份分界。期望的来源序列就是每条
+	// include 的选中行依次拼接：选行本身已由上面的逐行对照表与官方核对过。小棉复核时用行号启发式在这种
+	// 写法上随机撞出过 0.75% 的假坐标（空行与 `}` 的文本巧合），所以这里随机组合、逐条比对来源。
+	const code = ["first", "", "}", "", "}", "m", "", "}", "e", "", "}", "z"];
+	const choices = [
+		"lines=1;9",
+		"lines=4..12",
+		"lines=2..3",
+		"lines=5;7;11",
+		"lines=12",
+		"lines=1..",
+		"lines=3..1",
+		"lines=6;8",
+	];
+
+	function random(seed: number) {
+		let state = seed;
+		return () => {
+			state = (state + 0x6d2b79f5) | 0;
+			let mixed = Math.imul(state ^ (state >>> 15), 1 | state);
+			mixed = (mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed)) ^ mixed;
+			return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
+		};
+	}
+
+	it("maps every line to the include it came from", () => {
+		const root = join(fixtureRoot, "adjacent");
+		writeFixture("adjacent/code.txt", `${code.join("\n")}\n`);
+		const next = random(20261021);
+		const failures: string[] = [];
+		for (let round = 0; round < 300; round += 1) {
+			const picked = Array.from(
+				{ length: 2 + Math.floor(next() * 3) },
+				() => choices[Math.floor(next() * choices.length)] ?? "lines=1",
+			);
+			const entry = writeFixture(
+				"adjacent/book.adoc",
+				`= T\n\n----\n${picked.map((surface) => `include::code.txt[${surface}]`).join("\n")}\n----\n\n== After\n`,
+			);
+			const expected = picked.flatMap((surface) => {
+				const selector = selectionSurface(parseIncludeAttributes(surface));
+				const mapping = selector
+					? mapIncludeSelection(`${code.join("\n")}\n`, selector)
+					: undefined;
+				return mapping?.ok ? mapping.lines : [];
+			});
+			const document = preprocessBookEntryWithOfficialReader({
+				adapter: createAsciidoctorAdapter(),
+				sourcePath: entry,
+				documentRoot: root,
+			});
+			const actual = document.lines.flatMap((line) =>
+				"origin" in line && line.origin.relativePath === "code.txt"
+					? [line.origin.sourceLine]
+					: [],
+			);
+			const after = document.lines.find((line) => line.text === "== After");
+			const afterLine =
+				after && "origin" in after ? after.origin.sourceLine : undefined;
+			if (
+				JSON.stringify(actual) !== JSON.stringify(expected) ||
+				afterLine !== picked.length + 6
+			) {
+				failures.push(
+					`${picked.join(" + ")}: ${JSON.stringify(actual)} vs ${JSON.stringify(expected)}, After at ${afterLine}`,
+				);
+			}
+		}
+		expect(failures).toEqual([]);
 	});
 });

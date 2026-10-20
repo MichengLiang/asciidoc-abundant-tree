@@ -53,7 +53,8 @@ function authoredLines(sourceText: string): string[] {
 }
 
 // 以下两种选取逐句移植 Asciidoctor 2.0.26 `Reader#preprocess_include_directive`（lib/asciidoctor/reader.rb，
-// 选取 lines 与 tags 的两段）。行集必须与官方 Reader 的输出逐行一致，否则这次 include 的坐标只能降级
+// 选取 lines 与 tags 的两段），并以 aat 实际调用的 Asciidoctor.js 3.0.4 为准核对：两者选取逻辑一致，只有
+// TagDirectiveRx 的 \b 在 Ruby 里认 Unicode 单词字符、在 JS 里只认 ASCII，这里跟 JS。行集必须与官方 Reader 的输出逐行一致，否则这次 include 的坐标只能降级
 // （10 号书「选取引入」）；所以这里不另立语义，连官方的边角行为一并照搬：倒序范围不选行、`0..` 不选行、
 // 只写否定标签时隐含通配、结束标签对不上时从栈里摘掉。
 
@@ -202,15 +203,20 @@ function mapLineExpression(expression: string, lineCount: number): number[] {
 	return selected;
 }
 
-// Asciidoctor 的 split_delimited_value：有逗号按逗号切，否则按分号切。
+// Asciidoctor 的 split_delimited_value：有逗号按逗号切，否则按分号切。Ruby 的 split 去掉尾部的空串，空字符串
+// 切出来是空数组：`lines=` 因此按整份引入，`lines=1;3;` 不多出一个选不到任何行的 0。
 function splitDelimited(value: string): string[] {
-	return value.includes(",") ? value.split(",") : value.split(";");
+	const parts = value.split(value.includes(",") ? "," : ";");
+	while (parts.at(-1) === "") {
+		parts.pop();
+	}
+	return parts;
 }
 
-// Ruby 的 String#to_i：跳过前导空白，读可选符号与数字，读不出数字时是 0。
+// Ruby 的 String#to_i：跳过前导空白，读可选符号与数字（数字之间可以有单个下划线，如 1_0），读不出数字时是 0。
 function rubyInteger(text: string): number {
-	const match = /^\s*([+-]?\d+)/u.exec(text);
-	return match?.[1] ? Number(match[1]) : 0;
+	const match = /^\s*([+-]?\d+(?:_\d+)*)/u.exec(text);
+	return match?.[1] ? Number(match[1].replaceAll("_", "")) : 0;
 }
 
 function unquote(value: string): string {
