@@ -19,7 +19,7 @@ xref edge:: 由标题切片中的交叉引用创建的非层级关系边。
 
 xref edge evidence:: 保存 xref raw、source heading、target heading、target selector、字段、官方解析事实、RDF 1.2 reifier 和回源坐标的边证据 resource。
 
-field predicate:: 由源表面的字段名映射得到的 `aat:<name>` 谓词。字段名不能直接作为 prefixed local name 时，投影器使用稳定的 IRI-safe 编码。
+field predicate:: 由源表面的字段名映射得到的谓词：字段名匹配 `^[A-Za-z_][A-Za-z0-9._-]*$` 时是 `aat:<name>`，否则是 `aat:field-<encodeURIComponent(name)>`。
 
 literal field:: 值为 string literal 的字段。标题 metadata named attribute、标题下描述列表字段和未绑定 source value block 的 xref named attribute 产生 literal field。
 

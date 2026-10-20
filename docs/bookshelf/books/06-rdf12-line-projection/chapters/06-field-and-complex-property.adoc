@@ -43,7 +43,7 @@ xref:capacity[运力规则, rel=depends-on, weight=0.8]
 
 literal field 不触发业务解释。`aat:role`、`aat:status`、`aat:owner`、`aat:weight` 只是源文档表面字段的 RDF 表达。下游消费者可以解释这些字段，也可以忽略这些字段。
 
-字段名映射必须确定。字段名是合法 IRI local name 时，谓词 IRI 为 `aat:<fieldName>`。字段名包含不能直接进入 prefixed name 的字符时，投影器使用稳定的 IRI-safe 编码；同一字段名在同一投影配置下得到同一谓词 IRI。
+字段名映射必须确定。字段名匹配 `^[A-Za-z_][A-Za-z0-9._-]*$` 时，谓词 IRI 为 `aat:<fieldName>`；否则为 `aat:field-` 加上字段名的 `encodeURIComponent` 编码（`情况` → `aat:field-%E6%83%85%E5%86%B5`）。同一字段名在同一投影配置下得到同一谓词 IRI。
 
 `rel` 是 xref relation control field。它决定主 relation triple 的谓词，并可作为 `aat:rel` 保留。`rel` 不参与 source value id matching。
 
