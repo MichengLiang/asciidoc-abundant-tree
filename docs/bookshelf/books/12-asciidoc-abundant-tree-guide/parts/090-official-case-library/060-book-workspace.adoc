@@ -17,14 +17,14 @@ views:: `views/book-outline.mmd`
 = Book Workspace Demo
 :doctype: book
 
-include::frontmatter/preface.adoc[]
+\include::frontmatter/preface.adoc[]
 
 = 第一部：对象
 
-include::parts/010-object/010-object-boundary.adoc[]
+\include::parts/010-object/010-object-boundary.adoc[]
 
 [glossary]
-include::backmatter/glossary.adoc[]
+\include::backmatter/glossary.adoc[]
 ----
 
 entry file 保存书籍的整体顺序。included files 保存可维护章节。book-entry mode 构造 logical document，使整本书拥有统一 heading tree；line origin 把每个 logical line 指回原始 source file。
