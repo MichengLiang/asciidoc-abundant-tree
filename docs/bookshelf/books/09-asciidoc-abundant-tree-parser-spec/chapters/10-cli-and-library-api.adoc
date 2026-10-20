@@ -11,12 +11,14 @@
 ----
 import { parseAbundantTree } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({
+const document = await parseAbundantTree({
   sourcePath: "samples/reference-links.adoc",
 });
 ----
 
-`parseAbundantTree` 返回 `AbundantDocument`。调用者不需要解析 pretty tree 或 JSON。
+`parseAbundantTree` 返回 `Promise<AbundantDocument>`。调用者不需要解析 pretty tree 或 JSON。
+
+解析是异步的，因为它调用 Asciidoctor：`@asciidoctor/core` 4.x 的 `load`、`loadFile`、Reader 的 `readLine`、节点的 `getContent` 与 `convert` 都返回 Promise。
 
 公共序列化入口：
 
@@ -26,7 +28,7 @@ formatAbundantTree(document);
 serializeAbundantTreeToJson(document);
 ----
 
-Serializer 只读取 `AbundantDocument`。Serializer 不读取文件，不调用 Asciidoctor，不扫描 AsciiDoc。
+Serializer 只读取 `AbundantDocument`。Serializer 不读取文件，不调用 Asciidoctor，不扫描 AsciiDoc，所以保持同步。
 
 === CLI
 
@@ -49,6 +51,6 @@ CLI 参数错误、输入文件不存在和内部工具错误返回非零 exit c
 
 === 下游投影出口
 
-包导出 `rdf12(document, options)` 作为下游投影函数。下游投影函数以 `AbundantDocument` 为输入，并要求调用者提供自己的投影选项。
+包导出 `rdf12(document, options)` 作为下游投影函数。下游投影函数以 `AbundantDocument` 为输入，并要求调用者提供自己的投影选项。它与 serializer 一样不调用 Asciidoctor，保持同步。
 
 下游投影函数不改变解析器公共模型。它们定义自己的输出表面和验收条件。

@@ -11,14 +11,14 @@ Library API 使用 `parseAbundantTree` 的显式 mode：
 ----
 import { parseAbundantTree } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({
+const document = await parseAbundantTree({
   sourcePath: "docs/bookshelf/books/06-rdf12-line-projection/book.adoc",
   mode: "book-entry",
   documentRoot: "docs/bookshelf",
 });
 ----
 
-该调用返回 `AbundantDocument`。`mode: "book-entry"` 表达 book-entry pipeline 的对象身份。
+该调用返回 `Promise<AbundantDocument>`（见 09 号书「CLI 与 Library API」）。`mode: "book-entry"` 表达 book-entry pipeline 的对象身份。
 
 未提供 `mode` 时，`parseAbundantTree` 保持 single-file 输入语义。实现不得从 `:doctype: book`、文件名或 include directive 自动切换模式。
 

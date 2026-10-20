@@ -38,6 +38,17 @@ asciidoc-abundant-tree
 
 `src/asciidoctor-adapter.ts` 承载 `@asciidoctor/core` 和 HTML fragment parser 的直接调用。
 
+Adapter 只经由 `@asciidoctor/core` 4.x 的公开导出与它自带的类型调用 Asciidoctor，不探测运行时、不调用转译出来的内部方法。
+
+`AbundantDocument` 里的缺值一律省略字段，不出现 `null`。4.x 的 `getTitle()`、`getStyle()`、`getAttribute()` 缺值时返回 `null`（`getId()` 返回 `undefined`），读取它们的地方按类型把 `null` 当作缺值。
+
+解析器里有一类做法不是在弥补接口，而是 Asciidoctor 本身的语义，换 Asciidoctor 版本时保留：
+
+* 逐行来源由解析器与官方 Reader 的输出逐行配对得出（10 号书）：sourcemap 只记块的起始行与文件；Reader 一次推入的行号从第一条选中行逐行累加，选取有空隙时与源行不符；一次推入的第一行在读之前，游标还在外层文件上。
+* 行内 xref、anchor 由解析器扫描源文本：Asciidoctor 的行内处理是替换，不产生带位置的行内节点。
+* 块的结束行由 source interval resolver 恢复：official source location 只有起始行。
+* xref 的 official href 由转换器把一个 xref inline 节点转换成 HTML 后读出：这样得到的是转换器认定的链接，包括跨文档 `.adoc#` 改写为 `.html#`。
+
 `src/parser.ts` 编排文件读取、official parse、source surface projection、official projection、target/xref merge 和 `AbundantDocument` 构造。
 
 `src/source-lines.ts` 提供 line table、line text、line span 和 source span 工具。
@@ -56,7 +67,7 @@ asciidoc-abundant-tree
 
 === 依赖边界
 
-解析器运行依赖 `@asciidoctor/core` 和 HTML fragment parser。解析器不引入站点生成器、数据库、UI 框架或部署工具。
+解析器运行依赖 `@asciidoctor/core` 4.x 和 HTML fragment parser。解析器不引入站点生成器、数据库、UI 框架或部署工具。
 
 每个 parser 运行依赖都必须服务本对象。相邻工具需要的依赖不得进入 parser 运行依赖。
 

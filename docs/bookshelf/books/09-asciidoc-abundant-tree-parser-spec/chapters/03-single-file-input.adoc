@@ -31,11 +31,13 @@ single-file mode 只读取输入文件。该模式不展开 include directive，
 
 === Asciidoctor 配置
 
-single-file mode 使用 `@asciidoctor/core` 解析输入文件。加载配置为：
+single-file mode 使用 `@asciidoctor/core` 4.x 解析输入文件。加载配置为：
 
 [source,typescript]
 ----
-processor.loadFile(sourcePath, {
+import { loadFile } from "@asciidoctor/core";
+
+await loadFile(sourcePath, {
   safe: "secure",
   sourcemap: true,
   to_file: false,
