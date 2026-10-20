@@ -19,7 +19,6 @@ export type SelectionMismatchDiagnostic = {
 };
 
 type TagDirective = {
-	readonly line: number;
 	readonly kind: "start" | "end";
 	readonly name: string;
 };
@@ -28,12 +27,12 @@ export function mapIncludeSelection(
 	sourceText: string,
 	selector: IncludeLineSelector,
 ): IncludeSelectionMapping {
-	const lineCount = sourceText.split(/\r?\n/u).length;
-	const lines =
+	const source = authoredLines(sourceText);
+	const selected =
 		selector.kind === "lines"
-			? mapLineExpression(selector.expression, lineCount)
-			: mapTagExpression(sourceText, selector);
-	if (lines.length === 0) {
+			? mapLineExpression(selector.expression, source.length)
+			: mapTagExpression(source, selector);
+	if (selected.length === 0) {
 		return {
 			ok: false,
 			diagnostic: {
@@ -43,132 +42,175 @@ export function mapIncludeSelection(
 			},
 		};
 	}
-	return { ok: true, lines };
+	return { ok: true, lines: selected };
 }
+
+// 文件末尾的换行不另起一行：Asciidoctor 读到的行里没有它，算进来会让 `**` 与 `8..` 这类到文件末尾的
+// 选取多出一行，与官方输出对不上。
+function authoredLines(sourceText: string): string[] {
+	const lines = sourceText.split(/\r?\n/u);
+	return lines.at(-1) === "" ? lines.slice(0, -1) : lines;
+}
+
+// 以下两种选取逐句移植 Asciidoctor 2.0.26 `Reader#preprocess_include_directive`（lib/asciidoctor/reader.rb，
+// 选取 lines 与 tags 的两段）。行集必须与官方 Reader 的输出逐行一致，否则这次 include 的坐标只能降级
+// （10 号书「选取引入」）；所以这里不另立语义，连官方的边角行为一并照搬：倒序范围不选行、`0..` 不选行、
+// 只写否定标签时隐含通配、结束标签对不上时从栈里摘掉。
 
 function mapTagExpression(
-	sourceText: string,
+	lines: readonly string[],
 	selector: Extract<IncludeLineSelector, { kind: "tag" | "tags" }>,
 ): number[] {
-	const lines = sourceText.split(/\r?\n/u);
-	const directives = tagDirectives(lines);
-	const directiveLines = new Set(directives.map((directive) => directive.line));
-	if (selector.kind === "tag") {
-		if (selector.name === "**") {
-			return lines
-				.map((_, index) => index + 1)
-				.filter((lineNumber) => !directiveLines.has(lineNumber));
+	const tags = tagSelection(selector);
+	if (!tags) {
+		// 没有有效的标签时，官方按整份引入处理，标记行也在内。
+		return lines.map((_, index) => index + 1);
+	}
+	let select: boolean;
+	let baseSelect: boolean;
+	let wildcard: boolean | undefined;
+	const everything = tags.get("**");
+	const any = tags.get("*");
+	if (everything !== undefined) {
+		tags.delete("**");
+		select = baseSelect = everything;
+		if (any !== undefined) {
+			tags.delete("*");
+			wildcard = any;
+		} else if (!select && tags.values().next().value === false) {
+			wildcard = true;
 		}
-		if (selector.name === "*") {
-			return activeTagLines(lines, (active) => active.size > 0);
-		}
-		return activeTagLines(lines, (active) => active.has(selector.name));
+	} else if (any !== undefined) {
+		const anyFirst = tags.keys().next().value === "*";
+		tags.delete("*");
+		wildcard = any;
+		select = baseSelect = anyFirst ? !any : false;
+	} else {
+		select = baseSelect = ![...tags.values()].includes(true);
 	}
 
-	const terms = selector.expression
-		.split(";")
-		.map((term) => term.trim())
-		.filter(Boolean);
-	const includes = terms.filter((term) => !term.startsWith("!"));
-	const excludes = terms
-		.filter((term) => term.startsWith("!"))
-		.map((term) => term.slice(1));
-
-	return activeTagLines(lines, (active) => {
-		const included =
-			includes.length === 0 ||
-			includes.some((name) =>
-				name === "*" || name === "**" ? active.size > 0 : active.has(name),
-			);
-		const excluded = excludes.some((name) =>
-			name === "*" || name === "**" ? active.size > 0 : active.has(name),
-		);
-		return included && !excluded;
-	});
-}
-
-function activeTagLines(
-	lines: readonly string[],
-	includeLine: (active: ReadonlySet<string>) => boolean,
-): number[] {
-	const active = new Set<string>();
 	const selected: number[] = [];
+	const stack: [name: string, select: boolean][] = [];
+	let active: string | undefined;
 	for (const [index, text] of lines.entries()) {
-		const lineNumber = index + 1;
-		const directive = parseTagDirective(text, lineNumber);
-		if (directive?.kind === "start") {
-			active.add(directive.name);
+		const directive = parseTagDirective(text);
+		if (!directive) {
+			if (select) {
+				selected.push(index + 1);
+			}
 			continue;
 		}
-		if (directive?.kind === "end") {
-			active.delete(directive.name);
-			continue;
-		}
-		if (includeLine(active)) {
-			selected.push(lineNumber);
+		const chosen = tags.get(directive.name);
+		if (directive.kind === "end") {
+			if (directive.name === active) {
+				stack.pop();
+				const top = stack.at(-1);
+				active = top?.[0];
+				select = top ? top[1] : baseSelect;
+			} else if (chosen !== undefined) {
+				const at = stack.findLastIndex(([name]) => name === directive.name);
+				if (at >= 0) {
+					stack.splice(at, 1);
+				}
+			}
+		} else if (chosen !== undefined) {
+			select = chosen;
+			stack.push([directive.name, select]);
+			active = directive.name;
+		} else if (wildcard !== undefined) {
+			select = active !== undefined && !select ? false : wildcard;
+			stack.push([directive.name, select]);
+			active = directive.name;
 		}
 	}
 	return selected;
 }
 
-function tagDirectives(lines: readonly string[]): TagDirective[] {
-	return lines.flatMap((line, index) => {
-		const directive = parseTagDirective(line, index + 1);
-		return directive ? [directive] : [];
-	});
+function tagSelection(
+	selector: Extract<IncludeLineSelector, { kind: "tag" | "tags" }>,
+): Map<string, boolean> | undefined {
+	const definitions =
+		selector.kind === "tag"
+			? [selector.name]
+			: splitDelimited(selector.expression);
+	const tags = new Map<string, boolean>();
+	for (const definition of definitions) {
+		if (definition === "" || definition === "!") {
+			continue;
+		}
+		if (definition.startsWith("!")) {
+			tags.set(definition.slice(1), false);
+		} else {
+			tags.set(definition, true);
+		}
+	}
+	return tags.size > 0 ? tags : undefined;
 }
 
-function parseTagDirective(
-	line: string,
-	lineNumber: number,
-): TagDirective | undefined {
-	const start = /^\s*\/\/\s*tag::([^[]+)\[\]\s*$/u.exec(line);
-	if (start?.[1]) {
-		return { line: lineNumber, kind: "start", name: start[1] };
+// 与 Asciidoctor 的 TagDirectiveRx 相同：标记出现在行中任意位置，跟在什么注释符号之后都行
+// （//、#、--、<!-- …），其后是行尾或空白。只认 // 会让 Python、SQL 等源文件的选取落空。
+const tagDirectivePattern = /\b(?:tag|(e)nd)::(\S+?)\[\](?=$|[ \r])/u;
+
+function parseTagDirective(line: string): TagDirective | undefined {
+	if (!(line.includes("::") && line.includes("[]"))) {
+		return undefined;
 	}
-	const end = /^\s*\/\/\s*end::([^[]+)\[\]\s*$/u.exec(line);
-	if (end?.[1]) {
-		return { line: lineNumber, kind: "end", name: end[1] };
+	const match = tagDirectivePattern.exec(line);
+	if (!match?.[2]) {
+		return undefined;
 	}
-	return undefined;
+	return { kind: match[1] ? "end" : "start", name: match[2] };
 }
 
 function mapLineExpression(expression: string, lineCount: number): number[] {
-	const normalized = unquote(expression);
-	const items = normalized
-		.split(/[;,]/u)
-		.map((item) => item.trim())
-		.filter(Boolean);
-	const selected = new Set<number>();
-	for (const item of items) {
-		for (const line of expandLineRange(item, lineCount)) {
-			selected.add(line);
+	const wanted: number[] = [];
+	for (const item of splitDelimited(unquote(expression))) {
+		const range = item.indexOf("..");
+		if (range === -1) {
+			wanted.push(rubyInteger(item));
+			continue;
+		}
+		const from = rubyInteger(item.slice(0, range));
+		const toText = item.slice(range + 2);
+		const to = rubyInteger(toText);
+		if (toText === "" || to < 0) {
+			wanted.push(from, Number.POSITIVE_INFINITY);
+		} else {
+			for (let line = from; line <= to; line += 1) {
+				wanted.push(line);
+			}
 		}
 	}
-	return [...selected].toSorted((left, right) => left - right);
+	if (wanted.length === 0) {
+		// 官方：展开后一个行号也没有（如倒序的 3..1）时 inc_linenos 为 nil，按整份引入处理。
+		return Array.from({ length: lineCount }, (_, index) => index + 1);
+	}
+	const pending = [...new Set(wanted)].toSorted((left, right) => left - right);
+	const selected: number[] = [];
+	let remaining = false;
+	for (let line = 1; line <= lineCount && pending.length > 0; line += 1) {
+		if (remaining || pending[0] === Number.POSITIVE_INFINITY) {
+			remaining = true;
+			selected.push(line);
+			continue;
+		}
+		if (pending[0] === line) {
+			selected.push(line);
+			pending.shift();
+		}
+	}
+	return selected;
 }
 
-function expandLineRange(item: string, lineCount: number): number[] {
-	if (!item.includes("..")) {
-		const line = Number(item);
-		return Number.isInteger(line) && line >= 1 && line <= lineCount
-			? [line]
-			: [];
-	}
-	const [startRaw = "", endRaw = ""] = item.split("..");
-	const start = Number(startRaw);
-	const end =
-		endRaw === "" || endRaw === "-1"
-			? lineCount
-			: Math.min(Number(endRaw), lineCount);
-	if (!Number.isInteger(start) || !Number.isInteger(end) || start < 1) {
-		return [];
-	}
-	const result: number[] = [];
-	for (let line = start; line <= end; line += 1) {
-		result.push(line);
-	}
-	return result;
+// Asciidoctor 的 split_delimited_value：有逗号按逗号切，否则按分号切。
+function splitDelimited(value: string): string[] {
+	return value.includes(",") ? value.split(",") : value.split(";");
+}
+
+// Ruby 的 String#to_i：跳过前导空白，读可选符号与数字，读不出数字时是 0。
+function rubyInteger(text: string): number {
+	const match = /^\s*([+-]?\d+)/u.exec(text);
+	return match?.[1] ? Number(match[1]) : 0;
 }
 
 function unquote(value: string): string {

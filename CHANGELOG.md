@@ -6,6 +6,16 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Fixed
+
+- Fixed book-entry source coordinates drifting after a `tag=`/`tags=` include whose tag markers are not written with `//` (Python `# tag::x[]`, SQL `-- tag::x[]`, HTML `<!-- tag::x[] -->`). Tag markers are now recognized the way Asciidoctor's `TagDirectiveRx` recognizes them, whatever comment syntax precedes them. Previously no tag was recognized, the include selected nothing, and every later heading and xref was reported that many lines too late.
+- Fixed the `lines=` and `tag`/`tags` selections to follow Asciidoctor's selection algorithm line for line (ported from `reader.rb` in Asciidoctor 2.0.26): `**` and `*` wildcards, negated tags with an implied wildcard, `8..` and `2..-1` ranges, a reversed range falling back to the whole file, and a trailing newline no longer counted as an extra line.
+- Fixed selected includes losing alignment with the official Reader: each selected line is now paired with the official output only when it comes from the same include push and has the same text. An include directive inside the selected region is expanded with its own file's coordinates. When the selection stops lining up (for example a conditional inside the region that Asciidoctor drops), the rest of that include is recorded as degraded lines without source coordinates, and later lines stay aligned instead of drifting.
+
+### Changed
+
+- Book-entry construction warnings, such as `origin-map.selection-mismatch`, now reach `AbundantDocument.toolDiagnostics` (ahead of parser diagnostics) instead of being dropped, and name the include site and the selection surface.
+
 ## 0.1.20 - 2026-10-21
 
 ### Changed

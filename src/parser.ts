@@ -36,7 +36,7 @@ export function parseAbundantTree(
 		}
 		registerSourceAwareDocumentForRecovery(sourceAwareDocument);
 		const lineTable = buildLineTable(sourceAwareDocument.logicalText);
-		return parseAsciidoctorDocument({
+		const document = parseAsciidoctorDocument({
 			officialDocument: adapter.loadSource(sourceAwareDocument.logicalText),
 			adapter,
 			lineTable,
@@ -49,6 +49,14 @@ export function parseAbundantTree(
 			mode: "book-entry",
 			sourceIdentity: nodeSourceIdentity,
 		});
+		// 构造时的 warning（如 origin-map.selection-mismatch）不阻止文档成立，但要交给文档：下游拿到缺失的
+		// 坐标时，靠它知道是哪一处 include 造成的（10 号书「Warning 的去向」）。
+		document.toolDiagnostics.unshift(
+			...sourceAwareDocument.diagnostics.filter(
+				(diagnostic) => diagnostic.level === "warning",
+			),
+		);
+		return document;
 	}
 	if (options.mode !== undefined && options.mode !== "single-file") {
 		throw new Error(`Unsupported mode: ${String(options.mode)}.`);

@@ -26,9 +26,13 @@ Include attrlist 带 `tag`、`tags` 或 `lines` 时，目标文件只有被选�
 
 Tag 标记行的识别与 Asciidoctor 相同：行中出现 `tag::名称[]` 或 `end::名称[]`，其后是行尾或空白，该行就是标记行，不进入 logical document。注释符号不参与判断：`// tag::x[]`、`# tag::x[]`、`-- tag::x[]` 与 `<!-- tag::x[] -->` 都是标记行。只认 `//` 一种写法会让 Python、SQL 等源文件的选取落空。
 
-实现先自行算出被选中的源行，再与 Asciidoctor 官方 Reader 为这次 include 输出的行逐行对应。两者行数一致时，每一行取官方输出的文本，登记算出的源行号。行数不一致时，实现无法知道哪一行来自哪里：这次 include 的每一行登记为 degraded line，source coordinate 保持缺失，并产生一条 `origin-map.selection-mismatch` warning，写明哪一处 include、选取表达式与两边的行数。
+实现先自行算出被选中的源行，再与 Asciidoctor 官方 Reader 为这次 include 输出的行逐行对应：官方的这一行属于这次 include 的输出，文本就是这个源行，才登记这个源行号，正文取官方输出的文本。选中的行里有 include directive 时，它照常递归展开，嵌套文件的行登记嵌套文件的坐标。
 
-无论一致与否，官方 Reader 为这次 include 输出的行都在这里消费完。此后的 logical line 继续与官方输出逐行对齐：一处选取对不上，只让这次 include 的坐标缺失，不让后面的标题与引用整体错开。
+从某一行起对应不上时（例如选中区域里的条件指令被官方 Reader 吃掉），实现无法知道余下的行各自来自哪里：这次 include 余下的输出登记为 degraded line，source coordinate 保持缺失，并产生一条 `origin-map.selection-mismatch` warning，写明哪一处 include、用的选取写法与缺失坐标的行数。已经对应上的行保留坐标。
+
+官方 Reader 为这次 include 输出的行都在这里消费完。此后的 logical line 继续与官方输出逐行对齐：一处选取对不上，只让这次 include 的一部分坐标缺失，不让后面的标题与引用整体错开。
+
+一次 include 的输出从哪里结束，由官方 Reader 的行号判断：一次推入的行号从第一条选中的源行起算，每读一行加一，所以递增且不越过最后一条选中的源行；紧挨着再引入同一个文件时，下一次推入从它自己的首行重新起算，就此分界。
 
 === Unsupported Attrlist
 
