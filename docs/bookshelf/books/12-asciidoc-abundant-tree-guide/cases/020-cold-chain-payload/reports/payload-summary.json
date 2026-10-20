@@ -1,10 +1,15 @@
 {
-  "policy": "冷链出库放行策略",
-  "headingPayloads": [
-    {"field": "release-policy-config", "format": "json", "line": 8},
-    {"field": "review-playbook", "format": "yaml", "line": 16}
-  ],
-  "edgePayloads": [
-    {"field": "dependency-evidence", "format": "yaml", "sourceValueId": "rel-release-temperature-audit", "line": 24}
-  ]
+	"policy": "冷链出库放行策略",
+	"headingPayloads": [
+		{ "field": "release-policy-config", "format": "json", "line": 8 },
+		{ "field": "review-playbook", "format": "yaml", "line": 16 }
+	],
+	"edgePayloads": [
+		{
+			"field": "dependency-evidence",
+			"format": "yaml",
+			"sourceValueId": "rel-release-temperature-audit",
+			"line": 24
+		}
+	]
 }

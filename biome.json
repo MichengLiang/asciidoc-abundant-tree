@@ -13,9 +13,11 @@
 			"!**/dist",
 			"!coverage",
 			"!docs/bookshelf/build",
+			"!docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/reports.case-inventory.json",
 			"!docs/关于D2/probes",
 			"!node_modules",
 			"!pnpm-lock.yaml",
+			"!samples/business-kg-js-demo/generated",
 			"!tmp",
 			"!*.tgz"
 		]

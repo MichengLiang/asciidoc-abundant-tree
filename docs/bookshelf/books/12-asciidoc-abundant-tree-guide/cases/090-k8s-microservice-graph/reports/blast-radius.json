@@ -1,6 +1,6 @@
 [
-  {
-    "resource": "orders-db",
-    "affected": ["orders-service"]
-  }
+	{
+		"resource": "orders-db",
+		"affected": ["orders-service"]
+	}
 ]

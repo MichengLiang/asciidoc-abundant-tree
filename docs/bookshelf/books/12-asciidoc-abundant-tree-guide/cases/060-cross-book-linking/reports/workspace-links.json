@@ -1,7 +1,7 @@
 [
-  {
-    "source": "book-a#book-a-heading-l3-c1",
-    "relation": "same-concept-as",
-    "target": "book-b#book-b-heading-l3-c1"
-  }
+	{
+		"source": "book-a#book-a-heading-l3-c1",
+		"relation": "same-concept-as",
+		"target": "book-b#book-b-heading-l3-c1"
+	}
 ]

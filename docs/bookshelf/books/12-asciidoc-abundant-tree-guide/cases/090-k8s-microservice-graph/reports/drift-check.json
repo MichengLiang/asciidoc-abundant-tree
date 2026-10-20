@@ -1,4 +1,4 @@
 {
-  "conforms": true,
-  "checked": ["orders-service", "orders-db", "public-ingress"]
+	"conforms": true,
+	"checked": ["orders-service", "orders-db", "public-ingress"]
 }

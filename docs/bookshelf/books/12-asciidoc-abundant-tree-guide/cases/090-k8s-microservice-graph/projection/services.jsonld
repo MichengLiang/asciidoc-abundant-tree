@@ -1,14 +1,14 @@
 {
-  "@context": {
-    "k8s": "https://micheng.dev/ns/k8s-graph#",
-    "rel": "https://micheng.dev/ns/asciidoc-relation#",
-    "name": "k8s:name",
-    "dependsOn": { "@id": "rel:depends-on", "@type": "@id" },
-    "routesTo": { "@id": "rel:routes-to", "@type": "@id" }
-  },
-  "@id": "urn:case:k8s#heading-l3-c1",
-  "@type": "k8s:Service",
-  "name": "orders-service",
-  "dependsOn": "urn:case:k8s#heading-l17-c1",
-  "routesTo": "urn:case:k8s#heading-l20-c1"
+	"@context": {
+		"k8s": "https://micheng.dev/ns/k8s-graph#",
+		"rel": "https://micheng.dev/ns/asciidoc-relation#",
+		"name": "k8s:name",
+		"dependsOn": { "@id": "rel:depends-on", "@type": "@id" },
+		"routesTo": { "@id": "rel:routes-to", "@type": "@id" }
+	},
+	"@id": "urn:case:k8s#heading-l3-c1",
+	"@type": "k8s:Service",
+	"name": "orders-service",
+	"dependsOn": "urn:case:k8s#heading-l17-c1",
+	"routesTo": "urn:case:k8s#heading-l20-c1"
 }

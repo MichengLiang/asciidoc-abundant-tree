@@ -1,5 +1,5 @@
 export const queries = {
-  headingsByDocumentOrder: `
+	headingsByDocumentOrder: `
     PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
     SELECT ?heading ?headline ?order WHERE {
       ?heading a aat:Heading ;
@@ -8,7 +8,7 @@ export const queries = {
     }
     ORDER BY ?order
   `,
-  xrefEvidence: `
+	xrefEvidence: `
     PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
     SELECT ?edge ?raw ?line WHERE {
       ?edge a aat:XrefEdge ;

@@ -1,13 +1,13 @@
 {
-  "@context": {
-    "provx": "https://micheng.dev/ns/document-provenance#",
-    "sourceFile": "provx:sourceFile",
-    "page": "provx:page",
-    "supports": { "@id": "provx:supports", "@type": "@id" }
-  },
-  "@id": "urn:case:rag#chunk-001",
-  "@type": "provx:Chunk",
-  "sourceFile": "docs/report.pdf",
-  "page": "12",
-  "supports": "urn:case:rag#claim-001"
+	"@context": {
+		"provx": "https://micheng.dev/ns/document-provenance#",
+		"sourceFile": "provx:sourceFile",
+		"page": "provx:page",
+		"supports": { "@id": "provx:supports", "@type": "@id" }
+	},
+	"@id": "urn:case:rag#chunk-001",
+	"@type": "provx:Chunk",
+	"sourceFile": "docs/report.pdf",
+	"page": "12",
+	"supports": "urn:case:rag#claim-001"
 }

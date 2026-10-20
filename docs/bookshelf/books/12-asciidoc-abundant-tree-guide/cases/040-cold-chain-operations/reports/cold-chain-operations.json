@@ -1,9 +1,14 @@
 {
-  "nodes": [
-    { "label": "2-8C温控规则", "roles": ["policy"], "line": "7" },
-    { "label": "批次运输任务CT-2026-0618", "roles": ["shipment"], "line": "11" }
-  ],
-  "edges": [
-    { "source": "批次运输任务CT-2026-0618", "relation": "governed-by", "target": "2-8C温控规则", "line": "11" }
-  ]
+	"nodes": [
+		{ "label": "2-8C温控规则", "roles": ["policy"], "line": "7" },
+		{ "label": "批次运输任务CT-2026-0618", "roles": ["shipment"], "line": "11" }
+	],
+	"edges": [
+		{
+			"source": "批次运输任务CT-2026-0618",
+			"relation": "governed-by",
+			"target": "2-8C温控规则",
+			"line": "11"
+		}
+	]
 }

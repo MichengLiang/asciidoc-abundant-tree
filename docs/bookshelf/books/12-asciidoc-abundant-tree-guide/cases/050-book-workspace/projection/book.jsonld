@@ -1,2179 +1,2179 @@
 {
-  "@context": {
-    "aat": "https://micheng.dev/ns/asciidoc-abundant-tree#",
-    "rel": "https://micheng.dev/ns/asciidoc-relation#",
-    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-    "prov": "http://www.w3.org/ns/prov#",
-    "dcterms": "http://purl.org/dc/terms/",
-    "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "rdf12": "https://micheng.dev/ns/asciidoc-abundant-tree/rdf12-json-ld#"
-  },
-  "@graph": [
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-0",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "http://www.w3.org/ns/prov#Activity",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-1",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#ProjectionActivity",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-2",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/ns/prov#used",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-3",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-4",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-5",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-6",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-7",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-8",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "0",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-9",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-10",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "Book Workspace Case",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-11",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "= Book Workspace Case\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-12",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "book.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-13",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-14",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-15",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-16",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "3",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-17",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "3",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-18",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "2",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-19",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "3",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-20",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "_前言",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-21",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-22",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-23",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "前言",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-24",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "== 前言\n\n本案例展示 book-entry source set、logical document 和 line origin。\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-25",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "frontmatter/preface.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-26",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-27",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-28",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressLabel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "case-object-boundary",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-29",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-30",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "4",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-31",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "4",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-32",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "4",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-33",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "4",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-34",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-35",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "2",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-36",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "对象边界",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-37",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-38",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataStartLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-39",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "[#case-object-boundary]\n== 对象边界\n\n对象边界章节链接 xref:case-glossary[术语表]。\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-40",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#references",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-41",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "parts/010-object/010-object-boundary.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-42",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-43",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-44",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressLabel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "case-glossary",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-45",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "2",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-46",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "5",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-47",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "4",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-48",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "5",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-49",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "5",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-50",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "1",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-51",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "2",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-52",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "术语表",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-53",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "== 术语表\n\n[glossary]\nline origin:: logical line 到 origin source line 的映射。\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-54",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "backmatter/glossary.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-55",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "2",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-56",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#style",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "appendix",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-57",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-58",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "2",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-59",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-60",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-61",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "11",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-62",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "8",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-63",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "3",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-64",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "11",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-65",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "_第一部对象",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-66",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "0",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-67",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "6",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-68",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "第一部：对象",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-69",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "= 第一部：对象\n\ninclude::parts/010-object/010-object-boundary.adoc[]\n\n[appendix]\ninclude::backmatter/glossary.adoc[]\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-70",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "book.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-71",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "6",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-72",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "http://www.w3.org/ns/prov#Entity",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-73",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#HeadingProjection",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-74",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/ns/prov#hadPrimarySource",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-75",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/ns/prov#wasDerivedFrom",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-76",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/ns/prov#wasGeneratedBy",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-77",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#SourceFile",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-78",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "[#case-glossary]\n== 术语表\n\n[glossary]\nline origin:: logical line 到 origin source line 的映射。\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-79",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "backmatter/glossary.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-80",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#SourceFile",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-81",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "= Book Workspace Case\n:doctype: book\n\ninclude::frontmatter/preface.adoc[]\n\n= 第一部：对象\n\ninclude::parts/010-object/010-object-boundary.adoc[]\n\n[appendix]\ninclude::backmatter/glossary.adoc[]\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-82",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "book.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-83",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#SourceFile",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-84",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "== 前言\n\n本案例展示 book-entry source set、logical document 和 line origin。\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-85",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "frontmatter/preface.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-86",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#SourceFile",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-87",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "[#case-object-boundary]\n== 对象边界\n\n对象边界章节链接 xref:case-glossary[术语表]。\n",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-88",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "parts/010-object/010-object-boundary.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-89",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "http://www.w3.org/ns/prov#Entity",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-90",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#AsciiDocSourceDocument",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-91",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "book.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-92",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceFile",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-93",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceFile",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-94",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceFile",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-95",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceFile",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-96",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:TripleTerm",
-        "triple": {
-          "subject": {
-            "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-            "@type": "rdf12:IriTerm"
-          },
-          "predicate": {
-            "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#references",
-            "@type": "rdf12:IriTerm"
-          },
-          "object": {
-            "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-            "@type": "rdf12:IriTerm"
-          }
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-97",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#XrefEdge",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-98",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#displayLabel",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "术语表",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-99",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endColumn",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "33",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-100",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "4",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-101",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialHref",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "#case-glossary",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-102",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialReftext",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "术语表",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-103",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedId",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "case-glossary",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-104",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedType",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "section",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-105",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "xref:case-glossary[术语表]",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-106",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "parts/010-object/010-object-boundary.adoc",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-107",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceHeading",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-108",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceSelector",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "case-object-boundary",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-109",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startColumn",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "10",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-110",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "4",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#integer",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-111",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#syntax",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "macro",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-112",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetHeading",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
-        "@type": "rdf12:IriTerm"
-      }
-    },
-    {
-      "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-113",
-      "@type": "rdf12:Triple",
-      "subject": {
-        "@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
-        "@type": "rdf12:IriTerm"
-      },
-      "predicate": {
-        "@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetSelector",
-        "@type": "rdf12:IriTerm"
-      },
-      "object": {
-        "@type": "rdf12:LiteralTerm",
-        "@value": "case-glossary",
-        "datatype": {
-          "@id": "http://www.w3.org/2001/XMLSchema#string",
-          "@type": "rdf12:IriTerm"
-        }
-      }
-    }
-  ]
+	"@context": {
+		"aat": "https://micheng.dev/ns/asciidoc-abundant-tree#",
+		"rel": "https://micheng.dev/ns/asciidoc-relation#",
+		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		"prov": "http://www.w3.org/ns/prov#",
+		"dcterms": "http://purl.org/dc/terms/",
+		"xsd": "http://www.w3.org/2001/XMLSchema#",
+		"rdf12": "https://micheng.dev/ns/asciidoc-abundant-tree/rdf12-json-ld#"
+	},
+	"@graph": [
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-0",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "http://www.w3.org/ns/prov#Activity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-1",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#ProjectionActivity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-2",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/ns/prov#used",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-3",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-4",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-5",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-6",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-7",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-8",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-9",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-10",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "Book Workspace Case",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-11",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "= Book Workspace Case\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-12",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "book.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-13",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-14",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-15",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-16",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "3",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-17",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "3",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-18",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-19",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "3",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-20",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "_前言",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-21",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-22",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-23",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "前言",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-24",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "== 前言\n\n本案例展示 book-entry source set、logical document 和 line origin。\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-25",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "frontmatter/preface.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-26",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-27",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-28",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "case-object-boundary",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-29",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-30",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-31",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-32",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-33",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-34",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-35",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-36",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "对象边界",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-37",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-38",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-39",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "[#case-object-boundary]\n== 对象边界\n\n对象边界章节链接 xref:case-glossary[术语表]。\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-40",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#references",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-41",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "parts/010-object/010-object-boundary.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-42",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-43",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-44",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "case-glossary",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-45",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-46",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "5",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-47",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-48",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "5",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-49",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "5",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-50",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-51",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-52",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "术语表",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-53",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "== 术语表\n\n[glossary]\nline origin:: logical line 到 origin source line 的映射。\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-54",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "backmatter/glossary.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-55",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-56",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#style",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "appendix",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-57",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-58",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-59",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-60",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-61",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "11",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-62",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "8",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-63",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "3",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-64",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "11",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-65",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "_第一部对象",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-66",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-67",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "6",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-68",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "第一部：对象",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-69",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "= 第一部：对象\n\ninclude::parts/010-object/010-object-boundary.adoc[]\n\n[appendix]\ninclude::backmatter/glossary.adoc[]\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-70",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "book.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-71",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "6",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-72",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "http://www.w3.org/ns/prov#Entity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-73",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#HeadingProjection",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-74",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/ns/prov#hadPrimarySource",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-75",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/ns/prov#wasDerivedFrom",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-76",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#projection",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/ns/prov#wasGeneratedBy",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#activity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-77",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#SourceFile",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-78",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "[#case-glossary]\n== 术语表\n\n[glossary]\nline origin:: logical line 到 origin source line 的映射。\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-79",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "backmatter/glossary.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-80",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#SourceFile",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-81",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "= Book Workspace Case\n:doctype: book\n\ninclude::frontmatter/preface.adoc[]\n\n= 第一部：对象\n\ninclude::parts/010-object/010-object-boundary.adoc[]\n\n[appendix]\ninclude::backmatter/glossary.adoc[]\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-82",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "book.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-83",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#SourceFile",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-84",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "== 前言\n\n本案例展示 book-entry source set、logical document 和 line origin。\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-85",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "frontmatter/preface.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-86",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#SourceFile",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-87",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "[#case-object-boundary]\n== 对象边界\n\n对象边界章节链接 xref:case-glossary[术语表]。\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-88",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "parts/010-object/010-object-boundary.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-89",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "http://www.w3.org/ns/prov#Entity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-90",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#AsciiDocSourceDocument",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-91",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "book.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-92",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceFile",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-backmatter%2Fglossary.adoc",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-93",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceFile",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-book.adoc",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-94",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceFile",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-frontmatter%2Fpreface.adoc",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-95",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceFile",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#source-file-parts%2F010-object%2F010-object-boundary.adoc",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-96",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#references",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+						"@type": "rdf12:IriTerm"
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-97",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#XrefEdge",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-98",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#displayLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "术语表",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-99",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endColumn",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "33",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-100",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-101",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialHref",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "#case-glossary",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-102",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialReftext",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "术语表",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-103",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedId",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "case-glossary",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-104",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedType",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "section",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-105",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "xref:case-glossary[术语表]",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-106",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "parts/010-object/010-object-boundary.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-107",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceHeading",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-108",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#sourceSelector",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "case-object-boundary",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-109",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startColumn",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "10",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-110",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-111",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#syntax",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "macro",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-112",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetHeading",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#statement-113",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#xref-edge-l4-c10-o0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#targetSelector",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "case-glossary",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		}
+	]
 }

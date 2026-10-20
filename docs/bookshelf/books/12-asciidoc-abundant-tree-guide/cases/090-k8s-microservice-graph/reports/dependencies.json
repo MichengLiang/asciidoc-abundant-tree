@@ -1,6 +1,6 @@
 [
-  {
-    "service": "orders-service",
-    "dependsOn": ["orders-db"]
-  }
+	{
+		"service": "orders-service",
+		"dependsOn": ["orders-db"]
+	}
 ]

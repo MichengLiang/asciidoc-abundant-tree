@@ -1,9 +1,9 @@
 {
-  "headings": [
-    {"order": 1, "headline": "基础 RDF 投影示例", "level": 0},
-    {"order": 2, "headline": "结构示例", "role": "process", "line": 4},
-    {"order": 3, "headline": "约束规则", "role": "rule", "line": 9},
-    {"order": 4, "headline": "生成标签节点", "line": 25},
-    {"order": 5, "headline": "关系证据说明", "role": "evidence", "line": 30}
-  ]
+	"headings": [
+		{ "order": 1, "headline": "基础 RDF 投影示例", "level": 0 },
+		{ "order": 2, "headline": "结构示例", "role": "process", "line": 4 },
+		{ "order": 3, "headline": "约束规则", "role": "rule", "line": 9 },
+		{ "order": 4, "headline": "生成标签节点", "line": 25 },
+		{ "order": 5, "headline": "关系证据说明", "role": "evidence", "line": 30 }
+	]
 }

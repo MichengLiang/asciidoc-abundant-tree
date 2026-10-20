@@ -1,8 +1,8 @@
 {
-  "sourceFiles": [
-    "book.adoc",
-    "frontmatter/preface.adoc",
-    "parts/010-object/010-object-boundary.adoc",
-    "backmatter/glossary.adoc"
-  ]
+	"sourceFiles": [
+		"book.adoc",
+		"frontmatter/preface.adoc",
+		"parts/010-object/010-object-boundary.adoc",
+		"backmatter/glossary.adoc"
+	]
 }

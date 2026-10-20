@@ -1,5 +1,5 @@
 export type SourceSetEntry = {
-  relativePath: string;
-  headingCount: number;
-  contributesStructure: boolean;
+	relativePath: string;
+	headingCount: number;
+	contributesStructure: boolean;
 };
