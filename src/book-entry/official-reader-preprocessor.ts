@@ -69,6 +69,8 @@ type PreprocessorState = {
 	currentPush: ReaderPush;
 };
 
+const asciidocExtensionPattern = /\.(?:adoc|asciidoc|asc|ad|txt)$/u;
+
 const includeDirectivePattern =
 	/^(?<indent>\s*)(?<escape>\\?)include::(?<target>[^[]+)\[(?<attrlist>[^\]]*)\]\s*$/u;
 
@@ -289,25 +291,46 @@ function appendIncludeDirective(
 	// 下一条官方行比当前推入深一层，就是这次 include 的推入；没有这样的行，说明官方这次什么也没推入。
 	const parent = state.currentPush;
 	const first = state.officialLines[state.officialIndex];
+	const selection = selector
+		? mapIncludeSelection(targetFile.text, selector)
+		: undefined;
+	// 什么也没推入的 include（选取为空），下一条官方行可能是紧挨着的下一次 include 的推入，深度同样是父层加一：
+	// 选取为空就不认推入，并且这次推入里要有出自被引入文件的行（推入的第一行可能是 leveloffset 补的行，
+	// 游标还记在外层文件上，所以看整次推入）。
+	const candidate =
+		first && first.push.depth === parent.depth + 1 && selection?.ok !== false
+			? first.push
+			: undefined;
 	const own =
-		first && first.push.depth === parent.depth + 1 ? first.push : undefined;
+		candidate &&
+		state.officialLines
+			.slice(state.officialIndex, pushEnd(candidate, state))
+			.some(
+				(official) =>
+					official.push.id === candidate.id &&
+					official.cursor.file === includePath,
+			)
+			? candidate
+			: undefined;
 	const end = own ? pushEnd(own, state) : state.officialIndex;
 	state.currentPush = own ?? parent;
 	consumeGeneratedPreludeForInclude(leveloffset, own, state);
-	if (selector) {
+	if (selector && selection) {
 		appendSelectedInclude(
 			targetFile,
 			selector,
 			indentSurface(attributes),
 			state,
 			`${containingFile.relativePath}:${line.number}`,
+			selection,
 			own,
 			leveloffset ? generatedTailStart(end, state) : end,
 		);
 	} else {
 		appendFullFileInclude(targetFile, indentSurface(attributes), state);
 	}
-	if (leveloffset) {
+	// 没有推入就没有 Reader 补的尾行；照旧去吃会把父文件的空行当成补出来的行。
+	if (leveloffset && own) {
 		consumeGeneratedTailForInclude(state);
 	}
 	state.currentPush = parent;
@@ -398,10 +421,10 @@ function appendSelectedInclude(
 	indent: ReturnType<typeof indentSurface>,
 	state: PreprocessorState,
 	includeSite: string,
+	selection: ReturnType<typeof mapIncludeSelection>,
 	own: ReaderPush | undefined,
 	bodyEnd: number,
 ): void {
-	const selection = mapIncludeSelection(targetFile.text, selector);
 	if (!selection.ok) {
 		state.diagnostics.push({
 			...selection.diagnostic,
@@ -411,9 +434,13 @@ function appendSelectedInclude(
 	// 逐行与官方 Reader 的输出配对，同整份引入一样：选中的行里有 include 时交给 appendIncludeDirective，
 	// 嵌套文件的官方行由它消费。普通行要确认下一条官方行出自这次推入、文本就是这一行，才认它是这一行；
 	// 选中区域里的条件指令（ifdef 等）被官方吃掉时，文本对不上，不会把后一行认成前一行。
+	// Reader 只对 AsciiDoc 文件处理 include 与条件指令（reader.rb 的 ASCIIDOC_EXTENSIONS）；.py、.md 里字面写着的
+	// include:: 原样输出，不能当嵌套 include 展开。
+	const asciidoc = asciidocExtensionPattern.test(targetFile.absolutePath);
 	for (const sourceLine of selection.ok ? selection.lines : []) {
 		const line = targetFile.lineTable.lines[sourceLine - 1];
-		const directive = line && parseReaderIncludeDirective(line.text);
+		const directive =
+			asciidoc && line ? parseReaderIncludeDirective(line.text) : undefined;
 		if (line && directive && !directive.escaped) {
 			appendIncludeDirective(targetFile, line, directive, state);
 			continue;

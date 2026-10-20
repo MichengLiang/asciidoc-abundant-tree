@@ -403,4 +403,72 @@ describe("adjacent selected includes of the same file", () => {
 		}
 		expect(failures).toEqual([]);
 	});
+
+	function preprocess(root: string, entry: string) {
+		return preprocessBookEntryWithOfficialReader({
+			adapter: createAsciidoctorAdapter(),
+			sourcePath: entry,
+			documentRoot: root,
+		});
+	}
+	const originsIn = (document: ReturnType<typeof preprocess>, file: string) =>
+		document.lines.flatMap((line) =>
+			"origin" in line && line.origin.relativePath === file
+				? [line.origin.sourceLine]
+				: [],
+		);
+
+	it("does not take the next include's push for an include that selects nothing", () => {
+		// 小棉复核 a30b738 的反例：选取为空的 include 曾把紧挨着的下一次推入认成自己的，再下一条 include
+		// 又拿到别人的推入，靠空行与 `}` 的文本巧合配出假坐标。
+		const root = join(fixtureRoot, "empty-then-adjacent");
+		writeFixture("empty-then-adjacent/code.txt", "\n}\nm\n\n}\nz\n");
+		const entry = writeFixture(
+			"empty-then-adjacent/book.adoc",
+			"= T\n\n----\ninclude::code.txt[tag=nope]\ninclude::code.txt[lines=1..2]\ninclude::code.txt[lines=4..6]\n----\n",
+		);
+		const document = preprocess(root, entry);
+
+		expect(originsIn(document, "code.txt")).toEqual([1, 2, 4, 5, 6]);
+		expect(
+			document.diagnostics.map((diagnostic) => diagnostic.message),
+		).toEqual([
+			"Include 'code.txt' at book.adoc:4 with tag=nope selects no source lines.",
+		]);
+	});
+
+	it("leaves the parent's blank lines alone when a leveloffset include pushes nothing", () => {
+		const root = join(fixtureRoot, "leveloffset-empty");
+		writeFixture(
+			"leveloffset-empty/part.adoc",
+			"// tag::x[]\nx\n// end::x[]\n",
+		);
+		const entry = writeFixture(
+			"leveloffset-empty/book.adoc",
+			"= T\n\ninclude::part.adoc[tag=nope,leveloffset=+1]\n\n\n== After\n\nbody\n",
+		);
+		const document = preprocess(root, entry);
+
+		expect(originsIn(document, "book.adoc")).toEqual([1, 2, 4, 5, 6, 7, 8]);
+		expect(document.lines.filter((line) => line.text === "body")).toHaveLength(
+			1,
+		);
+	});
+
+	it("keeps a literal include line inside a selected non-AsciiDoc file", () => {
+		// Reader 只对 AsciiDoc 文件处理 include；.py 里写着的 include:: 是普通的一行，nested.adoc 也不必存在。
+		const root = join(fixtureRoot, "literal-include-in-py");
+		writeFixture(
+			"literal-include-in-py/code.py",
+			"# tag::x[]\nbefore\ninclude::nested.adoc[]\nafter\n# end::x[]\n",
+		);
+		const entry = writeFixture(
+			"literal-include-in-py/book.adoc",
+			"= T\n\n----\ninclude::code.py[tag=x]\n----\n",
+		);
+		const document = preprocess(root, entry);
+
+		expect(originsIn(document, "code.py")).toEqual([2, 3, 4]);
+		expect(document.diagnostics).toEqual([]);
+	});
 });
