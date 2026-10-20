@@ -39,6 +39,7 @@ Title 保存标题文本和可恢复的 source location。没有源标题行时�
 * `titleSpan`：标题文本 source span。
 * `idOrigin`：`source`、`asciidoctor-generated` 或 `unknown`。
 * `metadata`：附着到标题的 metadata。
+* `descriptionMetadata`：标题下描述列表字段，见 <<heading-description-metadata>>。
 * `children`：该 section 内的子 section 和 block。
 
 official section tree 决定 section identity 和父子结构。source layer 恢复 raw、metadata、line span 和 title span。
@@ -74,6 +75,17 @@ Description list 保存 explicit ID、block title、style、delimiter、metadata
 `DescriptionTermNode` 表示 description list item 的 term surface。Term 保存 display text、line、sourceSpan、source layer 和 term 文本区内的 inline occurrence 子节点。
 
 `DescriptionNode` 表示 description list item 的 description surface。Description 保存直接 description text、line、sourceSpan、source layer 和 attached block 或 nested description list 子节点。Description text 和 children 可以同时存在。
+
+[#heading-description-metadata]
+=== Heading Description Metadata
+
+`HeadingDescriptionMetadataNode` 表示标题下描述列表字段。它挂在 `SectionNode.descriptionMetadata` 上，不进入 section 的 `children`。
+
+解析器从 section 的第一个子块开始收集连续的 `DescriptionListNode`。收集到的列表都不带 ID、block title、style 或其他 block metadata，且任何条目的 description 子树中都不含嵌套 description list 时，这一串列表成为该 section 的 description metadata，并从 `children` 中移除；否则这一串列表原样保留在 `children` 中，section 不产生 description metadata。
+
+`entries` 按源文档顺序为每个 term 保存一条记录：`key`、`value`、`term` 与 `description`。`fields` 是 key 到 value 的映射，重复 key 由后出现的 value 覆盖；`entries` 保留全部出现。
+
+`key` 是 term 的源表面文本。`value` 是 description 的源文档表面值：解析器用 AST 确定 description 的起点、条目的终点和 attached block 的范围，再从该条目所在源文件的原文中截取这一范围。term 与分隔符不进入 value；把 attached block 挂到条目上的外层续接行替换为空行；value 去除公共缩进和首尾空行。value 不经过 Asciidoctor 的行内替换，attached block 以作者写下的 AsciiDoc 原文出现在 value 中。没有 description 的 term 得到空字符串。
 
 === Metadata
 

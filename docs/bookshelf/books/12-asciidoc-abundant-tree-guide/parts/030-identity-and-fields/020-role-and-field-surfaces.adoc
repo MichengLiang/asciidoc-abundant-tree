@@ -44,7 +44,7 @@ selector binding 使用 heading label space。role 是 heading field，提供筛
 
 |标题下描述列表
 |`summary::` 后接字段值
-|字段多，字段值长，字段需要多行文本。
+|字段多，字段值长，字段需要多行文本，或需要用 `+` 续接附带代码块、表格。字段值保存描述的源表面原文。
 
 |hmeta
 |`hmeta:review-state[ready, label=可复核]`

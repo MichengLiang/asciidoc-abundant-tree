@@ -146,6 +146,57 @@ named attributes 直接使用 `aat:` 命名空间下同名谓词。字段值作�
 
 标题 complex property 也使用同一套字段名映射。标题 complex property 的字段名来自 source value block 的 property role，字段值是 raw value object。标题 metadata role 仍只表达标题角色，不表达 complex property 字段名。
 
+[#heading-description-fields]
+=== 标题下描述列表字段
+
+标题下的描述列表也可以承载标题字段。字段较多、字段值较长、需要换行或需要附带代码块时，作者把字段写成标题下的描述列表。
+
+[source,asciidoc]
+------
+[#close-tab.rule, verdict=adapt]
+== 关闭标签
+
+situation:: 关闭当前标签。
+evidence:: `editorCommands.ts:835-839`。
++
+[source,ts]
+----
+closeActiveEditor()
+----
+landing:: core 的 `resources/`。
+
+正文从这里开始。
+------
+
+投影为：
+
+[source,turtle]
+----
+:heading-l1-o0 a aat:Heading ;
+  aat:headline "关闭标签" ;
+  aat:addressLabel "close-tab" ;
+  aat:role "rule" ;
+  aat:verdict "adapt" ;
+  aat:situation "关闭当前标签。" ;
+  aat:evidence "`editorCommands.ts:835-839`。\n\n[source,ts]\n----\ncloseActiveEditor()\n----" ;
+  aat:landing "core 的 `resources/`。" .
+----
+
+候选描述列表由标题的直接子块决定。标题的第一个子块是描述列表时，从它开始连续出现的描述列表组成候选串；候选串在第一个不是描述列表的块处结束。标题与描述列表之间的空行不影响判断。第一个子块不是描述列表的标题没有描述列表字段；候选串之后出现的描述列表是正文。
+
+候选串整体成立或整体不成立。以下任一情况使候选串不成立：
+
+* 串中某个描述列表带 ID、块标题、style 或其他块 metadata，例如 `[horizontal]`。带装饰的描述列表是作者排版的正文。
+* 串中某个条目的描述里含有嵌套描述列表。嵌套描述列表表达层级结构，压平为字段会丢失这一结构。
+
+不成立的候选串保留为正文，标题不获得其中任何字段。
+
+每个 term 产生一个字段。字段名是 term 的源表面文本。多个 term 共享一个描述时，每个 term 得到同一个字段值。同一字段名在候选串中出现多次时，每次出现各产生一个字段值。
+
+字段值是描述的源文档表面值，取自字段所在源文件的原文，范围从描述在源文件中的起点到该条目的最后一行。续接标记 `+` 挂上的段落、listing、表格等块属于字段值。投影器只移除服务于描述列表容器的表面：term、分隔符，以及描述内部把块挂到条目上的外层续接行；外层续接行移除后留下一个空行，块与块之间的分隔因此保留。字段值内部的 AsciiDoc 语法按作者写下的原样保存：行内标记、xref 宏和 include 指令都不被替换或展开。字段值去除公共缩进和首尾空行；源文本中的换行保存为真实换行，源文本中字面的 `\n` 保持为两个字符。
+
+描述列表字段与标题头部 named attributes 使用同一套字段名映射，字段值作为 string literal 保存。投影器不解释字段值的业务语义，也不把字段值中的块解析为结构节点。
+
 === 重复 label
 
 重复 headline 合法。重复 address label 按源文档事实保留。按重复 label 查询时，结果可以包含多个标题节点。投影器不为重复 label 虚构唯一绑定。
