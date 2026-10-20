@@ -5,7 +5,7 @@ Include resolution 读取 source file 中的受支持 include directive，并把
 
 === 支持表面
 
-本对象支持不带转义前缀的 full-file 完整行 include directive：`include::chapters/01-projection-object.adoc[]`。
+本对象支持不带转义前缀的完整行 include directive：整份引入 `include::chapters/01-projection-object.adoc[]`，以及用 `tag`、`tags` 或 `lines` 选取部分行的引入（见 <<selected-include>>）。
 
 Directive 可以带前导空白。Target path 按包含该 directive 的 source file 所在目录解析。
 
@@ -19,13 +19,20 @@ Included file 可以继续包含 include directive。Resolution 递归执行，�
 
 递归 resolution 必须检测循环。循环 include 阻止 logical document 成立，并产生错误诊断。
 
+[#selected-include]
+=== 选取引入
+
+Include attrlist 带 `tag`、`tags` 或 `lines` 时，目标文件只有被选中的行进入 logical document。哪些行被选中，以 Asciidoctor 的选取语义为准；line origin 记录每一行在目标文件中的源行号。
+
+Tag 标记行的识别与 Asciidoctor 相同：行中出现 `tag::名称[]` 或 `end::名称[]`，其后是行尾或空白，该行就是标记行，不进入 logical document。注释符号不参与判断：`// tag::x[]`、`# tag::x[]`、`-- tag::x[]` 与 `<!-- tag::x[] -->` 都是标记行。只认 `//` 一种写法会让 Python、SQL 等源文件的选取落空。
+
+实现先自行算出被选中的源行，再与 Asciidoctor 官方 Reader 为这次 include 输出的行逐行对应。两者行数一致时，每一行取官方输出的文本，登记算出的源行号。行数不一致时，实现无法知道哪一行来自哪里：这次 include 的每一行登记为 degraded line，source coordinate 保持缺失，并产生一条 `origin-map.selection-mismatch` warning，写明哪一处 include、选取表达式与两边的行数。
+
+无论一致与否，官方 Reader 为这次 include 输出的行都在这里消费完。此后的 logical line 继续与官方输出逐行对齐：一处选取对不上，只让这次 include 的坐标缺失，不让后面的标题与引用整体错开。
+
 === Unsupported Attrlist
 
-本对象只定义 full-file include。Include attrlist 若包含 tag、lines 或其它改变目标文件行集的语义，resolution 不得静默按整文件 include 处理。
-
-示例 surface 包括 `include::chapter.adoc[tag=main]` 和 `include::chapter.adoc[lines=1..20]`。
-
-这些 surface 进入 unsupported include diagnostic。该诊断保护 line origin 的真实性。
+Include attrlist 若包含本书没有定义的、改变目标文件行集的语义，resolution 不得静默按整文件 include 处理。这些 surface 进入 unsupported include diagnostic。该诊断保护 line origin 的真实性。
 
 === 路径边界
 
@@ -37,4 +44,4 @@ Resolved include path 必须位于允许边界内。允许边界由 `documentRoo
 
 AsciiDoc include 是预处理器行为。未转义完整行 include directive 是构造 logical document 的输入事实。
 
-本对象不实现完整 Asciidoctor preprocessor。它只实现本书定义的 full-file include resolution。其它 AsciiDoc 语义由 parser 在 logical document 上解释。
+本对象不实现完整 Asciidoctor preprocessor。它只实现本书定义的 include resolution，选取引入的行集以 Asciidoctor 官方 Reader 的输出为准。其它 AsciiDoc 语义由 parser 在 logical document 上解释。

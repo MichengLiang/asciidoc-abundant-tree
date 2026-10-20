@@ -28,6 +28,10 @@ Book-entry diagnostics 描述 logical document 构造和 origin recovery 中的�
 
 Recovery diagnostic 必须阻止假精确坐标输出。无法可靠恢复的 source coordinate 应保持缺失。
 
+=== Warning 的去向
+
+不阻止 logical document 成立的 book-entry 诊断是 warning，例如选取引入与官方 Reader 输出对不上时的 `origin-map.selection-mismatch`（见 xref:include-resolution[]）。Warning 进入成功 `AbundantDocument` 的 `toolDiagnostics`，排在 parser 诊断之前。只在构造过程中记下、不交给文档的 warning，等于没有：下游拿到缺失或降级的坐标，却不知道是哪一处 include 造成的。
+
 === 诊断表面
 
 Diagnostic 必须包含 code、level、message 和可用 source coordinate。
