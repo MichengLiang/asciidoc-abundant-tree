@@ -138,7 +138,7 @@ print("warp")
   aat:owner "ops" .
 ----
 
-named attributes 直接使用 `aat:` 命名空间下同名谓词。字段值作为 literal 保存。投影器不解释 `status` 和 `owner` 的业务语义。标题 role 是源文档表面的作者角色，不参与 selector binding，不决定 heading node 的 RDF type。heading node 的结构身份只来自等号标题。
+named attributes 使用 `aat:` 命名空间下的字段谓词，名字到谓词的映射见下一段。字段值作为 literal 保存。投影器不解释 `status` 和 `owner` 的业务语义。标题 role 是源文档表面的作者角色，不参与 selector binding，不决定 heading node 的 RDF type。heading node 的结构身份只来自等号标题。
 
 字段名映射必须确定。字段名匹配 `^[A-Za-z_][A-Za-z0-9._-]*$` 时，谓词 IRI 为 `aat:<fieldName>`；否则谓词 IRI 为 `aat:field-` 加上字段名的 `encodeURIComponent` 编码，例如 `情况` 映射为 `aat:field-%E6%83%85%E5%86%B5`。非 ASCII 的名字即使是合法的 Turtle local name 也走编码一支，所以中文字段名永远落在 `aat:field-` 之下。同一字段名在同一投影配置下必须得到同一谓词 IRI。字段值统一按源文档表面值保存为 string literal。
 
@@ -193,7 +193,7 @@ landing:: core 的 `resources/`。
 
 每个 term 产生一个字段。字段名是 term 的源表面文本。多个 term 共享一个描述时，每个 term 得到同一个字段值。同一字段名在候选串中出现多次时，每次出现各产生一个字段值。
 
-字段值是描述的源文档表面值，取自字段所在源文件的原文，范围从描述在源文件中的起点到该条目的最后一行。条目的最后一行按 AsciiDoc 的列表续接读原文确定：直接文字到空行为止，续接标记挂上的块到它结束为止，细则见解析器规约（09 号书）的 Heading Description Metadata 一节。续接标记 `+` 挂上的段落、listing、表格等块属于字段值。投影器只移除服务于描述列表容器的表面：term、分隔符，以及描述内部把块挂到条目上的外层续接行；外层续接行移除后留下一个空行，块与块之间的分隔因此保留。字段值内部的 AsciiDoc 语法按作者写下的原样保存：行内标记、xref 宏和 include 指令都不被替换或展开。字段值去除行尾空白、公共缩进和首尾空行；源文本中的换行保存为真实换行，源文本中字面的 `\n` 保持为两个字符。
+字段值是描述的源文档表面值，取自字段所在源文件的原文，范围从描述在源文件中的起点到该条目的最后一行。条目的最后一行按 AsciiDoc 的列表续接读原文确定：直接文字到空行为止，续接标记挂上的块到它结束为止，空行之后紧跟的列表项或缩进行仍属于条目，细则见解析器规约（09 号书）的 Heading Description Metadata 一节。续接标记 `+` 挂上的段落、listing、表格等块属于字段值。投影器只移除服务于描述列表容器的表面：term、分隔符，以及描述内部把块挂到条目上的外层续接行；外层续接行移除后留下一个空行，块与块之间的分隔因此保留。字段值内部的 AsciiDoc 语法按作者写下的原样保存：行内标记、xref 宏和 include 指令都不被替换或展开。字段值去除行尾空白、公共缩进和首尾空行；源文本中的换行保存为真实换行，源文本中字面的 `\n` 保持为两个字符。
 
 描述列表字段与标题头部 named attributes 使用同一套字段名映射，字段值作为 string literal 保存。投影器不解释字段值的业务语义，也不把字段值中的块解析为结构节点。
 
