@@ -6,6 +6,8 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.21 - 2026-10-21
+
 ### Fixed
 
 - Fixed book-entry source coordinates drifting after a `tag=`/`tags=` include whose tag markers are not written with `//` (Python `# tag::x[]`, SQL `-- tag::x[]`, HTML `<!-- tag::x[] -->`). Tag markers are now recognized the way Asciidoctor's `TagDirectiveRx` recognizes them, whatever comment syntax precedes them. Previously no tag was recognized, the include selected nothing, and every later heading and xref was reported that many lines too late.
