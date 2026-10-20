@@ -1,24 +1,42 @@
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import createAsciidoctor from "@asciidoctor/core";
 import { describe, expect, it } from "vitest";
 import {
 	type AsciidoctorBlock,
 	createAsciidoctorAdapter,
 } from "../../src/asciidoctor-adapter";
 import type { LogicalLineRecord } from "../../src/book-entry/line-origin-model";
+import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/official-reader-preprocessor";
 import { buildParserSafeLogicalText } from "../../src/book-entry/parser-safe-logical-text";
+import { parseAbundantTree } from "../../src/index";
+import type { AbundantNode, ListingNode } from "../../src/model";
 
 describe("book-entry parser-safe logical text", () => {
-	it("writes escaped include records with a leading backslash", () => {
+	it("writes include and conditional directive lines with a leading backslash", () => {
 		const safe = buildParserSafeLogicalText([
-			escapedIncludeRecord(1, "include::target.adoc[]"),
+			sourceRecord(1, "include::target.adoc[]"),
+			sourceRecord(2, "ifdef::never[]"),
+			sourceRecord(3, "endif::[]"),
+			sourceRecord(4, "ifeval::[1 > 0]"),
+			sourceRecord(5, "normal include::x[] in the middle"),
+			sourceRecord(6, "  include::indented.adoc[]"),
 		]);
 
-		expect(safe.text).toBe("\\include::target.adoc[]");
-		expect(safe.lineRecords).toHaveLength(1);
+		expect(safe.text.split("\n")).toEqual([
+			"\\include::target.adoc[]",
+			"\\ifdef::never[]",
+			"\\endif::[]",
+			"\\ifeval::[1 > 0]",
+			"normal include::x[] in the middle",
+			"  include::indented.adoc[]",
+		]);
+		expect(safe.lineRecords).toHaveLength(6);
 	});
 
-	it("does not expand escaped include target during parser load", () => {
+	it("does not expand an include line again during parser load", () => {
 		const safe = buildParserSafeLogicalText([
-			escapedIncludeRecord(1, "include::target.adoc[]"),
+			sourceRecord(1, "include::target.adoc[]"),
 		]);
 		const document = createAsciidoctorAdapter().loadSource(safe.text);
 		const [block] = (document.getBlocks?.() ?? []) as AsciidoctorBlock[];
@@ -42,28 +60,114 @@ describe("book-entry parser-safe logical text", () => {
 
 	it("keeps parser-safe line count equal to record count", () => {
 		const safe = buildParserSafeLogicalText([
-			escapedIncludeRecord(1, "include::target.adoc[]"),
-			{
-				kind: "source-preserving",
-				logicalLine: 2,
-				text: "normal",
-				origin: {
-					absolutePath: "/book.adoc",
-					relativePath: "book.adoc",
-					sourceLine: 2,
-				},
-				columnMap: { kind: "identity" },
-			},
+			sourceRecord(1, "include::target.adoc[]"),
+			sourceRecord(2, "normal"),
 		]);
 
 		expect(safe.text.split(/\r?\n/u)).toHaveLength(safe.lineRecords.length);
 	});
 });
 
-function escapedIncludeRecord(
-	logicalLine: number,
-	text: string,
-): LogicalLineRecord {
+// 第一次读取输出的行里像指令的都是字面内容，第二次解析不能再处理它们。预期取自官方 Asciidoctor 对同一本书的解析。
+describe("directive-shaped lines the official Reader emits literally", () => {
+	const fixtureRoot = join(process.cwd(), "tmp/parser-safe-logical-text");
+
+	function writeFixture(relativePath: string, content: string): string {
+		const path = join(fixtureRoot, relativePath);
+		mkdirSync(dirname(path), { recursive: true });
+		writeFileSync(path, content);
+		return path;
+	}
+
+	function officialListing(entry: string): string | undefined {
+		const document = createAsciidoctor().loadFile(entry, { safe: "unsafe" });
+		const [listing] = document.findBy({
+			context: "listing",
+		}) as AsciidoctorBlock[];
+		return listing?.getSource?.();
+	}
+
+	function listings(nodes: readonly AbundantNode[]): ListingNode[] {
+		return nodes.flatMap((node) => [
+			...(node.kind === "listing" ? [node] : []),
+			...listings(node.children ?? []),
+		]);
+	}
+
+	function parse(root: string, entry: string) {
+		return parseAbundantTree({
+			sourcePath: entry,
+			mode: "book-entry",
+			documentRoot: root,
+		});
+	}
+
+	// .py 里字面写着的指令行：Reader 不处理非 AsciiDoc 文件的指令，missing.adoc 也不必存在。
+	const pySource =
+		"x = 1\ninclude::missing.adoc[]\nifdef::never[]\ny = 2\nendif::[]\n";
+
+	it("keeps the lines of a fully included non-AsciiDoc file", () => {
+		const root = join(fixtureRoot, "full-py");
+		rmSync(root, { recursive: true, force: true });
+		writeFixture("full-py/code.py", pySource);
+		const entry = writeFixture(
+			"full-py/book.adoc",
+			"= T\n\n== 甲\n\n----\ninclude::code.py[]\n----\n\n== 乙\n",
+		);
+
+		const document = parse(root, entry);
+		const [listing] = listings(document.children ?? []);
+
+		expect(officialListing(entry)).toBe(pySource.trimEnd());
+		expect(listing?.content).toBe(pySource.trimEnd());
+		const yi = document.children?.find(
+			(node) => node.kind === "section" && node.title === "乙",
+		);
+		expect(yi?.source?.line).toBe(9);
+		const lines = preprocessBookEntryWithOfficialReader({
+			adapter: createAsciidoctorAdapter(),
+			sourcePath: entry,
+			documentRoot: root,
+		}).lines.flatMap((line) =>
+			"origin" in line && line.origin.relativePath === "code.py"
+				? [line.origin.sourceLine]
+				: [],
+		);
+		expect(lines).toEqual([1, 2, 3, 4, 5]);
+	});
+
+	it("keeps the lines of a selected non-AsciiDoc file", () => {
+		const root = join(fixtureRoot, "selected-py");
+		rmSync(root, { recursive: true, force: true });
+		writeFixture("selected-py/code.py", `# tag::x[]\n${pySource}# end::x[]\n`);
+		const entry = writeFixture(
+			"selected-py/book.adoc",
+			"= T\n\n== 甲\n\n----\ninclude::code.py[tag=x]\n----\n",
+		);
+
+		const [listing] = listings(parse(root, entry).children ?? []);
+
+		expect(officialListing(entry)).toBe(pySource.trimEnd());
+		expect(listing?.content).toBe(pySource.trimEnd());
+	});
+
+	it("keeps escaped conditional directives as their unescaped text", () => {
+		const root = join(fixtureRoot, "escaped-conditional");
+		rmSync(root, { recursive: true, force: true });
+		const entry = writeFixture(
+			"escaped-conditional/book.adoc",
+			"= T\n\n== 甲\n\n----\n\\ifdef::never[]\n中间\n\\endif::[]\n----\n",
+		);
+
+		const [listing] = listings(parse(root, entry).children ?? []);
+
+		expect(officialListing(entry)).toBe("ifdef::never[]\n中间\nendif::[]");
+		expect(listing?.content).toBe("ifdef::never[]\n中间\nendif::[]");
+		expect(listing?.source?.line).toBe(5);
+	});
+});
+
+function sourceRecord(logicalLine: number, text: string): LogicalLineRecord {
 	return {
 		kind: "source-preserving",
 		logicalLine,
@@ -74,6 +178,5 @@ function escapedIncludeRecord(
 			sourceLine: logicalLine,
 		},
 		columnMap: { kind: "identity" },
-		escapedInclude: true,
 	};
 }

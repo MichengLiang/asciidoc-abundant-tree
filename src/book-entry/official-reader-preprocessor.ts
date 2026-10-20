@@ -136,7 +136,12 @@ function validateIncludeGraph(
 				}),
 			);
 		}
-		if (selectionSurface(attributes)) {
+		// 被引入的非 AsciiDoc 文件，Reader 不处理其中的指令（见 appendSelectedInclude），里面字面写着的
+		// include:: 不是图的一部分；入口文件不论扩展名都处理。
+		if (
+			selectionSurface(attributes) ||
+			!asciidocExtensionPattern.test(includePath)
+		) {
 			continue;
 		}
 		validateIncludeGraph(includePath, documentRoot, nextStack);
@@ -405,8 +410,11 @@ function appendFullFileInclude(
 	indent: ReturnType<typeof indentSurface>,
 	state: PreprocessorState,
 ): void {
+	const asciidoc = asciidocExtensionPattern.test(targetFile.absolutePath);
 	for (const line of authoredLines(targetFile)) {
-		const directive = parseReaderIncludeDirective(line.text);
+		const directive = asciidoc
+			? parseReaderIncludeDirective(line.text)
+			: undefined;
 		if (directive && !directive.escaped) {
 			appendIncludeDirective(targetFile, line, directive, state);
 			continue;
@@ -601,7 +609,6 @@ function appendEscapedIncludeLine(
 			sourceLine: line.number,
 		},
 		columnMap: createIdentityColumnMap(),
-		escapedInclude: true,
 	});
 }
 

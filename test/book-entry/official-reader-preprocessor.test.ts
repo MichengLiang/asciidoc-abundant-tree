@@ -218,7 +218,6 @@ describe("book-entry official Reader preprocessor", () => {
 				expect.objectContaining({
 					kind: "source-preserving",
 					text: "include::escaped.adoc[]",
-					escapedInclude: true,
 				}),
 			]),
 		);

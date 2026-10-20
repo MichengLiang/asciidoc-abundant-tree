@@ -35,7 +35,6 @@ export type SourcePreservingLineRecord = {
 	readonly text: string;
 	readonly origin: PhysicalLineOrigin;
 	readonly columnMap: IdentityColumnMap;
-	readonly escapedInclude?: boolean | undefined;
 };
 
 export type SelectedSourceLineRecord = {

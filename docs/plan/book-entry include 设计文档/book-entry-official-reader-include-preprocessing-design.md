@@ -121,7 +121,7 @@ The target pipeline rejects these surfaces:
 - URI include target.
 - Include attrlist whose source mapping rule is absent from this design.
 
-The target parser input is a logical document that cannot perform a second include expansion. The preprocessing pipeline marks escaped include output and protects it before parser core receives the logical text.
+The target parser input is a logical document that cannot perform a second preprocessing pass on literal content. Every line of official Reader output that still has the shape of an include or conditional directive is literal content, and it is protected before parser core receives the logical text.
 
 The target source model distinguishes five logical line classes:
 
@@ -227,7 +227,7 @@ An include directive inside a source block is processed by the official Reader u
 
 `opts=optional` skips a missing include target.
 
-An escaped include line is unescaped by the official Reader. A logical line created from an escaped include must be protected before parser core receives the logical document.
+An escaped include or conditional directive line is unescaped by the official Reader. Directive-shaped lines of an included non-AsciiDoc file are emitted unprocessed. Such logical lines must be protected before parser core receives the logical document.
 
 Reader cursor line numbers are sufficient evidence for source-preserving full-file include lines. Reader cursor line numbers are not sufficient evidence for complex `tags` selections, non-contiguous `lines` selections, or generated control lines.
 
@@ -263,7 +263,7 @@ src/book-entry/
 
 `source-set.ts` owns documentRoot-relative path normalization, local source file registration, and source file reconstruction records.
 
-`parser-safe-logical-text.ts` owns the transformation from logical line records to parser input text. It protects escaped include lines from second include expansion.
+`parser-safe-logical-text.ts` owns the transformation from logical line records to parser input text. It protects directive-shaped literal lines from a second preprocessing pass.
 
 ### Data Flow
 
@@ -679,9 +679,9 @@ Surface:
 
 Official Reader emits literal include text without the escape backslash.
 
-The logical line is recorded as `source-preserving` with an escaped-include marker.
+The logical line is recorded as `source-preserving`.
 
-`parser-safe-logical-text.ts` restores the escape backslash before parser core receives the logical text.
+`parser-safe-logical-text.ts` restores the escape backslash before parser core receives the logical text, because the line has the shape of an include directive.
 
 The escaped target is not registered as an included source file.
 
@@ -723,7 +723,7 @@ Parser core receives one logical text string.
 
 The logical text is built from `LogicalLineRecord.text` with parser-safety transformations applied.
 
-Escaped include records are written with a leading backslash. This prevents second include expansion during `adapter.loadSource(logicalText)`.
+Records whose text matches Asciidoctor's `IncludeDirectiveRx` or `ConditionalDirectiveRx` (without the optional escape) are written with a leading backslash. The official Reader has already consumed every live directive, so such a line is literal content: an escaped directive the Reader unescaped, or a line of an included non-AsciiDoc file. The backslash prevents a second include expansion or conditional evaluation during `adapter.loadSource(logicalText)`. A literal line that itself starts with a backslash before a directive cannot be protected this way; the parser removes its first backslash.
 
 Generated control line records are written as their official Reader text.
 
