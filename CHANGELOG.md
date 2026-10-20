@@ -6,6 +6,8 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.1.20 - 2026-10-21
+
 ### Changed
 
 - Changed heading description metadata values to the authored source surface of each description, read from the origin file: inline markup such as backticks and `xref:` macros is preserved instead of being replaced by Asciidoctor inline substitutions, and multiline text keeps every line. This aligns the implementation with the RDF 1.2 projection rule that field values are source surface values.
@@ -15,6 +17,7 @@ This project uses semantic versioning after `0.1.0`.
 
 - Fixed description metadata fields whose description is only a list (for example `aliases::` followed by `*` items) projecting as empty strings.
 - Fixed the repository lint gate: the book 12 guide case library is formatted with Biome, and its two generated outputs are excluded from Biome.
+- Fixed the book 12 guide book-workspace example losing its `include::` lines: the directives are escaped so the bookshelf build no longer reports missing include files and the example shows them as written.
 
 ### Documentation
 
