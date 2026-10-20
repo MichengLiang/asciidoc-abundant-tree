@@ -151,6 +151,25 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 		expect(listing?.content).toBe(pySource.trimEnd());
 	});
 
+	it("keeps indented directive lines as ordinary text", () => {
+		// Asciidoctor 的指令从第 1 列匹配：代码清单里一段 diff 的上下文行 `     include::…[*]` 是普通文字。
+		const root = join(fixtureRoot, "indented-directives");
+		rmSync(root, { recursive: true, force: true });
+		const body =
+			"     include::missing.adoc#handoff[*]\n  ifdef::never[]\n中间\n  endif::[]";
+		const entry = writeFixture(
+			"indented-directives/book.adoc",
+			`= T\n\n== 甲\n\n----\n${body}\n----\n`,
+		);
+
+		const document = parse(root, entry);
+		const [listing] = listings(document.children ?? []);
+
+		expect(officialListing(entry)).toBe(body);
+		expect(listing?.content).toBe(body);
+		expect(document.toolDiagnostics).toEqual([]);
+	});
+
 	it("keeps escaped conditional directives as their unescaped text", () => {
 		const root = join(fixtureRoot, "escaped-conditional");
 		rmSync(root, { recursive: true, force: true });

@@ -6,6 +6,10 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Fixed
+
+- Fixed an indented directive-shaped line (such as the context line `     include::a.adoc#part[*]` of a diff shown in a listing) being taken for an include directive: book-entry construction failed with `include.attrlist-unmapped`. Asciidoctor matches include and conditional directives from column 1 only, so these lines are ordinary text. The include directive shape now follows Asciidoctor's `IncludeDirectiveRx` (target without surrounding whitespace, attribute list up to the last `]`), shared with the parser-safe text builder.
+
 ## 0.1.21 - 2026-10-21
 
 ### Fixed

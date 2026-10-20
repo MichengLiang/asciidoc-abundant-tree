@@ -7,7 +7,7 @@ Include resolution 读取 source file 中的受支持 include directive，并把
 
 本对象支持不带转义前缀的完整行 include directive：整份引入 `include::chapters/01-projection-object.adoc[]`，以及用 `tag`、`tags` 或 `lines` 选取部分行的引入（见 <<selected-include>>）。
 
-Directive 可以带前导空白。Target path 按包含该 directive 的 source file 所在目录解析。
+Directive 从行首写起，与 Asciidoctor 的 `IncludeDirectiveRx` 相同：行首有空白的 `  include::…[]` 是普通文字，见 <<literal-directive-lines>>。Target path 按包含该 directive 的 source file 所在目录解析。
 
 Escaped include 不执行 resolution。Escaped include 的 source line 以反斜杠开头：`\include::chapters/01-projection-object.adoc[]`。
 
@@ -23,6 +23,8 @@ Included file 可以继续包含 include directive。Resolution 递归执行，�
 === 字面指令行
 
 Asciidoctor 只处理 AsciiDoc 文件里的预处理指令，扩展名为 `adoc`、`asciidoc`、`asc`、`ad` 或 `txt`；入口文件不论扩展名都处理。被引入的其它文件（`.py`、`.md`……）里写着的 `include::` 与条件指令（`ifdef::`、`ifndef::`、`ifeval::`、`endif::`）是这个文件的普通内容：不递归展开，不检查目标是否存在，原样进入 logical document，line origin 登记各自的源行。代码清单引入一份讲解 AsciiDoc 的源文件时，常有这样的行。
+
+AsciiDoc 文件里，行首有空白的指令行同样是普通内容：指令从第 1 列匹配。代码清单里一段 diff 的上下文行（`     include::…#片区[*]`）就是这样，它不展开，也不因属性列表无法映射而让 logical document 不成立。
 
 Logical document 交给 parser 时，parser 会把文本再预处理一遍。官方 Reader 已经消费了全部真正的指令，它输出的行里仍然是指令形状的都是字面内容：上面说的这些行，以及被转义的 include 与条件指令（Reader 去掉了转义的反斜杠）。交给 parser 的文本给这些行加回一个反斜杠，parser 去掉它，得到与官方 Reader 相同的行；不加，parser 会把 include 再展开一次、让条件指令吞掉后面的行。本身以反斜杠开头的字面行无法这样保护，parser 会去掉它的第一个反斜杠。
 

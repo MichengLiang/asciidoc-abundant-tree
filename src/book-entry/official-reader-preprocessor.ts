@@ -41,6 +41,7 @@ import {
 	isUriTarget,
 	readerPreprocessingOptions,
 } from "./reader-boundary-policy";
+import { includeDirectivePattern } from "./reader-directive-patterns";
 import { createSourceSet } from "./source-set";
 
 export type PreprocessBookEntryOptions = {
@@ -70,9 +71,6 @@ type PreprocessorState = {
 };
 
 const asciidocExtensionPattern = /\.(?:adoc|asciidoc|asc|ad|txt)$/u;
-
-const includeDirectivePattern =
-	/^(?<indent>\s*)(?<escape>\\?)include::(?<target>[^[]+)\[(?<attrlist>[^\]]*)\]\s*$/u;
 
 function validateIncludeGraph(
 	absolutePath: string,
