@@ -301,6 +301,8 @@ second attached paragraph.
 [#target]
 == Target
 
+Intro paragraph.
+
 Term::
 +
 ----
@@ -397,6 +399,8 @@ Status:: hmeta:status[active, label=生效] description.
 
 [#rule]
 == Rule
+
+Intro paragraph.
 
 Term::
 +

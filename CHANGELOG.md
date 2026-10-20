@@ -6,6 +6,20 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Changed
+
+- Changed heading description metadata values to the authored source surface of each description, read from the origin file: inline markup such as backticks and `xref:` macros is preserved instead of being replaced by Asciidoctor inline substitutions, and multiline text keeps every line. This aligns the implementation with the RDF 1.2 projection rule that field values are source surface values.
+- Changed leading description lists whose descriptions carry `+`-attached blocks (listings, paragraphs, tables) to become heading description metadata. The attached blocks are part of the field value as authored AsciiDoc; the outer continuation lines become blank lines. Previously such a list was kept as content and every field in the run silently disappeared. Decorated lists and runs with nested description lists are still kept as content.
+
+### Fixed
+
+- Fixed description metadata fields whose description is only a list (for example `aliases::` followed by `*` items) projecting as empty strings.
+- Fixed the repository lint gate: the book 12 guide case library is formatted with Biome, and its two generated outputs are excluded from Biome.
+
+### Documentation
+
+- Specified heading description fields in book 06 (RDF 1.2 heading projection) and book 09 (parser node model), and synchronized the book 12 guide surface tables.
+
 ## 0.1.19 - 2026-06-23
 
 ### Added

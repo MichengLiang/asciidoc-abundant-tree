@@ -1,3 +1,5 @@
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
@@ -231,12 +233,67 @@ Term:: Description.
 		);
 	});
 
-	it("does not absorb leading description lists with structural attached children", () => {
+	it("keeps inline markup and xref macros in field values as authored", () => {
+		const path = writeFixture(
+			"heading-description-metadata-inline-markup.adoc",
+			`= Probe
+
+== Markup
+
+出处:: \`src/layout.ts:2110-2115\`。
+推导自:: xref:Markup[原则, rel=derives-from]。
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = onlySection(document, "Markup");
+
+		expect(section.descriptionMetadata?.fields).toEqual({
+			出处: "`src/layout.ts:2110-2115`。",
+			推导自: "xref:Markup[原则, rel=derives-from]。",
+		});
+	});
+
+	it("absorbs attached blocks into the field value as authored source", () => {
 		const path = writeFixture(
 			"heading-description-metadata-attached-listing.adoc",
 			`= Probe
 
 == Attached
+
+情况:: 某种情况。
+出处:: \`x.ts:1-2\`。
+另一行。
++
+[source,ts]
+----
+const a = 1
+----
++
+第二段。
+落点:: core。
+
+正文
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = onlySection(document, "Attached");
+
+		expect(section.descriptionMetadata?.fields).toEqual({
+			情况: "某种情况。",
+			出处: "`x.ts:1-2`。\n另一行。\n\n[source,ts]\n----\nconst a = 1\n----\n\n第二段。",
+			落点: "core。",
+		});
+		expect(section.children?.map((node) => node.kind)).toEqual(["paragraph"]);
+	});
+
+	it("starts a value at an attached block when the term has no text", () => {
+		const path = writeFixture(
+			"heading-description-metadata-attached-only.adoc",
+			`= Probe
+
+== Attached Only
 
 Term::
 +
@@ -247,26 +304,167 @@ attached block
 		);
 
 		const document = parseAbundantTree({ sourcePath: path });
-		const section = onlySection(document, "Attached");
+		const section = onlySection(document, "Attached Only");
 
-		expect(section.descriptionMetadata).toBeUndefined();
-		expect(section.children?.[0]).toEqual(
-			expect.objectContaining({
-				kind: "descriptionList",
-				items: [
-					expect.objectContaining({
-						description: expect.objectContaining({
-							children: [
-								expect.objectContaining({
-									kind: "listing",
-									content: "attached block",
-								}),
-							],
-						}),
-					}),
-				],
-			}),
+		expect(section.descriptionMetadata?.fields).toEqual({
+			Term: "----\nattached block\n----",
+		});
+	});
+
+	it("keeps a plus line that belongs to an attached listing", () => {
+		const path = writeFixture(
+			"heading-description-metadata-plus-in-listing.adoc",
+			`= Probe
+
+== Plus
+
+diff::
++
+----
+a
++
+b
+----
+`,
 		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = onlySection(document, "Plus");
+
+		expect(section.descriptionMetadata?.fields.diff).toBe(
+			"----\na\n+\nb\n----",
+		);
+	});
+
+	it("ends the last field before a block that is not attached with a continuation", () => {
+		const path = writeFixture(
+			"heading-description-metadata-unattached-listing.adoc",
+			`= Probe
+
+== Unattached
+
+出处:: \`x.ts:1-2\`。
+
+[source,ts]
+----
+const a = 1
+----
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = onlySection(document, "Unattached");
+
+		expect(section.descriptionMetadata?.fields).toEqual({
+			出处: "`x.ts:1-2`。",
+		});
+		expect(section.children?.map((node) => node.kind)).toEqual(["listing"]);
+	});
+
+	it("keeps a list that follows the term after a blank line in the field value", () => {
+		const path = writeFixture(
+			"heading-description-metadata-list-after-blank.adoc",
+			`= Probe
+
+== 宿舍集中备考者
+
+别名::
+
+* 宿舍高强度备考者（旧称）
+* 宿舍备考学生（常用称呼）
+
+正文
+`,
+		);
+
+		const document = parseAbundantTree({ sourcePath: path });
+		const section = onlySection(document, "宿舍集中备考者");
+
+		expect(section.descriptionMetadata?.fields).toEqual({
+			别名: "* 宿舍高强度备考者（旧称）\n* 宿舍备考学生（常用称呼）",
+		});
+	});
+
+	it("reads book-entry field values from the origin file, keeping include directives", () => {
+		const root = join(
+			process.cwd(),
+			"tmp/test-fixtures/heading-description-metadata-book",
+		);
+		const write = (relativePath: string, source: string) => {
+			const path = join(root, relativePath);
+			mkdirSync(dirname(path), { recursive: true });
+			writeFileSync(path, source, "utf8");
+			return path;
+		};
+		write("assets/code.ts", "const a = 1\nconst b = 2\n");
+		write(
+			"chapters/rule.adoc",
+			`== 规则
+
+出处:: \`code.ts:1-2\`。
++
+[source,ts]
+----
+include::../assets/code.ts[lines=1..2]
+----
+判定:: 照搬。
+`,
+		);
+		const entry = write(
+			"book.adoc",
+			"= Book\n:doctype: book\n\ninclude::chapters/rule.adoc[]\n",
+		);
+
+		const document = parseAbundantTree({
+			sourcePath: entry,
+			mode: "book-entry",
+			documentRoot: root,
+		});
+		const section = onlySection(document, "规则");
+
+		expect(section.descriptionMetadata?.fields).toEqual({
+			出处: "`code.ts:1-2`。\n\n[source,ts]\n----\ninclude::../assets/code.ts[lines=1..2]\n----",
+			判定: "照搬。",
+		});
+	});
+
+	it("reads a book-entry field whose description is only a list", () => {
+		const root = join(
+			process.cwd(),
+			"tmp/test-fixtures/heading-description-metadata-book-list",
+		);
+		const write = (relativePath: string, source: string) => {
+			const path = join(root, relativePath);
+			mkdirSync(dirname(path), { recursive: true });
+			writeFileSync(path, source, "utf8");
+			return path;
+		};
+		write(
+			"chapters/slot.adoc",
+			`== 槽位
+
+还要取得::
+* 布局状态模型；
+* 命令的注册。
+怎样算完成:: 测试通过。
+`,
+		);
+		const entry = write(
+			"book.adoc",
+			"= Book\n:doctype: book\n\ninclude::chapters/slot.adoc[]\n",
+		);
+
+		const document = parseAbundantTree({
+			sourcePath: entry,
+			mode: "book-entry",
+			documentRoot: root,
+		});
+		const section = onlySection(document, "槽位");
+
+		expect(section.descriptionMetadata?.fields).toEqual({
+			还要取得: "* 布局状态模型；\n* 命令的注册。",
+			怎样算完成: "测试通过。",
+		});
 	});
 
 	it("attaches child section metadata only to the child section", () => {

@@ -85,7 +85,9 @@ Description list 保存 explicit ID、block title、style、delimiter、metadata
 
 `entries` 按源文档顺序为每个 term 保存一条记录：`key`、`value`、`term` 与 `description`。`fields` 是 key 到 value 的映射，重复 key 由后出现的 value 覆盖；`entries` 保留全部出现。
 
-`key` 是 term 的源表面文本。`value` 是 description 的源文档表面值：解析器用 AST 确定 description 的起点、条目的终点和 attached block 的范围，再从该条目所在源文件的原文中截取这一范围。term 与分隔符不进入 value；把 attached block 挂到条目上的外层续接行替换为空行；value 去除公共缩进和首尾空行。value 不经过 Asciidoctor 的行内替换，attached block 以作者写下的 AsciiDoc 原文出现在 value 中。没有 description 的 term 得到空字符串。
+`key` 是 term 的源表面文本。`value` 是 description 的源文档表面值，从该条目所在源文件的原文中截取。AST 给出 description 在源文件中的起点和下一个 term 所在的行，下一个 term 之前是这个条目的上界；条目在上界之内的结束处按 AsciiDoc 的列表续接读原文：直接文字到空行为止；续接行挂上一个块，块前的块标题、属性行与注释属于这个块，分隔块到闭合分隔符为止，其余块到空行为止；空行之后的列表项或缩进行仍属于条目。结束处不取自 attached block 的 span：book-entry 中内容来自 include 的块映射不回源文件坐标，而 include 指令行本身属于表面值。
+
+term 与分隔符不进入 value；把 attached block 挂到条目上的外层续接行替换为空行，分隔块内部的 `+` 行保持原样；value 去除行尾空白、公共缩进和首尾空行。value 不经过 Asciidoctor 的行内替换，attached block 以作者写下的 AsciiDoc 原文出现在 value 中。没有 description 的 term 得到空字符串。
 
 === Metadata
 
