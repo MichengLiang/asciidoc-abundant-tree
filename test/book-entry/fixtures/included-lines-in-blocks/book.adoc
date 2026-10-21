@@ -1,0 +1,7 @@
+= Included Lines In Blocks
+:doctype: book
+
+include::parts/a.adoc[]
+
+include::parts/reread.adoc[tag=open]
+include::parts/reread.adoc[tag=close]

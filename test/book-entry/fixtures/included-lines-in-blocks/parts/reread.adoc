@@ -1,0 +1,7 @@
+// tag::close[]
+reread body
+----
+// end::close[]
+// tag::open[]
+----
+// end::open[]

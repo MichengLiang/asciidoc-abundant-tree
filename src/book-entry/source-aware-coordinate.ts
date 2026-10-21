@@ -125,14 +125,20 @@ export function recoverSourceAwareSourceLayer(
 			options.logicalSourceSpan,
 		);
 	}
+	// 块的作者文件由首尾两行决定（10 号书「Block Raw」）：中间来自别的文件的行，是作者文件里某条 include 指令
+	// 展开的结果，raw 保留那条指令，所以不算跨文件。首尾落在两个文件时，没有一个文件给得出连续原文。
 	const relativePath = firstRecord.origin.relativePath;
-	if (
-		!relativePath ||
-		sourceRecords.some((record) => record.origin.relativePath !== relativePath)
-	) {
+	if (firstRecord.origin.absolutePath !== lastRecord.origin.absolutePath) {
 		return recoveryFailure(
 			"block-origin.multi-source-span",
-			`Block span ${logicalSpan.startLine}-${logicalSpan.endLine} maps to more than one origin source file for ${options.diagnosticContext}.`,
+			`${options.diagnosticContext} starts at ${originLabel(firstRecord.origin)} and ends at ${originLabel(lastRecord.origin)}; no single origin source file holds its raw.`,
+			options.logicalSourceSpan,
+		);
+	}
+	if (!authorLinesInSourceOrder(sourceRecords, firstRecord.origin)) {
+		return recoveryFailure(
+			"block-origin.multi-source-span",
+			`${options.diagnosticContext} from ${originLabel(firstRecord.origin)} to ${originLabel(lastRecord.origin)} reads ${relativePath} out of source order; no contiguous raw exists.`,
 			options.logicalSourceSpan,
 		);
 	}
@@ -211,6 +217,80 @@ export function recoverSourceAwarePointSourceLayer(
 			sourceSpan: recovered.sourceSpan,
 		},
 	};
+}
+
+/**
+ * 块的 content span 在作者文件里的行区间。
+ *
+ * 内容的首行或尾行来自被引入的文件时，作者文件里与之对应的是那条 include 指令：从块里紧挨在内容之前的
+ * 作者行往后一行起，到紧挨在内容之后的作者行往前一行止。作者文件由块的首行决定，调用方应已用
+ * {@link recoverSourceAwareSourceLayer} 确认整块落在同一个作者文件里。
+ */
+export function recoverSourceAwareContentLineSpan(
+	document: SourceAwareLogicalDocument,
+	blockSpan: LineSpan,
+	contentSpan: LineSpan,
+): LineSpan | undefined {
+	const blockRecords = recordsForSpan(document, blockSpan)?.filter(hasOrigin);
+	const author = blockRecords?.[0]?.origin.absolutePath;
+	if (!blockRecords || author === undefined) {
+		return undefined;
+	}
+	const authored = blockRecords.filter(
+		(record) => record.origin.absolutePath === author,
+	);
+	const inside = (record: LogicalLineRecord) =>
+		record.logicalLine >= contentSpan.startLine &&
+		record.logicalLine <= contentSpan.endLine;
+	const firstInside = authored.find(inside);
+	const lastInside = authored.findLast(inside);
+	const before = authored.findLast(
+		(record) => record.logicalLine < contentSpan.startLine,
+	);
+	const after = authored.find(
+		(record) => record.logicalLine > contentSpan.endLine,
+	);
+	const startsWithAuthorLine =
+		firstInside !== undefined &&
+		firstInside.logicalLine === firstOriginLine(blockRecords, contentSpan);
+	const endsWithAuthorLine =
+		lastInside !== undefined &&
+		lastInside.logicalLine === lastOriginLine(blockRecords, contentSpan);
+	const startLine = startsWithAuthorLine
+		? firstInside.origin.sourceLine
+		: before && before.origin.sourceLine + 1;
+	const endLine = endsWithAuthorLine
+		? lastInside.origin.sourceLine
+		: after && after.origin.sourceLine - 1;
+	if (startLine === undefined || endLine === undefined || startLine > endLine) {
+		return undefined;
+	}
+	return { startLine, endLine };
+}
+
+/**
+ * 一段逻辑行在源文件里落在哪些行上：`relativePath` 与 `line` 的组合，用 {@link originPointKey} 编成键。
+ *
+ * 出现处回源后只剩来源坐标；判断它在不在一个块里，就看它的来源是不是这个块某条逻辑行的来源
+ * （10 号书「结构关系在 Logical Document 上判定」）。被引入文件里的行也在其中。
+ */
+export function originPointsForSpan(
+	document: SourceAwareLogicalDocument,
+	logicalSpan: LineSpan,
+): ReadonlySet<string> {
+	const points = new Set<string>();
+	for (const record of recordsForSpan(document, logicalSpan) ?? []) {
+		if (hasOrigin(record)) {
+			points.add(
+				originPointKey(record.origin.relativePath, record.origin.sourceLine),
+			);
+		}
+	}
+	return points;
+}
+
+export function originPointKey(relativePath: string, line: number): string {
+	return `${relativePath}\n${line}`;
 }
 
 export function recoverSourceAwareDocumentTitleSourceLayer(
@@ -373,7 +453,7 @@ function recoverSourceAwareSpan(
 	if (start.relativePath !== end.relativePath) {
 		return recoveryFailure(
 			"block-origin.multi-source-span",
-			`Source span ${logicalSourceSpan.start.line}-${logicalSourceSpan.end.line} maps to more than one origin source file.`,
+			`Source span starts at ${start.relativePath}:${start.line} and ends at ${end.relativePath}:${end.line}; no single origin source file holds it.`,
 			logicalSourceSpan,
 		);
 	}
@@ -478,6 +558,54 @@ function hasOrigin(
 	{ readonly origin: PhysicalLineOrigin }
 > {
 	return "origin" in record;
+}
+
+function originLabel(origin: PhysicalLineOrigin): string {
+	return `${origin.relativePath}:${origin.sourceLine}`;
+}
+
+// 同一个作者文件被引入两次时，一个块可能从前一次读入走到后一次读入；那时作者文件的行号会倒退，
+// 两段之间没有一段连续原文。
+function authorLinesInSourceOrder(
+	records: readonly Extract<
+		LogicalLineRecord,
+		{ readonly origin: PhysicalLineOrigin }
+	>[],
+	author: PhysicalLineOrigin,
+): boolean {
+	let previous = 0;
+	for (const record of records) {
+		if (record.origin.absolutePath !== author.absolutePath) {
+			continue;
+		}
+		if (record.origin.sourceLine <= previous) {
+			return false;
+		}
+		previous = record.origin.sourceLine;
+	}
+	return true;
+}
+
+function firstOriginLine(
+	records: readonly LogicalLineRecord[],
+	span: LineSpan,
+): number | undefined {
+	return records.find(
+		(record) =>
+			record.logicalLine >= span.startLine &&
+			record.logicalLine <= span.endLine,
+	)?.logicalLine;
+}
+
+function lastOriginLine(
+	records: readonly LogicalLineRecord[],
+	span: LineSpan,
+): number | undefined {
+	return records.findLast(
+		(record) =>
+			record.logicalLine >= span.startLine &&
+			record.logicalLine <= span.endLine,
+	)?.logicalLine;
 }
 
 function sourceFileForOrigin(

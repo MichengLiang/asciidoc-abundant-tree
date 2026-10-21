@@ -178,21 +178,24 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		expect(recovered).not.toHaveProperty("sourceSpan");
 	});
 
-	it("emits multi-source diagnostics and omits listing raw for source block snippet includes", async () => {
+	it("recovers a source block that includes a snippet from its author file, keeping the include directive", async () => {
 		const document = await parseOfficialReaderBook();
 		const listing = collectNodes(document.children, "listing").find((node) =>
 			(node as ListingNode).content?.includes("describeBook"),
 		) as ListingNode | undefined;
 
-		expect(listing?.source).toBeUndefined();
-		expect(document.toolDiagnostics).toEqual(
-			expect.arrayContaining([
-				expect.objectContaining({
-					code: "block-origin.multi-source-span",
-					level: "warning",
-				}),
-			]),
+		expect(listing?.source?.relativePath).toBe("chapters/01-main.adoc");
+		expect(listing?.source?.raw).toBe(
+			"[source,js]\n----\ninclude::../examples/minimal-tool.mjs[tag=main]\n----\n",
 		);
+		expect(listing?.span).toEqual({ startLine: 11, endLine: 14 });
+		expect(listing?.contentSpan).toEqual({ startLine: 13, endLine: 13 });
+		expect(listing?.content).toContain("export function describeBook");
+		expect(
+			document.toolDiagnostics.filter(
+				(diagnostic) => diagnostic.code === "block-origin.multi-source-span",
+			),
+		).toEqual([]);
 	});
 
 	it("rejects source-aware block spans that cross origin files", () => {

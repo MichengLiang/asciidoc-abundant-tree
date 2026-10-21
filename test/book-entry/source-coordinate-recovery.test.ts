@@ -165,6 +165,9 @@ This chapter owns the target section.
 				expect.objectContaining({
 					code: "block-origin.multi-source-span",
 					level: "warning",
+					message: expect.stringContaining(
+						"starts at simple-book/cross-origin-book.adoc:5 and ends at simple-book/chapters/cross-origin-listing.adoc:2",
+					),
 				}),
 			]),
 		);

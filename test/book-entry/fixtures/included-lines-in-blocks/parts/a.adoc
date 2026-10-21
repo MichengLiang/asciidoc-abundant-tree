@@ -1,0 +1,24 @@
+[#sec-a]
+== Section A
+
+[#lst]
+[source,python]
+----
+include::../code/values.py[]
+----
+
+[#tbl]
+|===
+| Col
+include::rows.adoc[]
+|===
+
+[#para]
+Opening line of the paragraph.
+include::middle.adoc[]
+Closing line.
+
+include::loose.adoc[]
+
+[#target]
+== Target

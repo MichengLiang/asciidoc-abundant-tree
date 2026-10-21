@@ -7,6 +7,9 @@ import {
 	recoverOriginSourceLayer,
 } from "./book-entry/origin-coordinate";
 import {
+	originPointKey,
+	originPointsForSpan,
+	recoverSourceAwareContentLineSpan,
 	recoverSourceAwareSourceLayer,
 	sourceAwareDocumentForLineTable,
 } from "./book-entry/source-aware-coordinate";
@@ -254,7 +257,9 @@ function buildDescriptionList(
 		delimiter: descriptionListDelimiterMatch(context.lineTable, startLine)?.raw,
 		metadata: metadata.map((surface) => surface.node),
 		metadataSpan: interval?.metadataSpan,
-		contentSpan: source ? originLineSpan(context, contentSpan) : undefined,
+		contentSpan: source
+			? originLineSpan(context, contentSpan, span)
+			: undefined,
 		span: source?.span,
 		source,
 		asciidoctor: definedObject({
@@ -725,7 +730,9 @@ function buildListing(
 					).join("\n")
 				: undefined),
 		metadataSpan: interval?.metadataSpan,
-		contentSpan: source ? originLineSpan(context, contentSpan) : undefined,
+		contentSpan: source
+			? originLineSpan(context, contentSpan, span)
+			: undefined,
 		span: source?.span,
 		source,
 		asciidoctor: definedObject({
@@ -945,20 +952,18 @@ function sameLineSpan(
 function originLineSpan(
 	context: ProjectContext,
 	span: { startLine: number; endLine: number } | undefined,
+	blockSpan: { startLine: number; endLine: number },
 ): { startLine: number; endLine: number } | undefined {
 	if (!span || (!context.logicalSource && !context.sourceAwareDocument)) {
 		return span;
 	}
 	if (context.sourceAwareDocument) {
-		const recovered = recoverSourceAwareSourceLayer(
+		// 内容可能整段来自 include：单独回源会落到被引入的文件上，和块的 source.relativePath 对不上。
+		return recoverSourceAwareContentLineSpan(
 			context.sourceAwareDocument,
+			blockSpan,
 			span,
-			{
-				raw: false,
-				diagnosticContext: "block content",
-			},
 		);
-		return recovered.ok ? recovered.lineSpan : undefined;
 	}
 	if (!context.logicalSource) {
 		return undefined;
@@ -1025,6 +1030,22 @@ function collectOccurrencesInSpan<T extends { source?: SourceLayer }>(
 			logicalSpan.startLine,
 			logicalSpan.endLine,
 		);
+	}
+	if (context.sourceAwareDocument) {
+		// 出现处属于哪个块是逻辑文档上的结构关系（10 号书「结构关系在 Logical Document 上判定」），
+		// 与块有没有坐标无关；出现处只剩来源坐标，所以按块内逻辑行的来源点认它。
+		const points = originPointsForSpan(
+			context.sourceAwareDocument,
+			logicalSpan,
+		);
+		return occurrences.filter((occurrence) => {
+			const { relativePath, line } = occurrence.source ?? {};
+			return (
+				relativePath !== undefined &&
+				line !== undefined &&
+				points.has(originPointKey(relativePath, line))
+			);
+		});
 	}
 	if (!source?.relativePath || !source.span) {
 		return [];
