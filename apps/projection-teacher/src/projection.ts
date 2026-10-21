@@ -35,7 +35,6 @@ export type TeachingProjection = {
 	readonly nodes: readonly TeachingNode[];
 	readonly edges: readonly TeachingEdge[];
 	readonly diagnostics: readonly string[];
-	readonly internalDiagnostics: readonly string[];
 };
 
 type ProjectionIndex = {
@@ -49,10 +48,6 @@ const REL_LABELS: Record<string, string> = {
 	references: "引用",
 	requires: "要求",
 };
-
-const USER_HIDDEN_DIAGNOSTIC_CODES = new Set([
-	"official-block-context.unknown",
-]);
 
 export async function projectTeachingGraph(
 	source: string,
@@ -71,7 +66,6 @@ export async function projectTeachingGraph(
 			diagnostics: [
 				`解析失败: ${error instanceof Error ? error.message : String(error)}`,
 			],
-			internalDiagnostics: [],
 		};
 	}
 }
@@ -82,10 +76,7 @@ export function projectTeachingGraphFromDocument(
 	const sections = collectSections(document.children);
 	const nodes = sections.map(sectionToTeachingNode);
 	const index = buildProjectionIndex(document, sections, nodes);
-	const internalDiagnostics = document.toolDiagnostics.map(formatDiagnostic);
-	const diagnostics = document.toolDiagnostics
-		.filter((diagnostic) => !USER_HIDDEN_DIAGNOSTIC_CODES.has(diagnostic.code))
-		.map(formatDiagnostic);
+	const diagnostics = document.toolDiagnostics.map(formatDiagnostic);
 	const edges = document.xrefOccurrences.flatMap((xref, indexInDocument) => {
 		const edge = xrefToTeachingEdge(xref, indexInDocument, index, diagnostics);
 		return edge ? [edge] : [];
@@ -95,7 +86,6 @@ export function projectTeachingGraphFromDocument(
 		nodes,
 		edges,
 		diagnostics,
-		internalDiagnostics,
 	};
 }
 

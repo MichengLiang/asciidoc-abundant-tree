@@ -181,8 +181,8 @@ async function runBrowserCheck(url) {
 	await browser.close();
 
 	assertNoRuntimeErrors(pageErrors, consoleErrors);
-	assertNoHiddenParserWarning(initialDiagnostics);
-	assertNoHiddenParserWarning(result.diagnostics);
+	assertNoDiagnostics(initialDiagnostics);
+	assertNoDiagnostics(result.diagnostics);
 	assertCounts(result);
 	assertCleanEdgeCards(result);
 	assertEdgeLabelsStayOnPaths(result.edgeLabelDistances);
@@ -259,15 +259,9 @@ function assertNoRuntimeErrors(pageErrors, consoleErrors) {
 	}
 }
 
-function assertNoHiddenParserWarning(diagnostics) {
-	if (
-		diagnostics.some((diagnostic) =>
-			diagnostic.includes("official-block-context.unknown"),
-		)
-	) {
-		throw new Error(
-			`Internal parser diagnostic leaked to UI: ${JSON.stringify(diagnostics)}`,
-		);
+function assertNoDiagnostics(diagnostics) {
+	if (diagnostics.length > 0) {
+		throw new Error(`Diagnostics shown in UI: ${JSON.stringify(diagnostics)}`);
 	}
 }
 

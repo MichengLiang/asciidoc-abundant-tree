@@ -21,6 +21,8 @@ export function officialBlockPolicy(
 			// 它装的是一段文字，没有段落子块可以递归（09 号书「Inline 扫描边界」）。
 			return block.getContentModel?.() === "simple" ? "scan" : "recurse";
 		case "olist":
+		// 文档标题与第一节之间的块，官方装进 preamble 块（parser.js 632-633 行补的就是它的坐标）。
+		case "preamble":
 		case "section":
 		case "ulist":
 			return "recurse";

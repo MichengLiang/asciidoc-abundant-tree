@@ -57,6 +57,8 @@ Paragraph、带 macros substitutions 的 prose block 和可扫描 table prose �
 
 Open block 是容器。它自身不产生 prose occurrence；occurrence 来自其 paragraph descendants。
 
+Preamble 也是容器：文档标题与第一节之间的块，官方装进一个 preamble 块（book 里，或文档还有别的块时），坐标取它的第一个子块（`parser.js` 632-633 行）。Preamble 的子块与节里的块一样投影与扫描。
+
 写成隐身段落的 example、sidebar、quote 与 open 块（xref:cloaked-paragraph[隐身段落]）不是容器：官方建块时把它们的内容模型从 compound 改成 simple（`parser.js` 1523 行），块里是一段文字，没有段落子块。内容模型为 simple 的这几种块按段落扫描，xref 与 anchor occurrence 来自块自己的文本行。
 
 === Section Scope

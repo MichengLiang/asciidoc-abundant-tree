@@ -104,18 +104,9 @@ describe("projection teacher document projection", () => {
 		expect(projection.diagnostics).toEqual([]);
 	});
 
-	it("keeps internal parser warnings out of the user-visible diagnostic strip", async () => {
+	it("reports no parser diagnostics for the sample source", async () => {
 		const projection = await projectTeachingGraph(SAMPLE_SOURCE);
 
-		expect(projection.internalDiagnostics).toEqual(
-			expect.arrayContaining([
-				expect.stringContaining("official-block-context.unknown"),
-			]),
-		);
-		expect(projection.diagnostics).not.toEqual(
-			expect.arrayContaining([
-				expect.stringContaining("official-block-context.unknown"),
-			]),
-		);
+		expect(projection.diagnostics).toEqual([]);
 	});
 });

@@ -30,7 +30,6 @@ const EMPTY_PROJECTION: TeachingProjection = {
 	nodes: [],
 	edges: [],
 	diagnostics: [],
-	internalDiagnostics: [],
 };
 
 export function App(): React.ReactElement {

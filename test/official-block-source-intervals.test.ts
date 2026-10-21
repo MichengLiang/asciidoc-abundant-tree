@@ -265,6 +265,40 @@ describe("delimiters written the long or masqueraded way", () => {
 	});
 });
 
+describe("the preamble Asciidoctor builds before the first section", () => {
+	it.each([
+		{ name: "article", header: "= 文\n", line: 3 },
+		{ name: "book", header: "= 书\n:doctype: book\n", line: 4 },
+	])("projects and scans the $name preamble", async ({
+		name,
+		header,
+		line,
+	}) => {
+		const document = await parseAbundantTree({
+			sourcePath: writeFixture(
+				`preamble-${name}.adoc`,
+				`${header}\n前言 xref:first[第一节]。\n\n[#first]\n== 第一节\n\n正文。\n`,
+			),
+		});
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(document.children.map((child) => child.kind)).toEqual([
+			"paragraph",
+			"section",
+		]);
+		expect(spans(document, "paragraph")[0]).toEqual({
+			startLine: line,
+			endLine: line,
+		});
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([["first", line]]);
+	});
+});
+
 async function parseBook(
 	name: string,
 	introduction: string,
