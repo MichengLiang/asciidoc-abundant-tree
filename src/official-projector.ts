@@ -1,8 +1,5 @@
-import type {
-	AsciidoctorAdapter,
-	AsciidoctorBlock,
-} from "./asciidoctor-adapter";
-import { addTarget, applyOfficialBindings } from "./binding-merge";
+import type { AsciidoctorBlock } from "./asciidoctor-adapter";
+import { addTarget, type OfficialBindingRequest } from "./binding-merge";
 import type { SourceAwareLogicalDocument } from "./book-entry/line-origin-model";
 import type { LogicalSource } from "./book-entry/model";
 import {
@@ -69,13 +66,11 @@ type ProjectContext = {
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
-	adapter: OfficialProjectionAdapter;
+	bindingRequests: OfficialBindingRequest[];
 	targets: TargetNode[];
 	logicalSource?: LogicalSource;
 	sourceAwareDocument?: SourceAwareLogicalDocument;
 };
-
-type OfficialProjectionAdapter = Pick<AsciidoctorAdapter, "resolveXrefBinding">;
 
 type BuildResult = AbundantNode | AbundantNode[] | undefined;
 
@@ -91,9 +86,13 @@ export function projectOfficialDocument(options: {
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
-	adapter: OfficialProjectionAdapter;
-}): { children: AbundantNode[]; targets: TargetNode[] } {
+}): {
+	children: AbundantNode[];
+	targets: TargetNode[];
+	bindingRequests: OfficialBindingRequest[];
+} {
 	const targets: TargetNode[] = [];
+	const bindingRequests: OfficialBindingRequest[] = [];
 	const sourceAwareDocument = sourceAwareDocumentForLineTable(
 		options.lineTable,
 	);
@@ -116,7 +115,7 @@ export function projectOfficialDocument(options: {
 		projectableBlocks: options.projectableBlocks,
 		containerFallbackBlocks: options.containerFallbackBlocks,
 		sectionByBlock: options.sectionByBlock,
-		adapter: options.adapter,
+		bindingRequests,
 		targets,
 		sourceAwareDocument,
 		...(logicalSource ? { logicalSource } : {}),
@@ -125,6 +124,7 @@ export function projectOfficialDocument(options: {
 	return {
 		children: buildChildren(options.officialDocument, context),
 		targets,
+		bindingRequests,
 	};
 }
 
@@ -382,12 +382,7 @@ function buildDescriptionTerm(
 				(occurrence) => isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
 			)
 		: [];
-	applyOfficialBindings(
-		xrefs,
-		xrefs.map((xref) =>
-			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
-		),
-	);
+	context.bindingRequests.push({ block, xrefs });
 	return definedObject({
 		kind: "descriptionTerm",
 		text: normalizedListItemText(block),
@@ -449,12 +444,7 @@ function buildDescription(
 				(occurrence) => isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
 			)
 		: [];
-	applyOfficialBindings(
-		xrefs,
-		xrefs.map((xref) =>
-			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
-		),
-	);
+	context.bindingRequests.push({ block, xrefs });
 	const children = [
 		...xrefs,
 		...anchors,
@@ -736,12 +726,7 @@ function buildParagraph(
 		contentSpan,
 		source,
 	);
-	applyOfficialBindings(
-		xrefs,
-		xrefs.map((xref) =>
-			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
-		),
-	);
+	context.bindingRequests.push({ block, xrefs });
 	const sourceSpan = source?.sourceSpan;
 	const asciidoctor = definedObject({
 		context: block.getContext?.(),
@@ -890,12 +875,7 @@ function buildTable(
 		tableContentSpan,
 		source,
 	);
-	applyOfficialBindings(
-		tableXrefs,
-		tableXrefs.map((xref) =>
-			context.adapter.resolveXrefBinding(context.officialDocument, block, xref),
-		),
-	);
+	context.bindingRequests.push({ block, xrefs: tableXrefs });
 	const table = definedObject({
 		kind: "table",
 		ids,

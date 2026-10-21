@@ -34,11 +34,11 @@ describe("book-entry parser-safe logical text", () => {
 		expect(safe.lineRecords).toHaveLength(6);
 	});
 
-	it("does not expand an include line again during parser load", () => {
+	it("does not expand an include line again during parser load", async () => {
 		const safe = buildParserSafeLogicalText([
 			sourceRecord(1, "include::target.adoc[]"),
 		]);
-		const document = createAsciidoctorAdapter().loadSource(safe.text);
+		const document = await createAsciidoctorAdapter().loadSource(safe.text);
 		const [block] = (document.getBlocks?.() ?? []) as AsciidoctorBlock[];
 
 		expect(document.getBlocks?.().length).toBe(1);
@@ -79,8 +79,10 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 		return path;
 	}
 
-	function officialListing(entry: string): string | undefined {
-		const document = createAsciidoctor().loadFile(entry, { safe: "unsafe" });
+	async function officialListing(entry: string): Promise<string | undefined> {
+		const document = await createAsciidoctor().loadFile(entry, {
+			safe: "unsafe",
+		});
 		const [listing] = document.findBy({
 			context: "listing",
 		}) as AsciidoctorBlock[];
@@ -94,8 +96,8 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 		]);
 	}
 
-	function parse(root: string, entry: string) {
-		return parseAbundantTree({
+	async function parse(root: string, entry: string) {
+		return await parseAbundantTree({
 			sourcePath: entry,
 			mode: "book-entry",
 			documentRoot: root,
@@ -106,7 +108,7 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 	const pySource =
 		"x = 1\ninclude::missing.adoc[]\nifdef::never[]\ny = 2\nendif::[]\n";
 
-	it("keeps the lines of a fully included non-AsciiDoc file", () => {
+	it("keeps the lines of a fully included non-AsciiDoc file", async () => {
 		const root = join(fixtureRoot, "full-py");
 		rmSync(root, { recursive: true, force: true });
 		writeFixture("full-py/code.py", pySource);
@@ -115,20 +117,22 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 			"= T\n\n== 甲\n\n----\ninclude::code.py[]\n----\n\n== 乙\n",
 		);
 
-		const document = parse(root, entry);
+		const document = await parse(root, entry);
 		const [listing] = listings(document.children ?? []);
 
-		expect(officialListing(entry)).toBe(pySource.trimEnd());
+		expect(await officialListing(entry)).toBe(pySource.trimEnd());
 		expect(listing?.content).toBe(pySource.trimEnd());
 		const yi = document.children?.find(
 			(node) => node.kind === "section" && node.title === "乙",
 		);
 		expect(yi?.source?.line).toBe(9);
-		const lines = preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
-			sourcePath: entry,
-			documentRoot: root,
-		}).lines.flatMap((line) =>
+		const lines = (
+			await preprocessBookEntryWithOfficialReader({
+				adapter: createAsciidoctorAdapter(),
+				sourcePath: entry,
+				documentRoot: root,
+			})
+		).lines.flatMap((line) =>
 			"origin" in line && line.origin.relativePath === "code.py"
 				? [line.origin.sourceLine]
 				: [],
@@ -136,7 +140,7 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 		expect(lines).toEqual([1, 2, 3, 4, 5]);
 	});
 
-	it("keeps the lines of a selected non-AsciiDoc file", () => {
+	it("keeps the lines of a selected non-AsciiDoc file", async () => {
 		const root = join(fixtureRoot, "selected-py");
 		rmSync(root, { recursive: true, force: true });
 		writeFixture("selected-py/code.py", `# tag::x[]\n${pySource}# end::x[]\n`);
@@ -145,13 +149,13 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 			"= T\n\n== 甲\n\n----\ninclude::code.py[tag=x]\n----\n",
 		);
 
-		const [listing] = listings(parse(root, entry).children ?? []);
+		const [listing] = listings((await parse(root, entry)).children ?? []);
 
-		expect(officialListing(entry)).toBe(pySource.trimEnd());
+		expect(await officialListing(entry)).toBe(pySource.trimEnd());
 		expect(listing?.content).toBe(pySource.trimEnd());
 	});
 
-	it("keeps indented directive lines as ordinary text", () => {
+	it("keeps indented directive lines as ordinary text", async () => {
 		// Asciidoctor 的指令从第 1 列匹配：代码清单里一段 diff 的上下文行 `     include::…[*]` 是普通文字。
 		const root = join(fixtureRoot, "indented-directives");
 		rmSync(root, { recursive: true, force: true });
@@ -162,15 +166,15 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 			`= T\n\n== 甲\n\n----\n${body}\n----\n`,
 		);
 
-		const document = parse(root, entry);
+		const document = await parse(root, entry);
 		const [listing] = listings(document.children ?? []);
 
-		expect(officialListing(entry)).toBe(body);
+		expect(await officialListing(entry)).toBe(body);
 		expect(listing?.content).toBe(body);
 		expect(document.toolDiagnostics).toEqual([]);
 	});
 
-	it("keeps escaped conditional directives as their unescaped text", () => {
+	it("keeps escaped conditional directives as their unescaped text", async () => {
 		const root = join(fixtureRoot, "escaped-conditional");
 		rmSync(root, { recursive: true, force: true });
 		const entry = writeFixture(
@@ -178,9 +182,11 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 			"= T\n\n== 甲\n\n----\n\\ifdef::never[]\n中间\n\\endif::[]\n----\n",
 		);
 
-		const [listing] = listings(parse(root, entry).children ?? []);
+		const [listing] = listings((await parse(root, entry)).children ?? []);
 
-		expect(officialListing(entry)).toBe("ifdef::never[]\n中间\nendif::[]");
+		expect(await officialListing(entry)).toBe(
+			"ifdef::never[]\n中间\nendif::[]",
+		);
 		expect(listing?.content).toBe("ifdef::never[]\n中间\nendif::[]");
 		expect(listing?.source?.line).toBe(5);
 	});

@@ -31,8 +31,8 @@ const book10EntryRelativePath =
 	"books/10-book-entry-source-mapped-logical-document/book.adoc";
 
 describe("rdf12 book-entry origin source coordinates", () => {
-	it("projects heading resource relativePath values from each heading origin file", () => {
-		const projection = projectBookEntryFixture();
+	it("projects heading resource relativePath values from each heading origin file", async () => {
+		const projection = await projectBookEntryFixture();
 
 		expectLiteralValue(
 			projection.graph,
@@ -54,8 +54,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
-	it("does not project book-entry document-title raw from expanded logical text", () => {
-		const projection = projectBookEntryFixture();
+	it("does not project book-entry document-title raw from expanded logical text", async () => {
+		const projection = await projectBookEntryFixture();
 		const titleHeading = headingByHeadline(
 			projection.graph,
 			"Simple Source-Mapped Book",
@@ -79,8 +79,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		expect(raw).not.toContain("include::shared/attributes.adoc[]");
 	});
 
-	it("projects book-entry section raw from the origin heading slice", () => {
-		const projection = projectBookEntryFixture();
+	it("projects book-entry section raw from the origin heading slice", async () => {
+		const projection = await projectBookEntryFixture();
 		const chapterHeading = headingByHeadline(projection.graph, "Xref Origin");
 		const nestedHeading = headingByHeadline(projection.graph, "Nested Origin");
 		const raw = onlyLiteralValue(
@@ -109,8 +109,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
-	it("projects book-entry heading raw through an included table body", () => {
-		const document = parseAbundantTree({
+	it("projects book-entry heading raw through an included table body", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: headingSliceBookPath,
 			mode: "book-entry",
 			documentRoot: headingSliceFixtureRoot,
@@ -146,8 +146,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		expect(raw).toContain("|===");
 	});
 
-	it("projects xref edge evidence relativePath from the occurrence origin file", () => {
-		const projection = projectBookEntryFixture();
+	it("projects xref edge evidence relativePath from the occurrence origin file", async () => {
+		const projection = await projectBookEntryFixture();
 		const edge = xrefEdgeByRaw(
 			projection.graph,
 			"xref:target-origin[Target Origin]",
@@ -167,8 +167,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
-	it("binds xref sourceHeading by origin relativePath and line containment", () => {
-		const projection = projectBookEntryFixture();
+	it("binds xref sourceHeading by origin relativePath and line containment", async () => {
+		const projection = await projectBookEntryFixture();
 		const edge = xrefEdgeByRaw(
 			projection.graph,
 			"xref:target-origin[Target Origin]",
@@ -201,8 +201,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		).toHaveLength(0);
 	});
 
-	it("keeps source document provenance on the entry file", () => {
-		const projection = projectBookEntryFixture();
+	it("keeps source document provenance on the entry file", async () => {
+		const projection = await projectBookEntryFixture();
 
 		expectLiteralValue(
 			projection.graph,
@@ -231,8 +231,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
-	it("projects one source reconstruction resource for each simple-book source-set file", () => {
-		const document = parseBookEntryFixture();
+	it("projects one source reconstruction resource for each simple-book source-set file", async () => {
+		const document = await parseBookEntryFixture();
 		const projection = rdf12(document, { documentRoot: fixtureRoot });
 		const sourceFileMap = sourceFileRawByRelativePath(projection.graph);
 
@@ -264,8 +264,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		).toHaveLength(document.sourceFiles?.length ?? 0);
 	});
 
-	it("lets parsed Turtle reconstruct Book 10 source-set files by relativePath and raw", () => {
-		const document = parseAbundantTree({
+	it("lets parsed Turtle reconstruct Book 10 source-set files by relativePath and raw", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: book10EntryPath,
 			mode: "book-entry",
 			documentRoot: book10DocumentRoot,
@@ -300,8 +300,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
-	it("does not emit build/adoc aggregate source paths", () => {
-		const projection = projectBookEntryFixture();
+	it("does not emit build/adoc aggregate source paths", async () => {
+		const projection = await projectBookEntryFixture();
 		const turtle = serializeRdf12ProjectionToTurtle(projection);
 		const literalValues = projection.graph
 			.toArray()
@@ -313,8 +313,8 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		expect(literalValues).not.toContain("build/adoc");
 	});
 
-	it("projects RDF12 from the public document without a line origin table parameter", () => {
-		const document = parseAbundantTree({
+	it("projects RDF12 from the public document without a line origin table parameter", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: entryPath,
 			mode: "book-entry",
 			documentRoot: fixtureRoot,
@@ -332,16 +332,16 @@ describe("rdf12 book-entry origin source coordinates", () => {
 	});
 });
 
-function parseBookEntryFixture(): AbundantDocument {
-	return parseAbundantTree({
+async function parseBookEntryFixture(): Promise<AbundantDocument> {
+	return await parseAbundantTree({
 		sourcePath: entryPath,
 		mode: "book-entry",
 		documentRoot: fixtureRoot,
 	});
 }
 
-function projectBookEntryFixture() {
-	const document = parseBookEntryFixture();
+async function projectBookEntryFixture() {
+	const document = await parseBookEntryFixture();
 
 	return rdf12(document, { documentRoot: fixtureRoot });
 }

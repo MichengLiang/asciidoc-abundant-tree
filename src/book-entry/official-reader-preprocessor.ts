@@ -146,9 +146,9 @@ function validateIncludeGraph(
 	}
 }
 
-export function preprocessBookEntryWithOfficialReader(
+export async function preprocessBookEntryWithOfficialReader(
 	options: PreprocessBookEntryOptions,
-): SourceAwareLogicalDocument {
+): Promise<SourceAwareLogicalDocument> {
 	const entryPath = resolveEntryPath(options.sourcePath);
 	const documentRoot = normalizeDocumentRoot(options.documentRoot);
 	relativePathWithinDocumentRoot(documentRoot, entryPath);
@@ -159,7 +159,7 @@ export function preprocessBookEntryWithOfficialReader(
 		);
 	}
 	validateIncludeGraph(entryPath, documentRoot, []);
-	const officialLines = options.adapter.readPreprocessedLines(
+	const officialLines = await options.adapter.readPreprocessedLines(
 		readerPreprocessingOptions({
 			sourcePath: entryPath,
 			documentRoot,

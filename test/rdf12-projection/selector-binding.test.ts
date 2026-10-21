@@ -15,8 +15,8 @@ const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
 
 describe("rdf12 selector binding", () => {
-	it("binds selectors to heading address labels", () => {
-		const projection = referenceProjection();
+	it("binds selectors to heading address labels", async () => {
+		const projection = await referenceProjection();
 		const result = bindSelector(projection.labelCatalog, "section-basics");
 
 		expect(result.status).toBe("bound");
@@ -26,8 +26,8 @@ describe("rdf12 selector binding", () => {
 		}
 	});
 
-	it("binds selectors to heading generated address labels and headlines", () => {
-		const projection = referenceProjection();
+	it("binds selectors to heading generated address labels and headlines", async () => {
+		const projection = await referenceProjection();
 		const generated = bindSelector(projection.labelCatalog, "_1_引言");
 		const headline = bindSelector(projection.labelCatalog, "3. 核心引擎设计");
 
@@ -41,8 +41,8 @@ describe("rdf12 selector binding", () => {
 		}
 	});
 
-	it("binds local non-heading target ids to their owning heading", () => {
-		const reference = referenceProjection();
+	it("binds local non-heading target ids to their owning heading", async () => {
+		const reference = await referenceProjection();
 
 		for (const [selector, headingLocalId] of [
 			["engine-code", "#heading-l25-o0"],
@@ -58,13 +58,13 @@ describe("rdf12 selector binding", () => {
 		}
 	});
 
-	it("binds paragraph and block target ids to their containing heading", () => {
+	it("binds paragraph and block target ids to their containing heading", async () => {
 		for (const [fixture, selector] of [
 			["paragraph-id-audit.adoc", "para-target"],
 			["block-anchor-audit.adoc", "block-para"],
 		] as const) {
 			const projection = projectAbundantDocumentToRdf12(
-				parseAbundantTree({
+				await parseAbundantTree({
 					sourcePath: join(projectRoot, "test/fixtures", fixture),
 				}),
 				{ documentRoot: projectRoot },
@@ -78,9 +78,9 @@ describe("rdf12 selector binding", () => {
 		}
 	});
 
-	it("keeps non-address surfaces out of selector binding", () => {
+	it("keeps non-address surfaces out of selector binding", async () => {
 		const payloadProjection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({
+			await parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
 			}),
 			{ documentRoot: projectRoot },
@@ -106,8 +106,8 @@ describe("rdf12 selector binding", () => {
 		}
 	});
 
-	it("keeps unresolved selector literal available without creating a target", () => {
-		const projection = referenceProjection();
+	it("keeps unresolved selector literal available without creating a target", async () => {
+		const projection = await referenceProjection();
 		const result = bindSelector(projection.labelCatalog, "missing-target");
 
 		expect(result).toEqual({
@@ -203,9 +203,9 @@ describe("rdf12 selector binding", () => {
 	});
 });
 
-function referenceProjection() {
+async function referenceProjection() {
 	return projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: referencePath }),
+		await parseAbundantTree({ sourcePath: referencePath }),
 		{
 			documentRoot: projectRoot,
 		},

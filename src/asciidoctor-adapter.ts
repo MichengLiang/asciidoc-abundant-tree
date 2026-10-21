@@ -81,7 +81,7 @@ export type ReaderPush = {
 
 export type AsciidoctorAdapter = {
 	parserVersion: string;
-	loadFile(sourcePath: string): AsciidoctorBlock;
+	loadFile(sourcePath: string): Promise<AsciidoctorBlock>;
 	extractAnchorBindings(html: string): HtmlAnchorBinding[];
 	resolveXrefTarget(
 		document: AsciidoctorBlock,
@@ -94,17 +94,17 @@ export type AsciidoctorAdapter = {
 			target: string;
 			label?: string | undefined;
 		},
-	): OfficialXrefBinding | undefined;
+	): Promise<OfficialXrefBinding | undefined>;
 };
 
 export type AsciidoctorParserAdapter = AsciidoctorAdapter & {
-	loadSource(sourceText: string): AsciidoctorBlock;
+	loadSource(sourceText: string): Promise<AsciidoctorBlock>;
 	readPreprocessedLines(options: {
 		readonly sourcePath: string;
 		readonly baseDir: string;
 		readonly jailDir?: string | undefined;
 		readonly attributes?: Record<string, unknown> | undefined;
-	}): readonly OfficialReaderLine[];
+	}): Promise<readonly OfficialReaderLine[]>;
 };
 
 export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
@@ -122,7 +122,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 
 	return {
 		parserVersion: resolveParserVersion(processor),
-		loadFile(sourcePath) {
+		async loadFile(sourcePath) {
 			return processor.loadFile(sourcePath, {
 				safe: "secure",
 				sourcemap: true,
@@ -130,7 +130,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				extension_registry: loadExtensionRegistry,
 			}) as AsciidoctorBlock;
 		},
-		loadSource(sourceText) {
+		async loadSource(sourceText) {
 			return processor.load(sourceText, {
 				safe: "secure",
 				sourcemap: true,
@@ -138,7 +138,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 				extension_registry: loadExtensionRegistry,
 			}) as AsciidoctorBlock;
 		},
-		readPreprocessedLines(options) {
+		async readPreprocessedLines(options) {
 			const document = processor.loadFile(options.sourcePath, {
 				// Book-entry preprocessing prevalidates every local include against its
 				// documentRoot. The Reader still needs unsafe mode here because Asciidoctor
@@ -204,7 +204,7 @@ export function createAsciidoctorAdapter(): AsciidoctorParserAdapter {
 			const resolved = document.$resolve_id?.(target);
 			return typeof resolved === "string" ? `#${resolved}` : undefined;
 		},
-		resolveXrefBinding(document, parent, xref) {
+		async resolveXrefBinding(document, parent, xref) {
 			const href = this.resolveXrefTarget(document, xref.target);
 			const target = href ?? unresolvedLocalHref(xref.target);
 			const reftext = resolveXrefReftext(document, xref, href);

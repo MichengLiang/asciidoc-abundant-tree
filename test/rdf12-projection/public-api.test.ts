@@ -14,8 +14,8 @@ const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
 
 describe("rdf12 public API", () => {
-	it("returns graph and Turtle from the single public rdf12 call", () => {
-		const document = parseAbundantTree({ sourcePath });
+	it("returns graph and Turtle from the single public rdf12 call", async () => {
+		const document = await parseAbundantTree({ sourcePath });
 		const result = rdf12(document, {
 			documentRoot: projectRoot,
 		});
@@ -26,12 +26,14 @@ describe("rdf12 public API", () => {
 		expect(parseTurtleToRdf12Graph(result.ttl).size).toBe(result.graph.size);
 	});
 
-	it("uses parsed document source text for document title raw without explicit sourceText", () => {
+	it("uses parsed document source text for document title raw without explicit sourceText", async () => {
 		const structuralPayloadPath = join(
 			projectRoot,
 			"samples/structural-payload.adoc",
 		);
-		const document = parseAbundantTree({ sourcePath: structuralPayloadPath });
+		const document = await parseAbundantTree({
+			sourcePath: structuralPayloadPath,
+		});
 		const result = rdf12(document, { documentRoot: projectRoot });
 		const root = iriTerm(
 			`${result.documentIri.slice(0, result.documentIri.indexOf("#"))}#heading-l1-o0`,
@@ -70,7 +72,7 @@ describe("rdf12 public API", () => {
 		).toBe(true);
 	});
 
-	it("honors explicit sourceText when projecting raw heading slices", () => {
+	it("honors explicit sourceText when projecting raw heading slices", async () => {
 		const structuralPayloadPath = join(
 			projectRoot,
 			"samples/structural-payload.adoc",
@@ -79,7 +81,9 @@ describe("rdf12 public API", () => {
 
 supplied body
 `;
-		const document = parseAbundantTree({ sourcePath: structuralPayloadPath });
+		const document = await parseAbundantTree({
+			sourcePath: structuralPayloadPath,
+		});
 		const result = rdf12(document, { documentRoot: projectRoot, sourceText });
 		const root = iriTerm(
 			`${result.documentIri.slice(0, result.documentIri.indexOf("#"))}#heading-l1-o0`,
@@ -96,8 +100,8 @@ supplied body
 		).toBe(true);
 	});
 
-	it("returns JSON-LD from the single public rdf12 call", () => {
-		const document = parseAbundantTree({ sourcePath });
+	it("returns JSON-LD from the single public rdf12 call", async () => {
+		const document = await parseAbundantTree({ sourcePath });
 		const result = rdf12(document, {
 			documentRoot: projectRoot,
 		});

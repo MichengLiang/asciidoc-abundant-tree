@@ -27,8 +27,8 @@ const orderedBookFixtureRoot = join(projectRoot, "test/book-entry/fixtures");
 const orderedBookPath = join(orderedBookFixtureRoot, "ordered-book/book.adoc");
 
 describe("rdf12 heading structure edges", () => {
-	it("projects only direct heading containment edges", () => {
-		const { graph } = structuralPayloadProjection();
+	it("projects only direct heading containment edges", async () => {
+		const { graph } = await structuralPayloadProjection();
 		const root = headingByHeadline(graph, "root");
 		const deliveryPolicy = headingByHeadline(graph, "配送策略");
 		const capacityRule = headingByHeadline(graph, "运力规则");
@@ -45,8 +45,8 @@ describe("rdf12 heading structure edges", () => {
 		expectNoTriple(graph, root, aatTerm("containsDirectly"), nestedHeading);
 	});
 
-	it("does not contain paragraphs, listings, tables, or anchors from headings", () => {
-		const { graph } = structuralPayloadProjection();
+	it("does not contain paragraphs, listings, tables, or anchors from headings", async () => {
+		const { graph } = await structuralPayloadProjection();
 		const containsEdges = graph.match({
 			predicate: aatTerm("containsDirectly"),
 		});
@@ -73,8 +73,8 @@ describe("rdf12 heading structure edges", () => {
 		}
 	});
 
-	it("projects childOrder for headings with parent headings", () => {
-		const { graph } = structuralPayloadProjection();
+	it("projects childOrder for headings with parent headings", async () => {
+		const { graph } = await structuralPayloadProjection();
 		const root = headingByHeadline(graph, "root");
 		const deliveryPolicy = headingByHeadline(graph, "配送策略");
 		const capacityRule = headingByHeadline(graph, "运力规则");
@@ -93,8 +93,8 @@ describe("rdf12 heading structure edges", () => {
 		).toHaveLength(0);
 	});
 
-	it("projects documentOrder as heading tree preorder", () => {
-		const { graph } = structuralPayloadProjection();
+	it("projects documentOrder as heading tree preorder", async () => {
+		const { graph } = await structuralPayloadProjection();
 
 		expect(headlinesByDocumentOrder(graph)).toEqual([
 			"root",
@@ -104,8 +104,8 @@ describe("rdf12 heading structure edges", () => {
 		]);
 	});
 
-	it("does not output previousSibling", () => {
-		const { graph } = structuralPayloadProjection();
+	it("does not output previousSibling", async () => {
+		const { graph } = await structuralPayloadProjection();
 
 		expect(graph.match({ predicate: aatTerm("previousSibling") })).toHaveLength(
 			0,
@@ -136,9 +136,9 @@ describe("rdf12 heading structure edges", () => {
 		);
 	});
 
-	it("projects ordered book-entry headings without using origin line order", () => {
+	it("projects ordered book-entry headings without using origin line order", async () => {
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({
+			await parseAbundantTree({
 				sourcePath: orderedBookPath,
 				mode: "book-entry",
 				documentRoot: orderedBookFixtureRoot,
@@ -188,9 +188,9 @@ describe("rdf12 heading structure edges", () => {
 	});
 });
 
-function structuralPayloadProjection() {
+async function structuralPayloadProjection() {
 	const projection = projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: structuralPayloadPath }),
+		await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 		{ documentRoot: projectRoot },
 	);
 

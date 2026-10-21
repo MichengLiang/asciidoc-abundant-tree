@@ -4,7 +4,7 @@ import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
 
 describe("parser input edges", () => {
-	it("keeps source spans stable for CRLF input", () => {
+	it("keeps source spans stable for CRLF input", async () => {
 		const path = writeFixture(
 			"crlf-input.adoc",
 			[
@@ -20,7 +20,7 @@ describe("parser input edges", () => {
 			].join("\r\n"),
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const before = findNode(
 			document.children,
 			"section",
@@ -57,7 +57,7 @@ describe("parser input edges", () => {
 		});
 	});
 
-	it("counts Unicode columns by code point for inline occurrences", () => {
+	it("counts Unicode columns by code point for inline occurrences", async () => {
 		const path = writeFixture(
 			"unicode-columns.adoc",
 			`= Probe
@@ -71,7 +71,7 @@ describe("parser input edges", () => {
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const anchor = document.anchorOccurrences[0];
 		const xref = document.xrefOccurrences[0];
 
@@ -95,13 +95,13 @@ describe("parser input edges", () => {
 		);
 	});
 
-	it("does not extend no-trailing-newline paragraph spans past EOF", () => {
+	it("does not extend no-trailing-newline paragraph spans past EOF", async () => {
 		const path = writeFixture(
 			"no-trailing-newline-paragraph.adoc",
 			"= Probe\n\n== Before\n\nFinal paragraph without trailing newline.",
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const before = findNode(
 			document.children,
 			"section",
@@ -114,13 +114,13 @@ describe("parser input edges", () => {
 		expect(paragraph.source?.span).toEqual({ startLine: 5, endLine: 5 });
 	});
 
-	it("does not extend no-trailing-newline listing spans past EOF", () => {
+	it("does not extend no-trailing-newline listing spans past EOF", async () => {
 		const path = writeFixture(
 			"no-trailing-newline-listing.adoc",
 			"= Probe\n\n== Before\n\n----\ncode\n----",
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const listing = findNode(document.children, "listing") as ListingNode;
 
 		expect(listing.span).toEqual({ startLine: 5, endLine: 7 });
@@ -128,10 +128,10 @@ describe("parser input edges", () => {
 		expect(listing.content).toBe("code");
 	});
 
-	it("parses a document title only without manufacturing sections", () => {
+	it("parses a document title only without manufacturing sections", async () => {
 		const path = writeFixture("title-only.adoc", "= Only Title");
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.title).toEqual(
 			expect.objectContaining({
@@ -151,10 +151,10 @@ describe("parser input edges", () => {
 		expect(document.anchorOccurrences).toEqual([]);
 	});
 
-	it("parses an empty document without manufacturing a title or structure", () => {
+	it("parses an empty document without manufacturing a title or structure", async () => {
 		const path = writeFixture("empty-document.adoc", "");
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.title).toEqual(
 			expect.objectContaining({
@@ -174,7 +174,7 @@ describe("parser input edges", () => {
 		expect(document.anchorOccurrences).toEqual([]);
 	});
 
-	it("preserves attrlist edge metadata on blocks without inventing structure", () => {
+	it("preserves attrlist edge metadata on blocks without inventing structure", async () => {
 		const path = writeFixture(
 			"metadata-attrlist-edges.adoc",
 			`= Probe
@@ -192,7 +192,7 @@ quoted
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const listings = collectNodes(
 			document.children,
 			"listing",
@@ -238,7 +238,7 @@ quoted
 		);
 	});
 
-	it("preserves id and role attrlists that intentionally omit style and language", () => {
+	it("preserves id and role attrlists that intentionally omit style and language", async () => {
 		const path = writeFixture(
 			"metadata-id-role-only.adoc",
 			`= Probe
@@ -250,7 +250,7 @@ content
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const listing = findNode(document.children, "listing") as ListingNode;
 		const attrlist = listing.metadata?.find(
 			(metadata) => metadata.metadataKind === "attrlist",
@@ -275,7 +275,7 @@ content
 		expect(attrlist?.attributes).not.toHaveProperty("language");
 	});
 
-	it("parses section shorthand id roles and named attributes as one attrlist", () => {
+	it("parses section shorthand id roles and named attributes as one attrlist", async () => {
 		const path = writeFixture(
 			"metadata-section-id-role-attributes.adoc",
 			`= Probe
@@ -285,7 +285,7 @@ content
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = findNode(
 			document.children,
 			"section",
@@ -315,7 +315,7 @@ content
 		);
 	});
 
-	it("preserves only RDF12 for marker bare attrlist fields", () => {
+	it("preserves only RDF12 for marker bare attrlist fields", async () => {
 		const path = writeFixture(
 			"metadata-rdf12-for-markers.adoc",
 			`= Probe
@@ -342,7 +342,7 @@ ordinary bare token
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const listings = collectNodes(
 			document.children,
 			"listing",

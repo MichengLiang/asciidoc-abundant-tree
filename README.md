@@ -253,11 +253,11 @@ import {
 	serializeAbundantTreeToJson,
 } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({
+const document = await parseAbundantTree({
 	sourcePath: "docs/index.adoc",
 });
 
-const book = parseAbundantTree({
+const book = await parseAbundantTree({
 	sourcePath: "samples/book-entry-demo/book.adoc",
 	mode: "book-entry",
 	documentRoot: "samples/book-entry-demo",
@@ -281,7 +281,7 @@ Browser tools that already hold AsciiDoc source text can use the browser-safe su
 ```ts
 import { parseAbundantTreeFromSource } from "asciidoc-abundant-tree/browser";
 
-const document = parseAbundantTreeFromSource({
+const document = await parseAbundantTreeFromSource({
 	sourceText,
 	sourcePath: "document.adoc",
 });
@@ -310,7 +310,7 @@ List unresolved local xrefs:
 ```ts
 import { parseAbundantTree } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({ sourcePath: "docs/index.adoc" });
+const document = await parseAbundantTree({ sourcePath: "docs/index.adoc" });
 
 for (const xref of document.xrefOccurrences) {
 	if (xref.scope === "unresolved") {
@@ -324,7 +324,7 @@ Inspect target kinds:
 ```ts
 import { parseAbundantTree } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({ sourcePath: "docs/index.adoc" });
+const document = await parseAbundantTree({ sourcePath: "docs/index.adoc" });
 
 const byKind = new Map<string, number>();
 for (const target of document.targets) {

@@ -9,9 +9,9 @@ import { parseAsciidoctorDocument } from "./parser-core";
 import { nodeSourceIdentity } from "./source-identity-node";
 import { buildLineTable } from "./source-lines";
 
-export function parseAbundantTree(
+export async function parseAbundantTree(
 	options: ParseAbundantTreeOptions,
-): AbundantDocument {
+): Promise<AbundantDocument> {
 	const sourcePath = resolve(options.sourcePath);
 	const adapter = createAsciidoctorAdapter();
 
@@ -19,7 +19,7 @@ export function parseAbundantTree(
 		if (!options.documentRoot) {
 			throw new Error("Book-entry mode requires documentRoot.");
 		}
-		const sourceAwareDocument = preprocessBookEntryWithOfficialReader({
+		const sourceAwareDocument = await preprocessBookEntryWithOfficialReader({
 			adapter,
 			sourcePath,
 			documentRoot: options.documentRoot,
@@ -36,8 +36,10 @@ export function parseAbundantTree(
 		}
 		registerSourceAwareDocumentForRecovery(sourceAwareDocument);
 		const lineTable = buildLineTable(sourceAwareDocument.logicalText);
-		const document = parseAsciidoctorDocument({
-			officialDocument: adapter.loadSource(sourceAwareDocument.logicalText),
+		const document = await parseAsciidoctorDocument({
+			officialDocument: await adapter.loadSource(
+				sourceAwareDocument.logicalText,
+			),
 			adapter,
 			lineTable,
 			sourcePath,
@@ -65,7 +67,7 @@ export function parseAbundantTree(
 	const source = readFileSync(sourcePath, "utf8");
 	const lineTable = buildLineTable(source);
 	return parseAsciidoctorDocument({
-		officialDocument: adapter.loadFile(sourcePath),
+		officialDocument: await adapter.loadFile(sourcePath),
 		adapter,
 		lineTable,
 		sourcePath,

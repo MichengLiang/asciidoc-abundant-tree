@@ -8,7 +8,7 @@ import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/offi
 const fixtureRoot = join(process.cwd(), "tmp/book-entry-official-reader");
 
 describe("book-entry official Reader preprocessor", () => {
-	it("reads full-file and nested includes through Reader.readLine cursor evidence", () => {
+	it("reads full-file and nested includes through Reader.readLine cursor evidence", async () => {
 		const entryPath = writeFixture(
 			"full/book.adoc",
 			["= Book", "include::chapter.adoc[]"].join("\n"),
@@ -19,7 +19,7 @@ describe("book-entry official Reader preprocessor", () => {
 		);
 		writeFixture("full/nested.adoc", "nested line\n");
 
-		const document = preprocessBookEntryWithOfficialReader({
+		const document = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "full"),
@@ -43,14 +43,14 @@ describe("book-entry official Reader preprocessor", () => {
 		);
 	});
 
-	it("preprocesses includes inside source blocks", () => {
+	it("preprocesses includes inside source blocks", async () => {
 		const entryPath = writeFixture(
 			"source-block/book.adoc",
 			["[source,js]", "----", "include::snippet.js[]", "----"].join("\n"),
 		);
 		writeFixture("source-block/snippet.js", "console.log('reader');\n");
 
-		const document = preprocessBookEntryWithOfficialReader({
+		const document = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "source-block"),
@@ -118,7 +118,7 @@ describe("book-entry official Reader preprocessor", () => {
 		);
 	});
 
-	it("records tag, tags, and line-range selected source origins", () => {
+	it("records tag, tags, and line-range selected source origins", async () => {
 		const entryPath = writeFixture(
 			"selection/book.adoc",
 			[
@@ -149,7 +149,7 @@ describe("book-entry official Reader preprocessor", () => {
 			Array.from({ length: 8 }, (_, index) => `line ${index + 1}`).join("\n"),
 		);
 
-		const document = preprocessBookEntryWithOfficialReader({
+		const document = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "selection"),
@@ -161,14 +161,14 @@ describe("book-entry official Reader preprocessor", () => {
 		expect(selectedSourceLines(document, "lines.adoc")).toEqual([1, 2, 3, 8]);
 	});
 
-	it("does not treat unmapped include attributes as source contributions", () => {
+	it("does not treat unmapped include attributes as source contributions", async () => {
 		const entryPath = writeFixture(
 			"unmapped/book.adoc",
 			"include::chapter.adoc[foo=bar]\n",
 		);
 		writeFixture("unmapped/chapter.adoc", "included\n");
 
-		const document = preprocessBookEntryWithOfficialReader({
+		const document = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "unmapped"),
@@ -188,7 +188,7 @@ describe("book-entry official Reader preprocessor", () => {
 		]);
 	});
 
-	it("records indentation transforms, leveloffset controls, optional missing includes, and escaped includes", () => {
+	it("records indentation transforms, leveloffset controls, optional missing includes, and escaped includes", async () => {
 		const entryPath = writeFixture(
 			"surfaces/book.adoc",
 			[
@@ -202,7 +202,7 @@ describe("book-entry official Reader preprocessor", () => {
 		writeFixture("surfaces/chapter.adoc", "== Chapter\n");
 		writeFixture("surfaces/escaped.adoc", "must not appear\n");
 
-		const document = preprocessBookEntryWithOfficialReader({
+		const document = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "surfaces"),
@@ -234,7 +234,7 @@ describe("book-entry official Reader preprocessor", () => {
 });
 
 function selectedSourceLines(
-	document: ReturnType<typeof preprocessBookEntryWithOfficialReader>,
+	document: Awaited<ReturnType<typeof preprocessBookEntryWithOfficialReader>>,
 	relativePath: string,
 ): number[] {
 	return document.lines

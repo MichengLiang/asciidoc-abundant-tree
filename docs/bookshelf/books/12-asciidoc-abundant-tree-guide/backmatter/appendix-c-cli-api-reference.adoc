@@ -33,7 +33,7 @@ import {
   serializeAbundantTreeToJson,
 } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({ sourcePath: "docs/index.adoc" });
+const document = await parseAbundantTree({ sourcePath: "docs/index.adoc" });
 const pretty = formatAbundantTree(document);
 const json = serializeAbundantTreeToJson(document);
 const projection = rdf12(document, { documentRoot: process.cwd() });
@@ -49,7 +49,7 @@ const graph = projection.graph;
 ----
 import { parseAbundantTreeFromSource } from "asciidoc-abundant-tree/browser";
 
-const document = parseAbundantTreeFromSource({
+const document = await parseAbundantTreeFromSource({
   sourceText,
   sourcePath: "document.adoc",
 });

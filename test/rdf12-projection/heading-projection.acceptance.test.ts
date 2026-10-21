@@ -29,8 +29,8 @@ const structuralPayloadPath = join(
 );
 
 describe("rdf12 heading projection target acceptance", () => {
-	it("Batch 01 projects the four heading nodes from the structural payload sample", () => {
-		const { graph, heading } = structuralPayloadProjection();
+	it("Batch 01 projects the four heading nodes from the structural payload sample", async () => {
+		const { graph, heading } = await structuralPayloadProjection();
 
 		expectResourceTypeCount(graph, aatTerm("Heading"), 4);
 		expectTriple(
@@ -59,8 +59,8 @@ describe("rdf12 heading projection target acceptance", () => {
 		);
 	});
 
-	it("Batch 01 projects heading labels, headlines, levels, and raw slices", () => {
-		const { graph, heading } = structuralPayloadProjection();
+	it("Batch 01 projects heading labels, headlines, levels, and raw slices", async () => {
+		const { graph, heading } = await structuralPayloadProjection();
 		const root = heading("heading-l1-o0");
 		const deliveryPolicy = heading("heading-l5-o0");
 		const capacityRule = heading("heading-l39-o0");
@@ -118,8 +118,8 @@ describe("rdf12 heading projection target acceptance", () => {
 		expect(literalValues(graph, nestedHeading, aatTerm("raw"))).toHaveLength(1);
 	});
 
-	it("Batch 02 projects ordered heading tree facts", () => {
-		const { graph } = structuralPayloadProjection();
+	it("Batch 02 projects ordered heading tree facts", async () => {
+		const { graph } = await structuralPayloadProjection();
 		const root = headingByHeadline(graph, "root");
 		const deliveryPolicy = headingByHeadline(graph, "配送策略");
 		const capacityRule = headingByHeadline(graph, "运力规则");
@@ -152,8 +152,9 @@ describe("rdf12 heading projection target acceptance", () => {
 		);
 	});
 
-	it("Batch 03 binds selectors only to heading label fields", () => {
-		const { graph, labelCatalog, heading } = structuralPayloadProjection();
+	it("Batch 03 binds selectors only to heading label fields", async () => {
+		const { graph, labelCatalog, heading } =
+			await structuralPayloadProjection();
 		const root = heading("heading-l1-o0");
 		const deliveryPolicy = heading("heading-l5-o0");
 		const capacityRule = heading("heading-l39-o0");
@@ -198,8 +199,8 @@ describe("rdf12 heading projection target acceptance", () => {
 		expect(graph.match({ predicate: aatTerm("hasLabel") })).toHaveLength(0);
 	});
 
-	it("Batch 04 projects xref relation edge evidence and RDF 1.2 reifier", () => {
-		const { graph, heading } = structuralPayloadProjection();
+	it("Batch 04 projects xref relation edge evidence and RDF 1.2 reifier", async () => {
+		const { graph, heading } = await structuralPayloadProjection();
 		const deliveryPolicy = heading("heading-l5-o0");
 		const capacityRule = heading("heading-l39-o0");
 		const relation = rdf12Triple(
@@ -233,8 +234,8 @@ describe("rdf12 heading projection target acceptance", () => {
 		);
 	});
 
-	it("Batch 05 projects heading and xref direct field predicates", () => {
-		const { graph, heading } = structuralPayloadProjection();
+	it("Batch 05 projects heading and xref direct field predicates", async () => {
+		const { graph, heading } = await structuralPayloadProjection();
 		const deliveryPolicy = heading("heading-l5-o0");
 		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
 
@@ -244,8 +245,8 @@ describe("rdf12 heading projection target acceptance", () => {
 		expectLiteralValue(graph, xrefEdge, aatTerm("weight"), "0.8");
 	});
 
-	it("Batch 06 binds heading and edge raw value complex properties", () => {
-		const { graph, heading } = structuralPayloadProjection();
+	it("Batch 06 binds heading and edge raw value complex properties", async () => {
+		const { graph, heading } = await structuralPayloadProjection();
 		const deliveryPolicy = heading("heading-l5-o0");
 		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
 		const policyRiskProfile = onlyObjectIri(
@@ -312,8 +313,8 @@ describe("rdf12 heading projection target acceptance", () => {
 		}
 	});
 
-	it("keeps payload raw opaque instead of expanding it into business graph facts", () => {
-		const { graph } = structuralPayloadProjection();
+	it("keeps payload raw opaque instead of expanding it into business graph facts", async () => {
+		const { graph } = await structuralPayloadProjection();
 		const payloadSubjects = payloadRawScopeSubjects(graph);
 
 		expect(payloadSubjects.length).toBeGreaterThan(0);
@@ -327,8 +328,8 @@ describe("rdf12 heading projection target acceptance", () => {
 		}
 	});
 
-	it("Batch 07 removes old structural resource types from the heading projection public graph", () => {
-		const { graph } = structuralPayloadProjection();
+	it("Batch 07 removes old structural resource types from the heading projection public graph", async () => {
+		const { graph } = await structuralPayloadProjection();
 
 		for (const oldType of [
 			"Paragraph",
@@ -343,15 +344,15 @@ describe("rdf12 heading projection target acceptance", () => {
 	});
 });
 
-function structuralPayloadProjection(): {
+async function structuralPayloadProjection(): Promise<{
 	readonly graph: Rdf12Graph;
 	readonly labelCatalog: ReturnType<
 		typeof projectAbundantDocumentToRdf12
 	>["labelCatalog"];
 	readonly heading: (localId: string) => Rdf12IriTerm;
-} {
+}> {
 	const projection = projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: structuralPayloadPath }),
+		await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 		{ documentRoot: projectRoot },
 	);
 

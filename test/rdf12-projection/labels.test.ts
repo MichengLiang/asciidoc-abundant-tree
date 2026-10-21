@@ -27,8 +27,8 @@ const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
 
 describe("rdf12 heading label space", () => {
-	it("projects heading label values as direct heading fields", () => {
-		const projection = referenceProjection();
+	it("projects heading label values as direct heading fields", async () => {
+		const projection = await referenceProjection();
 		const generatedHeading = headingWithHeadline(projection.graph, "1. 引言");
 		const manualHeading = headingWithHeadline(projection.graph, "2. 基础概念");
 		const titleHeading = headingWithHeadline(
@@ -56,8 +56,8 @@ describe("rdf12 heading label space", () => {
 		);
 	});
 
-	it("does not project public label resources or rdf:value label expressions", () => {
-		const projection = referenceProjection();
+	it("does not project public label resources or rdf:value label expressions", async () => {
+		const projection = await referenceProjection();
 
 		for (const labelType of [
 			"TitleLabel",
@@ -79,8 +79,8 @@ describe("rdf12 heading label space", () => {
 		expect(rdfValueLabelExpressionCount(projection.graph)).toBe(0);
 	});
 
-	it("records only heading owners in the selector label catalog", () => {
-		const projection = referenceProjection();
+	it("records only heading owners in the selector label catalog", async () => {
+		const projection = await referenceProjection();
 		const headingOwners = new Set(
 			resourcesOfType(projection.graph, aatTerm("Heading")).map(
 				(heading) => heading.value,
@@ -97,8 +97,8 @@ describe("rdf12 heading label space", () => {
 		}
 	});
 
-	it("projects local non-heading target ids as owning heading address labels", () => {
-		const projection = referenceProjection();
+	it("projects local non-heading target ids as owning heading address labels", async () => {
+		const projection = await referenceProjection();
 
 		const [engineCodeOwner] = projection.labelCatalog.owners("engine-code");
 		const [perfTableOwner] = projection.labelCatalog.owners("perf-table");
@@ -127,7 +127,7 @@ describe("rdf12 heading label space", () => {
 		);
 
 		const payloadProjection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({
+			await parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
 			}),
 			{ documentRoot: projectRoot },
@@ -145,15 +145,15 @@ describe("rdf12 heading label space", () => {
 		);
 	});
 
-	it("keeps non-address surfaces out of selector labels", () => {
-		const projection = referenceProjection();
+	it("keeps non-address surfaces out of selector labels", async () => {
+		const projection = await referenceProjection();
 
 		for (const value of ["代码清单 3-1", "重力井的危险性"]) {
 			expect(projection.labelCatalog.owners(value)).toEqual([]);
 		}
 
 		const payloadProjection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({
+			await parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
 			}),
 			{ documentRoot: projectRoot },
@@ -168,9 +168,9 @@ describe("rdf12 heading label space", () => {
 		);
 	});
 
-	it("does not use label values in heading IRIs", () => {
+	it("does not use label values in heading IRIs", async () => {
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({
+			await parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
 			}),
 			{ documentRoot: projectRoot },
@@ -194,7 +194,7 @@ describe("rdf12 heading label space", () => {
 		}
 	});
 
-	it("uses attrlist shorthand ids with roles as heading address labels only", () => {
+	it("uses attrlist shorthand ids with roles as heading address labels only", async () => {
 		const path = writeFixture(
 			"rdf12-label-attrlist-id-role.adoc",
 			`= Probe
@@ -204,7 +204,7 @@ describe("rdf12 heading label space", () => {
 `,
 		);
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: path }),
+			await parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
 		const [heading] = projection.labelCatalog.owners("delivery-policy");
@@ -281,9 +281,9 @@ describe("rdf12 heading label space", () => {
 	});
 });
 
-function referenceProjection() {
+async function referenceProjection() {
 	return projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: referencePath }),
+		await parseAbundantTree({ sourcePath: referencePath }),
 		{
 			documentRoot: projectRoot,
 		},

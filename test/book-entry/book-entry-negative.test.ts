@@ -15,24 +15,24 @@ const fixtureRoot = join(projectRoot, "test/book-entry/fixtures");
 const negativeRoot = join(fixtureRoot, "negative");
 
 describe("book-entry negative construction contracts", () => {
-	it("fails when the entry file is missing", () => {
-		expectConstructionError(
+	it("fails when the entry file is missing", async () => {
+		await expectConstructionError(
 			() => parseNegativeFixture("missing-entry.adoc"),
 			"entry.missing-source",
 			[/Entry source file does not exist:/, /missing-entry\.adoc/],
 		);
 	});
 
-	it("fails when an include target is missing", () => {
-		expectConstructionError(
+	it("fails when an include target is missing", async () => {
+		await expectConstructionError(
 			() => parseNegativeFixture("missing-include.adoc"),
 			"include.missing-target",
 			[/Include target file does not exist:/, /missing-target\.adoc/],
 		);
 	});
 
-	it("fails when the include graph is circular", () => {
-		expectConstructionError(
+	it("fails when the include graph is circular", async () => {
+		await expectConstructionError(
 			() => parseNegativeFixture("circular-a.adoc"),
 			"include.cycle",
 			[
@@ -43,8 +43,8 @@ describe("book-entry negative construction contracts", () => {
 		);
 	});
 
-	it("does not treat tag attrlists as unsupported in active book-entry parsing", () => {
-		const document = parseAbundantTree({
+	it("does not treat tag attrlists as unsupported in active book-entry parsing", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: join(fixtureRoot, "simple-book/book.adoc"),
 			mode: "book-entry",
 			documentRoot: fixtureRoot,
@@ -55,8 +55,8 @@ describe("book-entry negative construction contracts", () => {
 		).not.toContain("include.unsupported-attrlist");
 	});
 
-	it("does not treat lines attrlists as unsupported in active book-entry parsing", () => {
-		const document = parseAbundantTree({
+	it("does not treat lines attrlists as unsupported in active book-entry parsing", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: join(fixtureRoot, "simple-book/book.adoc"),
 			mode: "book-entry",
 			documentRoot: fixtureRoot,
@@ -67,16 +67,16 @@ describe("book-entry negative construction contracts", () => {
 		).not.toContain("include.unsupported-attrlist");
 	});
 
-	it("fails before reading an include path outside documentRoot", () => {
-		expectConstructionError(
+	it("fails before reading an include path outside documentRoot", async () => {
+		await expectConstructionError(
 			() => parseNegativeFixture("outside-root.adoc"),
 			"include.outside-document-root",
 			[/Resolved include path is outside documentRoot:/, /README\.md/],
 		);
 	});
 
-	it("fails when logical line count and line origin count diverge", () => {
-		expectConstructionError(
+	it("fails when logical line count and line origin count diverge", async () => {
+		await expectConstructionError(
 			() =>
 				assertLogicalDocumentInvariants({
 					entryPath: join(negativeRoot, "missing-include.adoc"),
@@ -97,8 +97,8 @@ describe("book-entry negative construction contracts", () => {
 		);
 	});
 
-	it("fails when a line origin references a source file absent from the source file table", () => {
-		expectConstructionError(
+	it("fails when a line origin references a source file absent from the source file table", async () => {
+		await expectConstructionError(
 			() =>
 				assertLogicalDocumentInvariants({
 					entryPath: join(negativeRoot, "missing-include.adoc"),
@@ -122,9 +122,9 @@ describe("book-entry negative construction contracts", () => {
 		);
 	});
 
-	it("fails when a line origin sourceLine is outside the origin file line table", () => {
+	it("fails when a line origin sourceLine is outside the origin file line table", async () => {
 		const sourcePath = join(negativeRoot, "missing-include.adoc");
-		expectConstructionError(
+		await expectConstructionError(
 			() =>
 				assertLogicalDocumentInvariants({
 					entryPath: sourcePath,
@@ -154,8 +154,8 @@ describe("book-entry negative construction contracts", () => {
 		);
 	});
 
-	it("does not emit construction errors as successful document diagnostics", () => {
-		const document = parseAbundantTree({
+	it("does not emit construction errors as successful document diagnostics", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: join(fixtureRoot, "simple-book/book.adoc"),
 			mode: "book-entry",
 			documentRoot: fixtureRoot,
@@ -198,13 +198,13 @@ function parseNegativeFixture(name: string): BookEntryDocument {
 	});
 }
 
-function expectConstructionError(
-	action: () => void,
+async function expectConstructionError(
+	action: () => unknown,
 	code: BookEntryConstructionErrorCode,
 	messagePatterns: readonly RegExp[],
-): void {
+): Promise<void> {
 	try {
-		action();
+		await action();
 		throw new Error(`Expected construction error: ${code}`);
 	} catch (error) {
 		expect(error).toBeInstanceOf(BookEntryConstructionError);

@@ -4,7 +4,7 @@ import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
 
 describe("parser block boundaries", () => {
-	it("does not let section-looking table cell content truncate section scope", () => {
+	it("does not let section-looking table cell content truncate section scope", async () => {
 		const path = writeFixture(
 			"table-asciidoc-cell-section.adoc",
 			`= Probe
@@ -25,7 +25,7 @@ See <<after>> inside table cell.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const before = document.children.find(
 			(node) =>
 				node.kind === "section" && "title" in node && node.title === "Before",
@@ -41,7 +41,7 @@ See <<after>> inside table cell.
 		);
 	});
 
-	it("treats fenced code as listing and does not scan its inline-looking content", () => {
+	it("treats fenced code as listing and does not scan its inline-looking content", async () => {
 		const path = writeFixture(
 			"fenced-code.adoc",
 			`= Probe
@@ -57,7 +57,7 @@ See <<after>> inside fenced code.
 == After
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const listing = findNode(document.children, "listing") as ListingNode;
 
 		expect(listing.span).toEqual({ startLine: 5, endLine: 8 });
@@ -69,7 +69,7 @@ See <<after>> inside fenced code.
 		);
 	});
 
-	it("does not scan passthrough block content as xrefs or sections", () => {
+	it("does not scan passthrough block content as xrefs or sections", async () => {
 		const path = writeFixture(
 			"passthrough-block.adoc",
 			`= Probe
@@ -85,7 +85,7 @@ See <<after>> inside passthrough.
 == After
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.xrefOccurrences.map((xref) => xref.raw)).not.toContain(
 			"<<after>>",
@@ -95,7 +95,7 @@ See <<after>> inside passthrough.
 		);
 	});
 
-	it("does not treat delimiter-looking table cell text as a global listing range", () => {
+	it("does not treat delimiter-looking table cell text as a global listing range", async () => {
 		const path = writeFixture(
 			"table-delimiter-text.adoc",
 			`= Probe
@@ -115,14 +115,14 @@ See <<after>> after that line.
 == After
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.xrefOccurrences.map((xref) => xref.raw)).toContain(
 			"<<after>>",
 		);
 	});
 
-	it("does not include blank block separators in paragraph text or spans", () => {
+	it("does not include blank block separators in paragraph text or spans", async () => {
 		const path = writeFixture(
 			"paragraph-boundary.adoc",
 			`= Probe
@@ -137,7 +137,7 @@ code
 ----
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const paragraph = findNode(document.children, "paragraph") as {
 			text?: string;
 			source?: { span?: { startLine: number; endLine: number } };
@@ -147,7 +147,7 @@ code
 		expect(paragraph.source?.span).toEqual({ startLine: 5, endLine: 5 });
 	});
 
-	it("scans table asciidoc cell paragraphs without scanning nested listing content", () => {
+	it("scans table asciidoc cell paragraphs without scanning nested listing content", async () => {
 		const path = writeFixture(
 			"table-nested-listing.adoc",
 			`= Probe
@@ -169,14 +169,14 @@ Normal <<after>> prose.
 == After
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.xrefOccurrences.map((xref) => xref.raw)).toEqual([
 			"<<after>>",
 		]);
 	});
 
-	it("recurses through table asciidoc cell open blocks when scanning prose", () => {
+	it("recurses through table asciidoc cell open blocks when scanning prose", async () => {
 		const path = writeFixture(
 			"table-open-block.adoc",
 			`= Probe
@@ -196,14 +196,14 @@ Open block prose links to <<after>>.
 == After
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.xrefOccurrences.map((xref) => xref.raw)).toEqual([
 			"<<after>>",
 		]);
 	});
 
-	it("extracts xrefs from Asciidoctor inline-substituted prose contexts only", () => {
+	it("extracts xrefs from Asciidoctor inline-substituted prose contexts only", async () => {
 		const path = writeFixture(
 			"xref-inline-substitution-contexts.adoc",
 			`= Probe
@@ -291,7 +291,7 @@ stem xref:target[Stem, rel=stem]
 ++++
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(
 			document.xrefOccurrences.map((xref) => xref.attributes?.rel),
@@ -332,7 +332,7 @@ stem xref:target[Stem, rel=stem]
 		).toBe(true);
 	});
 
-	it("stores rich section raw on the AST instead of requiring downstream file slicing", () => {
+	it("stores rich section raw on the AST instead of requiring downstream file slicing", async () => {
 		const path = writeFixture(
 			"section-rich-source-raw.adoc",
 			`= Probe
@@ -364,7 +364,7 @@ NOTE: Admonition paragraph.
 == Next
 `,
 		);
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = document.children.find(
 			(node) => node.kind === "section" && node.title === "Rich Raw",
 		) as SectionNode | undefined;

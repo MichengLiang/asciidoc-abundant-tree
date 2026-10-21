@@ -11,9 +11,9 @@ import {
 	useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { layoutTeachingGraph } from "./layout";
-import { projectTeachingGraph } from "./projection";
+import { projectTeachingGraph, type TeachingProjection } from "./projection";
 import { SAMPLE_SOURCE } from "./sample";
 import { TeachingEdge } from "./TeachingEdge";
 import { TeachingNode } from "./TeachingNode";
@@ -26,12 +26,30 @@ const edgeTypes: EdgeTypes = {
 	teachingEdge: TeachingEdge,
 };
 
+const EMPTY_PROJECTION: TeachingProjection = {
+	nodes: [],
+	edges: [],
+	diagnostics: [],
+	internalDiagnostics: [],
+};
+
 export function App(): React.ReactElement {
 	const [source, setSource] = useState(SAMPLE_SOURCE);
-	const projection = useMemo(() => projectTeachingGraph(source), [source]);
+	const [projection, setProjection] = useState(EMPTY_PROJECTION);
 	const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
 	const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 	const { fitView } = useReactFlow();
+
+	// 解析是异步的：连续输入时，先发起的解析可能后返回，只采用当前 source 的那一次。
+	useEffect(() => {
+		let cancelled = false;
+		void projectTeachingGraph(source).then((next) => {
+			if (!cancelled) setProjection(next);
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, [source]);
 
 	useEffect(() => {
 		let cancelled = false;

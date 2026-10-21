@@ -33,7 +33,7 @@ import {
   serializeAbundantTreeToJson,
 } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({ sourcePath: "source/delivery.adoc" });
+const document = await parseAbundantTree({ sourcePath: "source/delivery.adoc" });
 
 const pretty = formatAbundantTree(document);
 const json = serializeAbundantTreeToJson(document);

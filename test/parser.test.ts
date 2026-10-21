@@ -60,14 +60,14 @@ const bookPartAuditPath = join(
 );
 
 describe("parseAbundantTree", () => {
-	it("defaults omitted mode to single-file", () => {
-		const document = parseAbundantTree({ sourcePath: referencePath });
+	it("defaults omitted mode to single-file", async () => {
+		const document = await parseAbundantTree({ sourcePath: referencePath });
 
 		expect(document.mode).toBe("single-file");
 	});
 
-	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", () => {
-		const document = parseAbundantTree({ sourcePath: referencePath });
+	it("recovers the reference sample document, targets, xrefs, anchors, listings, and tables", async () => {
+		const document = await parseAbundantTree({ sourcePath: referencePath });
 
 		expect(document.kind).toBe("document");
 		expect(document.mode).toBe("single-file");
@@ -152,10 +152,10 @@ describe("parseAbundantTree", () => {
 		expect(formatAbundantTree(document)).toContain("<xref");
 	});
 
-	it("keeps interdocument xrefs external without reading the other document", () => {
+	it("keeps interdocument xrefs external without reading the other document", async () => {
 		expect(existsSync(join(projectRoot, "samples/other.adoc"))).toBe(false);
 
-		const document = parseAbundantTree({ sourcePath: interdocumentPath });
+		const document = await parseAbundantTree({ sourcePath: interdocumentPath });
 		const local = document.xrefOccurrences.find(
 			(xref) => xref.target === "local-target",
 		);
@@ -193,8 +193,10 @@ describe("parseAbundantTree", () => {
 		);
 	});
 
-	it("does not scan listing content as sections, xrefs, anchors, or targets", () => {
-		const document = parseAbundantTree({ sourcePath: codeSurfaceAuditPath });
+	it("does not scan listing content as sections, xrefs, anchors, or targets", async () => {
+		const document = await parseAbundantTree({
+			sourcePath: codeSurfaceAuditPath,
+		});
 
 		expect(
 			document.targets.map((target) => [target.id, target.targetType]),
@@ -220,8 +222,10 @@ describe("parseAbundantTree", () => {
 		expect(document.anchorOccurrences).toEqual([]);
 	});
 
-	it("uses official generated section ids and preserves official xref bindings", () => {
-		const document = parseAbundantTree({ sourcePath: generatedIdAuditPath });
+	it("uses official generated section ids and preserves official xref bindings", async () => {
+		const document = await parseAbundantTree({
+			sourcePath: generatedIdAuditPath,
+		});
 		const sectionTarget = document.targets.find(
 			(target) => target.targetType === "section",
 		);
@@ -250,8 +254,10 @@ describe("parseAbundantTree", () => {
 		);
 	});
 
-	it("recovers table cell xref occurrences without treating code listings as prose", () => {
-		const document = parseAbundantTree({ sourcePath: tableXrefAuditPath });
+	it("recovers table cell xref occurrences without treating code listings as prose", async () => {
+		const document = await parseAbundantTree({
+			sourcePath: tableXrefAuditPath,
+		});
 		const xref = document.xrefOccurrences[0];
 
 		expect(document.xrefOccurrences).toHaveLength(1);
@@ -275,8 +281,10 @@ describe("parseAbundantTree", () => {
 		);
 	});
 
-	it("keeps block anchors as occurrences and target catalog entries", () => {
-		const document = parseAbundantTree({ sourcePath: blockAnchorAuditPath });
+	it("keeps block anchors as occurrences and target catalog entries", async () => {
+		const document = await parseAbundantTree({
+			sourcePath: blockAnchorAuditPath,
+		});
 
 		expect(document.anchorOccurrences).toEqual([
 			expect.objectContaining({
@@ -319,8 +327,8 @@ describe("parseAbundantTree", () => {
 		);
 	});
 
-	it("parses complex attrlist style, id, roles, and attributes separately", () => {
-		const document = parseAbundantTree({
+	it("parses complex attrlist style, id, roles, and attributes separately", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: attrlistComplexAuditPath,
 		});
 		const listing = findNode(document.children, "listing") as {
@@ -349,8 +357,8 @@ describe("parseAbundantTree", () => {
 		);
 	});
 
-	it("keeps missing local hrefs unresolved when no target catalog entry exists", () => {
-		const document = parseAbundantTree({
+	it("keeps missing local hrefs unresolved when no target catalog entry exists", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: missingLocalXrefAuditPath,
 		});
 		const xref = document.xrefOccurrences[0];
@@ -376,8 +384,8 @@ describe("parseAbundantTree", () => {
 		expect(xref?.asciidoctor?.resolvedType).toBeUndefined();
 	});
 
-	it("does not fallback-bind table cell xrefs to generated section ids", () => {
-		const document = parseAbundantTree({
+	it("does not fallback-bind table cell xrefs to generated section ids", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: tableSectionPollutionAuditPath,
 		});
 		const xref = document.xrefOccurrences[0];
@@ -404,8 +412,10 @@ describe("parseAbundantTree", () => {
 		expect(xref?.asciidoctor?.resolvedType).toBeUndefined();
 	});
 
-	it("uses official paragraph block ids as target catalog entries", () => {
-		const document = parseAbundantTree({ sourcePath: paragraphIdAuditPath });
+	it("uses official paragraph block ids as target catalog entries", async () => {
+		const document = await parseAbundantTree({
+			sourcePath: paragraphIdAuditPath,
+		});
 		const paragraph = findNode(document.children, "paragraph") as {
 			asciidoctor?: { resolvedId?: string };
 		};
@@ -447,8 +457,10 @@ describe("parseAbundantTree", () => {
 		);
 	});
 
-	it("does not let ordinary links shift official xref bindings", () => {
-		const document = parseAbundantTree({ sourcePath: linkBeforeXrefAuditPath });
+	it("does not let ordinary links shift official xref bindings", async () => {
+		const document = await parseAbundantTree({
+			sourcePath: linkBeforeXrefAuditPath,
+		});
 		const xref = document.xrefOccurrences[0];
 
 		expect(document.xrefOccurrences).toHaveLength(1);
@@ -471,8 +483,8 @@ describe("parseAbundantTree", () => {
 		expect(xref?.asciidoctor?.reftext).not.toBe("external");
 	});
 
-	it("does not let ordinary local links with matching text shift xref bindings", () => {
-		const document = parseAbundantTree({
+	it("does not let ordinary local links with matching text shift xref bindings", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: localLinkBeforeXrefAuditPath,
 		});
 		const xref = document.xrefOccurrences[0];
@@ -496,8 +508,8 @@ describe("parseAbundantTree", () => {
 		expect(xref?.asciidoctor?.href).not.toBe("#_other");
 	});
 
-	it("does not let ordinary local links with the same href supply xref reftext", () => {
-		const document = parseAbundantTree({
+	it("does not let ordinary local links with the same href supply xref reftext", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: sameHrefLinkBeforeXrefAuditPath,
 		});
 		const xref = document.xrefOccurrences[0];
@@ -522,8 +534,8 @@ describe("parseAbundantTree", () => {
 		expect(xref?.asciidoctor?.reftext).not.toBe("wrong text");
 	});
 
-	it("keeps book parts, part introductions, chapters, and chapter xrefs", () => {
-		const document = parseAbundantTree({ sourcePath: bookPartAuditPath });
+	it("keeps book parts, part introductions, chapters, and chapter xrefs", async () => {
+		const document = await parseAbundantTree({ sourcePath: bookPartAuditPath });
 		const partOne = document.children[0] as {
 			kind?: string;
 			level?: number;

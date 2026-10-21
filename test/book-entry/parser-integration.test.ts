@@ -11,8 +11,8 @@ const simpleBookRoot = join(documentRoot, "simple-book");
 const entryPath = join(simpleBookRoot, "book.adoc");
 
 describe("book-entry parser integration", () => {
-	it("parses book-entry logical text into a standard AbundantDocument", () => {
-		const document = parseAbundantTree({
+	it("parses book-entry logical text into a standard AbundantDocument", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: entryPath,
 			mode: "book-entry",
 			documentRoot,
@@ -41,12 +41,12 @@ describe("book-entry parser integration", () => {
 		);
 	});
 
-	it("uses logical text rather than Asciidoctor include sourcemap for book-entry mode", () => {
-		const singleFileDocument = parseAbundantTree({
+	it("uses logical text rather than Asciidoctor include sourcemap for book-entry mode", async () => {
+		const singleFileDocument = await parseAbundantTree({
 			sourcePath: entryPath,
 			mode: "single-file",
 		});
-		const bookEntryDocument = parseAbundantTree({
+		const bookEntryDocument = await parseAbundantTree({
 			sourcePath: entryPath,
 			mode: "book-entry",
 			documentRoot,
@@ -67,7 +67,7 @@ describe("book-entry parser integration", () => {
 		).not.toContain("source-location.external-file");
 	});
 
-	it("keeps Asciidoctor memory parse source lines aligned to logical lines", () => {
+	it("keeps Asciidoctor memory parse source lines aligned to logical lines", async () => {
 		const logicalText = [
 			"= Memory Probe",
 			"",
@@ -78,7 +78,8 @@ describe("book-entry parser integration", () => {
 			"",
 			"Logical paragraph.",
 		].join("\n");
-		const officialDocument = createAsciidoctorAdapter().loadSource(logicalText);
+		const officialDocument =
+			await createAsciidoctorAdapter().loadSource(logicalText);
 		const logicalHeading = childBlocksOf(officialDocument).find(
 			(block) => block.getTitle?.() === "Logical Heading",
 		);
@@ -86,8 +87,8 @@ describe("book-entry parser integration", () => {
 		expect(logicalHeading?.getSourceLocation?.()?.getLineNumber?.()).toBe(6);
 	});
 
-	it("recovers description list source layers from included origin files", () => {
-		const document = parseAbundantTree({
+	it("recovers description list source layers from included origin files", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: entryPath,
 			mode: "book-entry",
 			documentRoot,

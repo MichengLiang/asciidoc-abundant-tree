@@ -7,8 +7,8 @@ import { buildLineTable } from "../src/source-lines";
 import { writeFixture } from "./helpers";
 
 describe("resolveSourceInterval", () => {
-	it("extends section spans from metadata to the next official sibling", () => {
-		const { lineTable, surfaces } = parseFixture(
+	it("extends section spans from metadata to the next official sibling", async () => {
+		const { lineTable, surfaces } = await parseFixture(
 			"resolver-section.adoc",
 			`= Probe
 
@@ -32,8 +32,8 @@ paragraph
 		);
 	});
 
-	it("resolves fenced and dashed listing spans with content spans", () => {
-		const { lineTable, surfaces } = parseFixture(
+	it("resolves fenced and dashed listing spans with content spans", async () => {
+		const { lineTable, surfaces } = await parseFixture(
 			"resolver-listings.adoc",
 			`= Probe
 
@@ -74,8 +74,8 @@ dashed
 		);
 	});
 
-	it("resolves table and pass spans without treating inner delimiter text as global structure", () => {
-		const { lineTable, surfaces } = parseFixture(
+	it("resolves table and pass spans without treating inner delimiter text as global structure", async () => {
+		const { lineTable, surfaces } = await parseFixture(
 			"resolver-table-pass.adoc",
 			`= Probe
 
@@ -113,8 +113,8 @@ This prose mentions ---- as text.
 		);
 	});
 
-	it("keeps paragraph intervals to paragraph source content instead of sibling separators", () => {
-		const { lineTable, surfaces } = parseFixture(
+	it("keeps paragraph intervals to paragraph source content instead of sibling separators", async () => {
+		const { lineTable, surfaces } = await parseFixture(
 			"resolver-paragraph-boundary.adoc",
 			`= Probe
 
@@ -139,8 +139,8 @@ code
 		);
 	});
 
-	it("resolves literal and open blocks from their official source lines", () => {
-		const { lineTable, surfaces } = parseFixture(
+	it("resolves literal and open blocks from their official source lines", async () => {
+		const { lineTable, surfaces } = await parseFixture(
 			"resolver-literal-open.adoc",
 			`= Probe
 
@@ -353,11 +353,13 @@ content
 	});
 });
 
-function parseFixture(name: string, source: string) {
+async function parseFixture(name: string, source: string) {
 	const path = writeFixture(name, source);
 	return {
 		lineTable: buildLineTable(source),
-		surfaces: walkOfficialBlocks(createAsciidoctorAdapter().loadFile(path)),
+		surfaces: walkOfficialBlocks(
+			await createAsciidoctorAdapter().loadFile(path),
+		),
 	};
 }
 

@@ -25,8 +25,8 @@ summary::
 `;
 
 describe("browser source parser", () => {
-	it("parses sourceText into an AbundantDocument with core consumer fields", () => {
-		const document = parseAbundantTreeFromSource({
+	it("parses sourceText into an AbundantDocument with core consumer fields", async () => {
+		const document = await parseAbundantTreeFromSource({
 			sourceText: fixture,
 			sourcePath: "fixture.adoc",
 		});
@@ -120,8 +120,8 @@ describe("browser source parser", () => {
 		);
 	});
 
-	it("uses a stable virtual source identity by default", () => {
-		const document = parseAbundantTreeFromSource({ sourceText: fixture });
+	it("uses a stable virtual source identity by default", async () => {
+		const document = await parseAbundantTreeFromSource({ sourceText: fixture });
 
 		expect(document.sourcePath).toBe("document.adoc");
 	});

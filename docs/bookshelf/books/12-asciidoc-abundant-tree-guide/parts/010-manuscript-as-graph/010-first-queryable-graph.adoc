@@ -36,7 +36,7 @@ Library API 输出同一 projection：
 import { mkdirSync, writeFileSync } from "node:fs";
 import { parseAbundantTree, rdf12 } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({ sourcePath: "source/delivery.adoc" });
+const document = await parseAbundantTree({ sourcePath: "source/delivery.adoc" });
 const projection = rdf12(document, { documentRoot: process.cwd() });
 
 mkdirSync("projection", { recursive: true });

@@ -16,13 +16,13 @@ export type ExportAnimationYamlResult = {
 	readonly warnings: readonly ExportWarning[];
 };
 
-export function exportAnimationYaml(
+export async function exportAnimationYaml(
 	options: ExportAnimationYamlOptions,
-): ExportAnimationYamlResult {
+): Promise<ExportAnimationYamlResult> {
 	const sourcePath = resolve(options.sourcePath);
 	const documentRoot = resolve(options.documentRoot ?? dirname(sourcePath));
 	const warnings: ExportWarning[] = [];
-	const document = parseAbundantTree({
+	const document = await parseAbundantTree({
 		sourcePath,
 		mode: "book-entry",
 		documentRoot,

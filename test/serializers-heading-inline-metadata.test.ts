@@ -7,8 +7,8 @@ import {
 import { writeFixture } from "./helpers";
 
 describe("heading inline metadata serialization", () => {
-	it("includes the document-level hmeta occurrence catalog in JSON", () => {
-		const json = serializeAbundantTreeToJson(hmetaDocument());
+	it("includes the document-level hmeta occurrence catalog in JSON", async () => {
+		const json = serializeAbundantTreeToJson(await hmetaDocument());
 
 		expect(json.headingInlineMetadataOccurrences).toEqual([
 			expect.objectContaining({
@@ -20,8 +20,8 @@ describe("heading inline metadata serialization", () => {
 		]);
 	});
 
-	it("includes hmeta occurrences as paragraph children in JSON", () => {
-		const json = serializeAbundantTreeToJson(hmetaDocument());
+	it("includes hmeta occurrences as paragraph children in JSON", async () => {
+		const json = serializeAbundantTreeToJson(await hmetaDocument());
 		const section = json.children.find((node) => node.kind === "section");
 		const paragraph = section?.children?.find(
 			(node) => node.kind === "paragraph",
@@ -36,9 +36,9 @@ describe("heading inline metadata serialization", () => {
 		]);
 	});
 
-	it("omits fallback labels when source omits label", () => {
+	it("omits fallback labels when source omits label", async () => {
 		const json = serializeAbundantTreeToJson(
-			hmetaDocument("Owner hmeta:owner[docs-team]."),
+			await hmetaDocument("Owner hmeta:owner[docs-team]."),
 		);
 		const occurrence = json.headingInlineMetadataOccurrences[0];
 
@@ -51,8 +51,8 @@ describe("heading inline metadata serialization", () => {
 		expect(occurrence).not.toHaveProperty("label");
 	});
 
-	it("formats hmeta occurrence field and value in the pretty tree", () => {
-		const output = formatAbundantTree(hmetaDocument());
+	it("formats hmeta occurrence field and value in the pretty tree", async () => {
+		const output = formatAbundantTree(await hmetaDocument());
 		const hmetaLine = output
 			.split("\n")
 			.find((line) => line.includes("<headingInlineMetadata "));
@@ -63,7 +63,7 @@ describe("heading inline metadata serialization", () => {
 	});
 });
 
-function hmetaDocument(
+async function hmetaDocument(
 	body = "Status hmeta:status[active, label=生效].",
 ): ReturnType<typeof parseAbundantTree> {
 	const path = writeFixture(
@@ -76,5 +76,5 @@ function hmetaDocument(
 ${body}
 `,
 	);
-	return parseAbundantTree({ sourcePath: path });
+	return await parseAbundantTree({ sourcePath: path });
 }

@@ -18,8 +18,8 @@ const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
 
 describe("rdf12 reference-links query contract acceptance", () => {
-	it("answers heading label lookup queries", () => {
-		const projection = referenceProjection();
+	it("answers heading label lookup queries", async () => {
+		const projection = await referenceProjection();
 
 		const intro = onlyHeadingForLabel(
 			projection.graph,
@@ -44,8 +44,8 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		expectLineSpan(projection.graph, core, 25, 39);
 	});
 
-	it("answers local non-heading target alias lookup queries", () => {
-		const projection = referenceProjection();
+	it("answers local non-heading target alias lookup queries", async () => {
+		const projection = await referenceProjection();
 		const core = onlyHeadingForLabel(
 			projection.graph,
 			"headline",
@@ -68,8 +68,8 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		).toEqual(troubleshooting);
 	});
 
-	it("answers direct containment and file-line reverse lookup queries", () => {
-		const projection = referenceProjection();
+	it("answers direct containment and file-line reverse lookup queries", async () => {
+		const projection = await referenceProjection();
 		const root = onlyHeadingForLabel(
 			projection.graph,
 			"headline",
@@ -117,8 +117,8 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		expect(coveringLine35).not.toContain(projection.documentIri);
 	});
 
-	it("answers xref edge, outgoing relation, and reifier queries", () => {
-		const projection = referenceProjection();
+	it("answers xref edge, outgoing relation, and reifier queries", async () => {
+		const projection = await referenceProjection();
 		const intro = onlyHeadingForLabel(
 			projection.graph,
 			"generatedAddressLabel",
@@ -154,9 +154,9 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		expect(reifier?.object).toEqual(rdf12TripleTerm(relation));
 	});
 
-	it("answers direct field predicate queries without attribute resources", () => {
+	it("answers direct field predicate queries without attribute resources", async () => {
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({
+			await parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
 			}),
 			{ documentRoot: projectRoot },
@@ -199,9 +199,9 @@ describe("rdf12 reference-links query contract acceptance", () => {
 	});
 });
 
-function referenceProjection() {
+async function referenceProjection() {
 	return projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: referencePath }),
+		await parseAbundantTree({ sourcePath: referencePath }),
 		{
 			documentRoot: projectRoot,
 		},

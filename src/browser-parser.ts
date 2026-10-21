@@ -9,12 +9,12 @@ import { buildLineTable } from "./source-lines";
 
 const DEFAULT_BROWSER_SOURCE_PATH = "document.adoc";
 
-export function parseAbundantTreeFromSource(
+export async function parseAbundantTreeFromSource(
 	options: ParseAbundantTreeFromSourceOptions,
-): AbundantDocument {
+): Promise<AbundantDocument> {
 	const sourcePath = options.sourcePath ?? DEFAULT_BROWSER_SOURCE_PATH;
 	const adapter = createAsciidoctorAdapter();
-	const officialDocument = adapter.loadSource(options.sourceText);
+	const officialDocument = await adapter.loadSource(options.sourceText);
 	const lineTable = buildLineTable(options.sourceText);
 
 	return parseAsciidoctorDocument({

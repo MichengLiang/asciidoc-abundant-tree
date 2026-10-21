@@ -15,8 +15,8 @@ const fixtureRoot = join(
 const entryPath = join(fixtureRoot, "book.adoc");
 
 describe("book-entry official Reader parser integration", () => {
-	it("routes book-entry parsing through official Reader include preprocessing", () => {
-		const document = parseOfficialReaderBook();
+	it("routes book-entry parsing through official Reader include preprocessing", async () => {
+		const document = await parseOfficialReaderBook();
 		const titles = collectSections(document.children).map(
 			(section) => section.title,
 		);
@@ -50,8 +50,8 @@ describe("book-entry official Reader parser integration", () => {
 		).not.toContain("missing-optional.adoc");
 	});
 
-	it("recovers heading source files and leveloffset hierarchy from physical origins", () => {
-		const document = parseOfficialReaderBook();
+	it("recovers heading source files and leveloffset hierarchy from physical origins", async () => {
+		const document = await parseOfficialReaderBook();
 		const main = sectionByTitle(document, "Main Chapter");
 		const nested = sectionByTitle(document, "Nested Section");
 
@@ -66,8 +66,8 @@ describe("book-entry official Reader parser integration", () => {
 		expect(main.source?.raw).not.toContain(":leveloffset");
 	});
 
-	it("parses tagged source block content and keeps escaped includes parser-safe", () => {
-		const document = parseOfficialReaderBook();
+	it("parses tagged source block content and keeps escaped includes parser-safe", async () => {
+		const document = await parseOfficialReaderBook();
 		const listings = collectNodes(
 			document.children,
 			"listing",
@@ -85,8 +85,8 @@ describe("book-entry official Reader parser integration", () => {
 	});
 });
 
-function parseOfficialReaderBook(): AbundantDocument {
-	return parseAbundantTree({
+async function parseOfficialReaderBook(): Promise<AbundantDocument> {
+	return await parseAbundantTree({
 		sourcePath: entryPath,
 		mode: "book-entry",
 		documentRoot: fixtureRoot,

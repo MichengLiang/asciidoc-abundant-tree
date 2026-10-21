@@ -25,10 +25,13 @@ const referencePath = join(projectRoot, "samples/reference-links.adoc");
 const interdocumentPath = join(projectRoot, "samples/interdocument-xref.adoc");
 
 describe("rdf12 xref edge projection", () => {
-	it("projects local xref edge evidence, default relation triple, and reifier", () => {
-		const projection = projectAbundantDocumentToRdf12(referenceDocument(), {
-			documentRoot: projectRoot,
-		});
+	it("projects local xref edge evidence, default relation triple, and reifier", async () => {
+		const projection = projectAbundantDocumentToRdf12(
+			await referenceDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
 		const edge = resourcesOfType(
 			projection.graph,
 			`${namespaces.aat}XrefEdge`,
@@ -74,10 +77,13 @@ describe("rdf12 xref edge projection", () => {
 		expectTripleTerm(projection.graph, edge ?? "", relation);
 	});
 
-	it("writes xref display text as a literal field on the edge evidence", () => {
-		const projection = projectAbundantDocumentToRdf12(referenceDocument(), {
-			documentRoot: projectRoot,
-		});
+	it("writes xref display text as a literal field on the edge evidence", async () => {
+		const projection = projectAbundantDocumentToRdf12(
+			await referenceDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
 		const edge = resourcesOfType(
 			projection.graph,
 			`${namespaces.aat}XrefEdge`,
@@ -122,9 +128,9 @@ describe("rdf12 xref edge projection", () => {
 		).toEqual([firstEdge, secondEdge]);
 	});
 
-	it("keeps interdocument xrefs unbound without opening external files", () => {
+	it("keeps interdocument xrefs unbound without opening external files", async () => {
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: interdocumentPath }),
+			await parseAbundantTree({ sourcePath: interdocumentPath }),
 			{ documentRoot: projectRoot },
 		);
 		const edge = resourcesOfType(
@@ -149,10 +155,13 @@ describe("rdf12 xref edge projection", () => {
 		).toHaveLength(0);
 	});
 
-	it("projects xrefs to local non-heading targets as owning heading relation edges", () => {
-		const projection = projectAbundantDocumentToRdf12(referenceDocument(), {
-			documentRoot: projectRoot,
-		});
+	it("projects xrefs to local non-heading targets as owning heading relation edges", async () => {
+		const projection = projectAbundantDocumentToRdf12(
+			await referenceDocument(),
+			{
+				documentRoot: projectRoot,
+			},
+		);
 		const core = heading(projection.documentIri, "heading-l25-o0");
 		const troubleshooting = heading(projection.documentIri, "heading-l40-o0");
 		const conclusion = heading(projection.documentIri, "heading-l58-o0");
@@ -230,13 +239,13 @@ describe("rdf12 xref edge projection", () => {
 		);
 	});
 
-	it("projects paragraph and block target xrefs to the containing heading", () => {
+	it("projects paragraph and block target xrefs to the containing heading", async () => {
 		for (const [fixture, selector, edgeFragment] of [
 			["paragraph-id-audit.adoc", "para-target", "#xref-edge-l8-c5-o0"],
 			["block-anchor-audit.adoc", "block-para", "#xref-edge-l9-c25-o0"],
 		] as const) {
 			const projection = projectAbundantDocumentToRdf12(
-				parseAbundantTree({
+				await parseAbundantTree({
 					sourcePath: join(projectRoot, "test/fixtures", fixture),
 				}),
 				{ documentRoot: projectRoot },
@@ -526,7 +535,7 @@ describe("rdf12 xref edge projection", () => {
 		).toHaveLength(0);
 	});
 
-	it("uses leading macro rel attributes as relation predicates", () => {
+	it("uses leading macro rel attributes as relation predicates", async () => {
 		const sourcePath = writeFixture(
 			"leading-macro-rel.adoc",
 			`= 我的笔记本
@@ -539,7 +548,7 @@ describe("rdf12 xref edge projection", () => {
 `,
 		);
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({
+			await parseAbundantTree({
 				sourcePath,
 			}),
 			{ documentRoot: projectRoot },
@@ -590,7 +599,7 @@ describe("rdf12 xref edge projection", () => {
 		);
 	});
 
-	it("projects xrefs found in non-paragraph inline-substituted contexts", () => {
+	it("projects xrefs found in non-paragraph inline-substituted contexts", async () => {
 		const sourcePath = writeFixture(
 			"rdf-xref-inline-contexts.adoc",
 			`= Probe
@@ -610,7 +619,7 @@ NOTE: Note points to xref:target-note[Note Target, rel=warns].
 `,
 		);
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath }),
+			await parseAbundantTree({ sourcePath }),
 			{ documentRoot: projectRoot },
 		);
 		const source = heading(projection.documentIri, "heading-l3-o0");
@@ -645,8 +654,8 @@ NOTE: Note points to xref:target-note[Note Target, rel=warns].
 	});
 });
 
-function referenceDocument(): AbundantDocument {
-	return parseAbundantTree({ sourcePath: referencePath });
+async function referenceDocument(): Promise<AbundantDocument> {
+	return await parseAbundantTree({ sourcePath: referencePath });
 }
 
 function resourceIri(documentIri: string, localId: string): string {

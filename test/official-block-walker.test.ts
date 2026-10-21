@@ -5,7 +5,7 @@ import { walkOfficialBlocks } from "../src/official-block-walker";
 import { writeFixture } from "./helpers";
 
 describe("walkOfficialBlocks", () => {
-	it("walks official block contexts without discovering source-looking content", () => {
+	it("walks official block contexts without discovering source-looking content", async () => {
 		const path = writeFixture(
 			"official-block-walker.adoc",
 			`= Probe
@@ -26,7 +26,7 @@ a|
 |===
 `,
 		);
-		const officialDocument = createAsciidoctorAdapter().loadFile(path);
+		const officialDocument = await createAsciidoctorAdapter().loadFile(path);
 
 		const surfaces = walkOfficialBlocks(officialDocument);
 		const contexts = surfaces.map((surface) => surface.context);

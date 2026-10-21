@@ -3,7 +3,7 @@ import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
 
 describe("description list parsing", () => {
-	it("projects basic description list items without unknown official block diagnostics", () => {
+	it("projects basic description list items without unknown official block diagnostics", async () => {
 		const path = writeFixture(
 			"description-list-basic.adoc",
 			`= Probe
@@ -13,7 +13,7 @@ RAM:: Memory.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const list = document.children.find(
 			(node) => node.kind === "descriptionList",
 		) as DescriptionListView | undefined;
@@ -49,7 +49,7 @@ RAM:: Memory.
 		);
 	});
 
-	it("keeps multiple terms attached to one description according to the official dlist model", () => {
+	it("keeps multiple terms attached to one description according to the official dlist model", async () => {
 		const path = writeFixture(
 			"description-list-multi-term.adoc",
 			`= Probe
@@ -60,7 +60,7 @@ Persistent storage.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const list = onlyDescriptionList(document.children);
 
 		expect(list.items).toHaveLength(1);
@@ -71,7 +71,7 @@ Persistent storage.
 		expect(list.items[0]?.description?.text).toBe("Persistent storage.");
 	});
 
-	it("projects multiline descriptions on their own source line", () => {
+	it("projects multiline descriptions on their own source line", async () => {
 		const path = writeFixture(
 			"description-list-multiline-description.adoc",
 			`= Probe
@@ -84,7 +84,7 @@ Memory.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const list = onlyDescriptionList(document.children);
 
 		expect(list.items.map((item) => item.description?.text)).toEqual([
@@ -101,7 +101,7 @@ Memory.
 		});
 	});
 
-	it("keeps consecutive terms without descriptions attached to the next described item", () => {
+	it("keeps consecutive terms without descriptions attached to the next described item", async () => {
 		const path = writeFixture(
 			"description-list-empty-description-boundary.adoc",
 			`= Probe
@@ -111,7 +111,7 @@ Next:: Value
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const list = onlyDescriptionList(document.children);
 
 		expect(list.items).toHaveLength(1);
@@ -126,7 +126,7 @@ Next:: Value
 		});
 	});
 
-	it("projects nested description lists created by delimiter changes", () => {
+	it("projects nested description lists created by delimiter changes", async () => {
 		const path = writeFixture(
 			"description-list-nested.adoc",
 			`= Probe
@@ -140,7 +140,7 @@ Second:: Done
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const outer = onlyDescriptionList(document.children);
 		const nested = outer.items[0]?.description?.children?.find(
 			(node) => node.kind === "descriptionList",
@@ -169,7 +169,7 @@ Second:: Done
 		});
 	});
 
-	it("projects semicolon-delimited nested description lists", () => {
+	it("projects semicolon-delimited nested description lists", async () => {
 		const path = writeFixture(
 			"description-list-semicolon-nested.adoc",
 			`= Probe
@@ -181,7 +181,7 @@ Second:: Done
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const outer = onlyDescriptionList(document.children);
 		const nested = outer.items[0]?.description?.children?.find(
 			(node) => node.kind === "descriptionList",
@@ -196,7 +196,7 @@ Second:: Done
 		expect(nested?.delimiter).toBe(";;");
 	});
 
-	it("preserves description list metadata, style, and inline occurrences", () => {
+	it("preserves description list metadata, style, and inline occurrences", async () => {
 		const path = writeFixture(
 			"description-list-metadata-inline.adoc",
 			`= Probe
@@ -211,7 +211,7 @@ Term with <<target>>:: Description with anchor:desc-anchor[].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = document.children.find((node) => node.kind === "section") as
 			| { children?: unknown[] }
 			| undefined;
@@ -249,7 +249,7 @@ Term with <<target>>:: Description with anchor:desc-anchor[].
 		expect(list.items[0]?.children).toBeUndefined();
 	});
 
-	it("keeps qanda lists as description lists with qanda style", () => {
+	it("keeps qanda lists as description lists with qanda style", async () => {
 		const path = writeFixture(
 			"description-list-qanda.adoc",
 			`= Probe
@@ -259,7 +259,7 @@ What is CPU?:: The brain.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const list = onlyDescriptionList(document.children);
 
 		expect(list.kind).toBe("descriptionList");
@@ -268,7 +268,7 @@ What is CPU?:: The brain.
 		expect(list.items[0]?.description?.text).toBe("The brain.");
 	});
 
-	it("keeps attached description paragraphs as children while preserving direct description text", () => {
+	it("keeps attached description paragraphs as children while preserving direct description text", async () => {
 		const path = writeFixture(
 			"description-list-attached-paragraph.adoc",
 			`= Probe
@@ -279,7 +279,7 @@ second attached paragraph.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const list = onlyDescriptionList(document.children);
 		const description = list.items[0]?.description;
 
@@ -293,7 +293,7 @@ second attached paragraph.
 		expect(list.items[0]?.span).toEqual({ startLine: 3, endLine: 5 });
 	});
 
-	it("does not scan xrefs inside listings attached to descriptions", () => {
+	it("does not scan xrefs inside listings attached to descriptions", async () => {
 		const path = writeFixture(
 			"description-list-attached-listing.adoc",
 			`= Probe
@@ -313,7 +313,7 @@ See <<target>>.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = document.children.find((node) => node.kind === "section") as
 			| { children?: unknown[] }
 			| undefined;
@@ -330,7 +330,7 @@ See <<target>>.
 		]);
 	});
 
-	it("scans hmeta in description terms once and attaches it to the term", () => {
+	it("scans hmeta in description terms once and attaches it to the term", async () => {
 		const path = writeFixture(
 			"description-list-hmeta-term.adoc",
 			`= Probe
@@ -344,7 +344,7 @@ Status hmeta:status[active, label=生效]:: Description.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = document.children.find((node) => node.kind === "section") as
 			| { children?: unknown[] }
 			| undefined;
@@ -361,7 +361,7 @@ Status hmeta:status[active, label=生效]:: Description.
 		expect(list.items[0]?.description?.children ?? []).toEqual([]);
 	});
 
-	it("scans hmeta in description text once and attaches it to the description", () => {
+	it("scans hmeta in description text once and attaches it to the description", async () => {
 		const path = writeFixture(
 			"description-list-hmeta-description.adoc",
 			`= Probe
@@ -375,7 +375,7 @@ Status:: hmeta:status[active, label=生效] description.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = document.children.find((node) => node.kind === "section") as
 			| { children?: unknown[] }
 			| undefined;
@@ -392,7 +392,7 @@ Status:: hmeta:status[active, label=生效] description.
 		]);
 	});
 
-	it("does not scan hmeta inside listings attached to descriptions", () => {
+	it("does not scan hmeta inside listings attached to descriptions", async () => {
 		const path = writeFixture(
 			"description-list-attached-listing-hmeta.adoc",
 			`= Probe
@@ -412,7 +412,7 @@ Visible hmeta:status[active].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = document.children.find((node) => node.kind === "section") as
 			| { children?: unknown[] }
 			| undefined;
@@ -429,7 +429,7 @@ Visible hmeta:status[active].
 		]);
 	});
 
-	it("keeps leading description metadata absorbable with hmeta children", () => {
+	it("keeps leading description metadata absorbable with hmeta children", async () => {
 		const path = writeFixture(
 			"description-metadata-hmeta-absorbable.adoc",
 			`= Probe
@@ -443,7 +443,7 @@ Body paragraph.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = document.children.find((node) => node.kind === "section") as
 			| {
 					descriptionMetadata?: {
@@ -469,7 +469,7 @@ Body paragraph.
 		]);
 	});
 
-	it("keeps raw description metadata term keys when hmeta has a label", () => {
+	it("keeps raw description metadata term keys when hmeta has a label", async () => {
 		const path = writeFixture(
 			"description-metadata-hmeta-labeled-key.adoc",
 			`= Probe
@@ -483,7 +483,7 @@ Body paragraph.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = document.children.find((node) => node.kind === "section") as
 			| {
 					descriptionMetadata?: {
@@ -518,7 +518,7 @@ Body paragraph.
 });
 
 describe("document header boundary around description lists", () => {
-	it("treats the line after a document title as an author until a blank line ends the header", () => {
+	it("treats the line after a document title as an author until a blank line ends the header", async () => {
 		const path = writeFixture(
 			"description-list-header-author.adoc",
 			`= Probe
@@ -528,7 +528,7 @@ Host:: 127.0.0.1
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.children.map((node) => node.kind)).toEqual([
 			"descriptionList",
@@ -538,7 +538,7 @@ Host:: 127.0.0.1
 		);
 	});
 
-	it("treats the line after a blank line following the title as body prose", () => {
+	it("treats the line after a blank line following the title as body prose", async () => {
 		const path = writeFixture(
 			"description-list-header-body.adoc",
 			`= Probe
@@ -549,7 +549,7 @@ Host:: 127.0.0.1
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.children.map((node) => node.kind)).toEqual([
 			"paragraph",

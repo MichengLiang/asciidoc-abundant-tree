@@ -17,8 +17,8 @@ const fixtureRoot = join(
 const entryPath = join(fixtureRoot, "book.adoc");
 
 describe("rdf12 official Reader book-entry source reconstruction", () => {
-	it("emits entry raw with authored include directives and escaped include syntax", () => {
-		const { sourceFiles } = projectOfficialReaderBook();
+	it("emits entry raw with authored include directives and escaped include syntax", async () => {
+		const { sourceFiles } = await projectOfficialReaderBook();
 
 		expect(sourceFiles.get("book.adoc")).toBe(readFixture("book.adoc"));
 		expect(sourceFiles.get("book.adoc")).toContain(
@@ -35,8 +35,8 @@ describe("rdf12 official Reader book-entry source reconstruction", () => {
 		);
 	});
 
-	it("emits full raw for full-file include targets", () => {
-		const { sourceFiles } = projectOfficialReaderBook();
+	it("emits full raw for full-file include targets", async () => {
+		const { sourceFiles } = await projectOfficialReaderBook();
 
 		expect(sourceFiles.get("frontmatter/preface.adoc")).toBe(
 			readFixture("frontmatter/preface.adoc"),
@@ -46,8 +46,8 @@ describe("rdf12 official Reader book-entry source reconstruction", () => {
 		);
 	});
 
-	it("emits full raw for tagged snippet targets, including tag directives and non-selected lines", () => {
-		const { sourceFiles } = projectOfficialReaderBook();
+	it("emits full raw for tagged snippet targets, including tag directives and non-selected lines", async () => {
+		const { sourceFiles } = await projectOfficialReaderBook();
 		const raw = sourceFiles.get("examples/minimal-tool.mjs");
 
 		expect(raw).toBe(readFixture("examples/minimal-tool.mjs"));
@@ -58,8 +58,8 @@ describe("rdf12 official Reader book-entry source reconstruction", () => {
 		expect(raw).toContain("outsideAgain();");
 	});
 
-	it("emits full raw for line-range targets, including non-selected lines", () => {
-		const { sourceFiles } = projectOfficialReaderBook();
+	it("emits full raw for line-range targets, including non-selected lines", async () => {
+		const { sourceFiles } = await projectOfficialReaderBook();
 		const raw = sourceFiles.get("snippets/lines.adoc");
 
 		expect(raw).toBe(readFixture("snippets/lines.adoc"));
@@ -67,8 +67,8 @@ describe("rdf12 official Reader book-entry source reconstruction", () => {
 		expect(raw).toContain("Line four.");
 	});
 
-	it("excludes optional missing targets, escaped targets, generated control lines, and parser-safe logical text", () => {
-		const { document, sourceFiles } = projectOfficialReaderBook();
+	it("excludes optional missing targets, escaped targets, generated control lines, and parser-safe logical text", async () => {
+		const { document, sourceFiles } = await projectOfficialReaderBook();
 		const sourceRaws = [...sourceFiles.values()];
 
 		expect(sourceFiles.has("missing-optional.adoc")).toBe(false);
@@ -84,11 +84,11 @@ describe("rdf12 official Reader book-entry source reconstruction", () => {
 	});
 });
 
-function projectOfficialReaderBook(): {
-	readonly document: ReturnType<typeof parseAbundantTree>;
+async function projectOfficialReaderBook(): Promise<{
+	readonly document: Awaited<ReturnType<typeof parseAbundantTree>>;
 	readonly sourceFiles: Map<string, string>;
-} {
-	const document = parseAbundantTree({
+}> {
+	const document = await parseAbundantTree({
 		sourcePath: entryPath,
 		mode: "book-entry",
 		documentRoot: fixtureRoot,

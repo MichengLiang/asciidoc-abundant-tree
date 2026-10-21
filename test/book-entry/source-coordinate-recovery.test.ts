@@ -37,8 +37,8 @@ const targetRelativePath = "simple-book/chapters/02-target-origin.adoc";
 const nestedRelativePath = "simple-book/chapters/nested/section.adoc";
 
 describe("book-entry origin source coordinate recovery", () => {
-	it("maps entry, chapter, and nested heading source layers to their origin relativePath", () => {
-		const document = parseBookEntryFixture();
+	it("maps entry, chapter, and nested heading source layers to their origin relativePath", async () => {
+		const document = await parseBookEntryFixture();
 
 		expect(sectionByTitle(document, "Part One").source?.relativePath).toBe(
 			entryRelativePath,
@@ -51,8 +51,8 @@ describe("book-entry origin source coordinate recovery", () => {
 		);
 	});
 
-	it("recovers heading raw from origin files instead of slicing logical text", () => {
-		const document = parseBookEntryFixture();
+	it("recovers heading raw from origin files instead of slicing logical text", async () => {
+		const document = await parseBookEntryFixture();
 		const chapterSection = sectionByTitle(document, "Xref Origin");
 		const nestedSection = sectionByTitle(document, "Nested Origin");
 		const targetSection = sectionByTitle(document, "Target Origin");
@@ -96,8 +96,8 @@ This chapter owns the target section.
 		expect(targetSection.source?.raw).toContain("| Value");
 	});
 
-	it("maps xref, anchor, and target source coordinates to their origin files", () => {
-		const document = parseBookEntryFixture();
+	it("maps xref, anchor, and target source coordinates to their origin files", async () => {
+		const document = await parseBookEntryFixture();
 		const xref = onlyXref(document);
 		const anchor = anchorById(document, "chapter-anchor");
 		const target = targetById(document, "target-origin");
@@ -115,8 +115,8 @@ This chapter owns the target section.
 		expect(paragraph.source?.relativePath).toBe(chapterRelativePath);
 	});
 
-	it("keeps same-origin late occurrences in section scope after block boundaries", () => {
-		const document = parseBookEntryFixture();
+	it("keeps same-origin late occurrences in section scope after block boundaries", async () => {
+		const document = await parseBookEntryFixture();
 		const lateXref = xrefByLabel(document, "Late Target");
 		const lateAnchor = anchorById(document, "late-chapter-anchor");
 
@@ -128,8 +128,8 @@ This chapter owns the target section.
 		expect(lateAnchor.containingSectionId).toBe("xref-origin");
 	});
 
-	it("recovers listing raw, contentSpan, and source span from the origin file", () => {
-		const document = parseBookEntryFixture();
+	it("recovers listing raw, contentSpan, and source span from the origin file", async () => {
+		const document = await parseBookEntryFixture();
 		const listing = findNode(document.children, "listing") as ListingNode;
 
 		expect(listing.source?.relativePath).toBe(chapterRelativePath);
@@ -143,8 +143,8 @@ This chapter owns the target section.
 		});
 	});
 
-	it("maps table source span to its origin file", () => {
-		const document = parseBookEntryFixture();
+	it("maps table source span to its origin file", async () => {
+		const document = await parseBookEntryFixture();
 		const table = findNode(document.children, "table") as TableNode;
 
 		expect(table.source?.relativePath).toBe(targetRelativePath);
@@ -152,8 +152,8 @@ This chapter owns the target section.
 		expect(table.source?.sourceSpan?.start).toEqual({ line: 8, column: 1 });
 	});
 
-	it("does not output fake raw or precise coordinates for cross-origin block spans", () => {
-		const document = parseAbundantTree({
+	it("does not output fake raw or precise coordinates for cross-origin block spans", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: crossOriginEntryPath,
 			mode: "book-entry",
 			documentRoot: fixtureRoot,
@@ -174,8 +174,8 @@ This chapter owns the target section.
 		expect(listing.source?.raw).toBeUndefined();
 	});
 
-	it("does not reuse book-entry recovery context for later same-text single-file parses", () => {
-		const bookEntryDocument = parseBookEntryFixture();
+	it("does not reuse book-entry recovery context for later same-text single-file parses", async () => {
+		const bookEntryDocument = await parseBookEntryFixture();
 		if (!bookEntryDocument.sourceText) {
 			throw new Error("Book-entry document sourceText is required.");
 		}
@@ -184,7 +184,7 @@ This chapter owns the target section.
 			bookEntryDocument.sourceText,
 		);
 
-		const singleFileDocument = parseAbundantTree({
+		const singleFileDocument = await parseAbundantTree({
 			sourcePath: singleFilePath,
 		});
 		const singleFileSection = sectionByTitle(singleFileDocument, "Xref Origin");
@@ -559,8 +559,8 @@ describe("book-entry origin coordinate mapper diagnostics", () => {
 	});
 });
 
-function parseBookEntryFixture(): AbundantDocument {
-	return parseAbundantTree({
+async function parseBookEntryFixture(): Promise<AbundantDocument> {
+	return await parseAbundantTree({
 		sourcePath: entryPath,
 		mode: "book-entry",
 		documentRoot: fixtureRoot,

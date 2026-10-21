@@ -29,8 +29,8 @@ summary::
 `;
 
 describe("projection teacher document projection", () => {
-	it("projects AbundantDocument sections, metadata, xrefs, and source spans", () => {
-		const document = parseAbundantTreeFromSource({
+	it("projects AbundantDocument sections, metadata, xrefs, and source spans", async () => {
+		const document = await parseAbundantTreeFromSource({
 			sourceText: fixture,
 			sourcePath: "fixture.adoc",
 		});
@@ -88,8 +88,8 @@ describe("projection teacher document projection", () => {
 		);
 	});
 
-	it("keeps the sourceText convenience wrapper on the main parser path", () => {
-		const projection = projectTeachingGraph(fixture);
+	it("keeps the sourceText convenience wrapper on the main parser path", async () => {
+		const projection = await projectTeachingGraph(fixture);
 
 		expect(projection.nodes.map((node) => node.title)).toEqual(
 			expect.arrayContaining(["来源节点", "目标节点"]),
@@ -104,8 +104,8 @@ describe("projection teacher document projection", () => {
 		expect(projection.diagnostics).toEqual([]);
 	});
 
-	it("keeps internal parser warnings out of the user-visible diagnostic strip", () => {
-		const projection = projectTeachingGraph(SAMPLE_SOURCE);
+	it("keeps internal parser warnings out of the user-visible diagnostic strip", async () => {
+		const projection = await projectTeachingGraph(SAMPLE_SOURCE);
 
 		expect(projection.internalDiagnostics).toEqual(
 			expect.arrayContaining([

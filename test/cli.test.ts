@@ -24,8 +24,8 @@ const officialReaderBookEntryPath = join(
 );
 
 describe("cli", () => {
-	it("shows help text", () => {
-		const result = runCli(["--help"]);
+	it("shows help text", async () => {
+		const result = await runCli(["--help"]);
 
 		expect(result.code).toBe(0);
 		expect(result.stdout).toMatch(/asciidoc-abundant-tree <file\.adoc>/);
@@ -38,16 +38,16 @@ describe("cli", () => {
 		expect(result.stderr).toBe("");
 	});
 
-	it("rejects missing input files", () => {
-		const result = runCli(["samples/missing.adoc"]);
+	it("rejects missing input files", async () => {
+		const result = await runCli(["samples/missing.adoc"]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toMatch(/Input file not found/);
 	});
 
-	it("prints the parsed document as pretty text by default", () => {
-		const result = runCli(["samples/reference-links.adoc"]);
+	it("prints the parsed document as pretty text by default", async () => {
+		const result = await runCli(["samples/reference-links.adoc"]);
 
 		expect(result.code).toBe(0);
 		expect(result.stdout).toMatch(/^<document/);
@@ -58,9 +58,9 @@ describe("cli", () => {
 		expect(result.stderr).toBe("");
 	});
 
-	it("prints the parsed document as JSON through both JSON options", () => {
-		const shortcut = runCli(["samples/reference-links.adoc", "--json"]);
-		const explicit = runCli([
+	it("prints the parsed document as JSON through both JSON options", async () => {
+		const shortcut = await runCli(["samples/reference-links.adoc", "--json"]);
+		const explicit = await runCli([
 			"samples/reference-links.adoc",
 			"--format",
 			"json",
@@ -81,9 +81,9 @@ describe("cli", () => {
 		expect(explicit.stderr).toBe("");
 	});
 
-	it("prints the same pretty tree through explicit tree format", () => {
-		const defaultTree = runCli(["samples/reference-links.adoc"]);
-		const explicitTree = runCli([
+	it("prints the same pretty tree through explicit tree format", async () => {
+		const defaultTree = await runCli(["samples/reference-links.adoc"]);
+		const explicitTree = await runCli([
 			"samples/reference-links.adoc",
 			"--format",
 			"tree",
@@ -92,8 +92,8 @@ describe("cli", () => {
 		expect(explicitTree).toEqual(defaultTree);
 	});
 
-	it("prints the input source through adoc format in single-file mode", () => {
-		const result = runCli([
+	it("prints the input source through adoc format in single-file mode", async () => {
+		const result = await runCli([
 			"samples/book-entry-demo/book.adoc",
 			"--format",
 			"adoc",
@@ -106,8 +106,8 @@ describe("cli", () => {
 		expect(result.stdout).not.toContain("[#demo-overview]");
 	});
 
-	it("prints merged include-expanded source through adoc format in book-entry mode", () => {
-		const result = runCli([
+	it("prints merged include-expanded source through adoc format in book-entry mode", async () => {
+		const result = await runCli([
 			"samples/book-entry-demo/book.adoc",
 			"--mode",
 			"book-entry",
@@ -130,8 +130,8 @@ describe("cli", () => {
 		expect(result.stdout).not.toMatch(/(^|\n)[ \t]*include::/u);
 	});
 
-	it("prints official Reader merged source with selected includes expanded", () => {
-		const result = runCli([
+	it("prints official Reader merged source with selected includes expanded", async () => {
+		const result = await runCli([
 			officialReaderBookEntryPath,
 			"--mode",
 			"book-entry",
@@ -157,8 +157,8 @@ describe("cli", () => {
 		expect(result.stdout).not.toMatch(/(^|\n)[ \t]*include::/u);
 	});
 
-	it("prints book-entry JSON through explicit book-entry mode", () => {
-		const result = runCli([
+	it("prints book-entry JSON through explicit book-entry mode", async () => {
+		const result = await runCli([
 			bookEntryPath,
 			"--mode",
 			"book-entry",
@@ -184,8 +184,8 @@ describe("cli", () => {
 		);
 	});
 
-	it("prints official Reader book-entry JSON with tagged include reconstruction", () => {
-		const result = runCli([
+	it("prints official Reader book-entry JSON with tagged include reconstruction", async () => {
+		const result = await runCli([
 			officialReaderBookEntryPath,
 			"--mode",
 			"book-entry",
@@ -222,8 +222,8 @@ describe("cli", () => {
 		expect(diagnostics).not.toContain("include.unsupported-attrlist");
 	});
 
-	it("prints book-entry pretty tree through explicit book-entry mode", () => {
-		const result = runCli([
+	it("prints book-entry pretty tree through explicit book-entry mode", async () => {
+		const result = await runCli([
 			bookEntryPath,
 			"--mode",
 			"book-entry",
@@ -242,8 +242,8 @@ describe("cli", () => {
 		);
 	});
 
-	it("keeps single-file behavior when mode is omitted", () => {
-		const result = runCli([bookEntryPath, "--format", "json"]);
+	it("keeps single-file behavior when mode is omitted", async () => {
+		const result = await runCli([bookEntryPath, "--format", "json"]);
 		const json = JSON.parse(result.stdout);
 
 		expect(result.code).toBe(0);
@@ -255,8 +255,8 @@ describe("cli", () => {
 		);
 	});
 
-	it("keeps single-file behavior when mode is explicitly single-file", () => {
-		const result = runCli([
+	it("keeps single-file behavior when mode is explicitly single-file", async () => {
+		const result = await runCli([
 			bookEntryPath,
 			"--mode",
 			"single-file",
@@ -276,11 +276,11 @@ describe("cli", () => {
 		);
 	});
 
-	it("defaults book-entry documentRoot to the current working directory", () => {
+	it("defaults book-entry documentRoot to the current working directory", async () => {
 		const previousCwd = process.cwd();
 		try {
 			process.chdir(bookEntryFixtureRoot);
-			const result = runCli([
+			const result = await runCli([
 				"simple-book/book.adoc",
 				"--mode",
 				"book-entry",
@@ -299,8 +299,8 @@ describe("cli", () => {
 		}
 	});
 
-	it("uses explicit documentRoot for book-entry relative paths", () => {
-		const result = runCli([
+	it("uses explicit documentRoot for book-entry relative paths", async () => {
+		const result = await runCli([
 			bookEntryPath,
 			"--mode",
 			"book-entry",
@@ -318,8 +318,12 @@ describe("cli", () => {
 		);
 	});
 
-	it("rejects unsupported formats with the accepted values", () => {
-		const result = runCli(["samples/reference-links.adoc", "--format", "xml"]);
+	it("rejects unsupported formats with the accepted values", async () => {
+		const result = await runCli([
+			"samples/reference-links.adoc",
+			"--format",
+			"xml",
+		]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
@@ -329,9 +333,9 @@ describe("cli", () => {
 		expect(result.stderr).toMatch(/rdf12/);
 	});
 
-	it("does not accept rdf, ttl, or turtle aliases", () => {
+	it("does not accept rdf, ttl, or turtle aliases", async () => {
 		for (const format of ["rdf", "ttl", "turtle"]) {
-			const result = runCli([
+			const result = await runCli([
 				"samples/reference-links.adoc",
 				"--format",
 				format,
@@ -342,8 +346,8 @@ describe("cli", () => {
 		}
 	});
 
-	it("prints RDF 1.2 Turtle through rdf12 format", () => {
-		const result = runCli([
+	it("prints RDF 1.2 Turtle through rdf12 format", async () => {
+		const result = await runCli([
 			"samples/reference-links.adoc",
 			"--format",
 			"rdf12",
@@ -357,8 +361,8 @@ describe("cli", () => {
 		expect(result.stdout.trimStart()).not.toMatch(/^\{/);
 	});
 
-	it("prints RDF 1.2 Turtle from a book-entry document", () => {
-		const result = runCli([
+	it("prints RDF 1.2 Turtle from a book-entry document", async () => {
+		const result = await runCli([
 			bookEntryPath,
 			"--mode",
 			"book-entry",
@@ -380,8 +384,8 @@ describe("cli", () => {
 		);
 	});
 
-	it("prints full document title raw in RDF 1.2 Turtle for the parsed source path", () => {
-		const result = runCli([
+	it("prints full document title raw in RDF 1.2 Turtle for the parsed source path", async () => {
+		const result = await runCli([
 			"samples/structural-payload.adoc",
 			"--format",
 			"rdf12",
@@ -429,8 +433,8 @@ describe("cli", () => {
 		).toBe(true);
 	});
 
-	it("prints RDF 1.2 JSON-LD through rdf12-json-ld format", () => {
-		const result = runCli([
+	it("prints RDF 1.2 JSON-LD through rdf12-json-ld format", async () => {
+		const result = await runCli([
 			"samples/reference-links.adoc",
 			"--format",
 			"rdf12-json-ld",
@@ -459,8 +463,8 @@ describe("cli", () => {
 		);
 	});
 
-	it("prints RDF 1.2 JSON-LD from a book-entry document", () => {
-		const result = runCli([
+	it("prints RDF 1.2 JSON-LD from a book-entry document", async () => {
+		const result = await runCli([
 			bookEntryPath,
 			"--mode",
 			"book-entry",
@@ -478,9 +482,9 @@ describe("cli", () => {
 		expect(JSON.stringify(jsonLd)).toContain("Xref Origin");
 	});
 
-	it("rejects rdf12 projections when the source path is outside cwd", () => {
+	it("rejects rdf12 projections when the source path is outside cwd", async () => {
 		for (const format of ["rdf12", "rdf12-json-ld"]) {
-			const result = runCli(["/etc/hosts", "--format", format]);
+			const result = await runCli(["/etc/hosts", "--format", format]);
 
 			expect(result.code).toBe(1);
 			expect(result.stdout).toBe("");
@@ -488,40 +492,40 @@ describe("cli", () => {
 		}
 	});
 
-	it("rejects missing format values", () => {
-		const result = runCli(["samples/reference-links.adoc", "--format"]);
+	it("rejects missing format values", async () => {
+		const result = await runCli(["samples/reference-links.adoc", "--format"]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toMatch(/--format requires a value/);
 	});
 
-	it("rejects unknown arguments", () => {
-		const result = runCli(["--unknown"]);
+	it("rejects unknown arguments", async () => {
+		const result = await runCli(["--unknown"]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toMatch(/Unknown argument: --unknown/);
 	});
 
-	it("rejects extra positional arguments", () => {
-		const result = runCli(["samples/reference-links.adoc", "extra.adoc"]);
+	it("rejects extra positional arguments", async () => {
+		const result = await runCli(["samples/reference-links.adoc", "extra.adoc"]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toMatch(/Unexpected extra argument: extra\.adoc/);
 	});
 
-	it("rejects missing input files when no source path is provided", () => {
-		const result = runCli([]);
+	it("rejects missing input files when no source path is provided", async () => {
+		const result = await runCli([]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toMatch(/Missing input file/);
 	});
 
-	it("skips undefined arguments", () => {
-		const result = runCli([undefined as unknown as string, "--help"]);
+	it("skips undefined arguments", async () => {
+		const result = await runCli([undefined as unknown as string, "--help"]);
 
 		expect(result.code).toBe(0);
 		expect(result.stdout).toMatch(/asciidoc-abundant-tree <file\.adoc>/);

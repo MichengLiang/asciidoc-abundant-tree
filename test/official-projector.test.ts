@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
+import { resolveOfficialBindings } from "../src/binding-merge";
 import type { SourceAwareLogicalDocument } from "../src/book-entry/line-origin-model";
 import type { LogicalSource } from "../src/book-entry/model";
 import { registerLogicalSourceForRecovery } from "../src/book-entry/origin-coordinate";
@@ -61,7 +62,6 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([
@@ -127,7 +127,6 @@ describe("official-projector helpers", () => {
 				],
 			]),
 			sectionByBlock: new WeakMap(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(
@@ -152,7 +151,6 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([]);
@@ -183,7 +181,6 @@ describe("official-projector helpers", () => {
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
 			projectableBlocks: new WeakSet(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([]);
@@ -224,7 +221,6 @@ describe("official-projector helpers", () => {
 			]),
 			sectionByBlock: new WeakMap(),
 			projectableBlocks: new WeakSet([paragraphBlock]),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([
@@ -278,7 +274,6 @@ describe("official-projector helpers", () => {
 			sectionByBlock: new WeakMap(),
 			projectableBlocks: new WeakSet([openBlock]),
 			containerFallbackBlocks: new WeakSet([paragraphBlock]),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([
@@ -337,7 +332,6 @@ describe("official-projector helpers", () => {
 			sectionByBlock: new WeakMap(),
 			projectableBlocks: new WeakSet([openBlock]),
 			containerFallbackBlocks: new WeakSet(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([]);
@@ -362,7 +356,6 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([]);
@@ -398,7 +391,6 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([
@@ -448,7 +440,6 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([
@@ -500,7 +491,6 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock: new WeakMap(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([
@@ -513,7 +503,7 @@ describe("official-projector helpers", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
-	it("deduplicates table anchors and resolves table xref bindings", () => {
+	it("deduplicates table anchors and resolves table xref bindings", async () => {
 		const tableBlock = {
 			getBlocks: () => [],
 			getContext: () => "table",
@@ -569,15 +559,18 @@ describe("official-projector helpers", () => {
 				],
 			]),
 			sectionByBlock: new WeakMap(),
-			adapter: {
-				...fakeAdapter(),
-				resolveXrefBinding: () => ({
+		});
+		await resolveOfficialBindings(
+			projected.bindingRequests,
+			{},
+			{
+				resolveXrefBinding: async () => ({
 					href: "#target",
 					resolvedId: "target",
 					reftext: "Target",
 				}),
 			},
-		});
+		);
 
 		expect(projected.children).toEqual([
 			expect.objectContaining({
@@ -624,7 +617,6 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock,
-			adapter: fakeAdapter(),
 		});
 
 		expect(
@@ -658,7 +650,6 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock: new WeakMap(),
 			sectionByBlock,
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([
@@ -736,7 +727,6 @@ describe("official-projector helpers", () => {
 				],
 			]),
 			sectionByBlock: new WeakMap(),
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([
@@ -760,7 +750,7 @@ describe("official-projector helpers", () => {
 		]);
 	});
 
-	it("projects description lists with term and description source slices, filtered inline children, and official ids", () => {
+	it("projects description lists with term and description source slices, filtered inline children, and official ids", async () => {
 		const termBlock = {
 			getContext: () => "dlist",
 			getNodeName: () => "dlist",
@@ -892,15 +882,18 @@ describe("official-projector helpers", () => {
 			headingInlineMetadataOccurrences: [],
 			intervalByBlock,
 			sectionByBlock: new WeakMap(),
-			adapter: {
-				...fakeAdapter(),
-				resolveXrefBinding: () => ({
+		});
+		await resolveOfficialBindings(
+			projected.bindingRequests,
+			{},
+			{
+				resolveXrefBinding: async () => ({
 					href: "#inside",
 					resolvedId: "inside",
 					reftext: "Inside",
 				}),
 			},
-		});
+		);
 
 		expect(projected.children).toEqual([
 			expect.objectContaining({
@@ -1712,16 +1705,6 @@ function makeSectionNode(title: string, id: string, line: number): SectionNode {
 		span: { startLine: line, endLine: line },
 		idOrigin: "source",
 		children: [],
-	};
-}
-
-function fakeAdapter() {
-	return {
-		parserVersion: "test",
-		loadFile: () => ({}) as AsciidoctorBlock,
-		extractAnchorBindings: () => [],
-		resolveXrefTarget: () => undefined,
-		resolveXrefBinding: () => undefined,
 	};
 }
 

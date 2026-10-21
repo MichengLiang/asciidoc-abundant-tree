@@ -8,8 +8,8 @@ const fixtureRoot = join(process.cwd(), "test/book-entry/fixtures");
 const orderedBookPath = join(fixtureRoot, "ordered-book/book.adoc");
 
 describe("heading tree projection", () => {
-	it("builds preorder document and child order from a book-entry logical tree with origin line collisions", () => {
-		const document = parseAbundantTree({
+	it("builds preorder document and child order from a book-entry logical tree with origin line collisions", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: orderedBookPath,
 			mode: "book-entry",
 			documentRoot: fixtureRoot,

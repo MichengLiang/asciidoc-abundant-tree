@@ -12,32 +12,32 @@ describe("cli error handling", () => {
 		vi.restoreAllMocks();
 	});
 
-	it("reports parser errors", () => {
+	it("reports parser errors", async () => {
 		vi.spyOn(parserModule, "parseAbundantTree").mockImplementation(() => {
 			throw new Error("parser boom");
 		});
 
-		const result = runCli(["samples/reference-links.adoc"]);
+		const result = await runCli(["samples/reference-links.adoc"]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toBe("parser boom");
 	});
 
-	it("reports unknown parser failures", () => {
+	it("reports unknown parser failures", async () => {
 		vi.spyOn(parserModule, "parseAbundantTree").mockImplementation(() => {
 			throw "boom";
 		});
 
-		const result = runCli(["samples/reference-links.adoc"]);
+		const result = await runCli(["samples/reference-links.adoc"]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toBe("Unknown error");
 	});
 
-	it("rejects unsupported modes", () => {
-		const result = runCli([
+	it("rejects unsupported modes", async () => {
+		const result = await runCli([
 			"samples/reference-links.adoc",
 			"--mode",
 			"workspace",
@@ -48,16 +48,16 @@ describe("cli error handling", () => {
 		expect(result.stderr).toContain("Unsupported mode: workspace");
 	});
 
-	it("rejects missing mode values", () => {
-		const result = runCli(["samples/reference-links.adoc", "--mode"]);
+	it("rejects missing mode values", async () => {
+		const result = await runCli(["samples/reference-links.adoc", "--mode"]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toBe("--mode requires a value");
 	});
 
-	it("rejects mode values that are another flag", () => {
-		const result = runCli([
+	it("rejects mode values that are another flag", async () => {
+		const result = await runCli([
 			"samples/reference-links.adoc",
 			"--mode",
 			"--format",
@@ -69,16 +69,19 @@ describe("cli error handling", () => {
 		expect(result.stderr).toBe("--mode requires a value");
 	});
 
-	it("rejects missing documentRoot values", () => {
-		const result = runCli(["samples/reference-links.adoc", "--document-root"]);
+	it("rejects missing documentRoot values", async () => {
+		const result = await runCli([
+			"samples/reference-links.adoc",
+			"--document-root",
+		]);
 
 		expect(result.code).toBe(1);
 		expect(result.stdout).toBe("");
 		expect(result.stderr).toBe("--document-root requires a value");
 	});
 
-	it("rejects documentRoot values that are another flag", () => {
-		const result = runCli([
+	it("rejects documentRoot values that are another flag", async () => {
+		const result = await runCli([
 			"samples/reference-links.adoc",
 			"--document-root",
 			"--format",
@@ -90,8 +93,8 @@ describe("cli error handling", () => {
 		expect(result.stderr).toBe("--document-root requires a value");
 	});
 
-	it("rejects format values that are another flag", () => {
-		const result = runCli([
+	it("rejects format values that are another flag", async () => {
+		const result = await runCli([
 			"samples/reference-links.adoc",
 			"--format",
 			"--mode",
@@ -103,26 +106,26 @@ describe("cli error handling", () => {
 		expect(result.stderr).toBe("--format requires a value");
 	});
 
-	it("throws from the library API when book-entry mode omits documentRoot", () => {
-		expect(() =>
+	it("throws from the library API when book-entry mode omits documentRoot", async () => {
+		await expect(
 			parserModule.parseAbundantTree({
 				sourcePath: bookEntryPath,
 				mode: "book-entry",
 			} as Parameters<typeof parserModule.parseAbundantTree>[0]),
-		).toThrow(/documentRoot/);
+		).rejects.toThrow(/documentRoot/);
 	});
 
-	it("throws from the library API for unsupported modes", () => {
-		expect(() =>
+	it("throws from the library API for unsupported modes", async () => {
+		await expect(
 			parserModule.parseAbundantTree({
 				sourcePath: bookEntryPath,
 				mode: "bogus",
 			} as unknown as Parameters<typeof parserModule.parseAbundantTree>[0]),
-		).toThrow(/Unsupported mode: bogus/);
+		).rejects.toThrow(/Unsupported mode: bogus/);
 	});
 
-	it("reports book-entry input files outside documentRoot", () => {
-		const result = runCli([
+	it("reports book-entry input files outside documentRoot", async () => {
+		const result = await runCli([
 			bookEntryPath,
 			"--mode",
 			"book-entry",
@@ -137,8 +140,8 @@ describe("cli error handling", () => {
 		expect(result.stderr).toContain("outside documentRoot");
 	});
 
-	it("reports missing book-entry entry files as construction errors", () => {
-		const result = runCli([
+	it("reports missing book-entry entry files as construction errors", async () => {
+		const result = await runCli([
 			join(bookEntryFixtureRoot, "negative/missing-entry.adoc"),
 			"--mode",
 			"book-entry",
@@ -154,8 +157,8 @@ describe("cli error handling", () => {
 		expect(result.stderr).toContain("Entry source file does not exist");
 	});
 
-	it("reports include targets outside documentRoot", () => {
-		const result = runCli([
+	it("reports include targets outside documentRoot", async () => {
+		const result = await runCli([
 			join(bookEntryFixtureRoot, "negative/outside-root.adoc"),
 			"--mode",
 			"book-entry",
@@ -173,8 +176,8 @@ describe("cli error handling", () => {
 		);
 	});
 
-	it("reports missing book-entry include targets on stderr only", () => {
-		const result = runCli([
+	it("reports missing book-entry include targets on stderr only", async () => {
+		const result = await runCli([
 			join(bookEntryFixtureRoot, "negative/missing-include.adoc"),
 			"--mode",
 			"book-entry",
@@ -190,8 +193,8 @@ describe("cli error handling", () => {
 		expect(result.stderr).toContain("Include target file does not exist");
 	});
 
-	it("reports unmapped book-entry include attrlists on stderr only", () => {
-		const result = runCli([
+	it("reports unmapped book-entry include attrlists on stderr only", async () => {
+		const result = await runCli([
 			join(bookEntryFixtureRoot, "negative/unmapped-attr.adoc"),
 			"--mode",
 			"book-entry",
@@ -207,9 +210,9 @@ describe("cli error handling", () => {
 		expect(result.stderr).toContain("foo");
 	});
 
-	it("does not accept rdf, ttl, or turtle aliases", () => {
+	it("does not accept rdf, ttl, or turtle aliases", async () => {
 		for (const format of ["rdf", "ttl", "turtle"]) {
-			const result = runCli([
+			const result = await runCli([
 				"samples/reference-links.adoc",
 				"--format",
 				format,

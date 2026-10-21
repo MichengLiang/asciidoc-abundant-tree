@@ -6,13 +6,13 @@ import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
 const fixtureRoot = join(process.cwd(), "tmp/book-entry-reader-adapter");
 
 describe("Asciidoctor adapter official Reader line evidence", () => {
-	it("keeps ordinary line cursor evidence on the line returned by readLine", () => {
+	it("keeps ordinary line cursor evidence on the line returned by readLine", async () => {
 		const entryPath = writeFixture(
 			"ordinary/book.adoc",
 			["first", "second"].join("\n"),
 		);
 
-		const lines = createAsciidoctorAdapter().readPreprocessedLines({
+		const lines = await createAsciidoctorAdapter().readPreprocessedLines({
 			sourcePath: entryPath,
 			baseDir: join(fixtureRoot, "ordinary"),
 		});
@@ -23,7 +23,7 @@ describe("Asciidoctor adapter official Reader line evidence", () => {
 		]);
 	});
 
-	it("keeps included line cursor evidence on the included physical source line", () => {
+	it("keeps included line cursor evidence on the included physical source line", async () => {
 		const root = join(fixtureRoot, "include");
 		const entryPath = writeFixture(
 			"include/book.adoc",
@@ -34,7 +34,7 @@ describe("Asciidoctor adapter official Reader line evidence", () => {
 			["included one", "included two"].join("\n"),
 		);
 
-		const lines = createAsciidoctorAdapter().readPreprocessedLines({
+		const lines = await createAsciidoctorAdapter().readPreprocessedLines({
 			sourcePath: entryPath,
 			baseDir: root,
 		});

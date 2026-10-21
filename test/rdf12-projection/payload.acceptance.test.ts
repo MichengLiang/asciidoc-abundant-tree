@@ -17,8 +17,8 @@ const structuralPayloadPath = join(
 );
 
 describe("rdf12 raw value query contract acceptance", () => {
-	it("binds heading and xref raw values as named complex properties", () => {
-		const projection = structuralPayloadProjection();
+	it("binds heading and xref raw values as named complex properties", async () => {
+		const projection = await structuralPayloadProjection();
 		const deliveryPolicy = onlyHeadingForAddressLabel(
 			projection.graph,
 			"delivery",
@@ -72,8 +72,8 @@ describe("rdf12 raw value query contract acceptance", () => {
 		expectNoLegacyPayloadContract(projection.graph);
 	});
 
-	it("projects raw value object facts and keeps raw opaque", () => {
-		const projection = structuralPayloadProjection();
+	it("projects raw value object facts and keeps raw opaque", async () => {
+		const projection = await structuralPayloadProjection();
 		const deliveryPolicy = onlyHeadingForAddressLabel(
 			projection.graph,
 			"delivery",
@@ -152,8 +152,8 @@ edge:
 		}
 	});
 
-	it("does not make raw value objects into structure or xref target nodes", () => {
-		const projection = structuralPayloadProjection();
+	it("does not make raw value objects into structure or xref target nodes", async () => {
+		const projection = await structuralPayloadProjection();
 		const deliveryPolicy = onlyHeadingForAddressLabel(
 			projection.graph,
 			"delivery",
@@ -202,9 +202,9 @@ edge:
 	});
 });
 
-function structuralPayloadProjection() {
+async function structuralPayloadProjection() {
 	return projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: structuralPayloadPath }),
+		await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 		{ documentRoot: projectRoot },
 	);
 }

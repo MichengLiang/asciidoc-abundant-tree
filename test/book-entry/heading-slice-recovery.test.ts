@@ -19,8 +19,8 @@ const sameOriginBookPath = join(
 );
 
 describe("book-entry heading slice recovery", () => {
-	it("recovers book-entry included heading raw through a table body", () => {
-		const document = parseHeadingSliceBook();
+	it("recovers book-entry included heading raw through a table body", async () => {
+		const document = await parseHeadingSliceBook();
 		const section = sectionByTitle(document, "Appendix Table");
 
 		expect(section.source?.relativePath).toBe("backmatter/appendix-table.adoc");
@@ -31,8 +31,8 @@ describe("book-entry heading slice recovery", () => {
 		expect(section.source?.raw).toContain("|===");
 	});
 
-	it("recovers book-entry included heading raw through a listing body", () => {
-		const document = parseHeadingSliceBook();
+	it("recovers book-entry included heading raw through a listing body", async () => {
+		const document = await parseHeadingSliceBook();
 		const section = sectionByTitle(document, "Appendix Listing");
 
 		expect(section.source?.relativePath).toBe(
@@ -45,8 +45,8 @@ describe("book-entry heading slice recovery", () => {
 		expect(section.source?.raw).toContain("----");
 	});
 
-	it("uses contiguous metadata before the next real heading as a same-origin boundary", () => {
-		const document = parseAbundantTree({
+	it("uses contiguous metadata before the next real heading as a same-origin boundary", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: sameOriginBookPath,
 			mode: "book-entry",
 			documentRoot: headingSliceFixtureRoot,
@@ -64,8 +64,8 @@ describe("book-entry heading slice recovery", () => {
 		expect(second.source?.raw).toContain("[#second-heading.rule]");
 	});
 
-	it("does not treat table cell text that looks like a heading as a slice boundary", () => {
-		const document = parseAbundantTree({
+	it("does not treat table cell text that looks like a heading as a slice boundary", async () => {
+		const document = await parseAbundantTree({
 			sourcePath: join(headingSliceFixtureRoot, "fake-table-heading.adoc"),
 			mode: "book-entry",
 			documentRoot: headingSliceFixtureRoot,
@@ -82,8 +82,8 @@ describe("book-entry heading slice recovery", () => {
 	});
 });
 
-function parseHeadingSliceBook(): AbundantDocument {
-	return parseAbundantTree({
+async function parseHeadingSliceBook(): Promise<AbundantDocument> {
+	return await parseAbundantTree({
 		sourcePath: headingSliceBookPath,
 		mode: "book-entry",
 		documentRoot: headingSliceFixtureRoot,

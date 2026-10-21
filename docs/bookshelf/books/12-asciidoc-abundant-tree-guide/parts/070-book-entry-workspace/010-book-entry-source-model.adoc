@@ -11,7 +11,7 @@ entry file 是 book-entry mode 的显式输入。`:doctype: book` 是源文档�
 ----
 import { parseAbundantTree, rdf12 } from "asciidoc-abundant-tree";
 
-const document = parseAbundantTree({
+const document = await parseAbundantTree({
   sourcePath: "book/book.adoc",
   mode: "book-entry",
   documentRoot: "book",

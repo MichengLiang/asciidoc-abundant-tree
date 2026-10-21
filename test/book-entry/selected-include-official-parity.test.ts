@@ -84,7 +84,7 @@ const selectors = [
 
 describe("selected include parity with the official Reader", () => {
 	for (const [marker, [open, close]] of Object.entries(markers)) {
-		it(`selects the same lines as Asciidoctor for ${marker} tag markers`, () => {
+		it(`selects the same lines as Asciidoctor for ${marker} tag markers`, async () => {
 			const source = taggedSource(open, close);
 			const sourcePath = writeFixture(
 				`markers/${encodeURIComponent(marker)}/code.txt`,
@@ -96,8 +96,12 @@ describe("selected include parity with the official Reader", () => {
 					`markers/${encodeURIComponent(marker)}/book.adoc`,
 					`----\ninclude::code.txt[${surface}]\n----\n`,
 				);
-				const official = createAsciidoctorAdapter()
-					.readPreprocessedLines({ sourcePath: entry, baseDir: dirname(entry) })
+				const official = (
+					await createAsciidoctorAdapter().readPreprocessedLines({
+						sourcePath: entry,
+						baseDir: dirname(entry),
+					})
+				)
 					.filter((line) => line.cursor.file === sourcePath)
 					.map((line) => line.text);
 				// 走与预处理器相同的 attrlist 解析：`tags=x,z` 里的逗号先分开属性，官方只拿到 `tags=x`。
@@ -136,8 +140,8 @@ describe("source coordinates after a selected include", () => {
 		return found;
 	}
 
-	function officialHeadingLine(entry: string, title: string) {
-		const document = createAsciidoctor().loadFile(entry, {
+	async function officialHeadingLine(entry: string, title: string) {
+		const document = await createAsciidoctor().loadFile(entry, {
 			safe: "unsafe",
 			sourcemap: true,
 		});
@@ -148,7 +152,7 @@ describe("source coordinates after a selected include", () => {
 		return [location?.getPath(), location?.getLineNumber()];
 	}
 
-	it("keeps headings after a # tag include where Asciidoctor puts them", () => {
+	it("keeps headings after a # tag include where Asciidoctor puts them", async () => {
 		const root = join(fixtureRoot, "hash-tag-book");
 		rmSync(root, { recursive: true, force: true });
 		const entry = writeFixture(
@@ -165,7 +169,7 @@ describe("source coordinates after a selected include", () => {
 		);
 		writeFixture("hash-tag-book/ch3.adoc", "== 乙\n\n见 xref:target[]。\n");
 
-		const document = parseAbundantTree({
+		const document = await parseAbundantTree({
 			sourcePath: entry,
 			mode: "book-entry",
 			documentRoot: root,
@@ -173,13 +177,13 @@ describe("source coordinates after a selected include", () => {
 		const yi = headings(document).find((heading) => heading.title === "乙");
 
 		expect([yi?.source?.relativePath, yi?.line]).toEqual(["ch3.adoc", 1]);
-		expect(officialHeadingLine(entry, "乙")).toEqual(["ch3.adoc", 1]);
+		expect(await officialHeadingLine(entry, "乙")).toEqual(["ch3.adoc", 1]);
 		expect(
 			document.toolDiagnostics.map((diagnostic) => diagnostic.code),
 		).not.toContain("origin-map.selection-mismatch");
 	});
 
-	it("maps lines of an include nested inside a tag region to their own file", () => {
+	it("maps lines of an include nested inside a tag region to their own file", async () => {
 		const root = join(fixtureRoot, "nested-in-tag");
 		const entry = writeFixture(
 			"nested-in-tag/book.adoc",
@@ -191,7 +195,7 @@ describe("source coordinates after a selected include", () => {
 		);
 		writeFixture("nested-in-tag/nested.adoc", "n1\n");
 
-		const document = parseAbundantTree({
+		const document = await parseAbundantTree({
 			sourcePath: entry,
 			mode: "book-entry",
 			documentRoot: root,
@@ -204,7 +208,7 @@ describe("source coordinates after a selected include", () => {
 		).not.toContain("origin-map.selection-mismatch");
 	});
 
-	it("degrades only the include that does not line up, reports it, and keeps later headings aligned", () => {
+	it("degrades only the include that does not line up, reports it, and keeps later headings aligned", async () => {
 		const root = join(fixtureRoot, "conditional-in-tag");
 		const entry = writeFixture(
 			"conditional-in-tag/book.adoc",
@@ -216,7 +220,7 @@ describe("source coordinates after a selected include", () => {
 			"// tag::x[]\nbefore\nifdef::never[]\nhidden\nendif::[]\nshown\n// end::x[]\n",
 		);
 
-		const document = parseAbundantTree({
+		const document = await parseAbundantTree({
 			sourcePath: entry,
 			mode: "book-entry",
 			documentRoot: root,
@@ -235,7 +239,7 @@ describe("source coordinates after a selected include", () => {
 		);
 	});
 
-	it("keeps a nested include after a dropped conditional out of the coordinates", () => {
+	it("keeps a nested include after a dropped conditional out of the coordinates", async () => {
 		const root = join(fixtureRoot, "conditional-then-nested");
 		const entry = writeFixture(
 			"conditional-then-nested/book.adoc",
@@ -247,7 +251,7 @@ describe("source coordinates after a selected include", () => {
 		);
 		writeFixture("conditional-then-nested/nested.adoc", "n1\n");
 
-		const document = preprocessBookEntryWithOfficialReader({
+		const document = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entry,
 			documentRoot: root,
@@ -267,7 +271,7 @@ describe("source coordinates after a selected include", () => {
 		);
 	});
 
-	it("does not take Reader's leveloffset lines for selected lines when the selection has gaps", () => {
+	it("does not take Reader's leveloffset lines for selected lines when the selection has gaps", async () => {
 		const root = join(fixtureRoot, "leveloffset-gap");
 		const entry = writeFixture(
 			"leveloffset-gap/book.adoc",
@@ -278,7 +282,7 @@ describe("source coordinates after a selected include", () => {
 			"intro\n// tag::x[]\n== X1\nx1\n// tag::y[]\ny1\n// end::y[]\nx2\n// end::x[]\ntail\n",
 		);
 
-		const document = preprocessBookEntryWithOfficialReader({
+		const document = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entry,
 			documentRoot: root,
@@ -303,7 +307,7 @@ describe("source coordinates after a selected include", () => {
 		expect(document.diagnostics).toEqual([]);
 	});
 
-	it("keeps a selection that starts with a blank line under leveloffset", () => {
+	it("keeps a selection that starts with a blank line under leveloffset", async () => {
 		const root = join(fixtureRoot, "leveloffset-blank");
 		const entry = writeFixture(
 			"leveloffset-blank/book.adoc",
@@ -314,7 +318,7 @@ describe("source coordinates after a selected include", () => {
 			"// tag::x[]\n\n== X\n// end::x[]\n",
 		);
 
-		const document = parseAbundantTree({
+		const document = await parseAbundantTree({
 			sourcePath: entry,
 			mode: "book-entry",
 			documentRoot: root,
@@ -358,7 +362,7 @@ describe("adjacent selected includes of the same file", () => {
 		};
 	}
 
-	it("maps every line to the include it came from", () => {
+	it("maps every line to the include it came from", async () => {
 		const root = join(fixtureRoot, "adjacent");
 		writeFixture("adjacent/code.txt", `${code.join("\n")}\n`);
 		const next = random(20261021);
@@ -379,7 +383,7 @@ describe("adjacent selected includes of the same file", () => {
 					: undefined;
 				return mapping?.ok ? mapping.lines : [];
 			});
-			const document = preprocessBookEntryWithOfficialReader({
+			const document = await preprocessBookEntryWithOfficialReader({
 				adapter: createAsciidoctorAdapter(),
 				sourcePath: entry,
 				documentRoot: root,
@@ -404,21 +408,24 @@ describe("adjacent selected includes of the same file", () => {
 		expect(failures).toEqual([]);
 	});
 
-	function preprocess(root: string, entry: string) {
-		return preprocessBookEntryWithOfficialReader({
+	async function preprocess(root: string, entry: string) {
+		return await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entry,
 			documentRoot: root,
 		});
 	}
-	const originsIn = (document: ReturnType<typeof preprocess>, file: string) =>
+	const originsIn = (
+		document: Awaited<ReturnType<typeof preprocess>>,
+		file: string,
+	) =>
 		document.lines.flatMap((line) =>
 			"origin" in line && line.origin.relativePath === file
 				? [line.origin.sourceLine]
 				: [],
 		);
 
-	it("does not take the next include's push for an include that selects nothing", () => {
+	it("does not take the next include's push for an include that selects nothing", async () => {
 		// 小棉复核 a30b738 的反例：选取为空的 include 曾把紧挨着的下一次推入认成自己的，再下一条 include
 		// 又拿到别人的推入，靠空行与 `}` 的文本巧合配出假坐标。
 		const root = join(fixtureRoot, "empty-then-adjacent");
@@ -427,7 +434,7 @@ describe("adjacent selected includes of the same file", () => {
 			"empty-then-adjacent/book.adoc",
 			"= T\n\n----\ninclude::code.txt[tag=nope]\ninclude::code.txt[lines=1..2]\ninclude::code.txt[lines=4..6]\n----\n",
 		);
-		const document = preprocess(root, entry);
+		const document = await preprocess(root, entry);
 
 		expect(originsIn(document, "code.txt")).toEqual([1, 2, 4, 5, 6]);
 		expect(
@@ -437,7 +444,7 @@ describe("adjacent selected includes of the same file", () => {
 		]);
 	});
 
-	it("leaves the parent's blank lines alone when a leveloffset include pushes nothing", () => {
+	it("leaves the parent's blank lines alone when a leveloffset include pushes nothing", async () => {
 		const root = join(fixtureRoot, "leveloffset-empty");
 		writeFixture(
 			"leveloffset-empty/part.adoc",
@@ -447,7 +454,7 @@ describe("adjacent selected includes of the same file", () => {
 			"leveloffset-empty/book.adoc",
 			"= T\n\ninclude::part.adoc[tag=nope,leveloffset=+1]\n\n\n== After\n\nbody\n",
 		);
-		const document = preprocess(root, entry);
+		const document = await preprocess(root, entry);
 
 		expect(originsIn(document, "book.adoc")).toEqual([1, 2, 4, 5, 6, 7, 8]);
 		expect(document.lines.filter((line) => line.text === "body")).toHaveLength(
@@ -455,7 +462,7 @@ describe("adjacent selected includes of the same file", () => {
 		);
 	});
 
-	it("keeps a literal include line inside a selected non-AsciiDoc file", () => {
+	it("keeps a literal include line inside a selected non-AsciiDoc file", async () => {
 		// Reader 只对 AsciiDoc 文件处理 include；.py 里写着的 include:: 是普通的一行，nested.adoc 也不必存在。
 		const root = join(fixtureRoot, "literal-include-in-py");
 		writeFixture(
@@ -466,7 +473,7 @@ describe("adjacent selected includes of the same file", () => {
 			"literal-include-in-py/book.adoc",
 			"= T\n\n----\ninclude::code.py[tag=x]\n----\n",
 		);
-		const document = preprocess(root, entry);
+		const document = await preprocess(root, entry);
 
 		expect(originsIn(document, "code.py")).toEqual([2, 3, 4]);
 		expect(document.diagnostics).toEqual([]);

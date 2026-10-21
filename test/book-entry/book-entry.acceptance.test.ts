@@ -113,15 +113,15 @@ describe("book-entry source-mapped logical document contract", () => {
 		);
 	});
 
-	it("returns a book-entry document whose sourcePath remains the entry file", () => {
-		const document = parseBookEntryFixture();
+	it("returns a book-entry document whose sourcePath remains the entry file", async () => {
+		const document = await parseBookEntryFixture();
 
 		expect(document.mode).toBe("book-entry");
 		expect(document.sourcePath).toBe(entryPath);
 	});
 
-	it("exposes source-set files on the public book-entry document model", () => {
-		const document = parseBookEntryFixture();
+	it("exposes source-set files on the public book-entry document model", async () => {
+		const document = await parseBookEntryFixture();
 		const files = sourceFilesByRelativePath(document);
 
 		expect([...files.keys()]).toEqual(expectedSourceFileRelativePaths);
@@ -134,8 +134,8 @@ describe("book-entry source-mapped logical document contract", () => {
 		expect(Reflect.has(document, "lineOrigins")).toBe(false);
 	});
 
-	it("projects entry, included, nested, and backmatter headings into one section tree", () => {
-		const document = parseBookEntryFixture();
+	it("projects entry, included, nested, and backmatter headings into one section tree", async () => {
+		const document = await parseBookEntryFixture();
 		const sectionTitles = collectSections(document.children).map(
 			(section) => section.title,
 		);
@@ -152,8 +152,8 @@ describe("book-entry source-mapped logical document contract", () => {
 		);
 	});
 
-	it("keeps heading source coordinates on the origin files that authored them", () => {
-		const document = parseBookEntryFixture();
+	it("keeps heading source coordinates on the origin files that authored them", async () => {
+		const document = await parseBookEntryFixture();
 		const entrySection = sectionByTitle(document, "Part One");
 		const chapterSection = sectionByTitle(document, "Xref Origin");
 		const nestedSection = sectionByTitle(document, "Nested Origin");
@@ -165,8 +165,8 @@ describe("book-entry source-mapped logical document contract", () => {
 		expect(sourceRelativePath(nestedSection)).toBe(expectedNestedRelativePath);
 	});
 
-	it("recovers heading raw from the origin file instead of slicing logical text", () => {
-		const document = parseBookEntryFixture();
+	it("recovers heading raw from the origin file instead of slicing logical text", async () => {
+		const document = await parseBookEntryFixture();
 		const chapterSection = sectionByTitle(document, "Xref Origin");
 		const nestedSection = sectionByTitle(document, "Nested Origin");
 
@@ -178,8 +178,8 @@ describe("book-entry source-mapped logical document contract", () => {
 		expect(nestedSection.source?.raw).toContain("=== Nested Origin");
 	});
 
-	it("maps xref occurrences and their targets to their own origin files", () => {
-		const document = parseBookEntryFixture();
+	it("maps xref occurrences and their targets to their own origin files", async () => {
+		const document = await parseBookEntryFixture();
 		const xref = onlyXref(document);
 		const target = targetById(document, "target-origin");
 
@@ -188,8 +188,8 @@ describe("book-entry source-mapped logical document contract", () => {
 		expect(sourceRelativePath(target)).toBe(expectedTargetRelativePath);
 	});
 
-	it("preserves escaped include as an ordinary source line without expansion", () => {
-		const document = parseBookEntryFixture();
+	it("preserves escaped include as an ordinary source line without expansion", async () => {
+		const document = await parseBookEntryFixture();
 		const sectionTitles = collectSections(document.children).map(
 			(section) => section.title,
 		);
@@ -199,8 +199,8 @@ describe("book-entry source-mapped logical document contract", () => {
 		expect(sectionTitles).not.toContain("Escaped Include");
 	});
 
-	it("does not let same line numbers in different origin files pollute section scope", () => {
-		const document = parseBookEntryFixture();
+	it("does not let same line numbers in different origin files pollute section scope", async () => {
+		const document = await parseBookEntryFixture();
 		const xref = onlyXref(document);
 		const chapterSection = sectionByTitle(document, "Xref Origin");
 		const targetSection = sectionByTitle(document, "Target Origin");
@@ -211,8 +211,8 @@ describe("book-entry source-mapped logical document contract", () => {
 	});
 });
 
-function parseBookEntryFixture(): AbundantDocument {
-	return parseAbundantTree({
+async function parseBookEntryFixture(): Promise<AbundantDocument> {
+	return await parseAbundantTree({
 		sourcePath: entryPath,
 		mode: "book-entry",
 		documentRoot,

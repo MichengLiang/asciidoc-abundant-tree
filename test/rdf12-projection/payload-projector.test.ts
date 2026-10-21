@@ -48,7 +48,7 @@ describe("rdf12 complex property projection", () => {
 		expectForbiddenPublicPayloadPredicates(projection.graph);
 	});
 
-	it("binds no-value heading markers by source owner without an empty selector", () => {
+	it("binds no-value heading markers by source owner without an empty selector", async () => {
 		const path = writeFixture(
 			"rdf12-no-value-for-complex-property.adoc",
 			`= Probe
@@ -64,7 +64,7 @@ review_team: quality-ops
 `,
 		);
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: path }),
+			await parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
 		const [delivery] = projection.labelCatalog.owners("delivery");

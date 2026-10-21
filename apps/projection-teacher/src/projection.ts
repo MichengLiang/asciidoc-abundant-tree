@@ -54,10 +54,12 @@ const USER_HIDDEN_DIAGNOSTIC_CODES = new Set([
 	"official-block-context.unknown",
 ]);
 
-export function projectTeachingGraph(source: string): TeachingProjection {
+export async function projectTeachingGraph(
+	source: string,
+): Promise<TeachingProjection> {
 	try {
 		return projectTeachingGraphFromDocument(
-			parseAbundantTreeFromSource({
+			await parseAbundantTreeFromSource({
 				sourceText: source,
 				sourcePath: "projection-teacher.adoc",
 			}),

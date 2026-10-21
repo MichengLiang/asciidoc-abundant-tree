@@ -19,8 +19,8 @@ const structuralPayloadPath = join(
 );
 
 describe("rdf12 structure projection", () => {
-	it("projects the structural payload sample as four heading resources", () => {
-		const projection = structuralPayloadProjection();
+	it("projects the structural payload sample as four heading resources", async () => {
+		const projection = await structuralPayloadProjection();
 		const headings = resourcesOfType(
 			projection.graph,
 			`${namespaces.aat}Heading`,
@@ -44,8 +44,8 @@ describe("rdf12 structure projection", () => {
 		}
 	});
 
-	it("does not project paragraph, listing, table, or anchor structure resources", () => {
-		const projection = structuralPayloadProjection();
+	it("does not project paragraph, listing, table, or anchor structure resources", async () => {
+		const projection = await structuralPayloadProjection();
 
 		for (const oldType of [
 			"Paragraph",
@@ -59,7 +59,7 @@ describe("rdf12 structure projection", () => {
 		}
 	});
 
-	it("does not project description lists as heading structure resources", () => {
+	it("does not project description lists as heading structure resources", async () => {
 		const path = writeFixture(
 			"rdf-description-list-structure.adoc",
 			`= Probe
@@ -71,7 +71,7 @@ Port:: 8080
 `,
 		);
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: path }),
+			await parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
 
@@ -86,8 +86,8 @@ Port:: 8080
 		).toHaveLength(0);
 	});
 
-	it("projects heading identity, headline, level, labels, and line coordinates", () => {
-		const projection = structuralPayloadProjection();
+	it("projects heading identity, headline, level, labels, and line coordinates", async () => {
+		const projection = await structuralPayloadProjection();
 		const root = resourceIri(projection.documentIri, "heading-l1-o0");
 		const deliveryPolicy = resourceIri(projection.documentIri, "heading-l5-o0");
 		const capacityRule = resourceIri(projection.documentIri, "heading-l39-o0");
@@ -176,8 +176,8 @@ Port:: 8080
 		expectNumberTriple(projection.graph, nestedHeading, "headingLevel", 2);
 	});
 
-	it("indexes the document title heading through the shared heading index", () => {
-		const projection = structuralPayloadProjection();
+	it("indexes the document title heading through the shared heading index", async () => {
+		const projection = await structuralPayloadProjection();
 		const rootEntry = projection.nodeIndex
 			.entries()
 			.find((entry) => entry.localId === "heading-l1-o0");
@@ -190,8 +190,8 @@ Port:: 8080
 		});
 	});
 
-	it("looks up projected heading targets by target type and line span", () => {
-		const projection = structuralPayloadProjection();
+	it("looks up projected heading targets by target type and line span", async () => {
+		const projection = await structuralPayloadProjection();
 		const rootEntry = projection.nodeIndex
 			.entries()
 			.find((entry) => entry.localId === "heading-l1-o0");
@@ -246,9 +246,9 @@ Port:: 8080
 	});
 });
 
-function structuralPayloadProjection() {
+async function structuralPayloadProjection() {
 	return projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: structuralPayloadPath }),
+		await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 		{ documentRoot: projectRoot },
 	);
 }

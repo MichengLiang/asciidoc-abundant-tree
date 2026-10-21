@@ -5,7 +5,7 @@ import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
 
 describe("heading inline metadata ownership", () => {
-	it("assigns occurrences under a parent section to that section", () => {
+	it("assigns occurrences under a parent section to that section", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-parent-owner.adoc",
 			`= Probe
@@ -20,7 +20,7 @@ Parent hmeta:status[parent].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.headingInlineMetadataOccurrences[0]).toEqual(
 			expect.objectContaining({
@@ -31,7 +31,7 @@ Parent hmeta:status[parent].
 		);
 	});
 
-	it("assigns occurrences under a child section to the child section", () => {
+	it("assigns occurrences under a child section to the child section", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-child-owner.adoc",
 			`= Probe
@@ -46,7 +46,7 @@ Child hmeta:status[child].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.headingInlineMetadataOccurrences[0]).toEqual(
 			expect.objectContaining({
@@ -57,7 +57,7 @@ Child hmeta:status[child].
 		);
 	});
 
-	it("leaves occurrences before the first section without an owner", () => {
+	it("leaves occurrences before the first section without an owner", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-no-owner.adoc",
 			`= Probe
@@ -69,7 +69,7 @@ Prelude hmeta:status[preface].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const occurrence = document.headingInlineMetadataOccurrences[0];
 
 		expect(occurrence).toEqual(
@@ -81,7 +81,7 @@ Prelude hmeta:status[preface].
 		expect(occurrence).not.toHaveProperty("containingSectionId");
 	});
 
-	it("recovers book-entry include origin and owner section", () => {
+	it("recovers book-entry include origin and owner section", async () => {
 		const root = join(process.cwd(), "tmp/test-fixtures/hmeta-book");
 		const entryPath = join(root, "book.adoc");
 		const chapterPath = join(root, "chapters/chapter.adoc");
@@ -104,7 +104,7 @@ Included hmeta:status[active].
 			"utf8",
 		);
 
-		const document = parseAbundantTree({
+		const document = await parseAbundantTree({
 			sourcePath: entryPath,
 			mode: "book-entry",
 			documentRoot: root,

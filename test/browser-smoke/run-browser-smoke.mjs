@@ -83,7 +83,7 @@ async function writeSmokeApp() {
 const fixture = ${JSON.stringify(fixture)};
 
 try {
-	const abundantDocument = parseAbundantTreeFromSource({
+	const abundantDocument = await parseAbundantTreeFromSource({
 		sourceText: fixture,
 		sourcePath: "fixture.adoc",
 	});

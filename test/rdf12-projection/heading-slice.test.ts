@@ -29,8 +29,8 @@ const structuralPayloadPath = join(
 );
 
 describe("rdf12 heading slices", () => {
-	it("projects document title raw as lines 1 through 4 with preamble content span", () => {
-		const projection = structuralPayloadProjection();
+	it("projects document title raw as lines 1 through 4 with preamble content span", async () => {
+		const projection = await structuralPayloadProjection();
 		const root = resourceIri(projection.documentIri, "heading-l1-o0");
 
 		expectStringTriple(
@@ -52,8 +52,8 @@ describe("rdf12 heading slices", () => {
 		expectNoNumberTriple(projection.graph, root, "metadataEndLine");
 	});
 
-	it("projects delivery policy raw as lines 5 through 38", () => {
-		const projection = structuralPayloadProjection();
+	it("projects delivery policy raw as lines 5 through 38", async () => {
+		const projection = await structuralPayloadProjection();
 		const deliveryPolicy = resourceIri(projection.documentIri, "heading-l5-o0");
 
 		expectStringTriple(
@@ -100,8 +100,8 @@ edge:
 		expectNumberTriple(projection.graph, deliveryPolicy, "endLine", 38);
 	});
 
-	it("projects capacity rule raw as lines 39 through 43 without nested heading text", () => {
-		const projection = structuralPayloadProjection();
+	it("projects capacity rule raw as lines 39 through 43 without nested heading text", async () => {
+		const projection = await structuralPayloadProjection();
 		const capacityRule = resourceIri(projection.documentIri, "heading-l39-o0");
 		const raw = onlyLiteralValue(projection.graph, capacityRule, "raw");
 
@@ -117,14 +117,14 @@ edge:
 		expectNumberTriple(projection.graph, capacityRule, "endLine", 43);
 	});
 
-	it("projects the nested heading level as 2", () => {
-		const projection = structuralPayloadProjection();
+	it("projects the nested heading level as 2", async () => {
+		const projection = await structuralPayloadProjection();
 		const nestedHeading = resourceIri(projection.documentIri, "heading-l44-o0");
 
 		expectNumberTriple(projection.graph, nestedHeading, "headingLevel", 2);
 	});
 
-	it("preserves rich block source text in heading raw slices", () => {
+	it("preserves rich block source text in heading raw slices", async () => {
 		const source = `= Probe
 
 == Rich Raw
@@ -153,7 +153,7 @@ NOTE: Admonition paragraph.
 
 == Next
 `;
-		const projection = projectFixture("heading-rich-raw.adoc", source);
+		const projection = await projectFixture("heading-rich-raw.adoc", source);
 		const rich = resourceIri(projection.documentIri, "heading-l3-o0");
 
 		expectStringTriple(
@@ -190,7 +190,7 @@ NOTE: Admonition paragraph.
 		expectNumberTriple(projection.graph, rich, "contentEndLine", 25);
 	});
 
-	it("preserves table-only heading raw instead of replacing table rows with blanks", () => {
+	it("preserves table-only heading raw instead of replacing table rows with blanks", async () => {
 		const source = `= Probe
 
 == Table Section
@@ -205,7 +205,7 @@ NOTE: Admonition paragraph.
 
 == Next
 `;
-		const projection = projectFixture("heading-table-raw.adoc", source);
+		const projection = await projectFixture("heading-table-raw.adoc", source);
 		const tableSection = resourceIri(projection.documentIri, "heading-l3-o0");
 		const raw = onlyLiteralValue(projection.graph, tableSection, "raw");
 
@@ -453,17 +453,17 @@ NOTE: Admonition paragraph.
 	});
 });
 
-function structuralPayloadProjection() {
+async function structuralPayloadProjection() {
 	return projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: structuralPayloadPath }),
+		await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 		{ documentRoot: projectRoot },
 	);
 }
 
-function projectFixture(name: string, source: string) {
+async function projectFixture(name: string, source: string) {
 	const path = writeFixture(name, source);
 	return projectAbundantDocumentToRdf12(
-		parseAbundantTree({ sourcePath: path }),
+		await parseAbundantTree({ sourcePath: path }),
 		{
 			documentRoot: projectRoot,
 		},

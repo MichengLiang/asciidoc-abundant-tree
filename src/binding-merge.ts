@@ -1,4 +1,8 @@
-import type { OfficialXrefBinding } from "./asciidoctor-adapter";
+import type {
+	AsciidoctorAdapter,
+	AsciidoctorBlock,
+	OfficialXrefBinding,
+} from "./asciidoctor-adapter";
 import type {
 	AnchorOccurrenceNode,
 	AsciidoctorLayer,
@@ -6,6 +10,29 @@ import type {
 	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
+
+// 投影时登记、投影后取回：一个块里的 xref 要问转换器它们的官方链接。转换是异步的，投影是同步的——投影只登记，
+// 不等；xref 节点是同一批对象，取回后原地写上 asciidoctor 层，bindXrefs 在这之后再按 resolvedId 认目标。
+export type OfficialBindingRequest = {
+	readonly block: AsciidoctorBlock;
+	readonly xrefs: XrefOccurrenceNode[];
+};
+
+export async function resolveOfficialBindings(
+	requests: readonly OfficialBindingRequest[],
+	officialDocument: AsciidoctorBlock,
+	adapter: Pick<AsciidoctorAdapter, "resolveXrefBinding">,
+): Promise<void> {
+	for (const { block, xrefs } of requests) {
+		const bindings = [];
+		for (const xref of xrefs) {
+			bindings.push(
+				await adapter.resolveXrefBinding(officialDocument, block, xref),
+			);
+		}
+		applyOfficialBindings(xrefs, bindings);
+	}
+}
 
 export function addTarget(targets: TargetNode[], target: TargetNode): void {
 	if (!target.id || targets.some((existing) => existing.id === target.id)) {
@@ -43,7 +70,7 @@ export function addAnchorTargets(
 	}
 }
 
-export function applyOfficialBindings(
+function applyOfficialBindings(
 	xrefs: XrefOccurrenceNode[],
 	bindings: Array<OfficialXrefBinding | undefined>,
 ): void {

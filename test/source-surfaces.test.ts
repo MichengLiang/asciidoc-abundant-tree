@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type {
-	AsciidoctorAdapter,
-	AsciidoctorBlock,
-} from "../src/asciidoctor-adapter";
+import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
 import type { LogicalSource } from "../src/book-entry/model";
 import { registerLogicalSourceForRecovery } from "../src/book-entry/origin-coordinate";
 import { projectOfficialDocument } from "../src/official-projector";
@@ -180,7 +177,6 @@ describe("projectSourceSurfaces", () => {
 				surfaces.headingInlineMetadataOccurrences,
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
-			adapter: fakeAdapter(),
 		});
 
 		expect(surfaces.sections).toEqual([
@@ -348,7 +344,6 @@ describe("projectSourceSurfaces", () => {
 				surfaces.headingInlineMetadataOccurrences,
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
-			adapter: fakeAdapter(),
 		});
 
 		expect(projected.children).toEqual([]);
@@ -380,7 +375,6 @@ describe("projectSourceSurfaces", () => {
 				surfaces.headingInlineMetadataOccurrences,
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
-			adapter: fakeAdapter(),
 		});
 
 		expect(surfaces.toolDiagnostics).toEqual([
@@ -428,7 +422,6 @@ describe("projectSourceSurfaces", () => {
 			sectionByBlock: surfaces.sectionByBlock,
 			projectableBlocks: surfaces.projectableBlocks,
 			containerFallbackBlocks: surfaces.containerFallbackBlocks,
-			adapter: fakeAdapter(),
 		});
 
 		expect(surfaces.sections).toEqual([
@@ -550,16 +543,6 @@ function makeBlock(
 					}),
 				}
 			: {}),
-	};
-}
-
-function fakeAdapter(): AsciidoctorAdapter {
-	return {
-		parserVersion: "test",
-		loadFile: () => makeDocument([]),
-		extractAnchorBindings: () => [],
-		resolveXrefTarget: () => undefined,
-		resolveXrefBinding: () => undefined,
 	};
 }
 

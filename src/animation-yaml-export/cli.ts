@@ -16,7 +16,9 @@ const USAGE = `Usage:
   animation-yaml-export <book.adoc> --document-root <root>
   animation-yaml-export --help`;
 
-export function runAnimationYamlCli(args: string[]): AnimationYamlCliResult {
+export async function runAnimationYamlCli(
+	args: string[],
+): Promise<AnimationYamlCliResult> {
 	let parsed: ReturnType<typeof parseArgs>;
 
 	try {
@@ -46,7 +48,7 @@ export function runAnimationYamlCli(args: string[]): AnimationYamlCliResult {
 	}
 
 	try {
-		const result = exportAnimationYaml({
+		const result = await exportAnimationYaml({
 			sourcePath: parsed.sourcePath,
 			...(parsed.documentRoot === undefined
 				? {}
@@ -118,7 +120,7 @@ function formatError(error: unknown): string {
 
 /* c8 ignore start */
 if (import.meta.url === `file://${process.argv[1]}`) {
-	const result = runAnimationYamlCli(process.argv.slice(2));
+	const result = await runAnimationYamlCli(process.argv.slice(2));
 	if (result.stdout) {
 		process.stdout.write(result.stdout);
 	}

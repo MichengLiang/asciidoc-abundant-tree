@@ -27,8 +27,8 @@ const fixtureRoot = join(process.cwd(), "test/fixtures/animation-yaml");
 const fixtureBook = join(fixtureRoot, "book.adoc");
 
 describe("animation YAML export", () => {
-	it("exports animation profile, source, bible, structure, script, storyboard, and review data", () => {
-		const result = exportAnimationYaml({
+	it("exports animation profile, source, bible, structure, script, storyboard, and review data", async () => {
+		const result = await exportAnimationYaml({
 			sourcePath: fixtureBook,
 			documentRoot: fixtureRoot,
 		});
@@ -53,7 +53,7 @@ describe("animation YAML export", () => {
 				productionForm: "animated_short",
 			},
 		});
-		expectProfilePayloadHasNoSourcePayloadId();
+		await expectProfilePayloadHasNoSourcePayloadId();
 		expect(yaml.source.chapters).toContainEqual(
 			expect.objectContaining({
 				id: "src-ch1",
@@ -248,8 +248,8 @@ describe("animation YAML export", () => {
 		});
 	});
 
-	it("prints YAML to stdout from the CLI runner", () => {
-		const result = runAnimationYamlCli([
+	it("prints YAML to stdout from the CLI runner", async () => {
+		const result = await runAnimationYamlCli([
 			fixtureBook,
 			"--document-root",
 			fixtureRoot,
@@ -262,8 +262,8 @@ describe("animation YAML export", () => {
 		expect(yaml.storyboard.shots[0].id).toBe("shot-rabbit-watch");
 	});
 
-	it("defaults CLI documentRoot to the input file directory", () => {
-		const result = runAnimationYamlCli([fixtureBook]);
+	it("defaults CLI documentRoot to the input file directory", async () => {
+		const result = await runAnimationYamlCli([fixtureBook]);
 		const yaml = parse(result.stdout);
 
 		expect(result.code).toBe(0);
@@ -272,28 +272,30 @@ describe("animation YAML export", () => {
 		expect(yaml.script.scenes[0].id).toBe("scene-riverbank-rabbit");
 	});
 
-	it("reports CLI help and argument errors without attempting export", () => {
-		expect(runAnimationYamlCli(["--help"])).toEqual({
+	it("reports CLI help and argument errors without attempting export", async () => {
+		expect(await runAnimationYamlCli(["--help"])).toEqual({
 			code: 0,
 			stdout: expect.stringContaining("animation-yaml-export <book.adoc>"),
 			stderr: "",
 		});
-		expect(runAnimationYamlCli([])).toEqual({
+		expect(await runAnimationYamlCli([])).toEqual({
 			code: 1,
 			stdout: "",
 			stderr: expect.stringContaining("Missing input file."),
 		});
-		expect(runAnimationYamlCli(["book.adoc", "--document-root"])).toEqual({
-			code: 1,
-			stdout: "",
-			stderr: "--document-root requires a value",
-		});
-		expect(runAnimationYamlCli(["book.adoc", "--unknown"])).toEqual({
+		expect(await runAnimationYamlCli(["book.adoc", "--document-root"])).toEqual(
+			{
+				code: 1,
+				stdout: "",
+				stderr: "--document-root requires a value",
+			},
+		);
+		expect(await runAnimationYamlCli(["book.adoc", "--unknown"])).toEqual({
 			code: 1,
 			stdout: "",
 			stderr: "Unknown argument: --unknown",
 		});
-		expect(runAnimationYamlCli(["book.adoc", "extra.adoc"])).toEqual({
+		expect(await runAnimationYamlCli(["book.adoc", "extra.adoc"])).toEqual({
 			code: 1,
 			stdout: "",
 			stderr: "Unexpected extra argument: extra.adoc",
@@ -516,9 +518,9 @@ describe("animation YAML export", () => {
 	});
 });
 
-function expectProfilePayloadHasNoSourcePayloadId(): void {
+async function expectProfilePayloadHasNoSourcePayloadId(): Promise<void> {
 	const projection = rdf12(
-		parseAbundantTree({
+		await parseAbundantTree({
 			sourcePath: fixtureBook,
 			mode: "book-entry",
 			documentRoot: fixtureRoot,

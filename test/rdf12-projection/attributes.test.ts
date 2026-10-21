@@ -14,7 +14,7 @@ const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
 
 describe("rdf12 direct field predicate projection", () => {
-	it("projects parsed heading attrlist roles and named fields as direct predicates", () => {
+	it("projects parsed heading attrlist roles and named fields as direct predicates", async () => {
 		const path = writeFixture(
 			"rdf12-section-attrlist.adoc",
 			`= Probe
@@ -24,7 +24,7 @@ describe("rdf12 direct field predicate projection", () => {
 `,
 		);
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: path }),
+			await parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
 		const heading = onlyHeadingWithLiteral(
@@ -93,7 +93,7 @@ describe("rdf12 direct field predicate projection", () => {
 		expectNoPublicAttributeResources(projection.graph);
 	});
 
-	it("projects heading description metadata fields as direct predicates", () => {
+	it("projects heading description metadata fields as direct predicates", async () => {
 		const path = writeFixture(
 			"rdf12-heading-description-metadata.adoc",
 			`= Probe
@@ -107,7 +107,7 @@ describe("rdf12 direct field predicate projection", () => {
 `,
 		);
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: path }),
+			await parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
 		const heading = onlyHeadingWithLiteral(
@@ -131,7 +131,7 @@ describe("rdf12 direct field predicate projection", () => {
 		expectNoPublicAttributeResources(projection.graph);
 	});
 
-	it("does not project nested failed heading description metadata fields", () => {
+	it("does not project nested failed heading description metadata fields", async () => {
 		const path = writeFixture(
 			"rdf12-heading-description-metadata-nested.adoc",
 			`= Probe
@@ -143,7 +143,7 @@ pear::: 3个
 `,
 		);
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: path }),
+			await parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
 		const heading = onlyHeadingWithLiteral(

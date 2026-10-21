@@ -11,14 +11,14 @@ import {
 const fixtureRoot = join(process.cwd(), "tmp/book-entry-reader-policy");
 
 describe("book-entry reader boundary policy", () => {
-	it("expands a local include inside documentRoot in safe mode", () => {
+	it("expands a local include inside documentRoot in safe mode", async () => {
 		const entryPath = writePolicyFixture(
 			"inside/book.adoc",
 			"include::chapter.adoc[]\n",
 		);
 		writePolicyFixture("inside/chapter.adoc", "included\n");
 
-		const document = preprocessBookEntryWithOfficialReader({
+		const document = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "inside"),
@@ -58,8 +58,8 @@ describe("book-entry reader boundary policy", () => {
 			"ancestor-include/books/example/chapter.adoc",
 			"chapter\n",
 		);
-		const stderr = captureStderr(() => {
-			const document = preprocessBookEntryWithOfficialReader({
+		const stderr = captureStderr(async () => {
+			const document = await preprocessBookEntryWithOfficialReader({
 				adapter: createAsciidoctorAdapter(),
 				sourcePath: entryPath,
 				documentRoot,

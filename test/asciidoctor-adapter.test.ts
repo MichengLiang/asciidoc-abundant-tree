@@ -39,15 +39,15 @@ describe("Asciidoctor adapter xref bindings", () => {
 		expect(adapter.resolveXrefTarget(document, "missing")).toBeUndefined();
 	});
 
-	it("uses explicit labels, official reftext, and unresolved fallbacks when creating xref bindings", () => {
+	it("uses explicit labels, official reftext, and unresolved fallbacks when creating xref bindings", async () => {
 		const adapter = createAsciidoctorAdapter();
-		const document = adapter.loadSource(
+		const document = await adapter.loadSource(
 			["= Book", "", "[#known]", "== Known Reftext", "", "body"].join("\n"),
 		);
 		const parent = document.getBlocks?.()[0] as AsciidoctorBlock;
 
 		expect(
-			adapter.resolveXrefBinding(document, parent, {
+			await adapter.resolveXrefBinding(document, parent, {
 				target: "known",
 			}),
 		).toEqual(
@@ -58,7 +58,7 @@ describe("Asciidoctor adapter xref bindings", () => {
 			}),
 		);
 		expect(
-			adapter.resolveXrefBinding(document, parent, {
+			await adapter.resolveXrefBinding(document, parent, {
 				target: "known",
 				label: "Explicit",
 			}),
@@ -70,7 +70,7 @@ describe("Asciidoctor adapter xref bindings", () => {
 			}),
 		);
 		expect(
-			adapter.resolveXrefBinding(document, parent, {
+			await adapter.resolveXrefBinding(document, parent, {
 				target: "chapter.adoc#intro",
 			}),
 		).toEqual(
@@ -81,7 +81,7 @@ describe("Asciidoctor adapter xref bindings", () => {
 			}),
 		);
 		expect(
-			adapter.resolveXrefBinding(document, parent, {
+			await adapter.resolveXrefBinding(document, parent, {
 				target: "missing",
 			}),
 		).toEqual(

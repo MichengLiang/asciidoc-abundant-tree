@@ -10,8 +10,8 @@ const simpleBookPath = join(
 );
 
 describe("single-file regression around book-entry fixtures", () => {
-	it("does not expand include directives in explicit single-file mode", () => {
-		const document = parseSingleFile(simpleBookPath);
+	it("does not expand include directives in explicit single-file mode", async () => {
+		const document = await parseSingleFile(simpleBookPath);
 
 		expect(document.mode).toBe("single-file");
 		expect(document.targets.map((target) => target.id)).not.toEqual(
@@ -26,8 +26,8 @@ describe("single-file regression around book-entry fixtures", () => {
 		expect(document.xrefOccurrences).toEqual([]);
 	});
 
-	it("does not let doctype book trigger book-entry mode", () => {
-		const document = parseAbundantTree({ sourcePath: simpleBookPath });
+	it("does not let doctype book trigger book-entry mode", async () => {
+		const document = await parseAbundantTree({ sourcePath: simpleBookPath });
 
 		expect(document.mode).toBe("single-file");
 		expect(document.sourceText).toContain(":doctype: book");
@@ -36,8 +36,8 @@ describe("single-file regression around book-entry fixtures", () => {
 		);
 	});
 
-	it("keeps the default mode as single-file when mode is omitted", () => {
-		const document = parseAbundantTree({ sourcePath: simpleBookPath });
+	it("keeps the default mode as single-file when mode is omitted", async () => {
+		const document = await parseAbundantTree({ sourcePath: simpleBookPath });
 
 		expect(document.mode).toBe("single-file");
 		expect(document.sourcePath).toBe(simpleBookPath);
@@ -49,9 +49,9 @@ type SingleFileParseOptions = {
 	mode: "single-file";
 };
 
-function parseSingleFile(sourcePath: string): AbundantDocument {
+function parseSingleFile(sourcePath: string): Promise<AbundantDocument> {
 	const parse = parseAbundantTree as (
 		options: SingleFileParseOptions,
-	) => AbundantDocument;
+	) => Promise<AbundantDocument>;
 	return parse({ sourcePath, mode: "single-file" });
 }

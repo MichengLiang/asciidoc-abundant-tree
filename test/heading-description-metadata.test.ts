@@ -5,7 +5,7 @@ import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
 
 describe("heading description metadata", () => {
-	it("attaches a flat leading description list as section descriptionMetadata", () => {
+	it("attaches a flat leading description list as section descriptionMetadata", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-flat.adoc",
 			`= Probe
@@ -21,7 +21,7 @@ banana:: 5个
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "你好");
 
 		expect(section.descriptionMetadata?.fields).toEqual({
@@ -30,7 +30,7 @@ banana:: 5个
 		});
 	});
 
-	it("removes the absorbed leading description list from section children", () => {
+	it("removes the absorbed leading description list from section children", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-removes-absorbed-run.adoc",
 			`= Probe
@@ -46,13 +46,13 @@ banana:: 5个
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "你好");
 
 		expect(section.children?.map((node) => node.kind)).toEqual(["paragraph"]);
 	});
 
-	it("preserves real multiline description text", () => {
+	it("preserves real multiline description text", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-multiline.adoc",
 			`= Probe
@@ -65,7 +65,7 @@ Line two.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Apple");
 
 		expect(section.descriptionMetadata?.fields.description).toBe(
@@ -73,7 +73,7 @@ Line two.
 		);
 	});
 
-	it("keeps literal backslash-n text literal", () => {
+	it("keeps literal backslash-n text literal", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-literal-backslash-n.adoc",
 			`= Probe
@@ -84,7 +84,7 @@ description:: 第一行\\n第二行
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Literal");
 
 		expect(section.descriptionMetadata?.fields.description).toBe(
@@ -92,7 +92,7 @@ description:: 第一行\\n第二行
 		);
 	});
 
-	it("ignores blank lines between heading and leading description list", () => {
+	it("ignores blank lines between heading and leading description list", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-blank-lines.adoc",
 			`= Probe
@@ -105,13 +105,13 @@ key:: value
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Blank");
 
 		expect(section.descriptionMetadata?.fields).toEqual({ key: "value" });
 	});
 
-	it("does not attach a later description list after a leading paragraph", () => {
+	it("does not attach a later description list after a leading paragraph", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-later-list.adoc",
 			`= Probe
@@ -124,7 +124,7 @@ key:: value
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Later");
 
 		expect(section.descriptionMetadata).toBeUndefined();
@@ -134,7 +134,7 @@ key:: value
 		]);
 	});
 
-	it("absorbs the complete leading consecutive description list run", () => {
+	it("absorbs the complete leading consecutive description list run", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-consecutive-run.adoc",
 			`= Probe
@@ -149,7 +149,7 @@ second:: 2
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Run");
 
 		expect(section.descriptionMetadata?.fields).toEqual({
@@ -159,7 +159,7 @@ second:: 2
 		expect(section.children?.map((node) => node.kind)).toEqual(["paragraph"]);
 	});
 
-	it("does not absorb description lists after the leading run is interrupted", () => {
+	it("does not absorb description lists after the leading run is interrupted", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-interrupted-run.adoc",
 			`= Probe
@@ -174,7 +174,7 @@ second:: 2
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Interrupted");
 
 		expect(section.descriptionMetadata?.fields).toEqual({ first: "1" });
@@ -184,7 +184,7 @@ second:: 2
 		]);
 	});
 
-	it("rejects the complete run when any descendant description list exists", () => {
+	it("rejects the complete run when any descendant description list exists", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-nested-failure.adoc",
 			`= Probe
@@ -198,14 +198,14 @@ pear::: 3个
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "你也好呀");
 
 		expect(section.descriptionMetadata).toBeUndefined();
 		expect(section.children?.[0]?.kind).toBe("descriptionList");
 	});
 
-	it("does not absorb decorated leading description lists with block metadata", () => {
+	it("does not absorb decorated leading description lists with block metadata", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-decorated-list.adoc",
 			`= Probe
@@ -219,7 +219,7 @@ Term:: Description.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Decorated");
 
 		expect(section.descriptionMetadata).toBeUndefined();
@@ -233,7 +233,7 @@ Term:: Description.
 		);
 	});
 
-	it("keeps inline markup and xref macros in field values as authored", () => {
+	it("keeps inline markup and xref macros in field values as authored", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-inline-markup.adoc",
 			`= Probe
@@ -245,7 +245,7 @@ Term:: Description.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Markup");
 
 		expect(section.descriptionMetadata?.fields).toEqual({
@@ -254,7 +254,7 @@ Term:: Description.
 		});
 	});
 
-	it("absorbs attached blocks into the field value as authored source", () => {
+	it("absorbs attached blocks into the field value as authored source", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-attached-listing.adoc",
 			`= Probe
@@ -277,7 +277,7 @@ const a = 1
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Attached");
 
 		expect(section.descriptionMetadata?.fields).toEqual({
@@ -288,7 +288,7 @@ const a = 1
 		expect(section.children?.map((node) => node.kind)).toEqual(["paragraph"]);
 	});
 
-	it("starts a value at an attached block when the term has no text", () => {
+	it("starts a value at an attached block when the term has no text", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-attached-only.adoc",
 			`= Probe
@@ -303,7 +303,7 @@ attached block
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Attached Only");
 
 		expect(section.descriptionMetadata?.fields).toEqual({
@@ -311,7 +311,7 @@ attached block
 		});
 	});
 
-	it("keeps a plus line that belongs to an attached listing", () => {
+	it("keeps a plus line that belongs to an attached listing", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-plus-in-listing.adoc",
 			`= Probe
@@ -328,7 +328,7 @@ b
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Plus");
 
 		expect(section.descriptionMetadata?.fields.diff).toBe(
@@ -336,7 +336,7 @@ b
 		);
 	});
 
-	it("ends the last field before a block that is not attached with a continuation", () => {
+	it("ends the last field before a block that is not attached with a continuation", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-unattached-listing.adoc",
 			`= Probe
@@ -352,7 +352,7 @@ const a = 1
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Unattached");
 
 		expect(section.descriptionMetadata?.fields).toEqual({
@@ -361,7 +361,7 @@ const a = 1
 		expect(section.children?.map((node) => node.kind)).toEqual(["listing"]);
 	});
 
-	it("keeps a list that follows the term after a blank line in the field value", () => {
+	it("keeps a list that follows the term after a blank line in the field value", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-list-after-blank.adoc",
 			`= Probe
@@ -377,7 +377,7 @@ const a = 1
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "宿舍集中备考者");
 
 		expect(section.descriptionMetadata?.fields).toEqual({
@@ -385,7 +385,7 @@ const a = 1
 		});
 	});
 
-	it("reads book-entry field values from the origin file, keeping include directives", () => {
+	it("reads book-entry field values from the origin file, keeping include directives", async () => {
 		const root = join(
 			process.cwd(),
 			"tmp/test-fixtures/heading-description-metadata-book",
@@ -415,7 +415,7 @@ include::../assets/code.ts[lines=1..2]
 			"= Book\n:doctype: book\n\ninclude::chapters/rule.adoc[]\n",
 		);
 
-		const document = parseAbundantTree({
+		const document = await parseAbundantTree({
 			sourcePath: entry,
 			mode: "book-entry",
 			documentRoot: root,
@@ -428,7 +428,7 @@ include::../assets/code.ts[lines=1..2]
 		});
 	});
 
-	it("reads a book-entry field whose description is only a list", () => {
+	it("reads a book-entry field whose description is only a list", async () => {
 		const root = join(
 			process.cwd(),
 			"tmp/test-fixtures/heading-description-metadata-book-list",
@@ -454,7 +454,7 @@ include::../assets/code.ts[lines=1..2]
 			"= Book\n:doctype: book\n\ninclude::chapters/slot.adoc[]\n",
 		);
 
-		const document = parseAbundantTree({
+		const document = await parseAbundantTree({
 			sourcePath: entry,
 			mode: "book-entry",
 			documentRoot: root,
@@ -467,7 +467,7 @@ include::../assets/code.ts[lines=1..2]
 		});
 	});
 
-	it("attaches child section metadata only to the child section", () => {
+	it("attaches child section metadata only to the child section", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-child-section.adoc",
 			`= Probe
@@ -480,7 +480,7 @@ key:: value
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const parent = onlySection(document, "Parent");
 		const child = onlyChildSection(parent, "Child");
 
@@ -488,7 +488,7 @@ key:: value
 		expect(child.descriptionMetadata?.fields).toEqual({ key: "value" });
 	});
 
-	it("creates one entry per term for shared descriptions", () => {
+	it("creates one entry per term for shared descriptions", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-multi-term.adoc",
 			`= Probe
@@ -501,7 +501,7 @@ Persistent storage.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Storage");
 
 		expect(
@@ -513,7 +513,7 @@ Persistent storage.
 		});
 	});
 
-	it("keeps ordered entries and uses last value in fields for duplicate keys", () => {
+	it("keeps ordered entries and uses last value in fields for duplicate keys", async () => {
 		const path = writeFixture(
 			"heading-description-metadata-duplicate-keys.adoc",
 			`= Probe
@@ -526,7 +526,7 @@ owner:: platform
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const section = onlySection(document, "Duplicate");
 
 		expect(section.descriptionMetadata?.fields.owner).toBe("platform");
@@ -544,7 +544,7 @@ owner:: platform
 });
 
 function onlySection(
-	document: ReturnType<typeof parseAbundantTree>,
+	document: Awaited<ReturnType<typeof parseAbundantTree>>,
 	title: string,
 ) {
 	const section = document.children.find(
@@ -558,7 +558,7 @@ function onlySection(
 }
 
 function onlyChildSection(
-	section: ReturnType<typeof onlySection>,
+	section: Awaited<ReturnType<typeof onlySection>>,
 	title: string,
 ) {
 	const child = section.children?.find(

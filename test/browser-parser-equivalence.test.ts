@@ -42,10 +42,10 @@ summary::
 `;
 
 describe("browser source parser equivalence", () => {
-	it("matches the Node single-file parser on normalized consumer fields", () => {
+	it("matches the Node single-file parser on normalized consumer fields", async () => {
 		const sourcePath = writeFixture("browser-parser-equivalence.adoc", fixture);
-		const nodeDocument = parseAbundantTree({ sourcePath });
-		const browserDocument = parseAbundantTreeFromSource({
+		const nodeDocument = await parseAbundantTree({ sourcePath });
+		const browserDocument = await parseAbundantTreeFromSource({
 			sourceText: fixture,
 			sourcePath: "fixture.adoc",
 		});

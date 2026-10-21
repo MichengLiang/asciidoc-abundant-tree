@@ -2,7 +2,11 @@ import type {
 	AsciidoctorAdapter,
 	AsciidoctorBlock,
 } from "./asciidoctor-adapter";
-import { addAnchorTargets, bindXrefs } from "./binding-merge";
+import {
+	addAnchorTargets,
+	bindXrefs,
+	resolveOfficialBindings,
+} from "./binding-merge";
 import {
 	recoverSourceAwareDocumentTitleSourceLayer,
 	sourceAwareDocumentForLineTable,
@@ -27,9 +31,9 @@ export type ParserCoreInput = {
 	readonly sourceSurfacePath?: string;
 };
 
-export function parseAsciidoctorDocument(
+export async function parseAsciidoctorDocument(
 	input: ParserCoreInput,
-): AbundantDocument {
+): Promise<AbundantDocument> {
 	const sourceSurfaces = projectSourceSurfaces({
 		officialDocument: input.officialDocument,
 		lineTable: input.lineTable,
@@ -49,8 +53,12 @@ export function parseAsciidoctorDocument(
 		projectableBlocks: sourceSurfaces.projectableBlocks,
 		containerFallbackBlocks: sourceSurfaces.containerFallbackBlocks,
 		sectionByBlock: sourceSurfaces.sectionByBlock,
-		adapter: input.adapter,
 	});
+	await resolveOfficialBindings(
+		officialProjection.bindingRequests,
+		input.officialDocument,
+		input.adapter,
+	);
 
 	addAnchorTargets(
 		officialProjection.targets,

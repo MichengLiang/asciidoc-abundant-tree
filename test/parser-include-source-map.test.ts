@@ -13,7 +13,7 @@ import {
 import { writeFixture } from "./helpers";
 
 describe("include source map handling", () => {
-	it("keeps secure-mode include directives anchored to the main file", () => {
+	it("keeps secure-mode include directives anchored to the main file", async () => {
 		writeFixture(
 			"included-secure.adoc",
 			`[#included-section]
@@ -33,8 +33,8 @@ include::included-secure.adoc[]
 `,
 		);
 
-		const officialDocument = createAsciidoctorAdapter().loadFile(path);
-		const document = parseAbundantTree({ sourcePath: path });
+		const officialDocument = await createAsciidoctorAdapter().loadFile(path);
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(
 			childBlocksOf(officialDocument)
@@ -107,7 +107,6 @@ include::included-secure.adoc[]
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
 			projectableBlocks: surfaces.projectableBlocks,
-			adapter: fakeAdapter(),
 		});
 
 		expect(surfaces.toolDiagnostics).toEqual([
@@ -252,15 +251,5 @@ function makeBlock(
 			getLineNumber: () => line,
 			getPath: () => options.path ?? options.file,
 		}),
-	};
-}
-
-function fakeAdapter() {
-	return {
-		parserVersion: "test",
-		loadFile: () => makeDocument([]),
-		extractAnchorBindings: () => [],
-		resolveXrefTarget: () => undefined,
-		resolveXrefBinding: () => undefined,
 	};
 }

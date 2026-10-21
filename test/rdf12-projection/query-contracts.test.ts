@@ -33,9 +33,9 @@ const structuralPayloadPath = join(
 );
 
 describe("rdf12 query contract end-to-end acceptance", () => {
-	it("roundtrips the public rdf12 result and exposes direct heading children", () => {
+	it("roundtrips the public rdf12 result and exposes direct heading children", async () => {
 		const result = rdf12(
-			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 			{
 				documentRoot: projectRoot,
 			},
@@ -78,8 +78,8 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		]);
 	});
 
-	it("parses CLI rdf12 stdout and supports recursive heading subtree queries", () => {
-		const result = runCli([
+	it("parses CLI rdf12 stdout and supports recursive heading subtree queries", async () => {
+		const result = await runCli([
 			"samples/structural-payload.adoc",
 			"--format",
 			"rdf12",
@@ -110,9 +110,9 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		);
 	});
 
-	it("exposes xref edge evidence for outgoing heading relations", () => {
+	it("exposes xref edge evidence for outgoing heading relations", async () => {
 		const result = rdf12(
-			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 			{
 				documentRoot: projectRoot,
 			},
@@ -137,9 +137,9 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectTriple(graph, edge, aatTerm("weight"), stringLiteral("0.8"));
 	});
 
-	it("exposes heading and xref edge complex properties through field predicates", () => {
+	it("exposes heading and xref edge complex properties through field predicates", async () => {
 		const result = rdf12(
-			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 			{
 				documentRoot: projectRoot,
 			},
@@ -202,9 +202,9 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		}
 	});
 
-	it("supports direct field predicate queries on headings", () => {
+	it("supports direct field predicate queries on headings", async () => {
 		const result = rdf12(
-			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 			{
 				documentRoot: projectRoot,
 			},
@@ -228,9 +228,9 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectTriple(graph, deliveryPolicy, aatTerm("owner"), stringLiteral("ops"));
 	});
 
-	it("does not expose old RDF12 public contract types or predicates", () => {
+	it("does not expose old RDF12 public contract types or predicates", async () => {
 		const result = rdf12(
-			parseAbundantTree({ sourcePath: structuralPayloadPath }),
+			await parseAbundantTree({ sourcePath: structuralPayloadPath }),
 			{
 				documentRoot: projectRoot,
 			},

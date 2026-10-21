@@ -27,8 +27,8 @@ const fixtureRoot = join(
 const entryPath = join(fixtureRoot, "book.adoc");
 
 describe("book-entry official Reader source coordinate recovery", () => {
-	it("maps xrefs in selected tagged includes to target physical lines", () => {
-		const document = parseOfficialReaderBook();
+	it("maps xrefs in selected tagged includes to target physical lines", async () => {
+		const document = await parseOfficialReaderBook();
 		const xref = xrefByRaw(document, "xref:preface[Tagged Preface]");
 
 		expect(xref.source?.relativePath).toBe("snippets/tagged-xref.adoc");
@@ -36,8 +36,8 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		expect(xref.sourceSpan?.start.column).toBe(8);
 	});
 
-	it("maps xrefs in non-contiguous lines includes to selected physical lines", () => {
-		const document = parseOfficialReaderBook();
+	it("maps xrefs in non-contiguous lines includes to selected physical lines", async () => {
+		const document = await parseOfficialReaderBook();
 		const xref = xrefByRaw(document, "xref:preface[Preface from line five]");
 
 		expect(xref.source?.relativePath).toBe("snippets/lines.adoc");
@@ -45,8 +45,8 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		expect(xref.sourceSpan?.start.column).toBe(1);
 	});
 
-	it("maps transformed indentation content through offset column maps", () => {
-		const document = parseOfficialReaderBook();
+	it("maps transformed indentation content through offset column maps", async () => {
+		const document = await parseOfficialReaderBook();
 		const xref = xrefByRaw(document, "xref:preface[Indented Preface]");
 
 		expect(xref.source?.relativePath).toBe("snippets/indented.adoc");
@@ -54,8 +54,8 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		expect(xref.sourceSpan?.start.column).toBe(3);
 	});
 
-	it("reports inserted indentation columns as unmapped through point recovery", () => {
-		const sourceAwareDocument = preprocessBookEntryWithOfficialReader({
+	it("reports inserted indentation columns as unmapped through point recovery", async () => {
+		const sourceAwareDocument = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
 			documentRoot: fixtureRoot,
@@ -97,8 +97,8 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		);
 	});
 
-	it("omits precise source coordinates for generated control lines", () => {
-		const sourceAwareDocument = preprocessBookEntryWithOfficialReader({
+	it("omits precise source coordinates for generated control lines", async () => {
+		const sourceAwareDocument = await preprocessBookEntryWithOfficialReader({
 			adapter: createAsciidoctorAdapter(),
 			sourcePath: entryPath,
 			documentRoot: fixtureRoot,
@@ -178,8 +178,8 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		expect(recovered).not.toHaveProperty("sourceSpan");
 	});
 
-	it("emits multi-source diagnostics and omits listing raw for source block snippet includes", () => {
-		const document = parseOfficialReaderBook();
+	it("emits multi-source diagnostics and omits listing raw for source block snippet includes", async () => {
+		const document = await parseOfficialReaderBook();
 		const listing = collectNodes(document.children, "listing").find((node) =>
 			(node as ListingNode).content?.includes("describeBook"),
 		) as ListingNode | undefined;
@@ -544,8 +544,8 @@ describe("book-entry official Reader source coordinate recovery", () => {
 	});
 });
 
-function parseOfficialReaderBook(): AbundantDocument {
-	return parseAbundantTree({
+async function parseOfficialReaderBook(): Promise<AbundantDocument> {
+	return await parseAbundantTree({
 		sourcePath: entryPath,
 		mode: "book-entry",
 		documentRoot: fixtureRoot,

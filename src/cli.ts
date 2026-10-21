@@ -26,7 +26,7 @@ const USAGE = `Usage:
 
 Default mode is single-file. In book-entry mode, --document-root is the relativePath basis and path boundary; when omitted it defaults to the current working directory. JSON is a machine-friendly projection of the same TypeScript document model. ADOC output writes the parser input source; in book-entry mode that source is the include-expanded logical document. RDF 1.2 output is available as Turtle text or JSON-LD.`;
 
-export function runCli(args: string[]): CliResult {
+export async function runCli(args: string[]): Promise<CliResult> {
 	let parsed: ReturnType<typeof parseArgs>;
 
 	try {
@@ -87,7 +87,7 @@ export function runCli(args: string[]): CliResult {
 				stderr: `Input source path is outside document root: ${inputPath}`,
 			};
 		}
-		const document = parseAbundantTree(
+		const document = await parseAbundantTree(
 			parserOptions(parsed, inputPath, documentRoot),
 		);
 		if (parsed.format === "rdf12") {
@@ -261,7 +261,7 @@ function formatError(error: unknown): string {
 
 /* c8 ignore start */
 if (import.meta.url === `file://${process.argv[1]}`) {
-	const result = runCli(process.argv.slice(2));
+	const result = await runCli(process.argv.slice(2));
 	if (result.stdout) {
 		process.stdout.write(
 			result.stdout.endsWith("\n") ? result.stdout : `${result.stdout}\n`,

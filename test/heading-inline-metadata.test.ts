@@ -3,7 +3,7 @@ import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
 
 describe("heading inline metadata scanner", () => {
-	it("catalogs paragraph occurrences with source evidence", () => {
+	it("catalogs paragraph occurrences with source evidence", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-basic.adoc",
 			`= Probe
@@ -15,7 +15,7 @@ Status is hmeta:status[active, label=生效].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const occurrence = document.headingInlineMetadataOccurrences[0];
 
 		expect(document.headingInlineMetadataOccurrences).toHaveLength(1);
@@ -41,7 +41,7 @@ Status is hmeta:status[active, label=生效].
 		expect(paragraph?.children).toEqual([occurrence]);
 	});
 
-	it("omits fallback labels when label is absent", () => {
+	it("omits fallback labels when label is absent", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-no-label.adoc",
 			`= Probe
@@ -52,7 +52,7 @@ Owner is hmeta:owner[docs-team].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const occurrence = document.headingInlineMetadataOccurrences[0];
 
 		expect(occurrence).toEqual(
@@ -64,7 +64,7 @@ Owner is hmeta:owner[docs-team].
 		expect(occurrence).not.toHaveProperty("label");
 	});
 
-	it("supports named value attributes", () => {
+	it("supports named value attributes", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-named-value.adoc",
 			`= Probe
@@ -75,7 +75,7 @@ Status is hmeta:status[value=active, label=生效].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.headingInlineMetadataOccurrences[0]).toEqual(
 			expect.objectContaining({
@@ -86,7 +86,7 @@ Status is hmeta:status[value=active, label=生效].
 		);
 	});
 
-	it("supports quoted comma values and labels", () => {
+	it("supports quoted comma values and labels", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-quoted-comma.adoc",
 			`= Probe
@@ -97,7 +97,7 @@ Summary is hmeta:summary["hello, world", label="你好，世界"].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.headingInlineMetadataOccurrences[0]).toEqual(
 			expect.objectContaining({
@@ -108,7 +108,7 @@ Summary is hmeta:summary["hello, world", label="你好，世界"].
 		);
 	});
 
-	it("diagnoses complete macros with missing values without creating a node", () => {
+	it("diagnoses complete macros with missing values without creating a node", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-missing-value.adoc",
 			`= Probe
@@ -120,7 +120,7 @@ Incomplete hmeta:status text is left alone.
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(document.headingInlineMetadataOccurrences).toEqual([]);
 		expect(document.toolDiagnostics).toEqual([
@@ -135,7 +135,7 @@ Incomplete hmeta:status text is left alone.
 		]);
 	});
 
-	it("keeps same-line occurrence columns distinct", () => {
+	it("keeps same-line occurrence columns distinct", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-same-line.adoc",
 			`= Probe
@@ -146,7 +146,7 @@ hmeta:status[active] and hmeta:priority[normal].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 		const starts = document.headingInlineMetadataOccurrences.map(
 			(occurrence) => occurrence.sourceSpan?.start,
 		);
@@ -157,7 +157,7 @@ hmeta:status[active] and hmeta:priority[normal].
 		]);
 	});
 
-	it("records actual source lines inside multiline paragraphs", () => {
+	it("records actual source lines inside multiline paragraphs", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-multiline-paragraph.adoc",
 			`= Probe
@@ -169,7 +169,7 @@ second hmeta:priority[normal].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(
 			document.headingInlineMetadataOccurrences.map(
@@ -181,7 +181,7 @@ second hmeta:priority[normal].
 		]);
 	});
 
-	it("does not scan listing, literal, pass, or stem blocks", () => {
+	it("does not scan listing, literal, pass, or stem blocks", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-skipped-blocks.adoc",
 			`= Probe
@@ -209,14 +209,14 @@ Visible hmeta:status[active].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(
 			document.headingInlineMetadataOccurrences.map((item) => item.value),
 		).toEqual(["active"]);
 	});
 
-	it("does not scan block titles or metadata ranges as hmeta surfaces", () => {
+	it("does not scan block titles or metadata ranges as hmeta surfaces", async () => {
 		const path = writeFixture(
 			"heading-inline-metadata-metadata-ranges.adoc",
 			`= Probe
@@ -229,7 +229,7 @@ Paragraph hmeta:status[body].
 `,
 		);
 
-		const document = parseAbundantTree({ sourcePath: path });
+		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(
 			document.headingInlineMetadataOccurrences.map((item) => item.raw),

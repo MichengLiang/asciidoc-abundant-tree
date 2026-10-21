@@ -12,9 +12,9 @@ const projectRoot = process.cwd();
 const interdocumentPath = join(projectRoot, "samples/interdocument-xref.adoc");
 
 describe("rdf12 interdocument xref acceptance", () => {
-	it("keeps external selectors and official href evidence without local target bindings", () => {
+	it("keeps external selectors and official href evidence without local target bindings", async () => {
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: interdocumentPath }),
+			await parseAbundantTree({ sourcePath: interdocumentPath }),
 			{ documentRoot: projectRoot },
 		);
 		const externalXrefs = xrefsWithSelector(
@@ -51,9 +51,9 @@ describe("rdf12 interdocument xref acceptance", () => {
 		}
 	});
 
-	it("still asserts local relations while leaving interdocument relations unasserted", () => {
+	it("still asserts local relations while leaving interdocument relations unasserted", async () => {
 		const projection = projectAbundantDocumentToRdf12(
-			parseAbundantTree({ sourcePath: interdocumentPath }),
+			await parseAbundantTree({ sourcePath: interdocumentPath }),
 			{ documentRoot: projectRoot },
 		);
 		const localXref = xrefsWithSelector(projection.graph, "local-target")[0];
