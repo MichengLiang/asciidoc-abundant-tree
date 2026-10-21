@@ -17,10 +17,11 @@ const cellLineMappers = new WeakMap<
 	(line: number) => number
 >();
 
-// 官方块的坐标有两处要补正，都在官方块上改：遍历、投影与行内扫描都从官方块读坐标，改在这一处，它们读到的就是同一个。
+// 官方块的坐标有三处要补正，都在官方块上改：遍历、投影与行内扫描都从官方块读坐标，改在这一处，它们读到的就是同一个。
 // - Asciidoctor 在部导言里新建两种没有 source location 的开放块与段落（09 号书「官方合成的块」）。照官方给合成的
 //   preamble 补坐标的做法（parser.js 632-633 行：preamble.sourceLocation = preamble.blocks[0].sourceLocation）补上。
 // - markdown 引语的子块带的是引语内部的相对行号（09 号书「段落写法的引语」），换算成源行。
+// - callout 列表的坐标落在它的最后一条上（09 号书「Callout 列表的坐标」），改取第一条的。
 export function completeOfficialSourceLocations(
 	officialDocument: AsciidoctorBlock,
 	lineTable: LineTable,
@@ -104,6 +105,11 @@ function complete(
 	}
 	for (const cellBlock of cellBlocksOf(block)) {
 		complete(cellBlock, undefined, lineTable, childDepth);
+	}
+	// 官方建完块取上一次 mark 的位置（parser.js 1443 行），parseCalloutList 每读一条后续条目都 mark 一次
+	// （1812-1862 行），所以列表落在最后一条上。条目自己的坐标是对的；在引语里时，上面已经换算过。
+	if (block.getContext?.() === "colist") {
+		locate(block, children[0]?.getSourceLocation?.());
 	}
 	// 部的第一个块被包进新建的 partintro 开放块（parser.js 554-565、587-596 行）。
 	if (!block.getSourceLocation?.() && block.getContext?.() === "open") {

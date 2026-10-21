@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
 import type { AbundantDocument, AbundantNode } from "../src/model";
+import { officialBlockPolicy } from "../src/official-block-policy";
 import { officialDelimiter } from "../src/official-delimiter";
 import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
@@ -17,6 +19,14 @@ const { Parser } = (await import(
 )) as {
 	Parser: { isDelimitedBlock(line: string, match: true): OfficialMatch };
 };
+
+// 官方块 context 的全集：HTML5 转换器为每种块写一个 convert_* 方法。
+const { default: Html5Converter } = (await import(
+	new URL(
+		"../node_modules/@asciidoctor/core/src/converter/html5.js",
+		import.meta.url,
+	).href
+)) as { default: { prototype: object } };
 
 describe("official delimiters", () => {
 	it("recognizes exactly the lines Asciidoctor's isDelimitedBlock recognizes", () => {
@@ -483,6 +493,158 @@ describe("table cells", () => {
 		).toEqual([
 			["a", 10],
 			["b", 12],
+		]);
+	});
+});
+
+describe("block contexts", () => {
+	it("classifies every block context Asciidoctor converts", () => {
+		const contexts = Object.getOwnPropertyNames(Html5Converter.prototype)
+			.filter(
+				(name) =>
+					name.startsWith("convert_") && !name.startsWith("convert_inline_"),
+			)
+			.map((name) => name.slice("convert_".length))
+			.filter(
+				(context) => !["document", "embedded", "outline"].includes(context),
+			);
+		const unclassified = contexts.filter(
+			(context) =>
+				officialBlockPolicy({
+					getContext: () => context,
+					getContentModel: () => "compound",
+				} as AsciidoctorBlock) === "diagnostic",
+		);
+
+		expect(contexts).toContain("thematic_break");
+		expect(unclassified).toEqual([]);
+	});
+
+	it("scans callout items and the titles of empty blocks, and targets their IDs", async () => {
+		const document = await parseAbundantTree({
+			sourcePath: writeFixture(
+				"empty-blocks.adoc",
+				[
+					"= 文",
+					":toc: macro",
+					"",
+					"toc::[]",
+					"",
+					"== 节",
+					"",
+					"[source,ts]",
+					"----",
+					"const x = 1; // <1>",
+					"const y = 2; // <2>",
+					"----",
+					"<1> 见 xref:a[A]。",
+					"<2> 第二条 [[co-anchor]]锚。",
+					"",
+					"'''",
+					"",
+					"<<<",
+					"",
+					".图 xref:b[B]",
+					"[#fig]",
+					"image::a.png[替代文字]",
+					"",
+					".音频 xref:c[C]",
+					"audio::a.mp3[]",
+					"",
+					".视频 xref:d[D]",
+					"video::a.mp4[]",
+					"",
+					"[discrete#loose]",
+					"=== 散标题",
+					"",
+					"引用 xref:fig[图] 与 xref:loose[散标题]。",
+					"",
+				].join("\n"),
+			),
+		});
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([
+			["a", 13],
+			["b", 20],
+			["c", 24],
+			["d", 27],
+			["fig", 33],
+			["loose", 33],
+		]);
+		expect(
+			document.xrefOccurrences
+				.filter((xref) => ["fig", "loose"].includes(xref.target))
+				.map((xref) => [xref.scope, xref.asciidoctor?.resolvedType]),
+		).toEqual([
+			["local", "block"],
+			["local", "block"],
+		]);
+		expect(
+			document.anchorOccurrences.map((anchor) => [
+				anchor.ids,
+				anchor.sourceSpan?.start.line,
+			]),
+		).toEqual([[["co-anchor"], 14]]);
+	});
+
+	it("locates a callout list at its first item", async () => {
+		const document = await parseArticle(
+			"colist-location.adoc",
+			[
+				"----",
+				"x // <1>",
+				"y // <2>",
+				"----",
+				".说明 xref:a[A]",
+				"[#calls]",
+				"<1> 一",
+				"<2> 二",
+				"",
+			].join("\n"),
+		);
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(
+			document.targets.find((target) => target.id === "calls")?.sourceSpan
+				?.start.line,
+		).toBe(9);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([["a", 9]]);
+	});
+
+	it("relocates a callout list inside a markdown quote", async () => {
+		const document = await parseArticle(
+			"colist-in-markdown-quote.adoc",
+			[
+				"> ----",
+				"> x // <1>",
+				"> y // <2>",
+				"> ----",
+				"> <1> 一 xref:a[A]。",
+				"> <2> 二 xref:b[B]。",
+				"",
+			].join("\n"),
+		);
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([
+			["a", 9],
+			["b", 10],
 		]);
 	});
 });

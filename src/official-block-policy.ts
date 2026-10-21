@@ -2,6 +2,8 @@ import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 
 export type OfficialBlockPolicy = "scan" | "skip" | "recurse" | "diagnostic";
 
+// 官方块 context 的全集取自 HTML5 转换器的 convert_* 方法；归类与依据见 09 号书「Inline 扫描边界」。
+// 只有不在表里的 context（扩展注册的自定义块）落到 diagnostic：不知道它的内容怎样替换，块与后代都不扫。
 export function officialBlockPolicy(
 	block: AsciidoctorBlock,
 ): OfficialBlockPolicy {
@@ -21,6 +23,7 @@ export function officialBlockPolicy(
 			// 它装的是一段文字，没有段落子块可以递归（09 号书「Inline 扫描边界」）。
 			return block.getContentModel?.() === "simple" ? "scan" : "recurse";
 		case "olist":
+		case "colist":
 		// 文档标题与第一节之间的块，官方装进 preamble 块（parser.js 632-633 行补的就是它的坐标）。
 		case "preamble":
 		case "section":
@@ -30,6 +33,15 @@ export function officialBlockPolicy(
 		case "literal":
 		case "pass":
 		case "stem":
+			return "skip";
+		// 没有内容的块（内容模型 empty）。块标题与属性行是 metadata，照样扫；带 ID 的登记为目标。
+		case "thematic_break":
+		case "page_break":
+		case "toc":
+		case "image":
+		case "audio":
+		case "video":
+		case "floating_title":
 			return "skip";
 		default:
 			return "diagnostic";
