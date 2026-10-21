@@ -1,9 +1,9 @@
 import { existsSync, readFileSync } from "node:fs";
 import type {
-	AsciidoctorParserAdapter,
+	AsciidoctorFileAdapter,
 	OfficialReaderLine,
 	ReaderPush,
-} from "../asciidoctor-adapter";
+} from "../asciidoctor-file-adapter";
 import type { SourceLine } from "../source-lines";
 import {
 	createIdentityColumnMap,
@@ -45,7 +45,7 @@ import { includeDirectivePattern } from "./reader-directive-patterns";
 import { createSourceSet } from "./source-set";
 
 export type PreprocessBookEntryOptions = {
-	readonly adapter: AsciidoctorParserAdapter;
+	readonly adapter: AsciidoctorFileAdapter;
 	readonly sourcePath: string;
 	readonly documentRoot: string;
 	readonly attributes?: Record<string, unknown> | undefined;

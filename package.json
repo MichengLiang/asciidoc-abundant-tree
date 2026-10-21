@@ -77,7 +77,8 @@
 	},
 	"scripts": {
 		"build": "tsdown",
-		"check": "pnpm lint && pnpm typecheck && pnpm test && pnpm pack:check && pnpm smoke:cli",
+		"check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:apps && pnpm pack:check && pnpm smoke:cli",
+		"check:browser": "pnpm build && pnpm test:browser && pnpm --dir apps/projection-teacher test:e2e",
 		"dev": "tsx src/cli.ts",
 		"export:animation-yaml": "tsx src/animation-yaml-export/cli.ts",
 		"lint": "biome check --vcs-use-ignore-file=false .",
@@ -85,6 +86,7 @@
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run",
 		"test:browser": "node test/browser-smoke/run-browser-smoke.mjs",
+		"test:apps": "vitest run --root apps/projection-teacher",
 		"test:coverage": "vitest run --coverage",
 		"pack:check": "pnpm build && publint && npm pack --dry-run",
 		"smoke:cli": "node dist/cli.mjs samples/reference-links.adoc --format rdf12 >/dev/null && node dist/cli.mjs samples/reference-links.adoc --format rdf12-json-ld >/dev/null && node dist/cli.mjs samples/book-entry-demo/book.adoc --mode book-entry --document-root samples/book-entry-demo --format json >/dev/null",

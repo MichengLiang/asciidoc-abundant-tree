@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
-import { createAsciidoctorAdapter } from "../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../src/asciidoctor-file-adapter";
 import { childBlocksOf } from "../src/official-block-utils";
 import { projectOfficialDocument } from "../src/official-projector";
 import { parseAbundantTree } from "../src/parser";
@@ -33,7 +33,8 @@ include::included-secure.adoc[]
 `,
 		);
 
-		const officialDocument = await createAsciidoctorAdapter().loadFile(path);
+		const officialDocument =
+			await createAsciidoctorFileAdapter().loadFile(path);
 		const document = await parseAbundantTree({ sourcePath: path });
 
 		expect(

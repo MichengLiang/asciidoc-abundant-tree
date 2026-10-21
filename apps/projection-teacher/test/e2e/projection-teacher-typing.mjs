@@ -47,6 +47,9 @@ const server = spawn(
 		"127.0.0.1",
 		"--port",
 		String(port),
+		// 每次重建依赖预构建：@asciidoctor/core 从 3.x 升到 4.x 后，旧缓存里仍是 3.x 的工厂导出，页面在加载时就因
+		// 缺少具名导出而崩溃，测试却只看到“等不到节点”。e2e 要测的是当前依赖。
+		"--force",
 	],
 	{
 		cwd: appRoot,
@@ -96,7 +99,7 @@ async function runBrowserCheck(url) {
 		await textarea.pressSequentially(`${chunk}\n\n`, { delay: 2 });
 		await page.waitForTimeout(120);
 	}
-	await page.waitForTimeout(900);
+	await waitForSettledGraph(page);
 
 	const result = await page.evaluate(() => {
 		const cards = [...document.querySelectorAll(".teaching-node")].map(
@@ -205,6 +208,39 @@ async function runBrowserCheck(url) {
 			2,
 		),
 	);
+}
+
+// 投影是异步的（解析、ELK 布局、fitView 动画各一段），机器忙时一段固定的等待不够。先等图达到预期的规模，
+// 再等卡片位置连续两次采样不变。等不到也继续：下面的断言带着当时的状态报错，真卡住的 bug 照样暴露。
+async function waitForSettledGraph(page) {
+	await page
+		.waitForFunction(
+			() =>
+				document.querySelectorAll(".teaching-node").length === 3 &&
+				document.querySelectorAll(".react-flow__edge").length === 3 &&
+				document.querySelectorAll(".teaching-edge-label").length === 2,
+			undefined,
+			{ timeout: 5000 },
+		)
+		.catch(() => {});
+	const cardRects = () =>
+		page.evaluate(() =>
+			JSON.stringify(
+				[...document.querySelectorAll(".teaching-node")].map((element) => {
+					const rect = element.getBoundingClientRect();
+					return [rect.left, rect.top, rect.width, rect.height];
+				}),
+			),
+		);
+	let previous = await cardRects();
+	for (let attempt = 0; attempt < 30; attempt += 1) {
+		await page.waitForTimeout(150);
+		const current = await cardRects();
+		if (current === previous) {
+			return;
+		}
+		previous = current;
+	}
 }
 
 async function visibleDiagnostics(page) {

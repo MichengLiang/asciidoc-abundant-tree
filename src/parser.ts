@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { createAsciidoctorAdapter } from "./asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "./asciidoctor-file-adapter";
 import { constructionError } from "./book-entry/diagnostics";
 import { preprocessBookEntryWithOfficialReader } from "./book-entry/official-reader-preprocessor";
 import { registerSourceAwareDocumentForRecovery } from "./book-entry/source-aware-coordinate";
@@ -13,7 +13,7 @@ export async function parseAbundantTree(
 	options: ParseAbundantTreeOptions,
 ): Promise<AbundantDocument> {
 	const sourcePath = resolve(options.sourcePath);
-	const adapter = createAsciidoctorAdapter();
+	const adapter = createAsciidoctorFileAdapter();
 
 	if (options.mode === "book-entry") {
 		if (!options.documentRoot) {

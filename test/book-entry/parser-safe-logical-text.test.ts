@@ -2,10 +2,8 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { loadFile } from "@asciidoctor/core";
 import { describe, expect, it } from "vitest";
-import {
-	type AsciidoctorBlock,
-	createAsciidoctorAdapter,
-} from "../../src/asciidoctor-adapter";
+import type { AsciidoctorBlock } from "../../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../../src/asciidoctor-file-adapter";
 import type { LogicalLineRecord } from "../../src/book-entry/line-origin-model";
 import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/official-reader-preprocessor";
 import { buildParserSafeLogicalText } from "../../src/book-entry/parser-safe-logical-text";
@@ -38,7 +36,7 @@ describe("book-entry parser-safe logical text", () => {
 		const safe = buildParserSafeLogicalText([
 			sourceRecord(1, "include::target.adoc[]"),
 		]);
-		const document = await createAsciidoctorAdapter().loadSource(safe.text);
+		const document = await createAsciidoctorFileAdapter().loadSource(safe.text);
 		const [block] = (document.getBlocks?.() ?? []) as AsciidoctorBlock[];
 
 		expect(document.getBlocks?.().length).toBe(1);
@@ -128,7 +126,7 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 		expect(yi?.source?.line).toBe(9);
 		const lines = (
 			await preprocessBookEntryWithOfficialReader({
-				adapter: createAsciidoctorAdapter(),
+				adapter: createAsciidoctorFileAdapter(),
 				sourcePath: entry,
 				documentRoot: root,
 			})

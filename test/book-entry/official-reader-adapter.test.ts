@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../../src/asciidoctor-file-adapter";
 
 const fixtureRoot = join(process.cwd(), "tmp/book-entry-reader-adapter");
 
@@ -12,7 +12,7 @@ describe("Asciidoctor adapter official Reader line evidence", () => {
 			["first", "second"].join("\n"),
 		);
 
-		const lines = await createAsciidoctorAdapter().readPreprocessedLines({
+		const lines = await createAsciidoctorFileAdapter().readPreprocessedLines({
 			sourcePath: entryPath,
 			baseDir: join(fixtureRoot, "ordinary"),
 		});
@@ -34,7 +34,7 @@ describe("Asciidoctor adapter official Reader line evidence", () => {
 			["included one", "included two"].join("\n"),
 		);
 
-		const lines = await createAsciidoctorAdapter().readPreprocessedLines({
+		const lines = await createAsciidoctorFileAdapter().readPreprocessedLines({
 			sourcePath: entryPath,
 			baseDir: root,
 		});

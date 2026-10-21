@@ -7,7 +7,7 @@
 
 解析器完成必须满足：
 
-* `parseAbundantTree({ sourcePath })` 返回 `AbundantDocument`。
+* `parseAbundantTree({ sourcePath })` 返回 `Promise<AbundantDocument>`。
 * Pretty tree 和 JSON 来自同一个 `AbundantDocument`。
 * Source layer 与 official layer 字段保持可区分。
 * Section tree、target catalog、xref occurrence、anchor occurrence 和 diagnostics 可由 public model 读取。
@@ -51,12 +51,19 @@ CLI 必须覆盖：
 
 [source,bash]
 ----
-pnpm test
-pnpm typecheck
-pnpm build
-pnpm pack:check
-pnpm smoke:cli
+pnpm check
 ----
+
+`pnpm check` 依次运行 lint、typecheck、`pnpm test`、`pnpm test:apps`（`apps/` 下应用的测试，以应用自己的 Vite 配置运行，测源码而不是 `dist/`）、`pack:check`（构建与打包检查）和 `smoke:cli`。CI 运行它。
+
+浏览器路径：
+
+[source,bash]
+----
+pnpm check:browser
+----
+
+它构建 `dist/`，在 Chromium 里跑浏览器入口的冒烟测试，再跑 projection-teacher 的打字 e2e。它需要 Playwright 的 Chromium，CI 不运行；改动 Asciidoctor adapter、浏览器入口或 `apps/` 时必须在本机运行。浏览器打包若把 Node 内置模块带进浏览器入口，冒烟测试失败；`@asciidoctor/core` 自己浏览器构建里按需加载的 Node 模块不算。
 
 质量检查命令：
 

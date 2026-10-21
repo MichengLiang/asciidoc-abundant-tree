@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../../src/asciidoctor-file-adapter";
 import type { SourceAwareLogicalDocument } from "../../src/book-entry/line-origin-model";
 import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/official-reader-preprocessor";
 import {
@@ -56,7 +56,7 @@ describe("book-entry official Reader source coordinate recovery", () => {
 
 	it("reports inserted indentation columns as unmapped through point recovery", async () => {
 		const sourceAwareDocument = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entryPath,
 			documentRoot: fixtureRoot,
 		});
@@ -99,7 +99,7 @@ describe("book-entry official Reader source coordinate recovery", () => {
 
 	it("omits precise source coordinates for generated control lines", async () => {
 		const sourceAwareDocument = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entryPath,
 			documentRoot: fixtureRoot,
 		});

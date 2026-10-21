@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../../src/asciidoctor-file-adapter";
 import { parseIncludeAttributes } from "../../src/book-entry/include-attribute-model";
 import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/official-reader-preprocessor";
 
@@ -20,7 +20,7 @@ describe("book-entry official Reader preprocessor", () => {
 		writeFixture("full/nested.adoc", "nested line\n");
 
 		const document = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "full"),
 		});
@@ -51,7 +51,7 @@ describe("book-entry official Reader preprocessor", () => {
 		writeFixture("source-block/snippet.js", "console.log('reader');\n");
 
 		const document = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "source-block"),
 		});
@@ -150,7 +150,7 @@ describe("book-entry official Reader preprocessor", () => {
 		);
 
 		const document = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "selection"),
 		});
@@ -169,7 +169,7 @@ describe("book-entry official Reader preprocessor", () => {
 		writeFixture("unmapped/chapter.adoc", "included\n");
 
 		const document = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "unmapped"),
 		});
@@ -203,7 +203,7 @@ describe("book-entry official Reader preprocessor", () => {
 		writeFixture("surfaces/escaped.adoc", "must not appear\n");
 
 		const document = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "surfaces"),
 		});

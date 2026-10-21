@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../../src/asciidoctor-file-adapter";
 import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/official-reader-preprocessor";
 import {
 	classifyReaderBoundaryDiagnostic,
@@ -19,7 +19,7 @@ describe("book-entry reader boundary policy", () => {
 		writePolicyFixture("inside/chapter.adoc", "included\n");
 
 		const document = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entryPath,
 			documentRoot: join(fixtureRoot, "inside"),
 		});
@@ -58,7 +58,7 @@ describe("book-entry reader boundary policy", () => {
 		);
 		const stderr = captureStderr(async () => {
 			const document = await preprocessBookEntryWithOfficialReader({
-				adapter: createAsciidoctorAdapter(),
+				adapter: createAsciidoctorFileAdapter(),
 				sourcePath: entryPath,
 				documentRoot,
 			});

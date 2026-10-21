@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
-import { createAsciidoctorAdapter } from "../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../src/asciidoctor-file-adapter";
 import { walkOfficialBlocks } from "../src/official-block-walker";
 import { writeFixture } from "./helpers";
 
@@ -26,7 +26,8 @@ a|
 |===
 `,
 		);
-		const officialDocument = await createAsciidoctorAdapter().loadFile(path);
+		const officialDocument =
+			await createAsciidoctorFileAdapter().loadFile(path);
 
 		const surfaces = walkOfficialBlocks(officialDocument);
 		const contexts = surfaces.map((surface) => surface.context);

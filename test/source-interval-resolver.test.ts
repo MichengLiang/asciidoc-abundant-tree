@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createAsciidoctorAdapter } from "../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../src/asciidoctor-file-adapter";
 import type { OfficialBlockSurface } from "../src/official-block-walker";
 import { walkOfficialBlocks } from "../src/official-block-walker";
 import { resolveSourceInterval } from "../src/source-interval-resolver";
@@ -358,7 +358,7 @@ async function parseFixture(name: string, source: string) {
 	return {
 		lineTable: buildLineTable(source),
 		surfaces: walkOfficialBlocks(
-			await createAsciidoctorAdapter().loadFile(path),
+			await createAsciidoctorFileAdapter().loadFile(path),
 		),
 	};
 }

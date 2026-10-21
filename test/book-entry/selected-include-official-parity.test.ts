@@ -2,7 +2,7 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { loadFile } from "@asciidoctor/core";
 import { describe, expect, it } from "vitest";
-import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
+import { createAsciidoctorFileAdapter } from "../../src/asciidoctor-file-adapter";
 import {
 	parseIncludeAttributes,
 	selectionSurface,
@@ -97,7 +97,7 @@ describe("selected include parity with the official Reader", () => {
 					`----\ninclude::code.txt[${surface}]\n----\n`,
 				);
 				const official = (
-					await createAsciidoctorAdapter().readPreprocessedLines({
+					await createAsciidoctorFileAdapter().readPreprocessedLines({
 						sourcePath: entry,
 						baseDir: dirname(entry),
 					})
@@ -254,7 +254,7 @@ describe("source coordinates after a selected include", () => {
 		writeFixture("conditional-then-nested/nested.adoc", "n1\n");
 
 		const document = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entry,
 			documentRoot: root,
 		});
@@ -285,7 +285,7 @@ describe("source coordinates after a selected include", () => {
 		);
 
 		const document = await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entry,
 			documentRoot: root,
 		});
@@ -386,7 +386,7 @@ describe("adjacent selected includes of the same file", () => {
 				return mapping?.ok ? mapping.lines : [];
 			});
 			const document = await preprocessBookEntryWithOfficialReader({
-				adapter: createAsciidoctorAdapter(),
+				adapter: createAsciidoctorFileAdapter(),
 				sourcePath: entry,
 				documentRoot: root,
 			});
@@ -412,7 +412,7 @@ describe("adjacent selected includes of the same file", () => {
 
 	async function preprocess(root: string, entry: string) {
 		return await preprocessBookEntryWithOfficialReader({
-			adapter: createAsciidoctorAdapter(),
+			adapter: createAsciidoctorFileAdapter(),
 			sourcePath: entry,
 			documentRoot: root,
 		});

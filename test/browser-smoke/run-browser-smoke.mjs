@@ -153,18 +153,20 @@ async function buildSmokeApp() {
 	}
 }
 
+// aat 的浏览器入口不能把 Node 内置模块带进浏览器包。Asciidoctor.js 4.x 自己的浏览器构建里有按需、懒加载的
+// node:fs、node:path 等导入（只在 Node 上走到），Vite 照样为它们报外部化警告；所以按警告里的导入方判断，
+// 导入方是 @asciidoctor/core 的浏览器构建时放行，其余一律失败。
 function assertNoNodeExternalizationWarnings(output) {
-	const forbiddenPatterns = [
-		/externalized for browser compatibility/u,
-		/node:fs/u,
-		/node:path/u,
-		/node:crypto/u,
-		/node:process/u,
-	];
-	const matched = forbiddenPatterns.find((pattern) => pattern.test(output));
-	if (matched) {
+	const offending = output
+		.split("\n")
+		.filter((line) => /externalized for browser compatibility/u.test(line))
+		.filter(
+			(line) =>
+				!/imported by "[^"]*\/@asciidoctor\/core\/build\/browser\//u.test(line),
+		);
+	if (offending.length > 0) {
 		throw new Error(
-			`browser smoke Vite build emitted forbidden dependency warning matching ${matched}.\n${output}`,
+			`browser smoke Vite build pulled Node built-ins into aat's browser entry.\n${offending.join("\n")}`,
 		);
 	}
 }
