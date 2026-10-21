@@ -31,7 +31,7 @@ Logical document 交给 parser 时，parser 会把文本再预处理一遍。官
 [#selected-include]
 === 选取引入
 
-Include attrlist 带 `tag`、`tags` 或 `lines` 时，目标文件只有被选中的行进入 logical document。哪些行被选中，以 Asciidoctor 的选取语义为准；line origin 记录每一行在目标文件中的源行号。
+Include attrlist 带 `tag`、`tags` 或 `lines` 时，目标文件只有被选中的行进入 logical document。哪些行被选中，以实现所运行的 Asciidoctor.js 的 Reader 为准；它与 Ruby 版 Asciidoctor 有出入时，跟随前者，因为 logical document 的每一行要与它的输出逐行对应。例如 Asciidoctor.js 4.x 把以换行结尾的文件切出末尾一个空行，选取延伸到文件末尾时这一行也被选入。line origin 记录每一行在目标文件中的源行号。
 
 Tag 标记行的识别与 Asciidoctor 相同：行中出现 `tag::名称[]` 或 `end::名称[]`，其后是行尾或空白，该行就是标记行，不进入 logical document。注释符号不参与判断：`// tag::x[]`、`# tag::x[]`、`-- tag::x[]` 与 `<!-- tag::x[] -->` 都是标记行。只认 `//` 一种写法会让 Python、SQL 等源文件的选取落空。
 

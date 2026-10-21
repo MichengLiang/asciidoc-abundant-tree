@@ -262,10 +262,10 @@ open xref:target[Open, rel=open]
 .Block title xref:target[Block Title, rel=title]
 block title body xref:target[Block Body, rel=body]
 
-[subs=]
+[subs=none]
 suppressed xref:target[Suppressed, rel=suppressed]
 
-[subs=]
+[subs=none]
 NOTE: suppressed note xref:target[Suppressed Note, rel=suppressed-note]
 
 ----

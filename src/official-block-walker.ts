@@ -41,7 +41,7 @@ function walkBlock(
 		context: block.getContext?.(),
 		nodeName: block.getNodeName?.(),
 		level: block.getLevel?.(),
-		title: block.getTitle?.(),
+		title: block.getTitle?.() ?? undefined,
 		id: block.getId?.(),
 		sourceLine: sourceLocation?.getLineNumber?.(),
 		sourceFile: sourceLocation?.getFile?.(),

@@ -751,7 +751,7 @@ function buildParagraph(
 
 	registerOfficialBlockTarget(context, block, {
 		targetType: "block",
-		title: block.getTitle?.(),
+		title: block.getTitle?.() ?? undefined,
 		sourceSpan,
 		source,
 		asciidoctor,
@@ -882,7 +882,7 @@ function buildTable(
 		title:
 			metadata.find((surface) => surface.title)?.title ?? block.getTitle?.(),
 		metadata: metadata.map((surface) => surface.node),
-		rows: rowsFromTable(block.getRows?.()),
+		rows: rowsFromTable(block.rows),
 		span: source?.span,
 		source,
 		asciidoctor: definedObject({

@@ -191,7 +191,7 @@ Default output is a pretty tree:
 
 ```text
 <document mode="single-file" sourcePath="samples/reference-links.adoc">
-    <parser name="@asciidoctor/core" version="3.0.4">
+    <parser name="@asciidoctor/core" version="4.1.1">
     children[]
         <section idOrigin="source" ids="section-basics" level=1 title="基础概念">
             <source>

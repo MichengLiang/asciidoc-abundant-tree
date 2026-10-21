@@ -30,17 +30,15 @@ describe("book-entry reader boundary policy", () => {
 		);
 	});
 
-	it("uses the source directory as Reader base and documentRoot as jail directory", () => {
+	it("uses the source directory as Reader base", () => {
 		const documentRoot = join(fixtureRoot, "workspace");
 		const sourcePath = join(documentRoot, "books/example/book.adoc");
 		const options = readerPreprocessingOptions({
 			sourcePath,
-			documentRoot,
 			attributes: { "source-highlighter": "rouge" },
 		});
 
 		expect(options.baseDir).toBe(join(documentRoot, "books/example"));
-		expect(options.jailDir).toBe(documentRoot);
 		expect(options.attributes).toEqual({ "source-highlighter": "rouge" });
 	});
 

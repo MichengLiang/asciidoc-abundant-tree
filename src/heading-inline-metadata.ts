@@ -46,17 +46,21 @@ export function interpretHeadingInlineMetadataAttributes(
 function macroArgumentsFromAttributeRecord(
 	attributes: Record<string, unknown>,
 ): ReturnType<typeof parseMacroArguments> {
-	const positional = Array.isArray(attributes.$positional)
-		? attributes.$positional
-				.filter((value): value is string => typeof value === "string")
-				.map((value) => value.trim())
-		: [];
+	// 宏属性里的位置参数以 "1"、"2"… 为键（Asciidoctor 的 attributes[1]）；其余键是命名参数。
+	const positional: string[] = [];
 	const named: Record<string, string> = {};
 	for (const [key, value] of Object.entries(attributes)) {
-		if (key === "$positional" || typeof value !== "string") {
+		if (typeof value !== "string") {
 			continue;
 		}
-		named[key] = value.trim();
+		if (/^[1-9]\d*$/u.test(key)) {
+			positional[Number(key) - 1] = value.trim();
+		} else {
+			named[key] = value.trim();
+		}
 	}
-	return { positional, named };
+	return {
+		positional: positional.filter((value) => value !== undefined),
+		named,
+	};
 }

@@ -462,7 +462,7 @@ function scanTableInlineRange(
 }
 
 function collectTableScannableRanges(block: AsciidoctorBlock): LineSpan[] {
-	const rows = block.getRows?.();
+	const rows = block.rows;
 	if (!isRecord(rows)) {
 		return [];
 	}
@@ -496,7 +496,8 @@ type InnerBlock = {
 type TableCell = {
 	getInnerDocument?: () => { getBlocks?: () => InnerBlock[] } | undefined;
 	getLineNumber?: () => number | undefined;
-	getLines?: () => string[] | undefined;
+	// 单元格的源文本行在 lines 属性上（Ruby 的 Cell#lines）。
+	lines?: string[] | undefined;
 	getStyle?: () => string | undefined;
 };
 
@@ -535,7 +536,7 @@ function ordinaryCellRange(cell: TableCell): LineSpan[] {
 	if (startLine === undefined) {
 		return [];
 	}
-	const lines = cell.getLines?.();
+	const lines = cell.lines;
 	const lineCount = Array.isArray(lines) ? Math.max(1, lines.length) : 1;
 	return [{ startLine, endLine: startLine + lineCount - 1 }];
 }

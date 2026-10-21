@@ -91,13 +91,12 @@
 		"clean": "rm -rf dist coverage"
 	},
 	"dependencies": {
-		"@asciidoctor/core": "^3.0.4",
+		"@asciidoctor/core": "^4.1.1",
 		"n3": "^2.0.3",
 		"parse5": "^8.0.1",
 		"yaml": "^2.9.0"
 	},
 	"devDependencies": {
-		"@asciidoctor/docbook-converter": "3.0.0",
 		"@biomejs/biome": "^2.4.16",
 		"@types/n3": "^1.26.1",
 		"@types/node": "^25.9.1",

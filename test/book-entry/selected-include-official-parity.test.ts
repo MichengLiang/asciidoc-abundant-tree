@@ -1,6 +1,6 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import createAsciidoctor from "@asciidoctor/core";
+import { loadFile } from "@asciidoctor/core";
 import { describe, expect, it } from "vitest";
 import { createAsciidoctorAdapter } from "../../src/asciidoctor-adapter";
 import {
@@ -105,15 +105,17 @@ describe("selected include parity with the official Reader", () => {
 					.filter((line) => line.cursor.file === sourcePath)
 					.map((line) => line.text);
 				// 走与预处理器相同的 attrlist 解析：`tags=x,z` 里的逗号先分开属性，官方只拿到 `tags=x`。
+				// 没有选取（如 `lines=`）时官方按整份引入。
 				const selector = selectionSurface(parseIncludeAttributes(surface));
-				if (!selector) {
-					throw new Error(`not a selection surface: ${surface}`);
-				}
-				const mapping = mapIncludeSelection(`${source}\n`, selector);
-				const lines = source.split("\n");
-				const ours = mapping.ok
-					? mapping.lines.map((line) => lines[line - 1])
-					: [];
+				const lines = `${source}\n`.split("\n");
+				const mapping = selector
+					? mapIncludeSelection(`${source}\n`, selector)
+					: undefined;
+				const ours = !mapping
+					? source.split("\n")
+					: mapping.ok
+						? mapping.lines.map((line) => lines[line - 1])
+						: [];
 				if (JSON.stringify(ours) !== JSON.stringify(official)) {
 					mismatches.push(
 						`${surface}: ours ${JSON.stringify(ours)} official ${JSON.stringify(official)}`,
@@ -141,7 +143,7 @@ describe("source coordinates after a selected include", () => {
 	}
 
 	async function officialHeadingLine(entry: string, title: string) {
-		const document = await createAsciidoctor().loadFile(entry, {
+		const document = await loadFile(entry, {
 			safe: "unsafe",
 			sourcemap: true,
 		});

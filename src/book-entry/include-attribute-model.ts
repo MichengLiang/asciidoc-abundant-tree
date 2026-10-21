@@ -92,7 +92,8 @@ export function parseIncludeAttributes(attrlist: string): IncludeAttributes {
 }
 
 // 一条 include 带了几种选取时，官方只用一种：lines 先于 tag，tag 先于 tags；同一个键写了几次，以最后一次
-// 为准（reader.rb 读的是属性表，后写的键覆盖先写的）。
+// 为准（Reader 读的是属性表，后写的键覆盖先写的）。lines 的值为空时当作没写，轮到 tag 与 tags
+// （Asciidoctor.js 4.1.1 reader.js 1382 行：`'lines' in parsedAttrs && parsedAttrs.lines !== ''`）。
 export function selectionSurface(
 	attributes: IncludeAttributes,
 ):
@@ -105,7 +106,7 @@ export function selectionSurface(
 			): surface is Extract<IncludeAttributeSurface, { kind: typeof kind }> =>
 				surface.kind === kind,
 		);
-		if (chosen) {
+		if (chosen && !(chosen.kind === "lines" && chosen.expression === "")) {
 			return chosen;
 		}
 	}

@@ -107,11 +107,12 @@ describe("book-entry include selection mapper", () => {
 		});
 	});
 
-	it("maps quoted comma-separated and semicolon-separated range lists", () => {
+	it("maps comma-separated and semicolon-separated range lists", () => {
+		// 引号在 attrlist 解析时已经去掉，mapper 拿到的是 `1..3,8`。
 		expect(
 			mapIncludeSelection(numberedSource, {
 				kind: "lines",
-				expression: '"1..3,8"',
+				expression: "1..3,8",
 			}),
 		).toEqual({ ok: true, lines: [1, 2, 3, 8] });
 		expect(

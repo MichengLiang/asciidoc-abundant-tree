@@ -3,7 +3,6 @@ import { dirname, resolve } from "node:path";
 import type { BookEntryDiagnostic } from "./diagnostics";
 import { parseIncludeAttributes } from "./include-attribute-model";
 import {
-	normalizeDocumentRoot,
 	relativePathWithinDocumentRoot,
 	resolveIncludeTarget,
 } from "./path-boundary";
@@ -16,22 +15,20 @@ export type ReaderBoundaryDiagnosticInput = {
 	readonly missing: boolean;
 };
 
+// Reader 以 unsafe 读（documentRoot 内合法的 `..` include 在 safe 模式下会被当成越出 jail），所以不给它 jail：
+// documentRoot 的边界由 preprocessor 的 validateIncludeGraph 在读之前查完。
 export function readerPreprocessingOptions(options: {
 	readonly sourcePath: string;
-	readonly documentRoot: string;
 	readonly attributes?: Record<string, unknown> | undefined;
 }): {
 	readonly sourcePath: string;
 	readonly baseDir: string;
-	readonly jailDir: string;
 	readonly attributes?: Record<string, unknown> | undefined;
 } {
 	const sourcePath = resolve(options.sourcePath);
-	const documentRoot = normalizeDocumentRoot(options.documentRoot);
 	return {
 		sourcePath,
 		baseDir: dirname(sourcePath),
-		jailDir: documentRoot,
 		...(options.attributes ? { attributes: options.attributes } : {}),
 	};
 }

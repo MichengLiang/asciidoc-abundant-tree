@@ -419,9 +419,9 @@ describe("official-projector helpers", () => {
 			getContext: () => "table",
 			getId: () => "official-table",
 			getNodeName: () => "table",
-			getRows: () => ({
+			rows: {
 				body: [[{ getText: () => "cell" }]],
-			}),
+			},
 			getSourceLocation: () => ({
 				getLineNumber: () => 3,
 			}),
@@ -508,9 +508,9 @@ describe("official-projector helpers", () => {
 			getBlocks: () => [],
 			getContext: () => "table",
 			getNodeName: () => "table",
-			getRows: () => ({
+			rows: {
 				body: [[{ getText: () => "cell" }]],
-			}),
+			},
 			getSourceLocation: () => ({
 				getLineNumber: () => 1,
 			}),
@@ -969,10 +969,10 @@ describe("official table inline scanning", () => {
 	it("skips tables without official row groups or usable cells", () => {
 		const tableBlock = {
 			getContext: () => "table",
-			getRows: () => ({
+			rows: {
 				head: "not rows",
 				body: [["not a cell"], "not a row"],
-			}),
+			},
 		} satisfies AsciidoctorBlock;
 		const intervalByBlock = new WeakMap([
 			[
@@ -1011,18 +1011,18 @@ describe("official table inline scanning", () => {
 	it("scans only official table cell ranges, not delimiter or separator source lines", () => {
 		const tableBlock = {
 			getContext: () => "table",
-			getRows: () => ({
+			rows: {
 				head: [],
 				foot: [],
 				body: [
 					[
 						{
 							getLineNumber: () => 4,
-							getLines: () => ["cell <<cell>>"],
+							lines: ["cell <<cell>>"],
 						},
 					],
 				],
-			}),
+			},
 		} satisfies AsciidoctorBlock;
 		const intervalByBlock = new WeakMap([
 			[
@@ -1070,18 +1070,18 @@ describe("official table inline scanning", () => {
 	it("deduplicates same-line table cells and recurses through asciidoc cell containers", () => {
 		const tableBlock = {
 			getContext: () => "table",
-			getRows: () => ({
+			rows: {
 				head: [],
 				foot: [],
 				body: [
 					[
 						{
 							getLineNumber: () => 1,
-							getLines: () => ["left <<same-line>>"],
+							lines: ["left <<same-line>>"],
 						},
 						{
 							getLineNumber: () => 1,
-							getLines: () => ["right"],
+							lines: ["right"],
 						},
 					],
 					[
@@ -1124,7 +1124,7 @@ describe("official table inline scanning", () => {
 						},
 					],
 				],
-			}),
+			},
 		} satisfies AsciidoctorBlock;
 		const intervalByBlock = new WeakMap([
 			[
@@ -1175,24 +1175,24 @@ describe("official table inline scanning", () => {
 	it("scans macro xref attributes, anchor macros, and disjoint table cell ranges", () => {
 		const tableBlock = {
 			getContext: () => "table",
-			getRows: () => ({
+			rows: {
 				head: [],
 				foot: [],
 				body: [
 					[
 						{
 							getLineNumber: () => 1,
-							getLines: () => ["first"],
+							lines: ["first"],
 						},
 					],
 					[
 						{
 							getLineNumber: () => 3,
-							getLines: () => ["second"],
+							lines: ["second"],
 						},
 					],
 				],
-			}),
+			},
 		} satisfies AsciidoctorBlock;
 		const intervalByBlock = new WeakMap([
 			[
@@ -1388,7 +1388,7 @@ describe("official table inline scanning", () => {
 	it("ignores table cells and inner documents that do not expose source ranges", () => {
 		const tableBlock = {
 			getContext: () => "table",
-			getRows: () => ({
+			rows: {
 				head: [],
 				foot: [],
 				body: [
@@ -1404,14 +1404,14 @@ describe("official table inline scanning", () => {
 						},
 						{
 							getLineNumber: () => undefined,
-							getLines: () => ["<<missing-line>>"],
+							lines: ["<<missing-line>>"],
 						},
 						{
 							getLineNumber: () => 5,
 						},
 					],
 				],
-			}),
+			},
 		} satisfies AsciidoctorBlock;
 		const intervalByBlock = new WeakMap([
 			[
@@ -1460,7 +1460,7 @@ describe("official table inline scanning", () => {
 	it("uses inner paragraph source lines conservatively when source text is partial or absent", () => {
 		const tableBlock = {
 			getContext: () => "table",
-			getRows: () => ({
+			rows: {
 				body: [
 					[
 						{
@@ -1485,7 +1485,7 @@ describe("official table inline scanning", () => {
 						},
 					],
 				],
-			}),
+			},
 		} satisfies AsciidoctorBlock;
 		const intervalByBlock = new WeakMap([
 			[

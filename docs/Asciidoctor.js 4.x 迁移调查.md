@@ -50,12 +50,29 @@
    `definedObject` 去掉 `undefined` 字段，`null` 会漏进输出（`"title": null`）。4.x 自带的类型把这些返回值标成
    `string | null`，改用它以后由 tsc 列出每一处。
 
+## 迁移时又发现的
+
+- **4.x 与 Ruby 2.0.26 不一致的三处。** aat 选行要与它实际运行的 Reader 逐行一致，所以照 4.1.1 的 `reader.js` 移植，
+  不照 Ruby：选取延伸到文件末尾时，4.x 按 `split('\n')` 切行，以换行结尾的文件末尾多出一个空行，被一并选入（Ruby 的
+  `split` 丢掉它）；`lines=1_0` 在 4.x 是第 1 行（`parseInt`），在 Ruby 是第 10 行（`to_i`）；`[subs=]` 在 Ruby 与 3.x
+  是不做任何替换，在 4.x 退回默认替换，xref 被转换成链接。三处都可以反馈给 asciidoctor.js 上游。
+- **表格与单元格的接口换成了 Ruby 的属性。** 3.x 的 `table.getRows()`、`cell.getLines()` 在 4.x 是 `table.rows`、`cell.lines`。
+- **行内宏属性、缺值的 `null`** 见上文。
+- **`jail_dir` 在 4.x 不存在**；在 3.x 上它也从没生效——Reader 以 unsafe 读，unsafe 不启用 jail。documentRoot 的边界一直由
+  aat 在读之前的 `validateIncludeGraph` 守住，所以连同 `readerPreprocessingOptions` 的 `jailDir` 一起删去。
+- **`@asciidoctor/docbook-converter` 不再需要**：4.x 内置 `docbook5` 后端，而它要求 core 低于 4。
+- **裁判结果。** 迁移前（3.x）与迁移后的 aat 紧挨着投影 trestlework 8 号书与 seekcrowd《人群实验室》：Turtle 逐字节相同，
+  JSON 只差 `parser.version`（3.0.4 → 4.1.1）。投影耗时 731 → 254 ms、470 → 180 ms。书是活的（别的团队在写），所以
+  裁判必须与新版本在同一时刻读同一份输入。
+
 ## 两类代偿
 
 **因 Opal 才有的，迁移后删掉**（`src/asciidoctor-adapter.ts`）：
 
-- 手写的 `AsciidoctorBlock` 类型（第 5 行起）：3.x 没有可用的类型，方法都标成可选再逐个探测。改用包里的 `AbstractBlock`、
-  `Document`、`Section` 等。
+- 手写的 `AsciidoctorBlock` 类型里的 Opal 痕迹（`$resolve_id`），以及照 3.x 写的返回类型。它本身留下：它是 aat 读块用的
+  窄接口，投影、扫描与测试替身都按它读，不必满足 4.x 上百个成员的 `AbstractBlock`；返回类型改照 4.x 的实情（`getTitle`、
+  `getStyle` 可为 `null`，表格的行在 `rows` 属性上）。adapter 内部直接用 4.x 的导出与类型。（迁移时更正：本节初稿写的是
+  “改用包里的 `AbstractBlock`”。）
 - `hasRuntimeInlineFactory`、`hasRuntimeExtensionFactory`（第 330、341 行）：探测 Opal 运行时有没有暴露 `Inline.create`、
   `Extensions.create`。4.x 是具名导出，导入失败在加载时就报。
 - `$resolve_id`（第 28、204 行）、`$xreftext`（第 376、397 行）：Opal 转译后的方法名。

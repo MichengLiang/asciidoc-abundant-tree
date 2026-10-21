@@ -17,6 +17,8 @@ AsciiDoc (.adoc)
 -> PDF
 ```
 
+> 本文写于书架使用 `@asciidoctor/core` 3.x 的时候。4.x 内置 `docbook5` 后端，不必安装 `@asciidoctor/docbook-converter`（它要求 core 低于 4），转换时直接给 `backend: 'docbook5'`；`convertFile` 等接口在 4.x 上是具名导出并返回 Promise。
+
 不要把 HTML 当成出版中间层。HTML 是浏览器展示目标，不是这条链路里的正式出版中间格式。正式中间层应使用 DocBook。
 
 ## 1. 准备依赖

@@ -1,6 +1,6 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import createAsciidoctor from "@asciidoctor/core";
+import { loadFile } from "@asciidoctor/core";
 import { describe, expect, it } from "vitest";
 import {
 	type AsciidoctorBlock,
@@ -80,7 +80,7 @@ describe("directive-shaped lines the official Reader emits literally", () => {
 	}
 
 	async function officialListing(entry: string): Promise<string | undefined> {
-		const document = await createAsciidoctor().loadFile(entry, {
+		const document = await loadFile(entry, {
 			safe: "unsafe",
 		});
 		const [listing] = document.findBy({

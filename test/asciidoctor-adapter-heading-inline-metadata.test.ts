@@ -39,7 +39,7 @@ Status hmeta:status[active, label=生效].
 Status hmeta:status[active, label=生效].
 `);
 
-		expect(document.getContent?.()).toContain("<mark>生效</mark>");
+		expect(await document.getContent?.()).toContain("<mark>生效</mark>");
 	});
 
 	it("does not alter parser source text or scanner-based occurrence extraction", async () => {
@@ -79,7 +79,7 @@ Status hmeta:status[active, label=生效].
 
 async function convertSource(source: string): Promise<string> {
 	const document = await createAsciidoctorAdapter().loadSource(source);
-	const converted = document.getContent?.();
+	const converted = await document.getContent?.();
 	if (typeof converted !== "string") {
 		throw new Error("expected converted content");
 	}

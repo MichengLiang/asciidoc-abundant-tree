@@ -162,7 +162,6 @@ export async function preprocessBookEntryWithOfficialReader(
 	const officialLines = await options.adapter.readPreprocessedLines(
 		readerPreprocessingOptions({
 			sourcePath: entryPath,
-			documentRoot,
 			attributes: options.attributes,
 		}),
 	);
@@ -440,7 +439,7 @@ function appendSelectedInclude(
 	// 逐行与官方 Reader 的输出配对，同整份引入一样：选中的行里有 include 时交给 appendIncludeDirective，
 	// 嵌套文件的官方行由它消费。普通行要确认下一条官方行出自这次推入、文本就是这一行，才认它是这一行；
 	// 选中区域里的条件指令（ifdef 等）被官方吃掉时，文本对不上，不会把后一行认成前一行。
-	// Reader 只对 AsciiDoc 文件处理 include 与条件指令（reader.rb 的 ASCIIDOC_EXTENSIONS）；.py、.md 里字面写着的
+	// Reader 只对 AsciiDoc 文件处理 include 与条件指令（Reader 的 ASCIIDOC_EXTENSIONS）；.py、.md 里字面写着的
 	// include:: 原样输出，不能当嵌套 include 展开。
 	const asciidoc = asciidocExtensionPattern.test(targetFile.absolutePath);
 	for (const sourceLine of selection.ok ? selection.lines : []) {
@@ -610,7 +609,7 @@ function appendEscapedIncludeLine(
 	});
 }
 
-// leveloffset 的推入开头是 Reader 补的两行：`:leveloffset: …` 与一个空行（reader.rb push_include）。只认这两行，
+// leveloffset 的推入开头是 Reader 补的两行：`:leveloffset: …` 与一个空行（Reader 的 pushInclude）。只认这两行，
 // 不按“文件第一个非空行”判停：选取的首行本身可以是空行，被当成补出来的行吃掉，整段就错开一行。
 function consumeGeneratedPreludeForInclude(
 	hasLeveloffset: boolean,

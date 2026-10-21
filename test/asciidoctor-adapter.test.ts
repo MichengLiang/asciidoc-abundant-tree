@@ -1,37 +1,29 @@
+import { getVersion } from "@asciidoctor/core";
 import { describe, expect, it } from "vitest";
-import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
 import {
-	ASCIIDOCTOR_CORE_VERSION,
+	type AsciidoctorBlock,
 	createAsciidoctorAdapter,
-	resolveParserVersion,
 } from "../src/asciidoctor-adapter";
 
 describe("Asciidoctor adapter parser version", () => {
-	it("falls back to a stable version when the runtime processor has no getVersion API", () => {
-		const version = resolveParserVersion({
-			Inline: { create: () => ({ convert: () => "" }) },
-			Extensions: { create: () => ({}) },
-		});
-
-		expect(version).toBe(ASCIIDOCTOR_CORE_VERSION);
-		expect(version.length).toBeGreaterThan(0);
+	it("reports the @asciidoctor/core version it runs on", () => {
+		expect(createAsciidoctorAdapter().parserVersion).toBe(getVersion());
+		expect(getVersion()).toMatch(/^4\./u);
 	});
 });
 
 describe("Asciidoctor adapter xref bindings", () => {
-	it("resolves document targets through refs, fallback ids, and interdocument links", () => {
+	it("resolves document targets through refs, titles, and interdocument links", async () => {
 		const adapter = createAsciidoctorAdapter();
-		const document: AsciidoctorBlock = {
-			getRefs: () => ({
-				known: {},
-			}),
-			$resolve_id: (target) =>
-				target === "generated title" ? "generated-title" : undefined,
-		};
+		const document = await adapter.loadSource(
+			["= Book", "", "[#known]", "== Known", "", "== Generated Title", ""].join(
+				"\n",
+			),
+		);
 
 		expect(adapter.resolveXrefTarget(document, "known")).toBe("#known");
-		expect(adapter.resolveXrefTarget(document, "generated title")).toBe(
-			"#generated-title",
+		expect(adapter.resolveXrefTarget(document, "Generated Title")).toBe(
+			"#_generated_title",
 		);
 		expect(adapter.resolveXrefTarget(document, "chapter.adoc#intro")).toBe(
 			"chapter.html#intro",

@@ -18,20 +18,20 @@ export type SelectionMismatchDiagnostic = {
 	readonly diagnostic: BookEntryDiagnostic;
 };
 
-type TagDirective = {
-	readonly kind: "start" | "end";
-	readonly name: string;
-};
-
+// 选取的行集必须与官方 Reader 为这次 include 推入的行逐行一致，否则坐标只能降级（10 号书「选取引入」）。
+// 所以这里逐句移植 aat 实际运行的 Asciidoctor.js 4.1.1（packages/core/src/reader.js：选取的解析在
+// preprocessIncludeDirective 1379-1417 行，#filterLinesByLinenos 1623 行，#filterLinesByTags 1660 行，
+// #splitDelimitedValue 1853 行），连它与 Ruby 2.0.26 不同的地方一并照搬：文件按 split('\n') 切行，以换行
+// 结尾时末尾多出一个空行，选到文件末尾的选取会带上它；数字用 parseInt，`1_0` 是 1 而不是 Ruby 的 10。
 export function mapIncludeSelection(
 	sourceText: string,
 	selector: IncludeLineSelector,
 ): IncludeSelectionMapping {
-	const source = authoredLines(sourceText);
+	const fileLines = sourceText.split("\n");
 	const selected =
 		selector.kind === "lines"
-			? mapLineExpression(selector.expression, source.length)
-			: mapTagExpression(source, selector);
+			? selectByLinenos(fileLines, selector.expression)
+			: selectByTags(fileLines, selector);
 	if (selected.length === 0) {
 		return {
 			ok: false,
@@ -45,186 +45,150 @@ export function mapIncludeSelection(
 	return { ok: true, lines: selected };
 }
 
-// 文件末尾的换行不另起一行：Asciidoctor 读到的行里没有它，算进来会让 `**` 与 `8..` 这类到文件末尾的
-// 选取多出一行，与官方输出对不上。
-function authoredLines(sourceText: string): string[] {
-	const lines = sourceText.split(/\r?\n/u);
-	return lines.at(-1) === "" ? lines.slice(0, -1) : lines;
+// 不过滤时官方走整份引入：推入整段内容，先去掉末尾一个换行再切行（reader.js 720 行），末尾没有那个空行。
+function wholeFile(fileLines: readonly string[]): number[] {
+	const count =
+		fileLines.at(-1) === "" ? fileLines.length - 1 : fileLines.length;
+	return Array.from({ length: count }, (_, index) => index + 1);
 }
 
-// 以下两种选取逐句移植 Asciidoctor 2.0.26 `Reader#preprocess_include_directive`（lib/asciidoctor/reader.rb，
-// 选取 lines 与 tags 的两段），并以 aat 实际调用的 Asciidoctor.js 3.0.4 为准核对：两者选取逻辑一致，只有
-// TagDirectiveRx 的 \b 在 Ruby 里认 Unicode 单词字符、在 JS 里只认 ASCII，这里跟 JS。行集必须与官方 Reader 的输出逐行一致，否则这次 include 的坐标只能降级
-// （10 号书「选取引入」）；所以这里不另立语义，连官方的边角行为一并照搬：倒序范围不选行、`0..` 不选行、
-// 只写否定标签时隐含通配、结束标签对不上时从栈里摘掉。
-
-function mapTagExpression(
-	lines: readonly string[],
-	selector: Extract<IncludeLineSelector, { kind: "tag" | "tags" }>,
+function selectByLinenos(
+	fileLines: readonly string[],
+	expression: string,
 ): number[] {
-	const tags = tagSelection(selector);
-	if (!tags) {
-		// 没有有效的标签时，官方按整份引入处理，标记行也在内。
-		return lines.map((_, index) => index + 1);
-	}
-	let select: boolean;
-	let baseSelect: boolean;
-	let wildcard: boolean | undefined;
-	const everything = tags.get("**");
-	const any = tags.get("*");
-	if (everything !== undefined) {
-		tags.delete("**");
-		select = baseSelect = everything;
-		if (any !== undefined) {
-			tags.delete("*");
-			wildcard = any;
-		} else if (!select && tags.values().next().value === false) {
-			wildcard = true;
+	let wanted: number[] = [];
+	for (const ld of splitDelimitedValue(expression)) {
+		if (ld.includes("..")) {
+			const sep = ld.indexOf("..");
+			const from = Number.parseInt(ld.slice(0, sep), 10);
+			const toStr = ld.slice(sep + 2);
+			if (toStr === "" || Number.parseInt(toStr, 10) < 0) {
+				wanted.push(from, Number.POSITIVE_INFINITY);
+			} else {
+				const to = Number.parseInt(toStr, 10);
+				for (let i = from; i <= to; i++) wanted.push(i);
+			}
+		} else {
+			wanted.push(Number.parseInt(ld, 10));
 		}
-	} else if (any !== undefined) {
-		const anyFirst = tags.keys().next().value === "*";
-		tags.delete("*");
-		wildcard = any;
-		select = baseSelect = anyFirst ? !any : false;
-	} else {
-		select = baseSelect = ![...tags.values()].includes(true);
 	}
-
+	if (wanted.length === 0) {
+		// 一个行号也没展开出来（如倒序的 3..1）时官方不过滤，按整份引入。
+		return wholeFile(fileLines);
+	}
+	// 与官方同一个比较函数：NaN 混在里面时排出的顺序也相同。
+	wanted = [...new Set(wanted)].sort((a, b) => a - b);
+	const remaining = [...wanted];
 	const selected: number[] = [];
-	const stack: [name: string, select: boolean][] = [];
-	let active: string | undefined;
-	for (const [index, text] of lines.entries()) {
-		const directive = parseTagDirective(text);
-		if (!directive) {
-			if (select) {
-				selected.push(index + 1);
-			}
-			continue;
+	let selectRemaining = false;
+	for (let index = 0; index < fileLines.length; index++) {
+		const lineno = index + 1;
+		if (remaining[0] === Number.POSITIVE_INFINITY) {
+			selectRemaining = true;
 		}
-		const chosen = tags.get(directive.name);
-		if (directive.kind === "end") {
-			if (directive.name === active) {
-				stack.pop();
-				const top = stack.at(-1);
-				active = top?.[0];
-				select = top ? top[1] : baseSelect;
-			} else if (chosen !== undefined) {
-				const at = stack.findLastIndex(([name]) => name === directive.name);
-				if (at >= 0) {
-					stack.splice(at, 1);
-				}
-			}
-		} else if (chosen !== undefined) {
-			select = chosen;
-			stack.push([directive.name, select]);
-			active = directive.name;
-		} else if (wildcard !== undefined) {
-			select = active !== undefined && !select ? false : wildcard;
-			stack.push([directive.name, select]);
-			active = directive.name;
+		if (selectRemaining) {
+			selected.push(lineno);
+		} else if (remaining[0] === lineno) {
+			selected.push(lineno);
+			remaining.shift();
+			if (remaining.length === 0) break;
 		}
 	}
 	return selected;
 }
 
+// 官方用普通对象作选择表：形如整数的键排在最前，“第一个键是不是 *”“第一个值是不是 false”都按这个顺序判断。
+type TagSelection = Record<string, boolean>;
+
 function tagSelection(
 	selector: Extract<IncludeLineSelector, { kind: "tag" | "tags" }>,
-): Map<string, boolean> | undefined {
-	const definitions =
-		selector.kind === "tag"
-			? [selector.name]
-			: splitDelimited(selector.expression);
-	const tags = new Map<string, boolean>();
-	for (const definition of definitions) {
-		if (definition === "" || definition === "!") {
-			continue;
-		}
-		if (definition.startsWith("!")) {
-			tags.set(definition.slice(1), false);
-		} else {
-			tags.set(definition, true);
+): TagSelection | undefined {
+	if (selector.kind === "tag") {
+		const tag = selector.name;
+		if (!tag || tag === "!") return undefined;
+		return tag.startsWith("!") ? { [tag.slice(1)]: false } : { [tag]: true };
+	}
+	const tags: TagSelection = Object.create(null);
+	for (const td of splitDelimitedValue(selector.expression)) {
+		if (td && td !== "!") {
+			tags[td.startsWith("!") ? td.slice(1) : td] = !td.startsWith("!");
 		}
 	}
-	return tags.size > 0 ? tags : undefined;
+	return Object.keys(tags).length === 0 ? undefined : tags;
 }
 
 // 与 Asciidoctor 的 TagDirectiveRx 相同：标记出现在行中任意位置，跟在什么注释符号之后都行
 // （//、#、--、<!-- …），其后是行尾或空白。只认 // 会让 Python、SQL 等源文件的选取落空。
 const tagDirectivePattern = /\b(?:tag|(e)nd)::(\S+?)\[\](?=$|[ \r])/u;
 
-function parseTagDirective(line: string): TagDirective | undefined {
-	if (!(line.includes("::") && line.includes("[]"))) {
-		return undefined;
+function selectByTags(
+	fileLines: readonly string[],
+	selector: Extract<IncludeLineSelector, { kind: "tag" | "tags" }>,
+): number[] {
+	const chosen = tagSelection(selector);
+	if (!chosen) {
+		// 没有有效的标签时官方不过滤，按整份引入，标记行也在内。
+		return wholeFile(fileLines);
 	}
-	const match = tagDirectivePattern.exec(line);
-	if (!match?.[2]) {
-		return undefined;
-	}
-	return { kind: match[1] ? "end" : "start", name: match[2] };
-}
-
-function mapLineExpression(expression: string, lineCount: number): number[] {
-	const wanted: number[] = [];
-	for (const item of splitDelimited(unquote(expression))) {
-		const range = item.indexOf("..");
-		if (range === -1) {
-			wanted.push(rubyInteger(item));
-			continue;
-		}
-		const from = rubyInteger(item.slice(0, range));
-		const toText = item.slice(range + 2);
-		const to = rubyInteger(toText);
-		if (toText === "" || to < 0) {
-			wanted.push(from, Number.POSITIVE_INFINITY);
+	const tags: TagSelection = { ...chosen };
+	let select: boolean;
+	let baseSelect: boolean;
+	let wildcard: boolean | undefined;
+	if ("**" in tags) {
+		select = baseSelect = tags["**"] as boolean;
+		delete tags["**"];
+		if ("*" in tags) {
+			wildcard = tags["*"];
+			delete tags["*"];
+		} else if (!select && Object.values(tags)[0] === false) wildcard = true;
+	} else if ("*" in tags) {
+		if (Object.keys(tags)[0] === "*") {
+			wildcard = tags["*"] as boolean;
+			select = baseSelect = !wildcard;
 		} else {
-			for (let line = from; line <= to; line += 1) {
-				wanted.push(line);
+			select = baseSelect = false;
+			wildcard = tags["*"];
+		}
+		delete tags["*"];
+	} else {
+		select = baseSelect = !Object.values(tags).includes(true);
+	}
+
+	const selected: number[] = [];
+	const tagStack: [name: string, select: boolean][] = [];
+	let activeTag: string | null = null;
+	for (const [index, line] of fileLines.entries()) {
+		if (line.includes("::") && line.includes("[]")) {
+			const match = tagDirectivePattern.exec(line);
+			if (match?.[2]) {
+				const [, isEnd, thisTag] = match;
+				if (isEnd) {
+					if (thisTag === activeTag) {
+						tagStack.pop();
+						const top = tagStack.at(-1);
+						[activeTag, select] = top ? top : [null, baseSelect];
+					} else if (Object.hasOwn(tags, thisTag)) {
+						const at = tagStack.findLastIndex(([name]) => name === thisTag);
+						if (at >= 0) tagStack.splice(at, 1);
+					}
+				} else if (Object.hasOwn(tags, thisTag)) {
+					select = tags[thisTag] as boolean;
+					activeTag = thisTag;
+					tagStack.push([activeTag, select]);
+				} else if (wildcard !== undefined) {
+					select = activeTag && !select ? false : wildcard;
+					activeTag = thisTag;
+					tagStack.push([activeTag, select]);
+				}
+				continue;
 			}
 		}
-	}
-	if (wanted.length === 0) {
-		// 官方：展开后一个行号也没有（如倒序的 3..1）时 inc_linenos 为 nil，按整份引入处理。
-		return Array.from({ length: lineCount }, (_, index) => index + 1);
-	}
-	const pending = [...new Set(wanted)].toSorted((left, right) => left - right);
-	const selected: number[] = [];
-	let remaining = false;
-	for (let line = 1; line <= lineCount && pending.length > 0; line += 1) {
-		if (remaining || pending[0] === Number.POSITIVE_INFINITY) {
-			remaining = true;
-			selected.push(line);
-			continue;
-		}
-		if (pending[0] === line) {
-			selected.push(line);
-			pending.shift();
-		}
+		if (select) selected.push(index + 1);
 	}
 	return selected;
 }
 
-// Asciidoctor 的 split_delimited_value：有逗号按逗号切，否则按分号切。Ruby 的 split 去掉尾部的空串，空字符串
-// 切出来是空数组：`lines=` 因此按整份引入，`lines=1;3;` 不多出一个选不到任何行的 0。
-function splitDelimited(value: string): string[] {
-	const parts = value.split(value.includes(",") ? "," : ";");
-	while (parts.at(-1) === "") {
-		parts.pop();
-	}
-	return parts;
-}
-
-// Ruby 的 String#to_i：跳过前导空白，读可选符号与数字（数字之间可以有单个下划线，如 1_0），读不出数字时是 0。
-function rubyInteger(text: string): number {
-	const match = /^\s*([+-]?\d+(?:_\d+)*)/u.exec(text);
-	return match?.[1] ? Number(match[1].replaceAll("_", "")) : 0;
-}
-
-function unquote(value: string): string {
-	if (
-		(value.startsWith(`"`) && value.endsWith(`"`)) ||
-		(value.startsWith("'") && value.endsWith("'"))
-	) {
-		return value.slice(1, -1);
-	}
-	return value;
+// 官方 #splitDelimitedValue：有逗号按逗号切，否则按分号切；JS 的 split 保留空段（`1;3;` 切出末尾的空串）。
+function splitDelimitedValue(value: string): string[] {
+	return value.includes(",") ? value.split(",") : value.split(";");
 }
