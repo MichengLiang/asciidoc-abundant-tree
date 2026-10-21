@@ -1,6 +1,9 @@
 import type { AbundantDocument, TargetNode } from "../model";
 import { type Rdf12Graph, rdf12Triple } from "./graph";
-import { findInnermostHeadingBySourceLine } from "./heading-ownership";
+import {
+	findHeadingBySectionId,
+	findInnermostHeadingBySourceLine,
+} from "./heading-ownership";
 import {
 	createRdf12LabelCatalog,
 	type Rdf12HeadingLabelKind,
@@ -63,25 +66,15 @@ function addLocalTargetAlias(
 	if (
 		target.targetType === "section" ||
 		!target.id ||
-		target.sourceSpan === undefined
+		(target.sourceSpan === undefined &&
+			target.containingSectionId === undefined)
 	) {
 		return;
 	}
 
-	const relativePath = sourceRelativePathOrFallback(
-		target.source,
-		input.relativePath,
-		input.document.mode,
-	);
-	if (relativePath === undefined) {
-		return;
-	}
-
-	const owner = findInnermostHeadingBySourceLine({
-		nodeIndex: input.nodeIndex,
-		relativePath,
-		line: target.sourceSpan.start.line,
-	});
+	const owner =
+		findHeadingBySectionId(input.nodeIndex, target.containingSectionId) ??
+		ownerBySourceLine(input, target);
 	if (owner === undefined) {
 		return;
 	}
@@ -110,5 +103,24 @@ function addCatalogEntry(
 		owner: entry.iri,
 		labelKind,
 		value,
+	});
+}
+
+function ownerBySourceLine(
+	input: ProjectLabelsInput,
+	target: TargetNode,
+): Rdf12NodeIndexEntry | undefined {
+	const relativePath = sourceRelativePathOrFallback(
+		target.source,
+		input.relativePath,
+		input.document.mode,
+	);
+	if (relativePath === undefined || target.sourceSpan === undefined) {
+		return undefined;
+	}
+	return findInnermostHeadingBySourceLine({
+		nodeIndex: input.nodeIndex,
+		relativePath,
+		line: target.sourceSpan.start.line,
 	});
 }

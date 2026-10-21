@@ -888,10 +888,24 @@ function registerOfficialBlockTarget(
 				options.idOrigin ??
 				(options.targetType === "section" ? "asciidoctor-generated" : "source"),
 			sourceSpan: options.sourceSpan,
+			containingSectionId:
+				options.targetType === "section"
+					? undefined
+					: blockSectionId(context, block),
 			source: options.source,
 			asciidoctor,
 		}) as TargetNode,
 	);
+}
+
+function blockSectionId(
+	context: ProjectContext,
+	block: AsciidoctorBlock,
+): string | undefined {
+	const line = context.intervalByBlock.get(block)?.span.startLine;
+	return line === undefined
+		? undefined
+		: context.sectionByLine.get(line)?.ids[0];
 }
 
 function blockSourceLayer(

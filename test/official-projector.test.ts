@@ -876,6 +876,7 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			sectionByLine: new Map(),
 			lineTable: buildLineTable("<<not-cell>>\n<<also-not-cell>>\n"),
 			blockSurfaces: [
 				{
@@ -926,6 +927,7 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
 					"|===",
@@ -1028,6 +1030,7 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
 					"left <<same-line>> right",
@@ -1097,6 +1100,7 @@ describe("official table inline scanning", () => {
 
 		const { xrefOccurrences, anchorOccurrences } =
 			scanInlineOccurrencesInOfficialBlocks({
+				sectionByLine: new Map(),
 				lineTable: buildLineTable(
 					[
 						"first xref:target.adoc#id[Label,role=nav,window=_blank]",
@@ -1166,6 +1170,7 @@ describe("official table inline scanning", () => {
 
 		const { xrefOccurrences, anchorOccurrences } =
 			scanInlineOccurrencesInOfficialBlocks({
+				sectionByLine: new Map(),
 				lineTable: buildLineTable(
 					[
 						"xref:empty[] and xref:target[Label,,flag,empty=]",
@@ -1240,6 +1245,7 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				"他应该是xref:水果[rel=is, weight=0.8, payload=rel-delivery-capacity]",
 			),
@@ -1315,6 +1321,7 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
 					"<<outside-1>>",
@@ -1389,6 +1396,7 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				["|===", "<<single-line-only>>", "<<missing-location>>"].join("\n"),
 			),
@@ -1427,6 +1435,7 @@ describe("official table inline scanning", () => {
 
 		const { xrefOccurrences, anchorOccurrences } =
 			scanInlineOccurrencesInOfficialBlocks({
+				sectionByLine: new Map(),
 				lineTable,
 				blockSurfaces: [
 					{
@@ -1516,6 +1525,7 @@ describe("official table inline scanning", () => {
 		const diagnostics: ToolDiagnostic[] = [];
 
 		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+			sectionByLine: new Map(),
 			lineTable,
 			blockSurfaces: [
 				{

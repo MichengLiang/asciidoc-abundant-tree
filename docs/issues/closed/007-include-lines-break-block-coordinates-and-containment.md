@@ -64,3 +64,20 @@ include::loose.adoc[]
   那几行。只有开头和结尾真的落在两个文件时才报诊断，消息写出两端的 `文件:行`。
 - 块内有哪些出现处、出现处属于哪个标题，在逻辑文档上判定：前者看出现处来自块的哪条逻辑行，后者用逻辑行上的
   `sectionByLine`（09 号书「Section Scope」）。RDF 按 `containingSectionId` 绑定起点标题，不要求同一文件。
+
+## 解决
+
+2026-10-22，aat 计划 #6：规约 `4a9f9a5`（10 号书 08 章「Block Raw」与新的「结构关系在 Logical Document 上判定」），
+实现 `fcea484`（块的坐标、`contentSpan`、块内出现处）与 6.5 的提交（所属标题），随 0.2.2 发布。
+
+- 块的作者文件由首尾两行决定，raw 保留 include 指令行；只有首尾真的在两个文件、或同一文件被两次读入且块从后一次
+  走回前一次时才报诊断，消息写出两端的 `文件:行`。
+- 块内出现处按块内逻辑行的来源点认；所属 section 在扫描之后、回源之前按逻辑行上的 `sectionByLine` 判定，
+  `src/book-entry/source-scope-index.ts`（按来源区间判定）整个删除。RDF 的起点标题与锚点的地址标签按
+  `containingSectionId` 找标题，不要求同一文件；目标节点新增 `containingSectionId`。
+- 摸底时还纠正了一条旧断言：章节里 include 一个 `===` 小节之后写的内容，在官方 AST 里属于那个小节
+  （AsciiDoc 的 section 延续到下一个标题），aat 的节点树本来也这样挂，只有 `containingSectionId` 按来源文件说成了
+  外层 section。现在两者一致。
+
+复现里的结果变为：listing、表格、段落都有 `parts/a.adoc` 的坐标，没有诊断；T1、T2 挂在各自的块下；T1–T3 的边都有
+起点标题 Section A。真书：8 号书诊断 10→0，4 条 `_partintro.adoc` 的边挂到各自的部标题；《人群实验室》诊断 13→0。

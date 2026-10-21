@@ -115,17 +115,26 @@ This chapter owns the target section.
 		expect(paragraph.source?.relativePath).toBe(chapterRelativePath);
 	});
 
-	it("keeps same-origin late occurrences in section scope after block boundaries", async () => {
+	it("assigns occurrences written after an included subsection to that subsection, as Asciidoctor nests them", async () => {
 		const document = await parseBookEntryFixture();
 		const lateXref = xrefByLabel(document, "Late Target");
 		const lateAnchor = anchorById(document, "late-chapter-anchor");
 
+		// 章节文件第 10 行 include 了一个 === 小节；AsciiDoc 的 section 延续到下一个标题，所以第 19 行的段落在官方
+		// AST 里是 Nested Origin 的子块（节点树里也挂在那里），尽管它写在章节文件里。
 		expect(lateXref.source?.relativePath).toBe(chapterRelativePath);
 		expect(lateXref.sourceSpan?.start.line).toBe(19);
-		expect(lateXref.containingSectionId).toBe("xref-origin");
+		expect(lateXref.containingSectionId).toBe("nested-origin");
 		expect(lateAnchor.source?.relativePath).toBe(chapterRelativePath);
 		expect(lateAnchor.sourceSpan?.start.line).toBe(19);
-		expect(lateAnchor.containingSectionId).toBe("xref-origin");
+		expect(lateAnchor.containingSectionId).toBe("nested-origin");
+		expect(
+			sectionByTitle(document, "Nested Origin").children?.some(
+				(child) =>
+					child.kind === "paragraph" &&
+					(child.text ?? "").includes("Late section"),
+			),
+		).toBe(true);
 	});
 
 	it("recovers listing raw, contentSpan, and source span from the origin file", async () => {

@@ -1,1 +1,1 @@
-Loose paragraph xref:target[T3].
+Loose paragraph xref:target[T3] and [[loose-anchor]]an inline anchor.

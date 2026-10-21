@@ -1,7 +1,10 @@
 import type { AbundantDocument, XrefOccurrenceNode } from "../model";
 import type { Rdf12Graph } from "./graph";
 import { rdf12TermKey, rdf12Triple } from "./graph";
-import { findInnermostHeadingBySourceLine } from "./heading-ownership";
+import {
+	findHeadingBySectionId,
+	findInnermostHeadingBySourceLine,
+} from "./heading-ownership";
 import type { Rdf12LabelCatalog } from "./label-catalog";
 import { stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
@@ -289,6 +292,14 @@ function sourceHeadingForXref(
 	if (xref.sourceSpan === undefined) {
 		return undefined;
 	}
+	const selectorHeading = findHeadingBySectionId(
+		context.nodeIndex,
+		xref.containingSectionId,
+	)?.iri;
+	if (selectorHeading !== undefined) {
+		return selectorHeading;
+	}
+
 	const relativePath = sourceRelativePathOrFallback(
 		xref.source,
 		context.relativePath,
@@ -297,14 +308,6 @@ function sourceHeadingForXref(
 	if (relativePath === undefined) {
 		return undefined;
 	}
-	const selectorHeading = sourceHeadingBySelector(
-		context.nodeIndex,
-		relativePath,
-		xref.containingSectionId,
-	);
-	if (selectorHeading !== undefined) {
-		return selectorHeading;
-	}
 
 	const line = xref.sourceSpan.start.line;
 	return findInnermostHeadingBySourceLine({
@@ -312,26 +315,6 @@ function sourceHeadingForXref(
 		relativePath,
 		line,
 	})?.iri;
-}
-
-function sourceHeadingBySelector(
-	nodeIndex: Rdf12NodeIndex,
-	relativePath: string,
-	selector: string | undefined,
-): Rdf12IriTerm | undefined {
-	if (selector === undefined) {
-		return undefined;
-	}
-
-	const candidates = nodeIndex.entries().filter((entry) => {
-		return (
-			entry.relativePath === relativePath &&
-			entry.kind === "section" &&
-			entry.node.ids.includes(selector)
-		);
-	});
-
-	return candidates.length === 1 ? candidates[0]?.iri : undefined;
 }
 
 function writeTargetBinding(

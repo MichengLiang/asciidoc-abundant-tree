@@ -1,12 +1,14 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { parseAbundantTree, rdf12 } from "../../src/index";
 import type {
 	AbundantDocument,
 	AbundantNode,
 	ListingNode,
 	XrefOccurrenceNode,
 } from "../../src/model";
-import { parseAbundantTree } from "../../src/parser";
+import type { Rdf12Graph } from "../../src/rdf12-projection/graph";
+import { aatTerm } from "../rdf12-projection/helpers/graph-matchers";
 
 // 10 号书「Block Raw」与「结构关系在 Logical Document 上判定」：块中间的 include 指令不让块失去作者文件的坐标，
 // 被引入的行里的出现处仍属于这个块。
@@ -75,6 +77,44 @@ describe("book-entry blocks with included lines", () => {
 			}),
 		]);
 	});
+
+	it("assigns occurrences from included files without headings to the section that includes them", async () => {
+		const document = await parseFixture();
+		const sectionOf = (label: string) =>
+			document.xrefOccurrences.find((xref) => xref.label === label)
+				?.containingSectionId;
+
+		expect(["T1", "T2", "T3"].map(sectionOf)).toEqual([
+			"sec-a",
+			"sec-a",
+			"sec-a",
+		]);
+		expect(
+			document.anchorOccurrences.find((anchor) =>
+				anchor.ids.includes("loose-anchor"),
+			)?.containingSectionId,
+		).toBe("sec-a");
+		expect(
+			document.targets.find((target) => target.id === "loose-anchor")
+				?.containingSectionId,
+		).toBe("sec-a");
+	});
+
+	it("gives RDF edges from headless included files a source heading, and their anchors an owning heading", async () => {
+		const { graph } = rdf12(await parseFixture(), {
+			documentRoot: fixtureRoot,
+		});
+		const sectionA = headingByHeadline(graph, "Section A");
+
+		for (const label of ["T1", "T2", "T3"]) {
+			expect(
+				objectOf(graph, edgeByLabel(graph, label), "sourceHeading"),
+			).toEqual(sectionA);
+		}
+		expect(objectOf(graph, edgeByLabel(graph, "T4"), "targetHeading")).toEqual(
+			sectionA,
+		);
+	});
 });
 
 function parseFixture(): Promise<AbundantDocument> {
@@ -124,4 +164,28 @@ function collectNodes(nodes: AbundantNode[], kind: string): AbundantNode[] {
 
 function collectAll(nodes: AbundantNode[]): AbundantNode[] {
 	return nodes.flatMap((node) => [node, ...collectAll(node.children ?? [])]);
+}
+
+function headingByHeadline(graph: Rdf12Graph, headline: string) {
+	return graph
+		.match({ predicate: aatTerm("headline") })
+		.find((triple) => triple.object.value === headline)?.subject;
+}
+
+function edgeByLabel(graph: Rdf12Graph, label: string) {
+	const edge = graph
+		.match({ predicate: aatTerm("displayLabel") })
+		.find((triple) => triple.object.value === label)?.subject;
+	if (!edge) {
+		throw new Error(`Missing xref edge labelled ${label}`);
+	}
+	return edge;
+}
+
+function objectOf(
+	graph: Rdf12Graph,
+	subject: ReturnType<typeof edgeByLabel>,
+	localName: string,
+) {
+	return graph.match({ subject, predicate: aatTerm(localName) })[0]?.object;
 }

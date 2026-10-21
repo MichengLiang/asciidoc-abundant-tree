@@ -59,6 +59,7 @@ export function addAnchorTargets(
 					title: anchor.reftext,
 					idOrigin: "source",
 					sourceSpan: anchor.sourceSpan,
+					containingSectionId: anchor.containingSectionId,
 					asciidoctor: definedObject({
 						resolvedId: id,
 						resolvedType: targetType,

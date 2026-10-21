@@ -430,14 +430,9 @@ describe("projectSourceSurfaces", () => {
 				}),
 			}),
 		]);
-		expect(surfaces.sectionScopeIndex?.candidates).toEqual([
-			expect.objectContaining({
-				relativePath: "chapter.adoc",
-				startLine: 2,
-				endLine: 3,
-				section: surfaces.sections[0],
-			}),
-		]);
+		expect(
+			surfaces.xrefOccurrences.map((xref) => xref.containingSectionId),
+		).toEqual(["legacy-section"]);
 		expect(projected.children).toEqual([
 			expect.objectContaining({
 				kind: "section",

@@ -187,16 +187,19 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		);
 	});
 
-	it("does not fallback book-entry xref sourceHeading binding to the entry file when occurrence origin is absent", () => {
+	it("binds sourceHeading of an xref without origin by its containing section, without inventing an entry-file coordinate", () => {
 		const projection = rdf12(bookEntryXrefWithoutOriginDocument(), {
 			documentRoot: fixtureRoot,
 		});
 		const edge = xrefEdgeByRaw(projection.graph, "xref:target[Target]");
 
+		expect(objectIri(projection.graph, edge, aatTerm("sourceHeading"))).toBe(
+			headingByHeadline(projection.graph, "Entry"),
+		);
 		expect(
 			projection.graph.match({
 				subject: edge,
-				predicate: aatTerm("sourceHeading"),
+				predicate: aatTerm("relativePath"),
 			}),
 		).toHaveLength(0);
 	});

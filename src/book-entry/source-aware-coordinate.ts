@@ -374,43 +374,6 @@ export function recoverSourceAwareTitleSpan(
 	return recovered.ok ? recovered.sourceSpan : undefined;
 }
 
-export function sourceScopeFromSourceAwareInterval(
-	document: SourceAwareLogicalDocument,
-	span: LineSpan,
-	headingLogicalLine: number,
-):
-	| {
-			readonly relativePath: string;
-			readonly startLine: number;
-			readonly endLine: number;
-	  }
-	| undefined {
-	const headingRecord = document.lines[headingLogicalLine - 1];
-	if (!headingRecord || !hasOrigin(headingRecord)) {
-		return undefined;
-	}
-	let endLine = headingRecord.origin.sourceLine;
-	for (
-		let logicalLine = span.startLine;
-		logicalLine <= span.endLine;
-		logicalLine += 1
-	) {
-		const record = document.lines[logicalLine - 1];
-		if (!record || !hasOrigin(record)) {
-			continue;
-		}
-		if (record.origin.relativePath !== headingRecord.origin.relativePath) {
-			continue;
-		}
-		endLine = Math.max(endLine, record.origin.sourceLine);
-	}
-	return {
-		relativePath: headingRecord.origin.relativePath,
-		startLine: headingRecord.origin.sourceLine,
-		endLine,
-	};
-}
-
 function recoverSourceAwareSpan(
 	document: SourceAwareLogicalDocument,
 	logicalSourceSpan: SourceSpan,

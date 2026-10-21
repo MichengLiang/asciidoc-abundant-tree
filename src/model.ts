@@ -210,6 +210,8 @@ export type TargetNode = NodeBase & {
 	title?: string;
 	idOrigin: "source" | "asciidoctor-generated" | "unknown";
 	sourceSpan?: SourceSpan;
+	// 非标题目标属于哪个 section；标题自身的目标没有这个字段。
+	containingSectionId?: string;
 };
 
 export type TextNode = NodeBase & {

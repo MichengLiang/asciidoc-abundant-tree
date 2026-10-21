@@ -11,18 +11,8 @@ import {
 	recoverSourceAwareSourceLayer,
 	recoverSourceAwareTitleSpan,
 	sourceAwareDocumentForLineTable,
-	sourceScopeFromSourceAwareInterval,
 } from "./book-entry/source-aware-coordinate";
-import {
-	assignContainingSectionIdsFromSourceScope,
-	buildSourceScopeIndex,
-	registerSectionSourceScope,
-	type SourceScopeIndex,
-} from "./book-entry/source-scope-index";
-import {
-	assignContainingSectionIds,
-	scanInlineOccurrencesInOfficialBlocks,
-} from "./inline-occurrence-scanner";
+import { scanInlineOccurrencesInOfficialBlocks } from "./inline-occurrence-scanner";
 import type {
 	AnchorOccurrenceNode,
 	HeadingInlineMetadataOccurrenceNode,
@@ -51,8 +41,8 @@ export type SourceSurfaces = {
 	xrefOccurrences: XrefOccurrenceNode[];
 	anchorOccurrences: AnchorOccurrenceNode[];
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
+	// 键是逻辑行：出现处、块属于哪个 section 都在逻辑文档上判定（10 号书「结构关系在 Logical Document 上判定」）。
 	sectionByLine: Map<number, SectionNode>;
-	sectionScopeIndex?: SourceScopeIndex;
 	toolDiagnostics: ToolDiagnostic[];
 };
 
@@ -63,8 +53,6 @@ type OriginHeadingBoundary = {
 };
 
 type OriginHeadingBoundaryIndex = Map<string, readonly OriginHeadingBoundary[]>;
-
-export { assignContainingSectionIds };
 
 export function projectSourceSurfaces(options: {
 	officialDocument: AsciidoctorBlock;
@@ -158,10 +146,11 @@ export function projectSourceSurfaces(options: {
 		logicalSource,
 		sourceAwareDocument,
 	);
-	const sectionByLine =
-		logicalSource || sourceAwareDocument
-			? new Map<number, SectionNode>()
-			: mapSectionScope(sections, options.lineTable.lines.length);
+	const sectionByLine = mapSectionScope(
+		blockSurfaces,
+		sectionByBlock,
+		intervalByBlock,
+	);
 	const {
 		xrefOccurrences,
 		anchorOccurrences,
@@ -170,25 +159,9 @@ export function projectSourceSurfaces(options: {
 		lineTable: options.lineTable,
 		blockSurfaces,
 		intervalByBlock,
+		sectionByLine,
 		toolDiagnostics,
 	});
-	let sectionScopeIndex: SourceScopeIndex | undefined;
-	if (logicalSource || sourceAwareDocument) {
-		sectionScopeIndex = buildSourceScopeIndex(sections);
-		assignContainingSectionIdsFromSourceScope(
-			xrefOccurrences,
-			anchorOccurrences,
-			headingInlineMetadataOccurrences,
-			sectionScopeIndex,
-		);
-	} else {
-		assignContainingSectionIds(
-			xrefOccurrences,
-			anchorOccurrences,
-			headingInlineMetadataOccurrences,
-			sectionByLine,
-		);
-	}
 
 	return {
 		blockSurfaces,
@@ -200,7 +173,6 @@ export function projectSourceSurfaces(options: {
 		anchorOccurrences,
 		headingInlineMetadataOccurrences,
 		sectionByLine,
-		...(sectionScopeIndex ? { sectionScopeIndex } : {}),
 		toolDiagnostics,
 	};
 }
@@ -384,24 +356,6 @@ function buildSectionSurfaces(
 			}),
 			children: [],
 		}) as SectionNode;
-		if (logicalSource || sourceAwareDocument) {
-			const sourceScope = sourceAwareDocument
-				? sourceScopeFromSourceAwareInterval(
-						sourceAwareDocument,
-						interval.span,
-						sourceLine,
-					)
-				: logicalSource
-					? sectionSourceScopeFromLogicalInterval(
-							logicalSource,
-							interval.span,
-							sourceLine,
-						)
-					: undefined;
-			if (sourceScope) {
-				registerSectionSourceScope(section, sourceScope);
-			}
-		}
 		sections.push(section);
 		sectionByBlock.set(surface.block, section);
 	}
@@ -513,40 +467,6 @@ function nextOriginHeadingBoundary(
 		?.find((candidate) => candidate.sliceStartLine > current.sliceStartLine);
 }
 
-function sectionSourceScopeFromLogicalInterval(
-	logicalSource: NonNullable<ReturnType<typeof logicalSourceForLineTable>>,
-	span: SourceInterval["span"],
-	headingLogicalLine: number,
-):
-	| {
-			readonly relativePath: string;
-			readonly startLine: number;
-			readonly endLine: number;
-	  }
-	| undefined {
-	const headingOrigin = logicalSource.lineOrigins[headingLogicalLine - 1];
-	if (!headingOrigin) {
-		return undefined;
-	}
-	let endLine = headingOrigin.sourceLine;
-	for (
-		let logicalLine = span.startLine;
-		logicalLine <= span.endLine;
-		logicalLine += 1
-	) {
-		const origin = logicalSource.lineOrigins[logicalLine - 1];
-		if (!origin || origin.relativePath !== headingOrigin.relativePath) {
-			continue;
-		}
-		endLine = Math.max(endLine, origin.sourceLine);
-	}
-	return {
-		relativePath: headingOrigin.relativePath,
-		startLine: headingOrigin.sourceLine,
-		endLine,
-	};
-}
-
 function sourceAwareOriginForLine(
 	document: SourceAwareLogicalDocument,
 	logicalLine: number,
@@ -575,14 +495,20 @@ function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
 }
 
 function mapSectionScope(
-	sections: SectionNode[],
-	totalLines: number,
+	blockSurfaces: readonly OfficialBlockSurface[],
+	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>,
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
 ): Map<number, SectionNode> {
+	// section 的逻辑区间从标题到整棵子树结束；先序铺开，内层覆盖外层，每行得到最内层的 section。
+	// 逻辑区间不受 include 影响：被引入文件没有自己的标题时，它的行仍落在引入它的 section 里。
 	const result = new Map<number, SectionNode>();
-	for (const section of sections) {
-		const start = section.span?.startLine ?? section.line ?? 1;
-		const end = section.span?.endLine ?? totalLines;
-		for (let line = start; line <= end; line += 1) {
+	for (const surface of blockSurfaces) {
+		const section = sectionByBlock.get(surface.block);
+		const span = intervalByBlock.get(surface.block)?.span;
+		if (!section || !span) {
+			continue;
+		}
+		for (let line = span.startLine; line <= span.endLine; line += 1) {
 			result.set(line, section);
 		}
 	}

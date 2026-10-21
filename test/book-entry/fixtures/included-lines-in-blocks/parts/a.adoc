@@ -22,3 +22,5 @@ include::loose.adoc[]
 
 [#target]
 == Target
+
+Back to xref:loose-anchor[T4].

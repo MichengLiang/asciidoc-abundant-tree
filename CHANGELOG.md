@@ -6,6 +6,11 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Fixed
+
+- Fixed book-entry blocks losing their coordinates when an `include::` line sits inside them. A source block written as `[source]`, `----`, `include::code.py[]`, `----`, a table whose rows come from an include, or a paragraph with an included line in the middle, all reported `block-origin.multi-source-span` and had no `source`, `span` or `contentSpan`. A block's author file is now the file of its first and last line: its raw is that file's lines and keeps the `include::` directive, the way a heading's raw already does, and its `contentSpan` is the lines between the delimiters in that file. Only a block that starts in one file and ends in another is still reported, and the message now names both ends as `path:line` instead of logical line numbers.
+- Fixed xrefs and anchors from included lines being left out of the block that includes them, and xrefs and anchors in an included file without its own heading (such as a part's `_partintro.adoc`) having no containing section. Which block and which section an occurrence belongs to is now decided on the logical document, as Asciidoctor nests it, rather than by matching source files: in the RDF projection those xref edges get their `aat:sourceHeading`, `aat:officialHref` and `rdf:reifies` triple, and those anchors become address labels of the heading that includes them. A heading no longer has to be in the same file as the xref it is the source of. Occurrences written after an included subsection now belong to that subsection, as they do in Asciidoctor's own tree. Targets that are not headings carry `containingSectionId`.
+
 ## 0.2.1 - 2026-10-21
 
 ### Added

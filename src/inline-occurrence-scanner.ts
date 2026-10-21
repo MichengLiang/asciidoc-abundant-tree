@@ -35,6 +35,7 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 	lineTable: LineTable;
 	blockSurfaces: OfficialBlockSurface[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
+	sectionByLine: Map<number, SectionNode>;
 	toolDiagnostics?: ToolDiagnostic[];
 }): {
 	xrefOccurrences: XrefOccurrenceNode[];
@@ -105,6 +106,13 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 		}
 	}
 
+	// 所属 section 是逻辑文档上的结构关系，要趁出现处还带着逻辑行时判定；下面回源以后只剩来源坐标。
+	assignContainingSectionIds(
+		xrefOccurrences,
+		anchorOccurrences,
+		headingInlineMetadataOccurrences,
+		options.sectionByLine,
+	);
 	const sourceAwareDocument = sourceAwareDocumentForLineTable(
 		options.lineTable,
 	);
@@ -239,7 +247,7 @@ function scansMacroSubstitutedContent(surface: OfficialBlockSurface): boolean {
 	return !Array.isArray(substitutions) || substitutions.includes("macros");
 }
 
-export function assignContainingSectionIds(
+function assignContainingSectionIds(
 	xrefs: XrefOccurrenceNode[],
 	anchors: AnchorOccurrenceNode[],
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],

@@ -9,7 +9,6 @@ import {
 	recoverSourceAwareSectionSourceLayer,
 	recoverSourceAwareSourceLayer,
 	recoverSourceAwareTitleSpan,
-	sourceScopeFromSourceAwareInterval,
 } from "../../src/book-entry/source-aware-coordinate";
 import type {
 	AbundantDocument,
@@ -522,29 +521,6 @@ describe("book-entry official Reader source coordinate recovery", () => {
 			),
 		).toBe(undefined);
 	});
-
-	it("builds source scopes from source-aware intervals without crossing origin files", () => {
-		const sourceAwareDocument = makeSourceScopeFixtureDocument();
-
-		expect(
-			sourceScopeFromSourceAwareInterval(
-				sourceAwareDocument,
-				{ startLine: 1, endLine: 3 },
-				1,
-			),
-		).toEqual({
-			relativePath: "chapter.adoc",
-			startLine: 1,
-			endLine: 2,
-		});
-		expect(
-			sourceScopeFromSourceAwareInterval(
-				sourceAwareDocument,
-				{ startLine: 2, endLine: 3 },
-				4,
-			),
-		).toBeUndefined();
-	});
 });
 
 async function parseOfficialReaderBook(): Promise<AbundantDocument> {
@@ -646,31 +622,6 @@ function makeSectionSourceAwareDocument(): SourceAwareLogicalDocument {
 			sourceLineRecord(4, "", chapter, 4),
 			sourceLineRecord(5, "== Next", chapter, 5),
 			sourceLineRecord(6, "next", chapter, 6),
-		],
-	};
-}
-
-function makeSourceScopeFixtureDocument(): SourceAwareLogicalDocument {
-	const chapter = sourceFile(
-		"/virtual/chapter.adoc",
-		"chapter.adoc",
-		"== Intro\nbody\n",
-	);
-	const snippet = sourceFile(
-		"/virtual/snippet.adoc",
-		"snippet.adoc",
-		"snippet\n",
-	);
-	return {
-		entryPath: "/virtual/book.adoc",
-		documentRoot: "/virtual",
-		logicalText: "== Intro\nbody\nsnippet",
-		sourceFiles: [chapter, snippet],
-		diagnostics: [],
-		lines: [
-			sourceLineRecord(1, "== Intro", chapter, 1),
-			sourceLineRecord(2, "body", chapter, 2),
-			sourceLineRecord(3, "snippet", snippet, 1),
 		],
 	};
 }
