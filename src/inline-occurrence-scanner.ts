@@ -211,6 +211,17 @@ function scanSurfaces(
 				collected.anchorOccurrences,
 			);
 		}
+		if (isHeading(surface) && surface.sourceLine !== undefined) {
+			const line = collected.lineTable.lines[surface.sourceLine - 1];
+			if (line) {
+				scanXrefMatches(collected.lineTable, line, collected.xrefOccurrences);
+				scanAnchorMatches(
+					collected.lineTable,
+					line,
+					collected.anchorOccurrences,
+				);
+			}
+		}
 		const span = interval.contentSpan ?? interval.span;
 		const policy = officialBlockPolicy(surface.block);
 		if (policy !== "scan") {
@@ -241,6 +252,12 @@ function scanSurfaces(
 			);
 		}
 	}
+}
+
+// section 与 discrete 标题的标题文字做 macros 替换（09 号书「Inline 扫描边界」）：标题行与块标题一样扫 xref 与锚点。
+// 标题记号 `=` 里没有可扫的内容，整行扫即可。
+export function isHeading(surface: OfficialBlockSurface): boolean {
+	return surface.context === "section" || surface.context === "floating_title";
 }
 
 // 官方按段落读的文字跳过行注释（parser.js 1066、1525 行）；按分隔符读的内容不跳过（1531 行），分隔的 verse 块里的

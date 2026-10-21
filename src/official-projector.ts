@@ -168,8 +168,15 @@ function buildNode(
 		return undefined;
 	}
 	if (officialLine !== undefined) {
+		const id = block.getId?.();
 		registerOfficialBlockTarget(context, block, {
 			targetType: "block",
+			// discrete 标题没写 ID 时，官方按标题生成一个，与 section 相同。
+			idOrigin:
+				blockContext === "floating_title" &&
+				!interval?.metadata.some((surface) => id && surface.ids.includes(id))
+					? "asciidoctor-generated"
+					: "source",
 			sourceSpan:
 				interval?.sourceSpan ??
 				sourceSpanFromLineSpan(context.lineTable, {
@@ -177,11 +184,31 @@ function buildNode(
 					endLine: officialLine,
 				}),
 		});
+		requestTitleBindings(context, block);
 		return childBlocksOf(block).flatMap((child) =>
 			toNodes(buildNode(child, context)),
 		);
 	}
 	return undefined;
+}
+
+// section 与 discrete 标题的标题行上的 xref 由扫描器找出（09 号书「Inline 扫描边界」），所在的块就是这个标题。
+function requestTitleBindings(
+	context: ProjectContext,
+	block: AsciidoctorBlock,
+): void {
+	const blockContext = block.getContext?.();
+	const line = context.intervalByBlock.get(block)?.blockStartLine;
+	if (
+		(blockContext !== "section" && blockContext !== "floating_title") ||
+		line === undefined
+	) {
+		return;
+	}
+	const xrefs = collectXrefsInSpan(context, { startLine: line, endLine: line });
+	if (xrefs.length > 0) {
+		context.bindingRequests.push({ block, xrefs });
+	}
 }
 
 function canProjectBlock(
@@ -222,6 +249,7 @@ function buildSection(
 		source: section.source,
 		asciidoctor: section.asciidoctor,
 	});
+	requestTitleBindings(context, block);
 	section.children = childBlocksOf(block).flatMap((child) =>
 		toNodes(buildNode(child, context)),
 	);
