@@ -2,9 +2,9 @@ import { type AbstractBlock, Cursor } from "@asciidoctor/core";
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import { asciidocCellDocuments, childBlocksOf } from "./official-block-utils";
 import {
+	isLineComment,
 	type LineTable,
 	lineText,
-	paragraphLine,
 	quotedLineTable,
 } from "./source-lines";
 
@@ -17,10 +17,11 @@ const cellLineMappers = new WeakMap<
 	(line: number) => number
 >();
 
-// 官方块的坐标有三处要补正，都在官方块上改：遍历、投影与行内扫描都从官方块读坐标，改在这一处，它们读到的就是同一个。
+// 官方块的坐标有四处要补正，都在官方块上改：遍历、投影与行内扫描都从官方块读坐标，改在这一处，它们读到的就是同一个。
 // - Asciidoctor 在部导言里新建两种没有 source location 的开放块与段落（09 号书「官方合成的块」）。照官方给合成的
 //   preamble 补坐标的做法（parser.js 632-633 行：preamble.sourceLocation = preamble.blocks[0].sourceLocation）补上。
 // - markdown 引语的子块带的是引语内部的相对行号（09 号书「段落写法的引语」），换算成源行。
+// - 表格里有行注释时，单元格与 a| 单元格里的块行号偏小（09 号书「表格里的行注释」），换算成源行。
 // - callout 列表的坐标落在它的最后一条上（09 号书「Callout 列表的坐标」），改取第一条的。
 export function completeOfficialSourceLocations(
 	officialDocument: AsciidoctorBlock,
@@ -51,8 +52,8 @@ export function markdownQuoteDepth(block: AsciidoctorBlock): number {
 	return quoteDepths.get(block) ?? 0;
 }
 
-// 普通单元格不是块，没有 source location 可补；它带的行号与所在的表格读自同一个 Reader，表格在 markdown 引语里时
-// 同样是相对行号，按表格的换算取源行。
+// 普通单元格不是块，没有 source location 可补；它带的行号是表格读取器的编号（跳过了行注释，表格在 markdown 引语里时
+// 还是相对的），按表格的换算取源行。
 export function cellSourceLine(table: AsciidoctorBlock, line: number): number {
 	return cellLineMappers.get(table)?.(line) ?? line;
 }
@@ -90,13 +91,46 @@ function complete(
 	}
 	const location = block.getSourceLocation?.();
 	const anchor = location?.getLineNumber?.();
+	const view = quotedLineTable(lineTable, depth);
+	if (location && anchor !== undefined && opensMarkdownQuote(block, view)) {
+		markdownQuotes.add(block);
+		// 官方为去掉 `> ` 的行新建的 Reader 不带游标（parser.js 1121 行，Ruby 版 2.0.26 相同）：引语里的块的行号从 1
+		// 数起、没有文件。去掉前缀不改变行数，读引语这个段落时跳过的行注释也不在这些行里，所以相对的第 n 行就是从锚点行
+		// 往下、按引语所在深度的视图跳过行注释数到的第 n 行。
+		relocateReader(
+			block,
+			location,
+			anchor,
+			numbering(
+				lineTable,
+				anchor,
+				1,
+				(line) => !isLineComment(lineText(view, line)),
+			),
+			quotedLineTable(lineTable, depth + 1),
+		);
+	}
+	// 官方读表格先去掉行注释，再从内容的第一行起逐行编号（parser.js 1266-1276 行：readLinesUntil 带
+	// skip_line_comments，交给以分隔符下一行为游标的新 Reader），注释之后的行号都偏小。在引语里或外层表格里的表格，
+	// 已在外层换算时按嵌套的读取器换过。
 	if (
 		location &&
 		anchor !== undefined &&
-		opensMarkdownQuote(block, quotedLineTable(lineTable, depth))
+		block.getContext?.() === "table" &&
+		!cellLineMappers.has(block)
 	) {
-		markdownQuotes.add(block);
-		relocateQuoted(block, location, anchor, lineTable, depth);
+		relocateReader(
+			block,
+			location,
+			anchor,
+			numbering(
+				lineTable,
+				anchor + 1,
+				anchor + 1,
+				(line) => !isLineComment(lineText(view, line)),
+			),
+			view,
+		);
 	}
 	const children = childBlocksOf(block);
 	const childDepth = markdownQuotes.has(block) ? depth + 1 : depth;
@@ -123,29 +157,57 @@ function complete(
 	}
 }
 
-// 官方为去掉 `> ` 的行新建的 Reader 不带游标（parser.js 1121 行，Ruby 版 2.0.26 相同）：引语里的块的行号从 1 数起、
-// 没有文件。去掉前缀不改变行数，读引语这个段落时跳过的行注释也不在这些行里，所以相对的第 n 行就是从锚点行往下、
-// 跳过行注释数到的第 n 行；哪些行是注释，按引语所在深度的视图判断。同一个 Reader 读出的块（引语里的列表项、分隔块
-// 的子块）都带相对行号，一并换算；嵌套的 markdown 引语另有自己的 Reader，它的子块等 complete 走到它时从它换算后的
-// 锚点行数起。
-function relocateQuoted(
-	quote: AsciidoctorBlock,
+// 一个读取器的编号：它交出的行是源行里 visible 的那些，第一条编号为 first、从源行 from 开始，之后逐行累加。
+type Numbering = {
+	readonly toSource: (line: number) => number;
+	readonly visible: (line: number) => boolean;
+};
+
+function numbering(
+	lineTable: LineTable,
+	from: number,
+	first: number,
+	visible: (line: number) => boolean,
+): Numbering {
+	return {
+		visible,
+		toSource: (line) => {
+			let counted = first - 1;
+			for (let source = from; source <= lineTable.lines.length; source += 1) {
+				if (visible(source)) {
+					counted += 1;
+					if (counted === line) {
+						return source;
+					}
+				}
+			}
+			return Math.max(from, lineTable.lines.length);
+		},
+	};
+}
+
+// container 的读取器只交出部分源行、行号却逐行累加：它读出的块都带这套编号，按 reader 换成源行。同一个读取器读出的
+// 块一并换算：嵌套的分隔块、列表项、a| 单元格里的块（单元格文档接着单元格的游标读，table.js 386、432 行）。嵌套的表格
+// 自己又跳过一次它视图里的行注释，它的单元格按它自己的编号换算。嵌套的 markdown 引语另有自己的 Reader，它的子块等
+// complete 走到它时从它换算后的锚点行数起；view 是读出这些块的视图，用来认出它。
+function relocateReader(
+	container: AsciidoctorBlock,
 	location: NonNullable<
 		ReturnType<NonNullable<AsciidoctorBlock["getSourceLocation"]>>
 	>,
 	anchor: number,
-	lineTable: LineTable,
-	depth: number,
+	reader: Numbering,
+	view: LineTable,
 ): void {
-	const outer = quotedLineTable(lineTable, depth);
-	const inner = quotedLineTable(lineTable, depth + 1);
-	const toSource = (relative: number) =>
-		paragraphLine(outer, anchor, relative, true);
+	if (container.getContext?.() === "table") {
+		cellLineMappers.set(container, reader.toSource);
+	}
 	const relocate = (block: AsciidoctorBlock): void => {
 		for (const child of [...childBlocksOf(block), ...cellBlocksOf(block)]) {
 			const relative = child.getSourceLocation?.()?.getLineNumber?.();
-			if (relative !== undefined) {
-				const line = toSource(relative);
+			const line =
+				relative === undefined ? undefined : reader.toSource(relative);
+			if (relative !== undefined && line !== undefined) {
 				locate(
 					child,
 					new Cursor(
@@ -155,19 +217,34 @@ function relocateQuoted(
 						line,
 					),
 				);
+				// markdown 引语的第一行内容就在引语的锚点行上。
 				if (line === anchor) {
 					takenFromParent.add(child);
 				}
+				if (child.getContext?.() === "table") {
+					relocateReader(
+						child,
+						location,
+						line,
+						numbering(
+							view,
+							line + 1,
+							relative + 1,
+							(source) =>
+								reader.visible(source) &&
+								!isLineComment(lineText(view, source)),
+						),
+						view,
+					);
+					continue;
+				}
 			}
-			if (child.getContext?.() === "table") {
-				cellLineMappers.set(child, toSource);
-			}
-			if (!opensMarkdownQuote(child, inner)) {
+			if (!opensMarkdownQuote(child, view)) {
 				relocate(child);
 			}
 		}
 	};
-	relocate(quote);
+	relocate(container);
 }
 
 // a| 单元格里的块：官方用单元格的游标读它们，它们与表格读自同一个 Reader，坐标的补正一样适用。

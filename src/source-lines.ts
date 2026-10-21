@@ -69,8 +69,13 @@ export function quotedLineTable(
 	return view;
 }
 
-// 官方读段落时跳过行注释（reader.js 528 行：`//` 开头、但不是 `///`），注释行不在读进的行里，段落却没有断开；
-// verbatim 块不跳。所以官方读进的第 n 行，是从锚点行往下数、数的时候跳过这些注释行数到的第 n 行源文。
+// 官方的行注释：`//` 开头、但不是 `///`（reader.js 528 行）。
+export function isLineComment(text: string): boolean {
+	return text.startsWith("//") && !text.startsWith("///");
+}
+
+// 官方读段落时跳过行注释，注释行不在读进的行里，段落却没有断开；verbatim 块不跳。所以官方读进的第 n 行，
+// 是从锚点行往下数、数的时候跳过这些注释行数到的第 n 行源文。
 // 源文先于 n 行结束时取最后一行。
 export function paragraphLine(
 	lineTable: LineTable,
@@ -81,7 +86,7 @@ export function paragraphLine(
 	let counted = 0;
 	for (let line = startLine; line <= lineTable.lines.length; line += 1) {
 		const text = lineText(lineTable, line);
-		if (skipsLineComments && text.startsWith("//") && !text.startsWith("///")) {
+		if (skipsLineComments && isLineComment(text)) {
 			continue;
 		}
 		counted += 1;
