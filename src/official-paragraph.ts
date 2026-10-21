@@ -1,5 +1,5 @@
 import { officialDelimiter } from "./official-delimiter";
-import { type LineTable, lineText } from "./source-lines";
+import { isLineComment, type LineTable, lineText } from "./source-lines";
 
 // 官方读一个段落读到哪一行停（09 号书「官方怎样读段落」）。逐句移植 aat 实际运行的 Asciidoctor.js 4.1.1：
 // Parser.readParagraphLines（packages/core/src/parser.js 3018-3047 行，Compliance.blockTerminatesParagraph 取默认的
@@ -38,7 +38,7 @@ export function paragraphEndLine(
 		if (text === "" || text === "+" || terminatesParagraph(text, breakAtList)) {
 			break;
 		}
-		if (!(text.startsWith("//") && !text.startsWith("///"))) {
+		if (!isLineComment(text)) {
 			last = line;
 		}
 	}
@@ -79,7 +79,7 @@ function isTextOnlyMetadata(text: string): boolean {
 	if (text.startsWith("[")) {
 		return text.endsWith("]") && BlockAttributeListRx.test(text);
 	}
-	return text.startsWith("//") && !text.startsWith("///");
+	return isLineComment(text);
 }
 
 function terminatesParagraph(text: string, breakAtList: boolean): boolean {

@@ -25,13 +25,18 @@ import {
 	type OfficialBlockSurface,
 	walkOfficialBlocks,
 } from "./official-block-walker";
-import { cellSourceLine } from "./official-source-location";
+import { cellSourceLine, markdownQuoteDepth } from "./official-source-location";
 import {
 	resolveSourceInterval,
 	type SourceInterval,
 } from "./source-interval-resolver";
 import type { LineRange, LineTable, SourceLine } from "./source-lines";
-import { sourceSpanForRange } from "./source-lines";
+import {
+	isLineComment,
+	lineText,
+	quotedLineTable,
+	sourceSpanForRange,
+} from "./source-lines";
 
 const shorthandXrefPattern = /<<([^>,]+)(?:,\s*([^>]+))?>>/gu;
 const macroXrefPattern = /xref:([^\s[]+)\[([^\]]*)\]/gu;
@@ -227,9 +232,27 @@ function scanSurfaces(
 				collected.toolDiagnostics,
 				descendantUnscannableRanges(surface, intervalByBlock),
 				isBibliographyList(surface),
+				skipsLineComments(surface, interval)
+					? quotedLineTable(
+							collected.lineTable,
+							markdownQuoteDepth(surface.block),
+						)
+					: null,
 			);
 		}
 	}
+}
+
+// 官方按段落读的文字跳过行注释（parser.js 1066、1525 行）；按分隔符读的内容不跳过（1531 行），分隔的 verse 块里的
+// `//` 行是内容。复合块的内容会再读成块，块与块之间的注释行被当作 metadata 读掉，同样不是文字。
+function skipsLineComments(
+	surface: OfficialBlockSurface,
+	interval: SourceInterval,
+): boolean {
+	return (
+		interval.delimited !== true ||
+		surface.block.getContentModel?.() === "compound"
+	);
 }
 
 function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
@@ -344,15 +367,20 @@ function scanInlineRange(
 	anchorOccurrences: AnchorOccurrenceNode[],
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
 	toolDiagnostics: ToolDiagnostic[] | undefined,
-	skipRanges: LineRange[] = [],
-	bibliography = false,
+	skipRanges: LineRange[],
+	bibliography: boolean,
+	// 按官方读到的行认行注释：markdown 引语里的块，读到的是去掉前缀的行。null 表示内容按分隔符读进，不跳过注释。
+	commentView: LineTable | null,
 ): void {
 	for (let lineNumber = startLine; lineNumber <= endLine; lineNumber += 1) {
 		if (isLineInRanges(lineNumber, skipRanges)) {
 			continue;
 		}
 		const line = lineTable.lines[lineNumber - 1];
-		if (!line) {
+		if (
+			!line ||
+			(commentView && isLineComment(lineText(commentView, lineNumber)))
+		) {
 			continue;
 		}
 		scanXrefMatches(lineTable, line, xrefOccurrences);
@@ -431,6 +459,9 @@ function scanTable(collected: Collected, block: AsciidoctorBlock): void {
 			collected.anchorOccurrences,
 			collected.headingInlineMetadataOccurrences,
 			collected.toolDiagnostics,
+			[],
+			false,
+			collected.lineTable,
 		);
 	}
 	for (const document of asciidocCellDocuments(block)) {

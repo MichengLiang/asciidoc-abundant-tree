@@ -14,6 +14,7 @@ import {
 } from "./official-source-location";
 import type { LineTable } from "./source-lines";
 import {
+	isLineComment,
 	lineText,
 	paragraphLine,
 	quotedLineTable,
@@ -30,6 +31,8 @@ export type SourceInterval = {
 	sourceSpan?: SourceSpan;
 	titleSpan?: SourceSpan;
 	diagnostics: ToolDiagnostic[];
+	// 块按分隔符读进内容。官方按分隔符读不跳过行注释，按段落读才跳过（09 号书「Inline 扫描边界」）。
+	delimited?: true;
 };
 
 export function resolveSourceInterval(
@@ -126,6 +129,7 @@ export function resolveSourceInterval(
 		...(contentSpan ? { contentSpan } : {}),
 		...(sourceSpan ? { sourceSpan } : {}),
 		...(titleSpan ? { titleSpan } : {}),
+		...(delimited ? { delimited: true as const } : {}),
 	};
 }
 
@@ -337,7 +341,7 @@ function markdownQuoteSpan(
 // 只有 `>` 的行与官方跳过的行注释：去掉前缀以后不是内容。
 function isEmptyQuotedLine(lineTable: LineTable, line: number): boolean {
 	const text = lineText(lineTable, line).trimEnd();
-	return text === ">" || (text.startsWith("//") && !text.startsWith("///"));
+	return text === ">" || isLineComment(text);
 }
 
 function withoutWhitespace(text: string): string {
