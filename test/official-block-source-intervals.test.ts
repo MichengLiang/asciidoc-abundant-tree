@@ -121,6 +121,25 @@ describe("part introductions built by Asciidoctor", () => {
 			"first-paragraph",
 		);
 	});
+
+	it.each([
+		{ name: "list", introduction: "* 列表项\n" },
+		{
+			name: "listing",
+			introduction: "[source]\n----\ncode\n----\n",
+		},
+		{ name: "example", introduction: "====\n例子。\n====\n" },
+	])("takes the span of a wrapped $name without checking a first line", async ({
+		name,
+		introduction,
+	}) => {
+		const document = await parseBook(
+			`partintro-synthesized-${name}.adoc`,
+			introduction,
+		);
+
+		expect(document.toolDiagnostics).toEqual([]);
+	});
 });
 
 describe("cloaked paragraphs", () => {
@@ -151,6 +170,43 @@ describe("cloaked paragraphs", () => {
 		);
 
 		expect(spans(document, "listing")).toEqual([{ startLine: 5, endLine: 7 }]);
+	});
+
+	it.each([
+		"[source,indent=0,tabsize=4]\n\tx\ty\n",
+		"[source,indent=2]\nconst x = 1;\n",
+	])("accepts a verbatim first line Asciidoctor reshaped in %j", async (body) => {
+		const document = await parseArticle(
+			`cloaked-reshaped-${body.length}.adoc`,
+			body,
+		);
+
+		expect(document.toolDiagnostics).toEqual([]);
+	});
+
+	it.each([
+		{ name: "paragraph", opening: "" },
+		{ name: "sidebar", opening: "[sidebar]\n" },
+	])("spans a $name past the line comments Asciidoctor skips", async ({
+		name,
+		opening,
+	}) => {
+		const document = await parseArticle(
+			`line-comment-${name}.adoc`,
+			`${opening}第一行。\n// 注释\n第二行 xref:target[目标]。\n\n[#target]\n=== 目标\n`,
+		);
+		const last = opening === "" ? 7 : 8;
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(
+			document.xrefOccurrences.map((xref) => xref.sourceSpan?.start.line),
+		).toEqual([last]);
+		if (name === "paragraph") {
+			expect(spans(document, "paragraph")).toContainEqual({
+				startLine: 5,
+				endLine: 7,
+			});
+		}
 	});
 
 	it.each([

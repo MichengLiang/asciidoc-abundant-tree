@@ -5,7 +5,10 @@ import {
 import type { LineSpan, SourceSpan, ToolDiagnostic } from "./model";
 import type { OfficialBlockSurface } from "./official-block-walker";
 import { delimiterOpens, officialDelimiter } from "./official-delimiter";
-import { takesParentSourceLocation } from "./official-source-location";
+import {
+	borrowsChildSourceLocation,
+	takesParentSourceLocation,
+} from "./official-source-location";
 import type { LineTable } from "./source-lines";
 import {
 	lineText,
@@ -37,15 +40,20 @@ export function resolveSourceInterval(
 	const startLine = metadata.at(0)?.line ?? blockStartLine;
 	const diagnostics: ToolDiagnostic[] = [];
 	const delimitedContext = isDelimitedContext(surface.context);
+	// 合成的容器借的是第一个子块的锚点行，那一行可能是列表项或分隔符：它没有自己的分隔符，也不必核对第一行源文。
+	// 它装着部标题之后、第一节之前的全部内容，结束行交给下面的兜底（下一个兄弟块之前）；不能向子块要——
+	// 没有结束线索的子块（如列表）会反过来向父块要，互相递归。
+	const synthesized = borrowsChildSourceLocation(surface.block);
 	const delimited = delimitedContext
 		? resolveDelimitedBlockSpan(lineTable, blockStartLine, surface)
 		: undefined;
 	const undelimited =
-		delimitedContext && delimited === undefined
+		delimitedContext && delimited === undefined && !synthesized
 			? resolveUndelimitedBlockSpan(lineTable, blockStartLine, surface)
 			: undefined;
 	const sourceContentSpan = sourceContentSpanForContext(
 		surface,
+		lineTable,
 		blockStartLine,
 	);
 	const nextSiblingStart = nextSiblingStartLine(surface, lineTable);
@@ -74,6 +82,7 @@ export function resolveSourceInterval(
 		delimitedContext &&
 		delimited === undefined &&
 		undelimited === undefined &&
+		!synthesized &&
 		blockStartLine <= lineTable.lines.length
 	) {
 		diagnostics.push({
@@ -199,10 +208,12 @@ function resolveUndelimitedBlockSpan(
 	startLine: number,
 	surface: OfficialBlockSurface,
 ): LineSpan | undefined {
+	// 只比可见字符：官方会展开 verbatim 块里的 tab，indent 会改行首。
 	const firstLine = firstSourceLine(surface);
 	if (
 		firstLine === undefined ||
-		lineText(lineTable, startLine).trim() !== firstLine.trim()
+		withoutWhitespace(lineText(lineTable, startLine)) !==
+			withoutWhitespace(firstLine)
 	) {
 		return undefined;
 	}
@@ -212,8 +223,42 @@ function resolveUndelimitedBlockSpan(
 			.filter((line): line is number => line !== undefined);
 		return { startLine, endLine: Math.max(startLine, ...childEnds) };
 	}
-	const lineCount = surface.block.getSourceLines?.().length ?? 1;
-	return { startLine, endLine: startLine + Math.max(1, lineCount) - 1 };
+	return {
+		startLine,
+		endLine: lastSourceLine(lineTable, startLine, surface.block),
+	};
+}
+
+function withoutWhitespace(text: string): string {
+	return text.replace(/\s+/gu, "");
+}
+
+// 官方读段落时跳过行注释（reader.js 528 行：`//` 开头、但不是 `///`），注释行不在块的源行里，段落却没有断开；
+// verbatim 块不跳。所以块的最后一行从锚点往下数够源行数，数的时候跳过这些注释行。
+function lastSourceLine(
+	lineTable: LineTable,
+	startLine: number,
+	block: OfficialBlockSurface["block"],
+): number {
+	const count = Math.max(
+		1,
+		block.getSourceLines?.().length ??
+			block.getSource?.().split(/\r?\n/u).length ??
+			1,
+	);
+	const skipsLineComments = block.getContentModel?.() !== "verbatim";
+	let counted = 0;
+	for (let line = startLine; line <= lineTable.lines.length; line += 1) {
+		const text = lineText(lineTable, line);
+		if (skipsLineComments && text.startsWith("//") && !text.startsWith("///")) {
+			continue;
+		}
+		counted += 1;
+		if (counted === count) {
+			return line;
+		}
+	}
+	return Math.max(startLine, lineTable.lines.length);
 }
 
 // 官方把 [partintro] 段落的文本行交给了子段落，合成的开放块自己也没有文本行：第一行源文在第一个子块里。
@@ -248,19 +293,21 @@ function contentSpanForContext(
 
 function sourceContentSpanForContext(
 	surface: OfficialBlockSurface,
+	lineTable: LineTable,
 	startLine: number,
 ): LineSpan | undefined {
 	if (surface.context !== "paragraph" && surface.context !== "admonition") {
 		return undefined;
 	}
-	const source = surface.block.getSource?.();
-	if (source === undefined) {
+	if (
+		surface.block.getSourceLines === undefined &&
+		surface.block.getSource === undefined
+	) {
 		return undefined;
 	}
-	const lineCount = Math.max(1, source.split(/\r?\n/u).length);
 	return {
 		startLine,
-		endLine: startLine + lineCount - 1,
+		endLine: lastSourceLine(lineTable, startLine, surface.block),
 	};
 }
 

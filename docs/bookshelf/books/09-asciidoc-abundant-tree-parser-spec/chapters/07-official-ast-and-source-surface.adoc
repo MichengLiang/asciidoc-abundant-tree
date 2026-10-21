@@ -27,7 +27,9 @@ Source surface 是 official block 在源文本中的可恢复表面。它包含 
 
 段落带上 Asciidoctor 的段落样式（`source`、`listing`、`literal`、`pass`、`quote`、`verse`、`example`、`sidebar`、`open`、`abstract`、`partintro` 等，`constants.js` 243 行的 `PARAGRAPH_STYLES`）时，Asciidoctor 用这个段落的行建成该样式的块，不写分隔符（`parser.js` 1007-1012 行，官方把这样的段落记作 cloaked paragraph）。`[source,ts]` 下面直接写一行代码是 listing，`[partintro]` 下面写一段导言是 open 块。
 
-这样的块，锚点行不是分隔符，而是块的第一行源文。区间解析器据此把它读作段落：范围从锚点行起，覆盖官方块的全部源行，不报 `source-interval.delimiter-not-found`。锚点行既不是分隔符、也不是块的第一行源文时，坐标与官方块对不上，这条诊断照报：它守着的是坐标漂移，不能因为隐身段落而失去。
+这样的块，锚点行不是分隔符，而是块的第一行源文。区间解析器据此把它读作段落：范围从锚点行起，覆盖官方块的全部源行，不报 `source-interval.delimiter-not-found`。核对第一行时只比可见字符：官方会展开 verbatim 块里的 tab，`indent` 会改行首。锚点行既不是分隔符、也不是块的第一行源文时，坐标与官方块对不上，这条诊断照报：它守着的是坐标漂移，不能因为隐身段落而失去。
+
+段落的最后一行，普通段落与隐身段落一样，从锚点行往下数够官方块的源行数。官方读段落时跳过行注释（`//` 开头、但不是 `///`，`reader.js` 528 行），注释行不在块的源行里，段落却没有断开，所以数的时候同样跳过它们；verbatim 块（listing、literal）不跳。
 
 [#synthesized-blocks]
 === 官方合成的块
@@ -37,7 +39,7 @@ Asciidoctor 在两处新建没有 source location 的块，都出现在部（par
 * 部下的第一个块既不是 partintro 开放块、也不是不带样式的开放块时（后者会直接被改成 partintro，`parser.js` 557 行），Asciidoctor 新建一个 partintro 开放块，把这个块和它之后、第一个 section 之前的块放进去（`parser.js` 554-565 行、587-596 行）。部下写普通段落、不写 `[partintro]`，就是这种情形。
 * `[partintro]` 段落先成为内容为段落文本的 open 块；放进部时，Asciidoctor 把 open 块改成复合块，新建一个段落子块，把文本行交给它（`parser.js` 566-575 行）。这个段落子块没有 source location。
 
-解析器按块是怎样合成的取坐标。合成的容器取第一个有坐标的子块的坐标，范围从第一个子块开始到最后一个子块结束；Asciidoctor 给合成的 preamble 补坐标也是取第一个子块的（`parser.js` 626-627 行）。接过父块文本行的段落子块取父块的坐标，范围就是这些文本行，父块的范围到它结束。两者都推不出坐标时，仍报 `source-location.missing`。合成的块不因为没有 source location 而从节点树中消失：它的子块是作者写下的内容。
+解析器按块是怎样合成的取坐标。合成的容器取第一个有坐标的子块的坐标，范围从第一个子块开始，到下一个兄弟块（部的第一节）之前；它借来的锚点行是子块的，可能是列表项或分隔符，不与容器的第一行源文核对，也不找分隔符。Asciidoctor 给合成的 preamble 补坐标也是取第一个子块的（`parser.js` 632-633 行）。接过父块文本行的段落子块取父块的坐标，范围就是这些文本行，父块的范围到它结束。两者都推不出坐标时，仍报 `source-location.missing`。合成的块不因为没有 source location 而从节点树中消失：它的子块是作者写下的内容。
 
 === 结构权威规则
 

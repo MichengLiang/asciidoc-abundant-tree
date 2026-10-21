@@ -60,7 +60,7 @@ trestlework 把 8 号书的部导言统一写成开放块，理由是书自己�
 
 规约写进 09 号书第 7 章：「分隔符与它的闭合」「隐身段落」「官方合成的块」。实现：
 
-- 解析后照官方给合成 preamble 补坐标的做法（`parser.js` 626-627 行），在官方块上补上两种合成块的 source location
+- 解析后照官方给合成 preamble 补坐标的做法（`parser.js` 632-633 行），在官方块上补上两种合成块的 source location
   （`src/official-source-location.ts`）。为部导言写的旧补救（按文本向后搜索行号的 `findBlockSourceLine` 与
   `containerFallbackBlocks`）随之删除；
 - 分隔符逐句移植官方 `isDelimitedBlock` 与 `DELIMITED_BLOCKS`（`src/official-delimiter.ts`），测试逐行对照官方函数；
