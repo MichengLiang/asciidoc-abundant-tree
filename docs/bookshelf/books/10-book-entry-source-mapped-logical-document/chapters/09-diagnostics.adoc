@@ -23,7 +23,7 @@ Book-entry diagnostics 描述 logical document 构造和 origin recovery 中的�
 
 以下情况可以进入 recovery diagnostic：
 
-* Block span 映射到多个 origin source files。
+* Block 的开头与结尾来自不同 origin source files（`block-origin.multi-source-span`，见 xref:block-raw[]）。Message 写出两端各自的 `relativePath:line`：book-entry 的 logical line 不是作者能找到的位置。
 * Origin file line table 无法恢复 raw。
 * Parser core 提供的 logical interval 无法映射到 line origin。
 

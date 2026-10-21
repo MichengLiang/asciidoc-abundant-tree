@@ -25,17 +25,41 @@ Xref sourceSpan 的 relativePath 必须表示 xref 出现的原始 source file�
 
 Column 映射以 logical line 原样复制 origin line 为前提。实现若改写 logical line text，不得继续直接继承 column。
 
+[#block-raw]
 === Block Raw
 
-Listing 或其它 block 的 logical span 可以映射为 origin span。正常 block 的所有 logical lines 应来自同一个 origin source file。
+Paragraph、listing、table 等 block 的 source coordinate 指向作者写下它的 origin source file，即 block 的作者文件。作者文件由 block 中第一条与最后一条有 origin 的 logical line 决定：两者来自同一个 origin source file，且该文件的行在 block 内按原文顺序出现时，block raw 取该文件从首行到末行的原文。
 
-若一个 block span 映射到多个 origin source files，source coordinate recovery 不得输出假 raw。该情况进入 diagnostic。
+Block 中间的 include directive 在作者文件里占一行。它引入的行在 logical document 中展开，origin 指向被引入的文件。Block raw 保留 include directive 原文，不用展开后的内容替代。这与 heading raw 保留 include directive 是同一条规则：include directive 是作者文件的原始文本，raw 记录作者写下的源表面。
 
-Block raw 和 content span 从 origin source file line table 恢复。Logical text 中的 block interval 只用于定位对应 logical lines。
+[source,asciidoc]
+------
+[source,python]
+----
+\include::../code/values.py[]
+----
+------
+
+这个 listing 的作者文件是写下 `[source,python]` 和两条 `----` 的章节文件。Block raw 是这四行；source span 和 content span 都在章节文件中，content span 是两条分隔符之间的 include directive 行。Listing 的 `content` 仍是官方展开后的代码。
+
+Block 的开头与结尾来自不同 origin source files 时，没有一个作者文件能给出连续原文，source coordinate recovery 不得输出假 raw。该情况进入 diagnostic；diagnostic message 写出开头与结尾各自的 `relativePath:line`，作者据此找到写法。
+
+Block raw 和 content span 从作者文件的 line table 恢复。Logical text 中的 block interval 只用于定位对应 logical lines。
+
+[#structure-on-logical-document]
+=== 结构关系在 Logical Document 上判定
+
+一个 occurrence 属于哪个 block、哪个 section，是 logical document 的结构关系。被引入文件的行在 logical document 中处在引入它的位置，结构关系随之确定：
+
+* Block 的 inline occurrences 是该 block content 的 logical lines 中的 occurrences。Occurrence 的 origin 可以在被引入的文件中，它仍属于这个 block。
+* Occurrence 的 containingSectionId 是其 logical line 所在的 official section。`sectionByLine` 只来自 official section surfaces，在 book-entry 中建立在 logical lines 上。被引入的文件没有自己的 heading 时，其中的 xref 和 anchor 属于引入它的那个 section。
+* 下游按 containingSectionId 绑定 source heading，不要求 heading 与 occurrence 在同一个 origin source file。
+
+Origin coordinate 把事实带回源文件，不划分结构边界。
 
 === Source Scope 查找
 
-任何通过 line containment 查找 source scope 的算法都必须同时比较 relativePath。
+结构关系不经由 origin coordinate 判定。只持有 origin coordinate、需要通过 line containment 查找 source scope 的算法，必须同时比较 relativePath。
 
 错误规则：
 

@@ -32,6 +32,7 @@ Book-entry 完成必须由 contract tests 证明。测试对象是 logical docum
 * Heading raw 不从 logical text 直接切取。
 * Xref occurrence 的 sourceSpan 指向 xref 所在 origin file。
 * Source scope 查找不跨 relativePath 匹配。
+* 被引入文件中的 xref 和 anchor 属于引入位置所在的 block 与 section，被引入文件没有 heading 时也一样（见 xref:structure-on-logical-document[]）。
 
 === Downstream Coordinate Tests
 
@@ -42,7 +43,9 @@ Book-entry 完成必须由 contract tests 证明。测试对象是 logical docum
 * Book-entry 输出不包含 `build/adoc` 聚合路径。
 * 同一 logical document 中不同 resources 可以有不同 relativePath。
 * Listing 或 table block 的 raw 和 source span 来自 origin file。
-* 跨 origin source files 的 block 不输出假 raw。
+* Block 中间有 include directive 时，raw、source span 和 content span 都在作者文件中，raw 保留 include directive 原文。
+* 开头与结尾来自不同 origin source files 的 block 不输出假 raw，diagnostic message 写出两端的 `relativePath:line`。
+* Xref 的 source heading 可以与 xref 位于不同 origin source files。
 
 === RDF12 Source Reconstruction Tests
 
