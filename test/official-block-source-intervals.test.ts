@@ -299,6 +299,99 @@ describe("the preamble Asciidoctor builds before the first section", () => {
 	});
 });
 
+describe("quotes written as paragraphs", () => {
+	it.each([
+		{
+			name: "air-multiline",
+			body: '"空气 xref:a[A]。\n// 注\n末行。"\n-- 某人 xref:credit[出处], 某书\n',
+		},
+		{
+			name: "air-one-line",
+			body: '"一句话 xref:a[A]。"\n-- 某人 xref:credit[出处]\n',
+		},
+	])("finds the xref of an $name quote and leaves its credit line alone", async ({
+		name,
+		body,
+	}) => {
+		const document = await parseArticle(`quote-${name}.adoc`, body);
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([["a", 5]]);
+	});
+
+	it("relocates the blocks of a markdown quote onto its source lines", async () => {
+		const document = await parseArticle(
+			"quote-markdown.adoc",
+			"> 引语一 xref:a[A]。\n> 引语二。\n>\n> 第二段 xref:b[B]。\n> -- 某人\n",
+		);
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(spans(document, "paragraph")).toEqual([
+			{ startLine: 5, endLine: 6 },
+			{ startLine: 8, endLine: 8 },
+			{ startLine: 11, endLine: 11 },
+		]);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([
+			["a", 5],
+			["b", 8],
+		]);
+	});
+
+	it("reads blocks inside a markdown quote the way Asciidoctor reads them", async () => {
+		const document = await parseArticle(
+			"quote-markdown-nested.adoc",
+			[
+				"> 开头 xref:a[A]。",
+				"// 注释",
+				"> 接着。",
+				">",
+				"> ====",
+				"> 例 xref:b[B]。",
+				"> ====",
+				">",
+				"> [sidebar]",
+				"> 侧 xref:c[C]。",
+				">",
+				"> * 项 xref:d[D]。",
+				">",
+				"> ____",
+				"> 内引 xref:e[E]。",
+				"> ____",
+				">",
+				"> > 内层 xref:f[F]。",
+				">",
+				"> -- 某人 xref:credit[出处]",
+				"",
+			].join("\n"),
+		);
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([
+			["a", 5],
+			["b", 10],
+			["c", 14],
+			["d", 16],
+			["e", 19],
+			["f", 22],
+		]);
+	});
+});
+
 async function parseBook(
 	name: string,
 	introduction: string,

@@ -59,6 +59,66 @@ export function lineText(lineTable: LineTable, line: number): string {
 	return lineTable.lines[line - 1]?.text ?? "";
 }
 
+const quotedViews = new WeakMap<LineTable, Map<number, LineTable>>();
+
+// markdown 引语里的行，官方每进一层引语去掉一个 `> `，只有 `>` 的行变成空行（parser.js 1103-1107 行）。这个视图给出
+// 套在 depth 层引语里的块被官方读到的样子：行号不变，结构判断（分隔符、第一行、段落在哪里断开）都按它做；
+// 列号与 raw 仍取原行。
+export function quotedLineTable(
+	lineTable: LineTable,
+	depth: number,
+): LineTable {
+	if (depth === 0) {
+		return lineTable;
+	}
+	const views = quotedViews.get(lineTable) ?? new Map<number, LineTable>();
+	quotedViews.set(lineTable, views);
+	const cached = views.get(depth);
+	if (cached) {
+		return cached;
+	}
+	const view: LineTable = {
+		source: lineTable.source,
+		lines: lineTable.lines.map((line) => {
+			let text = line.text;
+			for (let level = 0; level < depth; level += 1) {
+				text =
+					text.trimEnd() === ">"
+						? ""
+						: text.startsWith("> ")
+							? text.slice(2)
+							: text;
+			}
+			return { number: line.number, text };
+		}),
+	};
+	views.set(depth, view);
+	return view;
+}
+
+// 官方读段落时跳过行注释（reader.js 528 行：`//` 开头、但不是 `///`），注释行不在读进的行里，段落却没有断开；
+// verbatim 块不跳。所以官方读进的第 n 行，是从锚点行往下数、数的时候跳过这些注释行数到的第 n 行源文。
+// 源文先于 n 行结束时取最后一行。
+export function paragraphLine(
+	lineTable: LineTable,
+	startLine: number,
+	n: number,
+	skipsLineComments: boolean,
+): number {
+	let counted = 0;
+	for (let line = startLine; line <= lineTable.lines.length; line += 1) {
+		const text = lineText(lineTable, line);
+		if (skipsLineComments && text.startsWith("//") && !text.startsWith("///")) {
+			continue;
+		}
+		counted += 1;
+		if (counted === n) {
+			return line;
+		}
+	}
+	return Math.max(startLine, lineTable.lines.length);
+}
+
 export function sourceLines(
 	lineTable: LineTable,
 	startLine: number,

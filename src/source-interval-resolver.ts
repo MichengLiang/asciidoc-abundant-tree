@@ -7,11 +7,15 @@ import type { OfficialBlockSurface } from "./official-block-walker";
 import { delimiterOpens, officialDelimiter } from "./official-delimiter";
 import {
 	borrowsChildSourceLocation,
+	isMarkdownQuote,
+	markdownQuoteDepth,
 	takesParentSourceLocation,
 } from "./official-source-location";
 import type { LineTable } from "./source-lines";
 import {
 	lineText,
+	paragraphLine,
+	quotedLineTable,
 	sourceSpanFromLineSpan,
 	spanForLineText,
 } from "./source-lines";
@@ -29,12 +33,19 @@ export type SourceInterval = {
 
 export function resolveSourceInterval(
 	surface: OfficialBlockSurface,
-	lineTable: LineTable,
+	sourceTable: LineTable,
 ): SourceInterval | undefined {
 	if (surface.sourceLine === undefined) {
 		return undefined;
 	}
 
+	// 结构按官方读到的行判断：套在 markdown 引语里的块，官方读到的是去掉前缀的行（09 号书「段落写法的引语」）。
+	// span、列号与诊断位置取源行；递归解析别的块时传源行表，它们各按自己的深度取视图。引语里的块属性行
+	// 也按视图读，记下的是官方读到的那一行。
+	const lineTable = quotedLineTable(
+		sourceTable,
+		markdownQuoteDepth(surface.block),
+	);
 	const blockStartLine = surface.sourceLine;
 	const metadata = metadataForSurface(surface, lineTable, blockStartLine);
 	const startLine = metadata.at(0)?.line ?? blockStartLine;
@@ -49,7 +60,12 @@ export function resolveSourceInterval(
 		: undefined;
 	const undelimited =
 		delimitedContext && delimited === undefined && !synthesized
-			? resolveUndelimitedBlockSpan(lineTable, blockStartLine, surface)
+			? resolveUndelimitedBlockSpan(
+					lineTable,
+					sourceTable,
+					blockStartLine,
+					surface,
+				)
 			: undefined;
 	const sourceContentSpan = sourceContentSpanForContext(
 		surface,
@@ -63,11 +79,11 @@ export function resolveSourceInterval(
 			: undefined;
 	const endLine =
 		delimited?.span.endLine ??
-		undelimited?.endLine ??
+		undelimited?.span.endLine ??
 		sourceContentSpan?.endLine ??
 		childEndLine ??
 		(nextSiblingStart !== undefined ? nextSiblingStart - 1 : undefined) ??
-		parentEndLine(surface, lineTable) ??
+		parentEndLine(surface, sourceTable) ??
 		lineTable.lines.length;
 	const span = normalizeLineSpan({
 		startLine,
@@ -89,17 +105,17 @@ export function resolveSourceInterval(
 			level: "warning",
 			code: "source-interval.delimiter-not-found",
 			message: `Could not locate ${surface.context} block delimiter from official source line ${blockStartLine}.`,
-			source: spanForLineText(lineTable, blockStartLine, 1),
+			source: spanForLineText(sourceTable, blockStartLine, 1),
 		});
 	}
 
 	const contentSpan =
 		delimited?.contentSpan ??
-		undelimited ??
+		undelimited?.contentSpan ??
 		sourceContentSpan ??
 		contentSpanForContext(surface, span);
-	const sourceSpan = sourceSpanFromLineSpan(lineTable, span);
-	const titleSpan = titleSpanForSurface(surface, lineTable);
+	const sourceSpan = sourceSpanFromLineSpan(sourceTable, span);
+	const titleSpan = titleSpanForSurface(surface, sourceTable);
 	return {
 		blockStartLine,
 		metadata,
@@ -201,27 +217,59 @@ function resolveDelimitedBlockSpan(
 	return undefined;
 }
 
-// 隐身段落与官方合成的开放块都不写分隔符（09 号书「隐身段落」「官方合成的块」），锚点行就是块的第一行源文。
-// 锚点行对不上第一行源文时不在这里认领：那是坐标漂移，交给 delimiter-not-found 报出来。
+// 隐身段落、段落写法的引语与官方合成的开放块都不写分隔符（09 号书「隐身段落」「段落写法的引语」「官方合成的块」），
+// 锚点行就是块的第一行源文。锚点行对不上第一行源文时不在这里认领：那是坐标漂移，交给 delimiter-not-found 报出来。
 function resolveUndelimitedBlockSpan(
 	lineTable: LineTable,
+	sourceTable: LineTable,
 	startLine: number,
 	surface: OfficialBlockSurface,
-): LineSpan | undefined {
+): { span: LineSpan; contentSpan: LineSpan } | undefined {
+	const anchorText = lineText(lineTable, startLine);
+	// markdown 引语是按这一行认出来的，子块坐标也从这一行换算，锚点与官方块必然对得上，不再与子块的第一行比。
+	if (isMarkdownQuote(surface.block)) {
+		return markdownQuoteSpan(lineTable, sourceTable, startLine, surface);
+	}
 	// 只比可见字符：官方会展开 verbatim 块里的 tab，indent 会改行首。
 	const firstLine = firstSourceLine(surface);
-	if (
-		firstLine === undefined ||
-		withoutWhitespace(lineText(lineTable, startLine)) !==
-			withoutWhitespace(firstLine)
-	) {
+	if (firstLine === undefined) {
 		return undefined;
 	}
+	const official = withoutWhitespace(firstLine);
+	if (withoutWhitespace(anchorText) === official) {
+		const span = cloakedParagraphSpan(
+			lineTable,
+			sourceTable,
+			startLine,
+			surface,
+		);
+		return { span, contentSpan: span };
+	}
+	if (isAirQuote(surface, anchorText, official)) {
+		const contentEnd = lastSourceLine(lineTable, startLine, surface.block);
+		return {
+			// 出处行是官方读进段落的下一行，取走以后不在块的源行里。
+			span: {
+				startLine,
+				endLine: paragraphLine(lineTable, contentEnd, 2, true),
+			},
+			contentSpan: { startLine, endLine: contentEnd },
+		};
+	}
+	return undefined;
+}
+
+function cloakedParagraphSpan(
+	lineTable: LineTable,
+	sourceTable: LineTable,
+	startLine: number,
+	surface: OfficialBlockSurface,
+): LineSpan {
 	if (surface.children.length > 0) {
-		const childEnds = surface.children
-			.map((child) => resolveSourceInterval(child, lineTable)?.span.endLine)
-			.filter((line): line is number => line !== undefined);
-		return { startLine, endLine: Math.max(startLine, ...childEnds) };
+		return {
+			startLine,
+			endLine: lastChildIntervalEnd(sourceTable, startLine, surface),
+		};
 	}
 	return {
 		startLine,
@@ -229,12 +277,76 @@ function resolveUndelimitedBlockSpan(
 	};
 }
 
+function lastChildIntervalEnd(
+	sourceTable: LineTable,
+	startLine: number,
+	surface: OfficialBlockSurface,
+): number {
+	const childEnds = surface.children
+		.map((child) => resolveSourceInterval(child, sourceTable)?.span.endLine)
+		.filter((line): line is number => line !== undefined);
+	return Math.max(startLine, ...childEnds);
+}
+
+// 空气引号（parser.js 1141-1172 行）：官方去掉首行开头与内容末行结尾的 `"`，所以官方的第一行是锚点行去掉开头的引号；
+// 内容只有一行时，这一行也是末行，结尾的引号一并去掉。文字恰好以 `"` 开头的 [quote] 隐身段落，官方的第一行与锚点行
+// 整行相同，已在上面认作隐身段落。
+function isAirQuote(
+	surface: OfficialBlockSurface,
+	anchorText: string,
+	officialFirstLine: string,
+): boolean {
+	if (
+		surface.context !== "quote" ||
+		surface.block.getContentModel?.() !== "simple" ||
+		!anchorText.startsWith('"')
+	) {
+		return false;
+	}
+	const opened = anchorText.slice(1).trimEnd();
+	const unquoted =
+		surface.block.getSourceLines?.().length === 1 && opened.endsWith('"')
+			? opened.slice(0, -1)
+			: opened;
+	return withoutWhitespace(unquoted) === officialFirstLine;
+}
+
+// markdown 引语（parser.js 1102-1140 行）：官方读进的段落里，子块之后还可能有两种行：只有 `>` 的行（去掉前缀后是空行，
+// 不属于任何子块）与最后一行以 `-- ` 开头的出处行（被取走）。它们都在段落里，属于引语；出处行不进内容区间。
+function markdownQuoteSpan(
+	lineTable: LineTable,
+	sourceTable: LineTable,
+	startLine: number,
+	surface: OfficialBlockSurface,
+): { span: LineSpan; contentSpan: LineSpan } {
+	const contentEnd = lastChildIntervalEnd(sourceTable, startLine, surface);
+	let endLine = contentEnd;
+	for (
+		let next = paragraphLine(lineTable, endLine, 2, true);
+		next > endLine;
+		next = paragraphLine(lineTable, endLine, 2, true)
+	) {
+		const text = lineText(lineTable, next).trimEnd();
+		if (text === ">") {
+			endLine = next;
+			continue;
+		}
+		if (/^(?:> )?-- /u.test(text)) {
+			endLine = next;
+		}
+		break;
+	}
+	return {
+		span: { startLine, endLine },
+		contentSpan: { startLine, endLine: contentEnd },
+	};
+}
+
 function withoutWhitespace(text: string): string {
 	return text.replace(/\s+/gu, "");
 }
 
-// 官方读段落时跳过行注释（reader.js 528 行：`//` 开头、但不是 `///`），注释行不在块的源行里，段落却没有断开；
-// verbatim 块不跳。所以块的最后一行从锚点往下数够源行数，数的时候跳过这些注释行。
+// 块的最后一行从锚点往下数够官方块的源行数；verbatim 块的源行里留着注释行，不跳。
 function lastSourceLine(
 	lineTable: LineTable,
 	startLine: number,
@@ -246,19 +358,12 @@ function lastSourceLine(
 			block.getSource?.().split(/\r?\n/u).length ??
 			1,
 	);
-	const skipsLineComments = block.getContentModel?.() !== "verbatim";
-	let counted = 0;
-	for (let line = startLine; line <= lineTable.lines.length; line += 1) {
-		const text = lineText(lineTable, line);
-		if (skipsLineComments && text.startsWith("//") && !text.startsWith("///")) {
-			continue;
-		}
-		counted += 1;
-		if (counted === count) {
-			return line;
-		}
-	}
-	return Math.max(startLine, lineTable.lines.length);
+	return paragraphLine(
+		lineTable,
+		startLine,
+		count,
+		block.getContentModel?.() !== "verbatim",
+	);
 }
 
 // 官方把 [partintro] 段落的文本行交给了子段落，合成的开放块自己也没有文本行：第一行源文在第一个子块里。

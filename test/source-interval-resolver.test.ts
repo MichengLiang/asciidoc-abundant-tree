@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createAsciidoctorFileAdapter } from "../src/asciidoctor-file-adapter";
 import type { OfficialBlockSurface } from "../src/official-block-walker";
 import { walkOfficialBlocks } from "../src/official-block-walker";
+import { completeOfficialSourceLocations } from "../src/official-source-location";
 import { resolveSourceInterval } from "../src/source-interval-resolver";
 import { buildLineTable } from "../src/source-lines";
 import { writeFixture } from "./helpers";
@@ -351,6 +352,78 @@ content
 			}),
 		);
 	});
+
+	it.each([
+		{
+			name: "multi-line",
+			body: '"第一行。\n// 注\n末行。"\n-- 某人\n',
+			span: { startLine: 5, endLine: 8 },
+			contentSpan: { startLine: 5, endLine: 7 },
+		},
+		{
+			name: "one-line",
+			body: '"一句话。"\n-- 某人\n',
+			span: { startLine: 5, endLine: 6 },
+			contentSpan: { startLine: 5, endLine: 5 },
+		},
+	])("spans an $name air quote to its credit line", async ({
+		name,
+		body,
+		span,
+		contentSpan,
+	}) => {
+		const { lineTable, surfaces } = await parseCompletedFixture(
+			`resolver-air-quote-${name}.adoc`,
+			`= Probe\n\n== 节\n\n${body}`,
+		);
+
+		expect(
+			resolveSourceInterval(findSurface(surfaces, "quote"), lineTable),
+		).toEqual(expect.objectContaining({ span, contentSpan, diagnostics: [] }));
+	});
+
+	it("spans a markdown quote over its bare > lines and credit line", async () => {
+		const { lineTable, surfaces } = await parseCompletedFixture(
+			"resolver-markdown-quote.adoc",
+			[
+				"= Probe",
+				"",
+				"== 节",
+				"",
+				"[#outer]",
+				"> 外层。",
+				">",
+				"> > 内层一。",
+				"> > 内层二。",
+				"> >",
+				">",
+				"> -- 某人",
+				"",
+				"后文。",
+				"",
+			].join("\n"),
+		);
+		const [outer, inner] = surfaces.filter(
+			(surface) => surface.context === "quote",
+		) as [OfficialBlockSurface, OfficialBlockSurface];
+
+		expect(resolveSourceInterval(outer, lineTable)).toEqual(
+			expect.objectContaining({
+				metadataSpan: { startLine: 5, endLine: 5 },
+				span: { startLine: 5, endLine: 12 },
+				contentSpan: { startLine: 6, endLine: 10 },
+				diagnostics: [],
+			}),
+		);
+		// 外层只有 > 的行对内层是空行，内层的段落在那里结束。
+		expect(resolveSourceInterval(inner, lineTable)).toEqual(
+			expect.objectContaining({
+				span: { startLine: 8, endLine: 10 },
+				contentSpan: { startLine: 8, endLine: 9 },
+				diagnostics: [],
+			}),
+		);
+	});
 });
 
 async function parseFixture(name: string, source: string) {
@@ -361,6 +434,15 @@ async function parseFixture(name: string, source: string) {
 			await createAsciidoctorFileAdapter().loadFile(path),
 		),
 	};
+}
+
+async function parseCompletedFixture(name: string, source: string) {
+	const lineTable = buildLineTable(source);
+	const official = await createAsciidoctorFileAdapter().loadFile(
+		writeFixture(name, source),
+	);
+	completeOfficialSourceLocations(official, lineTable);
+	return { lineTable, surfaces: walkOfficialBlocks(official) };
 }
 
 function findSurface(
