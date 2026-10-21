@@ -6,6 +6,18 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.2.4 - 2026-10-22
+
+### Fixed
+
+- Every block context Asciidoctor converts is classified. Thematic breaks (`'''`), page breaks (`<<<`), `toc::[]`, block images, audio and video, discrete headings and callout lists used to report `official-block-context.unknown` and be skipped with all their descendants. Blocks without content are skipped as content only: their block titles and attribute lines are still scanned, and an ID on them (`[#fig]` before `image::`, a discrete heading's written or generated ID) is a target that xrefs resolve to. Callout list items are scanned like other list items. Only contexts registered by extensions still report the diagnostic.
+- A callout list is located at its first item. Asciidoctor (Asciidoctor.js 4.1.1, and Ruby Asciidoctor 2.0.26 alike) marks the reader before every following item, so the list's source location was its last item; a block title or ID line above the list now belongs to it.
+- Fixed parsing failing with `RangeError: Maximum call stack size exceeded` when a Markdown quote (`> ...`) ends in a list. A Markdown quote's span is now the paragraph Asciidoctor read it from, computed by Asciidoctor's own paragraph rules instead of asking its last child where it ends.
+- The continuation lines of a list item are scanned. Asciidoctor folds the lines directly under an item's marker into the item's text; xrefs and anchors on them used to be missing. As in Asciidoctor, an anchor line or attribute line right under the marker is dropped and the paragraph below it is still folded in, and a `.title`-like line there is text.
+- Line comments no longer produce occurrences. An xref in a `//` line inside a paragraph, a cloaked block, a list item, an admonition paragraph or a table cell was taken for a real one; Asciidoctor skips these lines. Content read up to a delimiter is not affected: a `//` line inside a delimited verse block is content and its xref still counts.
+- Fixed table cells after a line comment pointing at the wrong source line. Asciidoctor drops the comment lines of a table before numbering its lines, so every cell and every block of an `a|` cell after a comment carried a line number that was too small, and the scanner read the comment instead of the cell. Tables inside Markdown quotes and tables nested in `a|` cells are counted at each level.
+- Xrefs and anchors in section titles and discrete heading titles produce occurrences, as those in block titles already did. An xref in a section title belongs to that section and becomes an edge from its heading in the RDF projection; a natural xref written as the target's title (`<<Title>>`) in a heading is resolved by Asciidoctor.
+
 ## 0.2.3 - 2026-10-22
 
 ### Fixed
