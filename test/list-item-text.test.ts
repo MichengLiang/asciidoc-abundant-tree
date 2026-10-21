@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createAsciidoctorFileAdapter } from "../src/asciidoctor-file-adapter";
+import type { AbundantNode, DescriptionListNode } from "../src/model";
 import { walkOfficialBlocks } from "../src/official-block-walker";
 import { completeOfficialSourceLocations } from "../src/official-source-location";
 import { parseAbundantTree } from "../src/parser";
@@ -65,6 +66,48 @@ describe("list item text", () => {
 
 			expect(read).toEqual(folded);
 		}
+	});
+
+	it("leaves the terms and descriptions of a description list on the term line", async () => {
+		const document = await parseAbundantTree({
+			sourcePath: writeFixture(
+				"list-item-dlist.adoc",
+				"= 文\n\n== 节\n\n正文。\n\n术语:: 解释\n续行 xref:x[X]\n下一个:: 二\n",
+			),
+		});
+		const lists: AbundantNode[] = [];
+		const visit = (node: AbundantNode) => {
+			if (node.kind === "descriptionList") {
+				lists.push(node);
+			}
+			for (const child of "children" in node ? (node.children ?? []) : []) {
+				visit(child as AbundantNode);
+			}
+		};
+		document.children.forEach(visit);
+		const [list] = lists as DescriptionListNode[];
+
+		expect(
+			list?.items.map((item) => [
+				item.terms[0]?.source?.span,
+				item.description?.source?.span,
+			]),
+		).toEqual([
+			[
+				{ startLine: 7, endLine: 7 },
+				{ startLine: 7, endLine: 7 },
+			],
+			[
+				{ startLine: 9, endLine: 9 },
+				{ startLine: 9, endLine: 9 },
+			],
+		]);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([["x", 8]]);
 	});
 
 	it("scans the continuation lines of an item", async () => {

@@ -392,10 +392,15 @@ function contentSpanForContext(
 	if (surface.context === "list_item") {
 		// 条目的文字是标记行加紧挨着的续行：官方把续行读成段落，再并进条目的文字（parser.js 1985-2011 行，foldFirst），
 		// 并进以后它不再是子块，没有坐标，只能照官方的读法从标记行往下数（09 号书「Inline 扫描边界」）。
+		// 描述列表的术语与描述也是 list_item，但它们共用术语行的坐标（parser.js 1897-1899 行），术语行之后的续行属于描述；
+		// 两者的范围由描述列表的投影按术语与描述的文本切分，这里只给锚点行。
 		const line = surface.sourceLine ?? span.startLine;
 		return {
 			startLine: line,
-			endLine: listItemTextEndLine(lineTable, line),
+			endLine:
+				surface.parent?.context === "dlist"
+					? line
+					: listItemTextEndLine(lineTable, line),
 		};
 	}
 	return undefined;
