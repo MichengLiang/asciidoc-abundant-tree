@@ -31,6 +31,18 @@ Source surface 是 official block 在源文本中的可恢复表面。它包含 
 
 段落的最后一行，普通段落与隐身段落一样，从锚点行往下数够官方块的源行数。官方读段落时跳过行注释（`//` 开头、但不是 `///`，`reader.js` 528 行），注释行不在块的源行里，段落却没有断开，所以数的时候同样跳过它们；verbatim 块（listing、literal）不跳。
 
+[#paragraph-quote]
+=== 段落写法的引语
+
+引语除了 `____` 分隔块与 `[quote]` 隐身段落，还有两种直接用段落写出的写法。Asciidoctor 读完段落以后才认出它们是引语（`parser.js` 1102-1172 行）：
+
+* 空气引号：段落第一行以 `"` 开头，倒数第二行以 `"` 结尾，最后一行以 `-- ` 开头。官方去掉第一行开头与倒数第二行结尾的 `"`，取走最后一行作出处，用剩下的行建成内容模型为 simple 的 quote（1141-1172 行）。
+* Markdown 引语：段落第一行以 `> ` 开头。官方逐行去掉 `> `，只有 `>` 的行变成空行；最后一行以 `-- ` 开头时取走作出处，再去掉出处之前的空行；剩下的行另建一个 Reader，读成复合的 quote（1102-1140 行）。
+
+两种都不写分隔符。区间解析器认它们的方法与隐身段落相同：锚点行是块的第一行源文，只是核对之前先去掉官方从这一行删掉的前缀，空气引号去掉开头的 `"`，markdown 引语去掉 `> `。范围是官方读进的整个段落：从锚点行起，覆盖内容的行，再加上被取走的出处行，以及出处之前只有 `>` 的行。内容区间不含出处行。出处行里的 xref 不产生 occurrence，与写在属性列表里的出处（`[quote, 某人, 某书]`）相同。
+
+Markdown 引语的子块坐标要换算。官方为去掉前缀的行新建的 Reader 不带游标（`parser.js` 1121 行；Ruby 版 Asciidoctor 2.0.26 同样如此），子块的 source location 没有文件，行号从这个 Reader 的第一行数起。去掉前缀不改变行数，官方读段落时跳过的行注释也不在这些行里，所以第 _n_ 行就是从引语的锚点行往下、跳过行注释数到的第 _n_ 行源文。解析器在给合成的块补坐标的同一处（xref:synthesized-blocks[官方合成的块]）把它们换算成引语所在文件的源行；引语里再嵌套的块一并换算，嵌套的 markdown 引语，它的子块从它自己的锚点行数起。换算之后，引语的子块与正文里的块一样遍历、投影与扫描。
+
 [#synthesized-blocks]
 === 官方合成的块
 
@@ -60,6 +72,10 @@ Open block 是容器。它自身不产生 prose occurrence；occurrence 来自�
 Preamble 也是容器：文档标题与第一节之间的块，官方装进一个 preamble 块（book 里，或文档还有别的块时），坐标取它的第一个子块（`parser.js` 632-633 行）。Preamble 的子块与节里的块一样投影与扫描。
 
 写成隐身段落的 example、sidebar、quote 与 open 块（xref:cloaked-paragraph[隐身段落]）不是容器：官方建块时把它们的内容模型从 compound 改成 simple（`parser.js` 1523 行），块里是一段文字，没有段落子块。内容模型为 simple 的这几种块按段落扫描，xref 与 anchor occurrence 来自块自己的文本行。
+
+空气引号同样是内容模型为 simple 的 quote，按段落扫描；markdown 引语是复合的 quote，是容器（xref:paragraph-quote[段落写法的引语]）。
+
+`a|` 单元格的内容是一个内嵌文档。它的 Reader 接着单元格的游标（`table.js` 386、432 行），所以里面的块带着源文件的行号。内嵌文档里的块与正文同规则：同样解析 source interval，按 official block context 决定扫描、递归或跳过。单元格里的 example、sidebar、列表、提示块与正文里的一样产生 occurrence。
 
 === Section Scope
 
