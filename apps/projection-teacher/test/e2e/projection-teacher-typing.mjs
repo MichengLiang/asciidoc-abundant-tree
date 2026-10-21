@@ -1,6 +1,5 @@
 import { spawn } from "node:child_process";
 import { mkdir } from "node:fs/promises";
-import { createServer } from "node:net";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -35,7 +34,6 @@ summary::
 证据说明也引用 xref:draft.process[]。
 `;
 
-const port = await findFreePort();
 const server = spawn(
 	"pnpm",
 	[
@@ -45,8 +43,6 @@ const server = spawn(
 		"vite",
 		"--host",
 		"127.0.0.1",
-		"--port",
-		String(port),
 		// 每次重建依赖预构建：@asciidoctor/core 从 3.x 升到 4.x 后，旧缓存里仍是 3.x 的工厂导出，页面在加载时就因
 		// 缺少具名导出而崩溃，测试却只看到“等不到节点”。e2e 要测的是当前依赖。
 		"--force",
@@ -66,8 +62,7 @@ server.stderr.on("data", (chunk) => {
 });
 
 try {
-	await waitForServerReady(port);
-	await runBrowserCheck(`http://127.0.0.1:${port}/`);
+	await runBrowserCheck(await waitForServerReady());
 } finally {
 	server.kill("SIGTERM");
 }
@@ -334,11 +329,14 @@ function overlaps(first, second) {
 	);
 }
 
-async function waitForServerReady(port) {
+// 端口由 Vite 自己挑：先在外面找一个空闲端口再交给它，会撞上 Vite 认为占用、而探测时没看出来的端口
+// （例如另一个地址上监听着同一个端口），Vite 换了端口，测试还在等原来那个。
+async function waitForServerReady() {
 	const started = Date.now();
 	while (Date.now() - started < 15000) {
-		if (output.includes(`http://127.0.0.1:${port}/`)) {
-			return;
+		const ready = output.match(/Local:\s+(http:\/\/127\.0\.0\.1:\d+\/)/u);
+		if (ready?.[1]) {
+			return ready[1];
 		}
 		if (server.exitCode !== null) {
 			throw new Error(`Vite exited before ready:\n${output}`);
@@ -346,21 +344,4 @@ async function waitForServerReady(port) {
 		await new Promise((resolveReady) => setTimeout(resolveReady, 100));
 	}
 	throw new Error(`Timed out waiting for Vite:\n${output}`);
-}
-
-async function findFreePort() {
-	return new Promise((resolvePort, reject) => {
-		const probe = createServer();
-		probe.on("error", reject);
-		probe.listen(0, "127.0.0.1", () => {
-			const address = probe.address();
-			probe.close(() => {
-				if (typeof address === "object" && address) {
-					resolvePort(address.port);
-					return;
-				}
-				reject(new Error("Unable to allocate a local port."));
-			});
-		});
-	});
 }
