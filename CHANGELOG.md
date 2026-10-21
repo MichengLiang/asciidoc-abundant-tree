@@ -6,6 +6,8 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.2.2 - 2026-10-22
+
 ### Changed
 
 - `IncludeResolverRequest.attributes` is typed `Readonly<Record<string, string | null>>`. Asciidoctor passes a blank positional attribute as `null` (the first one in `[,beta]`, the second one in `[beta,,gamma]`) and the parser hands it over unchanged; the type used to say `string`, so a resolver written against it could call a string method on `null`.
