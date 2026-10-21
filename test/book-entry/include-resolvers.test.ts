@@ -214,6 +214,28 @@ describe("host include resolvers", () => {
 		]);
 	});
 
+	it("passes a blank positional attribute as null", async () => {
+		const entry = write(
+			"blank-positional/book.adoc",
+			"= 书\n\ninclude::docloom:code/replay.ts[,beta]\n\ninclude::docloom:code/replay.ts[beta,,gamma]\n",
+		);
+		const seen: IncludeResolverRequest["attributes"][] = [];
+		const recording: IncludeResolver = {
+			prefix: "docloom:",
+			resolve: ({ target, attributes }) => {
+				seen.push(attributes);
+				return { text: "", origin: { path: target, startLine: 1 } };
+			},
+		};
+
+		await preprocess(entry, [recording]);
+
+		expect(seen).toEqual([
+			{ 1: null, 2: "beta" },
+			{ 1: "beta", 2: null, 3: "gamma" },
+		]);
+	});
+
 	it("fails construction when the resolver throws", async () => {
 		const entry = write(
 			"throws/book.adoc",

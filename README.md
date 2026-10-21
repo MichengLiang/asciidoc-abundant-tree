@@ -295,7 +295,7 @@ const book = await parseAbundantTree({
 });
 ```
 
-`attributes` are the include attributes as Asciidoctor parses them, the same an Asciidoctor include processor receives, so the bookshelf build and this parser can register the same selector. A resolver that throws fails construction with `include.resolver-failed`; returned text that does not match its source leaves those lines without coordinates and reports `origin-map.selection-mismatch`.
+`attributes` are the include attributes as Asciidoctor parses them, the same an Asciidoctor include processor receives, so the bookshelf build and this parser can register the same selector. A blank positional attribute is `null`: the first one in `[,beta]`, the second one in `[beta,,gamma]`. A resolver that throws fails construction with `include.resolver-failed`; returned text that does not match its source leaves those lines without coordinates and reports `origin-map.selection-mismatch`.
 
 `parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.
 

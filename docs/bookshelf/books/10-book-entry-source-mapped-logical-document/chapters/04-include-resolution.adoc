@@ -60,7 +60,7 @@ Tag 标记行的识别与 Asciidoctor 相同：行中出现 `tag::名称[]` 或 
 
 调用方为 book-entry 登记一组 include 解析器。每个解析器以目标前缀认领 directive，例如 `docloom:`；一个 directive 由第一个前缀相符的解析器认领，认领先于 URI 与路径的判断。被认领的 directive 不按文件路径解析：
 
-* 解析器收到去掉前缀的目标、Asciidoctor 解析出的属性（与书架构建时 Asciidoctor 的 include 处理器收到的相同：位置属性以序号为键，`opts` 展开为 `<名字>-option`）与 directive 所在源文件的绝对路径。属性全部交给解析器：`tag`、`lines` 这样的选取由解析器决定是否支持，本对象不按它们选行，也不因解析器自定的属性报 `include.attrlist-unmapped`。
+* 解析器收到去掉前缀的目标、Asciidoctor 解析出的属性（与书架构建时 Asciidoctor 的 include 处理器收到的相同：位置属性以序号为键，`opts` 展开为 `<名字>-option`）与 directive 所在源文件的绝对路径。留空的位置属性值为 null，例如 `[,beta]` 的第 1 个和 `[beta,,gamma]` 的第 2 个；本对象原样转交，不删去这个键。属性全部交给解析器：`tag`、`lines` 这样的选取由解析器决定是否支持，本对象不按它们选行，也不因解析器自定的属性报 `include.attrlist-unmapped`。
 * 解析器交回文本与来源：来源文件的路径（绝对路径，或相对于 documentRoot）和文本第一行所在的源行。文本是来源文件中连续的整行，第 n 行对应来源的第 startLine + n - 1 行。AsciiDoc 的 include 以行为单位，官方 Reader 推入的也是行；选择器选出的范围从行中开始时，解析器把它扩到整行。
 * 来源文件必须在 documentRoot 之内，越界阻止 logical document 成立（`include.outside-document-root`），与文件 include 相同。
 * 解析器抛出异常时，logical document 不成立：`include.resolver-failed`，消息写明 directive 所在位置与异常消息。

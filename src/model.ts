@@ -284,8 +284,9 @@ export type IncludeResolverRequest = {
 	// 去掉前缀的目标。
 	readonly target: string;
 	// Asciidoctor 解析出的属性，与书架构建时 Asciidoctor 的 include 处理器收到的相同：位置属性以序号为键，
-	// opts 展开为 `<名字>-option`。
-	readonly attributes: Readonly<Record<string, string>>;
+	// opts 展开为 `<名字>-option`。留空的位置属性值为 null：`[,beta]` 的 1、`[beta,,gamma]` 的 2。
+	// 原样转交、不删键，因为 Asciidoctor.js 3 对后一种直接丢掉空位，宿主无从还原，两侧只能在 null 上对齐。
+	readonly attributes: Readonly<Record<string, string | null>>;
 	// directive 所在源文件的绝对路径。
 	readonly sourcePath: string;
 };

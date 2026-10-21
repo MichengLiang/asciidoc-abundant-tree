@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import type { IncludeProcessorDslInterface, Registry } from "@asciidoctor/core";
-import type { IncludeResolver } from "../model";
+import type { IncludeResolver, IncludeResolverRequest } from "../model";
 import { constructionError } from "./diagnostics";
 import { relativePathWithinDocumentRoot } from "./path-boundary";
 
@@ -84,7 +84,7 @@ export function registerIncludeResolvers(
 async function resolveOrFail(
 	resolver: IncludeResolver,
 	target: string,
-	attributes: Record<string, string>,
+	attributes: IncludeResolverRequest["attributes"],
 	sourcePath: string,
 ) {
 	try {

@@ -6,6 +6,10 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Changed
+
+- `IncludeResolverRequest.attributes` is typed `Readonly<Record<string, string | null>>`. Asciidoctor passes a blank positional attribute as `null` (the first one in `[,beta]`, the second one in `[beta,,gamma]`) and the parser hands it over unchanged; the type used to say `string`, so a resolver written against it could call a string method on `null`.
+
 ### Fixed
 
 - Fixed book-entry blocks losing their coordinates when an `include::` line sits inside them. A source block written as `[source]`, `----`, `include::code.py[]`, `----`, a table whose rows come from an include, or a paragraph with an included line in the middle, all reported `block-origin.multi-source-span` and had no `source`, `span` or `contentSpan`. A block's author file is now the file of its first and last line: its raw is that file's lines and keeps the `include::` directive, the way a heading's raw already does, and its `contentSpan` is the lines between the delimiters in that file. Only a block that starts in one file and ends in another is still reported, and the message now names both ends as `path:line` instead of logical line numbers.
