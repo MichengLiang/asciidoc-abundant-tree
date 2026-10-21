@@ -56,7 +56,7 @@ Paragraph 不恢复完整 inline formatting CST。strong、emphasis、literal in
 
 Listing 保存 explicit ID、block title、style、language、metadata、content、metadataSpan、contentSpan 和 span。
 
-Listing span 覆盖 metadata、delimiter、content 和 closing delimiter。contentSpan 只覆盖内容行。
+Listing span 覆盖 metadata、delimiter、content 和 closing delimiter。contentSpan 只覆盖内容行。写成隐身段落的 listing（`[source,ts]` 下面直接写代码）没有分隔符，span 覆盖 metadata 和段落行，contentSpan 是段落行，见 xref:cloaked-paragraph[隐身段落]。
 
 === Table
 

@@ -15,6 +15,30 @@ Source surface 是 official block 在源文本中的可恢复表面。它包含 
 
 `source-interval-resolver` 以 official block source location 为锚点恢复 source interval。Delimiter 查找只能在 official context 已确认的 block 内局部执行。
 
+[#official-delimiter]
+=== 分隔符与它的闭合
+
+锚点行是不是开始分隔符，按 Asciidoctor 自己认分隔符的规则判断（Asciidoctor.js 4.1.1 `Parser.isDelimitedBlock`，`packages/core/src/parser.js` 3056 行；分隔符表 `DELIMITED_BLOCKS`，`constants.js` 269 行）。`--` 只有两个字符。四个字符的分隔符可以用它的最后一个字符加长，`------` 与 `|=====` 都是分隔符；作者加长分隔符，通常是为了在块里写一个用短分隔符的示例。fenced code 是 `+```+`，后面可以跟语言名。
+
+一个分隔符能开出的 context 也按官方的表：分隔符自己的 context，加上它允许伪装成的样式。`....` 带 `[source]` 是 listing，`--` 带 `[quote]` 是 quote，fenced code 是 listing。锚点行是分隔符、并且能开出这个块的 context 时，块到第一行与开始行逐字相同的闭合行为止；fenced code 的闭合行是 `+```+`。
+
+[#cloaked-paragraph]
+=== 隐身段落
+
+段落带上 Asciidoctor 的段落样式（`source`、`listing`、`literal`、`pass`、`quote`、`verse`、`example`、`sidebar`、`open`、`abstract`、`partintro` 等，`constants.js` 243 行的 `PARAGRAPH_STYLES`）时，Asciidoctor 用这个段落的行建成该样式的块，不写分隔符（`parser.js` 1007-1012 行，官方把这样的段落记作 cloaked paragraph）。`[source,ts]` 下面直接写一行代码是 listing，`[partintro]` 下面写一段导言是 open 块。
+
+这样的块，锚点行不是分隔符，而是块的第一行源文。区间解析器据此把它读作段落：范围从锚点行起，覆盖官方块的全部源行，不报 `source-interval.delimiter-not-found`。锚点行既不是分隔符、也不是块的第一行源文时，坐标与官方块对不上，这条诊断照报：它守着的是坐标漂移，不能因为隐身段落而失去。
+
+[#synthesized-blocks]
+=== 官方合成的块
+
+Asciidoctor 在两处新建没有 source location 的块，都出现在部（part）的导言里。
+
+* 部下的第一个块既不是 partintro 开放块、也不是不带样式的开放块时（后者会直接被改成 partintro，`parser.js` 557 行），Asciidoctor 新建一个 partintro 开放块，把这个块和它之后、第一个 section 之前的块放进去（`parser.js` 554-565 行、587-596 行）。部下写普通段落、不写 `[partintro]`，就是这种情形。
+* `[partintro]` 段落先成为内容为段落文本的 open 块；放进部时，Asciidoctor 把 open 块改成复合块，新建一个段落子块，把文本行交给它（`parser.js` 566-575 行）。这个段落子块没有 source location。
+
+解析器按块是怎样合成的取坐标。合成的容器取第一个有坐标的子块的坐标，范围从第一个子块开始到最后一个子块结束；Asciidoctor 给合成的 preamble 补坐标也是取第一个子块的（`parser.js` 626-627 行）。接过父块文本行的段落子块取父块的坐标，范围就是这些文本行，父块的范围到它结束。两者都推不出坐标时，仍报 `source-location.missing`。合成的块不因为没有 source location 而从节点树中消失：它的子块是作者写下的内容。
+
 === 结构权威规则
 
 源码扫描不得创建 official AST 中不存在的 section、listing、table、literal、pass 或 open block。
