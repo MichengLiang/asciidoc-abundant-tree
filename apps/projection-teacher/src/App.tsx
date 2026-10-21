@@ -58,7 +58,18 @@ export function App(): React.ReactElement {
 			edges: projection.edges,
 		}).then((result) => {
 			if (cancelled) return;
-			setNodes(result.nodes);
+			// 布局交回的是新建的节点对象，不带 React Flow 量过的 measured。不带 measured 的节点会被清掉连接点位置、等重新测量；
+			// 连续两次布局挤在一次测量的间隙里时，节点会停在没有连接点的状态（尺寸没变，ResizeObserver 不再触发），
+			// 连着它的边就不画。沿用同一节点已有的 measured，React Flow 会继续用量好的连接点；尺寸真变了照样重新测量。
+			setNodes((current) => {
+				const measuredById = new Map(
+					current.map((node) => [node.id, node.measured]),
+				);
+				return result.nodes.map((node) => ({
+					...node,
+					measured: measuredById.get(node.id),
+				}));
+			});
 			setEdges(result.edges);
 			requestAnimationFrame(() => {
 				if (!cancelled) {
