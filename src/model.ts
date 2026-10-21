@@ -183,7 +183,8 @@ export type XrefOccurrenceNode = NodeBase & {
 
 export type AnchorOccurrenceNode = NodeBase & {
 	kind: "anchor";
-	syntax: "double-bracket" | "macro";
+	// bibliography：参考文献列表项开头的 [[[id]]] 或 [[[id, reftext]]]。
+	syntax: "double-bracket" | "macro" | "bibliography";
 	raw: string;
 	ids: string[];
 	reftext?: string;

@@ -27,8 +27,19 @@ import { sourceSpanForRange } from "./source-lines";
 
 const shorthandXrefPattern = /<<([^>,]+)(?:,\s*([^>]+))?>>/gu;
 const macroXrefPattern = /xref:([^\s[]+)\[([^\]]*)\]/gu;
-const anchorPattern =
-	/\[\[([^,\]]+)(?:,([^\]]+))?\]\]|anchor:([^\s[]+)\[([^\]]*)\]/gu;
+// 锚点照 Asciidoctor 4.1.1 的 rx.js：ID 首字符是字母、_ 或 :（InlineAnchorScanRx）；[[ 前面是 [ 或 \ 时不是锚点，
+// 所以 [[[id]]] 不会读出 ID "[id"。参考文献锚点 [[[id]]] 只在 bibliography 样式的无序列表项开头成立
+// （InlineBiblioAnchorRx，parser.js 建列表项时登记），由 bibliographyAnchorPattern 认。
+const anchorId = String.raw`[\p{Alphabetic}_:][\p{Alphabetic}\p{N}\p{Pc}\-:.]*`;
+const anchorPattern = new RegExp(
+	String.raw`(?<![\\\[])\[\[(${anchorId})(?:, *(.+?))? ?\]\]` +
+		String.raw`|(?<!\\)anchor:(${anchorId})\[(?:\]|(.*?[^\\])\])`,
+	"gu",
+);
+const bibliographyAnchorPattern = new RegExp(
+	String.raw`^(\s*[*-]+\s+)\[\[\[(${anchorId})(?:, *(.+?))?\]\]\]`,
+	"u",
+);
 const headingInlineMetadataPattern = /hmeta:([^\s[]+)\[([^\]]*)\]/gu;
 
 export function scanInlineOccurrencesInOfficialBlocks(options: {
@@ -102,6 +113,7 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 				headingInlineMetadataOccurrences,
 				options.toolDiagnostics,
 				descendantUnscannableRanges(surface, options.intervalByBlock),
+				isBibliographyList(surface),
 			);
 		}
 	}
@@ -375,6 +387,7 @@ function scanInlineRange(
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
 	toolDiagnostics: ToolDiagnostic[] | undefined,
 	skipRanges: LineRange[] = [],
+	bibliography = false,
 ): void {
 	for (let lineNumber = startLine; lineNumber <= endLine; lineNumber += 1) {
 		if (isLineInRanges(lineNumber, skipRanges)) {
@@ -385,6 +398,9 @@ function scanInlineRange(
 			continue;
 		}
 		scanXrefMatches(lineTable, line, xrefOccurrences);
+		if (bibliography) {
+			scanBibliographyAnchor(lineTable, line, anchorOccurrences);
+		}
 		scanAnchorMatches(lineTable, line, anchorOccurrences);
 		scanHeadingInlineMetadataMatches(
 			lineTable,
@@ -704,7 +720,8 @@ function scanAnchorMatches(
 				syntax: doubleBracketId ? "double-bracket" : "macro",
 				raw,
 				ids: [id],
-				reftext: match[2] ?? match[4] ?? undefined,
+				// 官方正则对 anchor:id[] 不捕获 reftext；源表面上那对方括号是空的，记为空串。
+				reftext: doubleBracketId ? match[2] : (match[4] ?? ""),
 				anchorScope:
 					line.text.trim() === raw && doubleBracketId ? "block" : "inline",
 				sourceSpan,
@@ -716,6 +733,44 @@ function scanAnchorMatches(
 			}) as AnchorOccurrenceNode,
 		);
 	}
+}
+
+function scanBibliographyAnchor(
+	lineTable: LineTable,
+	line: SourceLine,
+	anchorOccurrences: AnchorOccurrenceNode[],
+): void {
+	const match = bibliographyAnchorPattern.exec(line.text);
+	const [, marker, id, reftext] = match ?? [];
+	if (marker === undefined || id === undefined) {
+		return;
+	}
+	const raw = match?.[0].slice(marker.length) ?? "";
+	const sourceSpan = sourceSpanForRange(
+		lineTable,
+		line.number,
+		marker.length,
+		raw,
+	);
+	anchorOccurrences.push(
+		definedObject({
+			kind: "anchor",
+			syntax: "bibliography",
+			raw,
+			ids: [id],
+			reftext,
+			anchorScope: "inline",
+			sourceSpan,
+			source: { raw, line: line.number, sourceSpan },
+		}) as AnchorOccurrenceNode,
+	);
+}
+
+function isBibliographyList(surface: OfficialBlockSurface): boolean {
+	const list = surface.context === "list_item" ? surface.parent : surface;
+	return (
+		list?.context === "ulist" && list.block.getStyle?.() === "bibliography"
+	);
 }
 
 function scanHeadingInlineMetadataMatches(

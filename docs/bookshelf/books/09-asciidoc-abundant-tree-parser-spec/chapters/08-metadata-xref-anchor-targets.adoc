@@ -36,6 +36,20 @@ Anchor occurrence 来自 inline 或 block anchor syntax。
 anchor:id[]
 ----
 
+识别规则照 Asciidoctor 的 inline anchor 正则：ID 的首字符是字母、`_` 或 `:`，其后是字母、数字、连接标点、`-`、`:` 或 `.`；`[[` 前面紧挨着 `[` 或 `\` 时不是 anchor，`anchor:` 前面紧挨着 `\` 时也不是。
+
+参考文献条目是另一种 anchor：`[bibliography]` 样式的无序列表里，列表项文本以 `[[[id]]]` 或 `[[[id,reftext]]]` 开头。它只在这个位置成立；别处的 `[[[id]]]` 按上一条规则不产生 anchor，不会读出以 `[` 开头的 ID。
+
+[source,asciidoc]
+----
+[bibliography]
+== 参考文献
+
+* [[[parnas1972]]] Parnas, D. L. 1972. On the Criteria To Be Used in Decomposing Systems into Modules.
+----
+
+参考文献 anchor 的 syntax 是 `bibliography`，与 inline anchor 一样进入 target catalog，target type 是 `inline-anchor`。
+
 解析器保存 raw anchor、ID、reftext、sourceSpan 和 containingSectionId。
 
 === Target Catalog
