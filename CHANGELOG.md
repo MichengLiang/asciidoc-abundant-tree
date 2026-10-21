@@ -6,6 +6,8 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.2.0 - 2026-10-21
+
 ### Changed
 
 - **Breaking:** the parser now runs on `@asciidoctor/core` 4.x (4.1.1), the native JavaScript rewrite, instead of the Opal-transpiled 3.0.4. `parser.version` in the document reports `4.1.1`. Projections of real books are byte-identical to 3.x apart from that version, and parsing is about 2.5 times faster.
