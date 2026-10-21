@@ -41,7 +41,7 @@ Diagnostic message 应描述对象事实，不写实现者过程。示例：
 
 [source,text]
 ----
-include.unsupported-attrlist: include directive uses unsupported attrlist 'tag=main'.
+include.missing-target: Include target file does not exist: /books/design/chapters/02-model.adoc.
 ----
 
 该消息说明失败对象和失败原因。它不写“暂时不支持”或“以后实现”。

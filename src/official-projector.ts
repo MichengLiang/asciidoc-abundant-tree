@@ -1,11 +1,6 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import { addTarget, type OfficialBindingRequest } from "./binding-merge";
 import type { SourceAwareLogicalDocument } from "./book-entry/line-origin-model";
-import type { LogicalSource } from "./book-entry/model";
-import {
-	logicalSourceForLineTable,
-	recoverOriginSourceLayer,
-} from "./book-entry/origin-coordinate";
 import {
 	originPointKey,
 	originPointsForSpan,
@@ -70,7 +65,6 @@ type ProjectContext = {
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	bindingRequests: OfficialBindingRequest[];
 	targets: TargetNode[];
-	logicalSource?: LogicalSource;
 	sourceAwareDocument?: SourceAwareLogicalDocument;
 };
 
@@ -97,7 +91,6 @@ export function projectOfficialDocument(options: {
 	const sourceAwareDocument = sourceAwareDocumentForLineTable(
 		options.lineTable,
 	);
-	const logicalSource = logicalSourceForLineTable(options.lineTable);
 	const context: ProjectContext = definedObject({
 		officialDocument: options.officialDocument,
 		lineTable: options.lineTable,
@@ -118,7 +111,6 @@ export function projectOfficialDocument(options: {
 		bindingRequests,
 		targets,
 		sourceAwareDocument,
-		...(logicalSource ? { logicalSource } : {}),
 	}) as ProjectContext;
 
 	return {
@@ -330,12 +322,12 @@ function buildDescriptionTerm(
 				? blockSourceLayer(context, interval, span, "description term")
 				: undefined;
 	const xrefs = span
-		? collectXrefsInSpan(context, span, source).filter((xref) =>
+		? collectXrefsInSpan(context, span).filter((xref) =>
 				isOccurrenceInsideSourceSpan(xref, sourceSpan),
 			)
 		: [];
 	const anchors = span
-		? collectAnchorsInSpan(context, span, source).filter((anchor) => {
+		? collectAnchorsInSpan(context, span).filter((anchor) => {
 				if (!isOccurrenceInsideSourceSpan(anchor, sourceSpan)) {
 					return false;
 				}
@@ -348,8 +340,8 @@ function buildDescriptionTerm(
 			})
 		: [];
 	const headingInlineMetadata = span
-		? collectHeadingInlineMetadataInSpan(context, span, source).filter(
-				(occurrence) => isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
+		? collectHeadingInlineMetadataInSpan(context, span).filter((occurrence) =>
+				isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
 			)
 		: [];
 	context.bindingRequests.push({ block, xrefs });
@@ -392,12 +384,12 @@ function buildDescription(
 				? blockSourceLayer(context, interval, span, "description item")
 				: undefined;
 	const xrefs = span
-		? collectXrefsInSpan(context, span, source).filter((xref) =>
+		? collectXrefsInSpan(context, span).filter((xref) =>
 				isOccurrenceInsideSourceSpan(xref, sourceSpan),
 			)
 		: [];
 	const anchors = span
-		? collectAnchorsInSpan(context, span, source).filter((anchor) => {
+		? collectAnchorsInSpan(context, span).filter((anchor) => {
 				if (!isOccurrenceInsideSourceSpan(anchor, sourceSpan)) {
 					return false;
 				}
@@ -410,8 +402,8 @@ function buildDescription(
 			})
 		: [];
 	const headingInlineMetadata = span
-		? collectHeadingInlineMetadataInSpan(context, span, source).filter(
-				(occurrence) => isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
+		? collectHeadingInlineMetadataInSpan(context, span).filter((occurrence) =>
+				isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
 			)
 		: [];
 	context.bindingRequests.push({ block, xrefs });
@@ -510,31 +502,21 @@ function descriptionPartSourceLayer(
 	sourceSpan: SourceSpan,
 	diagnosticContext: string,
 ): SourceLayer | undefined {
-	if (!context.logicalSource && !context.sourceAwareDocument) {
+	if (!context.sourceAwareDocument) {
 		return definedObject({
 			span,
 			sourceSpan,
 			raw: sourceTextForSpan(context, sourceSpan),
 		}) as SourceLayer;
 	}
-	if (context.sourceAwareDocument) {
-		const recovered = recoverSourceAwareSourceLayer(
-			context.sourceAwareDocument,
-			span,
-			{
-				logicalSourceSpan: sourceSpan,
-				diagnosticContext,
-			},
-		);
-		return recovered.ok ? recovered.sourceLayer : undefined;
-	}
-	if (!context.logicalSource) {
-		return undefined;
-	}
-	const recovered = recoverOriginSourceLayer(context.logicalSource, span, {
-		logicalSourceSpan: sourceSpan,
-		diagnosticContext,
-	});
+	const recovered = recoverSourceAwareSourceLayer(
+		context.sourceAwareDocument,
+		span,
+		{
+			logicalSourceSpan: sourceSpan,
+			diagnosticContext,
+		},
+	);
 	return recovered.ok ? recovered.sourceLayer : undefined;
 }
 
@@ -647,8 +629,8 @@ function buildParagraph(
 		blockSpan,
 		"paragraph block",
 	);
-	const xrefs = collectXrefsInSpan(context, contentSpan, source);
-	const anchors = collectAnchorsInSpan(context, contentSpan, source).filter(
+	const xrefs = collectXrefsInSpan(context, contentSpan);
+	const anchors = collectAnchorsInSpan(context, contentSpan).filter(
 		(anchor) => {
 			const key = anchorKey(anchor);
 			if (context.usedAnchorKeys.has(key)) {
@@ -661,7 +643,6 @@ function buildParagraph(
 	const headingInlineMetadata = collectHeadingInlineMetadataInSpan(
 		context,
 		contentSpan,
-		source,
 	);
 	context.bindingRequests.push({ block, xrefs });
 	const sourceSpan = source?.sourceSpan;
@@ -796,23 +777,20 @@ function buildTable(
 	const source = blockSourceLayer(context, interval, span, "table block");
 	const ids = metadata.flatMap((surface) => surface.ids);
 	const tableContentSpan = interval?.contentSpan ?? span;
-	const tableXrefs = collectXrefsInSpan(context, tableContentSpan, source);
-	const tableAnchors = collectAnchorsInSpan(
-		context,
-		tableContentSpan,
-		source,
-	).filter((anchor) => {
-		const key = anchorKey(anchor);
-		if (context.usedAnchorKeys.has(key)) {
-			return false;
-		}
-		context.usedAnchorKeys.add(key);
-		return true;
-	});
+	const tableXrefs = collectXrefsInSpan(context, tableContentSpan);
+	const tableAnchors = collectAnchorsInSpan(context, tableContentSpan).filter(
+		(anchor) => {
+			const key = anchorKey(anchor);
+			if (context.usedAnchorKeys.has(key)) {
+				return false;
+			}
+			context.usedAnchorKeys.add(key);
+			return true;
+		},
+	);
 	const tableHeadingInlineMetadata = collectHeadingInlineMetadataInSpan(
 		context,
 		tableContentSpan,
-		source,
 	);
 	context.bindingRequests.push({ block, xrefs: tableXrefs });
 	const table = definedObject({
@@ -914,7 +892,7 @@ function blockSourceLayer(
 	fallbackSpan: { startLine: number; endLine: number },
 	diagnosticContext: string,
 ): SourceLayer | undefined {
-	if (!context.logicalSource && !context.sourceAwareDocument) {
+	if (!context.sourceAwareDocument) {
 		const sourceSpan = sourceSpanFromLineSpan(context.lineTable, fallbackSpan);
 		return sourceSpan
 			? {
@@ -929,23 +907,8 @@ function blockSourceLayer(
 	const logicalSourceSpan = sameLineSpan(fallbackSpan, interval.span)
 		? interval.sourceSpan
 		: undefined;
-	if (context.sourceAwareDocument) {
-		const recovered = recoverSourceAwareSourceLayer(
-			context.sourceAwareDocument,
-			fallbackSpan,
-			{
-				logicalSourceSpan,
-				raw: true,
-				diagnosticContext,
-			},
-		);
-		return recovered.ok ? recovered.sourceLayer : undefined;
-	}
-	if (!context.logicalSource) {
-		return undefined;
-	}
-	const recovered = recoverOriginSourceLayer(
-		context.logicalSource,
+	const recovered = recoverSourceAwareSourceLayer(
+		context.sourceAwareDocument,
 		fallbackSpan,
 		{
 			logicalSourceSpan,
@@ -968,66 +931,50 @@ function originLineSpan(
 	span: { startLine: number; endLine: number } | undefined,
 	blockSpan: { startLine: number; endLine: number },
 ): { startLine: number; endLine: number } | undefined {
-	if (!span || (!context.logicalSource && !context.sourceAwareDocument)) {
+	if (!span || !context.sourceAwareDocument) {
 		return span;
 	}
-	if (context.sourceAwareDocument) {
-		// 内容可能整段来自 include：单独回源会落到被引入的文件上，和块的 source.relativePath 对不上。
-		return recoverSourceAwareContentLineSpan(
-			context.sourceAwareDocument,
-			blockSpan,
-			span,
-		);
-	}
-	if (!context.logicalSource) {
-		return undefined;
-	}
-	const recovered = recoverOriginSourceLayer(context.logicalSource, span, {
-		raw: false,
-		diagnosticContext: "block content",
-	});
-	return recovered.ok ? recovered.lineSpan : undefined;
+	// 内容可能整段来自 include：单独回源会落到被引入的文件上，和块的 source.relativePath 对不上。
+	return recoverSourceAwareContentLineSpan(
+		context.sourceAwareDocument,
+		blockSpan,
+		span,
+	);
 }
 
 function collectXrefsInSpan(
 	context: ProjectContext,
 	logicalSpan: { startLine: number; endLine: number },
-	source: SourceLayer | undefined,
 ): XrefOccurrenceNode[] {
 	return collectOccurrencesInSpan(
 		context,
 		context.xrefsByLine,
 		context.xrefOccurrences,
 		logicalSpan,
-		source,
 	);
 }
 
 function collectAnchorsInSpan(
 	context: ProjectContext,
 	logicalSpan: { startLine: number; endLine: number },
-	source: SourceLayer | undefined,
 ): AnchorOccurrenceNode[] {
 	return collectOccurrencesInSpan(
 		context,
 		context.anchorsByLine,
 		context.anchorOccurrences,
 		logicalSpan,
-		source,
 	);
 }
 
 function collectHeadingInlineMetadataInSpan(
 	context: ProjectContext,
 	logicalSpan: { startLine: number; endLine: number },
-	source: SourceLayer | undefined,
 ): HeadingInlineMetadataOccurrenceNode[] {
 	return collectOccurrencesInSpan(
 		context,
 		context.headingInlineMetadataByLine,
 		context.headingInlineMetadataOccurrences,
 		logicalSpan,
-		source,
 	);
 }
 
@@ -1036,43 +983,23 @@ function collectOccurrencesInSpan<T extends { source?: SourceLayer }>(
 	groupedByLine: Map<number, T[]>,
 	occurrences: T[],
 	logicalSpan: { startLine: number; endLine: number },
-	source: SourceLayer | undefined,
 ): T[] {
-	if (!context.logicalSource && !context.sourceAwareDocument) {
+	if (!context.sourceAwareDocument) {
 		return collectOccurrencesInLineRange(
 			groupedByLine,
 			logicalSpan.startLine,
 			logicalSpan.endLine,
 		);
 	}
-	if (context.sourceAwareDocument) {
-		// 出现处属于哪个块是逻辑文档上的结构关系（10 号书「结构关系在 Logical Document 上判定」），
-		// 与块有没有坐标无关；出现处只剩来源坐标，所以按块内逻辑行的来源点认它。
-		const points = originPointsForSpan(
-			context.sourceAwareDocument,
-			logicalSpan,
-		);
-		return occurrences.filter((occurrence) => {
-			const { relativePath, line } = occurrence.source ?? {};
-			return (
-				relativePath !== undefined &&
-				line !== undefined &&
-				points.has(originPointKey(relativePath, line))
-			);
-		});
-	}
-	if (!source?.relativePath || !source.span) {
-		return [];
-	}
-	const relativePath = source.relativePath;
-	const sourceSpan = source.span;
+	// 出现处属于哪个块是逻辑文档上的结构关系（10 号书「结构关系在 Logical Document 上判定」），
+	// 与块有没有坐标无关；出现处只剩来源坐标，所以按块内逻辑行的来源点认它。
+	const points = originPointsForSpan(context.sourceAwareDocument, logicalSpan);
 	return occurrences.filter((occurrence) => {
-		const line = occurrence.source?.line;
+		const { relativePath, line } = occurrence.source ?? {};
 		return (
-			occurrence.source?.relativePath === relativePath &&
+			relativePath !== undefined &&
 			line !== undefined &&
-			line >= sourceSpan.startLine &&
-			line <= sourceSpan.endLine
+			points.has(originPointKey(relativePath, line))
 		);
 	});
 }

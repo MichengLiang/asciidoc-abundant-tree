@@ -4,11 +4,8 @@ import {
 	BookEntryConstructionError,
 	type BookEntryConstructionErrorCode,
 } from "../../src/book-entry/diagnostics";
-import { assertLogicalDocumentInvariants } from "../../src/book-entry/logical-source-builder";
-import type { LogicalSource } from "../../src/book-entry/model";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
-import { buildLineTable } from "../../src/source-lines";
 
 const projectRoot = process.cwd();
 const fixtureRoot = join(projectRoot, "test/book-entry/fixtures");
@@ -43,28 +40,41 @@ describe("book-entry negative construction contracts", () => {
 		);
 	});
 
-	it("does not treat tag attrlists as unsupported in active book-entry parsing", async () => {
+	it.each([
+		{
+			fixture: "tag.adoc",
+			child: {
+				kind: "paragraph",
+				relativePath: "selection/tagged.adoc",
+				line: 4,
+			},
+		},
+		{
+			fixture: "lines.adoc",
+			child: {
+				kind: "section",
+				relativePath: "simple-book/chapters/01-entry-origin.adoc",
+				line: 4,
+			},
+		},
+	])("parses a selected include in $fixture without diagnostics", async ({
+		fixture,
+		child,
+	}) => {
 		const document = await parseAbundantTree({
-			sourcePath: join(fixtureRoot, "simple-book/book.adoc"),
+			sourcePath: join(fixtureRoot, "selection", fixture),
 			mode: "book-entry",
 			documentRoot: fixtureRoot,
 		});
 
+		expect(document.toolDiagnostics).toEqual([]);
 		expect(
-			document.toolDiagnostics.map((diagnostic) => diagnostic.code),
-		).not.toContain("include.unsupported-attrlist");
-	});
-
-	it("does not treat lines attrlists as unsupported in active book-entry parsing", async () => {
-		const document = await parseAbundantTree({
-			sourcePath: join(fixtureRoot, "simple-book/book.adoc"),
-			mode: "book-entry",
-			documentRoot: fixtureRoot,
-		});
-
-		expect(
-			document.toolDiagnostics.map((diagnostic) => diagnostic.code),
-		).not.toContain("include.unsupported-attrlist");
+			document.children.map((node) => ({
+				kind: node.kind,
+				relativePath: node.source?.relativePath,
+				line: node.source?.line,
+			})),
+		).toEqual([child]);
 	});
 
 	it("fails before reading an include path outside documentRoot", async () => {
@@ -72,85 +82,6 @@ describe("book-entry negative construction contracts", () => {
 			() => parseNegativeFixture("outside-root.adoc"),
 			"include.outside-document-root",
 			[/Resolved include path is outside documentRoot:/, /README\.md/],
-		);
-	});
-
-	it("fails when logical line count and line origin count diverge", async () => {
-		await expectConstructionError(
-			() =>
-				assertLogicalDocumentInvariants({
-					entryPath: join(negativeRoot, "missing-include.adoc"),
-					documentRoot: fixtureRoot,
-					logicalText: "= Probe\n\n== Origin\n",
-					lineOrigins: [
-						{
-							logicalLine: 1,
-							absolutePath: join(negativeRoot, "missing-include.adoc"),
-							relativePath: "negative/missing-include.adoc",
-							sourceLine: 1,
-						},
-					],
-					sourceFiles: [],
-				} satisfies LogicalSource),
-			"logical-line-origin.count-mismatch",
-			[/Logical line count \d+ does not match line origin count 1\./],
-		);
-	});
-
-	it("fails when a line origin references a source file absent from the source file table", async () => {
-		await expectConstructionError(
-			() =>
-				assertLogicalDocumentInvariants({
-					entryPath: join(negativeRoot, "missing-include.adoc"),
-					documentRoot: fixtureRoot,
-					logicalText: "= Probe",
-					lineOrigins: [
-						{
-							logicalLine: 1,
-							absolutePath: join(negativeRoot, "missing-source-file.adoc"),
-							relativePath: "negative/missing-source-file.adoc",
-							sourceLine: 1,
-						},
-					],
-					sourceFiles: [],
-				} satisfies LogicalSource),
-			"line-origin.source-file-missing",
-			[
-				/Line origin references a source file missing from source file table:/,
-				/missing-source-file\.adoc/,
-			],
-		);
-	});
-
-	it("fails when a line origin sourceLine is outside the origin file line table", async () => {
-		const sourcePath = join(negativeRoot, "missing-include.adoc");
-		await expectConstructionError(
-			() =>
-				assertLogicalDocumentInvariants({
-					entryPath: sourcePath,
-					documentRoot: fixtureRoot,
-					logicalText: "= Probe",
-					lineOrigins: [
-						{
-							logicalLine: 1,
-							absolutePath: sourcePath,
-							relativePath: "negative/missing-include.adoc",
-							sourceLine: 99,
-						},
-					],
-					sourceFiles: [
-						{
-							absolutePath: sourcePath,
-							relativePath: "negative/missing-include.adoc",
-							text: "= Probe",
-							lineTable: buildLineTable("= Probe"),
-						},
-					],
-				} satisfies LogicalSource),
-			"line-origin.source-line-out-of-range",
-			[
-				/Line origin sourceLine 99 is outside origin file line table for negative\/missing-include\.adoc\./,
-			],
 		);
 	});
 
@@ -165,8 +96,7 @@ describe("book-entry negative construction contracts", () => {
 			"include.missing-target",
 			"include.outside-document-root",
 			"include.cycle",
-			"include.unsupported-attrlist",
-			"logical-line-origin.count-mismatch",
+			"logical-line-record.count-mismatch",
 			"line-origin.source-file-missing",
 			"line-origin.source-line-out-of-range",
 		];

@@ -1,4 +1,3 @@
-import type { LogicalSource } from "./book-entry/model";
 import { bindPendingSourceAwareDocumentToLineTable } from "./book-entry/source-aware-coordinate";
 import type { LineSpan, SourceSpan } from "./model";
 
@@ -17,24 +16,6 @@ export type LineRange = {
 	endLine: number;
 };
 
-const logicalSourceByLineTable = new WeakMap<LineTable, LogicalSource>();
-const pendingLogicalSourcesByText = new Map<string, LogicalSource[]>();
-
-export function registerPendingLogicalSourceForLineTable(
-	logicalSource: LogicalSource,
-): void {
-	const pending =
-		pendingLogicalSourcesByText.get(logicalSource.logicalText) ?? [];
-	pending.push(logicalSource);
-	pendingLogicalSourcesByText.set(logicalSource.logicalText, pending);
-}
-
-export function logicalSourceForLineTable(
-	lineTable: LineTable,
-): LogicalSource | undefined {
-	return logicalSourceByLineTable.get(lineTable);
-}
-
 export function buildLineTable(source: string): LineTable {
 	const lineTable = {
 		source,
@@ -43,14 +24,6 @@ export function buildLineTable(source: string): LineTable {
 			text,
 		})),
 	};
-	const pending = pendingLogicalSourcesByText.get(source);
-	const logicalSource = pending?.shift();
-	if (logicalSource) {
-		logicalSourceByLineTable.set(lineTable, logicalSource);
-	}
-	if (pending?.length === 0) {
-		pendingLogicalSourcesByText.delete(source);
-	}
 	bindPendingSourceAwareDocumentToLineTable(lineTable);
 	return lineTable;
 }

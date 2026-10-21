@@ -219,7 +219,7 @@ describe("cli", () => {
 				"snippets/lines.adoc": expect.stringContaining("Line four."),
 			}),
 		);
-		expect(diagnostics).not.toContain("include.unsupported-attrlist");
+		expect(diagnostics).toBe("[]");
 	});
 
 	it("prints book-entry pretty tree through explicit book-entry mode", async () => {

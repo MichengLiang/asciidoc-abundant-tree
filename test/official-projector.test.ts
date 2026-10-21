@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
 import { resolveOfficialBindings } from "../src/binding-merge";
 import type { SourceAwareLogicalDocument } from "../src/book-entry/line-origin-model";
-import type { LogicalSource } from "../src/book-entry/model";
-import { registerLogicalSourceForRecovery } from "../src/book-entry/origin-coordinate";
 import { registerSourceAwareDocumentForRecovery } from "../src/book-entry/source-aware-coordinate";
 import { scanInlineOccurrencesInOfficialBlocks } from "../src/inline-occurrence-scanner";
 import type {
@@ -1437,68 +1435,6 @@ describe("official table inline scanning", () => {
 			}),
 		]);
 	});
-
-	it("keeps legacy inline occurrences when origin recovery fails and records diagnostics", () => {
-		const logicalSource = makeInlineLogicalSource();
-		registerLogicalSourceForRecovery(logicalSource);
-		const lineTable = buildLineTable(logicalSource.logicalText);
-		const paragraphBlock = {
-			getContext: () => "paragraph",
-			getSourceLocation: () => ({
-				getLineNumber: () => 1,
-			}),
-		} satisfies AsciidoctorBlock;
-		const diagnostics: ToolDiagnostic[] = [];
-
-		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
-			sectionByLine: new Map(),
-			lineTable,
-			blockSurfaces: [
-				{
-					block: paragraphBlock,
-					context: "paragraph",
-					nodeName: "paragraph",
-					level: undefined,
-					title: undefined,
-					id: undefined,
-					sourceLine: 1,
-					children: [],
-					indexInParent: 0,
-				},
-			],
-			intervalByBlock: new WeakMap([
-				[
-					paragraphBlock,
-					{
-						blockStartLine: 1,
-						metadata: [],
-						contentSpan: { startLine: 1, endLine: 1 },
-						span: { startLine: 1, endLine: 1 },
-						diagnostics: [],
-					},
-				],
-			]),
-			toolDiagnostics: diagnostics,
-		});
-
-		expect(xrefOccurrences).toEqual([
-			expect.objectContaining({
-				raw: "xref:missing[Missing]",
-				sourceSpan: {
-					start: { line: 1, column: 1 },
-					end: { line: 1, column: 22 },
-				},
-				source: expect.objectContaining({
-					line: 1,
-				}),
-			}),
-		]);
-		expect(diagnostics).toEqual([
-			expect.objectContaining({
-				code: "source-recovery.logical-interval-unmapped",
-			}),
-		]);
-	});
 });
 
 function makeSectionBlock(
@@ -1595,16 +1531,5 @@ function makeInlineSourceAwareDocument(): SourceAwareLogicalDocument {
 				columnMap: { kind: "identity" },
 			},
 		],
-	};
-}
-
-function makeInlineLogicalSource(): LogicalSource {
-	const sourceText = "xref:missing[Missing]";
-	return {
-		entryPath: "/virtual/book.adoc",
-		documentRoot: "/virtual",
-		logicalText: sourceText,
-		sourceFiles: [],
-		lineOrigins: [],
 	};
 }

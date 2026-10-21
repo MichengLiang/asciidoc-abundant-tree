@@ -1,12 +1,6 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import type { SourceAwareLogicalDocument } from "./book-entry/line-origin-model";
 import {
-	logicalSourceForLineTable,
-	recoverOriginSourceLayer,
-	recoverSectionSourceLayer,
-	recoverTitleSpan,
-} from "./book-entry/origin-coordinate";
-import {
 	recoverSourceAwareSectionSourceLayer,
 	recoverSourceAwareSourceLayer,
 	recoverSourceAwareTitleSpan,
@@ -72,7 +66,6 @@ export function projectSourceSurfaces(options: {
 	const sourceAwareDocument = sourceAwareDocumentForLineTable(
 		options.lineTable,
 	);
-	const logicalSource = logicalSourceForLineTable(options.lineTable);
 
 	for (const surface of blockSurfaces) {
 		const policy = officialBlockPolicy(surface.block);
@@ -110,25 +103,18 @@ export function projectSourceSurfaces(options: {
 		}
 		toolDiagnostics.push(...interval.diagnostics);
 		if (
-			(sourceAwareDocument || logicalSource) &&
+			sourceAwareDocument &&
 			["paragraph", "listing", "table"].includes(surface.context ?? "")
 		) {
-			const recovered = sourceAwareDocument
-				? recoverSourceAwareSourceLayer(sourceAwareDocument, interval.span, {
-						logicalSourceSpan: interval.sourceSpan,
-						raw: true,
-						diagnosticContext: `${surface.context} block`,
-					})
-				: logicalSource
-					? recoverOriginSourceLayer(logicalSource, interval.span, {
-							logicalSourceSpan: interval.sourceSpan,
-							raw: true,
-							diagnosticContext: `${surface.context} block`,
-						})
-					: undefined;
-			if (!recovered) {
-				continue;
-			}
+			const recovered = recoverSourceAwareSourceLayer(
+				sourceAwareDocument,
+				interval.span,
+				{
+					logicalSourceSpan: interval.sourceSpan,
+					raw: true,
+					diagnosticContext: `${surface.context} block`,
+				},
+			);
 			if (!recovered.ok) {
 				toolDiagnostics.push(recovered.diagnostic);
 			}
@@ -143,7 +129,6 @@ export function projectSourceSurfaces(options: {
 		intervalByBlock,
 		options.lineTable,
 		toolDiagnostics,
-		logicalSource,
 		sourceAwareDocument,
 	);
 	const sectionByLine = mapSectionScope(
@@ -242,7 +227,6 @@ function buildSectionSurfaces(
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
 	lineTable: LineTable,
 	toolDiagnostics: ToolDiagnostic[],
-	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
 	sourceAwareDocument: SourceAwareLogicalDocument | undefined,
 ): {
 	sections: SectionNode[];
@@ -253,7 +237,6 @@ function buildSectionSurfaces(
 	const originHeadingBoundaryIndex = buildOriginHeadingBoundaryIndex(
 		blockSurfaces,
 		intervalByBlock,
-		logicalSource,
 		sourceAwareDocument,
 	);
 
@@ -274,7 +257,6 @@ function buildSectionSurfaces(
 		}
 		const currentBoundary = originHeadingBoundaryForSection(
 			originHeadingBoundaryIndex,
-			logicalSource,
 			sourceAwareDocument,
 			sourceLine,
 			interval.span.startLine,
@@ -291,15 +273,7 @@ function buildSectionSurfaces(
 					interval.titleSpan,
 					nextBoundary?.sliceStartLine,
 				)
-			: logicalSource
-				? recoverSectionSourceLayer(
-						logicalSource,
-						sourceLine,
-						interval.span.startLine,
-						interval.titleSpan,
-						nextBoundary?.sliceStartLine,
-					)
-				: undefined;
+			: undefined;
 		if (recoveredSource && !recoveredSource.ok) {
 			toolDiagnostics.push(recoveredSource.diagnostic);
 		}
@@ -324,9 +298,7 @@ function buildSectionSurfaces(
 		const titleSpan =
 			sourceAwareDocument && recoveredSource?.ok
 				? recoverSourceAwareTitleSpan(sourceAwareDocument, interval.titleSpan)
-				: logicalSource && recoveredSource?.ok
-					? recoverTitleSpan(logicalSource, interval.titleSpan)
-					: interval.titleSpan;
+				: interval.titleSpan;
 		const metadata = interval.metadata;
 		const ids = metadata.flatMap((entry) => entry.ids);
 		const officialId = surface.id;
@@ -366,10 +338,9 @@ function buildSectionSurfaces(
 function buildOriginHeadingBoundaryIndex(
 	blockSurfaces: readonly OfficialBlockSurface[],
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
-	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
 	sourceAwareDocument: SourceAwareLogicalDocument | undefined,
 ): OriginHeadingBoundaryIndex | undefined {
-	if (!logicalSource && !sourceAwareDocument) {
+	if (!sourceAwareDocument) {
 		return undefined;
 	}
 	const grouped = new Map<string, OriginHeadingBoundary[]>();
@@ -385,16 +356,15 @@ function buildOriginHeadingBoundaryIndex(
 		if (logicalHeadingLine === undefined || !interval) {
 			continue;
 		}
-		const headingOrigin = sourceAwareDocument
-			? sourceAwareOriginForLine(sourceAwareDocument, logicalHeadingLine)
-			: logicalSource?.lineOrigins[logicalHeadingLine - 1];
+		const headingOrigin = sourceAwareOriginForLine(
+			sourceAwareDocument,
+			logicalHeadingLine,
+		);
 		if (!headingOrigin) {
 			continue;
 		}
 		const metadataOrigin =
-			(sourceAwareDocument
-				? sourceAwareOriginForLine(sourceAwareDocument, interval.span.startLine)
-				: logicalSource?.lineOrigins[interval.span.startLine - 1]) ??
+			sourceAwareOriginForLine(sourceAwareDocument, interval.span.startLine) ??
 			headingOrigin;
 		const sliceStartLine =
 			metadataOrigin.relativePath === headingOrigin.relativePath
@@ -422,24 +392,22 @@ function buildOriginHeadingBoundaryIndex(
 
 function originHeadingBoundaryForSection(
 	index: OriginHeadingBoundaryIndex | undefined,
-	logicalSource: ReturnType<typeof logicalSourceForLineTable>,
 	sourceAwareDocument: SourceAwareLogicalDocument | undefined,
 	logicalHeadingLine: number,
 	logicalMetadataStartLine: number,
 ): OriginHeadingBoundary | undefined {
-	if (!index || (!logicalSource && !sourceAwareDocument)) {
+	if (!index || !sourceAwareDocument) {
 		return undefined;
 	}
-	const headingOrigin = sourceAwareDocument
-		? sourceAwareOriginForLine(sourceAwareDocument, logicalHeadingLine)
-		: logicalSource?.lineOrigins[logicalHeadingLine - 1];
+	const headingOrigin = sourceAwareOriginForLine(
+		sourceAwareDocument,
+		logicalHeadingLine,
+	);
 	if (!headingOrigin) {
 		return undefined;
 	}
 	const metadataOrigin =
-		(sourceAwareDocument
-			? sourceAwareOriginForLine(sourceAwareDocument, logicalMetadataStartLine)
-			: logicalSource?.lineOrigins[logicalMetadataStartLine - 1]) ??
+		sourceAwareOriginForLine(sourceAwareDocument, logicalMetadataStartLine) ??
 		headingOrigin;
 	const sliceStartLine =
 		metadataOrigin.relativePath === headingOrigin.relativePath

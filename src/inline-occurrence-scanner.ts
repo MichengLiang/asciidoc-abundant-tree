@@ -1,9 +1,5 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import {
-	logicalSourceForLineTable,
-	recoverOriginPointSourceLayer,
-} from "./book-entry/origin-coordinate";
-import {
 	recoverSourceAwarePointSourceLayer,
 	sourceAwareDocumentForLineTable,
 } from "./book-entry/source-aware-coordinate";
@@ -89,46 +85,23 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 	const sourceAwareDocument = sourceAwareDocumentForLineTable(
 		options.lineTable,
 	);
-	const logicalSource = logicalSourceForLineTable(options.lineTable);
-	const recoveredXrefs = sourceAwareDocument
-		? recoverSourceAwareInlineOrigins(
-				xrefOccurrences,
-				sourceAwareDocument,
-				options.toolDiagnostics,
-			)
-		: logicalSource
-			? recoverInlineOrigins(
-					xrefOccurrences,
-					logicalSource,
+	const recover = <
+		T extends Parameters<typeof recoverSourceAwareInlineOrigins>[0][number],
+	>(
+		occurrences: T[],
+	): T[] =>
+		sourceAwareDocument
+			? recoverSourceAwareInlineOrigins(
+					occurrences,
+					sourceAwareDocument,
 					options.toolDiagnostics,
 				)
-			: xrefOccurrences;
-	const recoveredAnchors = sourceAwareDocument
-		? recoverSourceAwareInlineOrigins(
-				anchorOccurrences,
-				sourceAwareDocument,
-				options.toolDiagnostics,
-			)
-		: logicalSource
-			? recoverInlineOrigins(
-					anchorOccurrences,
-					logicalSource,
-					options.toolDiagnostics,
-				)
-			: anchorOccurrences;
-	const recoveredHeadingInlineMetadata = sourceAwareDocument
-		? recoverSourceAwareInlineOrigins(
-				headingInlineMetadataOccurrences,
-				sourceAwareDocument,
-				options.toolDiagnostics,
-			)
-		: logicalSource
-			? recoverInlineOrigins(
-					headingInlineMetadataOccurrences,
-					logicalSource,
-					options.toolDiagnostics,
-				)
-			: headingInlineMetadataOccurrences;
+			: occurrences;
+	const recoveredXrefs = recover(xrefOccurrences);
+	const recoveredAnchors = recover(anchorOccurrences);
+	const recoveredHeadingInlineMetadata = recover(
+		headingInlineMetadataOccurrences,
+	);
 
 	return {
 		xrefOccurrences: dedupeOccurrences(recoveredXrefs).sort(compareSourceSpans),
@@ -336,48 +309,6 @@ function makeXref(
 			sourceSpan,
 		},
 	}) as XrefOccurrenceNode;
-}
-
-function recoverInlineOrigins<
-	T extends {
-		raw: string;
-		sourceSpan?: SourceSpan;
-		source?: {
-			raw?: string;
-			line?: number;
-			sourceSpan?: SourceSpan;
-			relativePath?: string;
-		};
-	},
->(
-	occurrences: T[],
-	logicalSource: NonNullable<ReturnType<typeof logicalSourceForLineTable>>,
-	toolDiagnostics: ToolDiagnostic[] | undefined,
-): T[] {
-	const recoveredOccurrences: T[] = [];
-	for (const occurrence of occurrences) {
-		if (!occurrence.sourceSpan) {
-			recoveredOccurrences.push(occurrence);
-			continue;
-		}
-		const recovered = recoverOriginPointSourceLayer(
-			logicalSource,
-			occurrence.sourceSpan,
-			occurrence.raw,
-		);
-		if (!recovered.ok) {
-			toolDiagnostics?.push(recovered.diagnostic);
-			recoveredOccurrences.push(occurrence);
-			continue;
-		}
-		occurrence.sourceSpan = recovered.sourceSpan;
-		occurrence.source = {
-			...occurrence.source,
-			...recovered.sourceLayer,
-		};
-		recoveredOccurrences.push(occurrence);
-	}
-	return recoveredOccurrences;
 }
 
 function parseMacroLabel(raw: string): {
