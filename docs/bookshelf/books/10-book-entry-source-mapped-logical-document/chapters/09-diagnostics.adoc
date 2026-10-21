@@ -12,6 +12,7 @@ Book-entry diagnostics 描述 logical document 构造和 origin recovery 中的�
 * Include path 越出允许边界。
 * Include graph 出现循环。
 * Include directive 使用 unsupported attrlist。
+* 宿主登记的 include 解析器抛出异常（`include.resolver-failed`，见 xref:host-include-resolvers[]）。
 * Logical line count 与 line origin count 不一致。
 * Line origin 指向 source file table 中不存在的 file。
 * Line origin 的 sourceLine 越出 origin file line table。

@@ -43,9 +43,37 @@ Tag 标记行的识别与 Asciidoctor 相同：行中出现 `tag::名称[]` 或 
 
 一次 include 的输出从哪里结束，由官方 Reader 的推入判断：include 每展开一次，Reader 就把当时的状态压进 include stack，这一次推入的行，以及嵌套在它里面更深的推入的行，属于这次 include；紧挨着再引入一次（同一个文件也一样）是另一次推入，就此分界。行号不能用来分界：一次推入的行号从第一条选中的源行起逐行累加，选取有空隙、或选中区域里有被吃掉的条件指令时，就与源行对不上。带 `leveloffset` 的推入，前后各有 Reader 补的两行（`:leveloffset: …` 与空行；空行与 `:leveloffset!:`），按这两行认出，不算选中的源行。
 
+[#host-include-resolvers]
+=== 宿主登记的 include 解析器
+
+书可以按作者自定的选择器引入内容，最常见的是按符号从源代码取一个声明：
+
+[source,asciidoc]
+------
+[source,ts]
+----
+\include::docloom:examples/gateway-board/commands/replay.ts[symbol=replay,part=source]
+----
+------
+
+按文件引入，代码挪了位置就要改书；按行号引入，代码一改行号就移动；按符号选出的始终是同一个声明。选择器的语义属于调用方：书架构建时 Asciidoctor 的 include 处理器、Ruby 侧的 asciidoctor-heading-include 与本对象各自登记同一个选择器，三方认同一种写法。
+
+调用方为 book-entry 登记一组 include 解析器。每个解析器以目标前缀认领 directive，例如 `docloom:`；一个 directive 由第一个前缀相符的解析器认领，认领先于 URI 与路径的判断。被认领的 directive 不按文件路径解析：
+
+* 解析器收到去掉前缀的目标、作者写下的属性（`name=value` 取值并去掉引号，只写名字的取空串）与 directive 所在源文件的绝对路径。属性全部交给解析器：`tag`、`lines` 这样的选取由解析器决定是否支持，本对象不按它们选行，也不因解析器自定的属性报 `include.attrlist-unmapped`。
+* 解析器交回文本与来源：来源文件的路径（绝对路径，或相对于 documentRoot）和文本第一行所在的源行。文本是来源文件中连续的整行，第 n 行对应来源的第 startLine + n - 1 行。AsciiDoc 的 include 以行为单位，官方 Reader 推入的也是行；选择器选出的范围从行中开始时，解析器把它扩到整行。
+* 来源文件必须在 documentRoot 之内，越界阻止 logical document 成立（`include.outside-document-root`），与文件 include 相同。
+* 解析器抛出异常时，logical document 不成立：`include.resolver-failed`，消息写明 directive 所在位置与异常消息。
+
+官方 Reader 与 logical document 读到同一份文本。实现向官方 Reader 登记一个 include 处理器，认领相同前缀的 directive，把解析器交回的文本推入 Reader，文件与起始行取自来源（Reader 的 `pushInclude`）。这次推入的游标因此落在来源文件的真实行上，推入身份的分界、`indent` 与 `leveloffset` 的处理都与文件 include 相同；来源是 AsciiDoc 文件时，其中的 include directive 照常递归展开。同一次解析中，同一文件里写着同一目标与属性的 directive 只调用一次解析器，两侧取同一份结果。
+
+文本按 <<selected-include>> 的方式与官方 Reader 的输出逐行配对：官方行出自这次推入、文本就是来源的那一行，才登记这个源行。解析器交回的文本与来源对不上时，这次推入余下的行登记为 degraded line，产生 `origin-map.selection-mismatch` warning：它守着解析器交回的来源是否属实，不让一处不实的来源变成假精确的坐标。
+
+没有解析器认领的 directive 照文件 include 处理。解析器只作用于 book-entry：single-file 输入由 Asciidoctor 以 secure 模式解析，不执行 include。
+
 === Unsupported Attrlist
 
-Include attrlist 若包含本书没有定义的、改变目标文件行集的语义，resolution 不得静默按整文件 include 处理。这些 surface 进入 unsupported include diagnostic。该诊断保护 line origin 的真实性。
+Include attrlist 若包含本书没有定义的、改变目标文件行集的语义，resolution 不得静默按整文件 include 处理。这些 surface 进入 unsupported include diagnostic。该诊断保护 line origin 的真实性。被宿主登记的解析器认领的 directive 不在此列：它的属性由解析器解释，来源由逐行配对核实。
 
 === 路径边界
 

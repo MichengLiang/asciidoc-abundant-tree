@@ -22,6 +22,29 @@ const document = await parseAbundantTree({
 
 未提供 `mode` 时，`parseAbundantTree` 保持 single-file 输入语义。实现不得从 `:doctype: book`、文件名或 include directive 自动切换模式。
 
+Book-entry 调用可以登记 include 解析器（见 xref:host-include-resolvers[]）：
+
+[source,typescript]
+----
+const document = await parseAbundantTree({
+  sourcePath: "bookshelf/books/08-design/book.adoc",
+  mode: "book-entry",
+  documentRoot: ".",
+  includeResolvers: [
+    {
+      prefix: "docloom:",
+      resolve: ({ target, attributes }) => {
+        // selectWholeLines 是调用方自己的选择器：按符号选出声明，扩到整行。
+        const { text, startLine } = selectWholeLines(target, attributes);
+        return { text, origin: { path: target, startLine } };
+      },
+    },
+  ],
+});
+----
+
+`resolve` 可以返回 `Promise`。CLI 不登记解析器：解析器是调用方的代码。
+
 === CLI
 
 CLI 使用显式 mode：
