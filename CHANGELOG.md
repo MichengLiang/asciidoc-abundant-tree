@@ -6,6 +6,15 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.2.3 - 2026-10-22
+
+### Fixed
+
+- Quotes written as paragraphs are recognized. An air quote (`"..."` followed by a `-- credit` line) and a Markdown quote (`> ...`) used to report `source-interval.delimiter-not-found`; an air quote whose content is a single line is handled too. Their span includes the credit line; xrefs in the credit line are not occurrences, as with an attribution written in the attribute list.
+- Fixed blocks inside a Markdown quote losing their coordinates and xrefs. Asciidoctor (Asciidoctor.js 4.1.1, and Ruby Asciidoctor 2.0.26 alike) reads a Markdown quote's lines with a new Reader that has no cursor, so its blocks carry line numbers counted from the quote and no file. They are now relocated onto the source lines of the quote's file. Blocks inside a Markdown quote are read the way Asciidoctor reads them, with one `> ` removed per nesting level: `> ====` opens an example, `> [sidebar]` is a cloaked sidebar, and a delimited `____` quote inside a Markdown quote is no longer taken for another Markdown quote (whose coordinates were then relocated twice).
+- Blocks inside an `a|` table cell are scanned by the same rules as the body. Xrefs and anchors in examples, sidebars (including cloaked ones), lists and admonitions in such a cell were missing; only paragraphs and open blocks were scanned.
+- Every line of a multi-line plain table cell is scanned again. Since 0.2.0 only its first line was, because Asciidoctor.js 4.x exposes a cell's lines as a method instead of a property.
+
 ## 0.2.2 - 2026-10-22
 
 ### Changed
