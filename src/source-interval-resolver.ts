@@ -5,6 +5,7 @@ import {
 import type { LineSpan, SourceSpan, ToolDiagnostic } from "./model";
 import type { OfficialBlockSurface } from "./official-block-walker";
 import { delimiterOpens, officialDelimiter } from "./official-delimiter";
+import { paragraphEndLine } from "./official-paragraph";
 import {
 	borrowsChildSourceLocation,
 	isMarkdownQuote,
@@ -228,7 +229,7 @@ function resolveUndelimitedBlockSpan(
 	const anchorText = lineText(lineTable, startLine);
 	// markdown 引语是按这一行认出来的，子块坐标也从这一行换算，锚点与官方块必然对得上，不再与子块的第一行比。
 	if (isMarkdownQuote(surface.block)) {
-		return markdownQuoteSpan(lineTable, sourceTable, startLine, surface);
+		return markdownQuoteSpan(lineTable, startLine);
 	}
 	// 只比可见字符：官方会展开 verbatim 块里的 tab，indent 会改行首。
 	const firstLine = firstSourceLine(surface);
@@ -311,35 +312,32 @@ function isAirQuote(
 	return withoutWhitespace(unquoted) === officialFirstLine;
 }
 
-// markdown 引语（parser.js 1102-1140 行）：官方读进的段落里，子块之后还可能有两种行：只有 `>` 的行（去掉前缀后是空行，
-// 不属于任何子块）与最后一行以 `-- ` 开头的出处行（被取走）。它们都在段落里，属于引语；出处行不进内容区间。
+// markdown 引语（parser.js 1102-1140 行）是官方先读成一个段落、再认出来的，范围就是这个段落，按官方读段落的规则从源行算；
+// 不向子块要结束行：子块是列表时，列表没有自己的结束线索，会反过来向引语要。段落最后一行去掉前缀后以 `-- ` 开头时是出处，
+// 被取走；末尾只有 `>` 的行去掉前缀后是空行。这些行属于引语，不进内容区间。
 function markdownQuoteSpan(
 	lineTable: LineTable,
-	sourceTable: LineTable,
 	startLine: number,
-	surface: OfficialBlockSurface,
 ): { span: LineSpan; contentSpan: LineSpan } {
-	const contentEnd = lastChildIntervalEnd(sourceTable, startLine, surface);
-	let endLine = contentEnd;
-	for (
-		let next = paragraphLine(lineTable, endLine, 2, true);
-		next > endLine;
-		next = paragraphLine(lineTable, endLine, 2, true)
-	) {
-		const text = lineText(lineTable, next).trimEnd();
-		if (text === ">") {
-			endLine = next;
-			continue;
-		}
-		if (/^(?:> )?-- /u.test(text)) {
-			endLine = next;
-		}
-		break;
+	const endLine = paragraphEndLine(lineTable, startLine, false);
+	let contentEnd =
+		endLine > startLine &&
+		/^(?:> )?-- /u.test(lineText(lineTable, endLine).trimEnd())
+			? endLine - 1
+			: endLine;
+	while (contentEnd > startLine && isEmptyQuotedLine(lineTable, contentEnd)) {
+		contentEnd -= 1;
 	}
 	return {
 		span: { startLine, endLine },
 		contentSpan: { startLine, endLine: contentEnd },
 	};
+}
+
+// 只有 `>` 的行与官方跳过的行注释：去掉前缀以后不是内容。
+function isEmptyQuotedLine(lineTable: LineTable, line: number): boolean {
+	const text = lineText(lineTable, line).trimEnd();
+	return text === ">" || (text.startsWith("//") && !text.startsWith("///"));
 }
 
 function withoutWhitespace(text: string): string {
