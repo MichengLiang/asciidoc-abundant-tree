@@ -15,6 +15,7 @@ import { attachHeadingDescriptionMetadata } from "./heading-description-metadata
 import type { AbundantDocument, AsciidoctorLayer, ParserInfo } from "./model";
 import { definedObject } from "./object-utils";
 import { projectOfficialDocument } from "./official-projector";
+import { completeSynthesizedSourceLocations } from "./official-source-location";
 import type { SourceIdentityApi } from "./source-identity";
 import { type LineTable, spanForLineText } from "./source-lines";
 import { projectSourceSurfaces } from "./source-surfaces";
@@ -34,6 +35,7 @@ export type ParserCoreInput = {
 export async function parseAsciidoctorDocument(
 	input: ParserCoreInput,
 ): Promise<AbundantDocument> {
+	completeSynthesizedSourceLocations(input.officialDocument);
 	const sourceSurfaces = projectSourceSurfaces({
 		officialDocument: input.officialDocument,
 		lineTable: input.lineTable,
@@ -51,7 +53,6 @@ export async function parseAsciidoctorDocument(
 			sourceSurfaces.headingInlineMetadataOccurrences,
 		intervalByBlock: sourceSurfaces.intervalByBlock,
 		projectableBlocks: sourceSurfaces.projectableBlocks,
-		containerFallbackBlocks: sourceSurfaces.containerFallbackBlocks,
 		sectionByBlock: sourceSurfaces.sectionByBlock,
 	});
 	await resolveOfficialBindings(

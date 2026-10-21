@@ -6,6 +6,12 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Fixed
+
+- Fixed part introductions losing their source coordinates. A one-paragraph `[partintro]` got no source location and reported `source-interval.delimiter-not-found` plus `source-location.missing`; plain paragraphs written directly under a part (which Asciidoctor wraps in an intro block it creates itself) disappeared from the tree altogether. The parser now gives these Asciidoctor-created blocks a location the way Asciidoctor gives one to the preamble it creates: a created container takes its first child's location, and the paragraph that receives a `[partintro]` paragraph's lines takes its parent's.
+- Fixed delimited-context blocks written as styled paragraphs (`[source,ts]` followed directly by code, `[quote]`, `[sidebar]`, `[example]` and the other paragraph styles) reporting `source-interval.delimiter-not-found`. When the anchor line is the block's first source line, the block spans its paragraph lines; a listing written this way no longer includes the blank line after it.
+- Delimiters are now recognized the way Asciidoctor recognizes them (a port of `Parser.isDelimitedBlock`, checked line by line against it): lengthened delimiters such as `------` or `|=====`, fenced code with a language, and delimiters masquerading as another block (`....` with `[source]` is a listing). A block opened by `------` to show a `----` example used to end at the wrong line with a warning.
+
 ## 0.2.0 - 2026-10-21
 
 ### Changed

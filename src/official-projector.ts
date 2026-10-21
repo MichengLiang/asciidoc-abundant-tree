@@ -64,7 +64,6 @@ type ProjectContext = {
 	usedAnchorKeys: Set<string>;
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
-	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	bindingRequests: OfficialBindingRequest[];
 	targets: TargetNode[];
@@ -84,7 +83,6 @@ export function projectOfficialDocument(options: {
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
-	containerFallbackBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 }): {
 	children: AbundantNode[];
@@ -113,7 +111,6 @@ export function projectOfficialDocument(options: {
 		usedAnchorKeys: new Set(),
 		intervalByBlock: options.intervalByBlock,
 		projectableBlocks: options.projectableBlocks,
-		containerFallbackBlocks: options.containerFallbackBlocks,
 		sectionByBlock: options.sectionByBlock,
 		bindingRequests,
 		targets,
@@ -144,21 +141,19 @@ function buildChildren(
 function buildNode(
 	block: AsciidoctorBlock,
 	context: ProjectContext,
-	fallbackLine?: number | undefined,
 ): BuildResult {
 	const blockContext = block.getContext?.();
 	const officialLine = block.getSourceLocation?.()?.getLineNumber?.();
-	const line = officialLine ?? fallbackLine;
 	const interval = context.intervalByBlock.get(block);
-	if (!canProjectBlock(block, context, officialLine, fallbackLine)) {
+	if (!canProjectBlock(block, context)) {
 		return undefined;
 	}
 
 	if (blockContext === "section" && officialLine !== undefined) {
 		return buildSection(block, context);
 	}
-	if (blockContext === "paragraph" && line !== undefined) {
-		return buildParagraph(block, line, context, interval);
+	if (blockContext === "paragraph" && officialLine !== undefined) {
+		return buildParagraph(block, officialLine, context, interval);
 	}
 	if (blockContext === "listing" && officialLine !== undefined) {
 		return buildListing(block, officialLine, context, interval);
@@ -169,8 +164,10 @@ function buildNode(
 	if (blockContext === "dlist" && officialLine !== undefined) {
 		return buildDescriptionList(block, officialLine, context, interval);
 	}
-	if (blockContext === "open" && line !== undefined) {
-		return buildOpenChildren(block, line, context);
+	if (blockContext === "open" && officialLine !== undefined) {
+		return childBlocksOf(block).flatMap((child) =>
+			toNodes(buildNode(child, context)),
+		);
 	}
 	if (officialBlockPolicy(blockContext) === "diagnostic") {
 		return undefined;
@@ -195,20 +192,8 @@ function buildNode(
 function canProjectBlock(
 	block: AsciidoctorBlock,
 	context: ProjectContext,
-	officialLine: number | undefined,
-	fallbackLine: number | undefined,
 ): boolean {
-	if (!context.projectableBlocks) {
-		return true;
-	}
-	if (context.projectableBlocks.has(block)) {
-		return true;
-	}
-	return (
-		officialLine === undefined &&
-		fallbackLine !== undefined &&
-		(context.containerFallbackBlocks?.has(block) ?? false)
-	);
+	return context.projectableBlocks?.has(block) ?? true;
 }
 
 function buildSection(
@@ -246,26 +231,6 @@ function buildSection(
 		toNodes(buildNode(child, context)),
 	);
 	return section;
-}
-
-function buildOpenChildren(
-	block: AsciidoctorBlock,
-	line: number,
-	context: ProjectContext,
-): AbundantNode[] {
-	const nodes: AbundantNode[] = [];
-	let cursor = line;
-
-	for (const child of childBlocksOf(block)) {
-		const childLine =
-			child.getSourceLocation?.()?.getLineNumber?.() ??
-			findBlockSourceLine(context, child, cursor);
-		const built = toNodes(buildNode(child, context, childLine));
-		nodes.push(...built);
-		cursor = Math.max(cursor, ...built.map(nodeEndLine).filter(isNumber)) + 1;
-	}
-
-	return nodes;
 }
 
 function buildDescriptionList(
@@ -658,39 +623,6 @@ function isLineSpan(
 	value: { startLine: number; endLine: number } | undefined,
 ): value is { startLine: number; endLine: number } {
 	return value !== undefined;
-}
-
-function findBlockSourceLine(
-	context: ProjectContext,
-	block: AsciidoctorBlock,
-	startLine: number,
-): number | undefined {
-	const firstSourceLine = block
-		.getSource?.()
-		?.split(/\r?\n/u)
-		.find((line) => line.trim() !== "")
-		?.trim();
-	if (!firstSourceLine) {
-		return undefined;
-	}
-	for (
-		let line = startLine;
-		line <= context.lineTable.lines.length;
-		line += 1
-	) {
-		if (lineText(context.lineTable, line).trim() === firstSourceLine) {
-			return line;
-		}
-	}
-	return undefined;
-}
-
-function nodeEndLine(node: AbundantNode): number | undefined {
-	return node.source?.span?.endLine ?? node.source?.line;
-}
-
-function isNumber(value: unknown): value is number {
-	return typeof value === "number";
 }
 
 function buildParagraph(

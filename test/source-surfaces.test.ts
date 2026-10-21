@@ -76,8 +76,6 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.sectionByBlock.get(section)).toBeUndefined();
 		expect(surfaces.sectionByLine.get(2)).toBeUndefined();
 		expect(surfaces.projectableBlocks.has(paragraph)).toBe(false);
-		expect(surfaces.containerFallbackBlocks.has(paragraph)).toBe(true);
-		expect(surfaces.containerFallbackBlocks.has(section)).toBe(false);
 		expect(surfaces.xrefOccurrences).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
@@ -105,7 +103,6 @@ describe("projectSourceSurfaces", () => {
 		]);
 		expect(surfaces.xrefOccurrences).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
-		expect(surfaces.containerFallbackBlocks.has(unknown)).toBe(false);
 	});
 
 	it("diagnoses missing context and source location without source scanning", () => {
@@ -132,7 +129,6 @@ describe("projectSourceSurfaces", () => {
 			}),
 		]);
 		expect(surfaces.projectableBlocks.has(unknown)).toBe(false);
-		expect(surfaces.containerFallbackBlocks.has(unknown)).toBe(false);
 		expect(surfaces.xrefOccurrences).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
@@ -386,7 +382,6 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.sectionByLine.get(2)).toBeUndefined();
 		expect(surfaces.sectionByBlock.get(hiddenSection)).toBeUndefined();
 		expect(surfaces.projectableBlocks.has(hiddenSection)).toBe(false);
-		expect(surfaces.containerFallbackBlocks.has(hiddenSection)).toBe(false);
 		expect(projected.children).toEqual([]);
 		expect(projected.targets).toEqual([]);
 	});
@@ -421,7 +416,6 @@ describe("projectSourceSurfaces", () => {
 			intervalByBlock: surfaces.intervalByBlock,
 			sectionByBlock: surfaces.sectionByBlock,
 			projectableBlocks: surfaces.projectableBlocks,
-			containerFallbackBlocks: surfaces.containerFallbackBlocks,
 		});
 
 		expect(surfaces.sections).toEqual([

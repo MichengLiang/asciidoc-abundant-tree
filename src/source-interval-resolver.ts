@@ -4,6 +4,8 @@ import {
 } from "./metadata-parser";
 import type { LineSpan, SourceSpan, ToolDiagnostic } from "./model";
 import type { OfficialBlockSurface } from "./official-block-walker";
+import { delimiterOpens, officialDelimiter } from "./official-delimiter";
+import { takesParentSourceLocation } from "./official-source-location";
 import type { LineTable } from "./source-lines";
 import {
 	lineText,
@@ -34,11 +36,14 @@ export function resolveSourceInterval(
 	const metadata = metadataForSurface(surface, lineTable, blockStartLine);
 	const startLine = metadata.at(0)?.line ?? blockStartLine;
 	const diagnostics: ToolDiagnostic[] = [];
-	const delimited = resolveContextDelimitedSpan(
-		lineTable,
-		blockStartLine,
-		surface.context,
-	);
+	const delimitedContext = isDelimitedContext(surface.context);
+	const delimited = delimitedContext
+		? resolveDelimitedBlockSpan(lineTable, blockStartLine, surface)
+		: undefined;
+	const undelimited =
+		delimitedContext && delimited === undefined
+			? resolveUndelimitedBlockSpan(lineTable, blockStartLine, surface)
+			: undefined;
 	const sourceContentSpan = sourceContentSpanForContext(
 		surface,
 		blockStartLine,
@@ -50,6 +55,7 @@ export function resolveSourceInterval(
 			: undefined;
 	const endLine =
 		delimited?.span.endLine ??
+		undelimited?.endLine ??
 		sourceContentSpan?.endLine ??
 		childEndLine ??
 		(nextSiblingStart !== undefined ? nextSiblingStart - 1 : undefined) ??
@@ -65,8 +71,9 @@ export function resolveSourceInterval(
 			: undefined;
 
 	if (
+		delimitedContext &&
 		delimited === undefined &&
-		isDelimitedContext(surface.context) &&
+		undelimited === undefined &&
 		blockStartLine <= lineTable.lines.length
 	) {
 		diagnostics.push({
@@ -79,6 +86,7 @@ export function resolveSourceInterval(
 
 	const contentSpan =
 		delimited?.contentSpan ??
+		undelimited ??
 		sourceContentSpan ??
 		contentSpanForContext(surface, span);
 	const sourceSpan = sourceSpanFromLineSpan(lineTable, span);
@@ -119,6 +127,9 @@ function metadataForSurface(
 	if (surface.context === "list_item") {
 		return [];
 	}
+	if (takesParentSourceLocation(surface.block)) {
+		return [];
+	}
 	return collectPrecedingMetadata(lineTable, blockStartLine);
 }
 
@@ -153,49 +164,22 @@ function parentEndLine(
 	return resolveSourceInterval(parent, lineTable)?.span.endLine;
 }
 
-function resolveContextDelimitedSpan(
-	lineTable: LineTable,
-	startLine: number,
-	context: string | undefined,
-): { span: LineSpan; contentSpan: LineSpan } | undefined {
-	switch (context) {
-		case "example":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["===="]);
-		case "listing":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["----", "```"]);
-		case "literal":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["...."]);
-		case "pass":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["++++"]);
-		case "open":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["--"]);
-		case "quote":
-		case "verse":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["____"]);
-		case "sidebar":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["****"]);
-		case "stem":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["++++"]);
-		case "table":
-			return resolveDelimitedBlockSpan(lineTable, startLine, ["|==="]);
-		default:
-			return undefined;
-	}
-}
-
 function resolveDelimitedBlockSpan(
 	lineTable: LineTable,
 	startLine: number,
-	allowedDelimiters: string[],
+	surface: OfficialBlockSurface,
 ): { span: LineSpan; contentSpan: LineSpan } | undefined {
 	// Delimiter matching is intentionally local to an official block anchor.
 	// It must never be promoted back into whole-file structure discovery.
-	const opening = lineText(lineTable, startLine).trim();
-	if (!allowedDelimiters.includes(opening)) {
+	const delimiter = officialDelimiter(lineText(lineTable, startLine).trimEnd());
+	if (
+		!delimiter ||
+		!delimiterOpens(delimiter, surface.context, surface.block.getStyle?.())
+	) {
 		return undefined;
 	}
 	for (let line = startLine + 1; line <= lineTable.lines.length; line += 1) {
-		if (lineText(lineTable, line).trim() === opening) {
+		if (lineText(lineTable, line).trimEnd() === delimiter.terminator) {
 			return {
 				span: { startLine, endLine: line },
 				contentSpan: {
@@ -206,6 +190,40 @@ function resolveDelimitedBlockSpan(
 		}
 	}
 	return undefined;
+}
+
+// 隐身段落与官方合成的开放块都不写分隔符（09 号书「隐身段落」「官方合成的块」），锚点行就是块的第一行源文。
+// 锚点行对不上第一行源文时不在这里认领：那是坐标漂移，交给 delimiter-not-found 报出来。
+function resolveUndelimitedBlockSpan(
+	lineTable: LineTable,
+	startLine: number,
+	surface: OfficialBlockSurface,
+): LineSpan | undefined {
+	const firstLine = firstSourceLine(surface);
+	if (
+		firstLine === undefined ||
+		lineText(lineTable, startLine).trim() !== firstLine.trim()
+	) {
+		return undefined;
+	}
+	if (surface.children.length > 0) {
+		const childEnds = surface.children
+			.map((child) => resolveSourceInterval(child, lineTable)?.span.endLine)
+			.filter((line): line is number => line !== undefined);
+		return { startLine, endLine: Math.max(startLine, ...childEnds) };
+	}
+	const lineCount = surface.block.getSourceLines?.().length ?? 1;
+	return { startLine, endLine: startLine + Math.max(1, lineCount) - 1 };
+}
+
+// 官方把 [partintro] 段落的文本行交给了子段落，合成的开放块自己也没有文本行：第一行源文在第一个子块里。
+function firstSourceLine(surface: OfficialBlockSurface): string | undefined {
+	const own = surface.block.getSourceLines?.()[0];
+	if (own !== undefined) {
+		return own;
+	}
+	const firstChild = surface.children[0];
+	return firstChild ? firstSourceLine(firstChild) : undefined;
 }
 
 function contentSpanForContext(

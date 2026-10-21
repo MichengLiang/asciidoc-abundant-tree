@@ -31,59 +31,6 @@ describe("official-projector helpers", () => {
 		).toEqual([["head-1", "head-2"], ["body-1"], ["body-2"], ["foot-1"]]);
 	});
 
-	it("uses official text to locate open-block children without source locations", () => {
-		const paragraphBlock = {
-			getBlocks: () => [],
-			getContext: () => "paragraph",
-			getId: () => "nested-paragraph",
-			getNodeName: () => "paragraph",
-			getSource: () => "Nested paragraph inside an open block.",
-		} satisfies AsciidoctorBlock;
-		const openBlock = {
-			getBlocks: () => [paragraphBlock],
-			getContext: () => "open",
-			getNodeName: () => "open",
-			getSourceLocation: () => ({
-				getLineNumber: () => 1,
-			}),
-		} satisfies AsciidoctorBlock;
-
-		const projected = projectOfficialDocument({
-			officialDocument: {
-				getBlocks: () => [openBlock],
-			},
-			lineTable: buildLineTable(
-				"--\nNested paragraph inside an open block.\n--\n",
-			),
-			sections: [],
-			sectionByLine: new Map(),
-			xrefOccurrences: [],
-			anchorOccurrences: [],
-			headingInlineMetadataOccurrences: [],
-			intervalByBlock: new WeakMap(),
-			sectionByBlock: new WeakMap(),
-		});
-
-		expect(projected.children).toEqual([
-			expect.objectContaining({
-				kind: "paragraph",
-				text: "Nested paragraph inside an open block.",
-				source: expect.objectContaining({
-					span: { startLine: 2, endLine: 2 },
-				}),
-			}),
-		]);
-		expect(projected.targets).toEqual([
-			expect.objectContaining({
-				id: "nested-paragraph",
-				targetType: "block",
-				sourceSpan: expect.objectContaining({
-					start: { line: 2, column: 1 },
-				}),
-			}),
-		]);
-	});
-
 	it("deduplicates anchors already consumed by paragraph children", () => {
 		const paragraphBlock = {
 			getBlocks: () => [],
@@ -232,7 +179,7 @@ describe("official-projector helpers", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
-	it("projects missing-source paragraphs only when container fallback explicitly accepts them", () => {
+	it("does not project official children that have no source location", () => {
 		const paragraphBlock = {
 			getBlocks: () => [],
 			getContext: () => "paragraph",
@@ -273,65 +220,6 @@ describe("official-projector helpers", () => {
 			]),
 			sectionByBlock: new WeakMap(),
 			projectableBlocks: new WeakSet([openBlock]),
-			containerFallbackBlocks: new WeakSet([paragraphBlock]),
-		});
-
-		expect(projected.children).toEqual([
-			expect.objectContaining({
-				kind: "paragraph",
-				text: "Fallback paragraph.",
-			}),
-		]);
-		expect(projected.targets).toEqual([
-			expect.objectContaining({
-				id: "fallback-paragraph",
-				targetType: "block",
-			}),
-		]);
-	});
-
-	it("does not project missing-source children without explicit container fallback acceptance", () => {
-		const paragraphBlock = {
-			getBlocks: () => [],
-			getContext: () => "paragraph",
-			getId: () => "fallback-paragraph",
-			getNodeName: () => "paragraph",
-			getSource: () => "Fallback paragraph.",
-		} satisfies AsciidoctorBlock;
-		const openBlock = {
-			getBlocks: () => [paragraphBlock],
-			getContext: () => "open",
-			getNodeName: () => "open",
-			getSourceLocation: () => ({
-				getLineNumber: () => 1,
-			}),
-		} satisfies AsciidoctorBlock;
-
-		const projected = projectOfficialDocument({
-			officialDocument: {
-				getBlocks: () => [openBlock],
-			},
-			lineTable: buildLineTable("--\nFallback paragraph.\n--\n"),
-			sections: [],
-			sectionByLine: new Map(),
-			xrefOccurrences: [],
-			anchorOccurrences: [],
-			headingInlineMetadataOccurrences: [],
-			intervalByBlock: new WeakMap([
-				[
-					openBlock,
-					{
-						blockStartLine: 1,
-						metadata: [],
-						contentSpan: { startLine: 2, endLine: 2 },
-						span: { startLine: 1, endLine: 3 },
-						diagnostics: [],
-					},
-				],
-			]),
-			sectionByBlock: new WeakMap(),
-			projectableBlocks: new WeakSet([openBlock]),
-			containerFallbackBlocks: new WeakSet(),
 		});
 
 		expect(projected.children).toEqual([]);

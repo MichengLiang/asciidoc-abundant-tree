@@ -26,6 +26,7 @@ export type AsciidoctorBlock = {
 	// 4.x 的表格把行放在 rows 属性上（Ruby 的 Table#rows），不再有 getRows()。
 	rows?: unknown;
 	getSource?: () => string;
+	getSourceLines?: () => string[];
 	getSourceLocation?: () => {
 		getDirectory?: () => string | undefined;
 		getFile?: () => string | undefined;

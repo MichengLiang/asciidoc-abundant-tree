@@ -47,6 +47,8 @@ Adapter 只经由 `@asciidoctor/core` 4.x 的公开导出与它自带的类型�
 * 逐行来源由解析器与官方 Reader 的输出逐行配对得出（10 号书）：sourcemap 只记块的起始行与文件；Reader 一次推入的行号从第一条选中行逐行累加，选取有空隙时与源行不符；一次推入的第一行在读之前，游标还在外层文件上。
 * 行内 xref、anchor 由解析器扫描源文本：Asciidoctor 的行内处理是替换，不产生带位置的行内节点。
 * 块的结束行由 source interval resolver 恢复：official source location 只有起始行。
+* 部导言里官方新建的开放块与段落没有 source location，解析器照官方给合成 preamble 补坐标的做法补上（第 7 章「官方合成的块」）。
+* 分隔符按官方的认法判断，逐句移植 `Parser.isDelimitedBlock`：`Parser` 不在公开导出里（第 7 章「分隔符与它的闭合」）。
 * xref 的 official href 由转换器把一个 xref inline 节点转换成 HTML 后读出：这样得到的是转换器认定的链接，包括跨文档 `.adoc#` 改写为 `.html#`。
 
 `src/parser.ts` 编排文件读取、official parse、source surface projection、official projection、target/xref merge 和 `AbundantDocument` 构造。
@@ -54,6 +56,10 @@ Adapter 只经由 `@asciidoctor/core` 4.x 的公开导出与它自带的类型�
 `src/source-lines.ts` 提供 line table、line text、line span 和 source span 工具。
 
 `src/official-block-walker.ts` 遍历 official AST。
+
+`src/official-source-location.ts` 在遍历之前补上官方合成块的 source location。
+
+`src/official-delimiter.ts` 照官方的认法判断分隔符与它的闭合行。
 
 `src/source-interval-resolver.ts` 从 official block anchor 恢复 source interval。
 
