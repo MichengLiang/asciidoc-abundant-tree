@@ -414,7 +414,7 @@ function appendPushedInclude(
 	}
 	// 没有推入就没有 Reader 补的尾行；照旧去吃会把父文件的空行当成补出来的行。
 	if (leveloffset && own) {
-		consumeGeneratedTailForInclude(state);
+		consumeGeneratedTailForInclude(own, state);
 	}
 	state.currentPush = parent;
 }
@@ -718,15 +718,24 @@ function consumeGeneratedPreludeForInclude(
 	}
 }
 
-function consumeGeneratedTailForInclude(state: PreprocessorState): void {
+// leveloffset 的推入末尾是 Reader 补的两行：空行与 `:leveloffset!:`（或恢复原值的 `:leveloffset: …`）。两行都进
+// logical document：空行把前一个块与属性行隔开，少了它，属性行会被读成前一个段落的正文，leveloffset 也不再复位。
+function consumeGeneratedTailForInclude(
+	own: ReaderPush,
+	state: PreprocessorState,
+): void {
 	while (state.officialIndex < state.officialLines.length) {
 		const next = state.officialLines[state.officialIndex];
-		if (!next || !(next.text === "" || next.text.startsWith(":leveloffset"))) {
+		if (
+			!next ||
+			next.push.id !== own.id ||
+			!(next.text === "" || next.text.startsWith(":leveloffset"))
+		) {
 			break;
 		}
-		const official = consumeOfficialLine(state);
-		if (official?.text.startsWith(":leveloffset")) {
-			appendGeneratedControl(official.text, state);
+		consumeOfficialLine(state);
+		appendGeneratedControl(next.text, state);
+		if (next.text.startsWith(":leveloffset")) {
 			break;
 		}
 	}

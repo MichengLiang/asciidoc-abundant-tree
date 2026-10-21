@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { createAsciidoctorFileAdapter } from "../../src/asciidoctor-file-adapter";
 import { parseIncludeAttributes } from "../../src/book-entry/include-attribute-model";
 import { preprocessBookEntryWithOfficialReader } from "../../src/book-entry/official-reader-preprocessor";
+import { parseAbundantTree } from "../../src/index";
+import type { SectionNode } from "../../src/model";
 
 const fixtureRoot = join(process.cwd(), "tmp/book-entry-official-reader");
 
@@ -230,6 +232,54 @@ describe("book-entry official Reader preprocessor", () => {
 				target: "missing.adoc",
 			}),
 		]);
+	});
+	it("keeps both lines Reader appends after a leveloffset include", async () => {
+		const root = join(fixtureRoot, "leveloffset-tail");
+		writeFixture("leveloffset-tail/inner.adoc", "内文。\n");
+		writeFixture(
+			"leveloffset-tail/part.adoc",
+			"== 部分\n\ninclude::inner.adoc[]\n",
+		);
+		const entryPath = writeFixture(
+			"leveloffset-tail/book.adoc",
+			"= 书\n\n== 章\n\ninclude::part.adoc[leveloffset=+1]\n\n== 后一章\n\n后文。\n",
+		);
+		const adapter = createAsciidoctorFileAdapter();
+
+		const official = await adapter.readPreprocessedLines({
+			sourcePath: entryPath,
+			baseDir: root,
+		});
+		const document = await preprocessBookEntryWithOfficialReader({
+			adapter,
+			sourcePath: entryPath,
+			documentRoot: root,
+		});
+		const parsed = await parseAbundantTree({
+			sourcePath: entryPath,
+			mode: "book-entry",
+			documentRoot: root,
+		});
+		const [chapter, nextChapter] = parsed.children as SectionNode[];
+		const part = chapter?.children?.find((child) => child.kind === "section") as
+			| SectionNode
+			| undefined;
+
+		// 末尾补的空行若不进 logical document，`:leveloffset!:` 会被读成“内文。”段落的正文，leveloffset 不再复位。
+		expect(document.lines.map((line) => line.text)).toEqual(
+			official.map((line) => line.text),
+		);
+		expect(parsed.toolDiagnostics).toEqual([]);
+		expect(part?.children).toEqual([
+			expect.objectContaining({
+				kind: "paragraph",
+				text: "内文。",
+				source: expect.objectContaining({ relativePath: "inner.adoc" }),
+			}),
+		]);
+		expect(nextChapter).toEqual(
+			expect.objectContaining({ title: "后一章", level: 1 }),
+		);
 	});
 });
 
