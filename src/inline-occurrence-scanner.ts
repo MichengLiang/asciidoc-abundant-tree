@@ -73,7 +73,7 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 			);
 		}
 		const span = interval.contentSpan ?? interval.span;
-		const policy = officialBlockPolicy(surface.context);
+		const policy = officialBlockPolicy(surface.block);
 		if (policy !== "scan") {
 			continue;
 		}
@@ -215,7 +215,7 @@ function recoverSourceAwareInlineOrigins<
 function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
 	let current = surface.parent;
 	while (current) {
-		if (officialBlockPolicy(current.context) === "diagnostic") {
+		if (officialBlockPolicy(current.block) === "diagnostic") {
 			return true;
 		}
 		current = current.parent;
@@ -609,7 +609,7 @@ function collectUnscannableRanges(
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
 	ranges: LineRange[],
 ): void {
-	const policy = officialBlockPolicy(surface.context);
+	const policy = officialBlockPolicy(surface.block);
 	const interval = intervalByBlock.get(surface.block);
 	if (policy === "skip" || policy === "diagnostic") {
 		if (interval) {

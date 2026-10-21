@@ -87,7 +87,7 @@ export function projectSourceSurfaces(options: {
 	const logicalSource = logicalSourceForLineTable(options.lineTable);
 
 	for (const surface of blockSurfaces) {
-		const policy = officialBlockPolicy(surface.context);
+		const policy = officialBlockPolicy(surface.block);
 		if (
 			isExternalSourceSurface(surface, mainSourcePath, options.sourceIdentity)
 		) {
@@ -566,7 +566,7 @@ function sourceAwareOriginForLine(
 function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
 	let current = surface.parent;
 	while (current) {
-		if (officialBlockPolicy(current.context) === "diagnostic") {
+		if (officialBlockPolicy(current.block) === "diagnostic") {
 			return true;
 		}
 		current = current.parent;

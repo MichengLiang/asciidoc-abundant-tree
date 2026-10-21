@@ -19,6 +19,7 @@ export type AsciidoctorBlock = {
 	getCatalog?: () => unknown;
 	getContent?: () => Promise<string>;
 	getContext?: () => string;
+	getContentModel?: () => string;
 	getDocumentTitle?: () => string | null;
 	getId?: () => string | undefined;
 	getLevel?: () => number;

@@ -169,7 +169,7 @@ function buildNode(
 			toNodes(buildNode(child, context)),
 		);
 	}
-	if (officialBlockPolicy(blockContext) === "diagnostic") {
+	if (officialBlockPolicy(block) === "diagnostic") {
 		return undefined;
 	}
 	if (officialLine !== undefined) {

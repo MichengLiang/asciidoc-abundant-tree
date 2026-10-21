@@ -55,6 +55,8 @@ Paragraph、带 macros substitutions 的 prose block 和可扫描 table prose �
 
 Open block 是容器。它自身不产生 prose occurrence；occurrence 来自其 paragraph descendants。
 
+写成隐身段落的 example、sidebar、quote 与 open 块（xref:cloaked-paragraph[隐身段落]）不是容器：官方建块时把它们的内容模型从 compound 改成 simple（`parser.js` 1523 行），块里是一段文字，没有段落子块。内容模型为 simple 的这几种块按段落扫描，xref 与 anchor occurrence 来自块自己的文本行。
+
 === Section Scope
 
 Section scope 由 official section surfaces 和 source intervals 建立。Table cell、listing、pass-through 或 literal content 中的 section-looking text 不得污染 section tree。

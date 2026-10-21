@@ -152,6 +152,27 @@ describe("cloaked paragraphs", () => {
 
 		expect(spans(document, "listing")).toEqual([{ startLine: 5, endLine: 7 }]);
 	});
+
+	it.each([
+		"[sidebar]",
+		"[quote]",
+		"[example]",
+		"[open]",
+		"****",
+	])("finds the xref inside %s once", async (opening) => {
+		const closing = opening === "****" ? "\n****" : "";
+		const document = await parseArticle(
+			`cloaked-xref-${opening.replace(/\W/gu, "-")}.adoc`,
+			`${opening}\n见 xref:target[目标]。${closing}\n\n[#target]\n=== 目标\n`,
+		);
+
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([["target", 6]]);
+	});
 });
 
 describe("delimiters written the long or masqueraded way", () => {
