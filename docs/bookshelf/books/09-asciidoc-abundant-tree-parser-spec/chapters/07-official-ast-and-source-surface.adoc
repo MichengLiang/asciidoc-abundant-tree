@@ -114,7 +114,7 @@ Paragraph、带 macros substitutions 的 prose block 和可扫描 table prose �
 
 Occurrence 只来自官方读进块文字的行。官方按段落读文字时跳过行注释（`//` 开头、但不是 `///`，`reader.js` 528 行）：普通段落、隐身段落、列表条目的文字、表格都这样读（`parser.js` 1066、1272、1525 行），这些块里的行注释不产生 occurrence。分隔块按分隔符读进的内容不跳过行注释（`parser.js` 1531 行）：分隔的 verse 块里以 `//` 开头的行是内容，官方照常替换，它的 xref 产生 occurrence。
 
-列表条目（olist、ulist、colist 的 list_item）的文字从标记行起。标记行下面紧挨着的行是续行：官方把它们读成一个段落，再并进条目的文字（`parser.js` 1985-2011 行，`ListItem#foldFirst`）。在列表里读段落，停在空行、`+` 续接行、块分隔符、块属性行与列表标记行之前（`parser.js` 3029-3036 行），行注释被跳过、不打断段落。续行里的 xref 与标记行上的一样产生 occurrence。用 `+` 挂上的块与嵌套列表是条目的子块，按它们自己的归类扫描。
+列表条目（olist、ulist、colist 的 list_item）的文字从标记行起。标记行下面紧挨着的行是续行：官方以只读文字的方式（text_only）读下一个块，读成一个段落，再并进条目的文字（`parser.js` 1985-2011 行，`ListItem#foldFirst`）。读之前先读掉块的 metadata，这时只认锚点行（`[[id]]`）、属性列表行与行注释（`parser.js` 2798-2880 行 `parseBlockMetadataLine`）；`.标题` 这样的行不是 metadata，是条目的文字。读掉的 metadata 随段落并进条目时丢弃。段落在列表里读（xref:official-paragraph[官方怎样读段落]），停在空行、`+` 续接行、块分隔符、块属性行与列表标记行之前（`parser.js` 3029-3036 行），行注释被跳过、不打断段落。紧挨着的不是段落（例如分隔块）时没有续行。续行里的 xref 与标记行上的一样产生 occurrence。用 `+` 挂上的块与嵌套列表是条目的子块，按它们自己的归类扫描。
 
 Section 标题与 floating_title 的标题文字做 macros 替换，标题行里的 xref 与锚点产生 occurrence，与块标题相同。标题文字从 `=` 标记之后算起。Section 标题里的 xref 属于这个 section 自己：投影成 RDF 时，它是从这个标题出发的边。
 

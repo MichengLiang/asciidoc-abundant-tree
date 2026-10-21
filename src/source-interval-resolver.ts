@@ -5,7 +5,7 @@ import {
 import type { LineSpan, SourceSpan, ToolDiagnostic } from "./model";
 import type { OfficialBlockSurface } from "./official-block-walker";
 import { delimiterOpens, officialDelimiter } from "./official-delimiter";
-import { paragraphEndLine } from "./official-paragraph";
+import { listItemTextEndLine, paragraphEndLine } from "./official-paragraph";
 import {
 	borrowsChildSourceLocation,
 	isMarkdownQuote,
@@ -114,7 +114,7 @@ export function resolveSourceInterval(
 		delimited?.contentSpan ??
 		undelimited?.contentSpan ??
 		sourceContentSpan ??
-		contentSpanForContext(surface, span);
+		contentSpanForContext(surface, span, lineTable);
 	const sourceSpan = sourceSpanFromLineSpan(sourceTable, span);
 	const titleSpan = titleSpanForSurface(surface, sourceTable);
 	return {
@@ -377,6 +377,7 @@ function firstSourceLine(surface: OfficialBlockSurface): string | undefined {
 function contentSpanForContext(
 	surface: OfficialBlockSurface,
 	span: LineSpan,
+	lineTable: LineTable,
 ): LineSpan | undefined {
 	if (surface.context === "paragraph") {
 		return {
@@ -385,10 +386,12 @@ function contentSpanForContext(
 		};
 	}
 	if (surface.context === "list_item") {
+		// 条目的文字是标记行加紧挨着的续行：官方把续行读成段落，再并进条目的文字（parser.js 1985-2011 行，foldFirst），
+		// 并进以后它不再是子块，没有坐标，只能照官方的读法从标记行往下数（09 号书「Inline 扫描边界」）。
 		const line = surface.sourceLine ?? span.startLine;
 		return {
 			startLine: line,
-			endLine: line,
+			endLine: listItemTextEndLine(lineTable, line),
 		};
 	}
 	return undefined;
