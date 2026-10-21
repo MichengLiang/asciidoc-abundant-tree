@@ -907,7 +907,7 @@ describe("official table inline scanning", () => {
 					[
 						{
 							getLineNumber: () => 4,
-							lines: ["cell <<cell>>"],
+							lines: () => ["cell <<cell>>"],
 						},
 					],
 				],
@@ -967,11 +967,11 @@ describe("official table inline scanning", () => {
 					[
 						{
 							getLineNumber: () => 1,
-							lines: ["left <<same-line>>"],
+							lines: () => ["left <<same-line>>"],
 						},
 						{
 							getLineNumber: () => 1,
-							lines: ["right"],
+							lines: () => ["right"],
 						},
 					],
 					[
@@ -1073,13 +1073,13 @@ describe("official table inline scanning", () => {
 					[
 						{
 							getLineNumber: () => 1,
-							lines: ["first"],
+							lines: () => ["first"],
 						},
 					],
 					[
 						{
 							getLineNumber: () => 3,
-							lines: ["second"],
+							lines: () => ["second"],
 						},
 					],
 				],
@@ -1292,13 +1292,8 @@ describe("official table inline scanning", () => {
 							getInnerDocument: () => undefined,
 						},
 						{
-							getInnerDocument: () => ({
-								getBlocks: () => "not blocks",
-							}),
-						},
-						{
 							getLineNumber: () => undefined,
-							lines: ["<<missing-line>>"],
+							lines: () => ["<<missing-line>>"],
 						},
 						{
 							getLineNumber: () => 5,
@@ -1349,75 +1344,6 @@ describe("official table inline scanning", () => {
 
 		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual([
 			"<<fallback-line>>",
-		]);
-	});
-
-	it("uses inner paragraph source lines conservatively when source text is partial or absent", () => {
-		const tableBlock = {
-			getContext: () => "table",
-			rows: {
-				body: [
-					[
-						{
-							getInnerDocument: () => ({
-								getBlocks: () => [
-									{
-										getContext: () => "paragraph",
-										getSource: () => undefined,
-										getSourceLocation: () => ({
-											getLineNumber: () => 2,
-										}),
-									},
-									{
-										getContext: () => "paragraph",
-										getSource: () => "<<missing-location>>",
-									},
-									{
-										getContext: () => "open",
-									},
-								],
-							}),
-						},
-					],
-				],
-			},
-		} satisfies AsciidoctorBlock;
-		const intervalByBlock = new WeakMap([
-			[
-				tableBlock,
-				{
-					blockStartLine: 1,
-					metadata: [],
-					contentSpan: { startLine: 1, endLine: 3 },
-					span: { startLine: 1, endLine: 3 },
-					diagnostics: [],
-				},
-			],
-		]);
-
-		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
-			sectionByLine: new Map(),
-			lineTable: buildLineTable(
-				["|===", "<<single-line-only>>", "<<missing-location>>"].join("\n"),
-			),
-			blockSurfaces: [
-				{
-					block: tableBlock,
-					context: "table",
-					nodeName: "table",
-					level: undefined,
-					title: undefined,
-					id: undefined,
-					sourceLine: 1,
-					children: [],
-					indexInParent: 0,
-				},
-			],
-			intervalByBlock,
-		});
-
-		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual([
-			"<<single-line-only>>",
 		]);
 	});
 

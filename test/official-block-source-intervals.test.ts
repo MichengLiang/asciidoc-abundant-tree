@@ -392,6 +392,101 @@ describe("quotes written as paragraphs", () => {
 	});
 });
 
+describe("table cells", () => {
+	it("scans the blocks of an a| cell by the same policy as the body", async () => {
+		const document = await parseArticle(
+			"cell-blocks.adoc",
+			[
+				'[cols="1a,1"]',
+				"|===",
+				"a|",
+				"====",
+				"例 xref:a[A]。",
+				"====",
+				"",
+				"* 项 xref:b[B]。",
+				"",
+				"NOTE: 注 xref:c[C]。",
+				"",
+				"[sidebar]",
+				"侧 xref:d[D]。",
+				"",
+				"----",
+				"代码 xref:listing[不扫]",
+				"----",
+				"|普通 xref:e[E]",
+				"",
+				"a|单元段 xref:f[F]。",
+				"|二 xref:g[G]",
+				"|===",
+				"",
+			].join("\n"),
+		);
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([
+			["a", 9],
+			["b", 12],
+			["c", 14],
+			["d", 17],
+			["e", 22],
+			["f", 24],
+			["g", 25],
+		]);
+	});
+
+	it("scans every line of a plain cell", async () => {
+		const document = await parseArticle(
+			"cell-multiline.adoc",
+			"|===\n|第一行\n第二行 xref:a[A]\n|单行 xref:b[B]\n|===\n",
+		);
+
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([
+			["a", 7],
+			["b", 8],
+		]);
+	});
+
+	it("relocates the cells of a table inside a markdown quote", async () => {
+		const document = await parseArticle(
+			"cell-in-markdown-quote.adoc",
+			[
+				"> 引语。",
+				">",
+				"> |===",
+				"> a|",
+				"> ====",
+				"> 例 xref:a[A]。",
+				"> ====",
+				"> |普通 xref:b[B]",
+				"> |===",
+				"",
+			].join("\n"),
+		);
+
+		expect(document.toolDiagnostics).toEqual([]);
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.target,
+				xref.sourceSpan?.start.line,
+			]),
+		).toEqual([
+			["a", 10],
+			["b", 12],
+		]);
+	});
+});
+
 async function parseBook(
 	name: string,
 	introduction: string,

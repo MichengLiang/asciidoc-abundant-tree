@@ -1,6 +1,6 @@
 import { type AbstractBlock, Cursor } from "@asciidoctor/core";
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
-import { childBlocksOf } from "./official-block-utils";
+import { asciidocCellDocuments, childBlocksOf } from "./official-block-utils";
 import {
 	type LineTable,
 	lineText,
@@ -12,6 +12,10 @@ const takenFromParent = new WeakSet<AsciidoctorBlock>();
 const borrowedFromChild = new WeakSet<AsciidoctorBlock>();
 const markdownQuotes = new WeakSet<AsciidoctorBlock>();
 const quoteDepths = new WeakMap<AsciidoctorBlock, number>();
+const cellLineMappers = new WeakMap<
+	AsciidoctorBlock,
+	(line: number) => number
+>();
 
 // 官方块的坐标有两处要补正，都在官方块上改：遍历、投影与行内扫描都从官方块读坐标，改在这一处，它们读到的就是同一个。
 // - Asciidoctor 在部导言里新建两种没有 source location 的开放块与段落（09 号书「官方合成的块」）。照官方给合成的
@@ -44,6 +48,12 @@ export function isMarkdownQuote(block: AsciidoctorBlock): boolean {
 // 块套在几层 markdown 引语里。官方读它时，每一层都已去掉一个 `> `（source-lines 的 quotedLineTable）。
 export function markdownQuoteDepth(block: AsciidoctorBlock): number {
 	return quoteDepths.get(block) ?? 0;
+}
+
+// 普通单元格不是块，没有 source location 可补；它带的行号与所在的表格读自同一个 Reader，表格在 markdown 引语里时
+// 同样是相对行号，按表格的换算取源行。
+export function cellSourceLine(table: AsciidoctorBlock, line: number): number {
+	return cellLineMappers.get(table)?.(line) ?? line;
 }
 
 // 官方认 markdown 引语的条件（parser.js 1102 行）：官方读到的段落第一行以 `> ` 开头。用它建出的 quote 是复合块；
@@ -92,6 +102,9 @@ function complete(
 	for (const child of children) {
 		complete(child, block, lineTable, childDepth);
 	}
+	for (const cellBlock of cellBlocksOf(block)) {
+		complete(cellBlock, undefined, lineTable, childDepth);
+	}
 	// 部的第一个块被包进新建的 partintro 开放块（parser.js 554-565、587-596 行）。
 	if (!block.getSourceLocation?.() && block.getContext?.() === "open") {
 		const location = children
@@ -120,11 +133,13 @@ function relocateQuoted(
 ): void {
 	const outer = quotedLineTable(lineTable, depth);
 	const inner = quotedLineTable(lineTable, depth + 1);
+	const toSource = (relative: number) =>
+		paragraphLine(outer, anchor, relative, true);
 	const relocate = (block: AsciidoctorBlock): void => {
-		for (const child of childBlocksOf(block)) {
+		for (const child of [...childBlocksOf(block), ...cellBlocksOf(block)]) {
 			const relative = child.getSourceLocation?.()?.getLineNumber?.();
 			if (relative !== undefined) {
-				const line = paragraphLine(outer, anchor, relative, true);
+				const line = toSource(relative);
 				locate(
 					child,
 					new Cursor(
@@ -138,12 +153,20 @@ function relocateQuoted(
 					takenFromParent.add(child);
 				}
 			}
+			if (child.getContext?.() === "table") {
+				cellLineMappers.set(child, toSource);
+			}
 			if (!opensMarkdownQuote(child, inner)) {
 				relocate(child);
 			}
 		}
 	};
 	relocate(quote);
+}
+
+// a| 单元格里的块：官方用单元格的游标读它们，它们与表格读自同一个 Reader，坐标的补正一样适用。
+function cellBlocksOf(block: AsciidoctorBlock): AsciidoctorBlock[] {
+	return asciidocCellDocuments(block).flatMap(childBlocksOf);
 }
 
 function locate(

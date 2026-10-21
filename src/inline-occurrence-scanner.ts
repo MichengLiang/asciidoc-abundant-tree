@@ -20,8 +20,20 @@ import type {
 } from "./model";
 import { definedObject } from "./object-utils";
 import { officialBlockPolicy } from "./official-block-policy";
-import type { OfficialBlockSurface } from "./official-block-walker";
-import type { SourceInterval } from "./source-interval-resolver";
+import {
+	asciidocCellDocuments,
+	cellDocument,
+	tableCells,
+} from "./official-block-utils";
+import {
+	type OfficialBlockSurface,
+	walkOfficialBlocks,
+} from "./official-block-walker";
+import { cellSourceLine } from "./official-source-location";
+import {
+	resolveSourceInterval,
+	type SourceInterval,
+} from "./source-interval-resolver";
 import type { LineRange, LineTable, SourceLine } from "./source-lines";
 import { sourceSpanForRange } from "./source-lines";
 
@@ -53,70 +65,19 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 	anchorOccurrences: AnchorOccurrenceNode[];
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 } {
-	const xrefOccurrences: XrefOccurrenceNode[] = [];
-	const anchorOccurrences: AnchorOccurrenceNode[] = [];
-	const headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[] =
-		[];
-
-	for (const surface of options.blockSurfaces) {
-		const interval = options.intervalByBlock.get(surface.block);
-		if (!interval) {
-			continue;
-		}
-		if (hasDiagnosticPolicyAncestor(surface)) {
-			if (isPreambleParagraph(surface)) {
-				scanHeadingInlineMetadataRange(
-					options.lineTable,
-					interval.contentSpan?.startLine ?? interval.span.startLine,
-					interval.contentSpan?.endLine ?? interval.span.endLine,
-					headingInlineMetadataOccurrences,
-					options.toolDiagnostics,
-				);
-			}
-			continue;
-		}
-		if (interval.metadataSpan) {
-			scanMetadataRange(
-				options.lineTable,
-				interval.metadataSpan.startLine,
-				interval.metadataSpan.endLine,
-				xrefOccurrences,
-				anchorOccurrences,
-			);
-		}
-		const span = interval.contentSpan ?? interval.span;
-		const policy = officialBlockPolicy(surface.block);
-		if (policy !== "scan") {
-			continue;
-		}
-		if (!scansMacroSubstitutedContent(surface)) {
-			continue;
-		}
-		if (surface.context === "table") {
-			scanTableInlineRange(
-				options.lineTable,
-				surface.block,
-				span.startLine,
-				span.endLine,
-				xrefOccurrences,
-				anchorOccurrences,
-				headingInlineMetadataOccurrences,
-				options.toolDiagnostics,
-			);
-		} else {
-			scanInlineRange(
-				options.lineTable,
-				span.startLine,
-				span.endLine,
-				xrefOccurrences,
-				anchorOccurrences,
-				headingInlineMetadataOccurrences,
-				options.toolDiagnostics,
-				descendantUnscannableRanges(surface, options.intervalByBlock),
-				isBibliographyList(surface),
-			);
-		}
-	}
+	const collected: Collected = {
+		lineTable: options.lineTable,
+		xrefOccurrences: [],
+		anchorOccurrences: [],
+		headingInlineMetadataOccurrences: [],
+		toolDiagnostics: options.toolDiagnostics,
+	};
+	scanSurfaces(collected, options.blockSurfaces, options.intervalByBlock);
+	const {
+		xrefOccurrences,
+		anchorOccurrences,
+		headingInlineMetadataOccurrences,
+	} = collected;
 
 	// 所属 section 是逻辑文档上的结构关系，要趁出现处还带着逻辑行时判定；下面回源以后只剩来源坐标。
 	assignContainingSectionIds(
@@ -230,6 +191,72 @@ function recoverSourceAwareInlineOrigins<
 		recoveredOccurrences.push(occurrence);
 	}
 	return recoveredOccurrences;
+}
+
+type Collected = {
+	lineTable: LineTable;
+	xrefOccurrences: XrefOccurrenceNode[];
+	anchorOccurrences: AnchorOccurrenceNode[];
+	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
+	toolDiagnostics: ToolDiagnostic[] | undefined;
+};
+
+// 正文的块与 a| 单元格里的块走同一个循环（09 号书「Inline 扫描边界」）：按 policy 扫描、递归或跳过。
+function scanSurfaces(
+	collected: Collected,
+	surfaces: OfficialBlockSurface[],
+	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>,
+): void {
+	for (const surface of surfaces) {
+		const interval = intervalByBlock.get(surface.block);
+		if (!interval) {
+			continue;
+		}
+		if (hasDiagnosticPolicyAncestor(surface)) {
+			if (isPreambleParagraph(surface)) {
+				scanHeadingInlineMetadataRange(
+					collected.lineTable,
+					interval.contentSpan?.startLine ?? interval.span.startLine,
+					interval.contentSpan?.endLine ?? interval.span.endLine,
+					collected.headingInlineMetadataOccurrences,
+					collected.toolDiagnostics,
+				);
+			}
+			continue;
+		}
+		if (interval.metadataSpan) {
+			scanMetadataRange(
+				collected.lineTable,
+				interval.metadataSpan.startLine,
+				interval.metadataSpan.endLine,
+				collected.xrefOccurrences,
+				collected.anchorOccurrences,
+			);
+		}
+		const span = interval.contentSpan ?? interval.span;
+		const policy = officialBlockPolicy(surface.block);
+		if (policy !== "scan") {
+			continue;
+		}
+		if (!scansMacroSubstitutedContent(surface)) {
+			continue;
+		}
+		if (surface.context === "table") {
+			scanTable(collected, surface.block);
+		} else {
+			scanInlineRange(
+				collected.lineTable,
+				span.startLine,
+				span.endLine,
+				collected.xrefOccurrences,
+				collected.anchorOccurrences,
+				collected.headingInlineMetadataOccurrences,
+				collected.toolDiagnostics,
+				descendantUnscannableRanges(surface, intervalByBlock),
+				isBibliographyList(surface),
+			);
+		}
+	}
 }
 
 function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
@@ -462,142 +489,57 @@ function scanXrefMatches(
 	}
 }
 
-function scanTableInlineRange(
-	lineTable: LineTable,
-	block: AsciidoctorBlock,
-	_startLine: number,
-	_endLine: number,
-	xrefOccurrences: XrefOccurrenceNode[],
-	anchorOccurrences: AnchorOccurrenceNode[],
-	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
-	toolDiagnostics: ToolDiagnostic[] | undefined,
-): void {
-	for (const range of mergeLineSpans(collectTableScannableRanges(block))) {
+// 表格自己不扫：普通单元格扫它的文本行；a| 单元格的内嵌文档按正文的规则解析区间、交给 scanSurfaces。
+function scanTable(collected: Collected, block: AsciidoctorBlock): void {
+	for (const range of mergeLineSpans(ordinaryCellRanges(block))) {
 		scanInlineRange(
-			lineTable,
+			collected.lineTable,
 			range.startLine,
 			range.endLine,
-			xrefOccurrences,
-			anchorOccurrences,
-			headingInlineMetadataOccurrences,
-			toolDiagnostics,
+			collected.xrefOccurrences,
+			collected.anchorOccurrences,
+			collected.headingInlineMetadataOccurrences,
+			collected.toolDiagnostics,
 		);
 	}
-}
-
-function collectTableScannableRanges(block: AsciidoctorBlock): LineSpan[] {
-	const rows = block.rows;
-	if (!isRecord(rows)) {
-		return [];
-	}
-	const ranges: LineSpan[] = [];
-	for (const groupName of ["head", "body", "foot"]) {
-		const group = rows[groupName];
-		if (!Array.isArray(group)) {
-			continue;
-		}
-		for (const row of group) {
-			if (!Array.isArray(row)) {
-				continue;
-			}
-			for (const cell of row) {
-				ranges.push(...scannableRangesFromCell(cell));
+	for (const document of asciidocCellDocuments(block)) {
+		const surfaces = walkOfficialBlocks(document);
+		const intervalByBlock = new WeakMap<AsciidoctorBlock, SourceInterval>();
+		for (const surface of surfaces) {
+			const interval = resolveSourceInterval(surface, collected.lineTable);
+			if (interval) {
+				intervalByBlock.set(surface.block, interval);
+				collected.toolDiagnostics?.push(...interval.diagnostics);
 			}
 		}
+		scanSurfaces(collected, surfaces, intervalByBlock);
 	}
-	return ranges;
 }
-
-type InnerBlock = {
-	getBlocks?: () => InnerBlock[];
-	getContext?: () => string | undefined;
-	getSource?: () => string | undefined;
-	getSourceLocation?: () => {
-		getLineNumber?: () => number | undefined;
-	};
-};
 
 type TableCell = {
-	getInnerDocument?: () => { getBlocks?: () => InnerBlock[] } | undefined;
 	getLineNumber?: () => number | undefined;
-	// 单元格的源文本行在 lines 属性上（Ruby 的 Cell#lines）。
-	lines?: string[] | undefined;
-	getStyle?: () => string | undefined;
+	// 4.x 的 Cell#lines 是方法（table.js 616 行），给出单元格文本的行。
+	lines?: () => string[];
 };
 
-function scannableRangesFromCell(cell: unknown): LineSpan[] {
-	if (!isRecord(cell)) {
-		return [];
-	}
-	const innerBlocks = innerBlocksFromCell(cell);
-	if (innerBlocks.length > 0) {
-		const ranges: LineSpan[] = [];
-		for (const innerBlock of innerBlocks) {
-			collectScannableInnerBlockRanges(innerBlock, ranges);
+function ordinaryCellRanges(block: AsciidoctorBlock): LineSpan[] {
+	return tableCells(block).flatMap((cell) => {
+		if (cellDocument(cell) !== undefined || !isRecord(cell)) {
+			return [];
 		}
-		return ranges;
-	}
-	return ordinaryCellRange(cell);
-}
-
-function innerBlocksFromCell(cell: unknown): InnerBlock[] {
-	if (!isRecord(cell) || typeof cell.getInnerDocument !== "function") {
-		return [];
-	}
-	const innerDocument = cell.getInnerDocument();
-	if (
-		!isRecord(innerDocument) ||
-		typeof innerDocument.getBlocks !== "function"
-	) {
-		return [];
-	}
-	const blocks = innerDocument.getBlocks();
-	return Array.isArray(blocks) ? (blocks as InnerBlock[]) : [];
-}
-
-function ordinaryCellRange(cell: TableCell): LineSpan[] {
-	const startLine = cell.getLineNumber?.();
-	if (startLine === undefined) {
-		return [];
-	}
-	const lines = cell.lines;
-	const lineCount = Array.isArray(lines) ? Math.max(1, lines.length) : 1;
-	return [{ startLine, endLine: startLine + lineCount - 1 }];
-}
-
-function collectScannableInnerBlockRanges(
-	block: InnerBlock,
-	ranges: LineSpan[],
-): void {
-	const context = block.getContext?.();
-	if (context === "paragraph") {
-		const range = sourceRangeForInnerBlock(block);
-		if (range) {
-			ranges.push(range);
+		const tableCell = cell as TableCell;
+		const startLine = tableCell.getLineNumber?.();
+		if (startLine === undefined) {
+			return [];
 		}
-		return;
-	}
-	if (context !== "open" && context !== "section") {
-		return;
-	}
-	for (const child of block.getBlocks?.() ?? []) {
-		collectScannableInnerBlockRanges(child, ranges);
-	}
-}
-
-function sourceRangeForInnerBlock(block: InnerBlock): LineSpan | undefined {
-	const startLine = block.getSourceLocation?.()?.getLineNumber?.();
-	if (startLine === undefined) {
-		return undefined;
-	}
-	const source = block.getSource?.();
-	if (source === undefined) {
-		return { startLine, endLine: startLine };
-	}
-	return {
-		startLine,
-		endLine: startLine + Math.max(1, source.split(/\r?\n/u).length) - 1,
-	};
+		const lineCount = Math.max(1, tableCell.lines?.().length ?? 1);
+		return [
+			{
+				startLine: cellSourceLine(block, startLine),
+				endLine: cellSourceLine(block, startLine + lineCount - 1),
+			},
+		];
+	});
 }
 
 function mergeLineSpans(ranges: LineSpan[]): LineSpan[] {
