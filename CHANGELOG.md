@@ -6,6 +6,10 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Added
+
+- Book-entry parsing accepts `includeResolvers`: a host registers a resolver per target prefix (for example `docloom:`) for includes that select by something other than a path, such as a symbol in a TypeScript file. The resolver receives the target, the include attributes as Asciidoctor parses them, and the including file, and returns whole consecutive lines of a file inside `documentRoot` with the line they start at. The text is pushed into Asciidoctor's own Reader at that file and line, so leveloffset, indent and nested includes behave as for a file include, and each line gets its coordinate in that file. Returned text that does not match its source leaves the rest of that include without coordinates (`origin-map.selection-mismatch`); a resolver that throws fails construction (`include.resolver-failed`). Directives that no resolver claims behave as before.
+
 ### Fixed
 
 - Fixed part introductions losing their source coordinates. A one-paragraph `[partintro]` got no source location and reported `source-interval.delimiter-not-found` plus `source-location.missing`; plain paragraphs written directly under a part (which Asciidoctor wraps in an intro block it creates itself) disappeared from the tree altogether. The parser now gives these Asciidoctor-created blocks a location the way Asciidoctor gives one to the preamble it creates: a created container takes its first child's location, and the paragraph that receives a `[partintro]` paragraph's lines takes its parent's.

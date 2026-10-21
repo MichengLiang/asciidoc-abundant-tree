@@ -266,7 +266,37 @@ export type ParseAbundantTreeOptions =
 			sourcePath: string;
 			mode: "book-entry";
 			documentRoot: string;
+			includeResolvers?: readonly IncludeResolver[];
 	  };
+
+// 宿主登记的 include 解析器：书按调用方自定的选择器引入内容，例如按符号取一个声明
+// （10 号书「宿主登记的 include 解析器」）。
+export type IncludeResolver = {
+	readonly prefix: string;
+	resolve(
+		request: IncludeResolverRequest,
+	): IncludeResolution | Promise<IncludeResolution>;
+};
+
+export type IncludeResolverRequest = {
+	// 去掉前缀的目标。
+	readonly target: string;
+	// Asciidoctor 解析出的属性，与书架构建时 Asciidoctor 的 include 处理器收到的相同：位置属性以序号为键，
+	// opts 展开为 `<名字>-option`。
+	readonly attributes: Readonly<Record<string, string>>;
+	// directive 所在源文件的绝对路径。
+	readonly sourcePath: string;
+};
+
+export type IncludeResolution = {
+	// 来源文件中连续的整行；第 n 行对应来源的第 startLine + n - 1 行。
+	readonly text: string;
+	readonly origin: {
+		// 绝对路径，或相对于 documentRoot。
+		readonly path: string;
+		readonly startLine: number;
+	};
+};
 
 export type ParseAbundantTreeFromSourceOptions = {
 	readonly sourceText: string;

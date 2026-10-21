@@ -4,6 +4,7 @@ import type {
 	OfficialReaderLine,
 	ReaderPush,
 } from "../asciidoctor-file-adapter";
+import type { IncludeResolver } from "../model";
 import type { SourceLine } from "../source-lines";
 import {
 	createIdentityColumnMap,
@@ -14,17 +15,17 @@ import { constructionError } from "./diagnostics";
 import {
 	hasLeveloffsetSurface,
 	hasOptionalSurface,
+	type IncludeAttributes,
 	indentSurface,
 	parseIncludeAttributes,
 	selectionSurface,
 } from "./include-attribute-model";
-import {
-	type IncludeLineSelector,
-	mapIncludeSelection,
-} from "./include-selection-mapper";
+import { claimingResolver } from "./include-resolvers";
+import { mapIncludeSelection } from "./include-selection-mapper";
 import {
 	assertSourceAwareLogicalDocumentInvariants,
 	type IncludeDirectiveEvidence,
+	type IncludeSelector,
 	type LogicalLineRecord,
 	type SourceAwareLogicalDocument,
 	type SourceFileRecord,
@@ -49,6 +50,7 @@ export type PreprocessBookEntryOptions = {
 	readonly sourcePath: string;
 	readonly documentRoot: string;
 	readonly attributes?: Record<string, unknown> | undefined;
+	readonly includeResolvers?: readonly IncludeResolver[] | undefined;
 };
 
 type IncludeDirective = {
@@ -59,6 +61,7 @@ type IncludeDirective = {
 
 type PreprocessorState = {
 	readonly documentRoot: string;
+	readonly includeResolvers: readonly IncludeResolver[];
 	readonly officialLines: readonly OfficialReaderLine[];
 	readonly sourceSet: ReturnType<typeof createSourceSet>;
 	readonly records: LogicalLineRecord[];
@@ -76,6 +79,7 @@ function validateIncludeGraph(
 	absolutePath: string,
 	documentRoot: string,
 	stack: string[],
+	includeResolvers: readonly IncludeResolver[],
 ): void {
 	const cycleStart = stack.indexOf(absolutePath);
 	if (cycleStart !== -1) {
@@ -89,6 +93,10 @@ function validateIncludeGraph(
 	for (const line of authoredTextLines(readFileSync(absolutePath, "utf8"))) {
 		const directive = parseReaderIncludeDirective(line);
 		if (!directive || directive.escaped) {
+			continue;
+		}
+		// 解析器认领的 directive 不指向文件：存在与边界由解析器交回的来源决定，在 Reader 推入时检查。
+		if (claimingResolver(includeResolvers, directive.target)) {
 			continue;
 		}
 		const attributes = parseIncludeAttributes(directive.attrlist);
@@ -142,7 +150,12 @@ function validateIncludeGraph(
 		) {
 			continue;
 		}
-		validateIncludeGraph(includePath, documentRoot, nextStack);
+		validateIncludeGraph(
+			includePath,
+			documentRoot,
+			nextStack,
+			includeResolvers,
+		);
 	}
 }
 
@@ -158,15 +171,18 @@ export async function preprocessBookEntryWithOfficialReader(
 			`Entry source file does not exist: ${entryPath}.`,
 		);
 	}
-	validateIncludeGraph(entryPath, documentRoot, []);
-	const officialLines = await options.adapter.readPreprocessedLines(
-		readerPreprocessingOptions({
+	const includeResolvers = options.includeResolvers ?? [];
+	validateIncludeGraph(entryPath, documentRoot, [], includeResolvers);
+	const officialLines = await options.adapter.readPreprocessedLines({
+		...readerPreprocessingOptions({
 			sourcePath: entryPath,
 			attributes: options.attributes,
 		}),
-	);
+		includeResolution: { resolvers: includeResolvers, documentRoot },
+	});
 	const state: PreprocessorState = {
 		documentRoot,
+		includeResolvers,
 		officialLines,
 		sourceSet: createSourceSet({ documentRoot }),
 		records: [],
@@ -233,6 +249,10 @@ function appendIncludeDirective(
 	directive: IncludeDirective,
 	state: PreprocessorState,
 ): void {
+	if (claimingResolver(state.includeResolvers, directive.target)) {
+		appendResolvedInclude(containingFile, line, directive, state);
+		return;
+	}
 	const attributes = parseIncludeAttributes(directive.attrlist);
 	state.diagnostics.push(...attributes.diagnostics);
 	if (attributes.classification === "unmapped") {
@@ -289,13 +309,74 @@ function appendIncludeDirective(
 
 	const targetFile = state.sourceSet.registerFile(includePath);
 	const selector = selectionSurface(attributes);
+	appendPushedInclude(
+		containingFile,
+		line,
+		targetFile,
+		attributes,
+		selector
+			? { selector, selection: mapIncludeSelection(targetFile.text, selector) }
+			: undefined,
+		state,
+	);
+}
+
+// 解析器认领的 include：解析器在官方 Reader 一侧调用过，交回的来源挂在这次推入上。文本是来源中从 startLine 起
+// 的连续整行，当作一次选取与官方输出逐行配对，来源不实时降级（10 号书「宿主登记的 include 解析器」）。
+function appendResolvedInclude(
+	containingFile: SourceFileRecord,
+	line: SourceLine,
+	directive: IncludeDirective,
+	state: PreprocessorState,
+): void {
+	const first = state.officialLines[state.officialIndex];
+	const resolved =
+		first && first.push.depth === state.currentPush.depth + 1
+			? first.push.resolved
+			: undefined;
+	// Reader 没有为它推入（解析器交回空文本）：没有行要登记。
+	if (!resolved || resolved.target !== directive.target) {
+		return;
+	}
+	appendPushedInclude(
+		containingFile,
+		line,
+		state.sourceSet.registerFile(resolved.absolutePath),
+		// 其余属性归解析器解释；这里只用 Reader 推入时照样施加的 indent 与 leveloffset。
+		parseIncludeAttributes(directive.attrlist),
+		{
+			selector: { kind: "resolver", target: directive.target },
+			selection: {
+				ok: true,
+				lines: Array.from(
+					{ length: resolved.lineCount },
+					(_, index) => resolved.startLine + index,
+				),
+			},
+		},
+		state,
+	);
+}
+
+function appendPushedInclude(
+	containingFile: SourceFileRecord,
+	line: SourceLine,
+	targetFile: SourceFileRecord,
+	attributes: IncludeAttributes,
+	selected:
+		| {
+				readonly selector: IncludeSelector;
+				readonly selection: ReturnType<typeof mapIncludeSelection>;
+		  }
+		| undefined,
+	state: PreprocessorState,
+): void {
+	const includePath = targetFile.absolutePath;
 	const leveloffset = hasLeveloffsetSurface(attributes);
 	// 下一条官方行比当前推入深一层，就是这次 include 的推入；没有这样的行，说明官方这次什么也没推入。
 	const parent = state.currentPush;
 	const first = state.officialLines[state.officialIndex];
-	const selection = selector
-		? mapIncludeSelection(targetFile.text, selector)
-		: undefined;
+	const selection = selected?.selection;
 	// 什么也没推入的 include（选取为空），下一条官方行可能是紧挨着的下一次 include 的推入，深度同样是父层加一：
 	// 选取为空就不认推入，并且这次推入里要有出自被引入文件的行（推入的第一行可能是 leveloffset 补的行，
 	// 游标还记在外层文件上，所以看整次推入）。
@@ -317,14 +398,14 @@ function appendIncludeDirective(
 	const end = own ? pushEnd(own, state) : state.officialIndex;
 	state.currentPush = own ?? parent;
 	consumeGeneratedPreludeForInclude(leveloffset, own, state);
-	if (selector && selection) {
+	if (selected) {
 		appendSelectedInclude(
 			targetFile,
-			selector,
+			selected.selector,
 			indentSurface(attributes),
 			state,
 			`${containingFile.relativePath}:${line.number}`,
-			selection,
+			selected.selection,
 			own,
 			leveloffset ? generatedTailStart(end, state) : end,
 		);
@@ -422,7 +503,7 @@ function appendFullFileInclude(
 
 function appendSelectedInclude(
 	targetFile: SourceFileRecord,
-	selector: IncludeLineSelector,
+	selector: IncludeSelector,
 	indent: ReturnType<typeof indentSurface>,
 	state: PreprocessorState,
 	includeSite: string,
@@ -480,7 +561,7 @@ function appendSelectedInclude(
 // degraded，坐标保持缺失，而不是逐行硬配——硬配会让这一段之后的每一行都错位（10 号书「选取引入」）。
 function degradeRestOfPush(
 	targetFile: SourceFileRecord,
-	selector: IncludeLineSelector,
+	selector: IncludeSelector,
 	includeSite: string,
 	bodyEnd: number,
 	state: PreprocessorState,
@@ -504,10 +585,15 @@ function degradeRestOfPush(
 	}
 }
 
-function selectorSurface(selector: IncludeLineSelector): string {
-	return selector.kind === "tag"
-		? `tag=${selector.name}`
-		: `${selector.kind}=${selector.expression}`;
+function selectorSurface(selector: IncludeSelector): string {
+	switch (selector.kind) {
+		case "tag":
+			return `tag=${selector.name}`;
+		case "resolver":
+			return `the resolver for ${selector.target}`;
+		default:
+			return `${selector.kind}=${selector.expression}`;
+	}
 }
 
 // 官方 Reader 读 AsciiDoc 文件时去掉行尾空白，所以只比到行尾空白之前；indent 改的是行首。
@@ -546,7 +632,7 @@ function appendIncludedPhysicalLine(
 	sourceFile: SourceFileRecord,
 	line: SourceLine,
 	indent: ReturnType<typeof indentSurface>,
-	selector: IncludeLineSelector | undefined,
+	selector: IncludeSelector | undefined,
 	state: PreprocessorState,
 	official: OfficialReaderLine | undefined = consumeOfficialLine(state),
 ): void {

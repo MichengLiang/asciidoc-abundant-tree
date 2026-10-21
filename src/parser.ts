@@ -23,6 +23,7 @@ export async function parseAbundantTree(
 			adapter,
 			sourcePath,
 			documentRoot: options.documentRoot,
+			includeResolvers: options.includeResolvers,
 		});
 		const constructionDiagnostic = sourceAwareDocument.diagnostics.find(
 			(diagnostic) => diagnostic.level === "error",

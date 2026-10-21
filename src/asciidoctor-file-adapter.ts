@@ -1,11 +1,20 @@
-import { loadFile, type PreprocessorReader } from "@asciidoctor/core";
+import {
+	Extensions,
+	loadFile,
+	type PreprocessorReader,
+} from "@asciidoctor/core";
 import {
 	type AsciidoctorAdapter,
 	type AsciidoctorBlock,
 	createAsciidoctorAdapter,
 	createExtensionRegistry,
 } from "./asciidoctor-adapter";
+import {
+	type ResolvedInclude,
+	registerIncludeResolvers,
+} from "./book-entry/include-resolvers";
 import type { ReaderLineCursor } from "./book-entry/line-origin-model";
+import type { IncludeResolver } from "./model";
 
 // 只在 Node 上用的这一层：从文件加载（single-file）与逐行读官方 Reader 的预处理输出（book-entry）。
 // 与 asciidoctor-adapter.ts 分开，因为 4.x 的浏览器构建不导出 loadFile。
@@ -20,9 +29,11 @@ export type OfficialReaderLine = {
 // 帧对象每次都是新的，所以以栈顶帧的身份区分推入：紧挨着两次引入同一个文件也分得开，leveloffset 补的前后
 // 两行也落在这次推入里。行号不能拿来分界：一次推入的行号从首条选中行逐行累加，选取有空隙时就对不上源行。
 // depth 是 includeStack 的深度，根文档为 0、id 为 0。
+// 宿主登记的解析器认领的 include，推入上带着解析器交回的来源。
 export type ReaderPush = {
 	readonly id: number;
 	readonly depth: number;
+	readonly resolved?: ResolvedInclude;
 };
 
 export type AsciidoctorFileAdapter = AsciidoctorAdapter & {
@@ -31,6 +42,10 @@ export type AsciidoctorFileAdapter = AsciidoctorAdapter & {
 		readonly sourcePath: string;
 		readonly baseDir: string;
 		readonly attributes?: Record<string, unknown> | undefined;
+		readonly includeResolution?: {
+			readonly resolvers: readonly IncludeResolver[];
+			readonly documentRoot: string;
+		};
 	}): Promise<readonly OfficialReaderLine[]>;
 };
 
@@ -48,6 +63,16 @@ export function createAsciidoctorFileAdapter(): AsciidoctorFileAdapter {
 			return document as unknown as AsciidoctorBlock;
 		},
 		async readPreprocessedLines(options) {
+			const resolutions = new WeakMap<object, ResolvedInclude>();
+			const registry = Extensions.create();
+			if (options.includeResolution) {
+				registerIncludeResolvers(
+					registry,
+					options.includeResolution.resolvers,
+					options.includeResolution.documentRoot,
+					resolutions,
+				);
+			}
 			const document = await loadFile(options.sourcePath, {
 				// Book-entry preprocessing prevalidates every local include against its
 				// documentRoot. The Reader still needs unsafe mode here because Asciidoctor
@@ -58,7 +83,7 @@ export function createAsciidoctorFileAdapter(): AsciidoctorFileAdapter {
 				parse: false,
 				to_file: false,
 				attributes: options.attributes ?? {},
-				extension_registry: extensionRegistry,
+				extension_registry: registry,
 			});
 			const reader: PreprocessorReader = document.getReader();
 			const lines: OfficialReaderLine[] = [];
@@ -78,12 +103,14 @@ export function createAsciidoctorFileAdapter(): AsciidoctorFileAdapter {
 					pushes += 1;
 					pushIds.set(frame, pushes);
 				}
+				const resolved = frame ? resolutions.get(frame) : undefined;
 				lines.push({
 					text,
 					cursor: cursorForReturnedReaderLine(before, after),
 					push: {
 						id: frame ? (pushIds.get(frame) ?? 0) : 0,
 						depth: stack.length,
+						...(resolved ? { resolved } : {}),
 					},
 				});
 			}

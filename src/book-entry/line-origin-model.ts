@@ -21,6 +21,11 @@ export type IncludeLineTransform = {
 	readonly columns: number;
 };
 
+// 选出这一行的方式：include 的 tag、tags、lines 选取，或宿主登记的解析器（10 号书「宿主登记的 include 解析器」）。
+export type IncludeSelector =
+	| IncludeLineSelector
+	| { readonly kind: "resolver"; readonly target: string };
+
 export type IncludeDirectiveEvidence = {
 	readonly absolutePath: string;
 	readonly relativePath: string;
@@ -42,7 +47,7 @@ export type SelectedSourceLineRecord = {
 	readonly logicalLine: number;
 	readonly text: string;
 	readonly origin: PhysicalLineOrigin;
-	readonly selector: IncludeLineSelector;
+	readonly selector: IncludeSelector;
 	readonly columnMap: IdentityColumnMap;
 };
 

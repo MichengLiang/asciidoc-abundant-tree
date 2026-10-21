@@ -51,3 +51,23 @@ parseAbundantTree({
 
 trestlework 的示例保持“一个文件一个用法”，书 include 整个文件，就等于引用那一个用法；按符号引用写成 8 号书的一个槽位，
 等 aat 能登记解析器以后再填。
+
+## 解决
+
+2026-10-21，aat 计划 #5（规约 5.4，实现 5.5）。
+
+`parseAbundantTree` 的 book-entry 调用接受 `includeResolvers`，方向与 issue 提的一致，形状按两件事定下：
+
+- **交回连续的整行与起始源行**（`{ text, origin: { path, startLine } }`）。AsciiDoc 的 include 以行为单位，官方 Reader 的
+  `pushInclude` 推入的也是行；docloom 按 AST 选出的范围从行中开始时（嵌套成员），宿主扩到整行。来源须在 documentRoot 之内。
+- **解析器只在官方 Reader 一侧调用。** aat 向官方 Reader 登记一个 include 处理器，把文本推入 Reader，文件与起始行取自来源；
+  这次推入的帧记下来源，logical document 一侧按推入身份取用。于是 leveloffset、indent、来源里的递归 include 都与文件 include
+  相同（有一条测试让同一本书分别经解析器与文件 include 引入同一份内容，节点树与诊断逐项相同）。解析器收到的属性是 Asciidoctor
+  解析出的，与书架构建时 Asciidoctor 的 include 处理器收到的一样，三方登记同一个选择器。
+
+来源核实沿用「选取引入」的逐行配对：交回的文本与来源对不上，余下的行没有坐标并报 `origin-map.selection-mismatch`；
+解析器抛出异常时构造失败（`include.resolver-failed`）。没有解析器认领的 directive 行为不变。规约见 10 号书第 4 章
+「宿主登记的 include 解析器」，README 与 CHANGELOG 有用法。
+
+下游要做的：trestlework 书架的结构检查、阅读页，以及 bookgraph 的投影，各自在调用 `parseAbundantTree` 时登记 docloom 的解析器
+（需要 aat 0.2.1 以上，书架通过 `link:` 用本地 aat 的，构建一次 dist 就能用）。

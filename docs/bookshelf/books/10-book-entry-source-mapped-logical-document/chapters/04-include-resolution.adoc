@@ -60,12 +60,12 @@ Tag 标记行的识别与 Asciidoctor 相同：行中出现 `tag::名称[]` 或 
 
 调用方为 book-entry 登记一组 include 解析器。每个解析器以目标前缀认领 directive，例如 `docloom:`；一个 directive 由第一个前缀相符的解析器认领，认领先于 URI 与路径的判断。被认领的 directive 不按文件路径解析：
 
-* 解析器收到去掉前缀的目标、作者写下的属性（`name=value` 取值并去掉引号，只写名字的取空串）与 directive 所在源文件的绝对路径。属性全部交给解析器：`tag`、`lines` 这样的选取由解析器决定是否支持，本对象不按它们选行，也不因解析器自定的属性报 `include.attrlist-unmapped`。
+* 解析器收到去掉前缀的目标、Asciidoctor 解析出的属性（与书架构建时 Asciidoctor 的 include 处理器收到的相同：位置属性以序号为键，`opts` 展开为 `<名字>-option`）与 directive 所在源文件的绝对路径。属性全部交给解析器：`tag`、`lines` 这样的选取由解析器决定是否支持，本对象不按它们选行，也不因解析器自定的属性报 `include.attrlist-unmapped`。
 * 解析器交回文本与来源：来源文件的路径（绝对路径，或相对于 documentRoot）和文本第一行所在的源行。文本是来源文件中连续的整行，第 n 行对应来源的第 startLine + n - 1 行。AsciiDoc 的 include 以行为单位，官方 Reader 推入的也是行；选择器选出的范围从行中开始时，解析器把它扩到整行。
 * 来源文件必须在 documentRoot 之内，越界阻止 logical document 成立（`include.outside-document-root`），与文件 include 相同。
 * 解析器抛出异常时，logical document 不成立：`include.resolver-failed`，消息写明 directive 所在位置与异常消息。
 
-官方 Reader 与 logical document 读到同一份文本。实现向官方 Reader 登记一个 include 处理器，认领相同前缀的 directive，把解析器交回的文本推入 Reader，文件与起始行取自来源（Reader 的 `pushInclude`）。这次推入的游标因此落在来源文件的真实行上，推入身份的分界、`indent` 与 `leveloffset` 的处理都与文件 include 相同；来源是 AsciiDoc 文件时，其中的 include directive 照常递归展开。同一次解析中，同一文件里写着同一目标与属性的 directive 只调用一次解析器，两侧取同一份结果。
+官方 Reader 与 logical document 读到同一份文本。实现向官方 Reader 登记一个 include 处理器，认领相同前缀的 directive，把解析器交回的文本推入 Reader，文件与起始行取自来源（Reader 的 `pushInclude`）。这次推入的游标因此落在来源文件的真实行上，推入身份的分界、`indent` 与 `leveloffset` 的处理都与文件 include 相同；来源是 AsciiDoc 文件时，其中的 include directive 照常递归展开。解析器只在官方 Reader 一侧调用，每处被 Reader 读到的 directive 一次：这次推入的帧记下解析器交回的来源，logical document 一侧按推入身份取用，两侧读到同一份文本，不必比对属性。被条件指令排除、Reader 没有读到的 directive 不调用解析器；解析器交回空文本时，Reader 什么也不推入，logical document 里也没有行。
 
 文本按 <<selected-include>> 的方式与官方 Reader 的输出逐行配对：官方行出自这次推入、文本就是来源的那一行，才登记这个源行。解析器交回的文本与来源对不上时，这次推入余下的行登记为 degraded line，产生 `origin-map.selection-mismatch` warning：它守着解析器交回的来源是否属实，不让一处不实的来源变成假精确的坐标。
 

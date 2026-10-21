@@ -274,6 +274,29 @@ const ttl = projection.ttl;
 const jsonLd = projection.jsonLd;
 ```
 
+Book-entry callers can register include resolvers for includes that select by something other than a file path, such as a symbol in a TypeScript file. A resolver claims targets by prefix and returns whole consecutive lines of a source file inside `documentRoot`, plus the line they start at; the lines get coordinates in that file just like a file include:
+
+```ts
+const book = await parseAbundantTree({
+	sourcePath: "bookshelf/books/08-design/book.adoc",
+	mode: "book-entry",
+	documentRoot: ".",
+	includeResolvers: [
+		{
+			// include::docloom:examples/replay.ts[symbol=replay,part=source]
+			prefix: "docloom:",
+			resolve: ({ target, attributes }) => {
+				// Your own selector: find the declaration, widen it to whole lines.
+				const { text, startLine } = selectWholeLines(target, attributes);
+				return { text, origin: { path: target, startLine } };
+			},
+		},
+	],
+});
+```
+
+`attributes` are the include attributes as Asciidoctor parses them, the same an Asciidoctor include processor receives, so the bookshelf build and this parser can register the same selector. A resolver that throws fails construction with `include.resolver-failed`; returned text that does not match its source leaves those lines without coordinates and reports `origin-map.selection-mismatch`.
+
 `parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.
 
 Browser tools that already hold AsciiDoc source text can use the browser-safe subpath:
