@@ -70,6 +70,8 @@ Table 保存 explicit ID、block title、metadata、rows 和 source span。`cell
 
 Description list 保存 explicit ID、block title、style、delimiter、metadata、metadataSpan、contentSpan、span 和 items。`delimiter` 记录该 list authored surface 中的 description delimiter；它是 source evidence，不定义列表层级。
 
+Description list 的 span 到最后一个后代块的结束行为止。后代块的结束行只从它自己往下读出：分隔块到闭合分隔符，段落与隐身段落到官方读进的最后一行，列表条目与描述到文字的最后一行（xref:description-text[描述的文字]），没有内容行的块（块宏、分隔线等）只占锚点行；容器块取它的后代中最大的结束行。读结束行时不向父块或后面的兄弟块推断：父块与兄弟的范围要用到描述列表在哪里结束。
+
 `DescriptionListItemNode` 表示一个 official description list item。Item 保存 `terms`、可选 `description` 和 item source line span。Item span 覆盖 term、直接 description text 和 description 子树中可恢复的 block surface。
 
 `DescriptionTermNode` 表示 description list item 的 term surface。Term 保存 display text、line、sourceSpan、source layer 和 term 文本区内的 inline occurrence 子节点。

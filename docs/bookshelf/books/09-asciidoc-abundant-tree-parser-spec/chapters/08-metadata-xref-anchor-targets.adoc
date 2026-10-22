@@ -65,3 +65,7 @@ Target 来自 section、listing、table、inline anchor 或 block anchor。Targe
 Source layer occurrence 与 official layer binding 必须保持可区分。
 
 Raw xref target 不被 official href 覆盖。Official reftext 不替代 source label。Binding merge 只把两个来源的事实放在同一个 occurrence 上。
+
+Official binding 在收下这个 occurrence 的官方块下取：解析器把 xref 交给转换器时，以那个块为父节点建一个 xref inline 节点（xref:engineering-contract[工程承载]）。收下它的块是文字里有这一行的块：段落、隐身段落、列表条目、描述列表的术语与描述、表格、section 与 discrete 标题。olist、ulist、colist 在节点树里是透明的，条目不建节点，但条目仍是收下自己文字里 xref 的块（xref:inline-scan-boundary[Inline 扫描边界]）。
+
+扫描器找到的每个 xref occurrence 都在某个块的文字里，所以都带 official href：本文档里找不到的 target 也由转换器给出 `#target`。没有 official href 的 xref occurrence 是解析器的缺陷，不是作者写法的结果。

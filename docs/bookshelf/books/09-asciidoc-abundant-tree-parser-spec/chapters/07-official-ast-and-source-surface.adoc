@@ -84,6 +84,7 @@ Asciidoctor 读表格时，先读到闭合分隔符为止、去掉其中的行�
 
 Fallback 必须锚定 official block。没有 official block 锚点时，解析器不得用全文件正则制造结构。
 
+[#inline-scan-boundary]
 === Inline 扫描边界
 
 Inline occurrence scanner 按 official block context 扫描。
