@@ -186,6 +186,7 @@ function buildNode(
 				}),
 		});
 		requestTitleBindings(context, block);
+		requestListItemBindings(context, block);
 		return childBlocksOf(block).flatMap((child) =>
 			toNodes(buildNode(child, context)),
 		);
@@ -207,6 +208,22 @@ function requestTitleBindings(
 		return;
 	}
 	const xrefs = collectXrefsInSpan(context, { startLine: line, endLine: line });
+	if (xrefs.length > 0) {
+		context.bindingRequests.push({ block, xrefs });
+	}
+}
+
+// olist、ulist、colist 的条目在节点树里透明，不建节点，但它仍是收下自己文字里 xref 的块（09 号书「Binding Merge」）。
+// 文字的范围由区间解析器照官方读法算出（「Inline 扫描边界」）；描述列表的条目走 buildDescriptionList，不到这里。
+function requestListItemBindings(
+	context: ProjectContext,
+	block: AsciidoctorBlock,
+): void {
+	if (block.getContext?.() !== "list_item") {
+		return;
+	}
+	const span = context.intervalByBlock.get(block)?.contentSpan;
+	const xrefs = span ? collectXrefsInSpan(context, span) : [];
 	if (xrefs.length > 0) {
 		context.bindingRequests.push({ block, xrefs });
 	}
