@@ -1,0 +1,12 @@
+== 词汇
+
+正文。
+
+术语 xref:target[术]:: 说明 xref:target[甲]
+另起::
+说明 xref:target[乙]
+续行 xref:target[丙]
+用 std::string:: 说明 xref:target[丁]
+
+[#target]
+== 目标

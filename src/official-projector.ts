@@ -350,14 +350,15 @@ function buildDescriptionTerm(
 			: span
 				? blockSourceLayer(context, interval, span, "description term")
 				: undefined;
+	const occurrenceSpan = occurrenceSpanOf(context, source, sourceSpan);
 	const xrefs = span
 		? collectXrefsInSpan(context, span).filter((xref) =>
-				isOccurrenceInsideSourceSpan(xref, sourceSpan),
+				isOccurrenceInsideSourceSpan(xref, occurrenceSpan),
 			)
 		: [];
 	const anchors = span
 		? collectAnchorsInSpan(context, span).filter((anchor) => {
-				if (!isOccurrenceInsideSourceSpan(anchor, sourceSpan)) {
+				if (!isOccurrenceInsideSourceSpan(anchor, occurrenceSpan)) {
 					return false;
 				}
 				const key = anchorKey(anchor);
@@ -370,7 +371,7 @@ function buildDescriptionTerm(
 		: [];
 	const headingInlineMetadata = span
 		? collectHeadingInlineMetadataInSpan(context, span).filter((occurrence) =>
-				isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
+				isOccurrenceInsideSourceSpan(occurrence, occurrenceSpan),
 			)
 		: [];
 	context.bindingRequests.push({ block, xrefs });
@@ -410,14 +411,15 @@ function buildDescription(
 			: span
 				? blockSourceLayer(context, interval, span, "description item")
 				: undefined;
+	const occurrenceSpan = occurrenceSpanOf(context, source, sourceSpan);
 	const xrefs = span
 		? collectXrefsInSpan(context, span).filter((xref) =>
-				isOccurrenceInsideSourceSpan(xref, sourceSpan),
+				isOccurrenceInsideSourceSpan(xref, occurrenceSpan),
 			)
 		: [];
 	const anchors = span
 		? collectAnchorsInSpan(context, span).filter((anchor) => {
-				if (!isOccurrenceInsideSourceSpan(anchor, sourceSpan)) {
+				if (!isOccurrenceInsideSourceSpan(anchor, occurrenceSpan)) {
 					return false;
 				}
 				const key = anchorKey(anchor);
@@ -430,7 +432,7 @@ function buildDescription(
 		: [];
 	const headingInlineMetadata = span
 		? collectHeadingInlineMetadataInSpan(context, span).filter((occurrence) =>
-				isOccurrenceInsideSourceSpan(occurrence, sourceSpan),
+				isOccurrenceInsideSourceSpan(occurrence, occurrenceSpan),
 			)
 		: [];
 	context.bindingRequests.push({ block, xrefs });
@@ -545,6 +547,16 @@ function sourceTextForSpan(
 		);
 	}
 	return lines.join("\n");
+}
+
+// 术语与描述常在同一行，出现处归谁按列分。book-entry 中出现处只剩来源坐标（10 号书「结构关系在 Logical Document
+// 上判定」），所以拿回源以后的 sourceSpan 比；文件模式两者是同一套坐标。回源失败时没有可比的列，不再按列分。
+function occurrenceSpanOf(
+	context: ProjectContext,
+	source: SourceLayer | undefined,
+	sourceSpan: SourceSpan | undefined,
+): SourceSpan | undefined {
+	return context.sourceAwareDocument ? source?.sourceSpan : sourceSpan;
 }
 
 function isOccurrenceInsideSourceSpan(

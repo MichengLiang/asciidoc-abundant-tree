@@ -54,6 +54,7 @@ Block raw 和 content span 从作者文件的 line table 恢复。Logical text �
 * Block 的 inline occurrences 是该 block content 的 logical lines 中的 occurrences。Occurrence 的 origin 可以在被引入的文件中，它仍属于这个 block。
 * Occurrence 的 containingSectionId 是其 logical line 所在的 official section。`sectionByLine` 只来自 official section surfaces，在 book-entry 中建立在 logical lines 上。被引入的文件没有自己的 heading 时，其中的 xref 和 anchor 属于引入它的那个 section。
 * 下游按 containingSectionId 绑定 source heading，不要求 heading 与 occurrence 在同一个 origin source file。
+* 一行上不止一个 surface 时（description list 的 term 与写在 term 行上的 description），occurrence 按列分给其中之一。分列比较 occurrence 的 origin sourceSpan 与 surface 回源后的 sourceSpan：occurrence 只保留 origin coordinate，logical sourceSpan 与它不在同一套坐标里。Surface 回源失败时没有可比的列，不按列分。
 
 Origin coordinate 把事实带回源文件，不划分结构边界。
 

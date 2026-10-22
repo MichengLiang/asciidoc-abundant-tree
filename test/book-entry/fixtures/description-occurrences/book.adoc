@@ -1,0 +1,8 @@
+= 描述里的出现处
+:doctype: book
+
+前言的第一段，让逻辑行与来源行错开。
+
+前言的第二段。
+
+include::parts/a.adoc[]

@@ -33,6 +33,7 @@ Book-entry 完成必须由 contract tests 证明。测试对象是 logical docum
 * Xref occurrence 的 sourceSpan 指向 xref 所在 origin file。
 * Source scope 查找不跨 relativePath 匹配。
 * 被引入文件中的 xref 和 anchor 属于引入位置所在的 block 与 section，被引入文件没有 heading 时也一样（见 xref:structure-on-logical-document[]）。
+* Description list 的 term 行上，xref 按列分给 term 与 description，并取得 official binding；logical line 与 origin line 不同时也一样。
 
 === Downstream Coordinate Tests
 
