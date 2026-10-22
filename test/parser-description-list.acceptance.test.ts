@@ -619,3 +619,69 @@ function onlyDescriptionList(nodes: unknown[]): DescriptionListView {
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return value !== null && typeof value === "object";
 }
+
+// 09 号书 05 章 Description List：span 到最后一个后代块的结束行，只从后代自己往下读出（issue 015）。
+describe("description list span", () => {
+	it.each([
+		["an attached multi-line paragraph", "术语:: 解释\n+\n附加\n第二行", 8],
+		["an attached listing", "术语:: 解释\n+\n----\nx\ny\n----\n\n后文。", 10],
+		["an attached example", "术语:: 解释\n+\n====\n例\n====", 9],
+		[
+			"a nested list with a continuation line",
+			"术语:: 解释\n* 子条目\n续行\n\n后文。",
+			7,
+		],
+		[
+			"an attached cloaked paragraph",
+			"术语:: 解释\n+\n[source]\nx = 1\ny = 2",
+			9,
+		],
+		["an attached admonition paragraph", "术语:: 解释\n+\nNOTE: 注\n第二行", 8],
+		["a wrapped last description", "甲:: 一\n乙:: 二\n续行", 7],
+	])("ends at the last line of %s", async (name, body, endLine) => {
+		expect(await descriptionListSpan(name, body)).toEqual({
+			startLine: 5,
+			endLine,
+		});
+	});
+
+	// 引语的第一行不能就是描述列表：`> 术语:: 解释` 先匹配描述列表，官方会把 `> 术语` 读成术语，引语根本不成立。
+	// 引语里的结构按去掉 `> ` 之后的行判断；D 的 `> ----` 按源文的原行看不是分隔符，那样会一路读到后文。
+	it.each([
+		["an attached paragraph", "> 术语:: 解释\n> +\n> 附加\n> 第二行", 10],
+		["an attached quote", "> 术语:: 解释\n> +\n> > 引一\n> > 引二", 10],
+		[
+			"a listing whose content looks like a delimiter",
+			"> 术语:: 解释\n> +\n> ----\n> > ----\n> ----",
+			11,
+		],
+		[
+			"a listing followed by quoted text",
+			"> 术语:: 解释\n> +\n> ----\n> x\n> ----\n>\n> 后文。",
+			11,
+		],
+	])("inside a markdown quote ends at the last line of %s", async (name, body, endLine) => {
+		expect(
+			await descriptionListSpan(`quoted-${name}`, `> 引语开头。\n>\n${body}`),
+		).toEqual({ startLine: 7, endLine });
+	});
+});
+
+async function descriptionListSpan(name: string, body: string) {
+	const document = await parseAbundantTree({
+		sourcePath: writeFixture(
+			`description-list-span-${name.replaceAll(" ", "-")}.adoc`,
+			`= Probe\n\n正文。\n\n${body}\n`,
+		),
+	});
+	const nodes: unknown[] = [];
+	const visit = (node: unknown) => {
+		nodes.push(node);
+		if (isRecord(node) && Array.isArray(node.children)) {
+			node.children.forEach(visit);
+		}
+	};
+	document.children.forEach(visit);
+	expect(document.toolDiagnostics).toEqual([]);
+	return onlyDescriptionList(nodes).span;
+}

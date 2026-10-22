@@ -95,7 +95,7 @@ export function resolveSourceInterval(
 	const nextSiblingStart = nextSiblingStartLine(surface, lineTable);
 	const childEndLine =
 		surface.context === "dlist"
-			? lastChildEndLine(surface, lineTable)
+			? lastChildEndLine(surface, sourceTable)
 			: undefined;
 	const endLine =
 		delimited?.span.endLine ??
@@ -237,32 +237,63 @@ function metadataForSurface(
 
 function lastChildEndLine(
 	surface: OfficialBlockSurface,
-	lineTable: LineTable,
+	sourceTable: LineTable,
 ): number | undefined {
-	const childLines = surface.children.flatMap((child) =>
-		descendantSourceLines(child, lineTable),
-	);
+	const childLines = surface.children
+		.map((child) => enclosedEndLine(child, sourceTable))
+		.filter((line) => line !== undefined);
 	if (childLines.length === 0) {
 		return undefined;
 	}
-	return Math.min(Math.max(...childLines), lastContentLine(lineTable));
+	return Math.min(Math.max(...childLines), lastContentLine(sourceTable));
 }
 
-// 描述的续行没有自己的块，它的最后一行另外算上；其余后代只取锚点行（附加块的尾巴见 issue 015）。
-function descendantSourceLines(
+// 一个块从它自己往下读出的结束行（09 号书 05 章 Description List）：容器取后代中最大的。只往下看，不调用
+// resolveSourceInterval——没有结束线索的块（列表、条目）在那里会向父块要结束行，而父块（描述列表）的结束正是这里要算的。
+function enclosedEndLine(
 	surface: OfficialBlockSurface,
-	lineTable: LineTable,
-): number[] {
-	const textEnd = isDescription(surface)
-		? descriptionTextOf(surface, lineTable)?.span.endLine
-		: undefined;
-	return [
-		...(surface.sourceLine === undefined ? [] : [surface.sourceLine]),
-		...(textEnd === undefined ? [] : [textEnd]),
-		...surface.children.flatMap((child) =>
-			descendantSourceLines(child, lineTable),
-		),
-	];
+	sourceTable: LineTable,
+): number | undefined {
+	const ends = [
+		surface.sourceLine === undefined
+			? undefined
+			: ownEndLine(surface, sourceTable, surface.sourceLine),
+		...surface.children.map((child) => enclosedEndLine(child, sourceTable)),
+	].filter((line) => line !== undefined);
+	return ends.length > 0 ? Math.max(...ends) : undefined;
+}
+
+// 块自己的内容读到哪一行，与 resolveSourceInterval 取结束行的前几条线索相同：分隔块到闭合分隔符，隐身段落、段落与
+// admonition 段落到官方读进的最后一行，描述与列表条目到文字的最后一行；都没有时（块宏、分隔线、列表本身）只占锚点行。
+function ownEndLine(
+	surface: OfficialBlockSurface,
+	sourceTable: LineTable,
+	startLine: number,
+): number {
+	const lineTable = quotedLineTable(
+		sourceTable,
+		markdownQuoteDepth(surface.block),
+	);
+	const delimited =
+		isDelimitedContext(surface.context) &&
+		!borrowsChildSourceLocation(surface.block)
+			? (resolveDelimitedBlockSpan(lineTable, startLine, surface) ??
+				resolveUndelimitedBlockSpan(lineTable, sourceTable, startLine, surface))
+			: undefined;
+	if (delimited) {
+		return delimited.span.endLine;
+	}
+	const paragraph = sourceContentSpanForContext(surface, lineTable, startLine);
+	if (paragraph) {
+		return paragraph.endLine;
+	}
+	if (isDescription(surface)) {
+		return descriptionTextOf(surface, lineTable)?.span.endLine ?? startLine;
+	}
+	if (surface.context === "list_item" && surface.parent?.context !== "dlist") {
+		return listItemTextEndLine(lineTable, startLine);
+	}
+	return startLine;
 }
 
 function parentEndLine(
