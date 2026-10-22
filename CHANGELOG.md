@@ -6,6 +6,21 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.2.5 - 2026-10-22
+
+### Fixed
+
+- A description is read the way Asciidoctor reads it, and its source span covers its whole text. A description written on the term line (`Term:: text`) folds the paragraph directly below it, after Asciidoctor has read off block metadata there (a `.Title` line, an `:attr: value` entry, line comments); a description under a bare term (`Term::`) starts at the first non-blank line, even after blank lines. Xrefs on those continuation lines used to be lost entirely when the description was the last in its list, came after a comment or attribute entry, followed a blank line, or was indented; they now hang under their description.
+- The block title Asciidoctor reads off and discards between a term line and its folded paragraph no longer produces an occurrence. Description lists are no longer scanned as a whole; terms and descriptions each scan their own text.
+- In an indented continuation of a description written on the term line, a `//` line is text, as Asciidoctor reads it (that paragraph does not skip line comments); its xref produces an occurrence.
+- A term is split from its description where Asciidoctor splits it: `std::string:: text` has the term `std::string`, not `std`. A heading field value whose first line held such a `::` used to start in the middle of that line.
+- In book-entry mode, the xrefs and anchors on a term line are attributed to the term and the description by comparing source coordinates. They used to be compared across logical and source coordinates and dropped, so these xrefs had no Asciidoctor binding (`href`, Asciidoctor's reftext); in the trestlework design book, xrefs with an `href` went from 353 to 712 of 758.
+- In book-entry mode, terms and descriptions carry `source.raw`, cut at their columns as in file mode.
+
+### Changed
+
+- In book-entry mode, a heading field key whose term has inline markup is the term's source text, as in file mode and as specified (`` `100_body` ``, not `100_body`). The `field-` predicate IRIs in the RDF projection change accordingly.
+
 ## 0.2.4 - 2026-10-22
 
 ### Fixed
