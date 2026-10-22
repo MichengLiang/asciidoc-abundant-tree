@@ -74,7 +74,7 @@ Description list 保存 explicit ID、block title、style、delimiter、metadata
 
 `DescriptionTermNode` 表示 description list item 的 term surface。Term 保存 display text、line、sourceSpan、source layer 和 term 文本区内的 inline occurrence 子节点。
 
-`DescriptionNode` 表示 description list item 的 description surface。Description 保存直接 description text、line、sourceSpan、source layer 和 attached block 或 nested description list 子节点。Description text 和 children 可以同时存在。
+`DescriptionNode` 表示 description list item 的 description surface。Description 保存直接 description text、line、sourceSpan、source layer 和 attached block 或 nested description list 子节点。Description text 和 children 可以同时存在。`line` 是官方给的坐标；`sourceSpan` 覆盖直接 description text，从分隔符之后或文字的第一行起，到并进的最后一条续行为止（xref:description-text[描述的文字]）。没有直接文字的 description 只有官方坐标那一行。
 
 [#heading-description-metadata]
 === Heading Description Metadata

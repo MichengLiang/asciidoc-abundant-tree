@@ -97,12 +97,12 @@ Paragraph、带 macros substitutions 的 prose block 和可扫描 table prose �
 |归类 |Context |依据
 
 |扫描
-|paragraph、admonition、verse、list_item、dlist、table
-|块里是一段做 macros 替换的文字；dlist 扫条目，table 扫单元格。
+|paragraph、admonition、verse、list_item、table
+|块里是一段做 macros 替换的文字；table 扫单元格。
 
 |递归
-|section、preamble、open、example、quote、sidebar、olist、ulist、colist
-|块是容器，occurrence 来自子块。写成隐身段落的 example、quote、sidebar、open 例外，见下文。
+|section、preamble、open、example、quote、sidebar、olist、ulist、colist、dlist
+|块是容器，occurrence 来自子块。写成隐身段落的 example、quote、sidebar、open 例外，见下文。dlist 的术语与描述是 list_item，各自扫描自己的文字；不整段扫描描述列表，因为术语与描述的文字之间可能夹着官方读掉的块标题（xref:description-text[描述的文字]）。
 
 |跳过
 |listing、literal、pass、stem
@@ -119,9 +119,19 @@ Paragraph、带 macros substitutions 的 prose block 和可扫描 table prose �
 
 跳过只针对块的内容。块标题（`.标题`）与块属性行是块的 metadata，扫描与跳过的块都扫描它们：图片、音频、视频标题里的 xref 照样产生 occurrence。带 ID 的块登记为目标：`[#fig]` 下写 `image::a.png[]`，`xref:fig[]` 解析到这张图；floating_title 的 ID 无论是作者写的还是官方按标题生成的，也一样登记。只有诊断归类的块与它的后代整个跳过。
 
-Occurrence 只来自官方读进块文字的行。官方按段落读文字时跳过行注释（`//` 开头、但不是 `///`，`reader.js` 528 行）：普通段落、隐身段落、列表条目的文字、表格都这样读（`parser.js` 1066、1272、1525 行），这些块里的行注释不产生 occurrence。分隔块按分隔符读进的内容不跳过行注释（`parser.js` 1531 行）：分隔的 verse 块里以 `//` 开头的行是内容，官方照常替换，它的 xref 产生 occurrence。
+Occurrence 只来自官方读进块文字的行。官方按段落读文字时跳过行注释（`//` 开头、但不是 `///`，`reader.js` 528 行）：普通段落、隐身段落、列表条目与描述的文字、表格都这样读（`parser.js` 1066、1272、1525 行），这些块里的行注释不产生 occurrence。分隔块按分隔符读进的内容不跳过行注释（`parser.js` 1531 行）：分隔的 verse 块里以 `//` 开头的行是内容，官方照常替换，它的 xref 产生 occurrence。描述的缩进续行也不跳过，见 xref:description-text[描述的文字]。
 
 列表条目（olist、ulist、colist 的 list_item）的文字从标记行起。标记行下面紧挨着的行是续行：官方以只读文字的方式（text_only）读下一个块，读成一个段落，再并进条目的文字（`parser.js` 1985-2011 行，`ListItem#foldFirst`）。读之前先读掉块的 metadata，这时只认锚点行（`[[id]]`）、属性列表行与行注释（`parser.js` 2798-2880 行 `parseBlockMetadataLine`）；`.标题` 这样的行不是 metadata，是条目的文字。读掉的 metadata 随段落并进条目时丢弃。段落在列表里读（xref:official-paragraph[官方怎样读段落]），停在空行、`+` 续接行、块分隔符、块属性行与列表标记行之前（`parser.js` 3029-3036 行），行注释被跳过、不打断段落。紧挨着的不是段落（例如分隔块）时没有续行。续行里的 xref 与标记行上的一样产生 occurrence。用 `+` 挂上的块与嵌套列表是条目的子块，按它们自己的归类扫描。
+
+[#description-text]
+描述列表的条目由术语与描述组成，两者在官方 AST 里都是 list_item（`parser.js` 1880-1902 行）。描述的文字按术语行有没有写文字分两种读法：
+
+* 术语行写了文字（`术语:: 解释`）：文字从分隔符之后起，描述与术语共用术语行的坐标。紧挨着的下一块按普通方式读，描述列表不改用只读文字的方式（`parser.js` 1994 行）：先读掉块的 metadata，块标题（`.标题`）、属性条目（`:名: 值`）与行注释都算（`parser.js` 2807-2880 行）；读到的是段落时并进描述的文字。读掉的块标题随段落丢弃，它里面的 xref 不产生 occurrence。段落中间以 `.` 开头的行不是块标题，是文字。
+* 术语行没有文字（`术语::` 换行再写）：官方先丢掉术语后面的空行（`parser.js` 2218 行），文字从下面第一个非空的行起，以只读文字的方式读，与列表条目相同。官方给描述的坐标是术语的下一行（`parser.js` 1986 行），隔着空行时那是一个空行；描述的范围从文字的第一行起。
+
+两种读法里，段落都在列表里读，停止的规则与列表条目相同。块属性行在描述列表里打断条目（`parser.js` 2085-2120 行），它和后面的块不属于这个列表；只有下面紧跟嵌套列表时，属性行是那个列表的 metadata。紧挨着的块不是段落时（admonition、引语、块宏、分隔线、嵌套列表），它是描述的子块，不并进文字：解析器以官方 AST 为准，紧挨着的那一行上有描述的子块，就没有续行。普通方式读缩进的段落时不跳过行注释（`parser.js` 1041-1046 行）：这样的续行里以 `//` 开头的行是文字，官方照常替换，它的 xref 产生 occurrence。
+
+描述的范围从文字的第一行到并进的最后一行。范围里读掉的 metadata 行不是文字，不扫描。
 
 Section 标题与 floating_title 的标题文字做 macros 替换，标题行里的 xref 与锚点产生 occurrence，与块标题相同。标题文字从 `=` 标记之后算起。Section 标题里的 xref 属于这个 section 自己：投影成 RDF 时，它是从这个标题出发的边。Discrete 标题不是 section，它标题里的 xref 属于外层的 section。写成标题文字的自然引用（`<<目标标题>>`）与正文里一样交给官方解析。
 
