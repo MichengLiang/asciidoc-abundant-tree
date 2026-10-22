@@ -48,7 +48,7 @@ markdown 引语的范围就是官方读进的这个段落，不由它的子块�
 
 两种都不写分隔符。区间解析器认它们的方法与隐身段落相同：锚点行是块的第一行源文，只是核对之前先去掉官方从这一行删掉的引号或前缀。空气引号去掉开头的 `"`；内容只有一行时，这一行也是被去掉结尾 `"` 的那一行，结尾的 `"` 一并去掉。markdown 引语去掉 `> `。范围是官方读进的整个段落（xref:official-paragraph[官方怎样读段落]）：从锚点行起，覆盖内容的行、被取走的出处行，以及 markdown 引语里只有 `>` 的行。内容区间到最后一行内容为止，不含出处行，也不含末尾只有 `>` 的行。出处行里的 xref 不产生 occurrence，与写在属性列表里的出处（`[quote, 某人, 某书]`）相同。
 
-Markdown 引语的子块坐标要换算。官方为去掉前缀的行新建的 Reader 不带游标（`parser.js` 1121 行；Ruby 版 Asciidoctor 2.0.26 同样如此），子块的 source location 没有文件，行号从这个 Reader 的第一行数起。去掉前缀不改变行数，官方读段落时跳过的行注释也不在这些行里，所以第 _n_ 行就是从引语的锚点行往下、跳过行注释数到的第 _n_ 行源文。解析器在给合成的块补坐标的同一处（xref:synthesized-blocks[官方合成的块]）把它们换算成引语所在文件的源行；引语里再嵌套的块一并换算，嵌套的 markdown 引语，它的子块从它自己的锚点行数起。换算之后，引语的子块与正文里的块一样遍历、投影与扫描。
+Markdown 引语的子块坐标要换算。官方为去掉前缀的行新建的 Reader 不带游标（`parser.js` 1121 行；Ruby 版 Asciidoctor 2.0.26 同样如此），子块的 source location 没有文件，行号从这个 Reader 的第一行数起。去掉前缀不改变行数，官方读段落时跳过的行注释也不在这些行里，所以第 _n_ 行就是从引语的锚点行往下、跳过行注释数到的第 _n_ 行源文。解析器在给合成的块补坐标的同一处（xref:synthesized-blocks[官方合成的块]）把它们换算成引语所在文件的源行；引语里再嵌套的块一并换算，嵌套的 markdown 引语，它的子块从它自己的锚点行数起。换算之后，引语的子块与正文里的块一样遍历、投影与扫描。这一处已报告给上游（https://github.com/asciidoctor/asciidoctor/issues/4891[asciidoctor#4891]）；上游给出源行以后，这里的换算随之删去，否则坐标会被换算两次。
 
 引语里的块，官方读到的是去掉前缀的行：套在几层 markdown 引语里，就去掉几个 `> `。区间解析器对它们的结构判断都按官方读到的行做：锚点行是不是分隔符、闭合行在哪里、第一行源文是否对得上、段落在哪里断开、哪些是块属性行，以及上面说的 markdown 引语本身的认法。所以 `> ====` 是 example 的分隔符，`> ____` 是分隔的 quote，不是又一层 markdown 引语；外层只有 `>` 的行对内层引语是空行，内层的段落在那里结束。span、列号与诊断位置仍取源行。引语里的块属性行记下的是官方读到的那一行。引语里的表格，`a|` 单元格里的块同样换算；普通单元格不是块，没有 source location 可补，它带的行号与表格读自同一个 Reader，按表格的换算取源行。
 
@@ -65,14 +65,14 @@ Asciidoctor 在两处新建没有 source location 的块，都出现在部（par
 [#callout-list-location]
 === Callout 列表的坐标
 
-Asciidoctor 建完一个块以后，把读取器上一次 mark 的位置记作块的 source location（`parser.js` 1443 行）。读 callout 列表时，每读一条后续条目都 mark 一次（`parser.js` 1812-1862 行，`parseCalloutList`），所以列表的 source location 落在它的最后一条上，而不是第一条。Ruby 版 Asciidoctor 2.0.26 的 `parse_callout_list` 写法相同。条目自己的 source location 是对的。
+Asciidoctor 建完一个块以后，把读取器上一次 mark 的位置记作块的 source location（`parser.js` 1443 行）。读 callout 列表时，每读一条后续条目都 mark 一次（`parser.js` 1812-1862 行，`parseCalloutList`），所以列表的 source location 落在它的最后一条上，而不是第一条。Ruby 版 Asciidoctor 2.0.26 的 `parse_callout_list` 写法相同。条目自己的 source location 是对的。这一处已报告给上游（https://github.com/asciidoctor/asciidoctor/issues/4892[asciidoctor#4892]）。
 
 解析器在给合成的块补坐标的同一处，让 callout 列表取它第一条的坐标。这样列表的范围从第一条开始，列表前面的块标题与属性行是它的 metadata；遍历、投影与扫描看到的是同一个坐标。
 
 [#table-line-comments]
 === 表格里的行注释
 
-Asciidoctor 读表格时，先读到闭合分隔符为止、去掉其中的行注释，再把剩下的行交给一个新的读取器，游标是开始分隔符的下一行（`parser.js` 1266-1276 行）。新读取器逐行累加行号，被去掉的注释行不占编号，所以注释之后的单元格行号偏小，每有一行注释就少一行。`a|` 单元格的内嵌文档接着单元格的游标读（`table.js` 386、432 行），里面的块同样偏小。
+Asciidoctor 读表格时，先读到闭合分隔符为止、去掉其中的行注释，再把剩下的行交给一个新的读取器，游标是开始分隔符的下一行（`parser.js` 1266-1276 行）。新读取器逐行累加行号，被去掉的注释行不占编号，所以注释之后的单元格行号偏小，每有一行注释就少一行。`a|` 单元格的内嵌文档接着单元格的游标读（`table.js` 386、432 行），里面的块同样偏小。这一处已报告给上游（https://github.com/asciidoctor/asciidoctor/issues/4893[asciidoctor#4893]）。
 
 解析器在给合成的块补坐标的同一处换算：表格读出的第 _n_ 行，是从开始分隔符的下一行往下、跳过表格视图里的行注释数到的第 _n_ 行源文。读取器嵌套时逐层叠加：markdown 引语里的表格，引语的读取器先按外层视图跳过一次注释，表格的读取器再按引语里的视图跳过一次；`a|` 单元格里的表格，在外层表格的编号上再跳过自己视图里的注释。
 

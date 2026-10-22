@@ -23,6 +23,7 @@ export type SelectionMismatchDiagnostic = {
 // preprocessIncludeDirective 1379-1417 行，#filterLinesByLinenos 1623 行，#filterLinesByTags 1660 行，
 // #splitDelimitedValue 1853 行），连它与 Ruby 2.0.26 不同的地方一并照搬：文件按 split('\n') 切行，以换行
 // 结尾时末尾多出一个空行，选到文件末尾的选取会带上它；数字用 parseInt，`1_0` 是 1 而不是 Ruby 的 10。
+// 这两处已报给上游（asciidoctor/asciidoctor.js#1898）；上游改成与 Ruby 一致以后，这里要跟着改，否则选取的行集对不上。
 export function mapIncludeSelection(
 	sourceText: string,
 	selector: IncludeLineSelector,

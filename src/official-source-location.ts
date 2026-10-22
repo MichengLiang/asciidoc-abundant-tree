@@ -23,6 +23,8 @@ const cellLineMappers = new WeakMap<
 // - markdown 引语的子块带的是引语内部的相对行号（09 号书「段落写法的引语」），换算成源行。
 // - 表格里有行注释时，单元格与 a| 单元格里的块行号偏小（09 号书「表格里的行注释」），换算成源行。
 // - callout 列表的坐标落在它的最后一条上（09 号书「Callout 列表的坐标」），改取第一条的。
+// 后三处已报给上游（asciidoctor/asciidoctor#4891、#4893、#4892）。上游修好以后，官方给的已经是源行，这里的换算会把它再换
+// 一次，所以升级 @asciidoctor/core 时要对照那几条 issue，删去修好的那一处。
 export function completeOfficialSourceLocations(
 	officialDocument: AsciidoctorBlock,
 	lineTable: LineTable,

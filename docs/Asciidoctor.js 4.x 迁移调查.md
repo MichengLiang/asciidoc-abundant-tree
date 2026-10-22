@@ -55,7 +55,10 @@
 - **4.x 与 Ruby 2.0.26 不一致的三处。** aat 选行要与它实际运行的 Reader 逐行一致，所以照 4.1.1 的 `reader.js` 移植，
   不照 Ruby：选取延伸到文件末尾时，4.x 按 `split('\n')` 切行，以换行结尾的文件末尾多出一个空行，被一并选入（Ruby 的
   `split` 丢掉它）；`lines=1_0` 在 4.x 是第 1 行（`parseInt`），在 Ruby 是第 10 行（`to_i`）；`[subs=]` 在 Ruby 与 3.x
-  是不做任何替换，在 4.x 退回默认替换，xref 被转换成链接。三处都可以反馈给 asciidoctor.js 上游。
+  是不做任何替换，在 4.x 退回默认替换，xref 被转换成链接。2026-10-23 已报告给上游：前两处见
+  [asciidoctor.js#1898](https://github.com/asciidoctor/asciidoctor.js/issues/1898)，`[subs=]` 见
+  [asciidoctor.js#1899](https://github.com/asciidoctor/asciidoctor.js/issues/1899)；同时报了单元格的 `getSourceLocation()`
+  返回普通对象而不是 Cursor（[asciidoctor.js#1900](https://github.com/asciidoctor/asciidoctor.js/issues/1900)）。
 - **表格与单元格的接口换成了 Ruby 的属性。** 3.x 的 `table.getRows()`、`cell.getLines()` 在 4.x 是 `table.rows`、`cell.lines`。
 - **行内宏属性、缺值的 `null`** 见上文。
 - **`jail_dir` 在 4.x 不存在**；在 3.x 上它也从没生效——Reader 以 unsafe 读，unsafe 不启用 jail。documentRoot 的边界一直由
