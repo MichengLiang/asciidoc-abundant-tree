@@ -6,6 +6,13 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+## 0.2.6 - 2026-10-23
+
+### Fixed
+
+- Xrefs in ordered, unordered and callout list items carry Asciidoctor's binding (`href`, Asciidoctor's reftext). List items are not nodes in the tree, so nothing requested a binding for them; such xrefs had only the target aat resolved itself, and in the RDF projection their `officialReftext` was the target's title instead of the text the reader sees. Across the 16 books checked, xref edges without `officialHref` went from 131 to 0; where the xref is written with text (`xref:id[text]`), `officialReftext` is now that text.
+- A description list's span ends at the last line of its last descendant block. A multi-line paragraph, listing, example or other block attached with `+` under the last description used to fall outside the span after its first line.
+
 ## 0.2.5 - 2026-10-22
 
 ### Fixed
