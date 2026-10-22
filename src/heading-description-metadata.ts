@@ -289,20 +289,8 @@ function trimBlankEdges(lines: readonly string[]): readonly string[] {
 function descriptionMetadataTermKey(
 	term: HeadingDescriptionMetadataEntry["term"],
 ) {
-	const raw = term.source?.raw;
-	const sourceSpan = term.sourceSpan;
-	if (!raw || !sourceSpan || sourceSpan.start.line !== sourceSpan.end.line) {
-		return term.text;
-	}
-
-	const [line] = raw.split(/\r?\n/u);
-	if (line === undefined) {
-		return term.text;
-	}
-
-	return Array.from(line)
-		.slice(sourceSpan.start.column - 1, sourceSpan.end.column - 1)
-		.join("");
+	// 术语的 raw 就是它在源文件里的表面（文件模式与 book-entry 都按列切出）；回源失败没有 raw 时退回官方文字。
+	return term.source?.raw || term.text;
 }
 
 function mergeRunSource(
