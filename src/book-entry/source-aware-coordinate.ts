@@ -82,7 +82,9 @@ export function recoverSourceAwareSourceLayer(
 	logicalSpan: LineSpan,
 	options: {
 		readonly logicalSourceSpan?: SourceSpan | undefined;
-		readonly raw?: boolean | undefined;
+		// lines：块的 raw，取整行；sourceSpan：一行上的一部分（术语、写在术语行上的描述），按回源后的列切，
+		// 与文件模式的切法相同。
+		readonly raw?: "lines" | "sourceSpan" | undefined;
 		readonly diagnosticContext: string;
 	},
 ): SourceAwareRecoveryResult {
@@ -160,6 +162,16 @@ export function recoverSourceAwareSourceLayer(
 	if (sourceSpan && !sourceSpan.ok) {
 		return sourceSpan;
 	}
+	const raw =
+		options.raw === "lines"
+			? `${sourceLines(
+					sourceFile.lineTable,
+					lineSpan.startLine,
+					lineSpan.endLine,
+				).join("\n")}\n`
+			: options.raw === "sourceSpan" && sourceSpan?.sourceSpan
+				? sliceSourceSpan(sourceFile.lineTable, sourceSpan.sourceSpan)
+				: undefined;
 	return {
 		ok: true,
 		relativePath,
@@ -170,17 +182,22 @@ export function recoverSourceAwareSourceLayer(
 			line: lineSpan.startLine,
 			span: lineSpan,
 			...(sourceSpan?.sourceSpan ? { sourceSpan: sourceSpan.sourceSpan } : {}),
-			...(options.raw
-				? {
-						raw: `${sourceLines(
-							sourceFile.lineTable,
-							lineSpan.startLine,
-							lineSpan.endLine,
-						).join("\n")}\n`,
-					}
-				: {}),
+			...(raw === undefined ? {} : { raw }),
 		},
 	};
+}
+
+function sliceSourceSpan(lineTable: LineTable, span: SourceSpan): string {
+	return sourceLines(lineTable, span.start.line, span.end.line)
+		.map((text, index, lines) =>
+			Array.from(text)
+				.slice(
+					index === 0 ? span.start.column - 1 : 0,
+					index === lines.length - 1 ? span.end.column - 1 : undefined,
+				)
+				.join(""),
+		)
+		.join("\n");
 }
 
 export function recoverSourceAwarePointSourceLayer(

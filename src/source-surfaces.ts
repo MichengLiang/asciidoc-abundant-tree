@@ -111,7 +111,7 @@ export function projectSourceSurfaces(options: {
 				interval.span,
 				{
 					logicalSourceSpan: interval.sourceSpan,
-					raw: true,
+					raw: "lines",
 					diagnosticContext: `${surface.context} block`,
 				},
 			);

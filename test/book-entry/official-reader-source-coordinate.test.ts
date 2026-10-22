@@ -208,7 +208,7 @@ describe("book-entry official Reader source coordinate recovery", () => {
 					start: { line: 1, column: 1 },
 					end: { line: 2, column: 6 },
 				},
-				raw: true,
+				raw: "lines",
 			},
 		);
 
@@ -283,7 +283,7 @@ describe("book-entry official Reader source coordinate recovery", () => {
 			{ startLine: 1, endLine: 3 },
 			{
 				diagnosticContext: "out-of-range block",
-				raw: true,
+				raw: "lines",
 			},
 		);
 

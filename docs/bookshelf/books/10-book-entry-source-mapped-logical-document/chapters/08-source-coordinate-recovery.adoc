@@ -46,6 +46,8 @@ Block 的开头与结尾来自不同 origin source files 时，没有一个作�
 
 Block raw 和 content span 从作者文件的 line table 恢复。Logical text 中的 block interval 只用于定位对应 logical lines。
 
+不占整行的 surface（description list 的 term，以及写在 term 行上的 description）的 raw 从回源后的 sourceSpan 切：首行从起点列起，末行到终点列止，与文件模式相同，不带结尾换行。
+
 [#structure-on-logical-document]
 === 结构关系在 Logical Document 上判定
 

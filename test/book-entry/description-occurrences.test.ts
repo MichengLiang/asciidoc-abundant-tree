@@ -39,7 +39,12 @@ describe("book-entry description list occurrences", () => {
 		expect(description?.source).toMatchObject({
 			relativePath: "parts/a.adoc",
 			span: { startLine: 7, endLine: 8 },
+			raw: "说明 xref:target[乙]\n续行 xref:target[丙]",
 		});
+		expect(list?.items[0]?.terms[0]?.source?.raw).toBe("术语 xref:target[术]");
+		expect(list?.items[0]?.description?.source?.raw).toBe(
+			"说明 xref:target[甲]",
+		);
 		expect(
 			document.xrefOccurrences.map((xref) => [
 				xref.label,

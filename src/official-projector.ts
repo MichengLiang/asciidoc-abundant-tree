@@ -520,6 +520,7 @@ function descriptionPartSourceLayer(
 		span,
 		{
 			logicalSourceSpan: sourceSpan,
+			raw: "sourceSpan",
 			diagnosticContext,
 		},
 	);
@@ -938,7 +939,7 @@ function blockSourceLayer(
 		fallbackSpan,
 		{
 			logicalSourceSpan,
-			raw: true,
+			raw: "lines",
 			diagnosticContext,
 		},
 	);
