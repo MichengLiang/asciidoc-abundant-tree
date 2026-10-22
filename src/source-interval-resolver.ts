@@ -3,9 +3,15 @@ import {
 	type MetadataSurface,
 } from "./metadata-parser";
 import type { LineSpan, SourceSpan, ToolDiagnostic } from "./model";
+import { descriptionListItemsFromBlock } from "./official-block-utils";
 import type { OfficialBlockSurface } from "./official-block-walker";
 import { delimiterOpens, officialDelimiter } from "./official-delimiter";
-import { listItemTextEndLine, paragraphEndLine } from "./official-paragraph";
+import {
+	type DescriptionText,
+	descriptionText,
+	listItemTextEndLine,
+	paragraphEndLine,
+} from "./official-paragraph";
 import {
 	borrowsChildSourceLocation,
 	isMarkdownQuote,
@@ -27,12 +33,19 @@ export type SourceInterval = {
 	metadata: MetadataSurface[];
 	metadataSpan?: LineSpan;
 	contentSpan?: LineSpan;
+	// 带列的内容范围：描述的文字从分隔符之后或文字的第一个字符起（09 号书「描述的文字」）。
+	contentSourceSpan?: SourceSpan;
+	// 范围里官方读掉、不是文字的行：描述的术语行与并进的段落之间的 metadata。扫描跳过它们。
+	discardedSpan?: LineSpan;
 	span: LineSpan;
 	sourceSpan?: SourceSpan;
 	titleSpan?: SourceSpan;
 	diagnostics: ToolDiagnostic[];
-	// 块按分隔符读进内容。官方按分隔符读不跳过行注释，按段落读才跳过（09 号书「Inline 扫描边界」）。
-	delimited?: true;
+	// 内容里的行注释（行首 `//`、不是 `///`）是文字。官方按段落读文字时跳过它们（parser.js 1066、1525 行）；
+	// 按分隔符读进的内容不跳过（1531 行），分隔的 verse 块里的 `//` 行是内容；描述的续行按普通方式读、又是缩进的
+	// 段落时也不跳过（1041-1046 行）。复合块的内容再读成块，替换列表是空的，扫描器只扫它的子块，用不到这个标记。
+	// 09 号书「Inline 扫描边界」与「描述的文字」。
+	readsLineComments?: true;
 };
 
 export function resolveSourceInterval(
@@ -55,6 +68,9 @@ export function resolveSourceInterval(
 	const startLine = metadata.at(0)?.line ?? blockStartLine;
 	const diagnostics: ToolDiagnostic[] = [];
 	const delimitedContext = isDelimitedContext(surface.context);
+	const description = isDescription(surface)
+		? descriptionTextOf(surface, lineTable)
+		: undefined;
 	// 合成的容器借的是第一个子块的锚点行，那一行可能是列表项或分隔符：它没有自己的分隔符，也不必核对第一行源文。
 	// 它装着部标题之后、第一节之前的全部内容，结束行交给下面的兜底（下一个兄弟块之前）；不能向子块要——
 	// 没有结束线索的子块（如列表）会反过来向父块要，互相递归。
@@ -117,9 +133,15 @@ export function resolveSourceInterval(
 		delimited?.contentSpan ??
 		undelimited?.contentSpan ??
 		sourceContentSpan ??
+		description?.span ??
 		contentSpanForContext(surface, span, lineTable);
 	const sourceSpan = sourceSpanFromLineSpan(sourceTable, span);
 	const titleSpan = titleSpanForSurface(surface, sourceTable);
+	const contentSourceSpan = description
+		? descriptionSourceSpan(description, sourceTable, lineTable)
+		: undefined;
+	const readsLineComments =
+		delimited !== undefined || description?.readsLineComments === true;
 	return {
 		blockStartLine,
 		metadata,
@@ -127,9 +149,59 @@ export function resolveSourceInterval(
 		diagnostics,
 		...(metadataSpan ? { metadataSpan } : {}),
 		...(contentSpan ? { contentSpan } : {}),
+		...(contentSourceSpan ? { contentSourceSpan } : {}),
+		...(description?.discardedSpan
+			? { discardedSpan: description.discardedSpan }
+			: {}),
 		...(sourceSpan ? { sourceSpan } : {}),
 		...(titleSpan ? { titleSpan } : {}),
-		...(delimited ? { delimited: true as const } : {}),
+		...(readsLineComments ? { readsLineComments: true as const } : {}),
+	};
+}
+
+// 描述是描述列表条目里跟在术语后面的那个 list_item（术语与描述在官方 AST 里都是 list_item）。
+function isDescription(surface: OfficialBlockSurface): boolean {
+	const list = surface.parent;
+	return (
+		list?.context === "dlist" &&
+		descriptionListItemsFromBlock(list.block).some(
+			(item) => item.description === surface.block,
+		)
+	);
+}
+
+// childBlocksOf 把条目排成术语在前、描述在后，描述前面的兄弟就是它所属的最后一个术语。
+// 紧挨着的那一行上有描述的子块，那一块就不是并进文字的段落（09 号书「描述的文字」）。
+function descriptionTextOf(
+	surface: OfficialBlockSurface,
+	lineTable: LineTable,
+): DescriptionText | undefined {
+	const termLine =
+		surface.parent?.children[surface.indexInParent - 1]?.sourceLine;
+	if (termLine === undefined) {
+		return undefined;
+	}
+	return descriptionText(lineTable, termLine, (line) =>
+		surface.children.some((child) => child.sourceLine === line),
+	);
+}
+
+// 列号在官方读到的行上算出；markdown 引语里那一行去掉了前缀，加回前缀的长度才是源文的列。
+function descriptionSourceSpan(
+	description: DescriptionText,
+	sourceTable: LineTable,
+	lineTable: LineTable,
+): SourceSpan {
+	const { startLine, endLine } = description.span;
+	const prefix =
+		[...lineText(sourceTable, startLine)].length -
+		[...lineText(lineTable, startLine)].length;
+	return {
+		start: { line: startLine, column: prefix + description.startColumn },
+		end: {
+			line: endLine,
+			column: [...lineText(sourceTable, endLine)].length + 1,
+		},
 	};
 }
 
@@ -168,7 +240,7 @@ function lastChildEndLine(
 	lineTable: LineTable,
 ): number | undefined {
 	const childLines = surface.children.flatMap((child) =>
-		descendantSourceLines(child),
+		descendantSourceLines(child, lineTable),
 	);
 	if (childLines.length === 0) {
 		return undefined;
@@ -176,10 +248,20 @@ function lastChildEndLine(
 	return Math.min(Math.max(...childLines), lastContentLine(lineTable));
 }
 
-function descendantSourceLines(surface: OfficialBlockSurface): number[] {
+// 描述的续行没有自己的块，它的最后一行另外算上；其余后代只取锚点行（附加块的尾巴见 issue 015）。
+function descendantSourceLines(
+	surface: OfficialBlockSurface,
+	lineTable: LineTable,
+): number[] {
+	const textEnd = isDescription(surface)
+		? descriptionTextOf(surface, lineTable)?.span.endLine
+		: undefined;
 	return [
 		...(surface.sourceLine === undefined ? [] : [surface.sourceLine]),
-		...surface.children.flatMap((child) => descendantSourceLines(child)),
+		...(textEnd === undefined ? [] : [textEnd]),
+		...surface.children.flatMap((child) =>
+			descendantSourceLines(child, lineTable),
+		),
 	];
 }
 
@@ -392,8 +474,8 @@ function contentSpanForContext(
 	if (surface.context === "list_item") {
 		// 条目的文字是标记行加紧挨着的续行：官方把续行读成段落，再并进条目的文字（parser.js 1985-2011 行，foldFirst），
 		// 并进以后它不再是子块，没有坐标，只能照官方的读法从标记行往下数（09 号书「Inline 扫描边界」）。
-		// 描述列表的术语与描述也是 list_item，但它们共用术语行的坐标（parser.js 1897-1899 行），术语行之后的续行属于描述；
-		// 两者的范围由描述列表的投影按术语与描述的文本切分，这里只给锚点行。
+		// 描述列表的术语与描述也是 list_item，读法不同：术语只占术语行；描述的文字在上面另算（descriptionText），
+		// 走到这里的是没有文字的描述，只给官方坐标那一行。
 		const line = surface.sourceLine ?? span.startLine;
 		return {
 			startLine: line,

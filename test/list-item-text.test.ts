@@ -68,7 +68,7 @@ describe("list item text", () => {
 		}
 	});
 
-	it("leaves the terms and descriptions of a description list on the term line", async () => {
+	it("keeps description list terms on the term line; the wrapped line belongs to the description", async () => {
 		const document = await parseAbundantTree({
 			sourcePath: writeFixture(
 				"list-item-dlist.adoc",
@@ -95,7 +95,7 @@ describe("list item text", () => {
 		).toEqual([
 			[
 				{ startLine: 7, endLine: 7 },
-				{ startLine: 7, endLine: 7 },
+				{ startLine: 7, endLine: 8 },
 			],
 			[
 				{ startLine: 9, endLine: 9 },

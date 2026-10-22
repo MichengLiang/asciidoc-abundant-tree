@@ -9,7 +9,6 @@ export function officialBlockPolicy(
 ): OfficialBlockPolicy {
 	switch (block.getContext?.()) {
 		case "admonition":
-		case "dlist":
 		case "list_item":
 		case "paragraph":
 		case "table":
@@ -24,6 +23,8 @@ export function officialBlockPolicy(
 			return block.getContentModel?.() === "simple" ? "scan" : "recurse";
 		case "olist":
 		case "colist":
+		// 术语与描述各扫自己的文字；整段扫会把它们之间官方读掉的块标题也扫进去（09 号书「描述的文字」）。
+		case "dlist":
 		// 文档标题与第一节之间的块，官方装进 preamble 块（parser.js 632-633 行补的就是它的坐标）。
 		case "preamble":
 		case "section":

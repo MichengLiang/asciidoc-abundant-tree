@@ -241,14 +241,17 @@ function scanSurfaces(
 				collected.anchorOccurrences,
 				collected.headingInlineMetadataOccurrences,
 				collected.toolDiagnostics,
-				descendantUnscannableRanges(surface, intervalByBlock),
+				[
+					...descendantUnscannableRanges(surface, intervalByBlock),
+					...(interval.discardedSpan ? [interval.discardedSpan] : []),
+				],
 				isBibliographyList(surface),
-				skipsLineComments(surface, interval)
-					? quotedLineTable(
+				interval.readsLineComments
+					? null
+					: quotedLineTable(
 							collected.lineTable,
 							markdownQuoteDepth(surface.block),
-						)
-					: null,
+						),
 			);
 		}
 	}
@@ -258,18 +261,6 @@ function scanSurfaces(
 // 标题记号 `=` 里没有可扫的内容，整行扫即可。
 export function isHeading(surface: OfficialBlockSurface): boolean {
 	return surface.context === "section" || surface.context === "floating_title";
-}
-
-// 官方按段落读的文字跳过行注释（parser.js 1066、1525 行）；按分隔符读的内容不跳过（1531 行），分隔的 verse 块里的
-// `//` 行是内容。复合块的内容会再读成块，块与块之间的注释行被当作 metadata 读掉，同样不是文字。
-function skipsLineComments(
-	surface: OfficialBlockSurface,
-	interval: SourceInterval,
-): boolean {
-	return (
-		interval.delimited !== true ||
-		surface.block.getContentModel?.() === "compound"
-	);
 }
 
 function hasDiagnosticPolicyAncestor(surface: OfficialBlockSurface): boolean {
@@ -290,9 +281,8 @@ function isPreambleParagraph(surface: OfficialBlockSurface): boolean {
 }
 
 function scansMacroSubstitutedContent(surface: OfficialBlockSurface): boolean {
-	// Asciidoctor exposes term/cell inline substitutions below these containers,
-	// not as a useful "macros" entry on the container block itself.
-	if (surface.context === "dlist" || surface.context === "table") {
+	// 表格自己的替换列表是空的，单元格的替换挂在单元格上；表格交给 scanTable 按单元格扫。
+	if (surface.context === "table") {
 		return true;
 	}
 	const substitutions = surface.block.getSubstitutions?.();

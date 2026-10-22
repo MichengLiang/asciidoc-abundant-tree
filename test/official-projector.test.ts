@@ -707,6 +707,10 @@ describe("official-projector helpers", () => {
 					blockStartLine: 2,
 					metadata: [],
 					contentSpan: { startLine: 2, endLine: 2 },
+					contentSourceSpan: {
+						start: { line: 2, column: 8 },
+						end: { line: 2, column: 48 },
+					},
 					span: { startLine: 2, endLine: 2 },
 					diagnostics: [],
 				},

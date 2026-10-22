@@ -34,6 +34,7 @@ import {
 	childBlocksOf,
 	descriptionListItemsFromBlock,
 } from "./official-block-utils";
+import { descriptionListDelimiter } from "./official-paragraph";
 import type { SourceInterval } from "./source-interval-resolver";
 import {
 	collectOccurrencesInLineRange,
@@ -396,10 +397,8 @@ function buildDescription(
 	const line = block.getSourceLocation?.()?.getLineNumber?.();
 	const interval = context.intervalByBlock.get(block);
 	const span = interval?.contentSpan ?? interval?.span;
-	const sourceSpan =
-		line === undefined
-			? undefined
-			: descriptionTextSourceSpan(context.lineTable, line);
+	// 文字的范围由区间解析器照官方读法算出（09 号书「描述的文字」）；没有直接文字的描述没有它。
+	const sourceSpan = interval?.contentSourceSpan;
 	const source =
 		span && sourceSpan
 			? descriptionPartSourceLayer(
@@ -486,41 +485,18 @@ function descriptionTermSourceSpan(
 	};
 }
 
-function descriptionTextSourceSpan(
-	lineTable: LineTable,
-	line: number,
-): SourceSpan | undefined {
-	const delimiter = descriptionListDelimiterMatch(lineTable, line);
-	if (!delimiter) {
-		return undefined;
-	}
-	const text = lineText(lineTable, line);
-	const afterDelimiterIndex = delimiter.index + delimiter.raw.length;
-	const firstTextIndex =
-		/\S/u.exec(text.slice(afterDelimiterIndex))?.index ?? 0;
-	return {
-		start: {
-			line,
-			column:
-				[...text.slice(0, afterDelimiterIndex + firstTextIndex)].length + 1,
-		},
-		end: { line, column: [...text].length + 1 },
-	};
-}
-
 function descriptionListDelimiterMatch(
 	lineTable: LineTable,
 	line: number,
 ): { raw: string; index: number; column: number } | undefined {
 	const text = lineText(lineTable, line);
-	const match = /:{2,4}|;;/u.exec(text);
-	if (!match || match.index === undefined) {
+	const delimiter = descriptionListDelimiter(text);
+	if (!delimiter) {
 		return undefined;
 	}
 	return {
-		raw: match[0],
-		index: match.index,
-		column: [...text.slice(0, match.index)].length + 1,
+		...delimiter,
+		column: [...text.slice(0, delimiter.index)].length + 1,
 	};
 }
 
@@ -552,12 +528,23 @@ function sourceTextForSpan(
 	context: ProjectContext,
 	sourceSpan: SourceSpan,
 ): string | undefined {
-	if (sourceSpan.start.line !== sourceSpan.end.line) {
-		return undefined;
+	const lines: string[] = [];
+	for (
+		let line = sourceSpan.start.line;
+		line <= sourceSpan.end.line;
+		line += 1
+	) {
+		const chars = Array.from(lineText(context.lineTable, line));
+		lines.push(
+			chars
+				.slice(
+					line === sourceSpan.start.line ? sourceSpan.start.column - 1 : 0,
+					line === sourceSpan.end.line ? sourceSpan.end.column - 1 : undefined,
+				)
+				.join(""),
+		);
 	}
-	return Array.from(lineText(context.lineTable, sourceSpan.start.line))
-		.slice(sourceSpan.start.column - 1, sourceSpan.end.column - 1)
-		.join("");
+	return lines.join("\n");
 }
 
 function isOccurrenceInsideSourceSpan(
@@ -567,18 +554,17 @@ function isOccurrenceInsideSourceSpan(
 	if (!sourceSpan || !occurrence.sourceSpan) {
 		return true;
 	}
-	const start = occurrence.sourceSpan.start;
-	const end = occurrence.sourceSpan.end;
-	if (
-		start.line !== sourceSpan.start.line ||
-		end.line !== sourceSpan.end.line
-	) {
-		return false;
-	}
 	return (
-		start.column >= sourceSpan.start.column &&
-		end.column <= sourceSpan.end.column
+		comparePositions(occurrence.sourceSpan.start, sourceSpan.start) >= 0 &&
+		comparePositions(occurrence.sourceSpan.end, sourceSpan.end) <= 0
 	);
+}
+
+function comparePositions(
+	left: SourceSpan["start"],
+	right: SourceSpan["start"],
+): number {
+	return left.line - right.line || left.column - right.column;
 }
 
 function mergeNodeLineSpans(
