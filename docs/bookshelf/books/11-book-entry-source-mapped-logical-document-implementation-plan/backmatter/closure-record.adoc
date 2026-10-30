@@ -124,5 +124,5 @@ Lines: 98.49%
 
 [horizontal]
 当前对象入口:: xref:../10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约]
-治理追溯入口:: xref:批次状态台账[批次状态台账] and xref:batch-08-review-package[Batch 08 阶段审核包]
+治理追溯入口:: xref:批次状态台账[批次状态台账] and xref:Batch 08 阶段审核包[Batch 08 阶段审核包]
 后续治理入口:: `none`

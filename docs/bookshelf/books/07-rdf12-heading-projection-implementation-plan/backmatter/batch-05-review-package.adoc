@@ -1,4 +1,3 @@
-[#batch-05-review-package]
 == Batch 05 审核包：直接字段谓词
 
 === 批次信息

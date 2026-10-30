@@ -25,10 +25,10 @@
 |`hmeta:field[value, label=显示文本]`
 |heading inline metadata field
 
-|`xref:target[显示文本]`
+|`+xref:target[显示文本]+`
 |`aat:references` relation 与 xref edge evidence
 
-|`xref:target[显示文本, rel=depends-on]`
+|`+xref:target[显示文本, rel=depends-on]+`
 |`rel:depends-on` relation 与 xref edge evidence
 
 |xref named attributes

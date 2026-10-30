@@ -1,4 +1,3 @@
-[#batch-00-review-package]
 == Batch 00 审核包：基线与迁移护栏
 
 === 批次信息
@@ -138,7 +137,7 @@ pnpm exec biome check test/rdf12-projection/heading-projection.acceptance.test.t
 * 本批测试覆盖了正向事实。
 * 本批测试覆盖了必要负向事实。
 * 本批 public graph 检查使用 RDF graph 语义，不使用 Turtle 排版比较。
-* 本批目标测试来自 xref:../../06-rdf12-line-projection/chapters/08-worked-example.adoc[06 号书完整样例]，不是来自当前旧输出。
+* 本批目标测试来自 xref:../06-rdf12-line-projection/book.adoc#完整样例[06 号书完整样例]，不是来自当前旧输出。
 
 === 审核结论
 

@@ -1,4 +1,3 @@
-[#batch-02-review-package]
 == Batch 02 审核包：标题结构边
 
 === 批次信息

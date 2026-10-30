@@ -55,7 +55,7 @@ selector binding 使用 heading label space。role 是 heading field，提供筛
 |字段值是 JSON、YAML、locator 或其它复杂 raw。
 
 |xref named attributes
-|`xref:capacity[rel=depends-on, weight=0.8]`
+|`+xref:capacity[rel=depends-on, weight=0.8]+`
 |字段主体是关系边证据。
 |===
 

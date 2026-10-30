@@ -10,49 +10,49 @@
 |基线与迁移护栏
 |通过
 |8458ebeb81666b82a2b48c481fabc9426fd3c3d0
-|xref:batch-00-review-package[Batch 00 审核包]
+|xref:Batch 00 审核包：基线与迁移护栏[Batch 00 审核包]
 
 |Batch 01
 |标题节点与标题切片
 |通过
 |2645741c6f3422cb271b150739f73ad2f8739a5b
-|xref:batch-01-review-package[Batch 01 审核包]
+|xref:Batch 01 审核包：标题节点与标题切片[Batch 01 审核包]
 
 |Batch 02
 |标题结构边
 |通过
 |d10a0a712fd023a0bf6b9a44d4e00fb1fa97c989
-|xref:batch-02-review-package[Batch 02 审核包]
+|xref:Batch 02 审核包：标题结构边[Batch 02 审核包]
 
 |Batch 03
 |标题 Label 空间与 Selector Binding
 |通过
 |69ed418645dda07d00c6286601f506dcdf613c12
-|xref:batch-03-review-package[Batch 03 审核包]
+|xref:Batch 03 审核包：标题 Label 空间与 Selector Binding[Batch 03 审核包]
 
 |Batch 04
 |Xref 边与 Reifier
 |通过
 |0deadc878cd20f3c1ff08cb548a3e04172f9d63f
-|xref:batch-04-review-package[Batch 04 审核包]
+|xref:Batch 04 审核包：Xref 边与 Reifier[Batch 04 审核包]
 
 |Batch 05
 |直接字段谓词
 |通过
 |fb712b3992e4316bded427ed0f97558ded43b996
-|xref:batch-05-review-package[Batch 05 审核包]
+|xref:Batch 05 审核包：直接字段谓词[Batch 05 审核包]
 
 |Batch 06
 |Payload 复杂属性
 |通过
 |c1b3ecac0b1d40238439af5dada49517ce312e72
-|xref:batch-06-review-package[Batch 06 审核包]
+|xref:Batch 06 审核包：Payload 复杂属性[Batch 06 审核包]
 
 |Batch 07
 |公共契约与最终门禁
 |通过
 |49a7c602997f35aabcad493ecb792064ef599edd
-|xref:batch-07-review-package[Batch 07 审核包]
+|xref:Batch 07 审核包：公共契约与最终门禁[Batch 07 审核包]
 |===
 
 === 台账规则

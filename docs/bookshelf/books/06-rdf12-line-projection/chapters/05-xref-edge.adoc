@@ -15,7 +15,7 @@ xref 所在的标题切片决定边的 source heading。
 
 === Target Heading
 
-xref 的 selector 由解析器给出：作者写下的目标在那个位置的属性取值下展开属性引用，再按官方规则切去 `#` 之前的文档部分（解析器规约第 8 章 Xref Occurrence）。selector 在标题投影 label 空间中按整串相等绑定；label 空间由地址路径、`aat:addressLabel` 与 `aat:generatedAddressLabel` 构成（xref:地址与 Label 空间[地址与 Label 空间]）。`xref:红烧肉::火候[]` 的 selector 是 `红烧肉::火候`，绑定到红烧肉下的那一节火候。selector 不绑定到 role、字段谓词、xref display label、raw 文本或标题节点 IRI。
+xref 的 selector 由解析器给出：作者写下的目标在那个位置的属性取值下展开属性引用，再按官方规则切去 `#` 之前的文档部分（解析器规约第 8 章 Xref Occurrence）。selector 在标题投影 label 空间中按整串相等绑定；label 空间由地址路径、`aat:addressLabel` 与 `aat:generatedAddressLabel` 构成（xref:地址与 Label 空间[地址与 Label 空间]）。`+xref:红烧肉::火候[]+` 的 selector 是 `红烧肉::火候`，绑定到红烧肉下的那一节火候。selector 不绑定到 role、字段谓词、xref display label、raw 文本或标题节点 IRI。
 
 指向别的文档的 xref 不在本文档的 label space 里绑定：边证据写 `aat:targetDocument`（文档部分）与 `aat:targetSelector`（片段），由读得到那份文档的消费者去绑定。
 

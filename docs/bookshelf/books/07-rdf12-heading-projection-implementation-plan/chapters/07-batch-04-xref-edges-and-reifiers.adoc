@@ -68,7 +68,7 @@ xref 所在标题切片决定 source heading。xref target selector 绑定到唯
 
 === 测试任务
 
-. `xref-projector.test.ts` 断言 `xref:capacity-rule[运力规则, rel=depends-on]` 生成 `rel:depends-on` triple。
+. `xref-projector.test.ts` 断言 `+xref:capacity-rule[运力规则, rel=depends-on]+` 生成 `rel:depends-on` triple。
 . `xref-projector.test.ts` 断言无 `rel` 时生成 `aat:references` triple。
 . `xref-projector.test.ts` 断言边证据类型为 `aat:XrefEdge`。
 . `xref-projector.test.ts` 断言边证据有 `aat:sourceHeading` 和 `aat:targetHeading`。

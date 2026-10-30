@@ -60,3 +60,27 @@ include::backmatter/review-package-template.adoc[]
 
 [appendix]
 include::backmatter/batch-status-ledger.adoc[]
+
+[appendix]
+include::backmatter/batch-00-review-package.adoc[]
+
+[appendix]
+include::backmatter/batch-01-review-package.adoc[]
+
+[appendix]
+include::backmatter/batch-02-review-package.adoc[]
+
+[appendix]
+include::backmatter/batch-03-review-package.adoc[]
+
+[appendix]
+include::backmatter/batch-04-review-package.adoc[]
+
+[appendix]
+include::backmatter/batch-05-review-package.adoc[]
+
+[appendix]
+include::backmatter/batch-06-review-package.adoc[]
+
+[appendix]
+include::backmatter/batch-07-review-package.adoc[]

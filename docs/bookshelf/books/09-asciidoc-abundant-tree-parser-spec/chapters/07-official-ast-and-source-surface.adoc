@@ -109,7 +109,7 @@ Paragraph、带 macros substitutions 的 prose block 和可扫描 table prose �
 |解析器不知道它的内容怎样替换；块与它的后代都不扫描，报 `official-block-context.unknown`。
 |===
 
-跳过只针对块的内容。块标题（`.标题`）与块属性行是块的 metadata，扫描与跳过的块都扫描它们：图片、音频、视频标题里的 xref 照样产生 occurrence。带 ID 的块登记为目标：`[#fig]` 下写 `image::a.png[]`，`xref:fig[]` 解析到这张图；floating_title 的 ID 无论是作者写的还是官方按标题生成的，也一样登记。只有诊断归类的块与它的后代整个跳过。
+跳过只针对块的内容。块标题（`.标题`）与块属性行是块的 metadata，扫描与跳过的块都扫描它们：图片、音频、视频标题里的 xref 照样产生 occurrence。带 ID 的块登记为目标：`[#fig]` 下写 `image::a.png[]`，`+xref:fig[]+` 解析到这张图；floating_title 的 ID 无论是作者写的还是官方按标题生成的，也一样登记。只有诊断归类的块与它的后代整个跳过。
 
 Occurrence 只来自官方读进块文字的行。官方按段落读文字时跳过行注释（`//` 开头、但不是 `///`，`reader.js` 528 行）：普通段落、隐身段落、列表条目与描述的文字、表格都这样读（`parser.js` 1066、1272、1525 行），这些块里的行注释不产生 occurrence。分隔块按分隔符读进的内容不跳过行注释（`parser.js` 1531 行）：分隔的 verse 块里以 `//` 开头的行是内容，官方照常替换，它的 xref 产生 occurrence。描述的缩进续行也不跳过，见 xref:description-text[描述的文字]。
 
@@ -125,7 +125,7 @@ Occurrence 只来自官方读进块文字的行。官方按段落读文字时跳
 
 描述的范围从文字的第一行到并进的最后一行。范围里读掉的 metadata 行不是文字，不扫描。
 
-Section 标题与 floating_title 的标题文字做 macros 替换，标题行里的 xref 与锚点产生 occurrence，与块标题相同。标题文字从 `=` 标记之后算起。Section 标题里的 xref 属于这个 section 自己：投影成 RDF 时，它是从这个标题出发的边。Discrete 标题不是 section，它标题里的 xref 属于外层的 section。写成标题文字的自然引用（`<<目标标题>>`）与正文里一样交给官方解析。
+Section 标题与 floating_title 的标题文字做 macros 替换，标题行里的 xref 与锚点产生 occurrence，与块标题相同。标题文字从 `=` 标记之后算起。Section 标题里的 xref 属于这个 section 自己：投影成 RDF 时，它是从这个标题出发的边。Discrete 标题不是 section，它标题里的 xref 属于外层的 section。写成标题文字的自然引用（`+<<目标标题>>+`）与正文里一样交给官方解析。
 
 以上规则决定哪些文字收下 occurrence。xref 在这些文字里怎样认，见 xref:Xref 由官方认定[Xref 由官方认定]；anchor 由扫描器按 xref:Metadata、Xref、Anchor 与 Target[第 8 章] 的规则认。
 

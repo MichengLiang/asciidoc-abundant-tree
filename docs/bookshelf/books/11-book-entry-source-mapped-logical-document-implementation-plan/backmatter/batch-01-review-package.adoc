@@ -1,4 +1,3 @@
-[#batch-01-review-package]
 == Batch 01 阶段审核包
 
 === 批次信息
@@ -141,8 +140,8 @@ src/book-entry/**: not present in Batch 01
 * 本批没有修改 `src/rdf12-projection/**`。
 * 本批没有修改 `README.md` 或 `CHANGELOG.md`。
 * 本批没有引入 line origin table、source file table 或 book-entry runtime builder。
-* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#执行契约[执行契约]。
-* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#执行契约[执行契约]。
+* 本批数据流符合 xref:执行契约[执行契约]。
+* 本批控制流符合 xref:执行契约[执行契约]。
 * 本批新增代码有对应测试。
 * 本批没有新增高频路径或性能相关结构。
 * 本批没有通过 `any` 或双重断言掩盖公共模型冲突。

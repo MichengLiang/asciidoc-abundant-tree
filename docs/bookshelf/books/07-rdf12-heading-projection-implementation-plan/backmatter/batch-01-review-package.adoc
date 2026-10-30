@@ -1,4 +1,3 @@
-[#batch-01-review-package]
 == Batch 01 审核包：标题节点与标题切片
 
 === 批次信息

@@ -10,55 +10,55 @@
 |基线与迁移护栏
 |通过
 |`4a8299800c0da0966ea051fc25dccfc7fbae9569`
-|xref:batch-00-review-package[batch-00-review-package.adoc]
+|xref:Batch 00 阶段审核包[batch-00-review-package.adoc]
 
 |Batch 01
 |公共模型与坐标身份
 |通过
 |`7766995b9263e8cfb8a05d087762033bf66578b3`
-|xref:batch-01-review-package[batch-01-review-package.adoc]
+|xref:Batch 01 阶段审核包[batch-01-review-package.adoc]
 
 |Batch 02
 |Logical Source Builder
 |通过
 |`9c50aa619299a76f0f272cdcc44b51b101a0c530`
-|xref:batch-02-review-package[batch-02-review-package.adoc]
+|xref:Batch 02 阶段审核包[batch-02-review-package.adoc]
 
 |Batch 03
 |Parser Core 内存入口
 |通过
 |`ea6c2b9c24bd5239204fd0cc470deedcbab30a5f`
-|xref:batch-03-review-package[batch-03-review-package.adoc]
+|xref:Batch 03 阶段审核包[batch-03-review-package.adoc]
 
 |Batch 04
 |Origin-aware Source Recovery
 |通过
 |`3367ab40119fa1a65034a8940c2f0bed7dee7f78`
-|xref:batch-04-review-package[batch-04-review-package.adoc]
+|xref:Batch 04 阶段审核包[batch-04-review-package.adoc]
 
 |Batch 05
 |Public API 与 CLI Mode
 |通过
 |`3ada9168fbe1546c9cf7567c708ee3193189d9f2`
-|xref:batch-05-review-package[batch-05-review-package.adoc]
+|xref:Batch 05 阶段审核包[batch-05-review-package.adoc]
 
 |Batch 06
 |Downstream Coordinate Regression
 |通过
 |`0aaa1ff598dfeb107e6aed3906f0e6ff8eb11528`
-|xref:batch-06-review-package[batch-06-review-package.adoc]
+|xref:Batch 06 阶段审核包[batch-06-review-package.adoc]
 
 |Batch 07
 |Diagnostics 与 Negative Contracts
 |通过
 |`ae4ff07a2f6a408a9d150706ff81ba841f9ce6b3`
-|xref:batch-07-review-package[batch-07-review-package.adoc]
+|xref:Batch 07 阶段审核包[batch-07-review-package.adoc]
 
 |Batch 08
 |Final Gates and Closure
 |通过
 |`d5dd50e33b81f0f7c9ee6895ed90f68c586458d4`
-|xref:batch-08-review-package[batch-08-review-package.adoc]
+|xref:Batch 08 阶段审核包[batch-08-review-package.adoc]
 |===
 
 === 台账规则
