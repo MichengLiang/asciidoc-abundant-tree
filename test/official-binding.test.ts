@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { parseAbundantTree } from "../src/parser";
 import { writeFixture } from "./helpers";
 
-const shelf = join(process.cwd(), "docs/bookshelf");
+const shelf = join(process.cwd(), "bookshelf");
 const books = readdirSync(join(shelf, "books"));
 
 function bindings(document: Awaited<ReturnType<typeof parseAbundantTree>>) {

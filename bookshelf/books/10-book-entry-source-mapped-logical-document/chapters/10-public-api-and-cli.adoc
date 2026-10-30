@@ -11,9 +11,9 @@ Library API 使用 `parseAbundantTree` 的显式 mode：
 import { parseAbundantTree } from "asciidoc-abundant-tree";
 
 const document = await parseAbundantTree({
-  sourcePath: "docs/bookshelf/books/06-rdf12-line-projection/book.adoc",
+  sourcePath: "bookshelf/books/06-rdf12-line-projection/book.adoc",
   mode: "book-entry",
-  documentRoot: "docs/bookshelf",
+  documentRoot: "bookshelf",
 });
 ----
 
@@ -50,7 +50,7 @@ CLI 使用显式 mode：
 
 [source,bash]
 ----
-asciidoc-abundant-tree docs/bookshelf/books/06-rdf12-line-projection/book.adoc \
+asciidoc-abundant-tree bookshelf/books/06-rdf12-line-projection/book.adoc \
   --mode book-entry \
   --format json
 ----
@@ -67,7 +67,7 @@ CLI 可以使用当前工作目录作为默认 `documentRoot`，并允许调用�
 ----
 asciidoc-abundant-tree books/example/book.adoc \
   --mode book-entry \
-  --document-root docs/bookshelf
+  --document-root bookshelf
 ----
 
 所有输出 relativePath 均相对于 `documentRoot`。

@@ -80,8 +80,8 @@ pnpm test
 pnpm typecheck
 pnpm build
 pnpm test:coverage
-pnpm --dir docs/bookshelf test
-pnpm --dir docs/bookshelf run build
+pnpm check:books
+pnpm --dir bookshelf run build
 ----
 
 未运行的命令不能写成通过。

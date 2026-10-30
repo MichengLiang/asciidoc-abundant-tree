@@ -77,7 +77,8 @@
 	},
 	"scripts": {
 		"build": "tsdown",
-		"check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:apps && pnpm pack:check && pnpm smoke:cli",
+		"check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:apps && pnpm pack:check && pnpm smoke:cli && pnpm check:books",
+		"check:books": "pnpm --dir bookshelf check",
 		"check:browser": "pnpm build && pnpm test:browser && pnpm --dir apps/projection-teacher test:e2e",
 		"dev": "tsx src/cli.ts",
 		"export:animation-yaml": "tsx src/animation-yaml-export/cli.ts",

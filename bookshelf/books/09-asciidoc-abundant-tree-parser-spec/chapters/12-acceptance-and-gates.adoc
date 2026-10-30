@@ -72,12 +72,11 @@ pnpm lint
 pnpm test:coverage
 ----
 
-文档书架变更时，书架命令也必须运行：
+`pnpm check` 的末尾是 `pnpm check:books`：书架用仓库里当前的 aat 核对书里每一处引用。文档书架变更时，还要构建书架的网页：
 
 [source,bash]
 ----
-pnpm --dir docs/bookshelf test
-pnpm --dir docs/bookshelf run build
+pnpm --dir bookshelf run build
 ----
 
 未运行的验证不能写成通过。不可用命令必须报告不可用原因。

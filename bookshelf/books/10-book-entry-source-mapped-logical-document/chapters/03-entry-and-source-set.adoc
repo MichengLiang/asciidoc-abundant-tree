@@ -9,9 +9,9 @@ Entry file 由调用者显式传入。
 [source,typescript]
 ----
 parseAbundantTree({
-  sourcePath: "docs/bookshelf/books/06-rdf12-line-projection/book.adoc",
+  sourcePath: "bookshelf/books/06-rdf12-line-projection/book.adoc",
   mode: "book-entry",
-  documentRoot: "docs/bookshelf",
+  documentRoot: "bookshelf",
 });
 ----
 

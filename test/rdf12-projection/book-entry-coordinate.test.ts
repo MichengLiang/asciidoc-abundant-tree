@@ -23,7 +23,7 @@ const fixtureRoot = join(projectRoot, "test/book-entry/fixtures");
 const entryPath = join(fixtureRoot, "simple-book/book.adoc");
 const headingSliceFixtureRoot = join(fixtureRoot, "heading-slice-book");
 const headingSliceBookPath = join(headingSliceFixtureRoot, "book.adoc");
-const book10DocumentRoot = join(projectRoot, "docs/bookshelf");
+const book10DocumentRoot = join(projectRoot, "bookshelf");
 const book10EntryPath = join(
 	book10DocumentRoot,
 	"books/10-book-entry-source-mapped-logical-document/book.adoc",
