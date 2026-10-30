@@ -7,3 +7,4 @@ test-results/
 tmp/
 __pycache__/
 raw/
+build/
