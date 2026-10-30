@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
-## Unreleased
+## 0.5.0 - 2026-10-31
 
 ### Removed (breaking)
 
