@@ -1,6 +1,12 @@
+import type { AsciidoctorBlock } from "./asciidoctor-adapter";
 import type { MetadataNode } from "./model";
 import { definedObject } from "./object-utils";
-import { type LineTable, lineText, spanForLineText } from "./source-lines";
+import {
+	isLineComment,
+	type LineTable,
+	lineText,
+	spanForLineText,
+} from "./source-lines";
 
 export type MetadataSurface = {
 	node: MetadataNode;
@@ -16,6 +22,9 @@ const idLongAttrPattern = /^\[id=([^,\]]+)\]$/;
 const blockAnchorPattern = /^\[\[([^,\]]+)(?:,([^\]]+))?\]\]$/;
 const titlePattern = /^\.(.+)$/;
 const attrListPattern = /^\[([^\]]+)\]$/;
+// 官方在元数据之间读掉的属性条目（rx.js 的 AttributeEntryRx）与块注释的围栏。
+const attributeEntryPattern = /^:(!?[\p{L}\p{N}_][^:]*):(?:[ \t]+.*)?$/u;
+const blockCommentFencePattern = /^\/{4,}$/;
 
 // 一次解析里，官方对每一个 attrlist 的读法，按方括号里的文字查（09 号书第 8 章 Metadata Attachment）。官方的
 // parseAttributes 是异步的，元数据扫描却在同步的源区间推导里，所以解析开始时先读好（readAttributeLists），随这次解析
@@ -61,25 +70,73 @@ function attrListTexts(lineTable: LineTable): Set<string> {
 	return texts;
 }
 
+// 元数据照官方的读法附着（09 号书第 8 章 Metadata Attachment；parser.js 的 nextBlock 与 parseBlockMetadataLines）：
+// 官方每读完一行元数据就跳过其后的空行，夹在中间的行注释、块注释与属性条目也读掉，再读下一行，直到读出块。这里从
+// 块往回读，同样越过它们。越过以后再碰到的块标题行未必是元数据：官方读段落时 `.标题` 行不断开段落
+// （readParagraphLines 只在 attribute list、锚点行与分隔符处断开），它可能是上一个段落的末行。所以越过空行收下的
+// 块标题，要官方块的标题（节的块标题也记在 attributes 的 title 里）确是这一行才算，否则就停在那里；离块更近处
+// 已经收下了标题时，更远的标题被它覆盖，官方块上看不到，不再核对。
 export function collectPrecedingMetadata(
 	lineTable: LineTable,
 	ownerLine: number,
 	attributeLists: AttributeListReadings,
+	owner: AsciidoctorBlock,
 ): MetadataSurface[] {
+	const officialTitle = owner.getAttributes?.().title;
 	const surfaces: MetadataSurface[] = [];
+	let crossed = false;
+	let titled = false;
 	let cursor = ownerLine - 1;
 
 	while (cursor > 0) {
 		const text = lineText(lineTable, cursor);
+		if (
+			text.trim() === "" ||
+			isLineComment(text) ||
+			attributeEntryPattern.test(text)
+		) {
+			crossed = true;
+			cursor -= 1;
+			continue;
+		}
+		if (blockCommentFencePattern.test(text)) {
+			const opening = blockCommentOpening(lineTable, cursor, text);
+			if (opening === undefined) {
+				break;
+			}
+			crossed = true;
+			cursor = opening - 1;
+			continue;
+		}
 		const surface = parseMetadataLine(lineTable, cursor, text, attributeLists);
 		if (!surface) {
 			break;
+		}
+		if (surface.title !== undefined) {
+			if (crossed && !titled && surface.title !== officialTitle) {
+				break;
+			}
+			titled = true;
 		}
 		surfaces.unshift(surface);
 		cursor -= 1;
 	}
 
 	return surfaces;
+}
+
+// 往回读到的围栏是块注释的结束围栏，开头围栏是它上面最近的同一行。
+function blockCommentOpening(
+	lineTable: LineTable,
+	closing: number,
+	fence: string,
+): number | undefined {
+	for (let line = closing - 1; line > 0; line -= 1) {
+		if (lineText(lineTable, line) === fence) {
+			return line;
+		}
+	}
+	return undefined;
 }
 
 function parseMetadataLine(

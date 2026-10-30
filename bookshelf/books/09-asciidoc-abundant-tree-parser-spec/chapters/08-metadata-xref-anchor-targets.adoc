@@ -6,7 +6,9 @@
 
 Metadata surface 附着到紧随其后的 section 或 block。可附着 surface 包括 explicit ID、block title、attribute list 和 block anchor。
 
-紧邻性是 metadata attachment 的前提。远离 block 的普通行不得被解释为该 block 的 metadata。
+附着照官方的读法（`parser.js` 的 `nextBlock` 与 `parseBlockMetadataLines`）：官方每读完一行元数据（attribute list、block anchor、block title，以及夹在其间的行注释、块注释），就跳过其后的空行，再读下一行，直到读出一个块；这些元数据附着给这个块，section 也一样。所以元数据与块之间隔着空行时照样附着；隔着别的块时，元数据附着给那个块，不附给更后面的块。普通文字行本身就是一个块（段落），不是 metadata。
+
+元数据附着决定块的 metadata 起点（`metadataStartLine`）、块标题里的行内文字属于哪个块（其中的 xref 因此有所属的块与标题切片），以及标题切片的起点：标题前隔着空行的 attribute list 同样属于这个标题。
 
 Attribute list 怎样拆，由官方定：哪一段是命名属性、名字是什么、哪一段是位置属性，取官方对源文本里方括号内文字的解析：官方读块属性行时调用 `parseAttributes`（`parser.js` 2839 行），解析器照样调用它，只是不开替换（`sub_input`、`sub_result`），所以拆法与名字照官方，值保留作者写下的样子。不用 `extractAttributesFromText`：它会替换单引号里的值，并另行处理第一个位置属性。只有官方认作命名属性的才是命名属性。`[.dish, 难度=中, 葱、姜=多, a.b=1]` 里，`难度` 是命名属性；`葱、姜=多` 与 `a.b=1` 的名字不合 Asciidoctor 的属性名规则（`[\p{Word}][\p{Word}-]*`），官方把它们读成第 3、4 个位置属性，它们不是命名属性，也就不成为字段（06 号书第 2 章「标题头部属性」）。按逗号自己切开 attrlist 会把它们读成命名属性，引号里的逗号也会被切开。
 

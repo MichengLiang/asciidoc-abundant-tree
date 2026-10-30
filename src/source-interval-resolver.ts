@@ -234,6 +234,7 @@ function nextSiblingStartLine(
 		lineTable,
 		next.sourceLine,
 		attributeLists,
+		next.block,
 	);
 	return metadata.at(0)?.line ?? next.sourceLine;
 }
@@ -250,7 +251,12 @@ function metadataForSurface(
 	if (takesParentSourceLocation(surface.block)) {
 		return [];
 	}
-	return collectPrecedingMetadata(lineTable, blockStartLine, attributeLists);
+	return collectPrecedingMetadata(
+		lineTable,
+		blockStartLine,
+		attributeLists,
+		surface.block,
+	);
 }
 
 function lastChildEndLine(

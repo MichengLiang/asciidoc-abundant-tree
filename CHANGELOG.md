@@ -13,6 +13,7 @@ This project uses semantic versioning after `0.1.0`.
 ### Fixed
 
 - A block or heading attrlist is split the way Asciidoctor splits it, so only what Asciidoctor treats as a named attribute becomes one, and a field. In `[.dish, 难度=中, 葱、姜=多, a.b=1]`, `葱、姜=多` and `a.b=1` are positional attributes (their names do not match Asciidoctor's attribute name rule) and no longer turn into `field:葱、姜` and `field:a.b`. Commas inside quotes no longer split a value (`[cols="1,2"]` was read as `cols` = `"1`), and a quoted value no longer keeps its quotes. `#id` and `.role` are read only from the first positional attribute, as Asciidoctor does; before, `[source,ts,#late-id]` gave the block the ID `late-id`. Values are kept as written: attribute references in them are not expanded.
+- Block metadata attaches the way Asciidoctor attaches it: blank lines, line comments, block comments and attribute entries between a metadata line and its block no longer break the attachment, and metadata separated from a block by another block belongs to that other block. A block title written above a blank line now belongs to the next block, so the xrefs in it are recognized and the block's metadata starts at that line. A title-like last line of a paragraph (`.Foo` right after its text) stays with the paragraph, as in Asciidoctor; a block title reached across blank lines is taken only when Asciidoctor gave the block that title.
 
 ## 0.5.0 - 2026-10-31
 
