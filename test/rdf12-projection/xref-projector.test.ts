@@ -12,6 +12,7 @@ import {
 	integerLiteral,
 	stringLiteral,
 } from "../../src/rdf12-projection/literals";
+import { parseTurtleToRdf12Graph } from "../../src/rdf12-projection/n3-adapter";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import {
@@ -19,6 +20,7 @@ import {
 	type Rdf12IriTerm,
 	rdf12TripleTerm,
 } from "../../src/rdf12-projection/terms";
+import { serializeRdf12ProjectionToTurtle } from "../../src/rdf12-projection/turtle-serializer";
 import { writeFixture } from "../helpers";
 import { documentResource, headingStartingAt } from "./helpers/graph-matchers";
 
@@ -426,35 +428,65 @@ describe("rdf12 xref edge projection", () => {
 		).toHaveLength(0);
 	});
 
-	it("emits candidate headings but no single target or relation for multi-binding targets", () => {
+	it("binds a selector with several owners to all of them, reified by one edge evidence", () => {
 		const projection = projectAbundantDocumentToRdf12(ambiguousDocument(), {
 			documentRoot: projectRoot,
 		});
-		const edge = onlyXrefEdge(projection.graph);
+		const edge = iriTerm(onlyXrefEdge(projection.graph));
+		const source = headingStartingAt(projection.graph, 7);
+		const references = iriTerm(`${namespaces.aat}references`);
+		const owners = [
+			headingStartingAt(projection.graph, 1),
+			headingStartingAt(projection.graph, 4),
+		];
 
 		expect(
 			projection.graph
 				.match({
-					subject: iriTerm(edge),
-					predicate: iriTerm(`${namespaces.aat}candidateHeading`),
+					subject: edge,
+					predicate: iriTerm(`${namespaces.aat}targetHeading`),
 				})
-				.map((triple) => triple.object.value),
-		).toEqual([
-			headingStartingAt(projection.graph, 1).value,
-			headingStartingAt(projection.graph, 4).value,
-		]);
+				.map((triple) => triple.object.value)
+				.toSorted(),
+		).toEqual(owners.map((owner) => owner.value).toSorted());
+		for (const owner of owners) {
+			const relation = rdf12Triple(source, references, owner);
+			expect(projection.graph.has(relation)).toBe(true);
+			expect(
+				projection.graph.has(
+					rdf12Triple(
+						edge,
+						iriTerm(`${namespaces.rdf}reifies`),
+						rdf12TripleTerm(relation),
+					),
+				),
+			).toBe(true);
+		}
 		expect(
 			projection.graph.match({
-				subject: iriTerm(edge),
-				predicate: iriTerm(`${namespaces.aat}targetHeading`),
-			}),
-		).toHaveLength(0);
-		expect(
-			projection.graph.match({
-				subject: iriTerm(edge),
+				subject: edge,
 				predicate: iriTerm(`${namespaces.rdf}reifies`),
 			}),
+		).toHaveLength(2);
+		expect(
+			projection.graph.match({
+				predicate: iriTerm(`${namespaces.aat}candidateHeading`),
+			}),
 		).toHaveLength(0);
+	});
+
+	it("writes one reifier of several relations as Turtle that reads back to the same graph", () => {
+		const projection = projectAbundantDocumentToRdf12(ambiguousDocument(), {
+			documentRoot: projectRoot,
+		});
+		const reread = parseTurtleToRdf12Graph(
+			serializeRdf12ProjectionToTurtle(projection),
+		);
+
+		expect(reread.size).toBe(projection.graph.size);
+		for (const triple of projection.graph.toArray()) {
+			expect(reread.has(triple)).toBe(true);
+		}
 	});
 
 	it("resolves source heading from containing slice when source labels are ambiguous", () => {

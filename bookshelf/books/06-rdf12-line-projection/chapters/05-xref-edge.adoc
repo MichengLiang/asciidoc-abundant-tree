@@ -27,17 +27,22 @@ xref 的 selector 由解析器给出：作者写下的目标在那个位置的�
 
 selector 未绑定时，边证据保留 `aat:targetSelector` 和回源坐标，不生成虚构 target heading，不生成主 relation triple。
 
-selector 多义绑定时，边证据保留候选目标，不任意选择一个 target heading，不生成主 relation triple。
+selector 有多个拥有者时，每个拥有者都是这处 xref 的 target heading：边证据为每个拥有者写一条 `aat:targetHeading`，图里为每个拥有者断言一条主 relation triple，同一个边证据以 `rdf:reifies` 指向全部这些三元组项。投影器不判断这是不是歧义，也不挑其中一个。
+
+一处引用指向一节还是几节，由书的约定规定，在下游检查（例如工作区的书架检查把一处多指报为错误）。下游从图上自己数：一个边证据有几条 `aat:targetHeading`（第 7 章「查找一处多指的交叉引用边」）。一个 reifier 可以 reify 多个三元组项（RDF 1.2 Concepts §1.5），所以“同一处引用”在图里仍是一个资源。
 
 xref edge evidence 保留 selector 和官方解析事实。`aat:targetSelector` 保存绑定用的 selector，作者写下的原样在 `aat:raw` 里；`aat:officialResolvedId`、`aat:officialResolvedType` 和 `aat:officialHref` 保存 Asciidoctor 解析出的 target id、target type 和 href。官方解析事实不改变 relation triple 的 heading endpoint。
 
 [source,turtle]
 ----
+:heading-2 aat:references :heading-3 , :heading-5 .
+
 :xref-edge-l12-c4-o0 a aat:XrefEdge ;
+  rdf:reifies <<( :heading-2 aat:references :heading-3 )>> ,
+              <<( :heading-2 aat:references :heading-5 )>> ;
   aat:sourceHeading :heading-2 ;
   aat:targetSelector "重复标题" ;
-  aat:candidateHeading :heading-3 ;
-  aat:candidateHeading :heading-5 ;
+  aat:targetHeading :heading-3 , :heading-5 ;
   aat:relativePath "samples/ambiguous.adoc" ;
   aat:startLine 12 ;
   aat:endLine 12 .
@@ -114,4 +119,4 @@ xref:capacity[运力规则, rel=depends-on]
 
 xref edge complex property 也使用 field predicate。示例中的 `relation-evidence=rel-delivery-capacity` 匹配 source value block id 时，边证据输出 `field:relation-evidence :value-l25-o0`。raw value object 保存该 source value block 的 raw、format、source coordinates 和 `aat:sourceValueId`。
 
-同一个 xref edge evidence 可以拥有多个 complex properties。每个 xref named attribute 的 key 是字段名；value 唯一匹配 source value block id 时，该字段值是 raw value object。未匹配或多义匹配时，该字段值是 string literal。
+同一个 xref edge evidence 可以拥有多个 complex properties。每个 xref named attribute 的 key 是字段名；value 匹配 source value block id 时，每个匹配的 block 各给出一个 raw value object 字段值（第 6 章「Xref Edge Complex Property」）。未匹配时，该字段值是 string literal。

@@ -2,52 +2,35 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
-import {
-	createRdf12LabelCatalog,
-	type Rdf12HeadingLabelKind,
-	type Rdf12LabelCatalog,
-} from "../../src/rdf12-projection/label-catalog";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
-import {
-	projectAbundantDocumentToRdf12,
-	type Rdf12Projection,
-} from "../../src/rdf12-projection/projector";
-import {
-	bindSelector,
-	candidateNodesForSelector,
-} from "../../src/rdf12-projection/selector-binding";
+import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm } from "../../src/rdf12-projection/terms";
-import { aatTerm, headingStartingAt } from "./helpers/graph-matchers";
+import { headingStartingAt, labelOwners } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
 
+// selector 绑定到 label 空间里与它整串相等的全部拥有者（06 号书第 2 章「地址与 Label 空间」、第 5 章「Target
+// Heading」）：一个、没有，或几个，投影器不再把结果分成“绑定 / 未解析 / 多义”三种结论。
 describe("rdf12 selector binding", () => {
 	it("binds selectors to heading address labels", async () => {
 		const projection = await referenceProjection();
-		const result = bindSelector(catalogOf(projection), "section-basics");
 
-		expect(result.status).toBe("bound");
-		expect(result.selector).toBe("section-basics");
-		if (result.status === "bound") {
-			expect(result.target).toEqual(headingStartingAt(projection.graph, 12));
-		}
+		expect(labelOwners(projection.graph, "section-basics")).toEqual([
+			headingStartingAt(projection.graph, 12),
+		]);
 	});
 
 	it("binds selectors to heading generated address labels and headlines", async () => {
 		const projection = await referenceProjection();
-		const generated = bindSelector(catalogOf(projection), "_1_引言");
-		const headline = bindSelector(catalogOf(projection), "3. 核心引擎设计");
 
-		expect(generated.status).toBe("bound");
-		if (generated.status === "bound") {
-			expect(generated.target).toEqual(headingStartingAt(projection.graph, 8));
-		}
-		expect(headline.status).toBe("bound");
-		if (headline.status === "bound") {
-			expect(headline.target).toEqual(headingStartingAt(projection.graph, 25));
-		}
+		expect(labelOwners(projection.graph, "_1_引言")).toEqual([
+			headingStartingAt(projection.graph, 8),
+		]);
+		expect(labelOwners(projection.graph, "3. 核心引擎设计")).toEqual([
+			headingStartingAt(projection.graph, 25),
+		]);
 	});
 
 	it("binds local non-heading target ids to their owning heading", async () => {
@@ -58,14 +41,9 @@ describe("rdf12 selector binding", () => {
 			["perf-table", 40],
 			["warning-text", 40],
 		] as const) {
-			const result = bindSelector(catalogOf(reference), selector);
-
-			expect(result.status).toBe("bound");
-			if (result.status === "bound") {
-				expect(result.target).toEqual(
-					headingStartingAt(reference.graph, headingStartLine),
-				);
-			}
+			expect(labelOwners(reference.graph, selector)).toEqual([
+				headingStartingAt(reference.graph, headingStartLine),
+			]);
 		}
 	});
 
@@ -80,105 +58,75 @@ describe("rdf12 selector binding", () => {
 				}),
 				{ documentRoot: projectRoot },
 			);
-			const result = bindSelector(catalogOf(projection), selector);
 
-			expect(result.status).toBe("bound");
-			if (result.status === "bound") {
-				expect(result.target).toEqual(headingStartingAt(projection.graph, 3));
-			}
+			expect(labelOwners(projection.graph, selector)).toEqual([
+				headingStartingAt(projection.graph, 3),
+			]);
 		}
 	});
 
 	it("keeps non-address surfaces out of selector binding", async () => {
-		const payloadProjection = projectAbundantDocumentToRdf12(
+		const projection = projectAbundantDocumentToRdf12(
 			await parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const [deliveryHeading] = catalogOf(payloadProjection).owners("delivery");
+		const [deliveryHeading] = labelOwners(projection.graph, "delivery");
 
-		for (const [projection, selector] of [
-			[payloadProjection, "section"],
-			[payloadProjection, "policy"],
-			[payloadProjection, "banana"],
-			[payloadProjection, "pear"],
-			[
-				payloadProjection,
-				"配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。",
-			],
-			[payloadProjection, deliveryHeading?.value ?? ""],
-		] as const) {
-			expect(bindSelector(catalogOf(projection), selector)).toEqual({
-				status: "unresolved",
-				selector,
-				selectorLiteral: selector,
-			});
+		for (const selector of [
+			"section",
+			"policy",
+			"banana",
+			"pear",
+			"配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, payload=rel-delivery]。",
+			deliveryHeading?.value ?? "",
+		]) {
+			expect(labelOwners(projection.graph, selector)).toEqual([]);
 		}
 	});
 
-	it("keeps unresolved selector literal available without creating a target", async () => {
+	it("binds an unknown selector to no heading", async () => {
 		const projection = await referenceProjection();
-		const result = bindSelector(catalogOf(projection), "missing-target");
 
-		expect(result).toEqual({
-			status: "unresolved",
-			selector: "missing-target",
-			selectorLiteral: "missing-target",
-		});
+		expect(labelOwners(projection.graph, "missing-target")).toEqual([]);
 	});
 
-	it("returns all candidate headings for duplicate selector matches", () => {
+	it("binds a selector shared by several headings to all of them", () => {
 		const projection = projectAbundantDocumentToRdf12(duplicateDocument(), {
 			documentRoot: projectRoot,
 		});
-		const result = bindSelector(catalogOf(projection), "Duplicate");
 
-		expect(result.status).toBe("ambiguous");
-		if (result.status === "ambiguous") {
-			expect(result.selectorLiteral).toBe("Duplicate");
-			expect(result.candidates.map((candidate) => candidate.value)).toEqual([
-				headingStartingAt(projection.graph, 1).value,
-				headingStartingAt(projection.graph, 4).value,
-			]);
-			expect("target" in result).toBe(false);
-		}
-		expect(
-			candidateNodesForSelector(catalogOf(projection), "Duplicate").map(
-				(candidate) => candidate.value,
-			),
-		).toEqual([
-			headingStartingAt(projection.graph, 1).value,
-			headingStartingAt(projection.graph, 4).value,
-		]);
+		expect(labelOwners(projection.graph, "Duplicate")).toEqual(
+			[
+				headingStartingAt(projection.graph, 1),
+				headingStartingAt(projection.graph, 4),
+			].toSorted((left, right) => left.value.localeCompare(right.value)),
+		);
 	});
 
-	it("keeps local target aliases ambiguous when they belong to multiple headings", () => {
-		const document = ambiguousTargetAliasDocument();
-		const projection = projectAbundantDocumentToRdf12(document, {
-			documentRoot: projectRoot,
-		});
-		const result = bindSelector(catalogOf(projection), "shared");
+	it("binds a local target alias that belongs to several headings to all of them", () => {
+		const projection = projectAbundantDocumentToRdf12(
+			ambiguousTargetAliasDocument(),
+			{ documentRoot: projectRoot },
+		);
 
-		expect(result.status).toBe("ambiguous");
-		if (result.status === "ambiguous") {
-			expect(result.candidates.map((candidate) => candidate.value)).toEqual([
-				headingStartingAt(projection.graph, 1).value,
-				headingStartingAt(projection.graph, 5).value,
-			]);
-		}
+		expect(labelOwners(projection.graph, "shared")).toEqual(
+			[
+				headingStartingAt(projection.graph, 1),
+				headingStartingAt(projection.graph, 5),
+			].toSorted((left, right) => left.value.localeCompare(right.value)),
+		);
 	});
 
-	it("deduplicates repeated local target aliases within one heading", () => {
+	it("counts a heading once when the same local target alias repeats inside it", () => {
 		const projection = projectAbundantDocumentToRdf12(repeatedAliasDocument(), {
 			documentRoot: projectRoot,
 		});
-		const result = bindSelector(catalogOf(projection), "shared");
 
-		expect(result.status).toBe("bound");
-		if (result.status === "bound") {
-			expect(result.target).toEqual(headingStartingAt(projection.graph, 1));
-		}
+		expect(labelOwners(projection.graph, "shared")).toEqual([
+			headingStartingAt(projection.graph, 1),
+		]);
 	});
 
 	it("does not bind a selector from xref display labels", () => {
@@ -186,11 +134,7 @@ describe("rdf12 selector binding", () => {
 			documentRoot: projectRoot,
 		});
 
-		expect(bindSelector(catalogOf(projection), "Display Label")).toEqual({
-			status: "unresolved",
-			selector: "Display Label",
-			selectorLiteral: "Display Label",
-		});
+		expect(labelOwners(projection.graph, "Display Label")).toEqual([]);
 		expect(
 			projection.graph.match({
 				predicate: iriTerm(`${namespaces.rdf}value`),
@@ -198,45 +142,7 @@ describe("rdf12 selector binding", () => {
 			}),
 		).toHaveLength(0);
 	});
-
-	it("throws when a catalog reports one candidate without an owner term", () => {
-		expect(() =>
-			bindSelector(
-				{
-					add: () => undefined,
-					find: () => [],
-					owners: () => [undefined] as never,
-					entries: () => [],
-				},
-				"broken-selector",
-			),
-		).toThrow(/unexpectedly empty/u);
-	});
 });
-
-// 绑定目录与图上的标签是同一份事实：从标题节点上的四个标签谓词建目录（06 号书第 2 章「地址与 Label 空间」）。
-function catalogOf(projection: Rdf12Projection): Rdf12LabelCatalog {
-	const catalog = createRdf12LabelCatalog();
-	for (const labelKind of [
-		"headline",
-		"addressPath",
-		"addressLabel",
-		"generatedAddressLabel",
-	] satisfies Rdf12HeadingLabelKind[]) {
-		for (const triple of projection.graph.match({
-			predicate: aatTerm(labelKind),
-		})) {
-			if (triple.object.termType === "literal") {
-				catalog.add({
-					owner: triple.subject,
-					labelKind,
-					value: triple.object.value,
-				});
-			}
-		}
-	}
-	return catalog;
-}
 
 async function referenceProjection() {
 	return projectAbundantDocumentToRdf12(

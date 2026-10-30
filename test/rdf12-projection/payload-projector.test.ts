@@ -151,7 +151,6 @@ review_team: quality-ops
 				attributes: { for: "missing" },
 				roles: ["release-policy-config"],
 			}),
-			ambiguousHeadingValueDocument(),
 		]) {
 			const projection = projectAbundantDocumentToRdf12(document, {
 				documentRoot: projectRoot,
@@ -204,7 +203,30 @@ review_team: quality-ops
 		expectNoPredicate(projection.graph, edge, "payloadSelector");
 	});
 
-	it("falls back to xref literal fields for unmatched and ambiguous source value ids", () => {
+	it("writes a heading complex property to every owner of its selector, sharing one raw value object", () => {
+		// for= 的值有几个拥有者，就写到几个标题上（06 号书第 6 章「Heading Complex Property」）。
+		const projection = projectAbundantDocumentToRdf12(
+			ambiguousHeadingValueDocument(),
+			{ documentRoot: projectRoot },
+		);
+		const values = [1, 4].map((startLine) =>
+			onlyIriObject(
+				projection.graph,
+				headingStartingAt(projection.graph, startLine),
+				fieldPredicate("release-policy-config"),
+			),
+		);
+
+		expect(values[0]).toEqual(values[1]);
+		const value = values[0] ?? iriTerm("urn:missing-value");
+		expect(
+			projection.graph.match({ subject: value, predicate: aat("forSelector") }),
+		).toHaveLength(1);
+		expectLiteral(projection.graph, value, "forSelector", "duplicate");
+		expectLiteral(projection.graph, value, "raw", '{"ambiguous":true}');
+	});
+
+	it("falls back to xref literal fields for unmatched source value ids", () => {
 		const unmatched = projectAbundantDocumentToRdf12(
 			edgeValueDocument({
 				attributes: {
@@ -232,23 +254,38 @@ review_team: quality-ops
 			unmatchedEdge,
 			fieldPredicate("dependency-evidence"),
 		);
+	});
 
-		const ambiguous = projectAbundantDocumentToRdf12(
+	it("gives one raw value object for every source value block whose id the xref value matches", () => {
+		// 值匹配几个 source value block，就有几个字段值（06 号书第 6 章「Xref Edge Complex Property」）。
+		const projection = projectAbundantDocumentToRdf12(
 			ambiguousEdgeValueDocument(),
 			{ documentRoot: projectRoot },
 		);
-		const ambiguousEdge = onlyResourceOfType(ambiguous.graph, "XrefEdge");
-		expectLiteral(
-			ambiguous.graph,
-			ambiguousEdge,
-			fieldPredicate("dependency-evidence"),
-			"rel-delivery",
-		);
-		expectNoIriObjects(
-			ambiguous.graph,
-			ambiguousEdge,
-			fieldPredicate("dependency-evidence"),
-		);
+		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
+		const values = projection.graph
+			.match({
+				subject: edge,
+				predicate: fieldPredicate("dependency-evidence"),
+			})
+			.map((triple) => triple.object);
+
+		expect(values).toHaveLength(2);
+		expect(values.every((value) => value.termType === "iri")).toBe(true);
+		expect(
+			values
+				.map((value) =>
+					value.termType === "iri"
+						? literalValue(projection.graph, value, "raw")
+						: undefined,
+				)
+				.toSorted(),
+		).toEqual(["first: true", "second: true"]);
+		for (const value of values) {
+			if (value.termType === "iri") {
+				expectLiteral(projection.graph, value, "sourceValueId", "rel-delivery");
+			}
+		}
 	});
 
 	it("projects multiple xref edge complex properties on the same edge", () => {

@@ -93,7 +93,7 @@ describe("rdf12 interdocument xref acceptance", () => {
 		expect(
 			projection.graph.match({
 				subject: iriTerm(xref ?? ""),
-				predicate: iriTerm(`${namespaces.aat}candidateHeading`),
+				predicate: iriTerm(`${namespaces.aat}targetHeading`),
 			}),
 		).toHaveLength(0);
 	});

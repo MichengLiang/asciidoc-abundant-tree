@@ -79,7 +79,7 @@ raw value object 不保存字段名、结构分类标记或下游模型名。字
 
 带 `for` 或 `forSelector` marker 的 source value block 表达 heading complex property。该 block 的 property role 是字段名。source block language 是 format。block body 是 raw。
 
-带值 marker 查询 xref:地址与 Label 空间[地址与 Label 空间] 定义的 label 空间，与 xref 的 selector 同一套规则：值可以是标题原文、带上级标题的地址路径（`for=红烧肉::火候`）、custom ID 或生成 ID。绑定失败或多义绑定时，不输出 heading complex property。
+带值 marker 查询 xref:地址与 Label 空间[地址与 Label 空间] 定义的 label 空间，与 xref 的 selector 同一套规则：值可以是标题原文、带上级标题的地址路径（`for=红烧肉::火候`）、custom ID 或生成 ID。marker 的值有几个拥有者，heading complex property 就写到几个标题节点上，它们指向同一个 raw value object，`aat:forSelector` 只写一次。没有拥有者时不输出 heading complex property。
 
 无值 marker 表达 source ownership binding。投影器使用 source value block 的源位置，找到覆盖该 block 起始行的最内层 heading node，并把 complex property 写到该 heading node。源位置无法确定 owning heading 时，不输出 heading complex property。
 
@@ -145,7 +145,7 @@ steps:
 
 === Xref Edge Complex Property
 
-xref edge complex property 由 xref named attribute 和 source value block 共同表达。attribute key 是字段名。attribute value 唯一匹配 source value block id 时，字段值是 raw value object。
+xref edge complex property 由 xref named attribute 和 source value block 共同表达。attribute key 是字段名。attribute value 匹配 source value block id 时，字段值是 raw value object；匹配几个 block，就有几个字段值，各是一个 raw value object，各带 `aat:sourceValueId`。
 
 [source,asciidoc]
 ------
@@ -192,7 +192,7 @@ edge:
 
 edge complex property 归属于 xref edge evidence。它不归属于 source heading，也不归属于 target heading。
 
-一个 xref edge evidence 可以拥有多个 complex properties。每个匹配的 attribute 产生一个 field predicate。attribute value 未匹配 source value block id 或多义匹配 source value block id 时，该 attribute 按 literal field 输出。
+一个 xref edge evidence 可以拥有多个 complex properties。每个匹配的 attribute 产生一个 field predicate。attribute value 未匹配任何 source value block id 时，该 attribute 按 literal field 输出。
 
 === Opaque Raw
 

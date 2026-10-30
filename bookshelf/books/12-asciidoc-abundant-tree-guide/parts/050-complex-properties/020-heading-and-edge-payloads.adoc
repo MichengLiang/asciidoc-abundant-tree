@@ -41,7 +41,7 @@ steps:
 <urn:aat:doc:...#payload-l10-o0> aat:format "yaml" .
 ----
 
-xref edge complex property 由 xref named attribute 和 source value block 共同表达。attribute key 是字段名；attribute value 唯一匹配 source value block id 时，字段值是 raw value object。
+xref edge complex property 由 xref named attribute 和 source value block 共同表达。attribute key 是字段名；attribute value 匹配 source value block id 时，字段值是 raw value object，匹配几个 block 就有几个字段值。
 
 [source,asciidoc]
 ------

@@ -94,7 +94,7 @@ raw value object 内部 JSON、YAML、TOML、XML 或其它格式作为 raw liter
 
 raw value object 的 format 来自 source block language。该字段表达 raw 的源文本语法。
 
-heading complex property 由带 `for` 或 `forSelector` marker 的 source value block 产生。字段名来自该 block 的 property role。xref edge complex property 由 xref named attribute 产生。字段名来自 attribute key；attribute value 唯一匹配 source value id 时，字段值是 raw value object；未匹配或多义匹配时，字段值是 string literal。
+heading complex property 由带 `for` 或 `forSelector` marker 的 source value block 产生。字段名来自该 block 的 property role。xref edge complex property 由 xref named attribute 产生。字段名来自 attribute key；attribute value 匹配 source value id 时，每个匹配的 block 各给出一个 raw value object 字段值；未匹配时，字段值是 string literal。
 
 === 来源与回源
 

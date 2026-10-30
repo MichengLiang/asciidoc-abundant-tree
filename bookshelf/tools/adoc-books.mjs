@@ -611,7 +611,7 @@ function bindReferences(config, document) {
             continue;
         }
         const fragment = edge.selector;
-        const found = located([...values(edge.iri, "targetHeading"), ...values(edge.iri, "candidateHeading")]);
+        const found = located(values(edge.iri, "targetHeading"));
         if (found.length === 1) {
             const heading = { id: found[0].id, title: found[0].title };
             headingsByFragment.set(fragment, heading);

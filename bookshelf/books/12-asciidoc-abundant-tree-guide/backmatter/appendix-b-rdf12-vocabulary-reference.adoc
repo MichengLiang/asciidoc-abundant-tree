@@ -19,6 +19,9 @@
 |`aat:headline`
 |标题文本。
 
+|`aat:addressPath`
+|两段以上的地址路径（`红烧肉::火候`），每个后缀一条。与 `aat:headline`、`aat:addressLabel`、`aat:generatedAddressLabel` 一起构成 heading label space。
+
 |`aat:addressLabel`
 |可寻址到 heading node 的作者声明 label 或本地 target alias。
 
@@ -53,13 +56,10 @@
 |xref edge evidence 的 source heading。
 
 |`aat:targetHeading`
-|xref edge evidence 的 target heading。
+|xref edge evidence 的 target heading：selector 在 label space 里的每个拥有者各一条。
 
 |`aat:targetSelector`
 |xref 源表面写出的 selector。
-
-|`aat:candidateHeading`
-|多义 selector 命中的候选 heading。
 
 |`aat:format`
 |raw value object 的 source block language。
@@ -71,5 +71,5 @@
 |xref edge complex property 的 source value id binding 证据。
 
 |`rdf:reifies`
-|RDF 1.2 reifier 指向 relation triple term。
+|RDF 1.2 reifier 指向 relation triple term；一处 xref 有几个 target heading，它的边证据就 reify 几个。
 |===

@@ -128,24 +128,25 @@ SELECT ?edge ?selector ?path ?start ?end WHERE {
         aat:startLine ?start ;
         aat:endLine ?end .
   FILTER NOT EXISTS { ?edge aat:targetHeading ?target . }
-  FILTER NOT EXISTS { ?edge aat:candidateHeading ?candidate . }
 }
 ----
 
 该查询返回 selector 没有绑定到标题节点的 xref edge evidence。该结果不自动表示 dead link；dead link 判断属于下游 lint。
 
-=== 查找多义交叉引用边
+=== 查找一处多指的交叉引用边
 
 [source,sparql]
 ----
-SELECT ?edge ?selector ?candidate WHERE {
+SELECT ?edge ?selector (COUNT(?target) AS ?targets) WHERE {
   ?edge a aat:XrefEdge ;
         aat:targetSelector ?selector ;
-        aat:candidateHeading ?candidate .
+        aat:targetHeading ?target .
 }
+GROUP BY ?edge ?selector
+HAVING (COUNT(?target) > 1)
 ----
 
-多义边不生成主 relation triple。
+一处引用的 selector 有几个拥有者，边证据就有几条 `aat:targetHeading`，图里也有同样多条主 relation triple。这算不算错误，由书的约定决定。
 
 === 按直接字段查找标题
 

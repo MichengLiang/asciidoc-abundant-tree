@@ -127,7 +127,7 @@ print("warp")
 # :engine-code a aat:ListingBlock .
 ----
 
-同一 address label 可以归属多个标题节点。该 selector 绑定时产生多义候选，不生成单一 target heading，也不生成主 relation triple。同一 address label 在同一标题节点下出现多次时，selector owner 是同一个标题节点，不因此制造多义。
+同一 address label 可以归属多个标题节点，这时用它作 selector 的引用绑定到全部这些标题节点（第 5 章「Target Heading」）。同一 address label 在同一标题节点下出现多次时，selector owner 是同一个标题节点，只算一个拥有者。
 
 跨文档 target 不读取外部文件，不归属到当前标题投影图。
 
@@ -213,4 +213,4 @@ landing:: core 的 `resources/`。
 
 === 重复 label
 
-重复 headline 合法。重复 address label 按源文档事实保留。按重复 label 查询时，结果可以包含多个标题节点。投影器不为重复 label 虚构唯一绑定。
+重复 headline 合法。重复 address label 按源文档事实保留。按重复 label 查询时，结果可以包含多个标题节点；用它作 selector 时，绑定到全部拥有者。投影器不判断哪几个标题算重复，也不为重复 label 挑出一个目标。

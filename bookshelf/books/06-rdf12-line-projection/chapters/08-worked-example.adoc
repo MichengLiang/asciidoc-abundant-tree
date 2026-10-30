@@ -265,7 +265,7 @@ edge:
 
 === Xref Edge Complex Property
 
-`relation-evidence=rel-delivery-capacity` 表达 xref edge complex property。`relation-evidence` 是字段名。`rel-delivery-capacity` 唯一匹配 source value block id，因此字段值是 raw value object。该 complex property 归属于 xref edge evidence，不归属于 source heading 或 target heading。
+`relation-evidence=rel-delivery-capacity` 表达 xref edge complex property。`relation-evidence` 是字段名。`rel-delivery-capacity` 匹配一个 source value block id，因此字段值是一个 raw value object。该 complex property 归属于 xref edge evidence，不归属于 source heading 或 target heading。
 
 [source,turtle]
 ----

@@ -18,7 +18,6 @@ import {
 	makeXrefEdgeResourceLocalId,
 	type OrdinalAllocator,
 } from "./resource-identity";
-import { bindSelector } from "./selector-binding";
 import {
 	addSourceSpanTriples,
 	sourceRelativePathOrFallback,
@@ -127,7 +126,7 @@ function projectXref(
 	const xrefIri = createXrefResource(context, xref);
 	context.xrefIndex.set({ node: xref, iri: xrefIri });
 	const sourceHeading = writeSourceBinding(context, xrefIri, xref);
-	const targetHeading = writeTargetBinding(context, xrefIri, xref);
+	const targetHeadings = writeTargetBinding(context, xrefIri, xref);
 	const rawRel = stringAttribute(xref.attributes, "rel");
 	const predicateMapping = mapRelationPredicate(
 		rawRel,
@@ -137,11 +136,12 @@ function projectXref(
 	if (predicateMapping.rawRel !== undefined) {
 		addStringTriple(context.graph, xrefIri, "rel", predicateMapping.rawRel);
 	}
-	if (
-		sourceHeading !== undefined &&
-		targetHeading !== undefined &&
-		predicateMapping.predicate !== undefined
-	) {
+	if (sourceHeading === undefined || predicateMapping.predicate === undefined) {
+		return;
+	}
+	// selector 有几个拥有者，就断言几条主关系、由同一个边证据 reify 全部（06 号书第 5 章「Target Heading」）：
+	// 一处引用指向几节算不算错，由书的约定在下游判断，投影器不挑其中一个。
+	for (const targetHeading of targetHeadings) {
 		const relation = rdf12Triple(
 			sourceHeading,
 			predicateMapping.predicate,
@@ -330,37 +330,18 @@ function writeTargetBinding(
 	context: XrefProjectorContext,
 	xrefIri: Rdf12IriTerm,
 	xref: XrefOccurrenceNode,
-): Rdf12IriTerm | undefined {
+): readonly Rdf12IriTerm[] {
 	// 指向别的文档的 xref 不在本文档的 label space 里绑定，由读得到那份文档的消费者去绑定（06 号书第 5 章）。
 	if (xref.document !== undefined || xref.selector === undefined) {
-		return undefined;
+		return [];
 	}
-	const result = bindSelector(context.labelCatalog, xref.selector);
-
-	if (result.status === "bound") {
+	const targets = context.labelCatalog.owners(xref.selector);
+	for (const target of targets) {
 		context.graph.add(
-			rdf12Triple(
-				xrefIri,
-				iriTerm(`${namespaces.aat}targetHeading`),
-				result.target,
-			),
+			rdf12Triple(xrefIri, iriTerm(`${namespaces.aat}targetHeading`), target),
 		);
-		return result.target;
 	}
-
-	if (result.status === "ambiguous") {
-		for (const candidate of result.candidates) {
-			context.graph.add(
-				rdf12Triple(
-					xrefIri,
-					iriTerm(`${namespaces.aat}candidateHeading`),
-					candidate,
-				),
-			);
-		}
-	}
-
-	return undefined;
+	return targets;
 }
 
 function stringAttribute(

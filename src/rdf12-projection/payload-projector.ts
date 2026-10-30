@@ -18,7 +18,6 @@ import {
 	makePayloadLocalId,
 	type OrdinalAllocator,
 } from "./resource-identity";
-import { bindSelector } from "./selector-binding";
 import {
 	addLineSpanTriples,
 	sourceRelativePathOrFallback,
@@ -169,33 +168,37 @@ function projectHeadingComplexProperty(
 	if (fieldName === undefined || entry.roles.length !== 1) {
 		return;
 	}
-	const owner = headingOwnerForComplexProperty(context, entry, marker);
-	if (owner === undefined) {
+	const owners = headingOwnersForComplexProperty(context, entry, marker);
+	if (owners.length === 0) {
 		return;
 	}
 	const value = rawValueObjectFor(context, entry);
 
-	context.graph.add(rdf12Triple(owner, fieldPredicate(fieldName), value));
+	// marker 的值有几个拥有者，就写到几个标题上，指向同一个 raw value object（06 号书第 6 章「Heading Complex
+	// Property」）：投影器不判断该挂到哪一个。
+	for (const owner of owners) {
+		context.graph.add(rdf12Triple(owner, fieldPredicate(fieldName), value));
+	}
 	if (marker.kind === "selector") {
 		addString(context.graph, value, "forSelector", marker.selector);
 	}
 }
 
-function headingOwnerForComplexProperty(
+function headingOwnersForComplexProperty(
 	context: ComplexPropertyProjectorContext,
 	entry: SourceValueBlockEntry,
 	marker: HeadingMarker,
-): Rdf12IriTerm | undefined {
+): readonly Rdf12IriTerm[] {
 	if (marker.kind === "selector") {
-		const result = bindSelector(context.labelCatalog, marker.selector);
-		return result.status === "bound" ? result.target : undefined;
+		return context.labelCatalog.owners(marker.selector);
 	}
 
-	return findInnermostHeadingBySourceLine({
+	const owner = findInnermostHeadingBySourceLine({
 		nodeIndex: context.nodeIndex,
 		relativePath: entry.relativePath,
 		line: entry.span.startLine,
 	})?.iri;
+	return owner === undefined ? [] : [owner];
 }
 
 function projectXrefFields(
@@ -209,26 +212,20 @@ function projectXrefFields(
 			continue;
 		}
 		const value = String(rawValue);
-		const sourceValue = uniqueSourceValueForId(context, value);
-		if (sourceValue === undefined) {
+		const sourceValues = context.sourceValuesById.get(value) ?? [];
+		if (sourceValues.length === 0) {
 			addFieldLiteral(context.graph, entry.iri, fieldName, value);
 			continue;
 		}
-
-		const rawValueObject = rawValueObjectFor(context, sourceValue);
-		context.graph.add(
-			rdf12Triple(entry.iri, fieldPredicate(fieldName), rawValueObject),
-		);
-		addString(context.graph, rawValueObject, "sourceValueId", value);
+		// 值匹配几个 source value block，就有几个字段值（06 号书第 6 章「Xref Edge Complex Property」）。
+		for (const sourceValue of sourceValues) {
+			const rawValueObject = rawValueObjectFor(context, sourceValue);
+			context.graph.add(
+				rdf12Triple(entry.iri, fieldPredicate(fieldName), rawValueObject),
+			);
+			addString(context.graph, rawValueObject, "sourceValueId", value);
+		}
 	}
-}
-
-function uniqueSourceValueForId(
-	context: ComplexPropertyProjectorContext,
-	id: string,
-): SourceValueBlockEntry | undefined {
-	const matches = context.sourceValuesById.get(id) ?? [];
-	return matches.length === 1 ? matches[0] : undefined;
 }
 
 function rawValueObjectFor(
