@@ -1,0 +1,50 @@
+# 015 描述列表的范围到最后一个后代块的锚点行为止，挂上的多行块的尾巴在范围外
+
+:发现: 2026-10-22，aat 计划 #9 的 9.2 修描述的范围时实测。
+:代码版本: asciidoc-abundant-tree 仓库 ``08098f8``（0.2.5 之前）；0.2.4 及更早同样。
+:影响: ``descriptionList`` 节点的 ``span``（以及由它而来的 source 层）短了：用 ``+`` 挂在最后一条描述下的多行块，第二行起不在描述列表的范围里。这些块自己扫描，xref 不丢，RDF 不受影响；读节点树的范围、按范围切原文的下游会少几行。
+:涉及: ``src/source-interval-resolver.ts``、``test/parser-description-list.acceptance.test.ts``
+
+## 复现（实测）
+
+.. code-block:: asciidoc
+
+   = 文
+
+   == 节
+
+   正文。
+
+   术语:: 解释
+   +
+   附加
+   第二行 xref:z1[]
+
+描述列表的 ``span`` 是 ``{startLine: 7, endLine: 9}``；挂上的段落占第 9–10 行。挂上的是 listing 时同样，到 ``----`` 开头那一行为止。
+
+## 原因
+
+区间解析器给描述列表算结束行时（``lastChildEndLine``），取的是后代块的锚点行，只给描述的文字另算了最后一行（9.2）。后代块的结束行
+要解析它们自己的区间，而列表条目、嵌套列表的结束行又会反过来向父块要，所以当初只取了锚点行，免得互相递归。
+
+## 方向
+
+后代块里能就地算出结束行的（段落、分隔块、隐身段落、描述的文字、列表条目的文字）就地算，不调 ``resolveSourceInterval``；对照官方
+``readLinesForListItem`` 读进条目的行，确认描述列表的最后一行。
+
+## 解决
+
+:提交: 工作包 10.3（git log --grep "Work-Package: 10.3"）
+
+2026-10-23，aat 计划 #10 的 10.3（``git log --grep "Work-Package: 10.3"``），随 0.2.6 发布。规约在 09 号书第 5 章 Description List
+（10.1）：span 到最后一个后代块的结束行，后代块的结束行只从它自己往下读出，不向父块或兄弟推断。
+
+修法：``lastChildEndLine``（``src/source-interval-resolver.ts``）改由 ``enclosedEndLine`` 给出每个子块的结束行：块自己的结束行
+（``ownEndLine``：分隔块到闭合分隔符、隐身段落与段落到官方读进的最后一行、描述与非描述列表的条目到文字的最后一行、其余只占锚点行），
+与它全部后代的结束行取最大。它不调 ``resolveSourceInterval``，所以没有原方向里担心的递归。每个块按自己的 markdown 引语深度取视图
+判断结构，坐标仍落在源文。
+
+测试（``test/parser-description-list.acceptance.test.ts`` 的 ``description list span``）：挂上的多行段落、listing、example、隐身段落、
+admonition 段落，带续行的嵌套列表，折行的最后一条描述，以及 markdown 引语里的四种写法。写测试时发现：引语的第一行不能就是描述列表，
+``> 术语:: 解释`` 先匹配描述列表，官方把 ``> 术语`` 读成术语，引语不成立；引语用例因此都以一句开头再写描述列表，结构逐条对过官方 AST。
+变异实验 7 个都被抓到。
