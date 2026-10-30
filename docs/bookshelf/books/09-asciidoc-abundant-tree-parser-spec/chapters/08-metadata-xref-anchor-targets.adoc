@@ -11,7 +11,7 @@ Metadata surface 附着到紧随其后的 section 或 block。可附着 surface 
 
 === Xref Occurrence
 
-Xref occurrence 来自源文本中的 xref syntax。
+Xref occurrence 是官方认下、并在源文本里找到位置的 xref（xref:xref-recognition[Xref 由官方认定]）。它在源文本中的写法是下面几种：
 
 [source,asciidoc]
 ----
@@ -21,7 +21,29 @@ xref:target[label]
 xref:target[label,key=value]
 ----
 
-解析器保存 raw selector、display label、named attributes、sourceSpan 和 official binding facts。
+一个 occurrence 上的事实分属两层：
+
+[cols="1,3"]
+|===
+|事实 |来自
+
+|`raw`、`syntax`、`sourceSpan`
+|源文本：扫描器的候选。
+
+|`target`
+|源文本：作者写下的目标原样，如 `{sec}`、`#body-map`。
+
+|`label`、`attributes`
+|哪些是命名属性由官方定，值取源文本：对源文本里方括号内的文字调用官方的 `extractAttributesFromText`。官方转换得到的属性值经过了 replacements（`a--b` 变成破折号的实体），不是作者写下的值。
+
+|`selector`、`document`
+|源文本经官方规则得出：在这个位置的属性取值下展开 `target` 的属性引用，再按官方切 `#` 的规则分成文档部分与片段。片段是 `selector`；指向别的文档时，文档部分是 `document`。
+
+|`asciidoctor` 层的 `href`、`refid`、`path`、`fragment`、`reftext`
+|官方 xref 节点。`reftext` 是转换器给出的链接文字。
+|===
+
+`selector` 不取官方的 fragment：官方解析成功一个自然引用以后，把 fragment 改写成它找到的 ID（`substitutors.js` 1244 行），`role 的作用域` 成了 `_role_的作用域`，作者写下的文字就丢了；而 label space 按作者写下的标题原文绑定。
 
 Xref occurrence 不验证外部 target。Interdocument target 保持 raw target 和 official href。
 
@@ -66,6 +88,6 @@ Source layer occurrence 与 official layer binding 必须保持可区分。
 
 Raw xref target 不被 official href 覆盖。Official reftext 不替代 source label。Binding merge 只把两个来源的事实放在同一个 occurrence 上。
 
-Official binding 在收下这个 occurrence 的官方块下取：解析器把 xref 交给转换器时，以那个块为父节点建一个 xref inline 节点（xref:engineering-contract[工程承载]）。收下它的块是文字里有这一行的块：段落、隐身段落、列表条目、描述列表的术语与描述、表格、section 与 discrete 标题。olist、ulist、colist 在节点树里是透明的，条目不建节点，但条目仍是收下自己文字里 xref 的块（xref:inline-scan-boundary[Inline 扫描边界]）。
+Official binding 就是官方在这个位置认下的那个 xref 节点的事实，解析器不为 occurrence 另建 xref 节点去问转换器：另建的节点用的是扫描器给出的目标，官方没有认的文字也会因此得到 href，那是伪造的官方绑定。每个 occurrence 都出自一个官方 xref 节点，所以都带 official href；本文档里找不到的 target 也由转换器给出 `#target`。
 
-扫描器找到的每个 xref occurrence 都在某个块的文字里，所以都带 official href：本文档里找不到的 target 也由转换器给出 `#target`。没有 official href 的 xref occurrence 是解析器的缺陷，不是作者写法的结果。
+`scope` 只记官方事实：官方节点带 `path` 时是 `external`，否则是 `local`。公共模型不下"绑定成功"或"未解析"的结论：引用是否成立，按作者写下的地址在标题投影的 label space 里绑定，结论只由 RDF 投影给出（06 号书第 5 章），规则只在一处。官方按自己的规则解析（无空格的目标当作 ID，同名标题默默取第一个），它的 `resolvedId` 作为官方事实保留，不作为引用是否成立的判断。

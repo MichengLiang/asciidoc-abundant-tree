@@ -137,11 +137,15 @@ describe("rdf12 xref edge projection", () => {
 		const edge = resourcesOfType(
 			projection.graph,
 			`${namespaces.aat}XrefEdge`,
-		).find((iri) =>
-			hasSelector(projection.graph, iri, "other.adoc#remote-target"),
-		);
+		).find((iri) => hasSelector(projection.graph, iri, "remote-target"));
 
 		expect(edge).toBeDefined();
+		expectStringTriple(
+			projection.graph,
+			edge ?? "",
+			"targetDocument",
+			"other.adoc",
+		);
 		expect(
 			projection.graph.match({
 				subject: iriTerm(edge ?? ""),
@@ -848,6 +852,7 @@ function unresolvedDocument(): AbundantDocument {
 							syntax: "shorthand",
 							raw: "<<missing-target>>",
 							target: "missing-target",
+							selector: "missing-target",
 							containingSectionId: "source",
 							sourceSpan: {
 								start: { line: 3, column: 1 },
@@ -893,6 +898,7 @@ function spanlessXrefDocument(): AbundantDocument {
 				syntax: "shorthand",
 				raw: "<<target>>",
 				target: "target",
+				selector: "target",
 			},
 		],
 	};
@@ -904,6 +910,7 @@ function indexedXref(): XrefOccurrenceNode {
 		syntax: "shorthand",
 		raw: "<<indexed-target>>",
 		target: "indexed-target",
+		selector: "indexed-target",
 		sourceSpan: {
 			start: { line: 9, column: 3 },
 			end: { line: 9, column: 21 },
@@ -928,6 +935,7 @@ function ambiguousDocument(): AbundantDocument {
 							syntax: "shorthand",
 							raw: "<<duplicate-target>>",
 							target: "duplicate-target",
+							selector: "duplicate-target",
 							containingSectionId: "source",
 							sourceSpan: {
 								start: { line: 9, column: 1 },
@@ -961,6 +969,7 @@ function duplicateSourceLabelDocument(): AbundantDocument {
 								syntax: "shorthand",
 								raw: "<<target>>",
 								target: "target",
+								selector: "target",
 								containingSectionId: "dup",
 								sourceSpan: {
 									start: { line: 6, column: 1 },
@@ -1003,6 +1012,7 @@ function documentTitlePreambleXrefDocument(): AbundantDocument {
 						syntax: "shorthand",
 						raw: "<<target>>",
 						target: "target",
+						selector: "target",
 						sourceSpan: {
 							start: { line: 3, column: 5 },
 							end: { line: 3, column: 15 },
@@ -1021,6 +1031,7 @@ function sourceValueIdAliasDocument(): AbundantDocument {
 		syntax: "macro",
 		raw: "xref:rel-delivery-capacity[Evidence target]",
 		target: "rel-delivery-capacity",
+		selector: "rel-delivery-capacity",
 		label: "Evidence target",
 		containingSectionId: "delivery",
 		attributes: {},
@@ -1034,6 +1045,7 @@ function sourceValueIdAliasDocument(): AbundantDocument {
 		syntax: "macro",
 		raw: "xref:capacity[Capacity, dependency-evidence=rel-delivery-capacity]",
 		target: "capacity",
+		selector: "capacity",
 		label: "Capacity",
 		containingSectionId: "delivery",
 		attributes: {
@@ -1132,6 +1144,7 @@ function relPayloadDocument(): AbundantDocument {
 								syntax: "macro",
 								raw: "xref:target[Target, rel=depends-on, payload=payload-one]",
 								target: "target",
+								selector: "target",
 								label: "Target",
 								containingSectionId: "target",
 								attributes: {
@@ -1171,6 +1184,7 @@ function emptyRelDocument(): AbundantDocument {
 								syntax: "macro",
 								raw: "xref:target[Target, rel=]",
 								target: "target",
+								selector: "target",
 								label: "Target",
 								containingSectionId: "target",
 								attributes: {
@@ -1209,6 +1223,7 @@ function spacedRelDocument(): AbundantDocument {
 								syntax: "macro",
 								raw: 'xref:target[Target, rel="依 据"]',
 								target: "target",
+								selector: "target",
 								label: "Target",
 								containingSectionId: "target",
 								attributes: {
@@ -1247,6 +1262,7 @@ function payloadSelectorOnlyDocument(): AbundantDocument {
 								syntax: "macro",
 								raw: "xref:missing-target[Missing, payload=delivery]",
 								target: "missing-target",
+								selector: "missing-target",
 								label: "Missing",
 								containingSectionId: "delivery",
 								attributes: {
@@ -1272,6 +1288,7 @@ function sameLineXrefLabelsDocument(): AbundantDocument {
 		syntax: "shorthand",
 		raw: "<<missing-a,A>>",
 		target: "missing-a",
+		selector: "missing-a",
 		label: "A",
 		sourceSpan: {
 			start: { line: 3, column: 1 },
@@ -1283,6 +1300,7 @@ function sameLineXrefLabelsDocument(): AbundantDocument {
 		syntax: "shorthand",
 		raw: "<<missing-b,B>>",
 		target: "missing-b",
+		selector: "missing-b",
 		label: "B",
 		sourceSpan: {
 			start: { line: 3, column: 12 },

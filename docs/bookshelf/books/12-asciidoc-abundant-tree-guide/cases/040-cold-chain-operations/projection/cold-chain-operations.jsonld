@@ -3692,7 +3692,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "#_温度偏离处置流程",
+				"@value": "#温度偏离处置流程",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -3712,7 +3712,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "温度偏离处置流程",
+				"@value": "[温度偏离处置流程]",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -3721,46 +3721,6 @@
 		},
 		{
 			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-191",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedId",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "_温度偏离处置流程",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-192",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#officialResolvedType",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "section",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-193",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3780,7 +3740,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-194",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-192",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3800,7 +3760,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-195",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-193",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3820,7 +3780,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-196",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-194",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3836,7 +3796,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-197",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-195",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3856,7 +3816,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-198",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-196",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3876,7 +3836,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-199",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-197",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3896,7 +3856,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-200",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-198",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3916,7 +3876,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-201",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-199",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3932,7 +3892,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-202",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-200",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",
@@ -3952,7 +3912,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-203",
+			"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#statement-201",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:6b8c38a13630a00a470028028ac82077a1ced5e372415babc9cce804543fb4a1#xref-edge-l8-c11-o0",

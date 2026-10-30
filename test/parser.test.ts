@@ -370,17 +370,19 @@ describe("parseAbundantTree", () => {
 			expect.objectContaining({
 				raw: "<<missing-target>>",
 				target: "missing-target",
-				scope: "unresolved",
+				selector: "missing-target",
+				scope: "local",
 				sourceSpan: expect.objectContaining({
 					start: { line: 5, column: 5 },
 				}),
 				asciidoctor: expect.objectContaining({
 					href: "#missing-target",
-					resolvedId: "missing-target",
 					reftext: "[missing-target]",
 				}),
 			}),
 		);
+		// 官方没有找到目标：不给 resolvedId，公共模型也不另下"未解析"的结论（09 号书第 8 章 Binding Merge）。
+		expect(xref?.asciidoctor?.resolvedId).toBeUndefined();
 		expect(xref?.asciidoctor?.resolvedType).toBeUndefined();
 	});
 
@@ -402,13 +404,13 @@ describe("parseAbundantTree", () => {
 				raw: "<<before>>",
 				target: "before",
 				containingSectionId: "_before",
-				scope: "unresolved",
+				scope: "local",
 				asciidoctor: expect.objectContaining({
 					href: "#before",
-					resolvedId: "before",
 				}),
 			}),
 		);
+		expect(xref?.asciidoctor?.resolvedId).toBeUndefined();
 		expect(xref?.asciidoctor?.resolvedType).toBeUndefined();
 	});
 

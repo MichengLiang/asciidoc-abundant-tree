@@ -64,6 +64,9 @@ export type AsciidoctorLayer = {
   context?: string;
   nodeName?: string;
   href?: string;
+  refid?: string;
+  path?: string;
+  fragment?: string;
   resolvedId?: string;
   resolvedType?: TargetType;
   reftext?: string;

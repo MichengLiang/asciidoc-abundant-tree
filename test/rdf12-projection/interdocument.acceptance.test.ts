@@ -17,10 +17,7 @@ describe("rdf12 interdocument xref acceptance", () => {
 			await parseAbundantTree({ sourcePath: interdocumentPath }),
 			{ documentRoot: projectRoot },
 		);
-		const externalXrefs = xrefsWithSelector(
-			projection.graph,
-			"other.adoc#remote-target",
-		);
+		const externalXrefs = xrefsWithSelector(projection.graph, "remote-target");
 
 		expect(externalXrefs).toHaveLength(2);
 		for (const xref of externalXrefs) {
@@ -28,7 +25,13 @@ describe("rdf12 interdocument xref acceptance", () => {
 				projection.graph,
 				xref,
 				"targetSelector",
-				"other.adoc#remote-target",
+				"remote-target",
+			);
+			expectStringTriple(
+				projection.graph,
+				xref,
+				"targetDocument",
+				"other.adoc",
 			);
 			expectStringTriple(
 				projection.graph,
@@ -65,12 +68,11 @@ describe("rdf12 interdocument xref acceptance", () => {
 		expect(localXref).toBeDefined();
 		expect(localRelation?.termType).toBe("triple");
 		expect(
-			xrefsWithSelector(projection.graph, "other.adoc#remote-target").flatMap(
-				(xref) =>
-					projection.graph.match({
-						subject: iriTerm(xref),
-						predicate: iriTerm(`${namespaces.aat}targetHeading`),
-					}),
+			xrefsWithSelector(projection.graph, "remote-target").flatMap((xref) =>
+				projection.graph.match({
+					subject: iriTerm(xref),
+					predicate: iriTerm(`${namespaces.aat}targetHeading`),
+				}),
 			),
 		).toHaveLength(0);
 	});
@@ -80,10 +82,20 @@ describe("rdf12 interdocument xref acceptance", () => {
 			documentRoot: "/virtual",
 		});
 
+		const [xref] = xrefsWithSelector(projection.graph, "remote");
+		expect(xref).toBeDefined();
+		expectStringTriple(
+			projection.graph,
+			xref ?? "",
+			"targetDocument",
+			"missing.adoc",
+		);
 		expect(
-			xrefsWithSelector(projection.graph, "missing.adoc#remote"),
-		).toHaveLength(1);
-		expect(projection.labelCatalog.owners("missing.adoc#remote")).toEqual([]);
+			projection.graph.match({
+				subject: iriTerm(xref ?? ""),
+				predicate: iriTerm(`${namespaces.aat}candidateHeading`),
+			}),
+		).toHaveLength(0);
 	});
 });
 
@@ -153,6 +165,8 @@ function externalOnlyDocument(): AbundantDocument {
 								syntax: "macro",
 								raw: "xref:missing.adoc#remote[Remote]",
 								target: "missing.adoc#remote",
+								selector: "remote",
+								document: "missing.adoc",
 								label: "Remote",
 								scope: "external",
 								sourceSpan: {

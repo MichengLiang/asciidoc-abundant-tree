@@ -32,12 +32,14 @@ describe("heading titles", () => {
 				xref.sourceSpan?.start.line,
 				xref.containingSectionId,
 				xref.scope,
+				xref.selector,
 				xref.asciidoctor?.resolvedId,
 			]),
 		).toEqual([
-			["target", 3, "sec-anchor", "local", "target"],
-			// 写成标题文字的自然引用要靠官方解析才认得出目标。
-			["目标", 8, "sec-anchor", "local", "target"],
+			["target", 3, "sec-anchor", "local", "target", "target"],
+			// 官方只在目标带空格或大写字母时按标题去找，`目标` 被当作 ID，官方层没有 resolvedId；
+			// 按标题原文绑定由 RDF 投影的 label space 给出（06 号书第 5 章）。
+			["目标", 8, "sec-anchor", "local", "目标", undefined],
 		]);
 		expect(
 			document.anchorOccurrences.map((anchor) => [

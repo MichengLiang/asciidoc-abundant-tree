@@ -314,24 +314,31 @@ describe("quotes written as paragraphs", () => {
 		{
 			name: "air-multiline",
 			body: '"空气 xref:a[A]。\n// 注\n末行。"\n-- 某人 xref:credit[出处], 某书\n',
+			creditLine: 8,
 		},
 		{
 			name: "air-one-line",
 			body: '"一句话 xref:a[A]。"\n-- 某人 xref:credit[出处]\n',
+			creditLine: 6,
 		},
-	])("finds the xref of an $name quote and leaves its credit line alone", async ({
+	])("finds the xrefs of an $name quote, including the one in its credit line", async ({
 		name,
 		body,
+		creditLine,
 	}) => {
 		const document = await parseArticle(`quote-${name}.adoc`, body);
 
 		expect(document.toolDiagnostics).toEqual([]);
+		// 官方取走出处行、在 quote 块上做 normal 替换（parser.js 1159-1166 行），出处里的 xref 也是链接。
 		expect(
 			document.xrefOccurrences.map((xref) => [
 				xref.target,
 				xref.sourceSpan?.start.line,
 			]),
-		).toEqual([["a", 5]]);
+		).toEqual([
+			["a", 5],
+			["credit", creditLine],
+		]);
 	});
 
 	it("relocates the blocks of a markdown quote onto its source lines", async () => {
@@ -398,6 +405,7 @@ describe("quotes written as paragraphs", () => {
 			["d", 16],
 			["e", 19],
 			["f", 22],
+			["credit", 24],
 		]);
 	});
 });

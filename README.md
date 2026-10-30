@@ -18,8 +18,8 @@ The pretty tree format is designed for terminal reading. Its shape is intentiona
 - Section, paragraph, description list, listing, table, title, metadata, target, anchor, and xref nodes.
 - Raw source text and source spans for recoverable authored surfaces.
 - A target catalog for sections, blocks, listings, tables, inline anchors, and block anchors.
-- Xref occurrence records that keep raw target text, labels, local/external/unresolved scope, containing section, and resolved target kind.
-- Official Asciidoctor binding data for xrefs: `href`, `resolvedId`, `resolvedType`, and `reftext`.
+- Xref occurrence records for exactly the xrefs Asciidoctor recognizes, keeping raw target text, the selector they address, the document they name, labels, local/external scope, containing section, and resolved target kind.
+- Official Asciidoctor binding data for xrefs: `href`, `refid`, `path`, `fragment`, `resolvedId`, `resolvedType`, and `reftext`.
 - Pretty tree output for terminal inspection and JSON output for automation.
 - Explicit book-entry mode for parsing an entry file plus supported full-file includes with origin source coordinates.
 - RDF 1.2 graph, Turtle, and JSON-LD output through the single `rdf12` projection for source-aware graph queries, frontend consumption, and line-based edit loops.
@@ -73,7 +73,7 @@ The RDF 1.2 heading projection does not emit `aat:previousSibling`. Consumers th
 
 Heading complex properties use a `for` or `forSelector` marker to bind a raw value object to a heading through a field predicate. A marker with a selector value queries the heading label space; a no-value marker binds by source ownership. Edge complex properties use a named xref attribute such as `relation-evidence=<source-value-id>` and a source value block id to bind a raw value object to xref edge evidence through a field predicate. Field names come from source roles or xref named attribute keys; they determine the public query entry. Raw value format comes from the source block language such as `[source,json]` or `[source,yaml]`; raw value objects preserve raw text and source coordinates without separate kind, id, or role predicates. Raw value objects are opaque and are not expanded into business RDF predicates.
 
-Ordinary xref target selectors and xref field values use separate spaces. The xref target selector queries `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`; a named xref attribute value queries source value ids. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and xref named attribute keys become field predicates; neither is emitted as a legacy surface-attribute resource.
+Ordinary xref target selectors and xref field values use separate spaces. The xref selector is the written target with its attribute references expanded and any document part cut off; it queries `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`. An xref that names another document records it as `aat:targetDocument` and is not bound in this document. A named xref attribute value queries source value ids. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and xref named attribute keys become field predicates; neither is emitted as a legacy surface-attribute resource.
 
 JSON-LD output is a frontend-friendly projection of the same RDF graph. RDF 1.2 triple terms are represented as structured `rdf12:TripleTerm` objects rather than flattened strings.
 
@@ -298,7 +298,7 @@ const book = await parseAbundantTree({
 
 `attributes` are the include attributes as Asciidoctor parses them, the same an Asciidoctor include processor receives, so the bookshelf build and this parser can register the same selector. A blank positional attribute is `null`: the first one in `[,beta]`, the second one in `[beta,,gamma]`. A resolver that throws fails construction with `include.resolver-failed`; returned text that does not match its source leaves those lines without coordinates and reports `origin-map.selection-mismatch`.
 
-`parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target and official href when Asciidoctor exposes one, but this package does not open the referenced `.adoc` file.
+`parseAbundantTree` reads only the supplied source file. Interdocument xrefs keep their raw target, the document and selector they name, and the official href, but this package does not open the referenced `.adoc` file.
 
 Browser tools that already hold AsciiDoc source text can use the browser-safe subpath:
 
@@ -325,11 +325,11 @@ Source-layer fields describe the file surface: raw text, source line, line span,
 
 Official-layer fields describe Asciidoctor results: context, node name, href, resolved ID, resolved type, and reftext.
 
-The separation matters. Raw xref targets are not overwritten by official bindings, and official xref data is not inferred from ordinary links in converted HTML. Each source xref occurrence receives its official binding from the Asciidoctor xref conversion for that occurrence.
+The separation matters. Raw xref targets are not overwritten by official bindings, and official xref data is not inferred from ordinary links in converted HTML. An xref exists where Asciidoctor's own substitution recognizes one, so passthroughs, escapes, attribute references, and fragments read the way Asciidoctor reads them; the parser only locates each one in the source, and the occurrence carries the facts of the xref node Asciidoctor created at that position.
 
 ## Example Tasks
 
-List unresolved local xrefs:
+List the xrefs that name another document:
 
 ```ts
 import { parseAbundantTree } from "asciidoc-abundant-tree";
@@ -337,8 +337,10 @@ import { parseAbundantTree } from "asciidoc-abundant-tree";
 const document = await parseAbundantTree({ sourcePath: "docs/index.adoc" });
 
 for (const xref of document.xrefOccurrences) {
-	if (xref.scope === "unresolved") {
-		console.log(`${xref.target} at line ${xref.sourceSpan?.start.line}`);
+	if (xref.scope === "external") {
+		console.log(
+			`${xref.document}#${xref.selector ?? ""} at line ${xref.sourceSpan?.start.line}`,
+		);
 	}
 }
 ```

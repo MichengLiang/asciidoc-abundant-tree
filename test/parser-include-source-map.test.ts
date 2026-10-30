@@ -10,7 +10,7 @@ import {
 	projectSourceSurfaces,
 	type SourceSurfaces,
 } from "../src/source-surfaces";
-import { writeFixture } from "./helpers";
+import { scannedXrefRaws, writeFixture } from "./helpers";
 
 describe("include source map handling", () => {
 	it("keeps secure-mode include directives anchored to the main file", async () => {
@@ -76,7 +76,7 @@ include::included-secure.adoc[]
 		expect(surfaces.sections).toEqual([]);
 		expect(surfaces.sectionByBlock.get(includedSection)).toBeUndefined();
 		expect(surfaces.sectionByLine.get(2)).toBeUndefined();
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
@@ -101,7 +101,7 @@ include::included-secure.adoc[]
 			lineTable,
 			sections: surfaces.sections,
 			sectionByLine: surfaces.sectionByLine,
-			xrefOccurrences: surfaces.xrefOccurrences,
+			xrefOccurrences: [],
 			anchorOccurrences: surfaces.anchorOccurrences,
 			headingInlineMetadataOccurrences:
 				surfaces.headingInlineMetadataOccurrences,
@@ -148,15 +148,11 @@ include::included-secure.adoc[]
 				message: expect.stringContaining("included.adoc"),
 			}),
 		]);
-		expect(external.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(external.xrefRegions)).toEqual([]);
 		expect(sameFile.toolDiagnostics).toEqual([]);
-		expect(sameFile.xrefOccurrences.map((xref) => xref.raw)).toEqual([
-			"<<target>>",
-		]);
+		expect(scannedXrefRaws(sameFile.xrefRegions)).toEqual(["<<target>>"]);
 		expect(noMainPath.toolDiagnostics).toEqual([]);
-		expect(noMainPath.xrefOccurrences.map((xref) => xref.raw)).toEqual([
-			"<<target>>",
-		]);
+		expect(scannedXrefRaws(noMainPath.xrefRegions)).toEqual(["<<target>>"]);
 	});
 
 	it("uses sourcePath before sourceFile and tolerates missing source file identity", () => {
@@ -188,7 +184,7 @@ include::included-secure.adoc[]
 		});
 
 		expect(surfaces.toolDiagnostics).toEqual([]);
-		expect(surfaces.xrefOccurrences.map((xref) => xref.raw)).toEqual([
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([
 			"<<target>>",
 			"<<target>>",
 		]);
@@ -206,9 +202,7 @@ include::included-secure.adoc[]
 		});
 
 		expect(surfaces.toolDiagnostics).toEqual([]);
-		expect(surfaces.xrefOccurrences.map((xref) => xref.raw)).toEqual([
-			"<<target>>",
-		]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual(["<<target>>"]);
 	});
 });
 

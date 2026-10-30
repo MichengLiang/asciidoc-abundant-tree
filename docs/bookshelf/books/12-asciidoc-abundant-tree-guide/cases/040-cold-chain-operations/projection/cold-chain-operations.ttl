@@ -211,10 +211,8 @@
     a aat:XrefEdge;
     aat:endColumn 58;
     aat:endLine 8;
-    aat:officialHref "#_温度偏离处置流程";
-    aat:officialReftext "温度偏离处置流程";
-    aat:officialResolvedId "_温度偏离处置流程";
-    aat:officialResolvedType "section";
+    aat:officialHref "#温度偏离处置流程";
+    aat:officialReftext "[温度偏离处置流程]";
     aat:raw "xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]";
     aat:rel "triggers";
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";

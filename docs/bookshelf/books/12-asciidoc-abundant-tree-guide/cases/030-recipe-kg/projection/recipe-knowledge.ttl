@@ -175,10 +175,8 @@ summary:: 一道由番茄和鸡蛋组成的家常菜。
     a aat:XrefEdge;
     aat:endColumn 22;
     aat:endLine 12;
-    aat:officialHref "#_家常菜";
-    aat:officialReftext "家常菜";
-    aat:officialResolvedId "_家常菜";
-    aat:officialResolvedType "section";
+    aat:officialHref "#家常菜";
+    aat:officialReftext "[家常菜]";
     aat:raw "xref:家常菜[rel=is-a]";
     aat:rel "is-a";
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
@@ -193,10 +191,8 @@ summary:: 一道由番茄和鸡蛋组成的家常菜。
     a aat:XrefEdge;
     aat:endColumn 21;
     aat:endLine 19;
-    aat:officialHref "#_食材";
-    aat:officialReftext "食材";
-    aat:officialResolvedId "_食材";
-    aat:officialResolvedType "section";
+    aat:officialHref "#食材";
+    aat:officialReftext "[食材]";
     aat:raw "xref:食材[rel=is-a]";
     aat:rel "is-a";
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
@@ -211,10 +207,8 @@ summary:: 一道由番茄和鸡蛋组成的家常菜。
     a aat:XrefEdge;
     aat:endColumn 21;
     aat:endLine 26;
-    aat:officialHref "#_食材";
-    aat:officialReftext "食材";
-    aat:officialResolvedId "_食材";
-    aat:officialResolvedType "section";
+    aat:officialHref "#食材";
+    aat:officialReftext "[食材]";
     aat:raw "xref:食材[rel=is-a]";
     aat:rel "is-a";
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";

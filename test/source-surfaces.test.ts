@@ -7,6 +7,7 @@ import {
 	projectSourceSurfaces,
 	type SourceSurfaces,
 } from "../src/source-surfaces";
+import { scannedXrefRaws } from "./helpers";
 
 describe("projectSourceSurfaces", () => {
 	it("diagnoses unknown official block contexts and skips their inline content", () => {
@@ -36,7 +37,7 @@ describe("projectSourceSurfaces", () => {
 				message: expect.stringContaining("mystery"),
 			}),
 		]);
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
@@ -74,7 +75,7 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.sectionByBlock.get(section)).toBeUndefined();
 		expect(surfaces.sectionByLine.get(2)).toBeUndefined();
 		expect(surfaces.projectableBlocks.has(paragraph)).toBe(false);
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
@@ -99,7 +100,7 @@ describe("projectSourceSurfaces", () => {
 				message: expect.stringContaining("mystery"),
 			}),
 		]);
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
@@ -127,7 +128,7 @@ describe("projectSourceSurfaces", () => {
 			}),
 		]);
 		expect(surfaces.projectableBlocks.has(unknown)).toBe(false);
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
@@ -148,7 +149,7 @@ describe("projectSourceSurfaces", () => {
 				message: expect.stringContaining("undefined"),
 			}),
 		]);
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
@@ -165,7 +166,7 @@ describe("projectSourceSurfaces", () => {
 			lineTable,
 			sections: surfaces.sections,
 			sectionByLine: surfaces.sectionByLine,
-			xrefOccurrences: surfaces.xrefOccurrences,
+			xrefOccurrences: [],
 			anchorOccurrences: surfaces.anchorOccurrences,
 			headingInlineMetadataOccurrences:
 				surfaces.headingInlineMetadataOccurrences,
@@ -230,9 +231,7 @@ describe("projectSourceSurfaces", () => {
 		});
 
 		expect(surfaces.toolDiagnostics).toEqual([]);
-		expect(surfaces.xrefOccurrences.map((xref) => xref.raw)).toEqual([
-			"<<target>>",
-		]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual(["<<target>>"]);
 	});
 
 	it("uses sourceFile in external source diagnostics when sourcePath is unavailable", () => {
@@ -257,7 +256,7 @@ describe("projectSourceSurfaces", () => {
 				message: expect.stringContaining("/virtual/include/included.adoc"),
 			}),
 		]);
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 	});
 
 	it("joins sourceDirectory and relative sourceFile before external source checks", () => {
@@ -283,7 +282,7 @@ describe("projectSourceSurfaces", () => {
 			}),
 		]);
 		expect(surfaces.projectableBlocks.has(paragraph)).toBe(false);
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 	});
 
 	it("diagnoses external unknown official blocks with both context and source-location warnings", () => {
@@ -310,7 +309,7 @@ describe("projectSourceSurfaces", () => {
 				message: expect.stringContaining("included.adoc"),
 			}),
 		]);
-		expect(surfaces.xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 	});
 
 	it("does not project unknown official block contexts into document children", () => {
@@ -332,7 +331,7 @@ describe("projectSourceSurfaces", () => {
 			lineTable,
 			sections: surfaces.sections,
 			sectionByLine: surfaces.sectionByLine,
-			xrefOccurrences: surfaces.xrefOccurrences,
+			xrefOccurrences: [],
 			anchorOccurrences: surfaces.anchorOccurrences,
 			headingInlineMetadataOccurrences:
 				surfaces.headingInlineMetadataOccurrences,
@@ -363,7 +362,7 @@ describe("projectSourceSurfaces", () => {
 			lineTable,
 			sections: surfaces.sections,
 			sectionByLine: surfaces.sectionByLine,
-			xrefOccurrences: surfaces.xrefOccurrences,
+			xrefOccurrences: [],
 			anchorOccurrences: surfaces.anchorOccurrences,
 			headingInlineMetadataOccurrences:
 				surfaces.headingInlineMetadataOccurrences,

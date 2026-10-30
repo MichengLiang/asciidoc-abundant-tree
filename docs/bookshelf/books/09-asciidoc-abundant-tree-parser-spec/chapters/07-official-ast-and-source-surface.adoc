@@ -5,7 +5,7 @@
 
 === Official AST
 
-Asciidoctor official document 提供 section tree、block context、block parent-child relation、refs catalog 和 official xref conversion。
+Asciidoctor official document 提供 section tree、block context、block parent-child relation、refs catalog，以及替换行内文字时认出的 xref（xref:xref-recognition[Xref 由官方认定]）。
 
 解析器通过 `official-block-walker` 遍历 official block tree。walker 只读取 official block 属性，不扫描源文件。
 
@@ -46,7 +46,7 @@ markdown 引语的范围就是官方读进的这个段落，不由它的子块�
 * 空气引号：段落第一行以 `"` 开头，倒数第二行以 `"` 结尾，最后一行以 `-- ` 开头。官方去掉第一行开头与倒数第二行结尾的 `"`，取走最后一行作出处，用剩下的行建成内容模型为 simple 的 quote（1141-1172 行）。
 * Markdown 引语：段落第一行以 `> ` 开头。官方逐行去掉 `> `，只有 `>` 的行变成空行；最后一行以 `-- ` 开头时取走作出处，再去掉出处之前的空行；剩下的行另建一个 Reader，读成复合的 quote（1102-1140 行）。
 
-两种都不写分隔符。区间解析器认它们的方法与隐身段落相同：锚点行是块的第一行源文，只是核对之前先去掉官方从这一行删掉的引号或前缀。空气引号去掉开头的 `"`；内容只有一行时，这一行也是被去掉结尾 `"` 的那一行，结尾的 `"` 一并去掉。markdown 引语去掉 `> `。范围是官方读进的整个段落（xref:official-paragraph[官方怎样读段落]）：从锚点行起，覆盖内容的行、被取走的出处行，以及 markdown 引语里只有 `>` 的行。内容区间到最后一行内容为止，不含出处行，也不含末尾只有 `>` 的行。出处行里的 xref 不产生 occurrence，与写在属性列表里的出处（`[quote, 某人, 某书]`）相同。
+两种都不写分隔符。区间解析器认它们的方法与隐身段落相同：锚点行是块的第一行源文，只是核对之前先去掉官方从这一行删掉的引号或前缀。空气引号去掉开头的 `"`；内容只有一行时，这一行也是被去掉结尾 `"` 的那一行，结尾的 `"` 一并去掉。markdown 引语去掉 `> `。范围是官方读进的整个段落（xref:official-paragraph[官方怎样读段落]）：从锚点行起，覆盖内容的行、被取走的出处行，以及 markdown 引语里只有 `>` 的行。内容区间到最后一行内容为止，不含出处行，也不含末尾只有 `>` 的行。两种写法取走的出处行，官方都替换其中的 xref，所以出处行里的 xref 产生 occurrence，收下它的是这个 quote 块，文字是出处行去掉 `-- ` 以后的部分；写在属性列表里的出处（`[quote, 某人, 某书]`）官方不替换，不产生 occurrence。
 
 Markdown 引语的子块坐标要换算。官方为去掉前缀的行新建的 Reader 不带游标（`parser.js` 1121 行；Ruby 版 Asciidoctor 2.0.26 同样如此），子块的 source location 没有文件，行号从这个 Reader 的第一行数起。去掉前缀不改变行数，官方读段落时跳过的行注释也不在这些行里，所以第 _n_ 行就是从引语的锚点行往下、跳过行注释数到的第 _n_ 行源文。解析器在给合成的块补坐标的同一处（xref:synthesized-blocks[官方合成的块]）把它们换算成引语所在文件的源行；引语里再嵌套的块一并换算，嵌套的 markdown 引语，它的子块从它自己的锚点行数起。换算之后，引语的子块与正文里的块一样遍历、投影与扫描。这一处已报告给上游（https://github.com/asciidoctor/asciidoctor/issues/4891[asciidoctor#4891]）；上游给出源行以后，这里的换算随之删去，否则坐标会被换算两次。
 
@@ -135,6 +135,24 @@ Occurrence 只来自官方读进块文字的行。官方按段落读文字时跳
 描述的范围从文字的第一行到并进的最后一行。范围里读掉的 metadata 行不是文字，不扫描。
 
 Section 标题与 floating_title 的标题文字做 macros 替换，标题行里的 xref 与锚点产生 occurrence，与块标题相同。标题文字从 `=` 标记之后算起。Section 标题里的 xref 属于这个 section 自己：投影成 RDF 时，它是从这个标题出发的边。Discrete 标题不是 section，它标题里的 xref 属于外层的 section。写成标题文字的自然引用（`<<目标标题>>`）与正文里一样交给官方解析。
+
+以上规则决定哪些文字收下 occurrence。xref 在这些文字里怎样认，见 xref:xref-recognition[Xref 由官方认定]；anchor 由扫描器按 xref:metadata-xref-anchor-targets[第 8 章] 的规则认。
+
+[#xref-recognition]
+=== Xref 由官方认定
+
+一个 xref 存不存在、指向哪里，以 Asciidoctor 替换行内文字时认出的 xref 为准，解析器不自己判断哪段文字是 xref。透传、`\` 转义、属性引用、`#` 开头的片段、带空格的目标、行内宏参数里的 xref，官方怎样认，解析器就怎样收。自己判断的做法每一处都要与官方的替换规则逐条对齐，对不齐的地方就成为假引用或漏掉的引用。
+
+官方的行内处理是替换，认出的 xref 不留在 AST 里：官方在替换中为它新建一个 xref inline 节点，立即交给转换器（`substitutors.js` 1126-1270 行）。节点带着父节点与官方事实（refid、path、fragment、href、链接文字、命名属性），不带位置。解析器在加载时把自己的 `Html5Converter` 子类作为 `converter` 选项交给官方（`document.js` 1899-1925 行），由它接住这些节点；`Html5Converter` 在公开导出与浏览器构建里都有。必须在加载时交：官方在加载时已经替换了标题、列表条目、描述列表与单元格的文字（`document.js` 1840-1890 行）。
+
+位置由扫描器给出，二者用哨兵对上：
+
+* 扫描器在收下 occurrence 的每段文字里，找出每个 `xref:` 与 `<<` 的起点，连同紧挨在前面的 `\`，照官方的 `InlineXrefMacroRx`（`rx.js` 746 行）定出它的结束处。扫描器只提出候选，不判断透传、转义或目标的形状。
+* 探测：解析器按文档顺序走官方块树，照官方转换时的做法，到每个块先回放它的属性条目（`Document#playbackAttributes`）；再把这个节点收下的文字复制一份，在每个候选起点前插入一个私用区的哨兵字符，调用这个节点的 `applySubs`。输出里紧跟在某个哨兵后面的 xref，就是官方在这个位置认下的 xref；候选后面没有 xref 的，不是 xref。回放属性使属性引用按它在文中那个位置的取值展开，与官方转换时相同。
+* 对位只看哨兵，不看顺序。同一段文字里官方认的与扫描器找的条数相等，也可能不是同一批：隐藏的索引词里的 xref 官方会认，属性引用展开出的 xref 在源里没有字面写法。
+* 官方认下、前面却没有哨兵的 xref，是属性值展开出来的，源里没有它的字面写法，也就没有源位置。它不产生 occurrence，解析器报 `xref.without-source` warning。
+
+探测只做一次，不再完整转换一遍文档：加载时已替换过的文字会被再替换一次，同一个 xref 被接住两次。收下 xref 的块就是被探测的那个官方节点，即官方 xref 节点的父节点，不再由投影器另行列举。
 
 Open block 是容器。它自身不产生 prose occurrence；occurrence 来自其 paragraph descendants。
 

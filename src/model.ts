@@ -45,6 +45,9 @@ export type AsciidoctorLayer = {
 	context?: string;
 	nodeName?: string;
 	href?: string;
+	refid?: string;
+	path?: string;
+	fragment?: string;
 	resolvedId?: string;
 	resolvedType?: TargetType;
 	reftext?: string;
@@ -173,12 +176,16 @@ export type XrefOccurrenceNode = NodeBase & {
 	syntax: "shorthand" | "macro";
 	raw: string;
 	target: string;
+	// 绑定用的地址：target 在那个位置展开属性引用、按官方规则切去文档部分以后的片段（09 号书第 8 章）。
+	selector?: string;
+	// 指向别的文档时，展开后 # 之前的文档部分。
+	document?: string;
 	label?: string;
 	attributes?: Record<string, string | number | boolean>;
 	sourceSpan?: SourceSpan;
 	containingSectionId?: string;
-	scope?: "local" | "external" | "unresolved";
-	targetKind?: string;
+	// 只记官方事实：官方节点带 path 时是 external。引用是否成立由 RDF 投影绑定给出。
+	scope?: "local" | "external";
 };
 
 export type AnchorOccurrenceNode = NodeBase & {

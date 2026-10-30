@@ -4,7 +4,6 @@ import {
 	sourceAwareDocumentForLineTable,
 } from "./book-entry/source-aware-coordinate";
 import { interpretHeadingInlineMetadataAttributes } from "./heading-inline-metadata";
-import { parseMacroArguments } from "./macro-argument-parser";
 import type {
 	AnchorOccurrenceNode,
 	HeadingInlineMetadataOccurrenceNode,
@@ -37,9 +36,8 @@ import {
 	quotedLineTable,
 	sourceSpanForRange,
 } from "./source-lines";
+import type { XrefProbeRegion } from "./xref-recognition";
 
-const shorthandXrefPattern = /<<([^>,]+)(?:,\s*([^>]+))?>>/gu;
-const macroXrefPattern = /xref:([^\s[]+)\[([^\]]*)\]/gu;
 // 锚点照 Asciidoctor 4.1.1 的 rx.js：ID 首字符是字母、_ 或 :（InlineAnchorScanRx）；[[ 前面是 [ 或 \ 时不是锚点，
 // 所以 [[[id]]] 不会读出 ID "[id"。参考文献锚点 [[[id]]] 只在 bibliography 样式的无序列表项开头成立
 // （InlineBiblioAnchorRx，parser.js 建列表项时登记），由 bibliographyAnchorPattern 认。
@@ -55,34 +53,37 @@ const bibliographyAnchorPattern = new RegExp(
 );
 const headingInlineMetadataPattern = /hmeta:([^\s[]+)\[([^\]]*)\]/gu;
 
+// xref 由官方认定（09 号书第 7 章《Xref 由官方认定》）：这里只交出收下 xref 的官方节点与它们的文字区域，
+// 由 xref-recognition 交给官方探测；anchor 与 hmeta 仍由扫描器按源文本认。
 export function scanInlineOccurrencesInOfficialBlocks(options: {
 	lineTable: LineTable;
 	blockSurfaces: OfficialBlockSurface[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	sectionByLine: Map<number, SectionNode>;
+	officialDocument?: AsciidoctorBlock;
 	toolDiagnostics?: ToolDiagnostic[];
 }): {
-	xrefOccurrences: XrefOccurrenceNode[];
+	xrefRegions: XrefProbeRegion[];
 	anchorOccurrences: AnchorOccurrenceNode[];
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 } {
 	const collected: Collected = {
 		lineTable: options.lineTable,
-		xrefOccurrences: [],
+		xrefRegions: [],
+		regionsByOwner: new Map(),
 		anchorOccurrences: [],
 		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: options.toolDiagnostics,
 	};
+	if (options.officialDocument) {
+		addDocumentTitleSegment(collected, options.officialDocument);
+	}
 	scanSurfaces(collected, options.blockSurfaces, options.intervalByBlock);
-	const {
-		xrefOccurrences,
-		anchorOccurrences,
-		headingInlineMetadataOccurrences,
-	} = collected;
+	const { anchorOccurrences, headingInlineMetadataOccurrences } = collected;
 
 	// 所属 section 是逻辑文档上的结构关系，要趁出现处还带着逻辑行时判定；下面回源以后只剩来源坐标。
 	assignContainingSectionIds(
-		xrefOccurrences,
+		[],
 		anchorOccurrences,
 		headingInlineMetadataOccurrences,
 		options.sectionByLine,
@@ -102,20 +103,45 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 					options.toolDiagnostics,
 				)
 			: occurrences;
-	const recoveredXrefs = recover(xrefOccurrences);
 	const recoveredAnchors = recover(anchorOccurrences);
 	const recoveredHeadingInlineMetadata = recover(
 		headingInlineMetadataOccurrences,
 	);
 
 	return {
-		xrefOccurrences: dedupeOccurrences(recoveredXrefs).sort(compareSourceSpans),
+		xrefRegions: collected.xrefRegions,
 		anchorOccurrences:
 			dedupeOccurrences(recoveredAnchors).sort(compareSourceSpans),
 		headingInlineMetadataOccurrences: dedupeOccurrences(
 			recoveredHeadingInlineMetadata,
 		).sort(compareSourceSpans),
 	};
+}
+
+// 官方认下的 xref 的收尾：判定所属 section、去重、book-entry 下回源、按源位置排序。
+// 同一个 xref 可能出现在两个区域里（描述列表的术语与描述共用一行），去重留下一个。去重要在回源之前：
+// 逻辑文档的坐标在整本书里唯一，回源以后只剩文件内的行列，几个文件同一行同一列写着同样的 xref 时会被当成重复。
+export function finishXrefOccurrences(
+	xrefs: XrefOccurrenceNode[],
+	options: {
+		lineTable: LineTable;
+		sectionByLine: Map<number, SectionNode>;
+		toolDiagnostics?: ToolDiagnostic[] | undefined;
+	},
+): XrefOccurrenceNode[] {
+	assignContainingSectionIds(xrefs, [], [], options.sectionByLine);
+	const unique = dedupeOccurrences(xrefs);
+	const sourceAwareDocument = sourceAwareDocumentForLineTable(
+		options.lineTable,
+	);
+	const recovered = sourceAwareDocument
+		? recoverSourceAwareInlineOrigins(
+				unique,
+				sourceAwareDocument,
+				options.toolDiagnostics,
+			)
+		: unique;
+	return recovered.sort(compareSourceSpans);
 }
 
 function recoverSourceAwareInlineOrigins<
@@ -173,7 +199,11 @@ function recoverSourceAwareInlineOrigins<
 
 type Collected = {
 	lineTable: LineTable;
-	xrefOccurrences: XrefOccurrenceNode[];
+	xrefRegions: XrefProbeRegion[];
+	regionsByOwner: Map<
+		AsciidoctorBlock,
+		{ title?: XrefProbeRegion; content?: XrefProbeRegion }
+	>;
 	anchorOccurrences: AnchorOccurrenceNode[];
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 	toolDiagnostics: ToolDiagnostic[] | undefined;
@@ -204,23 +234,31 @@ function scanSurfaces(
 		}
 		if (interval.metadataSpan) {
 			scanMetadataRange(
-				collected.lineTable,
+				collected,
+				surface.block,
 				interval.metadataSpan.startLine,
 				interval.metadataSpan.endLine,
-				collected.xrefOccurrences,
-				collected.anchorOccurrences,
 			);
 		}
 		if (isHeading(surface) && surface.sourceLine !== undefined) {
 			const line = collected.lineTable.lines[surface.sourceLine - 1];
 			if (line) {
-				scanXrefMatches(collected.lineTable, line, collected.xrefOccurrences);
+				addXrefSegment(
+					collected,
+					surface.block,
+					true,
+					line,
+					headingMarkerPattern.exec(line.text)?.[0].length ?? 0,
+				);
 				scanAnchorMatches(
 					collected.lineTable,
 					line,
 					collected.anchorOccurrences,
 				);
 			}
+		}
+		if (surface.context === "quote") {
+			addAttributionSegment(collected, surface.block, interval);
 		}
 		const span = interval.contentSpan ?? interval.span;
 		const policy = officialBlockPolicy(surface.block);
@@ -234,13 +272,10 @@ function scanSurfaces(
 			scanTable(collected, surface.block);
 		} else {
 			scanInlineRange(
-				collected.lineTable,
+				collected,
+				surface.block,
 				span.startLine,
 				span.endLine,
-				collected.xrefOccurrences,
-				collected.anchorOccurrences,
-				collected.headingInlineMetadataOccurrences,
-				collected.toolDiagnostics,
 				[
 					...descendantUnscannableRanges(surface, intervalByBlock),
 					...(interval.discardedSpan ? [interval.discardedSpan] : []),
@@ -309,53 +344,6 @@ function assignContainingSectionIds(
 	}
 }
 
-function makeXref(
-	lineTable: LineTable,
-	line: SourceLine,
-	index: number,
-	raw: string,
-	parts: {
-		syntax: XrefOccurrenceNode["syntax"];
-		target: string;
-		label?: string;
-		attributes?: Record<string, string | number | boolean>;
-	},
-): XrefOccurrenceNode {
-	const sourceSpan = sourceSpanForRange(lineTable, line.number, index, raw);
-	return definedObject({
-		kind: "xref",
-		...parts,
-		raw,
-		sourceSpan,
-		targetKind: parts.target.includes(".adoc#")
-			? "document-target"
-			: parts.target.includes(".")
-				? "natural-title-candidate"
-				: "id-or-anchor",
-		scope: parts.target.includes(".adoc#") ? "external" : undefined,
-		source: {
-			raw,
-			line: line.number,
-			sourceSpan,
-		},
-	}) as XrefOccurrenceNode;
-}
-
-function parseMacroLabel(raw: string): {
-	label?: string;
-	attributes?: Record<string, string | number | boolean>;
-} {
-	const parsed = parseMacroArguments(raw);
-	const label = parsed.positional[0];
-	return definedObject({
-		label: label || undefined,
-		attributes: Object.keys(parsed.named).length > 0 ? parsed.named : undefined,
-	}) as {
-		label?: string;
-		attributes?: Record<string, string | number | boolean>;
-	};
-}
-
 function compareSourceSpans(
 	left: { sourceSpan?: SourceSpan },
 	right: { sourceSpan?: SourceSpan },
@@ -366,14 +354,12 @@ function compareSourceSpans(
 	);
 }
 
+// owner 是收下这段文字里 xref 的官方节点；表格按行扫 anchor 时不给 owner，xref 由单元格各自交出（scanTable）。
 function scanInlineRange(
-	lineTable: LineTable,
+	collected: Collected,
+	owner: AsciidoctorBlock | undefined,
 	startLine: number,
 	endLine: number,
-	xrefOccurrences: XrefOccurrenceNode[],
-	anchorOccurrences: AnchorOccurrenceNode[],
-	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[],
-	toolDiagnostics: ToolDiagnostic[] | undefined,
 	skipRanges: LineRange[],
 	bibliography: boolean,
 	// 按官方读到的行认行注释：markdown 引语里的块，读到的是去掉前缀的行。null 表示内容按分隔符读进，不跳过注释。
@@ -383,93 +369,51 @@ function scanInlineRange(
 		if (isLineInRanges(lineNumber, skipRanges)) {
 			continue;
 		}
-		const line = lineTable.lines[lineNumber - 1];
+		const line = collected.lineTable.lines[lineNumber - 1];
 		if (
 			!line ||
 			(commentView && isLineComment(lineText(commentView, lineNumber)))
 		) {
 			continue;
 		}
-		scanXrefMatches(lineTable, line, xrefOccurrences);
+		if (owner) {
+			addXrefSegment(collected, owner, false, line);
+		}
 		if (bibliography) {
-			scanBibliographyAnchor(lineTable, line, anchorOccurrences);
-		}
-		scanAnchorMatches(lineTable, line, anchorOccurrences);
-		scanHeadingInlineMetadataMatches(
-			lineTable,
-			line,
-			headingInlineMetadataOccurrences,
-			toolDiagnostics,
-		);
-	}
-}
-
-function scanXrefMatches(
-	lineTable: LineTable,
-	line: SourceLine,
-	xrefOccurrences: XrefOccurrenceNode[],
-): void {
-	for (const match of line.text.matchAll(shorthandXrefPattern)) {
-		if (match.index === undefined || !match[1]) {
-			continue;
-		}
-		const label = match[2]?.trim();
-		xrefOccurrences.push(
-			makeXref(
-				lineTable,
+			scanBibliographyAnchor(
+				collected.lineTable,
 				line,
-				match.index,
-				match[0],
-				label
-					? {
-							syntax: "shorthand",
-							target: match[1].trim(),
-							label,
-						}
-					: {
-							syntax: "shorthand",
-							target: match[1].trim(),
-						},
-			),
-		);
-	}
-	for (const match of line.text.matchAll(macroXrefPattern)) {
-		if (match.index === undefined || !match[1]) {
-			continue;
+				collected.anchorOccurrences,
+			);
 		}
-		const parsed = parseMacroLabel(match[2] ?? "");
-		const parts = definedObject({
-			syntax: "macro",
-			target: match[1].trim(),
-			label: parsed.label,
-			attributes: parsed.attributes,
-		}) as {
-			syntax: "macro";
-			target: string;
-			label?: string;
-			attributes?: Record<string, string | number | boolean>;
-		};
-		xrefOccurrences.push(
-			makeXref(lineTable, line, match.index, match[0], parts),
+		scanAnchorMatches(collected.lineTable, line, collected.anchorOccurrences);
+		scanHeadingInlineMetadataMatches(
+			collected.lineTable,
+			line,
+			collected.headingInlineMetadataOccurrences,
+			collected.toolDiagnostics,
 		);
 	}
 }
 
 // 表格自己不扫：普通单元格扫它的文本行；a| 单元格的内嵌文档按正文的规则解析区间、交给 scanSurfaces。
 function scanTable(collected: Collected, block: AsciidoctorBlock): void {
-	for (const range of mergeLineSpans(ordinaryCellRanges(block))) {
+	const cells = ordinaryCellRanges(block);
+	for (const range of mergeLineSpans(cells.map((cell) => cell.range))) {
 		scanInlineRange(
-			collected.lineTable,
+			collected,
+			undefined,
 			range.startLine,
 			range.endLine,
-			collected.xrefOccurrences,
-			collected.anchorOccurrences,
-			collected.headingInlineMetadataOccurrences,
-			collected.toolDiagnostics,
 			[],
 			false,
 			collected.lineTable,
 		);
+	}
+	// 一行里可以有几个单元格，替换各按各的（literal 单元格不做 macros）：每个单元格只交出它自己的文字。
+	const searchFrom = new Map<number, number>();
+	for (const { cell, range, lines } of cells) {
+		addCellSegments(collected, cell, range, lines, searchFrom);
 	}
 	for (const document of asciidocCellDocuments(block)) {
 		const surfaces = walkOfficialBlocks(document);
@@ -491,7 +435,13 @@ type TableCell = {
 	lines?: () => string[];
 };
 
-function ordinaryCellRanges(block: AsciidoctorBlock): LineSpan[] {
+type OrdinaryCellRange = {
+	readonly cell: AsciidoctorBlock;
+	readonly range: LineSpan;
+	readonly lines: readonly string[];
+};
+
+function ordinaryCellRanges(block: AsciidoctorBlock): OrdinaryCellRange[] {
 	return tableCells(block).flatMap((cell) => {
 		if (cellDocument(cell) !== undefined || !isRecord(cell)) {
 			return [];
@@ -501,14 +451,117 @@ function ordinaryCellRanges(block: AsciidoctorBlock): LineSpan[] {
 		if (startLine === undefined) {
 			return [];
 		}
-		const lineCount = Math.max(1, tableCell.lines?.().length ?? 1);
+		const lines = tableCell.lines?.() ?? [];
+		const lineCount = Math.max(1, lines.length);
 		return [
 			{
-				startLine: cellSourceLine(block, startLine),
-				endLine: cellSourceLine(block, startLine + lineCount - 1),
+				cell: cell as AsciidoctorBlock,
+				range: {
+					startLine: cellSourceLine(block, startLine),
+					endLine: cellSourceLine(block, startLine + lineCount - 1),
+				},
+				lines,
 			},
 		];
 	});
+}
+
+// 单元格的文字在源行里定位：官方给的是去掉分隔符与首尾空白的文字。同一行上的单元格按从左到右的顺序找，
+// 每找到一格，下一格从它之后找起；找不到时整行交出（官方会再按自己的读法判断）。
+function addCellSegments(
+	collected: Collected,
+	cell: AsciidoctorBlock,
+	range: LineSpan,
+	cellLines: readonly string[],
+	searchFrom: Map<number, number>,
+): void {
+	for (
+		let lineNumber = range.startLine;
+		lineNumber <= range.endLine;
+		lineNumber += 1
+	) {
+		const line = collected.lineTable.lines[lineNumber - 1];
+		if (!line || isLineComment(line.text)) {
+			continue;
+		}
+		const from = searchFrom.get(lineNumber) ?? 0;
+		const found = cellLines
+			.filter((text) => text.trim() !== "")
+			.map((text) => ({ text, index: line.text.indexOf(text, from) }))
+			.find((match) => match.index !== -1);
+		if (!found) {
+			addXrefSegment(collected, cell, false, line);
+			continue;
+		}
+		const endIndex = found.index + found.text.length;
+		searchFrom.set(lineNumber, endIndex);
+		addXrefSegment(collected, cell, false, line, found.index, endIndex);
+	}
+}
+
+// 一个官方节点的文字区域按标题与内容分开：标题走官方的标题替换。同一行同一起点只收一次。
+function addXrefSegment(
+	collected: Collected,
+	owner: AsciidoctorBlock,
+	title: boolean,
+	line: SourceLine,
+	startIndex = 0,
+	endIndex = line.text.length,
+): void {
+	const regions = collected.regionsByOwner.get(owner) ?? {};
+	collected.regionsByOwner.set(owner, regions);
+	const kind = title ? "title" : "content";
+	let region = regions[kind];
+	if (!region) {
+		region = { owner, title, segments: [] };
+		regions[kind] = region;
+		collected.xrefRegions.push(region);
+	}
+	if (
+		region.segments.some(
+			(segment) =>
+				segment.line.number === line.number &&
+				segment.startIndex === startIndex,
+		)
+	) {
+		return;
+	}
+	region.segments.push({ line, startIndex, endIndex });
+}
+
+const headingMarkerPattern = /^(?:=+|#+)[ \t]+/u;
+
+// 文档标题在加载时就被官方替换了，里面的 xref 同样由官方认。aat 把文档标题行取在第一行（parser-core 的 documentTitleSource）。
+function addDocumentTitleSegment(
+	collected: Collected,
+	document: AsciidoctorBlock,
+): void {
+	const line = collected.lineTable.lines[0];
+	const marker = line ? /^=[ \t]+/u.exec(line.text) : null;
+	if (!line || !marker || !document.getDocumentTitle?.()) {
+		return;
+	}
+	addXrefSegment(collected, document, true, line, marker[0].length);
+}
+
+// 空气引号与 markdown 引语取走最后一行作出处，在 quote 块上做 normal 替换（parser.js 1119-1166 行），
+// 出处里的 xref 由官方认。出处行在块的范围里、内容区间之外，文字从 `-- ` 之后算起。
+function addAttributionSegment(
+	collected: Collected,
+	block: AsciidoctorBlock,
+	interval: SourceInterval,
+): void {
+	const contentEnd = interval.contentSpan?.endLine;
+	const end = interval.span.endLine;
+	if (contentEnd === undefined || end <= contentEnd) {
+		return;
+	}
+	const line = collected.lineTable.lines[end - 1];
+	const prefix = line ? /^(?:> ?)*-- /u.exec(line.text) : null;
+	if (!line || !prefix || block.getAttributes?.()?.attribution === undefined) {
+		return;
+	}
+	addXrefSegment(collected, block, false, line, prefix[0].length);
 }
 
 function mergeLineSpans(ranges: LineSpan[]): LineSpan[] {
@@ -563,22 +616,22 @@ function isLineInRanges(line: number, ranges: LineRange[]): boolean {
 	);
 }
 
+// 块标题（`.标题`）是块的 metadata，官方用标题替换处理它，收下其中 xref 的是这个块。
 function scanMetadataRange(
-	lineTable: LineTable,
+	collected: Collected,
+	owner: AsciidoctorBlock,
 	startLine: number,
 	endLine: number,
-	xrefOccurrences: XrefOccurrenceNode[],
-	anchorOccurrences: AnchorOccurrenceNode[],
 ): void {
 	for (let lineNumber = startLine; lineNumber <= endLine; lineNumber += 1) {
-		const line = lineTable.lines[lineNumber - 1];
+		const line = collected.lineTable.lines[lineNumber - 1];
 		if (!line) {
 			continue;
 		}
 		if (line.text.startsWith(".")) {
-			scanXrefMatches(lineTable, line, xrefOccurrences);
+			addXrefSegment(collected, owner, true, line, 1);
 		}
-		scanAnchorMatches(lineTable, line, anchorOccurrences);
+		scanAnchorMatches(collected.lineTable, line, collected.anchorOccurrences);
 	}
 }
 

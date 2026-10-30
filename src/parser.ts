@@ -40,6 +40,7 @@ export async function parseAbundantTree(
 		const document = await parseAsciidoctorDocument({
 			officialDocument: await adapter.loadSource(
 				sourceAwareDocument.logicalText,
+				sourcePath,
 			),
 			adapter,
 			lineTable,

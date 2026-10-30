@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
-import { resolveOfficialBindings } from "../src/binding-merge";
 import type { SourceAwareLogicalDocument } from "../src/book-entry/line-origin-model";
 import { registerSourceAwareDocumentForRecovery } from "../src/book-entry/source-aware-coordinate";
 import { scanInlineOccurrencesInOfficialBlocks } from "../src/inline-occurrence-scanner";
@@ -16,6 +15,7 @@ import {
 } from "../src/official-projector";
 import type { SourceInterval } from "../src/source-interval-resolver";
 import { buildLineTable } from "../src/source-lines";
+import { recognizeEveryCandidate, scannedXrefRaws } from "./helpers";
 
 describe("official-projector helpers", () => {
 	it("handles missing and irregular table row groups", () => {
@@ -389,7 +389,7 @@ describe("official-projector helpers", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
-	it("deduplicates table anchors and resolves table xref bindings", async () => {
+	it("deduplicates table anchors and keeps table xrefs as table children", () => {
 		const tableBlock = {
 			getBlocks: () => [],
 			getContext: () => "table",
@@ -416,10 +416,12 @@ describe("official-projector helpers", () => {
 			syntax: "shorthand",
 			raw: "<<target>>",
 			target: "target",
+			selector: "target",
 			sourceSpan: {
 				start: { line: 3, column: 1 },
 				end: { line: 3, column: 11 },
 			},
+			asciidoctor: { href: "#target", resolvedId: "target", reftext: "Target" },
 		};
 
 		const projected = projectOfficialDocument({
@@ -446,17 +448,6 @@ describe("official-projector helpers", () => {
 			]),
 			sectionByBlock: new WeakMap(),
 		});
-		await resolveOfficialBindings(
-			projected.bindingRequests,
-			{},
-			{
-				resolveXrefBinding: async () => ({
-					href: "#target",
-					resolvedId: "target",
-					reftext: "Target",
-				}),
-			},
-		);
 
 		expect(projected.children).toEqual([
 			expect.objectContaining({
@@ -721,6 +712,8 @@ describe("official-projector helpers", () => {
 			syntax: "shorthand",
 			raw: "<<inside>>",
 			target: "inside",
+			selector: "inside",
+			asciidoctor: { href: "#inside", resolvedId: "inside", reftext: "Inside" },
 			sourceSpan: {
 				start: { line: 2, column: 20 },
 				end: { line: 2, column: 30 },
@@ -773,17 +766,6 @@ describe("official-projector helpers", () => {
 			intervalByBlock,
 			sectionByBlock: new WeakMap(),
 		});
-		await resolveOfficialBindings(
-			projected.bindingRequests,
-			{},
-			{
-				resolveXrefBinding: async () => ({
-					href: "#inside",
-					resolvedId: "inside",
-					reftext: "Inside",
-				}),
-			},
-		);
 
 		expect(projected.children).toEqual([
 			expect.objectContaining({
@@ -877,7 +859,7 @@ describe("official table inline scanning", () => {
 			],
 		]);
 
-		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+		const { xrefRegions } = scanInlineOccurrencesInOfficialBlocks({
 			sectionByLine: new Map(),
 			lineTable: buildLineTable("<<not-cell>>\n<<also-not-cell>>\n"),
 			blockSurfaces: [
@@ -896,7 +878,7 @@ describe("official table inline scanning", () => {
 			intervalByBlock,
 		});
 
-		expect(xrefOccurrences).toEqual([]);
+		expect(scannedXrefRaws(xrefRegions)).toEqual([]);
 	});
 
 	it("scans only official table cell ranges, not delimiter or separator source lines", () => {
@@ -928,7 +910,7 @@ describe("official table inline scanning", () => {
 			],
 		]);
 
-		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+		const { xrefRegions } = scanInlineOccurrencesInOfficialBlocks({
 			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
@@ -956,7 +938,7 @@ describe("official table inline scanning", () => {
 			intervalByBlock,
 		});
 
-		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual(["<<cell>>"]);
+		expect(scannedXrefRaws(xrefRegions)).toEqual(["<<cell>>"]);
 	});
 
 	it("deduplicates same-line table cells and recurses through asciidoc cell containers", () => {
@@ -1031,7 +1013,7 @@ describe("official table inline scanning", () => {
 			],
 		]);
 
-		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+		const { xrefRegions } = scanInlineOccurrencesInOfficialBlocks({
 			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
@@ -1058,14 +1040,14 @@ describe("official table inline scanning", () => {
 			intervalByBlock,
 		});
 
-		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual([
+		expect(scannedXrefRaws(xrefRegions)).toEqual([
 			"<<same-line>>",
 			"<<inner-section>>",
 			"<<inner-open>>",
 		]);
 	});
 
-	it("scans macro xref attributes, anchor macros, and disjoint table cell ranges", () => {
+	it("scans macro xrefs, anchor macros, and disjoint table cell ranges", () => {
 		const tableBlock = {
 			getContext: () => "table",
 			rows: {
@@ -1075,13 +1057,15 @@ describe("official table inline scanning", () => {
 					[
 						{
 							getLineNumber: () => 1,
-							lines: () => ["first"],
+							lines: () => [
+								"first xref:target.adoc#id[Label,role=nav,window=_blank]",
+							],
 						},
 					],
 					[
 						{
 							getLineNumber: () => 3,
-							lines: () => ["second"],
+							lines: () => ["second anchor:cell-anchor[Cell Anchor]"],
 						},
 					],
 				],
@@ -1100,7 +1084,7 @@ describe("official table inline scanning", () => {
 			],
 		]);
 
-		const { xrefOccurrences, anchorOccurrences } =
+		const { xrefRegions, anchorOccurrences } =
 			scanInlineOccurrencesInOfficialBlocks({
 				sectionByLine: new Map(),
 				lineTable: buildLineTable(
@@ -1126,18 +1110,8 @@ describe("official table inline scanning", () => {
 				intervalByBlock,
 			});
 
-		expect(xrefOccurrences).toEqual([
-			expect.objectContaining({
-				raw: "xref:target.adoc#id[Label,role=nav,window=_blank]",
-				syntax: "macro",
-				target: "target.adoc#id",
-				label: "Label",
-				attributes: {
-					role: "nav",
-					window: "_blank",
-				},
-				scope: "external",
-			}),
+		expect(scannedXrefRaws(xrefRegions)).toEqual([
+			"xref:target.adoc#id[Label,role=nav,window=_blank]",
 		]);
 		expect(anchorOccurrences).toEqual([
 			expect.objectContaining({
@@ -1148,137 +1122,6 @@ describe("official table inline scanning", () => {
 				anchorScope: "inline",
 			}),
 		]);
-	});
-
-	it("keeps macro xref labels and attributes faithful at paragraph boundaries", () => {
-		const paragraphBlock = {
-			getContext: () => "paragraph",
-			getSourceLocation: () => ({
-				getLineNumber: () => 1,
-			}),
-		} satisfies AsciidoctorBlock;
-		const intervalByBlock = new WeakMap([
-			[
-				paragraphBlock,
-				{
-					blockStartLine: 1,
-					metadata: [],
-					contentSpan: { startLine: 1, endLine: 3 },
-					span: { startLine: 1, endLine: 3 },
-					diagnostics: [],
-				},
-			],
-		]);
-
-		const { xrefOccurrences, anchorOccurrences } =
-			scanInlineOccurrencesInOfficialBlocks({
-				sectionByLine: new Map(),
-				lineTable: buildLineTable(
-					[
-						"xref:empty[] and xref:target[Label,,flag,empty=]",
-						"<<short, Trimmed Label >>",
-						"anchor:inline-empty[]",
-					].join("\n"),
-				),
-				blockSurfaces: [
-					{
-						block: paragraphBlock,
-						context: "paragraph",
-						nodeName: "paragraph",
-						level: undefined,
-						title: undefined,
-						id: undefined,
-						sourceLine: 1,
-						children: [],
-						indexInParent: 0,
-					},
-				],
-				intervalByBlock,
-			});
-
-		expect(xrefOccurrences).toEqual([
-			expect.objectContaining({
-				raw: "xref:empty[]",
-				target: "empty",
-			}),
-			expect.objectContaining({
-				raw: "xref:target[Label,,flag,empty=]",
-				target: "target",
-				label: "Label",
-				attributes: {
-					empty: "",
-				},
-			}),
-			expect.objectContaining({
-				raw: "<<short, Trimmed Label >>",
-				target: "short",
-				label: "Trimmed Label",
-			}),
-		]);
-		expect(xrefOccurrences[0]).not.toHaveProperty("label");
-		expect(xrefOccurrences[0]).not.toHaveProperty("attributes");
-		expect(anchorOccurrences).toEqual([
-			expect.objectContaining({
-				raw: "anchor:inline-empty[]",
-				ids: ["inline-empty"],
-				reftext: "",
-			}),
-		]);
-	});
-
-	it("treats leading macro xref named fields as attributes instead of display labels", () => {
-		const paragraphBlock = {
-			getContext: () => "paragraph",
-			getSourceLocation: () => ({
-				getLineNumber: () => 1,
-			}),
-		} satisfies AsciidoctorBlock;
-		const intervalByBlock = new WeakMap([
-			[
-				paragraphBlock,
-				{
-					blockStartLine: 1,
-					metadata: [],
-					contentSpan: { startLine: 1, endLine: 1 },
-					span: { startLine: 1, endLine: 1 },
-					diagnostics: [],
-				},
-			],
-		]);
-
-		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
-			sectionByLine: new Map(),
-			lineTable: buildLineTable(
-				"他应该是xref:水果[rel=is, weight=0.8, payload=rel-delivery-capacity]",
-			),
-			blockSurfaces: [
-				{
-					block: paragraphBlock,
-					context: "paragraph",
-					nodeName: "paragraph",
-					level: undefined,
-					title: undefined,
-					id: undefined,
-					sourceLine: 1,
-					children: [],
-					indexInParent: 0,
-				},
-			],
-			intervalByBlock,
-		});
-
-		expect(xrefOccurrences).toEqual([
-			expect.objectContaining({
-				raw: "xref:水果[rel=is, weight=0.8, payload=rel-delivery-capacity]",
-				target: "水果",
-				attributes: {
-					rel: "is",
-					weight: "0.8",
-					payload: "rel-delivery-capacity",
-				},
-			}),
-		]);
-		expect(xrefOccurrences[0]).not.toHaveProperty("label");
 	});
 
 	it("ignores table cells and inner documents that do not expose source ranges", () => {
@@ -1317,7 +1160,7 @@ describe("official table inline scanning", () => {
 			],
 		]);
 
-		const { xrefOccurrences } = scanInlineOccurrencesInOfficialBlocks({
+		const { xrefRegions } = scanInlineOccurrencesInOfficialBlocks({
 			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
@@ -1344,12 +1187,10 @@ describe("official table inline scanning", () => {
 			intervalByBlock,
 		});
 
-		expect(xrefOccurrences.map((xref) => xref.raw)).toEqual([
-			"<<fallback-line>>",
-		]);
+		expect(scannedXrefRaws(xrefRegions)).toEqual(["<<fallback-line>>"]);
 	});
 
-	it("recovers source-aware inline origins and reports unmapped inserted columns with fallback source layer", () => {
+	it("recovers source-aware inline origins and reports unmapped inserted columns with fallback source layer", async () => {
 		const sourceAwareDocument = makeInlineSourceAwareDocument();
 		registerSourceAwareDocumentForRecovery(sourceAwareDocument);
 		const lineTable = buildLineTable(sourceAwareDocument.logicalText);
@@ -1361,7 +1202,7 @@ describe("official table inline scanning", () => {
 		} satisfies AsciidoctorBlock;
 		const diagnostics: ToolDiagnostic[] = [];
 
-		const { xrefOccurrences, anchorOccurrences } =
+		const { xrefRegions, anchorOccurrences } =
 			scanInlineOccurrencesInOfficialBlocks({
 				sectionByLine: new Map(),
 				lineTable,
@@ -1393,6 +1234,11 @@ describe("official table inline scanning", () => {
 				toolDiagnostics: diagnostics,
 			});
 
+		const xrefOccurrences = await recognizeEveryCandidate({
+			regions: xrefRegions,
+			lineTable,
+			toolDiagnostics: diagnostics,
+		});
 		expect(
 			xrefOccurrences.find((xref) => xref.raw === "xref:target[Label]"),
 		).toEqual(

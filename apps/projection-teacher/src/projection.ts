@@ -144,7 +144,7 @@ function xrefToTeachingEdge(
 
 	const target = targetNodeForXref(xref, index);
 	if (!target) {
-		diagnostics.push(`未解析 xref target: ${xref.target}`);
+		diagnostics.push(`未解析 xref target: ${xref.selector ?? xref.target}`);
 		return undefined;
 	}
 
@@ -180,10 +180,11 @@ function targetNodeForXref(
 	xref: XrefOccurrenceNode,
 	index: ProjectionIndex,
 ): TeachingNode | undefined {
+	const address = xref.selector ?? xref.target;
 	const candidates = [
 		xref.asciidoctor?.resolvedId,
-		xref.target,
-		targetIdWithoutRole(xref.target),
+		address,
+		targetIdWithoutRole(address),
 	].filter((value): value is string => Boolean(value));
 	for (const candidate of candidates) {
 		const node =

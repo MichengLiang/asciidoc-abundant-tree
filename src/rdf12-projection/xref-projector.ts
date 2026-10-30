@@ -223,7 +223,18 @@ function createXrefResource(
 	}
 	addStringTriple(context.graph, xrefIri, "syntax", xref.syntax);
 	addStringTriple(context.graph, xrefIri, "raw", xref.raw);
-	addStringTriple(context.graph, xrefIri, "targetSelector", xref.target);
+	addOptionalStringTriple(
+		context.graph,
+		xrefIri,
+		"targetDocument",
+		xref.document,
+	);
+	addOptionalStringTriple(
+		context.graph,
+		xrefIri,
+		"targetSelector",
+		xref.selector,
+	);
 	addOptionalStringTriple(
 		context.graph,
 		xrefIri,
@@ -322,7 +333,11 @@ function writeTargetBinding(
 	xrefIri: Rdf12IriTerm,
 	xref: XrefOccurrenceNode,
 ): Rdf12IriTerm | undefined {
-	const result = bindSelector(context.labelCatalog, xref.target);
+	// 指向别的文档的 xref 不在本文档的 label space 里绑定，由读得到那份文档的消费者去绑定（06 号书第 5 章）。
+	if (xref.document !== undefined || xref.selector === undefined) {
+		return undefined;
+	}
+	const result = bindSelector(context.labelCatalog, xref.selector);
 
 	if (result.status === "bound") {
 		context.graph.add(

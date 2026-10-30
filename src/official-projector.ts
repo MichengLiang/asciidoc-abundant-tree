@@ -1,5 +1,5 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
-import { addTarget, type OfficialBindingRequest } from "./binding-merge";
+import { addTarget } from "./binding-merge";
 import type { SourceAwareLogicalDocument } from "./book-entry/line-origin-model";
 import {
 	originPointKey,
@@ -64,7 +64,6 @@ type ProjectContext = {
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	projectableBlocks?: WeakSet<AsciidoctorBlock> | undefined;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
-	bindingRequests: OfficialBindingRequest[];
 	targets: TargetNode[];
 	sourceAwareDocument?: SourceAwareLogicalDocument;
 };
@@ -85,10 +84,8 @@ export function projectOfficialDocument(options: {
 }): {
 	children: AbundantNode[];
 	targets: TargetNode[];
-	bindingRequests: OfficialBindingRequest[];
 } {
 	const targets: TargetNode[] = [];
-	const bindingRequests: OfficialBindingRequest[] = [];
 	const sourceAwareDocument = sourceAwareDocumentForLineTable(
 		options.lineTable,
 	);
@@ -109,7 +106,6 @@ export function projectOfficialDocument(options: {
 		intervalByBlock: options.intervalByBlock,
 		projectableBlocks: options.projectableBlocks,
 		sectionByBlock: options.sectionByBlock,
-		bindingRequests,
 		targets,
 		sourceAwareDocument,
 	}) as ProjectContext;
@@ -117,7 +113,6 @@ export function projectOfficialDocument(options: {
 	return {
 		children: buildChildren(options.officialDocument, context),
 		targets,
-		bindingRequests,
 	};
 }
 
@@ -185,48 +180,11 @@ function buildNode(
 					endLine: officialLine,
 				}),
 		});
-		requestTitleBindings(context, block);
-		requestListItemBindings(context, block);
 		return childBlocksOf(block).flatMap((child) =>
 			toNodes(buildNode(child, context)),
 		);
 	}
 	return undefined;
-}
-
-// section 与 discrete 标题的标题行上的 xref 由扫描器找出（09 号书「Inline 扫描边界」），所在的块就是这个标题。
-function requestTitleBindings(
-	context: ProjectContext,
-	block: AsciidoctorBlock,
-): void {
-	const blockContext = block.getContext?.();
-	const line = context.intervalByBlock.get(block)?.blockStartLine;
-	if (
-		(blockContext !== "section" && blockContext !== "floating_title") ||
-		line === undefined
-	) {
-		return;
-	}
-	const xrefs = collectXrefsInSpan(context, { startLine: line, endLine: line });
-	if (xrefs.length > 0) {
-		context.bindingRequests.push({ block, xrefs });
-	}
-}
-
-// olist、ulist、colist 的条目在节点树里透明，不建节点，但它仍是收下自己文字里 xref 的块（09 号书「Binding Merge」）。
-// 文字的范围由区间解析器照官方读法算出（「Inline 扫描边界」）；描述列表的条目走 buildDescriptionList，不到这里。
-function requestListItemBindings(
-	context: ProjectContext,
-	block: AsciidoctorBlock,
-): void {
-	if (block.getContext?.() !== "list_item") {
-		return;
-	}
-	const span = context.intervalByBlock.get(block)?.contentSpan;
-	const xrefs = span ? collectXrefsInSpan(context, span) : [];
-	if (xrefs.length > 0) {
-		context.bindingRequests.push({ block, xrefs });
-	}
 }
 
 function canProjectBlock(
@@ -267,7 +225,6 @@ function buildSection(
 		source: section.source,
 		asciidoctor: section.asciidoctor,
 	});
-	requestTitleBindings(context, block);
 	section.children = childBlocksOf(block).flatMap((child) =>
 		toNodes(buildNode(child, context)),
 	);
@@ -391,7 +348,6 @@ function buildDescriptionTerm(
 				isOccurrenceInsideSourceSpan(occurrence, occurrenceSpan),
 			)
 		: [];
-	context.bindingRequests.push({ block, xrefs });
 	return definedObject({
 		kind: "descriptionTerm",
 		text: normalizedListItemText(block),
@@ -452,7 +408,6 @@ function buildDescription(
 				isOccurrenceInsideSourceSpan(occurrence, occurrenceSpan),
 			)
 		: [];
-	context.bindingRequests.push({ block, xrefs });
 	const children = [
 		...xrefs,
 		...anchors,
@@ -688,7 +643,6 @@ function buildParagraph(
 		context,
 		contentSpan,
 	);
-	context.bindingRequests.push({ block, xrefs });
 	const sourceSpan = source?.sourceSpan;
 	const asciidoctor = definedObject({
 		context: block.getContext?.(),
@@ -836,7 +790,6 @@ function buildTable(
 		context,
 		tableContentSpan,
 	);
-	context.bindingRequests.push({ block, xrefs: tableXrefs });
 	const table = definedObject({
 		kind: "table",
 		ids,

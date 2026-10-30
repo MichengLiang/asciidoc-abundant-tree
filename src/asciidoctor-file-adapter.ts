@@ -8,6 +8,7 @@ import {
 	type AsciidoctorBlock,
 	createAsciidoctorAdapter,
 	createExtensionRegistry,
+	xrefProbeLoadOptions,
 } from "./asciidoctor-adapter";
 import {
 	type ResolvedInclude,
@@ -54,13 +55,16 @@ export function createAsciidoctorFileAdapter(): AsciidoctorFileAdapter {
 	return {
 		...createAsciidoctorAdapter(extensionRegistry),
 		async loadFile(sourcePath) {
-			const document = await loadFile(sourcePath, {
+			const probing = xrefProbeLoadOptions();
+			const document = (await loadFile(sourcePath, {
 				safe: "secure",
 				sourcemap: true,
 				to_file: false,
 				extension_registry: extensionRegistry,
-			});
-			return document as unknown as AsciidoctorBlock;
+				converter: probing.converter,
+			})) as unknown as AsciidoctorBlock;
+			probing.register(document);
+			return document;
 		},
 		async readPreprocessedLines(options) {
 			const resolutions = new WeakMap<object, ResolvedInclude>();

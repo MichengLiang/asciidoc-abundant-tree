@@ -103,9 +103,9 @@ Metadata raw 是 source layer 事实。解析器不得丢弃 raw metadata 后只
 
 `XrefOccurrenceNode` 表示源文档中的一个交叉引用出现点。
 
-它保存 raw、syntax、target、label、attributes、sourceSpan、containingSectionId 和 official binding facts。
+它保存 raw、syntax、target、selector、document、label、attributes、sourceSpan、containingSectionId、scope 和 official binding facts。每个事实来自源文本还是官方，见 xref:metadata-xref-anchor-targets[第 8 章] Xref Occurrence。
 
-`targetKind` 是词法提示，不是目标存在性判断。跨文档 xref 不触发外部文件读取。
+`scope` 只记官方事实：指向别的文档时是 `external`，否则是 `local`；引用是否成立不在公共模型里下结论。跨文档 xref 不触发外部文件读取。
 
 === Anchor Occurrence
 

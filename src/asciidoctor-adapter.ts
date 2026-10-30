@@ -3,7 +3,8 @@ import {
 	type Document,
 	Extensions,
 	getVersion,
-	Inline,
+	Html5Converter,
+	type Inline,
 	type InlineMacroProcessorDslInterface,
 	load,
 	type Registry,
@@ -52,30 +53,134 @@ type HtmlAnchorBinding = {
 	id?: string | undefined;
 };
 
-export type OfficialXrefBinding = {
-	href?: string | undefined;
-	resolvedId?: string | undefined;
-	reftext?: string | undefined;
+// 探测（09 号书第 7 章《Xref 由官方认定》）：一段文字交给收下它的官方节点重跑一遍替换，官方在哪些候选位置认下了
+// xref，就收哪些。候选起点前插一个哨兵，转换器在探测期间把接到的 xref 换成一个记录标记；输出里紧跟在哨兵后面的
+// 标记，就是官方在这个位置认下的 xref。标记取私用区码位，作者的文字里没有，替换也不碰它。
+//
+// 哨兵与它前面的字符相邻，官方的约束写法（`+…+` 透传、`*…*` 等）看闭合符后面是不是单词字符，所以哨兵要与它顶替的
+// 那个字符同类：`xref:` 打头时是单词字符，取西夏文字母（书里不会出现）；`<<` 与 `\` 打头时是非单词字符，取私用区。
+// 取错类时，`+xref:a[] b+xref:c[]` 里的 `+…+` 会被认成透传，吞掉官方原本认下的第一个 xref。
+const WORD_SENTINEL_BASE = 0x17000;
+const NON_WORD_SENTINEL_BASE = 0xf0000;
+const MARKER_BASE = 0x100000;
+const MAX_PROBE_INDEX = 0x17f7;
+
+export type XrefProbeCandidate = {
+	// 候选在 text 中的起点，含紧挨在前面的反斜杠：转义与否由官方判断。
+	readonly offset: number;
+	readonly syntax: "shorthand" | "macro";
+	// 源文写下的目标与方括号（shorthand 是逗号）后的文字。
+	readonly target: string;
+	readonly label?: string | undefined;
 };
 
-// 浏览器也能用的这一层：从源文本加载与解析 xref。从文件加载在 asciidoctor-file-adapter.ts——4.x 的浏览器构建
+export type XrefProbeRequest = {
+	readonly owner: AsciidoctorBlock;
+	// 标题文字（章节标题、块标题、文档标题）走官方的标题替换。
+	readonly title: boolean;
+	readonly text: string;
+	readonly candidates: readonly XrefProbeCandidate[];
+};
+
+export type OfficialXref = {
+	readonly href: string;
+	readonly refid?: string | undefined;
+	readonly path?: string | undefined;
+	readonly fragment?: string | undefined;
+	// refid 在官方的 refs 目录里：官方按它自己的规则找到了目标。
+	readonly resolved: boolean;
+	readonly reftext: string;
+};
+
+export type RecognizedXref = {
+	readonly candidate: number;
+	readonly official: OfficialXref;
+	// 源文目标在这个位置的属性取值下展开属性引用以后的样子。
+	readonly expandedTarget: string;
+	readonly label?: string | undefined;
+	readonly attributes?: Record<string, string> | undefined;
+};
+
+export type XrefProbeResult = {
+	readonly recognized: readonly RecognizedXref[];
+	// 官方认下、前面却没有哨兵的 xref：属性值展开出来的，源里没有字面写法。
+	readonly withoutSource: readonly OfficialXref[];
+};
+
+type ProbeState = { active: boolean; hits: OfficialXref[] };
+
+// 4.x 在 load.js 32 行把 Substitutors 混进 AbstractNode.prototype，每个节点都有这些替换方法；类型声明却只把它们
+// 写成独立的 Substitutors 命名空间（types/substitutors.d.ts），没有并进 AbstractBlock。签名照那份声明。
+type SubstitutingNode = {
+	applySubs(text: string, subs?: string[]): Promise<string | string[]>;
+	applyTitleSubs(text: string): Promise<string | string[]>;
+	subAttributes(text: string): string;
+	extractAttributesFromText(text: string): Promise<unknown[]>;
+};
+
+const probeStates = new WeakMap<object, ProbeState>();
+
+// load 与 loadFile 都要在加载时交出转换器：官方在加载时就替换了标题、列表条目、描述列表与单元格的文字，
+// 事后再换转换器，这些文字里的 xref 就接不到了。探测之外，转换器照常转换。
+export function xrefProbeLoadOptions(): {
+	readonly converter: typeof Html5Converter;
+	register(document: AsciidoctorBlock): void;
+} {
+	const state: ProbeState = { active: false, hits: [] };
+	class XrefProbeConverter extends Html5Converter {
+		override async convert_inline_anchor(node: Inline): Promise<string> {
+			const html = await super.convert_inline_anchor(node);
+			if (!state.active || node.getType() !== "xref") {
+				return html;
+			}
+			state.hits.push(officialXref(node, html));
+			return String.fromCodePoint(MARKER_BASE + state.hits.length - 1);
+		}
+	}
+	return {
+		converter: XrefProbeConverter,
+		register(document) {
+			probeStates.set(document, state);
+		},
+	};
+}
+
+function officialXref(node: Inline, html: string): OfficialXref {
+	const refid = stringAttribute(node, "refid");
+	const anchor = extractAnchorBindings(parseFragment(html)).find(
+		(binding) => binding.href,
+	);
+	return {
+		href: node.getTarget() ?? "",
+		refid,
+		path: stringAttribute(node, "path"),
+		fragment: stringAttribute(node, "fragment"),
+		resolved:
+			refid !== undefined && Object.hasOwn(node.getDocument().getRefs(), refid),
+		reftext: anchor?.text ?? "",
+	};
+}
+
+function stringAttribute(node: Inline, name: string): string | undefined {
+	const value = node.getAttribute(name);
+	return typeof value === "string" ? value : undefined;
+}
+
+// 浏览器也能用的这一层：从源文本加载与探测 xref。从文件加载在 asciidoctor-file-adapter.ts——4.x 的浏览器构建
 // 不导出 loadFile，这里导入它会让浏览器打包失败。
 export type AsciidoctorAdapter = {
 	parserVersion: string;
-	loadSource(sourceText: string): Promise<AsciidoctorBlock>;
+	// sourcePath 是这段文字所在的文件：官方从文件加载时据它设 docname（load.js 104-106 行），引用自己的
+	// `xref:本文件.adoc#id[]` 才认作本文档。只交文字时要补上，读法才与官方读这个文件时相同。
+	loadSource(
+		sourceText: string,
+		sourcePath?: string,
+	): Promise<AsciidoctorBlock>;
 	extractAnchorBindings(html: string): HtmlAnchorBinding[];
-	resolveXrefTarget(
+	probeXrefs(
 		document: AsciidoctorBlock,
-		target: string,
-	): string | undefined;
-	resolveXrefBinding(
-		document: AsciidoctorBlock,
-		parent: AsciidoctorBlock,
-		xref: {
-			target: string;
-			label?: string | undefined;
-		},
-	): Promise<OfficialXrefBinding | undefined>;
+		requests: readonly XrefProbeRequest[],
+	): Promise<XrefProbeResult[]>;
 };
 
 export function createAsciidoctorAdapter(
@@ -83,50 +188,215 @@ export function createAsciidoctorAdapter(
 ): AsciidoctorAdapter {
 	return {
 		parserVersion: getVersion(),
-		async loadSource(sourceText) {
-			const document = await load(sourceText, {
+		async loadSource(sourceText, sourcePath) {
+			const probing = xrefProbeLoadOptions();
+			const document = (await load(sourceText, {
 				safe: "secure",
 				sourcemap: true,
 				to_file: false,
 				extension_registry: extensionRegistry,
-			});
-			return document as unknown as AsciidoctorBlock;
+				converter: probing.converter,
+				...(sourcePath !== undefined
+					? { attributes: { docname: docnameOf(sourcePath) } }
+					: {}),
+			})) as unknown as AsciidoctorBlock;
+			probing.register(document);
+			return document;
 		},
 		extractAnchorBindings(html) {
 			return extractAnchorBindings(parseFragment(html));
 		},
-		resolveXrefTarget(document, target) {
-			if (target.includes(".adoc#")) {
-				return target.replace(".adoc#", ".html#");
-			}
-			const refs = official<Document>(document).getRefs();
-			if (Object.hasOwn(refs, target)) {
-				return `#${target}`;
-			}
-			const resolved = official<Document>(document).resolveId(target);
-			return resolved === null ? undefined : `#${resolved}`;
-		},
-		async resolveXrefBinding(document, parent, xref) {
-			const href = this.resolveXrefTarget(document, xref.target);
-			const target = href ?? unresolvedLocalHref(xref.target);
-			const reftext = await resolveXrefReftext(document, xref, href);
-			const inline = new Inline(official(parent), "anchor", reftext, {
-				type: "xref",
-				target,
-			});
-			const converted = extractAnchorBindings(
-				parseFragment(await inline.convert()),
-			);
-			const anchor = converted.find((binding) => binding.href);
-			if (!anchor?.href) {
-				return undefined;
-			}
-			return {
-				href: anchor.href,
-				resolvedId: resolvedIdFromHref(anchor.href),
-				reftext: anchor.text,
-			};
-		},
+		probeXrefs,
+	};
+}
+
+function docnameOf(sourcePath: string): string {
+	const name = sourcePath.split(/[\\/]/u).at(-1) ?? sourcePath;
+	const dot = name.lastIndexOf(".");
+	return dot > 0 ? name.slice(0, dot) : name;
+}
+
+// 按官方转换的顺序探测：先还原文档头的属性，再按文档顺序走官方块树，到每个块先回放它的属性条目
+// （Document#playbackAttributes，官方转换时也这样做），属性引用因此按它在文中那个位置的取值展开。
+async function probeXrefs(
+	document: AsciidoctorBlock,
+	requests: readonly XrefProbeRequest[],
+): Promise<XrefProbeResult[]> {
+	const state = probeStates.get(document);
+	if (!state) {
+		throw new Error("probeXrefs requires a document loaded by this adapter");
+	}
+	const results = new Map<XrefProbeRequest, XrefProbeResult>();
+	const requestsByOwner = new Map<object, XrefProbeRequest[]>();
+	for (const request of requests) {
+		const owned = requestsByOwner.get(request.owner) ?? [];
+		owned.push(request);
+		requestsByOwner.set(request.owner, owned);
+	}
+	const root = official<Document>(document);
+	root.restoreAttributes();
+	for (const node of root.findBy({ traverseDocuments: true })) {
+		official<Document>(
+			node.getDocument() as unknown as AsciidoctorBlock,
+		).playbackAttributes(node.getAttributes());
+		for (const request of requestsByOwner.get(node) ?? []) {
+			results.set(request, await probeRequest(state, root, request));
+		}
+		requestsByOwner.delete(node);
+	}
+	// 走不到的节点（块树之外的官方节点）不再回放属性，照文档末尾的属性取值探测。
+	for (const owned of requestsByOwner.values()) {
+		for (const request of owned) {
+			results.set(request, await probeRequest(state, root, request));
+		}
+	}
+	return requests.map(
+		(request) => results.get(request) ?? { recognized: [], withoutSource: [] },
+	);
+}
+
+async function probeRequest(
+	state: ProbeState,
+	root: Document,
+	request: XrefProbeRequest,
+): Promise<XrefProbeResult> {
+	const owner = request.owner as unknown as SubstitutingNode;
+	const subs = probeSubstitutions(request);
+	if (subs === undefined || request.candidates.length > MAX_PROBE_INDEX) {
+		return { recognized: [], withoutSource: [] };
+	}
+	let marked = "";
+	let last = 0;
+	request.candidates.forEach((candidate, index) => {
+		const base = request.text.startsWith("xref:", candidate.offset)
+			? WORD_SENTINEL_BASE
+			: NON_WORD_SENTINEL_BASE;
+		marked +=
+			request.text.slice(last, candidate.offset) +
+			String.fromCodePoint(base + index);
+		last = candidate.offset;
+	});
+	marked += request.text.slice(last);
+
+	const footnotes = root.getFootnotes();
+	const footnotesBefore = footnotes.length;
+	state.active = true;
+	state.hits = [];
+	let output: string;
+	try {
+		output = String(
+			request.title
+				? await owner.applyTitleSubs(marked)
+				: await owner.applySubs(marked, subs),
+		);
+		// 脚注里的 xref 随脚注文字登记进文档的脚注表，不在替换的输出里。
+		output += footnotes
+			.slice(footnotesBefore)
+			.map((footnote) => footnote.getText())
+			.join("");
+	} finally {
+		state.active = false;
+	}
+	// 探测登记的脚注不属于文档。
+	footnotes.splice(footnotesBefore);
+	const hits = state.hits;
+	state.hits = [];
+
+	const recognized: RecognizedXref[] = [];
+	const withoutSource: OfficialXref[] = [];
+	const codePoints = [...output].map(
+		(character) => character.codePointAt(0) ?? 0,
+	);
+	for (const [index, codePoint] of codePoints.entries()) {
+		if (codePoint < MARKER_BASE) {
+			continue;
+		}
+		const official = hits[codePoint - MARKER_BASE];
+		if (!official) {
+			continue;
+		}
+		const candidateIndex = sentinelIndex(codePoints[index - 1] ?? 0);
+		const candidate =
+			candidateIndex === undefined
+				? undefined
+				: request.candidates[candidateIndex];
+		if (candidateIndex === undefined || !candidate) {
+			withoutSource.push(official);
+			continue;
+		}
+		recognized.push({
+			candidate: candidateIndex,
+			official,
+			expandedTarget: owner.subAttributes(candidate.target),
+			...(await candidateLabel(owner, candidate)),
+		});
+	}
+	return { recognized, withoutSource };
+}
+
+function sentinelIndex(codePoint: number): number | undefined {
+	for (const base of [WORD_SENTINEL_BASE, NON_WORD_SENTINEL_BASE]) {
+		if (codePoint >= base && codePoint <= base + MAX_PROBE_INDEX) {
+			return codePoint - base;
+		}
+	}
+	return undefined;
+}
+
+// 单元格的替换列表不经 getSubstitutions 交出：literal 单元格只做 basic 替换，其余做 normal 替换（table.js 436-451 行）。
+function probeSubstitutions(request: XrefProbeRequest): string[] | undefined {
+	if (request.title) {
+		return [];
+	}
+	const owner = request.owner;
+	if (owner.getContext?.() === "table_cell") {
+		return owner.getContentModel?.() === "verbatim" ? undefined : NORMAL_SUBS;
+	}
+	const subs = owner.getSubstitutions?.() ?? [];
+	// 复合块（如 markdown 引语）自己没有替换列表，送来探测的只有它的出处文字，官方用 normal 替换（parser.js 1119-1132 行）。
+	if (subs.length === 0) {
+		return NORMAL_SUBS;
+	}
+	return subs.includes("macros") ? subs : undefined;
+}
+
+const NORMAL_SUBS = [
+	"specialcharacters",
+	"quotes",
+	"attributes",
+	"replacements",
+	"macros",
+	"post_replacements",
+];
+
+// 标签照官方的读法分出命名属性（substitutors.js 1147-1158 行），值取源文本：官方转换得到的值经过了 replacements。
+async function candidateLabel(
+	owner: SubstitutingNode,
+	candidate: XrefProbeCandidate,
+): Promise<{
+	label?: string;
+	attributes?: Record<string, string>;
+}> {
+	const label = candidate.label;
+	if (label === undefined || label === "") {
+		return {};
+	}
+	if (candidate.syntax === "shorthand" || !label.includes("=")) {
+		return { label };
+	}
+	const [text, extracted] = (await owner.extractAttributesFromText(label)) as [
+		unknown,
+		Record<string, unknown>,
+	];
+	const attributes: Record<string, string> = {};
+	for (const [name, value] of Object.entries(extracted ?? {})) {
+		if (!/^\d+$/u.test(name) && typeof value === "string") {
+			attributes[name] = value;
+		}
+	}
+	return {
+		...(typeof text === "string" && text !== "" ? { label: text } : {}),
+		...(Object.keys(attributes).length > 0 ? { attributes } : {}),
 	};
 }
 
@@ -157,33 +427,6 @@ export function createExtensionRegistry(): Registry {
 		},
 	);
 	return registry;
-}
-
-async function resolveXrefReftext(
-	document: AsciidoctorBlock,
-	xref: { target: string; label?: string | undefined },
-	href: string | undefined,
-): Promise<string> {
-	if (xref.label) {
-		return xref.label;
-	}
-	const resolvedId = href?.startsWith("#") ? href.slice(1) : undefined;
-	const ref: AbstractBlock | Inline | undefined = resolvedId
-		? official<Document>(document).getRefs()[resolvedId]
-		: undefined;
-	// AbstractBlock 的 xreftext 是异步的，Inline 的是同步的；await 两种都接得住。
-	return (await ref?.xreftext()) ?? `[${xref.target}]`;
-}
-
-function unresolvedLocalHref(target: string): string {
-	if (target.includes(".adoc#")) {
-		return target.replace(".adoc#", ".html#");
-	}
-	return `#${target}`;
-}
-
-function resolvedIdFromHref(href: string): string | undefined {
-	return href.startsWith("#") ? href.slice(1) : href.split("#").at(1);
 }
 
 function extractAnchorBindings(

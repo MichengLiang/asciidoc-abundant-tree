@@ -14,7 +14,10 @@ export async function parseAbundantTreeFromSource(
 ): Promise<AbundantDocument> {
 	const sourcePath = options.sourcePath ?? DEFAULT_BROWSER_SOURCE_PATH;
 	const adapter = createAsciidoctorAdapter();
-	const officialDocument = await adapter.loadSource(options.sourceText);
+	const officialDocument = await adapter.loadSource(
+		options.sourceText,
+		sourcePath,
+	);
 	const lineTable = buildLineTable(options.sourceText);
 
 	return parseAsciidoctorDocument({

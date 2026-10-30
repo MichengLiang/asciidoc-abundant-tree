@@ -2,11 +2,7 @@ import type {
 	AsciidoctorAdapter,
 	AsciidoctorBlock,
 } from "./asciidoctor-adapter";
-import {
-	addAnchorTargets,
-	bindXrefs,
-	resolveOfficialBindings,
-} from "./binding-merge";
+import { addAnchorTargets, completeXrefTargetTypes } from "./binding-merge";
 import {
 	recoverSourceAwareDocumentTitleSourceLayer,
 	sourceAwareDocumentForLineTable,
@@ -19,6 +15,7 @@ import { completeOfficialSourceLocations } from "./official-source-location";
 import type { SourceIdentityApi } from "./source-identity";
 import { type LineTable, spanForLineText } from "./source-lines";
 import { projectSourceSurfaces } from "./source-surfaces";
+import { recognizeXrefOccurrences } from "./xref-recognition";
 
 export type ParserCoreInput = {
 	readonly officialDocument: AsciidoctorBlock;
@@ -42,12 +39,21 @@ export async function parseAsciidoctorDocument(
 		sourceIdentity: input.sourceIdentity,
 		...(input.sourceSurfacePath ? { sourcePath: input.sourceSurfacePath } : {}),
 	});
+	// xref 在投影之前定下：投影器按源范围把它们挂到段落、描述与表格下面。
+	const xrefOccurrences = await recognizeXrefOccurrences({
+		adapter: input.adapter,
+		officialDocument: input.officialDocument,
+		lineTable: input.lineTable,
+		regions: sourceSurfaces.xrefRegions,
+		sectionByLine: sourceSurfaces.sectionByLine,
+		toolDiagnostics: sourceSurfaces.toolDiagnostics,
+	});
 	const officialProjection = projectOfficialDocument({
 		officialDocument: input.officialDocument,
 		lineTable: input.lineTable,
 		sections: sourceSurfaces.sections,
 		sectionByLine: sourceSurfaces.sectionByLine,
-		xrefOccurrences: sourceSurfaces.xrefOccurrences,
+		xrefOccurrences,
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
 		headingInlineMetadataOccurrences:
 			sourceSurfaces.headingInlineMetadataOccurrences,
@@ -55,17 +61,12 @@ export async function parseAsciidoctorDocument(
 		projectableBlocks: sourceSurfaces.projectableBlocks,
 		sectionByBlock: sourceSurfaces.sectionByBlock,
 	});
-	await resolveOfficialBindings(
-		officialProjection.bindingRequests,
-		input.officialDocument,
-		input.adapter,
-	);
 
 	addAnchorTargets(
 		officialProjection.targets,
 		sourceSurfaces.anchorOccurrences,
 	);
-	bindXrefs(sourceSurfaces.xrefOccurrences, officialProjection.targets);
+	completeXrefTargetTypes(xrefOccurrences, officialProjection.targets);
 	const titleSource = documentTitleSource(input.lineTable);
 
 	const document: AbundantDocument = {
@@ -88,7 +89,7 @@ export async function parseAsciidoctorDocument(
 		},
 		children: officialProjection.children,
 		targets: officialProjection.targets,
-		xrefOccurrences: sourceSurfaces.xrefOccurrences,
+		xrefOccurrences,
 		anchorOccurrences: sourceSurfaces.anchorOccurrences,
 		headingInlineMetadataOccurrences:
 			sourceSurfaces.headingInlineMetadataOccurrences,

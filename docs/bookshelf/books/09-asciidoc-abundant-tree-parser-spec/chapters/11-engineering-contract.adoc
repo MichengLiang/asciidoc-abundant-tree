@@ -36,7 +36,7 @@ asciidoc-abundant-tree
 
 `src/model.ts` 定义公共 TypeScript 数据模型。
 
-`src/asciidoctor-adapter.ts` 承载 `@asciidoctor/core` 和 HTML fragment parser 的直接调用。
+`src/asciidoctor-adapter.ts` 承载 `@asciidoctor/core` 和 HTML fragment parser 的直接调用，包括加载时交给官方的探测用转换器与 xref 探测（第 7 章 Xref 由官方认定）。`src/xref-recognition.ts` 把扫描器交出的文字区域交给 adapter 探测，用官方认下的 xref 造出 occurrence。
 
 Adapter 只经由 `@asciidoctor/core` 4.x 的公开导出与它自带的类型调用 Asciidoctor，不探测运行时、不调用转译出来的内部方法。
 
@@ -45,11 +45,11 @@ Adapter 只经由 `@asciidoctor/core` 4.x 的公开导出与它自带的类型�
 解析器里有一类做法不是在弥补接口，而是 Asciidoctor 本身的语义，换 Asciidoctor 版本时保留：
 
 * 逐行来源由解析器与官方 Reader 的输出逐行配对得出（10 号书）：sourcemap 只记块的起始行与文件；Reader 一次推入的行号从第一条选中行逐行累加，选取有空隙时与源行不符；一次推入的第一行在读之前，游标还在外层文件上。
-* 行内 xref、anchor 由解析器扫描源文本：Asciidoctor 的行内处理是替换，不产生带位置的行内节点。
+* 行内 anchor 由解析器扫描源文本：Asciidoctor 的行内处理是替换，不产生带位置的行内节点。行内 xref 的有无与指向取自官方替换时新建、交给转换器的 xref 节点，位置由扫描器给出，二者用哨兵对上（第 7 章 Xref 由官方认定）。
 * 块的结束行由 source interval resolver 恢复：official source location 只有起始行。
 * 部导言里官方新建的开放块与段落没有 source location，解析器照官方给合成 preamble 补坐标的做法补上（第 7 章「官方合成的块」）。
 * 分隔符按官方的认法判断，逐句移植 `Parser.isDelimitedBlock`：`Parser` 不在公开导出里（第 7 章「分隔符与它的闭合」）。
-* xref 的 official href 由转换器把一个 xref inline 节点转换成 HTML 后读出：这样得到的是转换器认定的链接，包括跨文档 `.adoc#` 改写为 `.html#`。
+* 扫描器照抄官方的 `InlineXrefMacroRx`（`rx.js` 746 行）定出 xref 候选的结束处：`rx` 不在公开导出里，理由与移植 `isDelimitedBlock` 相同。
 
 `src/parser.ts` 编排文件读取、official parse、source surface projection、official projection、target/xref merge 和 `AbundantDocument` 构造。
 

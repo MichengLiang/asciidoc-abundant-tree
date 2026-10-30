@@ -177,10 +177,8 @@ summary:: 一道由番茄和鸡蛋组成的家常菜。
     a aat:XrefEdge;
     aat:endColumn 22;
     aat:endLine 12;
-    aat:officialHref "#_家常菜";
-    aat:officialReftext "家常菜";
-    aat:officialResolvedId "_家常菜";
-    aat:officialResolvedType "section";
+    aat:officialHref "#家常菜";
+    aat:officialReftext "[家常菜]";
     aat:raw "xref:家常菜[rel=is-a]";
     aat:rel "is-a";
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
@@ -195,10 +193,8 @@ summary:: 一道由番茄和鸡蛋组成的家常菜。
     a aat:XrefEdge;
     aat:endColumn 21;
     aat:endLine 20;
-    aat:officialHref "#_食材";
-    aat:officialReftext "食材";
-    aat:officialResolvedId "_食材";
-    aat:officialResolvedType "section";
+    aat:officialHref "#食材";
+    aat:officialReftext "[食材]";
     aat:raw "xref:食材[rel=is-a]";
     aat:rel "is-a";
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
@@ -213,10 +209,8 @@ summary:: 一道由番茄和鸡蛋组成的家常菜。
     a aat:XrefEdge;
     aat:endColumn 21;
     aat:endLine 27;
-    aat:officialHref "#_食材";
-    aat:officialReftext "食材";
-    aat:officialResolvedId "_食材";
-    aat:officialResolvedType "section";
+    aat:officialHref "#食材";
+    aat:officialReftext "[食材]";
     aat:raw "xref:食材[rel=is-a]";
     aat:rel "is-a";
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";

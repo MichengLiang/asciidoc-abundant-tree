@@ -13,7 +13,6 @@ import type {
 	SectionNode,
 	TargetType,
 	ToolDiagnostic,
-	XrefOccurrenceNode,
 } from "./model";
 import { definedObject } from "./object-utils";
 import { officialBlockPolicy } from "./official-block-policy";
@@ -25,6 +24,7 @@ import {
 	type SourceInterval,
 } from "./source-interval-resolver";
 import { type LineTable, sourceLines } from "./source-lines";
+import type { XrefProbeRegion } from "./xref-recognition";
 
 export type SourceSurfaces = {
 	blockSurfaces: OfficialBlockSurface[];
@@ -32,7 +32,8 @@ export type SourceSurfaces = {
 	projectableBlocks: WeakSet<AsciidoctorBlock>;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	sections: SectionNode[];
-	xrefOccurrences: XrefOccurrenceNode[];
+	// 收下 xref 的官方节点与文字区域，交给 xref-recognition 由官方认定。
+	xrefRegions: XrefProbeRegion[];
 	anchorOccurrences: AnchorOccurrenceNode[];
 	headingInlineMetadataOccurrences: HeadingInlineMetadataOccurrenceNode[];
 	// 键是逻辑行：出现处、块属于哪个 section 都在逻辑文档上判定（10 号书「结构关系在 Logical Document 上判定」）。
@@ -136,17 +137,15 @@ export function projectSourceSurfaces(options: {
 		sectionByBlock,
 		intervalByBlock,
 	);
-	const {
-		xrefOccurrences,
-		anchorOccurrences,
-		headingInlineMetadataOccurrences,
-	} = scanInlineOccurrencesInOfficialBlocks({
-		lineTable: options.lineTable,
-		blockSurfaces,
-		intervalByBlock,
-		sectionByLine,
-		toolDiagnostics,
-	});
+	const { xrefRegions, anchorOccurrences, headingInlineMetadataOccurrences } =
+		scanInlineOccurrencesInOfficialBlocks({
+			lineTable: options.lineTable,
+			blockSurfaces,
+			intervalByBlock,
+			sectionByLine,
+			officialDocument: options.officialDocument,
+			toolDiagnostics,
+		});
 
 	return {
 		blockSurfaces,
@@ -154,7 +153,7 @@ export function projectSourceSurfaces(options: {
 		projectableBlocks,
 		sectionByBlock,
 		sections,
-		xrefOccurrences,
+		xrefRegions,
 		anchorOccurrences,
 		headingInlineMetadataOccurrences,
 		sectionByLine,
