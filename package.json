@@ -19,8 +19,7 @@
 	"type": "module",
 	"types": "./dist/index.d.mts",
 	"bin": {
-		"asciidoc-abundant-tree": "dist/cli.mjs",
-		"animation-yaml-export": "dist/animation-yaml-export/cli.mjs"
+		"asciidoc-abundant-tree": "dist/cli.mjs"
 	},
 	"exports": {
 		".": {
@@ -81,7 +80,6 @@
 		"check:books": "pnpm --dir bookshelf check",
 		"check:browser": "pnpm build && pnpm test:browser && pnpm --dir apps/projection-teacher test:e2e",
 		"dev": "tsx src/cli.ts",
-		"export:animation-yaml": "tsx src/animation-yaml-export/cli.ts",
 		"lint": "biome check --vcs-use-ignore-file=false .",
 		"format": "biome check --write --vcs-use-ignore-file=false .",
 		"typecheck": "tsc --noEmit",
@@ -96,8 +94,7 @@
 	"dependencies": {
 		"@asciidoctor/core": "^4.1.1",
 		"n3": "^2.0.3",
-		"parse5": "^8.0.1",
-		"yaml": "^2.9.0"
+		"parse5": "^8.0.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",

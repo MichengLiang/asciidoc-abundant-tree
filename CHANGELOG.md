@@ -4,6 +4,12 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## Unreleased
+
+### Removed (breaking)
+
+- The animation YAML export is gone: `exportAnimationYaml`, its option and result types, the `animation-yaml-export` bin and the `export:animation-yaml` script. It turned projection facts into one particular adaptation format, which is a downstream reading of the graph, not part of a projector; nothing in use called it any more. `yaml`, which only it needed, is no longer a runtime dependency.
+
 ## 0.4.0 - 2026-10-31
 
 ### Changed (breaking)

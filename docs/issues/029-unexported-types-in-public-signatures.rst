@@ -1,9 +1,9 @@
-# 029 公开签名用到的九个类型没有从入口导出
+# 029 公开签名用到的七个类型没有从入口导出
 
 :发现: 2026-10-31，小汤，计划 #14 期间为 aat 的 API 参考实测 TypeDoc 与 sphinx-js 时
 :代码版本: ``86f465c``
 :影响: 使用方写不出 rdf12 的参数类型、Rdf12Result 各字段的类型名；API 参考工具对它们报引用断裂
-:涉及: ``src/index.ts:13-46``、``src/model.ts:63``、``src/model.ts:230``、``src/rdf12-projection/projector.ts:24-36``
+:涉及: ``src/index.ts:13-51``、``src/model.ts:63``、``src/model.ts:230``、``src/rdf12-projection/projector.ts:19-30``
 
 ## 现象与复现
 
@@ -28,15 +28,20 @@
 TypeDoc 只在 ``Rdf12Projection`` 收进文档以后才会对它们报同样的警告：计划 #14 期间的 sphinx-js 实测把
 ``Rdf12Projection`` 写进页面，开着 nitpicky 时剩下的引用断裂正是这四个。
 
+记下以后少了两个：0.4.0 从 ``Rdf12Projection`` 去掉了 ``labelCatalog``（``git log --grep "Work-Package: 15.1"``），
+计划 #17 删掉了动画 YAML 导出，``ExportAnimationYamlResult`` 与它露出的 ``ExportWarning`` 随之不在
+（``git log --grep "Work-Package: 17.1"``）。剩下七个：``NodeBase``、``UnknownNode``、``Rdf12Projection``、
+``Rdf12Options``、``Rdf12Graph``、``Rdf12PrefixMap``、``Rdf12NodeIndex``。
+
 ## 原因
 
 ``src/index.ts`` 显式列出导出的类型（``export type { AbundantDocument, … } from "./model"`` 与 ``Rdf12Result``），
-上面九个类型不在列表里：
+上面七个类型不在列表里：
 
 * ``NodeBase``、``UnknownNode`` 在 ``src/model.ts`` 里没有 ``export``（63、230 行）。``AbundantNode`` 是包含
   ``UnknownNode`` 的联合，各种节点类型都是 ``NodeBase & {…}``。
-* 其余七个在各自模块里有 ``export``，入口没有转出：``rdf12(document, options: Rdf12Options)``、
-  ``Rdf12Result = Rdf12Projection & {…}``、``ExportAnimationYamlResult.warnings`` 直接露出它们。
+* 其余五个在各自模块里有 ``export``，入口没有转出：``rdf12(document, options: Rdf12Options)``、
+  ``Rdf12Result = Rdf12Projection & {…}`` 直接露出它们。
 
 ## 影响到的使用方
 
