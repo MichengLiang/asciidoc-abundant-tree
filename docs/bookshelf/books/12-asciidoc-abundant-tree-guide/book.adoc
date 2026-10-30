@@ -57,7 +57,7 @@ include::parts/020-heading-structure/010-resource-node-boundary.adoc[]
 
 include::parts/020-heading-structure/020-resource-tree-and-order.adoc[]
 
-include::parts/030-identity-and-fields/010-address-and-stable-id.adoc[]
+include::parts/030-identity-and-fields/010-address-space.adoc[]
 
 include::parts/030-identity-and-fields/020-role-and-field-surfaces.adoc[]
 

@@ -31,11 +31,11 @@ entry file 保存书籍的整体顺序。included files 保存可维护章节。
 
 === 书籍结构
 
-frontmatter 提供书籍身份、摘要、前言和阅读入口。parts 与 chapters 承担正文论证。backmatter 提供术语表、参考文献、附录和索引。source-order notation 保留插入空间；stable ID 支撑长期 xref；indexterm 支撑书后检索。
+frontmatter 提供书籍身份、摘要、前言和阅读入口。parts 与 chapters 承担正文论证。backmatter 提供术语表、参考文献、附录和索引。source-order notation 保留插入空间；标题原文支撑 xref；indexterm 支撑书后检索。
 
 === 输出表面
 
-`source-set-report.ts` 生成 `source-set.json`，列出 entry file 通过 include graph 到达的源文件。`xref-audit.ts` 生成 `xref-audit.json`，检查 unresolved、ambiguous 和 unused stable ID。`book-outline.mmd` 按 `aat:documentOrder` 输出书籍大纲。
+`source-set-report.ts` 生成 `source-set.json`，列出 entry file 通过 include graph 到达的源文件。`xref-audit.ts` 生成 `xref-audit.json`，检查 unresolved、ambiguous 和 unused custom ID。`book-outline.mmd` 按 `aat:documentOrder` 输出书籍大纲。
 
 === 回源意义
 

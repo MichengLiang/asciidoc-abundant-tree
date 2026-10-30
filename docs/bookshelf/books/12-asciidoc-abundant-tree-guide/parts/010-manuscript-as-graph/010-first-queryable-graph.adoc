@@ -73,7 +73,7 @@ writeFileSync("projection/delivery.jsonld", projection.jsonLd);
   aat:headingLine 9 .
 ----
 
-`urn:aat:doc:...` 是文档 IRI，`#` 之后是标题节点的名字，也就是引用这一节时写的地址。`delivery` 和 `capacity` 是 heading label space 中的查询 label。长期引用使用作者声明的 label；节点 IRI 属于投影表面。
+`urn:aat:doc:...` 是文档 IRI，`#` 之后是标题节点的名字，也就是引用这一节时写的地址。`delivery` 和 `capacity` 是这两个标题的别名，同样在 heading label space 中。引用写标题原文；消费者从 `aat:name` 读名字，不解析 IRI。
 
 查询 active policy 的依赖：
 

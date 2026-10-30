@@ -9,10 +9,11 @@ heading node:: 由等号标题创建的 RDF resource。
 resource node:: 由标题承载的书稿资源单位；它可以代表概念、规则、资产、证据、配置、场景或任务。
 headline:: 标题文本。
 heading slice:: 标题节点对应的连续源文本区域。
-heading label space:: `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成的 selector 查询空间。
+heading label space:: 地址路径、`aat:addressLabel` 和 `aat:generatedAddressLabel` 构成的 selector 查询空间。selector 按整串相等匹配。
+address path:: 从文档标题到某个标题的各级 headline 以 `::` 连接而成的路径的任一后缀。只有一段的地址路径就是 headline。
 address label:: 可寻址到 heading node 的作者声明 label 或本地 target alias。
 generated address label:: 投影器恢复出的标题 label。
-stable ID:: 作者为标题声明的长期寻址 label。
+custom ID:: 作者用 `[#id]` 给标题加的别名。同一父标题下同名、地址路径分不开、又要引用其中一个时才需要。
 role:: 标题身份字段。
 literal field:: 值为 string literal 的字段。
 complex property:: 值为 raw value object 的字段。

@@ -16,7 +16,7 @@ Book A 和 Book B 独立声明各自的 heading labels、headlines 和 fields。
 
 === Alignment Policy
 
-`alignment-policy.ts` 定义跨书候选规则。规则可以使用 stable ID、headline、role、外部 URI 字段或人工维护的 mapping field。候选结果进入 `alignment-candidates.json`，确认后的跨书关系进入 `workspace.ttl`。
+`alignment-policy.ts` 定义跨书候选规则。规则可以使用 headline、custom ID、role、外部 URI 字段或人工维护的 mapping field。候选结果进入 `alignment-candidates.json`，确认后的跨书关系进入 `workspace.ttl`。
 
 === 输出表面
 

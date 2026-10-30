@@ -14,7 +14,7 @@ xref selector 查询 logical document 的 heading label space。命中 heading n
 
 === 审计报告
 
-xref audit 读取 unresolved、ambiguous 和 unused stable ID。报告记录 source file 与 line：
+xref audit 读取 unresolved、ambiguous 和 unused custom ID。报告记录 source file 与 line：
 
 [source,json]
 ----
@@ -28,4 +28,4 @@ xref audit 读取 unresolved、ambiguous 和 unused stable ID。报告记录 sou
 
 === 维护动作
 
-维护动作从报告返回源文件。projection 不替作者修复源文档。未绑定 selector 通常需要补 stable ID、改 target selector 或调整标题文本。多义 selector 需要收窄 label space。unused stable ID 需要判断它是否仍承担长期引用入口。
+维护动作从报告返回源文件。projection 不替作者修复源文档。未绑定的 selector 多半来自改了名的标题：作者回到原文判断引用说的是否还是那一节，再改成新标题或改指别处。多义 selector 用 `::` 补上级标题，直到只剩一个候选。unused custom ID 是没有引用的别名，只增加维护面。
