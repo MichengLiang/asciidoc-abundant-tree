@@ -19,7 +19,8 @@
 			"!pnpm-lock.yaml",
 			"!samples/business-kg-js-demo/generated",
 			"!tmp",
-			"!*.tgz"
+			"!*.tgz",
+			"!.wbs"
 		]
 	},
 	"formatter": {

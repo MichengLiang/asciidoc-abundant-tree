@@ -189,7 +189,7 @@ SELECT ?raw ?format ?path ?start ?end WHERE {
 ----
 SELECT ?configRaw ?playbookRaw WHERE {
   ?heading aat:addressLabel "cold-chain-release" ;
-           aat:release-policy-config ?config ;
+           field:release-policy-config ?config ;
            field:review-playbook ?playbook .
   ?config aat:format "json" ;
           aat:raw ?configRaw .
@@ -218,13 +218,13 @@ SELECT ?raw ?format ?path ?start ?end WHERE {
 }
 ----
 
-冷链样例中的边复杂属性查询使用 `aat:dependency-evidence`：
+冷链样例中的边复杂属性查询使用 `field:dependency-evidence`：
 
 [source,sparql]
 ----
 SELECT ?raw WHERE {
   ?edge a aat:XrefEdge ;
-        aat:dependency-evidence ?evidence .
+        field:dependency-evidence ?evidence .
   ?evidence aat:format "yaml" ;
             aat:raw ?raw .
 }
