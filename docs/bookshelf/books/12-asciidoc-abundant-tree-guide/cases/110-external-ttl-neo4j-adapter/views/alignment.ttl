@@ -1,3 +1,3 @@
 @prefix ex: <https://micheng.dev/ns/external-demo#>.
 
-<urn:case:external#heading-l3-c1> ex:aligns-with <https://example.org/ontology/ReleasePolicy>.
+<urn:case:external#冷链出库放行策略> ex:aligns-with <https://example.org/ontology/ReleasePolicy>.

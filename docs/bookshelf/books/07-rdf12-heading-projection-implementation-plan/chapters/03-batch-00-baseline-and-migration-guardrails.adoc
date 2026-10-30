@@ -1,4 +1,3 @@
-[#batch-00-baseline-and-migration-guardrails]
 == Batch 00：基线与迁移护栏
 
 === 批次目标

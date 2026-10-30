@@ -1,4 +1,3 @@
-[#case-cross-book-linking]
 == Cross-book Linking
 
 Cross-book Linking 把多本独立 book-entry projection 放入 workspace graph。领域对象是两本书中的 heading node 以及一份跨书 alignment policy。每本书保持自己的 source set、projection 和回源坐标；workspace 层生成跨书关系。

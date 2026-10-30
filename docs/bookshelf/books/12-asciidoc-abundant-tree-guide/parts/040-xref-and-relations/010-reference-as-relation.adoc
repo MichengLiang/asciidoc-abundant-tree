@@ -1,4 +1,3 @@
-[#reference-as-relation]
 == 引用作为关系边
 
 xref 位于某个 heading slice 中。该 heading node 是关系 source。xref target selector 绑定到 heading label space 后，命中的 heading node 是关系 target。

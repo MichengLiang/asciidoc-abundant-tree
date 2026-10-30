@@ -1,4 +1,3 @@
-[#index]
 = 索引
 
 indexterm2:[heading node]

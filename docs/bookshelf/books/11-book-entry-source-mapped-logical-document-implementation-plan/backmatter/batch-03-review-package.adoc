@@ -168,8 +168,8 @@ src/parser.ts Lines: 92.85% (13/14)
 * 本批没有修改批次边界外文件。
 * 本批没有修改 `src/rdf12-projection/**`、`src/cli.ts`、`README.md` 或 `CHANGELOG.md`。
 * 本批没有引入全局打回条件；全局 branch coverage 阈值失败为已记录基线。
-* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
-* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]。
+* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#执行契约[执行契约]。
+* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#执行契约[执行契约]。
 * 本批新增代码有对应测试。
 * 本批 parser core 拆分消除 single-file 和 logical input assembly 重复。
 * 本批 memory parse 入口与 file parse 入口通过不同 adapter 方法区分。

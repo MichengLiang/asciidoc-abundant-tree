@@ -1,4 +1,3 @@
-[#bibliography]
 == 参考坐标
 
 * xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc[asciidoc-abundant-tree 解析器规约]：本计划的 parser 公共模型、single-file 输入、source layer、official layer、diagnostics、CLI/API 和验收门禁来源。

@@ -1,4 +1,3 @@
-[#batch-01-public-model-and-coordinate-identity]
 == Batch 01：公共模型与坐标身份
 
 === 批次目标
@@ -10,19 +9,19 @@
 === 上游门槛
 
 * Batch 00 状态为 `通过`。
-* Batch 00 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+* Batch 00 提交 hash 已写入 xref:批次状态台账[批次状态台账]。
 
 === 本批上下文闭包
 
 执行者必须阅读：
 
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#abundant-document[9 号书：AbundantDocument]
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#node-model[9 号书：节点模型]
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#source-coordinate[9 号书：Source Coordinate]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#entry-and-source-set[10 号书：Entry 与 Source Set]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#line-origin[10 号书：Line Origin]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#public-api-and-cli[10 号书：Public API 与 CLI]
-* xref:execution-contract[本书：执行契约]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#AbundantDocument[9 号书：AbundantDocument]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#节点模型[9 号书：节点模型]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#Source Coordinate[9 号书：Source Coordinate]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Entry 与 Source Set[10 号书：Entry 与 Source Set]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Line Origin[10 号书：Line Origin]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Public API 与 CLI[10 号书：Public API 与 CLI]
+* xref:执行契约[本书：执行契约]
 * `src/model.ts`
 * `src/serializers.ts`
 * `src/index.ts`

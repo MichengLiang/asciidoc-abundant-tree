@@ -1,4 +1,3 @@
-[#case-external-ttl-neo4j-adapter]
 == External TTL and Neo4j Adapter
 
 External TTL and Neo4j Adapter 面向书稿 projection、外部 TTL 和 Neo4j import surface。书稿录入新资源，外部 TTL 提供已有 URI 和本体坐标，adapter 生成工程图数据库的导入表面。

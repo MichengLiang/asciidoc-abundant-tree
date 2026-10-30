@@ -1,4 +1,3 @@
-[#case-recipe-knowledge-graph]
 == Recipe Knowledge Graph
 
 Recipe Knowledge Graph 使用菜谱、食材、步骤和分类说明 role、rel、field 与 hierarchy policy 的组合。低门槛领域让投影图到业务图的转换保持可见。

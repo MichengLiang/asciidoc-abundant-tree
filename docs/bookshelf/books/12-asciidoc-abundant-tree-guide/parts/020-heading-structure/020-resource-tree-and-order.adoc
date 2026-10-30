@@ -1,4 +1,3 @@
-[#resource-tree-and-order]
 == 资源树与顺序
 
 `aat:containsDirectly` 表达父标题到直接子标题的结构边。该关系来自 logical heading tree。结构边只连接 heading node；代码块、表格、inline anchor 和 raw value object 通过其它事实归属于 heading node。

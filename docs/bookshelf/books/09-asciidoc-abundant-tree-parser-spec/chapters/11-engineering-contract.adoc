@@ -1,4 +1,3 @@
-[#engineering-contract]
 == 工程承载
 
 本章定义解析器在仓库中的工程承载方式。

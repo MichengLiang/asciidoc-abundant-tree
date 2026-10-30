@@ -1,4 +1,3 @@
-[#heading-and-edge-payloads]
 == 节点 Payload 与边 Payload
 
 complex property 是值为 raw value object 的字段。它把 JSON、YAML 或其它 source block body 挂到 heading node 或 xref edge evidence 上。

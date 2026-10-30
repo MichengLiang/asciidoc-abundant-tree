@@ -1,4 +1,3 @@
-[#raw-value-object-workflow]
 == Raw Value Object 工作流
 
 复杂信息以 raw value object 的形式进入资源图。raw value object 保存 source value block 的 raw、format、source coordinate 和 binding evidence。它适合承载 JSON 配置、YAML 手册、外部文档 locator、视觉模型输出、Kubernetes manifest 和叙事分支条件。

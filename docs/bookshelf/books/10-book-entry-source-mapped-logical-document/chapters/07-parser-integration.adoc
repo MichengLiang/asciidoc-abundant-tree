@@ -1,4 +1,3 @@
-[#parser-integration]
 == Parser Integration
 
 Book-entry pipeline 通过 logical document 调用 `asciidoc-abundant-tree` parser。它不改变 parser 的对象边界。

@@ -1,4 +1,3 @@
-[#selector-binding-audit]
 == Selector Binding 与审计
 
 xref target selector 查询 heading label space。命中一个 heading node 时，projection 输出 target heading 和主 relation triple。未命中时，edge evidence 保留 selector 和回源坐标。命中多个 heading node 时，edge evidence 保留候选 heading。

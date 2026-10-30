@@ -1,13 +1,12 @@
-[#include-resolution]
 == Include Resolution
 
 Include resolution 读取 source file 中的受支持 include directive，并把目标 source file 的行插入 logical document。
 
 === 支持表面
 
-本对象支持不带转义前缀的完整行 include directive：整份引入 `include::chapters/01-projection-object.adoc[]`，以及用 `tag`、`tags` 或 `lines` 选取部分行的引入（见 <<selected-include>>）。
+本对象支持不带转义前缀的完整行 include directive：整份引入 `include::chapters/01-projection-object.adoc[]`，以及用 `tag`、`tags` 或 `lines` 选取部分行的引入（见 <<选取引入>>）。
 
-Directive 从行首写起，与 Asciidoctor 的 `IncludeDirectiveRx` 相同：行首有空白的 `  include::…[]` 是普通文字，见 <<literal-directive-lines>>。Target path 按包含该 directive 的 source file 所在目录解析。
+Directive 从行首写起，与 Asciidoctor 的 `IncludeDirectiveRx` 相同：行首有空白的 `  include::…[]` 是普通文字，见 <<字面指令行>>。Target path 按包含该 directive 的 source file 所在目录解析。
 
 Escaped include 不执行 resolution。Escaped include 的 source line 以反斜杠开头：`\include::chapters/01-projection-object.adoc[]`。
 
@@ -15,11 +14,10 @@ Escaped include 是普通 source line。它以原文进入 logical document，�
 
 === 递归 include
 
-Included file 可以继续包含 include directive。Resolution 递归执行，并为插入的每一行记录 origin。只有 AsciiDoc 文件里的 directive 递归展开，见 <<literal-directive-lines>>。
+Included file 可以继续包含 include directive。Resolution 递归执行，并为插入的每一行记录 origin。只有 AsciiDoc 文件里的 directive 递归展开，见 <<字面指令行>>。
 
 递归 resolution 必须检测循环。循环 include 阻止 logical document 成立，并产生错误诊断。
 
-[#literal-directive-lines]
 === 字面指令行
 
 Asciidoctor 只处理 AsciiDoc 文件里的预处理指令，扩展名为 `adoc`、`asciidoc`、`asc`、`ad` 或 `txt`；入口文件不论扩展名都处理。被引入的其它文件（`.py`、`.md`……）里写着的 `include::` 与条件指令（`ifdef::`、`ifndef::`、`ifeval::`、`endif::`）是这个文件的普通内容：不递归展开，不检查目标是否存在，原样进入 logical document，line origin 登记各自的源行。代码清单引入一份讲解 AsciiDoc 的源文件时，常有这样的行。
@@ -28,7 +26,6 @@ AsciiDoc 文件里，行首有空白的指令行同样是普通内容：指令�
 
 Logical document 交给 parser 时，parser 会把文本再预处理一遍。官方 Reader 已经消费了全部真正的指令，它输出的行里仍然是指令形状的都是字面内容：上面说的这些行，以及被转义的 include 与条件指令（Reader 去掉了转义的反斜杠）。交给 parser 的文本给这些行加回一个反斜杠，parser 去掉它，得到与官方 Reader 相同的行；不加，parser 会把 include 再展开一次、让条件指令吞掉后面的行。本身以反斜杠开头的字面行无法这样保护，parser 会去掉它的第一个反斜杠。
 
-[#selected-include]
 === 选取引入
 
 Include attrlist 带 `tag`、`tags` 或 `lines` 时，目标文件只有被选中的行进入 logical document。哪些行被选中，以实现所运行的 Asciidoctor.js 的 Reader 为准；它与 Ruby 版 Asciidoctor 有出入时，跟随前者，因为 logical document 的每一行要与它的输出逐行对应。例如 Asciidoctor.js 4.x 把以换行结尾的文件切出末尾一个空行，选取延伸到文件末尾时这一行也被选入。line origin 记录每一行在目标文件中的源行号。
@@ -43,7 +40,6 @@ Tag 标记行的识别与 Asciidoctor 相同：行中出现 `tag::名称[]` 或 
 
 一次 include 的输出从哪里结束，由官方 Reader 的推入判断：include 每展开一次，Reader 就把当时的状态压进 include stack，这一次推入的行，以及嵌套在它里面更深的推入的行，属于这次 include；紧挨着再引入一次（同一个文件也一样）是另一次推入，就此分界。行号不能用来分界：一次推入的行号从第一条选中的源行起逐行累加，选取有空隙、或选中区域里有被吃掉的条件指令时，就与源行对不上。带 `leveloffset` 的推入，前后各有 Reader 补的两行（`:leveloffset: …` 与空行；空行与 `:leveloffset!:`），按这两行认出，不算选中的源行。
 
-[#host-include-resolvers]
 === 宿主登记的 include 解析器
 
 书可以按作者自定的选择器引入内容，最常见的是按符号从源代码取一个声明：
@@ -67,7 +63,7 @@ Tag 标记行的识别与 Asciidoctor 相同：行中出现 `tag::名称[]` 或 
 
 官方 Reader 与 logical document 读到同一份文本。实现向官方 Reader 登记一个 include 处理器，认领相同前缀的 directive，把解析器交回的文本推入 Reader，文件与起始行取自来源（Reader 的 `pushInclude`）。这次推入的游标因此落在来源文件的真实行上，推入身份的分界、`indent` 与 `leveloffset` 的处理都与文件 include 相同；来源是 AsciiDoc 文件时，其中的 include directive 照常递归展开。解析器只在官方 Reader 一侧调用，每处被 Reader 读到的 directive 一次：这次推入的帧记下解析器交回的来源，logical document 一侧按推入身份取用，两侧读到同一份文本，不必比对属性。被条件指令排除、Reader 没有读到的 directive 不调用解析器；解析器交回空文本时，Reader 什么也不推入，logical document 里也没有行。
 
-文本按 <<selected-include>> 的方式与官方 Reader 的输出逐行配对：官方行出自这次推入、文本就是来源的那一行，才登记这个源行。解析器交回的文本与来源对不上时，这次推入余下的行登记为 degraded line，产生 `origin-map.selection-mismatch` warning：它守着解析器交回的来源是否属实，不让一处不实的来源变成假精确的坐标。
+文本按 <<选取引入>> 的方式与官方 Reader 的输出逐行配对：官方行出自这次推入、文本就是来源的那一行，才登记这个源行。解析器交回的文本与来源对不上时，这次推入余下的行登记为 degraded line，产生 `origin-map.selection-mismatch` warning：它守着解析器交回的来源是否属实，不让一处不实的来源变成假精确的坐标。
 
 没有解析器认领的 directive 照文件 include 处理。解析器只作用于 book-entry：single-file 输入由 Asciidoctor 以 secure 模式解析，不执行 include。
 

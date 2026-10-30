@@ -1,4 +1,3 @@
-[#diagnostics]
 == Diagnostics
 
 Book-entry diagnostics 描述 logical document 构造和 origin recovery 中的失败面。
@@ -12,7 +11,7 @@ Book-entry diagnostics 描述 logical document 构造和 origin recovery 中的�
 * Include path 越出允许边界。
 * Include graph 出现循环。
 * Include directive 使用 unsupported attrlist。
-* 宿主登记的 include 解析器抛出异常（`include.resolver-failed`，见 xref:host-include-resolvers[]）。
+* 宿主登记的 include 解析器抛出异常（`include.resolver-failed`，见 xref:宿主登记的 include 解析器[]）。
 * Logical line count 与 line origin count 不一致。
 * Line origin 指向 source file table 中不存在的 file。
 * Line origin 的 sourceLine 越出 origin file line table。
@@ -23,7 +22,7 @@ Book-entry diagnostics 描述 logical document 构造和 origin recovery 中的�
 
 以下情况可以进入 recovery diagnostic：
 
-* Block 的开头与结尾来自不同 origin source files（`block-origin.multi-source-span`，见 xref:block-raw[]）。Message 写出两端各自的 `relativePath:line`：book-entry 的 logical line 不是作者能找到的位置。
+* Block 的开头与结尾来自不同 origin source files（`block-origin.multi-source-span`，见 xref:Block Raw[]）。Message 写出两端各自的 `relativePath:line`：book-entry 的 logical line 不是作者能找到的位置。
 * Origin file line table 无法恢复 raw。
 * Parser core 提供的 logical interval 无法映射到 line origin。
 
@@ -31,7 +30,7 @@ Recovery diagnostic 必须阻止假精确坐标输出。无法可靠恢复的 so
 
 === Warning 的去向
 
-不阻止 logical document 成立的 book-entry 诊断是 warning，例如选取引入与官方 Reader 输出对不上时的 `origin-map.selection-mismatch`（见 xref:include-resolution[]）。Warning 进入成功 `AbundantDocument` 的 `toolDiagnostics`，排在 parser 诊断之前。只在构造过程中记下、不交给文档的 warning，等于没有：下游拿到缺失或降级的坐标，却不知道是哪一处 include 造成的。
+不阻止 logical document 成立的 book-entry 诊断是 warning，例如选取引入与官方 Reader 输出对不上时的 `origin-map.selection-mismatch`（见 xref:Include Resolution[]）。Warning 进入成功 `AbundantDocument` 的 `toolDiagnostics`，排在 parser 诊断之前。只在构造过程中记下、不交给文档的 warning，等于没有：下游拿到缺失或降级的坐标，却不知道是哪一处 include 造成的。
 
 === 诊断表面
 

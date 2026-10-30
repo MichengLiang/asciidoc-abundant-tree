@@ -1,4 +1,3 @@
-[#book-entry-source-model]
 == Book-entry Source Model
 
 book-entry mode 把一个 entry file 和它到达的 included source files 构造成一份带 origin mapping 的 logical document。parser 读取 logical document；报告、查询和回源动作使用 origin source coordinate。

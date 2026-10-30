@@ -1,4 +1,3 @@
-[#xref-edge]
 == 交叉引用边
 
 交叉引用边由标题切片中的 xref 创建。行内解析只需要识别交叉引用，因为交叉引用是非层级边的来源。
@@ -16,7 +15,7 @@ xref 所在的标题切片决定边的 source heading。
 
 === Target Heading
 
-xref 的 selector 由解析器给出：作者写下的目标在那个位置的属性取值下展开属性引用，再按官方规则切去 `#` 之前的文档部分（解析器规约第 8 章 Xref Occurrence）。selector 在标题投影 label 空间中按整串相等绑定；label 空间由地址路径、`aat:addressLabel` 与 `aat:generatedAddressLabel` 构成（xref:heading-address[地址与 Label 空间]）。`xref:红烧肉::火候[]` 的 selector 是 `红烧肉::火候`，绑定到红烧肉下的那一节火候。selector 不绑定到 role、字段谓词、xref display label、raw 文本或标题节点 IRI。
+xref 的 selector 由解析器给出：作者写下的目标在那个位置的属性取值下展开属性引用，再按官方规则切去 `#` 之前的文档部分（解析器规约第 8 章 Xref Occurrence）。selector 在标题投影 label 空间中按整串相等绑定；label 空间由地址路径、`aat:addressLabel` 与 `aat:generatedAddressLabel` 构成（xref:地址与 Label 空间[地址与 Label 空间]）。`xref:红烧肉::火候[]` 的 selector 是 `红烧肉::火候`，绑定到红烧肉下的那一节火候。selector 不绑定到 role、字段谓词、xref display label、raw 文本或标题节点 IRI。
 
 指向别的文档的 xref 不在本文档的 label space 里绑定：边证据写 `aat:targetDocument`（文档部分）与 `aat:targetSelector`（片段），由读得到那份文档的消费者去绑定。
 
@@ -78,7 +77,7 @@ xref:capacity[运力规则, rel=depends-on]
 
 `rel` 只选择谓词。投影器不解释该谓词的业务语义。
 
-`rel` 字段是绝对 IRI 时，predicate 使用该 IRI。`rel` 字段是已知 CURIE 时，predicate 使用展开后的 IRI。其余非空的 `rel` 是书的关系谓词词表里的词，predicate 是 `rel:` 下按原文写成的名字，转写规则见 xref:names-in-iri[名字进入 IRI]：`rel=depends-on` 映射为 `rel:depends-on`，`rel=依据` 映射为 `rel:依据`。`rel` 为空时，边证据保留 `aat:rel`，不生成主 relation triple。
+`rel` 字段是绝对 IRI 时，predicate 使用该 IRI。`rel` 字段是已知 CURIE 时，predicate 使用展开后的 IRI。其余非空的 `rel` 是书的关系谓词词表里的词，predicate 是 `rel:` 下按原文写成的名字，转写规则见 xref:名字进入 IRI[名字进入 IRI]：`rel=depends-on` 映射为 `rel:depends-on`，`rel=依据` 映射为 `rel:依据`。`rel` 为空时，边证据保留 `aat:rel`，不生成主 relation triple。
 
 === 边证据
 
@@ -111,7 +110,7 @@ xref:capacity[运力规则, rel=depends-on]
   aat:endColumn 96 .
 ----
 
-普通 xref named attributes 投影为字段谓词，规则见 xref:field-predicate[Field Predicate]。示例中的 `weight=0.8` 投影为 `field:weight "0.8"`。字段值按源文档表面值保存为 string literal。
+普通 xref named attributes 投影为字段谓词，规则见 xref:Field Predicate[Field Predicate]。示例中的 `weight=0.8` 投影为 `field:weight "0.8"`。字段值按源文档表面值保存为 string literal。
 
 xref edge complex property 也使用 field predicate。示例中的 `relation-evidence=rel-delivery-capacity` 匹配 source value block id 时，边证据输出 `field:relation-evidence :value-l25-o0`。raw value object 保存该 source value block 的 raw、format、source coordinates 和 `aat:sourceValueId`。
 

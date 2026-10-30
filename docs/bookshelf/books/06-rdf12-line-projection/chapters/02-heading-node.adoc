@@ -1,4 +1,3 @@
-[#heading-node]
 == 标题节点
 
 标题节点由 AsciiDoc 等号标题创建。一个标题节点对应源文档中的一个标题表面。
@@ -39,11 +38,11 @@ headline 不取 Asciidoctor 转换后的标题：转换替换了引号、符号�
 
 === 身份
 
-标题节点以它的地址命名，IRI 是 `<文档 IRI>#<名字>`，名字照 xref:names-in-iri[名字进入 IRI] 转写。查询者在主语与宾语的位置读到的，就是作者引用这一节时写的地址，例如 `<#炒糖色>`、`<#红烧肉::火候>`。按行号起的名字随编辑漂移，读不出是哪一节；地址只在标题改名、或别处出现同名标题时改变。
+标题节点以它的地址命名，IRI 是 `<文档 IRI>#<名字>`，名字照 xref:名字进入 IRI[名字进入 IRI] 转写。查询者在主语与宾语的位置读到的，就是作者引用这一节时写的地址，例如 `<#炒糖色>`、`<#红烧肉::火候>`。按行号起的名字随编辑漂移，读不出是哪一节；地址只在标题改名、或别处出现同名标题时改变。
 
 名字按下面的顺序取，取到即止：
 
-. 这个标题的地址路径（xref:heading-address[地址与 Label 空间]）中最短的一条，它在整份文档的 label 空间里只属于这个标题。
+. 这个标题的地址路径（xref:地址与 Label 空间[地址与 Label 空间]）中最短的一条，它在整份文档的 label 空间里只属于这个标题。
 . 这个标题自己的 custom ID 中，只属于它的一个。
 . 同一父标题下同名、又没有只属于自己的 ID 时，取只被这一组标题共享的最短地址路径，后面加 `-k`；`k` 是它在这一组里按文档顺序的位次，从 1 起。加了 `-k` 以后撞上别的地址时，路径往前补一级再加。
 
@@ -71,7 +70,6 @@ Turtle 写出时以文档 IRI 为 `@base`，标题节点写作 `<#红烧肉::火
 
 `配送策略` 在文档里只属于这一个标题，所以它就是名字；`delivery` 是这个标题的别名。
 
-[#heading-address]
 === 地址与 Label 空间
 
 一节的地址是它的标题原文。标题重名、又要引用其中一个时，用 `::` 往前补直接上级的标题消歧，最长补到从文档标题起的完整路径；custom ID 是别名，用它也能引用。寻址的范围是整份文档（book-entry 下是整本书），不分文件，没有就近查找，也没有相对寻址。
@@ -88,7 +86,6 @@ Turtle 写出时以文档 IRI 为 `@base`，标题节点写作 `<#红烧肉::火
 
 同一 selector 可以命中多个标题节点。多义命中是源文档事实，投影器必须保留多义结果，不得任意选择一个标题节点作为唯一目标。
 
-[#local-target-heading-ownership]
 === 本地 Target 的标题归属
 
 AsciiDoc 的本地 target catalog 可以包含 section、listing、table、block、inline anchor 和未知类型 target。标题投影图只把等号标题创建为标题节点；非标题 target 不创建 RDF 结构节点。
@@ -155,7 +152,7 @@ print("warp")
   field:owner "ops" .
 ----
 
-named attributes 投影为字段谓词，规则见 xref:field-predicate[Field Predicate]。字段值作为 literal 保存。投影器不解释 `status` 和 `owner` 的业务语义。标题 role 是源文档表面的作者角色，不参与 selector binding，不决定 heading node 的 RDF type。heading node 的结构身份只来自等号标题。
+named attributes 投影为字段谓词，规则见 xref:Field Predicate[Field Predicate]。字段值作为 literal 保存。投影器不解释 `status` 和 `owner` 的业务语义。标题 role 是源文档表面的作者角色，不参与 selector binding，不决定 heading node 的 RDF type。heading node 的结构身份只来自等号标题。
 
 字段值统一按源文档表面值保存为 string literal。
 
@@ -163,7 +160,6 @@ named attributes 投影为字段谓词，规则见 xref:field-predicate[Field Pr
 
 标题 complex property 也使用同一套字段名映射。标题 complex property 的字段名来自 source value block 的 property role，字段值是 raw value object。标题 metadata role 仍只表达标题角色，不表达 complex property 字段名。
 
-[#heading-description-fields]
 === 标题下描述列表字段
 
 标题下的描述列表也可以承载标题字段。字段较多、字段值较长、需要换行或需要附带代码块时，作者把字段写成标题下的描述列表。

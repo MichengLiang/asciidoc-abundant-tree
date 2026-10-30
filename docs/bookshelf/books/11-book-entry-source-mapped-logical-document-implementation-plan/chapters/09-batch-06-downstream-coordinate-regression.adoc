@@ -1,4 +1,3 @@
-[#batch-06-downstream-coordinate-regression]
 == Batch 06：Downstream Coordinate Regression
 
 === 批次目标
@@ -10,18 +9,18 @@
 === 上游门槛
 
 * Batch 05 状态为 `通过`。
-* Batch 05 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+* Batch 05 提交 hash 已写入 xref:批次状态台账[批次状态台账]。
 
 === 本批上下文闭包
 
 执行者必须阅读：
 
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#cli-and-library-api[9 号书：CLI 与 Library API]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#consumer-actions[10 号书：消费者动作]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#source-coordinate-recovery[10 号书：Source Coordinate Recovery]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#contract-tests[10 号书：Contract Tests]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#CLI 与 Library API[9 号书：CLI 与 Library API]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#消费者动作[10 号书：消费者动作]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Source Coordinate Recovery[10 号书：Source Coordinate Recovery]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Contract Tests[10 号书：Contract Tests]
 * xref:../06-rdf12-line-projection/book.adoc[6 号书：AsciiDoc 标题切片到 RDF 1.2 投影规约]
-* xref:../07-rdf12-heading-projection-implementation-plan/book.adoc#batch-07-public-contract-and-final-gates[7 号书：公共契约与最终门禁]
+* xref:../07-rdf12-heading-projection-implementation-plan/book.adoc#Batch 07：公共契约与最终门禁[7 号书：公共契约与最终门禁]
 * `src/rdf12-projection/projector.ts`
 * `src/rdf12-projection/source-location.ts`
 * `src/rdf12-projection/path-coordinate.ts`

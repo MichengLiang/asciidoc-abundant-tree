@@ -1,4 +1,3 @@
-[#local-target-ownership]
 == 本地 Target 归属
 
 本地非标题 target 的 ID 归属为覆盖该 target source span 起始行的最内层 heading node 的 `aat:addressLabel`。listing、table、block、inline anchor 和 source value block 的 ID 都可以成为所属标题节点的 address label。

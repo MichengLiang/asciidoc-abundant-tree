@@ -1,4 +1,3 @@
-[#appendix-modeling-decision-trees]
 = 附录 F：建模决策树
 
 == 标题节点

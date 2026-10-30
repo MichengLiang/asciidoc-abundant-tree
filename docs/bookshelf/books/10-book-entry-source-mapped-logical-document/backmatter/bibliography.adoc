@@ -1,4 +1,3 @@
-[#bibliography]
 == 参考坐标
 
 * xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc[asciidoc-abundant-tree 解析器规约]：本书所消费的 parser 与 `AbundantDocument` 对象。

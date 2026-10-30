@@ -1,4 +1,3 @@
-[#batch-08-final-gates-and-closure]
 == Batch 08：Final Gates and Closure
 
 === 批次目标
@@ -10,19 +9,19 @@
 === 上游门槛
 
 * Batch 07 状态为 `通过`。
-* Batch 07 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+* Batch 07 提交 hash 已写入 xref:批次状态台账[批次状态台账]。
 
 === 本批上下文闭包
 
 执行者必须阅读：
 
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#acceptance-and-gates[9 号书：验收与门禁]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#public-api-and-cli[10 号书：Public API 与 CLI]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#contract-tests[10 号书：Contract Tests]
-* xref:../08-body-lab-material-system/book.adoc#entry-conditions[8 号书：从 Lab 到 Body 的进入规则]
-* xref:../08-body-lab-material-system/book.adoc#cross-reference-direction[8 号书：引用、版本与归档]
-* xref:batch-status-ledger[批次状态台账]
-* xref:closure-record-template[关闭记录模板]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#验收与门禁[9 号书：验收与门禁]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Public API 与 CLI[10 号书：Public API 与 CLI]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Contract Tests[10 号书：Contract Tests]
+* xref:../08-body-lab-material-system/book.adoc#进入条件[8 号书：从 Lab 到 Body 的进入规则]
+* xref:../08-body-lab-material-system/book.adoc#交叉引用方向[8 号书：引用、版本与归档]
+* xref:批次状态台账[批次状态台账]
+* xref:关闭记录模板[关闭记录模板]
 * `README.md`
 * `CHANGELOG.md`
 * `docs/bookshelf/catalog.adoc`
@@ -69,7 +68,7 @@ Review package 只记录实际发生的证据。未运行命令不能写成通�
 . 更新 README 中 book-entry public usage。
 . 更新 CHANGELOG。
 . 更新书架 catalog，加入本计划书入口。
-. 基于 xref:closure-record-template[关闭记录模板] 创建 `backmatter/closure-record.adoc`。
+. 基于 xref:关闭记录模板[关闭记录模板] 创建 `backmatter/closure-record.adoc`。
 . 更新 `book.adoc`，使实际关闭记录进入书稿公共表面。
 . 将 Batch 08 状态台账条目更新为 `通过`，并写入最终提交 hash 与审核包 xref。
 

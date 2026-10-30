@@ -228,8 +228,8 @@ src/book-entry/source-scope-index.ts Lines: 100%
 * 本批没有修改 `src/rdf12-projection/**`、`src/cli.ts`、`README.md` 或 `CHANGELOG.md`。
 * 本批没有修改 `src/parser.ts`、`src/parser-core.ts` 或 `src/asciidoctor-adapter.ts`。
 * 本批没有引入全局打回条件；全局 branch coverage 阈值失败为已记录基线，新增 book-entry recovery 覆盖率达标。
-* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]：logical text 是 parser surface，line origin/source file table 只服务 origin recovery。
-* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#execution-contract[执行契约]：recovery diagnostic 不伪造 precise coordinate。
+* 本批数据流符合 xref:../chapters/01-execution-contract.adoc#执行契约[执行契约]：logical text 是 parser surface，line origin/source file table 只服务 origin recovery。
+* 本批控制流符合 xref:../chapters/01-execution-contract.adoc#执行契约[执行契约]：recovery diagnostic 不伪造 precise coordinate。
 * 本批新增代码有对应测试。
 * 本批 source scope lookup 比较 relativePath 和 origin line range。
 * 本批 source scope containment 不复用 public heading raw/span；book-entry section scope 使用内部 source-scope candidate。

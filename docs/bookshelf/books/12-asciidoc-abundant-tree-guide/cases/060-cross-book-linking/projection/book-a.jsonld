@@ -4,7 +4,7 @@
 		"headline": "aat:headline",
 		"addressLabel": "aat:addressLabel"
 	},
-	"@id": "urn:case:cross-book#book-a-heading-l3-c1",
+	"@id": "urn:case:cross-book/book-a#共享术语",
 	"@type": "aat:Heading",
 	"headline": "共享术语",
 	"addressLabel": "shared-term"

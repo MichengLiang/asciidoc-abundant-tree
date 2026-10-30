@@ -1,4 +1,3 @@
-[#shacl-validation]
 == SHACL 校验
 
 SHACL shape graph 把 projection graph 上的事实变成可检查约束。role mapping 可以把 `aat:role` 映射为下游 class assertion。

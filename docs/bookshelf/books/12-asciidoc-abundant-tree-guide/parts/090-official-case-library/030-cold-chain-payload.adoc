@@ -1,4 +1,3 @@
-[#case-cold-chain-payload]
 == Cold Chain Payload
 
 Cold Chain Payload 把复杂属性放入一条冷链放行闭环。领域对象是冷链药品出库放行策略；复杂信息包括策略 JSON 配置、复核手册 YAML 和依赖关系 YAML 证据。

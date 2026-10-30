@@ -1,4 +1,3 @@
-[#source-coordinate-recovery]
 == Source Coordinate Recovery
 
 Book-entry source coordinate recovery 把 parser 在 logical document 中观察到的行列位置转换为 origin source coordinate。
@@ -25,7 +24,6 @@ Xref sourceSpan 的 relativePath 必须表示 xref 出现的原始 source file�
 
 Column 映射以 logical line 原样复制 origin line 为前提。实现若改写 logical line text，不得继续直接继承 column。
 
-[#block-raw]
 === Block Raw
 
 Paragraph、listing、table 等 block 的 source coordinate 指向作者写下它的 origin source file，即 block 的作者文件。作者文件由 block 中第一条与最后一条有 origin 的 logical line 决定：两者来自同一个 origin source file，且该文件的行在 block 内按原文顺序出现时，block raw 取该文件从首行到末行的原文。
@@ -48,7 +46,6 @@ Block raw 和 content span 从作者文件的 line table 恢复。Logical text �
 
 不占整行的 surface（description list 的 term，以及写在 term 行上的 description）的 raw 从回源后的 sourceSpan 切：首行从起点列起，末行到终点列止，与文件模式相同，不带结尾换行。
 
-[#structure-on-logical-document]
 === 结构关系在 Logical Document 上判定
 
 一个 occurrence 属于哪个 block、哪个 section，是 logical document 的结构关系。被引入文件的行在 logical document 中处在引入它的位置，结构关系随之确定：

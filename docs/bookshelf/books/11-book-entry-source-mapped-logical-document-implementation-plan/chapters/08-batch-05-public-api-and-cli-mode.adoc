@@ -1,4 +1,3 @@
-[#batch-05-public-api-and-cli-mode]
 == Batch 05：Public API 与 CLI Mode
 
 === 批次目标
@@ -8,17 +7,17 @@
 === 上游门槛
 
 * Batch 04 状态为 `通过`。
-* Batch 04 提交 hash 已写入 xref:batch-status-ledger[批次状态台账]。
+* Batch 04 提交 hash 已写入 xref:批次状态台账[批次状态台账]。
 
 === 本批上下文闭包
 
 执行者必须阅读：
 
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#cli-and-library-api[9 号书：CLI 与 Library API]
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#acceptance-and-gates[9 号书：验收与门禁]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#entry-and-source-set[10 号书：Entry 与 Source Set]
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#public-api-and-cli[10 号书：Public API 与 CLI]
-* xref:batch-04-origin-aware-source-recovery[Batch 04：Origin-aware Source Recovery]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#CLI 与 Library API[9 号书：CLI 与 Library API]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#验收与门禁[9 号书：验收与门禁]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Entry 与 Source Set[10 号书：Entry 与 Source Set]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#Public API 与 CLI[10 号书：Public API 与 CLI]
+* xref:Batch 04：Origin-aware Source Recovery[Batch 04：Origin-aware Source Recovery]
 * `src/parser.ts`
 * `src/cli.ts`
 * `src/index.ts`

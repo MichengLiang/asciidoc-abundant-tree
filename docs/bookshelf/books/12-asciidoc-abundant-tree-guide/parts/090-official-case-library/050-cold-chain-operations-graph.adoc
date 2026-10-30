@@ -1,4 +1,3 @@
-[#case-cold-chain-operations-graph]
 == Cold Chain Operations Graph
 
 Cold Chain Operations Graph 面向冷链运输规则、运输任务、载荷、传感器和处置流程。模型重点是规则约束、部件组成、监控关系、触发关系和边属性。

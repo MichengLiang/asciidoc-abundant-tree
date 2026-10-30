@@ -1,4 +1,3 @@
-[#source-coordinate]
 == Source Coordinate
 
 Source coordinate 描述某个恢复事实在源文档中的位置。该坐标支持阅读、审查和修改动作。

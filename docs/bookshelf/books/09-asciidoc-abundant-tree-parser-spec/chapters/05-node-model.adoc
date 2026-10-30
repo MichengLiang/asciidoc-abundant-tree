@@ -1,4 +1,3 @@
-[#node-model]
 == 节点模型
 
 节点模型描述 AsciiDoc source document 中可恢复的结构事实。节点按自身事实类型携带 source layer、official layer 和子节点。
@@ -39,7 +38,7 @@ Title 保存标题文本和可恢复的 source location。没有源标题行时�
 * `titleSpan`：标题文本 source span。
 * `idOrigin`：`source`、`asciidoctor-generated` 或 `unknown`。
 * `metadata`：附着到标题的 metadata。
-* `descriptionMetadata`：标题下描述列表字段，见 <<heading-description-metadata>>。
+* `descriptionMetadata`：标题下描述列表字段，见 <<Heading Description Metadata>>。
 * `children`：该 section 内的子 section 和 block。
 
 official section tree 决定 section identity 和父子结构。source layer 恢复 raw、metadata、line span 和 title span。
@@ -56,7 +55,7 @@ Paragraph 不恢复完整 inline formatting CST。strong、emphasis、literal in
 
 Listing 保存 explicit ID、block title、style、language、metadata、content、metadataSpan、contentSpan 和 span。
 
-Listing span 覆盖 metadata、delimiter、content 和 closing delimiter。contentSpan 只覆盖内容行。写成隐身段落的 listing（`[source,ts]` 下面直接写代码）没有分隔符，span 覆盖 metadata 和段落行，contentSpan 是段落行，见 xref:cloaked-paragraph[隐身段落]。
+Listing span 覆盖 metadata、delimiter、content 和 closing delimiter。contentSpan 只覆盖内容行。写成隐身段落的 listing（`[source,ts]` 下面直接写代码）没有分隔符，span 覆盖 metadata 和段落行，contentSpan 是段落行，见 xref:隐身段落[隐身段落]。
 
 === Table
 
@@ -78,7 +77,6 @@ Description list 的 span 到最后一个后代块的结束行为止。后代块
 
 `DescriptionNode` 表示 description list item 的 description surface。Description 保存直接 description text、line、sourceSpan、source layer 和 attached block 或 nested description list 子节点。Description text 和 children 可以同时存在。`line` 是官方给的坐标；`sourceSpan` 覆盖直接 description text，从分隔符之后或文字的第一行起，到并进的最后一条续行为止（xref:description-text[描述的文字]）。没有直接文字的 description 只有官方坐标那一行。
 
-[#heading-description-metadata]
 === Heading Description Metadata
 
 `HeadingDescriptionMetadataNode` 表示标题下描述列表字段。它挂在 `SectionNode.descriptionMetadata` 上，不进入 section 的 `children`。
@@ -103,7 +101,7 @@ Metadata raw 是 source layer 事实。解析器不得丢弃 raw metadata 后只
 
 `XrefOccurrenceNode` 表示源文档中的一个交叉引用出现点。
 
-它保存 raw、syntax、target、selector、document、label、attributes、sourceSpan、containingSectionId、scope 和 official binding facts。每个事实来自源文本还是官方，见 xref:metadata-xref-anchor-targets[第 8 章] Xref Occurrence。
+它保存 raw、syntax、target、selector、document、label、attributes、sourceSpan、containingSectionId、scope 和 official binding facts。每个事实来自源文本还是官方，见 xref:Metadata、Xref、Anchor 与 Target[第 8 章] Xref Occurrence。
 
 `scope` 只记官方事实：指向别的文档时是 `external`，否则是 `local`；引用是否成立不在公共模型里下结论。跨文档 xref 不触发外部文件读取。
 

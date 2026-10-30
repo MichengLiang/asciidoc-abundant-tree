@@ -1,4 +1,3 @@
-[#source-document-abundant-document-projection]
 == 同一信息的多个表面
 
 `source document` 是作者编辑的 AsciiDoc 文件。`AbundantDocument` 是 `parseAbundantTree` 返回的 TypeScript object model。`projection` 是从 `AbundantDocument` 导出的下游表面。三者不是三份互不相干的数据；它们是同一书稿结构面向不同消费者的表面。

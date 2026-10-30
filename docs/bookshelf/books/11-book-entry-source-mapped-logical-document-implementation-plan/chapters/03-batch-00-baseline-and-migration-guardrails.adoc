@@ -1,4 +1,3 @@
-[#batch-00-baseline-and-migration-guardrails]
 == Batch 00：基线与迁移护栏
 
 === 批次目标
@@ -15,16 +14,16 @@ Batch 00 没有前置批次。开始前必须确认本计划书执行契约已�
 
 执行者必须阅读：
 
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#parser-object[9 号书：解析器对象]
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#single-file-input[9 号书：Single-file 输入]
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#abundant-document[9 号书：AbundantDocument]
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#diagnostics-and-failure-surface[9 号书：Diagnostics 与 Failure Surface]
-* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#acceptance-and-gates[9 号书：验收与门禁]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#解析器对象[9 号书：解析器对象]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#Single-file 输入[9 号书：Single-file 输入]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#AbundantDocument[9 号书：AbundantDocument]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#Diagnostics 与 Failure Surface[9 号书：Diagnostics 与 Failure Surface]
+* xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#验收与门禁[9 号书：验收与门禁]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc[10 号书全文]
-* xref:../08-body-lab-material-system/book.adoc#lab-object-conditions[8 号书：Lab]
-* xref:../08-body-lab-material-system/book.adoc#body-evaluation[8 号书：实例评判标准]
-* xref:execution-contract[本书：执行契约]
-* xref:current-source-state[本书：当前源码状态]
+* xref:../08-body-lab-material-system/book.adoc#Lab Object 的成立条件[8 号书：Lab]
+* xref:../08-body-lab-material-system/book.adoc#Body 评判清单[8 号书：实例评判标准]
+* xref:执行契约[本书：执行契约]
+* xref:当前源码状态[本书：当前源码状态]
 * `src/model.ts`
 * `src/parser.ts`
 * `src/asciidoctor-adapter.ts`

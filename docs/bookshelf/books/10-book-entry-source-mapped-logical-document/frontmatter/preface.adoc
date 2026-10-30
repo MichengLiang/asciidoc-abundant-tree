@@ -1,4 +1,3 @@
-[#preface]
 == 前言
 
 本书定义书稿入口回源逻辑文档。该对象从一个 AsciiDoc book entry 出发，解析受支持的 full-file include directive，构造一份带 line origin 的 in-memory logical document，并通过 `asciidoc-abundant-tree` 解析器产出可回源的 `AbundantDocument`。

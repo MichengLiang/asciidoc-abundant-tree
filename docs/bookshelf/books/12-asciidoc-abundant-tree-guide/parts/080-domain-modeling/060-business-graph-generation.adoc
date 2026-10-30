@@ -1,4 +1,3 @@
-[#business-graph-generation]
 == 业务图生成
 
 business graph 是 TS/JS consumer 从 projection graph 派生出的领域图。生成器读取 heading nodes、fields、xref edge evidence 和 hierarchy policy。

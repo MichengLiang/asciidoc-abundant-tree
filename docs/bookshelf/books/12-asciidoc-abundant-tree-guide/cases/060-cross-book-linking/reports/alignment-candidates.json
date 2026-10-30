@@ -1,6 +1,6 @@
 [
 	{
 		"selector": "shared-term",
-		"candidates": ["book-a#book-a-heading-l3-c1", "book-b#book-b-heading-l3-c1"]
+		"candidates": ["book-a#共享术语", "book-b#共享术语"]
 	}
 ]

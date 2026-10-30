@@ -1,11 +1,10 @@
-[#official-ast-and-source-surface]
 == Official AST 与 Source Surface
 
 解析器流水线分离结构权威和源文本证据。Official AST 决定 block identity 和结构关系；source surface 恢复 raw、metadata、span 和 column。
 
 === Official AST
 
-Asciidoctor official document 提供 section tree、block context、block parent-child relation、refs catalog，以及替换行内文字时认出的 xref（xref:xref-recognition[Xref 由官方认定]）。
+Asciidoctor official document 提供 section tree、block context、block parent-child relation、refs catalog，以及替换行内文字时认出的 xref（xref:Xref 由官方认定[Xref 由官方认定]）。
 
 解析器通过 `official-block-walker` 遍历 official block tree。walker 只读取 official block 属性，不扫描源文件。
 
@@ -15,14 +14,12 @@ Source surface 是 official block 在源文本中的可恢复表面。它包含 
 
 `source-interval-resolver` 以 official block source location 为锚点恢复 source interval。Delimiter 查找只能在 official context 已确认的 block 内局部执行。
 
-[#official-delimiter]
 === 分隔符与它的闭合
 
 锚点行是不是开始分隔符，按 Asciidoctor 自己认分隔符的规则判断（Asciidoctor.js 4.1.1 `Parser.isDelimitedBlock`，`packages/core/src/parser.js` 3056 行；分隔符表 `DELIMITED_BLOCKS`，`constants.js` 269 行）。`--` 只有两个字符。四个字符的分隔符可以用它的最后一个字符加长，`------` 与 `|=====` 都是分隔符；作者加长分隔符，通常是为了在块里写一个用短分隔符的示例。fenced code 是 `+```+`，后面可以跟语言名。
 
 一个分隔符能开出的 context 也按官方的表：分隔符自己的 context，加上它允许伪装成的样式。`....` 带 `[source]` 是 listing，`--` 带 `[quote]` 是 quote，fenced code 是 listing。锚点行是分隔符、并且能开出这个块的 context 时，块到第一行与开始行逐字相同的闭合行为止；fenced code 的闭合行是 `+```+`。
 
-[#cloaked-paragraph]
 === 隐身段落
 
 段落带上 Asciidoctor 的段落样式（`source`、`listing`、`literal`、`pass`、`quote`、`verse`、`example`、`sidebar`、`open`、`abstract`、`partintro` 等，`constants.js` 243 行的 `PARAGRAPH_STYLES`）时，Asciidoctor 用这个段落的行建成该样式的块，不写分隔符（`parser.js` 1007-1012 行，官方把这样的段落记作 cloaked paragraph）。`[source,ts]` 下面直接写一行代码是 listing，`[partintro]` 下面写一段导言是 open 块。
@@ -31,14 +28,12 @@ Source surface 是 official block 在源文本中的可恢复表面。它包含 
 
 段落的最后一行，普通段落与隐身段落一样，从锚点行往下数够官方块的源行数。官方读段落时跳过行注释（`//` 开头、但不是 `///`，`reader.js` 528 行），注释行不在块的源行里，段落却没有断开，所以数的时候同样跳过它们；verbatim 块（listing、literal）不跳。
 
-[#official-paragraph]
 === 官方怎样读段落
 
 有几处范围要知道一个段落读到哪一行为止：markdown 引语的范围、列表条目的续行。它们照 Asciidoctor 读段落的规则算（`parser.js` 3018-3047 行 `readParagraphLines`，`reader.js` 498-531 行 `readLinesUntil`）：从段落的第一行往下读，读到空行、`+` 续接行、块分隔符或块属性行就停，停下的那一行不属于段落；在列表里读时，列表标记行也让段落停下。官方读进的行去掉了行尾空白，只有空白的行就是空行。行注释（`//` 开头、但不是 `///`）被跳过：它不打断段落，也不是读进的行，所以段落的最后一行是最后一条读进的行。
 
 markdown 引语的范围就是官方读进的这个段落，不由它的子块决定。子块可能是列表，列表没有自己的结束线索，只能由它所在的块给出。
 
-[#paragraph-quote]
 === 段落写法的引语
 
 引语除了 `____` 分隔块与 `[quote]` 隐身段落，还有两种直接用段落写出的写法。Asciidoctor 读完段落以后才认出它们是引语（`parser.js` 1102-1172 行）：
@@ -46,13 +41,12 @@ markdown 引语的范围就是官方读进的这个段落，不由它的子块�
 * 空气引号：段落第一行以 `"` 开头，倒数第二行以 `"` 结尾，最后一行以 `-- ` 开头。官方去掉第一行开头与倒数第二行结尾的 `"`，取走最后一行作出处，用剩下的行建成内容模型为 simple 的 quote（1141-1172 行）。
 * Markdown 引语：段落第一行以 `> ` 开头。官方逐行去掉 `> `，只有 `>` 的行变成空行；最后一行以 `-- ` 开头时取走作出处，再去掉出处之前的空行；剩下的行另建一个 Reader，读成复合的 quote（1102-1140 行）。
 
-两种都不写分隔符。区间解析器认它们的方法与隐身段落相同：锚点行是块的第一行源文，只是核对之前先去掉官方从这一行删掉的引号或前缀。空气引号去掉开头的 `"`；内容只有一行时，这一行也是被去掉结尾 `"` 的那一行，结尾的 `"` 一并去掉。markdown 引语去掉 `> `。范围是官方读进的整个段落（xref:official-paragraph[官方怎样读段落]）：从锚点行起，覆盖内容的行、被取走的出处行，以及 markdown 引语里只有 `>` 的行。内容区间到最后一行内容为止，不含出处行，也不含末尾只有 `>` 的行。两种写法取走的出处行，官方都替换其中的 xref，所以出处行里的 xref 产生 occurrence，收下它的是这个 quote 块，文字是出处行去掉 `-- ` 以后的部分；写在属性列表里的出处（`[quote, 某人, 某书]`）官方不替换，不产生 occurrence。
+两种都不写分隔符。区间解析器认它们的方法与隐身段落相同：锚点行是块的第一行源文，只是核对之前先去掉官方从这一行删掉的引号或前缀。空气引号去掉开头的 `"`；内容只有一行时，这一行也是被去掉结尾 `"` 的那一行，结尾的 `"` 一并去掉。markdown 引语去掉 `> `。范围是官方读进的整个段落（xref:官方怎样读段落[官方怎样读段落]）：从锚点行起，覆盖内容的行、被取走的出处行，以及 markdown 引语里只有 `>` 的行。内容区间到最后一行内容为止，不含出处行，也不含末尾只有 `>` 的行。两种写法取走的出处行，官方都替换其中的 xref，所以出处行里的 xref 产生 occurrence，收下它的是这个 quote 块，文字是出处行去掉 `-- ` 以后的部分；写在属性列表里的出处（`[quote, 某人, 某书]`）官方不替换，不产生 occurrence。
 
-Markdown 引语的子块坐标要换算。官方为去掉前缀的行新建的 Reader 不带游标（`parser.js` 1121 行；Ruby 版 Asciidoctor 2.0.26 同样如此），子块的 source location 没有文件，行号从这个 Reader 的第一行数起。去掉前缀不改变行数，官方读段落时跳过的行注释也不在这些行里，所以第 _n_ 行就是从引语的锚点行往下、跳过行注释数到的第 _n_ 行源文。解析器在给合成的块补坐标的同一处（xref:synthesized-blocks[官方合成的块]）把它们换算成引语所在文件的源行；引语里再嵌套的块一并换算，嵌套的 markdown 引语，它的子块从它自己的锚点行数起。换算之后，引语的子块与正文里的块一样遍历、投影与扫描。这一处已报告给上游（https://github.com/asciidoctor/asciidoctor/issues/4891[asciidoctor#4891]）；上游给出源行以后，这里的换算随之删去，否则坐标会被换算两次。
+Markdown 引语的子块坐标要换算。官方为去掉前缀的行新建的 Reader 不带游标（`parser.js` 1121 行；Ruby 版 Asciidoctor 2.0.26 同样如此），子块的 source location 没有文件，行号从这个 Reader 的第一行数起。去掉前缀不改变行数，官方读段落时跳过的行注释也不在这些行里，所以第 _n_ 行就是从引语的锚点行往下、跳过行注释数到的第 _n_ 行源文。解析器在给合成的块补坐标的同一处（xref:官方合成的块[官方合成的块]）把它们换算成引语所在文件的源行；引语里再嵌套的块一并换算，嵌套的 markdown 引语，它的子块从它自己的锚点行数起。换算之后，引语的子块与正文里的块一样遍历、投影与扫描。这一处已报告给上游（https://github.com/asciidoctor/asciidoctor/issues/4891[asciidoctor#4891]）；上游给出源行以后，这里的换算随之删去，否则坐标会被换算两次。
 
 引语里的块，官方读到的是去掉前缀的行：套在几层 markdown 引语里，就去掉几个 `> `。区间解析器对它们的结构判断都按官方读到的行做：锚点行是不是分隔符、闭合行在哪里、第一行源文是否对得上、段落在哪里断开、哪些是块属性行，以及上面说的 markdown 引语本身的认法。所以 `> ====` 是 example 的分隔符，`> ____` 是分隔的 quote，不是又一层 markdown 引语；外层只有 `>` 的行对内层引语是空行，内层的段落在那里结束。span、列号与诊断位置仍取源行。引语里的块属性行记下的是官方读到的那一行。引语里的表格，`a|` 单元格里的块同样换算；普通单元格不是块，没有 source location 可补，它带的行号与表格读自同一个 Reader，按表格的换算取源行。
 
-[#synthesized-blocks]
 === 官方合成的块
 
 Asciidoctor 在两处新建没有 source location 的块，都出现在部（part）的导言里。
@@ -62,14 +56,12 @@ Asciidoctor 在两处新建没有 source location 的块，都出现在部（par
 
 解析器按块是怎样合成的取坐标。合成的容器取第一个有坐标的子块的坐标，范围从第一个子块开始，到下一个兄弟块（部的第一节）之前；它借来的锚点行是子块的，可能是列表项或分隔符，不与容器的第一行源文核对，也不找分隔符。Asciidoctor 给合成的 preamble 补坐标也是取第一个子块的（`parser.js` 632-633 行）。接过父块文本行的段落子块取父块的坐标，范围就是这些文本行，父块的范围到它结束。两者都推不出坐标时，仍报 `source-location.missing`。合成的块不因为没有 source location 而从节点树中消失：它的子块是作者写下的内容。
 
-[#callout-list-location]
 === Callout 列表的坐标
 
 Asciidoctor 建完一个块以后，把读取器上一次 mark 的位置记作块的 source location（`parser.js` 1443 行）。读 callout 列表时，每读一条后续条目都 mark 一次（`parser.js` 1812-1862 行，`parseCalloutList`），所以列表的 source location 落在它的最后一条上，而不是第一条。Ruby 版 Asciidoctor 2.0.26 的 `parse_callout_list` 写法相同。条目自己的 source location 是对的。这一处已报告给上游（https://github.com/asciidoctor/asciidoctor/issues/4892[asciidoctor#4892]）。
 
 解析器在给合成的块补坐标的同一处，让 callout 列表取它第一条的坐标。这样列表的范围从第一条开始，列表前面的块标题与属性行是它的 metadata；遍历、投影与扫描看到的是同一个坐标。
 
-[#table-line-comments]
 === 表格里的行注释
 
 Asciidoctor 读表格时，先读到闭合分隔符为止、去掉其中的行注释，再把剩下的行交给一个新的读取器，游标是开始分隔符的下一行（`parser.js` 1266-1276 行）。新读取器逐行累加行号，被去掉的注释行不占编号，所以注释之后的单元格行号偏小，每有一行注释就少一行。`a|` 单元格的内嵌文档接着单元格的游标读（`table.js` 386、432 行），里面的块同样偏小。这一处已报告给上游（https://github.com/asciidoctor/asciidoctor/issues/4893[asciidoctor#4893]）。
@@ -84,7 +76,6 @@ Asciidoctor 读表格时，先读到闭合分隔符为止、去掉其中的行�
 
 Fallback 必须锚定 official block。没有 official block 锚点时，解析器不得用全文件正则制造结构。
 
-[#inline-scan-boundary]
 === Inline 扫描边界
 
 Inline occurrence scanner 按 official block context 扫描。
@@ -122,7 +113,7 @@ Paragraph、带 macros substitutions 的 prose block 和可扫描 table prose �
 
 Occurrence 只来自官方读进块文字的行。官方按段落读文字时跳过行注释（`//` 开头、但不是 `///`，`reader.js` 528 行）：普通段落、隐身段落、列表条目与描述的文字、表格都这样读（`parser.js` 1066、1272、1525 行），这些块里的行注释不产生 occurrence。分隔块按分隔符读进的内容不跳过行注释（`parser.js` 1531 行）：分隔的 verse 块里以 `//` 开头的行是内容，官方照常替换，它的 xref 产生 occurrence。描述的缩进续行也不跳过，见 xref:description-text[描述的文字]。
 
-列表条目（olist、ulist、colist 的 list_item）的文字从标记行起。标记行下面紧挨着的行是续行：官方以只读文字的方式（text_only）读下一个块，读成一个段落，再并进条目的文字（`parser.js` 1985-2011 行，`ListItem#foldFirst`）。读之前先读掉块的 metadata，这时只认锚点行（`[[id]]`）、属性列表行与行注释（`parser.js` 2798-2880 行 `parseBlockMetadataLine`）；`.标题` 这样的行不是 metadata，是条目的文字。读掉的 metadata 随段落并进条目时丢弃。段落在列表里读（xref:official-paragraph[官方怎样读段落]），停在空行、`+` 续接行、块分隔符、块属性行与列表标记行之前（`parser.js` 3029-3036 行），行注释被跳过、不打断段落。紧挨着的不是段落（例如分隔块）时没有续行。续行里的 xref 与标记行上的一样产生 occurrence。用 `+` 挂上的块与嵌套列表是条目的子块，按它们自己的归类扫描。
+列表条目（olist、ulist、colist 的 list_item）的文字从标记行起。标记行下面紧挨着的行是续行：官方以只读文字的方式（text_only）读下一个块，读成一个段落，再并进条目的文字（`parser.js` 1985-2011 行，`ListItem#foldFirst`）。读之前先读掉块的 metadata，这时只认锚点行（`[[id]]`）、属性列表行与行注释（`parser.js` 2798-2880 行 `parseBlockMetadataLine`）；`.标题` 这样的行不是 metadata，是条目的文字。读掉的 metadata 随段落并进条目时丢弃。段落在列表里读（xref:官方怎样读段落[官方怎样读段落]），停在空行、`+` 续接行、块分隔符、块属性行与列表标记行之前（`parser.js` 3029-3036 行），行注释被跳过、不打断段落。紧挨着的不是段落（例如分隔块）时没有续行。续行里的 xref 与标记行上的一样产生 occurrence。用 `+` 挂上的块与嵌套列表是条目的子块，按它们自己的归类扫描。
 
 [#description-text]
 描述列表的条目由术语与描述组成，两者在官方 AST 里都是 list_item（`parser.js` 1880-1902 行）。描述的文字按术语行有没有写文字分两种读法：
@@ -136,9 +127,8 @@ Occurrence 只来自官方读进块文字的行。官方按段落读文字时跳
 
 Section 标题与 floating_title 的标题文字做 macros 替换，标题行里的 xref 与锚点产生 occurrence，与块标题相同。标题文字从 `=` 标记之后算起。Section 标题里的 xref 属于这个 section 自己：投影成 RDF 时，它是从这个标题出发的边。Discrete 标题不是 section，它标题里的 xref 属于外层的 section。写成标题文字的自然引用（`<<目标标题>>`）与正文里一样交给官方解析。
 
-以上规则决定哪些文字收下 occurrence。xref 在这些文字里怎样认，见 xref:xref-recognition[Xref 由官方认定]；anchor 由扫描器按 xref:metadata-xref-anchor-targets[第 8 章] 的规则认。
+以上规则决定哪些文字收下 occurrence。xref 在这些文字里怎样认，见 xref:Xref 由官方认定[Xref 由官方认定]；anchor 由扫描器按 xref:Metadata、Xref、Anchor 与 Target[第 8 章] 的规则认。
 
-[#xref-recognition]
 === Xref 由官方认定
 
 一个 xref 存不存在、指向哪里，以 Asciidoctor 替换行内文字时认出的 xref 为准，解析器不自己判断哪段文字是 xref。透传、`\` 转义、属性引用、`#` 开头的片段、带空格的目标、行内宏参数里的 xref，官方怎样认，解析器就怎样收。自己判断的做法每一处都要与官方的替换规则逐条对齐，对不齐的地方就成为假引用或漏掉的引用。
@@ -158,9 +148,9 @@ Open block 是容器。它自身不产生 prose occurrence；occurrence 来自�
 
 Preamble 也是容器：文档标题与第一节之间的块，官方装进一个 preamble 块（book 里，或文档还有别的块时），坐标取它的第一个子块（`parser.js` 632-633 行）。Preamble 的子块与节里的块一样投影与扫描。
 
-写成隐身段落的 example、sidebar、quote 与 open 块（xref:cloaked-paragraph[隐身段落]）不是容器：官方建块时把它们的内容模型从 compound 改成 simple（`parser.js` 1523 行），块里是一段文字，没有段落子块。内容模型为 simple 的这几种块按段落扫描，xref 与 anchor occurrence 来自块自己的文本行。
+写成隐身段落的 example、sidebar、quote 与 open 块（xref:隐身段落[隐身段落]）不是容器：官方建块时把它们的内容模型从 compound 改成 simple（`parser.js` 1523 行），块里是一段文字，没有段落子块。内容模型为 simple 的这几种块按段落扫描，xref 与 anchor occurrence 来自块自己的文本行。
 
-空气引号同样是内容模型为 simple 的 quote，按段落扫描；markdown 引语是复合的 quote，是容器（xref:paragraph-quote[段落写法的引语]）。
+空气引号同样是内容模型为 simple 的 quote，按段落扫描；markdown 引语是复合的 quote，是容器（xref:段落写法的引语[段落写法的引语]）。
 
 `a|` 单元格的内容是一个内嵌文档。它的 Reader 接着单元格的游标（`table.js` 386、432 行），所以里面的块带着源文件的行号。内嵌文档里的块与正文同规则：同样解析 source interval，按 official block context 决定扫描、递归或跳过。单元格里的 example、sidebar、列表、提示块与正文里的一样产生 occurrence。
 

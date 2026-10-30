@@ -1,4 +1,3 @@
-[#appendix-asciidoc-surface-reference]
 = 附录 A：AsciiDoc 投影表面速查
 
 [cols="1,2", options="header"]

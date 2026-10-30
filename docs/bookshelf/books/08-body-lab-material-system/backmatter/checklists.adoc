@@ -1,4 +1,3 @@
-[#checklists]
 == 检查清单
 
 === Body 检查

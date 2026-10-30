@@ -1,4 +1,3 @@
-[#case-document-provenance-rag]
 == PDF / Word / RAG Provenance Index
 
 PDF / Word / RAG Provenance Index 把外部文档中的证据片段放入可查询图索引。领域对象是 claim、chunk、段落、页面区域和证据片段。书稿标题节点为外部文件中的证据建立名称、关系、locator payload 和回源入口。

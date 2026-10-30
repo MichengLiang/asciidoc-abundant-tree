@@ -1,4 +1,3 @@
-[#case-screenplay-game-narrative]
 == Screenplay and Game Narrative Graph
 
 Screenplay and Game Narrative Graph 面向角色、场景、任务、物品、地点和对白分支。叙事文本拥有对象、关系、条件和连续性约束，同样能进入标题节点、关系边和 payload 的建模表面。

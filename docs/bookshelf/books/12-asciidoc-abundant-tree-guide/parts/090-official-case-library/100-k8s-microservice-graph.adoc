@@ -1,4 +1,3 @@
-[#case-k8s-microservice-graph]
 == K8S Microservice Configuration Graph
 
 K8S Microservice Configuration Graph 面向 Service、Ingress、Database、ConfigMap 和生成 YAML。书稿中的标题节点同时承担配置说明、依赖建模和生成物索引。

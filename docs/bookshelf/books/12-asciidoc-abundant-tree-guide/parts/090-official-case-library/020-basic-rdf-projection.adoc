@@ -1,4 +1,3 @@
-[#case-basic-rdf-projection]
 == Basic RDF Projection
 
 Basic RDF Projection 是结构基线。标题、字段、xref、local target alias 和 hmeta 共同建立一份投影夹具，使后续业务目录共享同一组底层事实：heading node、field predicate、relation triple、xref edge evidence、source coordinate 和 heading tree order。

@@ -3,6 +3,6 @@
 		"ex": "https://micheng.dev/ns/external-demo#",
 		"alignsWith": { "@id": "ex:aligns-with", "@type": "@id" }
 	},
-	"@id": "urn:case:external#heading-l3-c1",
+	"@id": "urn:case:external#冷链出库放行策略",
 	"alignsWith": "https://example.org/ontology/ReleasePolicy"
 }

@@ -1,4 +1,3 @@
-[#bibliography]
 == 参考坐标
 
 * [[[rdf12-concepts]]] W3C, _RDF 1.2 Concepts and Abstract Data Model_, W3C Candidate Recommendation Snapshot, 07 April 2026. https://www.w3.org/TR/rdf12-concepts/

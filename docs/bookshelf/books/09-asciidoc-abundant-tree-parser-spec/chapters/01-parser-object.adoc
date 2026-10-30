@@ -1,4 +1,3 @@
-[#parser-object]
 == 解析器对象
 
 `asciidoc-abundant-tree` 是 AsciiDoc source-aware structure recovery parser。它从一个 AsciiDoc source document 中恢复结构事实，并输出 `AbundantDocument`。

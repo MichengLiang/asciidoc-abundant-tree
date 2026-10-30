@@ -1,4 +1,3 @@
-[#single-file-input]
 == Single-file 输入
 
 single-file mode 是解析器的基本输入模式。该模式只读取调用者传入的 AsciiDoc source file。

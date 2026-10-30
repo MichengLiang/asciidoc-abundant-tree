@@ -6,9 +6,9 @@
 		"dependsOn": { "@id": "rel:depends-on", "@type": "@id" },
 		"routesTo": { "@id": "rel:routes-to", "@type": "@id" }
 	},
-	"@id": "urn:case:k8s#heading-l3-c1",
+	"@id": "urn:case:k8s#orders-service",
 	"@type": "k8s:Service",
 	"name": "orders-service",
-	"dependsOn": "urn:case:k8s#heading-l17-c1",
-	"routesTo": "urn:case:k8s#heading-l20-c1"
+	"dependsOn": "urn:case:k8s#orders-db",
+	"routesTo": "urn:case:k8s#public-ingress"
 }

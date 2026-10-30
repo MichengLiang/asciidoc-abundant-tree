@@ -1,4 +1,3 @@
-[#bibliography]
 == 参考坐标
 
 * link:https://docs.asciidoctor.org/asciidoctor.js/latest/[Asciidoctor.js documentation]：official parser 语义来源。

@@ -1,4 +1,3 @@
-[#cli-and-library-api]
 == CLI 与 Library API
 
 解析器提供 library API 和 CLI。两者消费同一解析流程。

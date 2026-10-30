@@ -1,4 +1,3 @@
-[#diagnostics-and-failure-surface]
 == Diagnostics 与 Failure Surface
 
 解析器区分工具错误、解析诊断和下游 lint。

@@ -1,4 +1,3 @@
-[#first-queryable-graph]
 == 第一张可查询图
 
 一份 AsciiDoc 源文档可以同时成为阅读文本和查询图。作者写标题、字段和交叉引用；投影器输出 RDF 1.2；消费者用 SPARQL 或 TS/JS 查询图，再根据 source coordinate 回到源文件。

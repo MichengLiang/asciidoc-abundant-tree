@@ -1,4 +1,3 @@
-[#abundant-document]
 == AbundantDocument
 
 `AbundantDocument` 是解析器的公共 TypeScript 数据模型。所有序列化表面和下游投影都消费该对象。

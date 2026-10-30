@@ -1,4 +1,3 @@
-[#case-multimodal-asset-catalog]
 == Multimodal Asset Catalog
 
 Multimodal Asset Catalog 把图片和多模态资产放入标题资源节点。领域对象是资产集合、单张图片、项目、人物、地点和视觉特征。图片文件留在文件系统中；书稿标题节点保存语义、字段、视觉 payload 和项目关系。

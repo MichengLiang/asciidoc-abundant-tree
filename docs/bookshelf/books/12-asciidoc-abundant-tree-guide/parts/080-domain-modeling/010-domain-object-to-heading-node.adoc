@@ -1,4 +1,3 @@
-[#domain-object-to-heading-node]
 == 从领域对象到标题节点
 
 领域对象进入书稿时，先判断它是否需要被引用、查询、校验、回源或单独维护。满足这些动作的对象适合作为 heading node。

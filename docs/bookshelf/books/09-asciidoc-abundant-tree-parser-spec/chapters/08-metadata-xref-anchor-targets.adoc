@@ -1,4 +1,3 @@
-[#metadata-xref-anchor-targets]
 == Metadata、Xref、Anchor 与 Target
 
 本章定义 source occurrence 与 target catalog 的关系。解析器保存源文档事实，不决定下游图形状。
@@ -11,7 +10,7 @@ Metadata surface 附着到紧随其后的 section 或 block。可附着 surface 
 
 === Xref Occurrence
 
-Xref occurrence 是官方认下、并在源文本里找到位置的 xref（xref:xref-recognition[Xref 由官方认定]）。它在源文本中的写法是下面几种：
+Xref occurrence 是官方认下、并在源文本里找到位置的 xref（xref:Xref 由官方认定[Xref 由官方认定]）。它在源文本中的写法是下面几种：
 
 [source,asciidoc]
 ----

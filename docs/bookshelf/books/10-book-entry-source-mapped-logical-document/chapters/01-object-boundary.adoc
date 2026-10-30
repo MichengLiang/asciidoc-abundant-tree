@@ -1,4 +1,3 @@
-[#object-boundary]
 == 对象边界
 
 书稿入口回源逻辑文档是一个输入构造对象。它把物理多文件书稿构造成一份带 line origin 的 logical document。

@@ -1,4 +1,3 @@
-[#line-origin]
 == Line Origin
 
 Line origin 把 logical line 映射到原始 source file 和 source line。它是 book-entry 回源能力的构成性对象。

@@ -1,4 +1,3 @@
-[#oxigraph-query]
 == Oxigraph 查询
 
 Oxigraph 提供本地 RDF store 与 SPARQL 查询执行。消费者可以加载 projection TTL 与 model TTL，再用 `CONSTRUCT` materialize 下游关系。

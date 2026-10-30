@@ -1,4 +1,3 @@
-[#appendix-ts-js-consumer-templates]
 = 附录 D：TS/JS Consumer 模板
 
 == Projection 生成

@@ -1,4 +1,3 @@
-[#logical-document]
 == Logical Document
 
 Logical document 是 book-entry mode 构造出的 in-memory AsciiDoc 文本。Parser 把它作为一份逻辑 source document 解析。

@@ -7,9 +7,9 @@
 		"unlocks": { "@id": "rel:unlocks", "@type": "@id" },
 		"requires": { "@id": "rel:requires", "@type": "@id" }
 	},
-	"@id": "urn:case:narrative#heading-l6-c1",
+	"@id": "urn:case:narrative#雨夜车站",
 	"@type": "story:Scene",
 	"name": "雨夜车站",
-	"features": "urn:case:narrative#heading-l3-c1",
-	"unlocks": "urn:case:narrative#heading-l11-c1"
+	"features": "urn:case:narrative#林澈",
+	"unlocks": "urn:case:narrative#寻找车票"
 }

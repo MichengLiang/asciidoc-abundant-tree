@@ -1,4 +1,3 @@
-[#entry-and-source-set]
 == Entry 与 Source Set
 
 Entry file 是 book-entry mode 的显式输入。Source set 是 entry file 通过受支持 include directive 到达的 source files 集合。

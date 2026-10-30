@@ -1,4 +1,3 @@
-[#query-contract]
 == 查询契约
 
 查询契约定义标题投影图的公共查询面。查询结果应返回可继续回源的 resource、relative path 和 line span。

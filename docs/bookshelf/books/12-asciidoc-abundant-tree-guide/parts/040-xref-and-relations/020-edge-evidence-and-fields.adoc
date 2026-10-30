@@ -1,4 +1,3 @@
-[#edge-evidence-and-fields]
 == 边字段与边证据
 
 relation triple 让查询者找到关系。xref edge evidence 让查询者知道这条关系来自哪一个 xref occurrence。回源修改、边属性审计、official binding 检查和 complex property 读取都使用 edge evidence。

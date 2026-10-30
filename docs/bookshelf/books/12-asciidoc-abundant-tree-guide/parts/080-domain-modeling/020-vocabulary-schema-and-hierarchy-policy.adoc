@@ -1,4 +1,3 @@
-[#vocabulary-schema-and-hierarchy-policy]
 == 词表、Schema 与层级政策
 
 领域模型把 projection graph 中的结构事实解释为业务图。role 词表定义节点类型，rel 词表定义关系谓词，field schema 定义字段约束，payload schema 定义 raw value object 的内部结构，hierarchy policy 定义标题层级是否生成业务边。

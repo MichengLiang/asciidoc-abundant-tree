@@ -1,4 +1,3 @@
-[#source-aware-report]
 == Source-aware Report
 
 source-aware report 把查询结果转换成可编辑定位信息。报告保存 label、headline、role、fields、edges、raw、relativePath 和 line。它是人、CI、adapter 和 code agent 共用的任务视图。

@@ -1,4 +1,3 @@
-[#address-space]
 == 地址空间
 
 一节的地址是它的标题原文。xref target selector 和 heading complex property selector 都按地址查询 heading label space。地址模型的规约见 06 号书第 2 章「身份」与「地址与 Label 空间」。

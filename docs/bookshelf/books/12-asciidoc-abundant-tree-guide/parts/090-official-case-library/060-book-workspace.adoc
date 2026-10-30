@@ -1,4 +1,3 @@
-[#case-book-workspace]
 == Book Workspace
 
 Book Workspace 把一本多文件书稿作为投影对象。领域对象是书籍本身：entry file、frontmatter、parts、chapters、backmatter、glossary、bibliography 和 index 共同构成长期知识人工制品。

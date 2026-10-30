@@ -1,14 +1,12 @@
-[#field-and-complex-property]
 == 字段与复杂属性
 
 字段是 heading node 或 xref edge evidence 上的谓词。字段值可以是 string literal，也可以是 raw value object。
 
 literal field 保存源表面的 scalar value。complex property 保存源表面的 raw value object。二者使用同一套 field predicate 规则。
 
-[#field-predicate]
 === Field Predicate
 
-字段名是书的约定词表里的词：作者在约定声明里写下它，在标题与 xref 上使用它，查询者照着它写查询。字段谓词因此是 `field:` 命名空间下按原文写成的名字，转写规则见 xref:names-in-iri[名字进入 IRI]：
+字段名是书的约定词表里的词：作者在约定声明里写下它，在标题与 xref 上使用它，查询者照着它写查询。字段谓词因此是 `field:` 命名空间下按原文写成的名字，转写规则见 xref:名字进入 IRI[名字进入 IRI]：
 
 [source,text]
 ----
@@ -81,7 +79,7 @@ raw value object 不保存字段名、结构分类标记或下游模型名。字
 
 带 `for` 或 `forSelector` marker 的 source value block 表达 heading complex property。该 block 的 property role 是字段名。source block language 是 format。block body 是 raw。
 
-带值 marker 查询 xref:heading-address[地址与 Label 空间] 定义的 label 空间，与 xref 的 selector 同一套规则：值可以是标题原文、带上级标题的地址路径（`for=红烧肉::火候`）、custom ID 或生成 ID。绑定失败或多义绑定时，不输出 heading complex property。
+带值 marker 查询 xref:地址与 Label 空间[地址与 Label 空间] 定义的 label 空间，与 xref 的 selector 同一套规则：值可以是标题原文、带上级标题的地址路径（`for=红烧肉::火候`）、custom ID 或生成 ID。绑定失败或多义绑定时，不输出 heading complex property。
 
 无值 marker 表达 source ownership binding。投影器使用 source value block 的源位置，找到覆盖该 block 起始行的最内层 heading node，并把 complex property 写到该 heading node。源位置无法确定 owning heading 时，不输出 heading complex property。
 

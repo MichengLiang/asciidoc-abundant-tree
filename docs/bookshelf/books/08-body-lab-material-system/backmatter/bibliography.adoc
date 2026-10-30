@@ -1,4 +1,3 @@
-[#bibliography]
 == 参考坐标
 
 * [[[wbs]]] Project Management Institute, _Practice Standard for Work Breakdown Structures_. Work package 用于标记有边界、有交付物、有验收的工作单元。
