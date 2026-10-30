@@ -1,0 +1,45 @@
+# bookgraph 的项目配置：这个项目里有哪些书，各自的代码目录与引用标记。人写、进 git。
+# 由 init 生成，之后直接手改；再次 init 只补上新识别到的书，已有的段与这里的注释原样保留。
+#
+# 每本书一段 [books."<书名>"]。书名就是书的文件夹名，book(项目, 书名) 按它精确匹配。
+#   path  必填：书的目录（含 book.adoc，位于书架的 books/ 下），相对项目。
+#   code  可省：code、coverage、audit 扫描的代码目录或文件，相对项目，例如 ["packages", "tools"]。
+#   cite  可省：代码注释引用这本书时写在书名号前面的称呼。写 // ……（8 号书《布局存储分两层》），标记就是 "8 号书"。
+#   aat   可省：装着 asciidoc-abundant-tree 的 Node 项目，相对项目；默认是书架根，用书架自己安装的那一份。
+#
+# 投影的缓存在旁边的 cache/ 里，不进 git。
+
+[books."06-rdf12-line-projection"]
+path = "bookshelf/books/06-rdf12-line-projection"
+# code = ["…"]
+# cite = "…"
+
+[books."07-rdf12-heading-projection-implementation-plan"]
+path = "bookshelf/books/07-rdf12-heading-projection-implementation-plan"
+# code = ["…"]
+# cite = "…"
+
+[books."08-body-lab-material-system"]
+path = "bookshelf/books/08-body-lab-material-system"
+# code = ["…"]
+# cite = "…"
+
+[books."09-asciidoc-abundant-tree-parser-spec"]
+path = "bookshelf/books/09-asciidoc-abundant-tree-parser-spec"
+# code = ["…"]
+# cite = "…"
+
+[books."10-book-entry-source-mapped-logical-document"]
+path = "bookshelf/books/10-book-entry-source-mapped-logical-document"
+# code = ["…"]
+# cite = "…"
+
+[books."11-book-entry-source-mapped-logical-document-implementation-plan"]
+path = "bookshelf/books/11-book-entry-source-mapped-logical-document-implementation-plan"
+# code = ["…"]
+# cite = "…"
+
+[books."12-asciidoc-abundant-tree-guide"]
+path = "bookshelf/books/12-asciidoc-abundant-tree-guide"
+# code = ["…"]
+# cite = "…"
