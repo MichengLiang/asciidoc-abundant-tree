@@ -1,3 +1,4 @@
+import { nameInIri } from "./iri-name";
 import { namespaces } from "./namespaces";
 import { iriTerm, type Rdf12IriTerm } from "./terms";
 
@@ -8,7 +9,6 @@ export type RelationPredicateMapping = {
 
 const absoluteIriPattern = /^[A-Za-z][A-Za-z0-9+.-]*:[^\s]*$/u;
 const curiePattern = /^([A-Za-z][A-Za-z0-9_-]*):([^\s]+)$/u;
-const ordinaryTokenPattern = /^[A-Za-z][A-Za-z0-9._~-]*$/u;
 
 export function mapRelationPredicate(
 	rawRel: string | undefined,
@@ -20,7 +20,7 @@ export function mapRelationPredicate(
 		};
 	}
 
-	if (rawRel.trim() !== rawRel || rawRel === "") {
+	if (rawRel === "") {
 		return { rawRel };
 	}
 
@@ -30,7 +30,7 @@ export function mapRelationPredicate(
 		if (prefix !== undefined) {
 			return {
 				rawRel,
-				predicate: iriTerm(`${prefix}${encodeIriComponent(curie[2])}`),
+				predicate: iriTerm(`${prefix}${nameInIri(curie[2])}`),
 			};
 		}
 	}
@@ -42,16 +42,8 @@ export function mapRelationPredicate(
 		};
 	}
 
-	if (ordinaryTokenPattern.test(rawRel)) {
-		return {
-			rawRel,
-			predicate: iriTerm(`${namespaces.rel}${encodeIriComponent(rawRel)}`),
-		};
-	}
-
-	return { rawRel };
-}
-
-function encodeIriComponent(value: string): string {
-	return encodeURIComponent(value).replaceAll("%2D", "-");
+	return {
+		rawRel,
+		predicate: iriTerm(`${namespaces.rel}${nameInIri(rawRel)}`),
+	};
 }

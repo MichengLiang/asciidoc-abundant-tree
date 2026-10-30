@@ -6,6 +6,7 @@ const { namedNode } = DataFactory;
 export const NS = {
 	aat: "https://micheng.dev/ns/asciidoc-abundant-tree#",
 	rel: "https://micheng.dev/ns/asciidoc-relation#",
+	field: "https://micheng.dev/ns/asciidoc-field#",
 	rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 };
 

@@ -15,6 +15,7 @@ import {
 	expectNoTriple,
 	expectResourceTypeCount,
 	expectTriple,
+	fieldTerm,
 	literalValues,
 	rdfTerm,
 	relTerm,
@@ -240,9 +241,9 @@ describe("rdf12 heading projection target acceptance", () => {
 		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
 
 		expectLiteralValue(graph, deliveryPolicy, aatTerm("role"), "policy");
-		expectLiteralValue(graph, deliveryPolicy, aatTerm("status"), "active");
-		expectLiteralValue(graph, deliveryPolicy, aatTerm("owner"), "ops");
-		expectLiteralValue(graph, xrefEdge, aatTerm("weight"), "0.8");
+		expectLiteralValue(graph, deliveryPolicy, fieldTerm("status"), "active");
+		expectLiteralValue(graph, deliveryPolicy, fieldTerm("owner"), "ops");
+		expectLiteralValue(graph, xrefEdge, fieldTerm("weight"), "0.8");
 	});
 
 	it("Batch 06 binds heading and edge raw value complex properties", async () => {
@@ -252,18 +253,18 @@ describe("rdf12 heading projection target acceptance", () => {
 		const policyRiskProfile = onlyObjectIri(
 			graph,
 			deliveryPolicy,
-			aatTerm("policy-risk-profile"),
+			fieldTerm("policy-risk-profile"),
 		);
 		const relationEvidence = onlyObjectIri(
 			graph,
 			xrefEdge,
-			aatTerm("relation-evidence"),
+			fieldTerm("relation-evidence"),
 		);
 
 		expectTriple(
 			graph,
 			deliveryPolicy,
-			aatTerm("policy-risk-profile"),
+			fieldTerm("policy-risk-profile"),
 			policyRiskProfile,
 		);
 		expectLiteralValue(
@@ -294,7 +295,7 @@ describe("rdf12 heading projection target acceptance", () => {
 		expectTriple(
 			graph,
 			xrefEdge,
-			aatTerm("relation-evidence"),
+			fieldTerm("relation-evidence"),
 			relationEvidence,
 		);
 		expectLiteralValue(graph, relationEvidence, aatTerm("format"), "yaml");

@@ -44,6 +44,7 @@
 ```ttl
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
@@ -70,7 +71,7 @@
     aat:startLine 1.
 <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#heading-l10-o0> a aat:Heading;
     aat:addressLabel "capacity";
-    aat:apple "true";
+    field:apple "true";
     aat:childOrder 2;
     aat:containsDirectly <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#heading-l16-o0>;
     aat:contentEndLine 14;
@@ -92,7 +93,7 @@
     aat:relativePath "base.adoc";
     aat:role "rule";
     aat:startLine 10;
-    aat:status "active".
+    field:status "active".
 <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#heading-l16-o0> a aat:Heading;
     aat:childOrder 1;
     aat:containsDirectly <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#heading-l20-o0>;
@@ -164,7 +165,7 @@
     aat:headline "配送策略";
     aat:metadataEndLine 5;
     aat:metadataStartLine 5;
-    aat:owner "ops";
+    field:owner "ops";
     aat:raw """[#delivery.policy, status=active, owner=ops]
 == 配送策略
 
@@ -174,7 +175,7 @@
     aat:relativePath "base.adoc";
     aat:role "policy";
     aat:startLine 5;
-    aat:status "active";
+    field:status "active";
     rel:depends-on <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#heading-l10-o0>.
 <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#projection> a prov:Entity, aat:HeadingProjection;
     prov:hadPrimarySource <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#source>;
@@ -219,7 +220,7 @@
     aat:targetSelector "capacity".
 <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#xref-edge-l8-c8-o0> rdf:reifies <<(<urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#heading-l5-o0> rel:depends-on <urn:aat:doc:4018d2b90b3a7851a394261f11d8b8302322dfcf8eee2cb0050bf37000a5c140#heading-l10-o0>)>>;
     a aat:XrefEdge;
-    aat:banana "true";
+    field:banana "true";
     aat:displayLabel "运力规则";
     aat:endColumn 56;
     aat:endLine 8;

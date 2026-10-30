@@ -39,34 +39,6 @@ const PAYLOAD_FIELD_PREDICATES = new Set([
 	"visual-payload",
 ]);
 
-const STRUCTURAL_AAT_FIELDS = new Set([
-	"addressLabel",
-	"candidateHeading",
-	"contentEndLine",
-	"contentStartLine",
-	"displayLabel",
-	"endLine",
-	"field-kind",
-	"forSelector",
-	"format",
-	"generatedAddressLabel",
-	"headline",
-	"officialHref",
-	"officialReftext",
-	"officialResolvedId",
-	"officialResolvedType",
-	"raw",
-	"relativePath",
-	"role",
-	"sourceValueId",
-	"sourceHeading",
-	"sourceSelector",
-	"startLine",
-	"syntax",
-	"targetHeading",
-	"targetSelector",
-]);
-
 export function readBusinessNodes(input: {
 	readonly graph: Rdf12Graph;
 	readonly scriptTextById?: ReadonlyMap<string, string>;
@@ -227,8 +199,8 @@ function readFields(
 		if (triple.object.termType !== "literal") {
 			continue;
 		}
-		const fieldName = fieldNameFromAatPredicate(triple.predicate);
-		if (fieldName === undefined || STRUCTURAL_AAT_FIELDS.has(fieldName)) {
+		const fieldName = fieldNameFromPredicate(triple.predicate);
+		if (fieldName === undefined) {
 			continue;
 		}
 		fields[fieldName] = coerceFieldValue(triple.object.value);
@@ -236,17 +208,11 @@ function readFields(
 	return fields;
 }
 
-function fieldNameFromAatPredicate(
-	predicate: Rdf12IriTerm,
-): string | undefined {
-	if (!predicate.value.startsWith(namespaces.aat)) {
-		return undefined;
-	}
-	const localName = predicate.value.slice(namespaces.aat.length);
-	if (localName.startsWith("field-")) {
-		return decodeURIComponent(localName.slice("field-".length));
-	}
-	return localName;
+// 字段谓词是 field: 下按原文转写的名字，一次百分号解码还原字段名（06 号书《名字进入 IRI》）。
+function fieldNameFromPredicate(predicate: Rdf12IriTerm): string | undefined {
+	return predicate.value.startsWith(namespaces.field)
+		? decodeURIComponent(predicate.value.slice(namespaces.field.length))
+		: undefined;
 }
 
 function normalizedRelations(
@@ -290,12 +256,8 @@ function rawValueObjectField(
 			if (triple.object.termType !== "iri") {
 				return [];
 			}
-			const fieldName = fieldNameFromAatPredicate(triple.predicate);
-			if (
-				fieldName === undefined ||
-				STRUCTURAL_AAT_FIELDS.has(fieldName) ||
-				!PAYLOAD_FIELD_PREDICATES.has(fieldName)
-			) {
+			const fieldName = fieldNameFromPredicate(triple.predicate);
+			if (fieldName === undefined || !PAYLOAD_FIELD_PREDICATES.has(fieldName)) {
 				return [];
 			}
 			return hasRawValueFacts(graph, triple.object) ? [triple.object] : [];
@@ -325,7 +287,7 @@ function readScriptElements(
 
 function relationLocalName(predicate: Rdf12IriTerm): string | undefined {
 	return predicate.value.startsWith(namespaces.rel)
-		? predicate.value.slice(namespaces.rel.length)
+		? decodeURIComponent(predicate.value.slice(namespaces.rel.length))
 		: undefined;
 }
 

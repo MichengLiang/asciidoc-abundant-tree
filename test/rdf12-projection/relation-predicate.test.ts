@@ -24,23 +24,23 @@ describe("rdf12 relation predicate mapping", () => {
 		).toBe("https://example.test/relation/depends-on");
 	});
 
-	it("maps ordinary tokens into the rel namespace", () => {
+	it("writes the book's relation words as written into the rel namespace", () => {
 		expect(mapRelationPredicate("depends-on", {}).predicate?.value).toBe(
 			`${namespaces.rel}depends-on`,
 		);
+		expect(mapRelationPredicate("依据", {}).predicate?.value).toBe(
+			`${namespaces.rel}依据`,
+		);
 	});
 
-	it("does not map invalid rel values", () => {
-		expect(mapRelationPredicate("bad value", {})).toEqual({
-			rawRel: "bad value",
-		});
+	it("percent-encodes what an IRI cannot carry in a relation word", () => {
+		expect(mapRelationPredicate("依 据", {}).predicate?.value).toBe(
+			`${namespaces.rel}依%20据`,
+		);
 	});
 
-	it("preserves blank or padded rel values without predicate mapping", () => {
+	it("leaves an empty rel without a predicate", () => {
 		expect(mapRelationPredicate("", {})).toEqual({ rawRel: "" });
-		expect(mapRelationPredicate(" depends-on", {})).toEqual({
-			rawRel: " depends-on",
-		});
 	});
 
 	it("falls back from unknown CURIE-shaped rel values to absolute IRI handling", () => {

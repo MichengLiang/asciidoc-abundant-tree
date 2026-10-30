@@ -29,7 +29,7 @@
   aat:addressLabel "delivery" ;
   aat:headline "配送策略" ;
   aat:role "policy" ;
-  aat:status "active" ;
+  field:status "active" ;
   rel:depends-on <urn:aat:doc:...#heading-l8-o0> .
 
 <urn:aat:doc:...#heading-l8-o0> a aat:Heading ;

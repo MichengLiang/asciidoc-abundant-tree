@@ -27,7 +27,7 @@ describe("rdf12 heading inline metadata projection", () => {
 Status hmeta:status[active, label=生效].
 `);
 
-		expectLiteralValue(graph, heading, aatTerm("status"), "active");
+		expectLiteralValue(graph, heading, fieldPredicate("status"), "active");
 	});
 
 	it("projects value-only priority hmeta as a heading direct field", async () => {
@@ -39,10 +39,10 @@ Status hmeta:status[active, label=生效].
 Priority hmeta:priority[normal].
 `);
 
-		expectLiteralValue(graph, heading, aatTerm("priority"), "normal");
+		expectLiteralValue(graph, heading, fieldPredicate("priority"), "normal");
 	});
 
-	it("projects role hmeta through the normal role field predicate", async () => {
+	it("projects a role hmeta as a field named role, apart from the heading role", async () => {
 		const { graph, heading } = await projectSource(`= Probe
 
 [#rule]
@@ -51,7 +51,8 @@ Priority hmeta:priority[normal].
 Role hmeta:role[rule, label=规则节点].
 `);
 
-		expectLiteralValue(graph, heading, aatTerm("role"), "rule");
+		expectLiteralValue(graph, heading, fieldPredicate("role"), "rule");
+		expect(literalValues(graph, heading, aatTerm("role"))).toEqual([]);
 	});
 
 	it("uses value rather than label as the RDF object", async () => {
@@ -63,9 +64,11 @@ Role hmeta:role[rule, label=规则节点].
 Status hmeta:status[active, label=生效].
 `);
 
-		expectLiteralValue(graph, heading, aatTerm("status"), "active");
+		expectLiteralValue(graph, heading, fieldPredicate("status"), "active");
 		expect(
-			graph.has(rdf12Triple(heading, aatTerm("status"), stringLiteral("生效"))),
+			graph.has(
+				rdf12Triple(heading, fieldPredicate("status"), stringLiteral("生效")),
+			),
 		).toBe(false);
 	});
 
@@ -78,8 +81,8 @@ Status hmeta:status[active, label=生效].
 Status hmeta:status[active].
 `);
 
-		expect(graph.match({ predicate: aatTerm("status") })).toEqual([
-			rdf12Triple(heading, aatTerm("status"), stringLiteral("active")),
+		expect(graph.match({ predicate: fieldPredicate("status") })).toEqual([
+			rdf12Triple(heading, fieldPredicate("status"), stringLiteral("active")),
 		]);
 		expect(resourcesOfType(graph, aatTerm("HeadingInlineMetadata"))).toEqual(
 			[],
@@ -96,10 +99,9 @@ Status hmeta:status[active].
 Status hmeta:status[active] and hmeta:status[ready].
 `);
 
-		expect(literalValues(graph, heading, aatTerm("status")).sort()).toEqual([
-			"active",
-			"ready",
-		]);
+		expect(
+			literalValues(graph, heading, fieldPredicate("status")).sort(),
+		).toEqual(["active", "ready"]);
 	});
 
 	it("preserves attrlist and hmeta values with the same predicate", async () => {
@@ -111,10 +113,9 @@ Status hmeta:status[active] and hmeta:status[ready].
 Status hmeta:status[ready].
 `);
 
-		expect(literalValues(graph, heading, aatTerm("status")).sort()).toEqual([
-			"draft",
-			"ready",
-		]);
+		expect(
+			literalValues(graph, heading, fieldPredicate("status")).sort(),
+		).toEqual(["draft", "ready"]);
 	});
 
 	it("preserves description metadata and hmeta values with the same predicate", async () => {
@@ -128,10 +129,9 @@ status:: active
 Status hmeta:status[ready].
 `);
 
-		expect(literalValues(graph, heading, aatTerm("status")).sort()).toEqual([
-			"active",
-			"ready",
-		]);
+		expect(
+			literalValues(graph, heading, fieldPredicate("status")).sort(),
+		).toEqual(["active", "ready"]);
 	});
 
 	it("projects duplicate description metadata entries from entries", async () => {
@@ -144,13 +144,12 @@ owner:: ops
 owner:: platform
 `);
 
-		expect(literalValues(graph, heading, aatTerm("owner")).sort()).toEqual([
-			"ops",
-			"platform",
-		]);
+		expect(
+			literalValues(graph, heading, fieldPredicate("owner")).sort(),
+		).toEqual(["ops", "platform"]);
 	});
 
-	it("uses encoded field predicates for unsafe hmeta field names", async () => {
+	it("writes hmeta field names as written under the field namespace", async () => {
 		const unsafeField = "9priority";
 		const { graph, heading } = await projectSource(`= Probe
 

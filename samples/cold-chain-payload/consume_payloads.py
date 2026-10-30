@@ -127,9 +127,10 @@ def print_policy_report(store: Store) -> None:
             store,
             f"""
             PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+            PREFIX field: <https://micheng.dev/ns/asciidoc-field#>
             SELECT ?format ?raw WHERE {{
               ?heading aat:addressLabel "cold-chain-release" ;
-                       aat:{field} ?value .
+                       field:{field} ?value .
               ?value aat:format ?format ;
                      aat:raw ?raw .
             }}
@@ -146,10 +147,11 @@ def print_relation_report(store: Store) -> None:
         store,
         """
         PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+        PREFIX field: <https://micheng.dev/ns/asciidoc-field#>
         SELECT ?sourceHeadline ?targetHeadline ?sourceValueId ?format ?raw WHERE {
           ?edge aat:sourceHeading ?source ;
                 aat:targetHeading ?target ;
-                aat:dependency-evidence ?value .
+                field:dependency-evidence ?value .
           ?source aat:headline ?sourceHeadline .
           ?target aat:headline ?targetHeadline .
           ?value aat:sourceValueId ?sourceValueId ;

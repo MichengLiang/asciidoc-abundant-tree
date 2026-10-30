@@ -1,4 +1,5 @@
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix ex: <https://micheng.dev/ns/structure-model#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix sh: <http://www.w3.org/ns/shacl#>.
@@ -28,13 +29,13 @@ ex:HeadingShape a sh:NodeShape;
 ex:ProcessShape a sh:NodeShape;
     sh:targetClass ex:ProcessHeading;
     sh:property [
-        sh:path aat:owner;
+        sh:path field:owner;
         sh:minCount 1;
         sh:datatype xsd:string;
         sh:message "process heading must declare owner"
     ];
     sh:property [
-        sh:path aat:status;
+        sh:path field:status;
         sh:minCount 1;
         sh:in ("draft" "active");
         sh:message "process heading status must be draft or active"
@@ -49,13 +50,13 @@ ex:ProcessShape a sh:NodeShape;
 ex:RuleShape a sh:NodeShape;
     sh:targetClass ex:RuleHeading;
     sh:property [
-        sh:path aat:priority;
+        sh:path field:priority;
         sh:minCount 1;
         sh:in ("normal" "high");
         sh:message "rule heading priority must be normal or high"
     ];
     sh:property [
-        sh:path aat:status;
+        sh:path field:status;
         sh:minCount 1;
         sh:hasValue "active";
         sh:message "rule heading status must be active"
@@ -70,7 +71,7 @@ ex:RuleShape a sh:NodeShape;
 ex:EvidenceShape a sh:NodeShape;
     sh:targetClass ex:EvidenceHeading;
     sh:property [
-        sh:path aat:status;
+        sh:path field:status;
         sh:minCount 1;
         sh:hasValue "active";
         sh:message "evidence heading status must be active"

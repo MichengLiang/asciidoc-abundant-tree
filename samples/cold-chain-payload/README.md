@@ -27,10 +27,10 @@ uv run samples/cold-chain-payload/consume_payloads.py
 | 特性 | 示例表面 | RDF12 事实 |
 |---|---|---|
 | heading node | `== 冷链出库放行策略` | `aat:Heading` |
-| heading role/direct fields | `[#cold-chain-release.policy, status=active, owner=quality-ops]` | `aat:role`、`aat:status`、`aat:owner` |
-| selector-bound heading complex property | `[.release-policy-config, for=cold-chain-release]` | heading `aat:release-policy-config` -> raw value object，value 输出 `aat:forSelector` |
-| source-owned heading complex property | `[.review-playbook, for]` | heading `aat:review-playbook` -> raw value object，不输出空 selector |
-| xref edge complex property | xref `dependency-evidence=rel-release-temperature-audit` + `[#rel-release-temperature-audit]` | xref edge evidence `aat:dependency-evidence` -> raw value object |
+| heading role/direct fields | `[#cold-chain-release.policy, status=active, owner=quality-ops]` | `aat:role`、`field:status`、`field:owner` |
+| selector-bound heading complex property | `[.release-policy-config, for=cold-chain-release]` | heading `field:release-policy-config` -> raw value object，value 输出 `aat:forSelector` |
+| source-owned heading complex property | `[.review-playbook, for]` | heading `field:review-playbook` -> raw value object，不输出空 selector |
+| xref edge complex property | xref `dependency-evidence=rel-release-temperature-audit` + `[#rel-release-temperature-audit]` | xref edge evidence `field:dependency-evidence` -> raw value object |
 | source value id | `#rel-release-temperature-audit` | raw value object `aat:sourceValueId` |
 | raw value format | `[source,json]` / `[source,yaml]` | raw value object `aat:format` |
 | nested JSON object | `temperatureWindowCelsius.min/max` | raw value object `aat:raw` |
@@ -104,16 +104,17 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
 ```ttl
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
 <urn:aat:doc:{document-hash}#heading-l5-o0> a aat:Heading;
     aat:addressLabel "cold-chain-release", "rel-release-temperature-audit";
     aat:headline "冷链出库放行策略";
-    aat:owner "quality-ops";
-    aat:release-policy-config <urn:aat:doc:{document-hash}#payload-l10-o0>;
-    aat:review-playbook <urn:aat:doc:{document-hash}#payload-l34-o0>;
+    field:owner "quality-ops";
+    field:release-policy-config <urn:aat:doc:{document-hash}#payload-l10-o0>;
+    field:review-playbook <urn:aat:doc:{document-hash}#payload-l34-o0>;
     aat:role "policy";
-    aat:status "active";
+    field:status "active";
     rel:depends-on <urn:aat:doc:{document-hash}#heading-l55-o0>.
 
 <urn:aat:doc:{document-hash}#payload-l10-o0> aat:contentEndLine 31;
@@ -162,12 +163,12 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
 
 <urn:aat:doc:{document-hash}#xref-edge-l8-c12-o0> rdf:reifies <<(<urn:aat:doc:{document-hash}#heading-l5-o0> rel:depends-on <urn:aat:doc:{document-hash}#heading-l55-o0>)>>;
     a aat:XrefEdge;
-    aat:dependency-evidence <urn:aat:doc:{document-hash}#payload-l44-o0>;
+    field:dependency-evidence <urn:aat:doc:{document-hash}#payload-l44-o0>;
     aat:rel "depends-on";
     aat:sourceHeading <urn:aat:doc:{document-hash}#heading-l5-o0>;
     aat:targetHeading <urn:aat:doc:{document-hash}#heading-l55-o0>;
     aat:targetSelector "temperature-audit";
-    aat:weight "0.9".
+    field:weight "0.9".
 ```
 
 ## Python 下游消费输出
@@ -201,4 +202,4 @@ Local target aliases:
 
 ## 消费边界
 
-RDF12 projector 的公共事实是字段谓词、raw value object、format、raw、binding evidence 和源码坐标。`consume_payloads.py` 是下游消费者：它按 heading field `aat:release-policy-config`、`aat:review-playbook` 和 xref edge field `aat:dependency-evidence` 选择 Pydantic model，按 `aat:format` 选择 JSON/YAML parser，再把 `aat:raw` 解释成放行策略配置、复核手册或依赖证据。raw 的 schema validation 与内部字段解释属于下游消费者；如果 raw 不满足下游模型，那是消费模型与源字段的匹配问题，不改变 projection 的结构事实。
+RDF12 projector 的公共事实是字段谓词、raw value object、format、raw、binding evidence 和源码坐标。`consume_payloads.py` 是下游消费者：它按 heading field `field:release-policy-config`、`field:review-playbook` 和 xref edge field `field:dependency-evidence` 选择 Pydantic model，按 `aat:format` 选择 JSON/YAML parser，再把 `aat:raw` 解释成放行策略配置、复核手册或依赖证据。raw 的 schema validation 与内部字段解释属于下游消费者；如果 raw 不满足下游模型，那是消费模型与源字段的匹配问题，不改变 projection 的结构事实。

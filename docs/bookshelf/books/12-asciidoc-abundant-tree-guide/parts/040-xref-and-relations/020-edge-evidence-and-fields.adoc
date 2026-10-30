@@ -19,6 +19,7 @@ xref named attributes 投影为 xref edge evidence 上的 fields。字段主体�
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
+@prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l8-o0> .
@@ -30,8 +31,8 @@ xref named attributes 投影为 xref edge evidence 上的 fields。字段主体�
   aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;
-  aat:weight "0.8" ;
-  aat:condition "旺季" ;
+  field:weight "0.8" ;
+  field:condition "旺季" ;
   aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, condition=旺季]" ;
   aat:relativePath "source/delivery.adoc" ;
   aat:startLine 6 ;

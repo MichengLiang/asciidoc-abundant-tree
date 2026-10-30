@@ -1,4 +1,5 @@
 import { expect } from "vitest";
+import { fieldPredicate } from "../../../src/rdf12-projection/field-predicate";
 import {
 	type Rdf12Graph,
 	type Rdf12IriTerm,
@@ -18,6 +19,10 @@ export function termIri(value: string): Rdf12IriTerm {
 
 export function aatTerm(localName: string): Rdf12IriTerm {
 	return iriTerm(`${namespaces.aat}${localName}`);
+}
+
+export function fieldTerm(fieldName: string): Rdf12IriTerm {
+	return fieldPredicate(fieldName);
 }
 
 export function rdfTerm(localName: string): Rdf12IriTerm {

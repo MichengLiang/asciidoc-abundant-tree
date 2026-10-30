@@ -1,5 +1,6 @@
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
@@ -21,7 +22,6 @@
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
     aat:startLine 1.
 <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l14-o0> a aat:Heading;
-    aat:allergen "蛋类";
     aat:childOrder 1;
     aat:contentEndLine 20;
     aat:contentStartLine 15;
@@ -31,7 +31,6 @@
     aat:headingLevel 2;
     aat:headingLine 14;
     aat:headline "鸡蛋";
-    aat:protein "高";
     aat:raw """=== 鸡蛋
 role:: ingredient
 storage:: 冷藏
@@ -42,9 +41,11 @@ protein:: 高
 
 """;
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
-    aat:role "ingredient";
     aat:startLine 14;
-    aat:storage "冷藏";
+    field:allergen "蛋类";
+    field:protein "高";
+    field:role "ingredient";
+    field:storage "冷藏";
     rel:is-a <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l33-o0>.
 <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l22-o0> a aat:Heading;
     aat:childOrder 2;
@@ -52,7 +53,6 @@ protein:: 高
     aat:contentStartLine 23;
     aat:documentOrder 5;
     aat:endLine 28;
-    aat:flavor "酸甜";
     aat:generatedAddressLabel "_番茄";
     aat:headingLevel 2;
     aat:headingLine 22;
@@ -66,9 +66,10 @@ flavor:: 酸甜
 
 """;
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
-    aat:role "ingredient";
     aat:startLine 22;
-    aat:storage "常温";
+    field:flavor "酸甜";
+    field:role "ingredient";
+    field:storage "常温";
     rel:is-a <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l33-o0>.
 <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l29-o0> a aat:Heading;
     aat:childOrder 3;
@@ -76,7 +77,6 @@ flavor:: 酸甜
     aat:contentStartLine 30;
     aat:documentOrder 6;
     aat:endLine 32;
-    aat:estimatedTime "5分钟";
     aat:generatedAddressLabel "_炒制步骤";
     aat:headingLevel 2;
     aat:headingLine 29;
@@ -87,8 +87,9 @@ estimatedTime:: 5分钟
 
 """;
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
-    aat:role "step";
-    aat:startLine 29.
+    aat:startLine 29;
+    field:estimatedTime "5分钟";
+    field:role "step".
 <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l3-o0> a aat:Heading;
     aat:childOrder 1;
     aat:contentEndLine 4;
@@ -120,8 +121,8 @@ role:: category
 
 """;
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
-    aat:role "category";
-    aat:startLine 33.
+    aat:startLine 33;
+    field:role "category".
 <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l36-o0> a aat:Heading;
     aat:childOrder 4;
     aat:contentEndLine 37;
@@ -137,14 +138,13 @@ role:: category
 
 """;
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
-    aat:role "category";
-    aat:startLine 36.
+    aat:startLine 36;
+    field:role "category".
 <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l6-o0> a aat:Heading;
     aat:childOrder 2;
     aat:containsDirectly <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l14-o0>, <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l22-o0>, <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l29-o0>;
     aat:contentEndLine 12;
     aat:contentStartLine 7;
-    aat:difficulty "简单";
     aat:documentOrder 3;
     aat:endLine 13;
     aat:generatedAddressLabel "_番茄炒蛋";
@@ -161,10 +161,11 @@ summary:: 一道由番茄和鸡蛋组成的家常菜。
 
 """;
     aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
-    aat:role "recipe";
-    aat:serving "2人份";
     aat:startLine 6;
-    aat:summary "一道由番茄和鸡蛋组成的家常菜。";
+    field:difficulty "简单";
+    field:role "recipe";
+    field:serving "2人份";
+    field:summary "一道由番茄和鸡蛋组成的家常菜。";
     rel:is-a <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#heading-l36-o0>.
 <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#projection> a prov:Entity, aat:HeadingProjection;
     prov:hadPrimarySource <urn:aat:doc:5fab7bb3caf79ee9aabbd4716b4835f852c8a3f950292dd2fab1b3f16c50bc0a#source>;

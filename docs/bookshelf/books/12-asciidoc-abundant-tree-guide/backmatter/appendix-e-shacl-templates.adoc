@@ -37,6 +37,7 @@ ex:HeadingShape a sh:NodeShape ;
 [source,turtle]
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix ex: <https://micheng.dev/ns/example-shapes#>.
 @prefix sh: <http://www.w3.org/ns/shacl#>.
 
@@ -49,7 +50,7 @@ ex:PolicyShape a sh:NodeShape ;
     sh:message "policy shape applies to headings whose role is policy"
   ] ;
   sh:property [
-    sh:path aat:status ;
+    sh:path field:status ;
     sh:minCount 1 ;
     sh:in ("draft" "active") ;
     sh:message "policy heading status must be draft or active"

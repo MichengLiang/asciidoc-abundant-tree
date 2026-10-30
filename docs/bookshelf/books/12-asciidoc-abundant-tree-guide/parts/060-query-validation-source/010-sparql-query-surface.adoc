@@ -24,11 +24,12 @@ SELECT ?heading ?headline ?path ?start ?end WHERE {
 [source,sparql]
 ----
 PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+PREFIX field: <https://micheng.dev/ns/asciidoc-field#>
 
 SELECT ?policy ?headline ?owner ?line WHERE {
   ?policy aat:role "policy" ;
-          aat:status "active" ;
-          aat:owner ?owner ;
+          field:status "active" ;
+          field:owner ?owner ;
           aat:headline ?headline ;
           aat:headingLine ?line .
 }

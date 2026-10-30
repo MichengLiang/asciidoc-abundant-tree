@@ -138,12 +138,12 @@ edge:
   aat:addressLabel "delivery" ;
   aat:addressLabel "rel-delivery-capacity" ;
   aat:role "policy" ;
-  aat:status "active" ;
-  aat:owner "ops" ;
+  field:status "active" ;
+  field:owner "ops" ;
   aat:headingLevel 1 ;
   aat:documentOrder 2 ;
   aat:childOrder 1 ;
-  aat:policy-risk-profile :value-l10-o0 ;
+  field:policy-risk-profile :value-l10-o0 ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 5 ;
   aat:endLine 38 ;
@@ -191,7 +191,7 @@ edge:
   aat:headline "运力规则" ;
   aat:addressLabel "capacity" ;
   aat:role "rule" ;
-  aat:status "active" ;
+  field:status "active" ;
   aat:headingLevel 1 ;
   aat:documentOrder 3 ;
   aat:childOrder 2 ;
@@ -216,7 +216,7 @@ edge:
 
 [source,turtle]
 ----
-:heading-l5-o0 aat:policy-risk-profile :value-l10-o0 .
+:heading-l5-o0 field:policy-risk-profile :value-l10-o0 .
 
 :value-l10-o0 aat:forSelector "delivery" ;
   aat:format "json" ;
@@ -237,7 +237,7 @@ edge:
 }""" .
 ----
 
-该 complex property 的公共读取路径是 heading 的 `aat:policy-risk-profile`。消费者按字段名取得 raw value object，并按 `aat:format` 解析 raw。
+该 complex property 的公共读取路径是 heading 的 `field:policy-risk-profile`。消费者按字段名取得 raw value object，并按 `aat:format` 解析 raw。
 
 === 交叉引用边
 
@@ -252,8 +252,8 @@ edge:
   aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;
-  aat:weight "0.8" ;
-  aat:relation-evidence :value-l25-o0 ;
+  field:weight "0.8" ;
+  field:relation-evidence :value-l25-o0 ;
   aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 8 ;
@@ -268,7 +268,7 @@ edge:
 
 [source,turtle]
 ----
-:xref-edge-l8-c8-o0 aat:relation-evidence :value-l25-o0 .
+:xref-edge-l8-c8-o0 field:relation-evidence :value-l25-o0 .
 
 :value-l25-o0 aat:sourceValueId "rel-delivery-capacity" ;
   aat:format "yaml" ;
@@ -340,20 +340,20 @@ edge:
 
 * 标题节点数量为四个。
 * `= root` 创建标题节点。
-* `配送策略` 节点有 `aat:addressLabel "delivery"`、`aat:addressLabel "rel-delivery-capacity"`、`aat:role "policy"`、`aat:status "active"` 和 `aat:owner "ops"`。
-* `运力规则` 节点有 `aat:addressLabel "capacity"`、`aat:role "rule"` 和 `aat:status "active"`。
+* `配送策略` 节点有 `aat:addressLabel "delivery"`、`aat:addressLabel "rel-delivery-capacity"`、`aat:role "policy"`、`field:status "active"` 和 `field:owner "ops"`。
+* `运力规则` 节点有 `aat:addressLabel "capacity"`、`aat:role "rule"` 和 `field:status "active"`。
 * `运力规则` 节点自身 raw 不包含 `=== 我是3级标题`。
 * `root` 直接包含 `配送策略` 和 `运力规则`。
 * `运力规则` 直接包含 `我是3级标题`。
 * `配送策略` 和 `运力规则` 在 `root` 的 direct children 中分别拥有 `aat:childOrder 1` 和 `aat:childOrder 2`。
 * 四个标题节点的 `aat:documentOrder` 按 `root`、`配送策略`、`运力规则`、`我是3级标题` 连续递增。
 * `配送策略` 到 `运力规则` 生成 `rel:depends-on` 边。
-* xref `weight=0.8` 投影为边证据上的 `aat:weight "0.8"`。
-* xref `relation-evidence=rel-delivery-capacity` 投影为边证据上的 `aat:relation-evidence` raw value object。
+* xref `weight=0.8` 投影为边证据上的 `field:weight "0.8"`。
+* xref `relation-evidence=rel-delivery-capacity` 投影为边证据上的 `field:relation-evidence` raw value object。
 * `[.policy-risk-profile, for=delivery]` 表达 heading complex property。
-* heading complex property 通过 `for=delivery` 绑定为 `配送策略` 的 `aat:policy-risk-profile`。
+* heading complex property 通过 `for=delivery` 绑定为 `配送策略` 的 `field:policy-risk-profile`。
 * heading raw value object 有 `aat:forSelector "delivery"` 和 `aat:format "json"`。
-* `[#rel-delivery-capacity]` 通过 xref 的 `relation-evidence=rel-delivery-capacity` 绑定为 `depends-on` 边证据的 `aat:relation-evidence` raw value object。
+* `[#rel-delivery-capacity]` 通过 xref 的 `relation-evidence=rel-delivery-capacity` 绑定为 `depends-on` 边证据的 `field:relation-evidence` raw value object。
 * edge raw value object 有 `aat:sourceValueId "rel-delivery-capacity"` 和 `aat:format "yaml"`。
 * format 来自 source block language。
 * raw 不展开为业务 RDF 图。

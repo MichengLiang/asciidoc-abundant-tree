@@ -20,14 +20,15 @@ summary::
 [source,turtle]
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 
 <urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "delivery" ;
   aat:role "policy" ;
-  aat:status "active" ;
-  aat:owner "ops" ;
-  aat:priority "high" ;
-  aat:summary "配送策略定义订单进入配送流程后的降级与复核规则。" ;
-  aat:review-state "ready" .
+  field:status "active" ;
+  field:owner "ops" ;
+  field:priority "high" ;
+  field:summary "配送策略定义订单进入配送流程后的降级与复核规则。" ;
+  field:review-state "ready" .
 ----
 
 selector binding 使用 heading label space。role 是 heading field，提供筛选、报告和下游模型映射入口。下游模型可以把 role 映射为业务 class，也可以只把它作为普通字段消费。role 词表属于书稿或领域模型；每个 role 在同一模型中保持单一含义。

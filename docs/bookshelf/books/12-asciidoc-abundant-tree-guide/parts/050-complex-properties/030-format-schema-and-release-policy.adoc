@@ -63,15 +63,16 @@ reason: 放行策略必须读取温控审计结果。
 [source,sparql]
 ----
 PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+PREFIX field: <https://micheng.dev/ns/asciidoc-field#>
 
 SELECT ?configRaw ?evidenceRaw WHERE {
   ?policy aat:addressLabel "cold-chain-release" ;
-          aat:release-policy-config ?config .
+          field:release-policy-config ?config .
   ?config aat:raw ?configRaw .
 
   ?edge a aat:XrefEdge ;
         aat:sourceHeading ?policy ;
-        aat:dependency-evidence ?evidence .
+        field:dependency-evidence ?evidence .
   ?evidence aat:raw ?evidenceRaw .
 }
 ----

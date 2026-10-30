@@ -3,21 +3,26 @@ import { fieldPredicate } from "../../src/rdf12-projection/field-predicate";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 
 describe("rdf12 field predicate mapping", () => {
-	it("uses the aat namespace directly for simple legal field names", () => {
-		expect(fieldPredicate("kind").value).toBe(`${namespaces.aat}kind`);
-		expect(fieldPredicate("status").value).toBe(`${namespaces.aat}status`);
-		expect(fieldPredicate("owner").value).toBe(`${namespaces.aat}owner`);
-		expect(fieldPredicate("weight").value).toBe(`${namespaces.aat}weight`);
+	it("writes every field name as written under the field namespace", () => {
+		expect(fieldPredicate("status").value).toBe(`${namespaces.field}status`);
+		expect(fieldPredicate("难度").value).toBe(`${namespaces.field}难度`);
+		expect(fieldPredicate("9priority").value).toBe(
+			`${namespaces.field}9priority`,
+		);
+		expect(fieldPredicate("x/y").value).toBe(`${namespaces.field}x/y`);
 	});
 
-	it("uses stable IRI-safe encoding for unsafe local names", () => {
-		expect(fieldPredicate("9priority").value).toBe(
-			`${namespaces.aat}field-9priority`,
+	it("keeps field names apart from the projector's own vocabulary", () => {
+		expect(fieldPredicate("role").value).toBe(`${namespaces.field}role`);
+		expect(fieldPredicate("headline").value).not.toBe(
+			`${namespaces.aat}headline`,
 		);
+	});
+
+	it("percent-encodes only what an IRI cannot carry", () => {
 		expect(fieldPredicate("über score").value).toBe(
-			`${namespaces.aat}field-%C3%BCber%20score`,
+			`${namespaces.field}über%20score`,
 		);
-		expect(fieldPredicate("x/y").value).toBe(`${namespaces.aat}field-x%2Fy`);
 	});
 
 	it("maps the same field name deterministically", () => {

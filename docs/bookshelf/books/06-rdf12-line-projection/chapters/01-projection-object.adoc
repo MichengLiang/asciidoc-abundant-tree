@@ -15,6 +15,7 @@
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
+@prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -22,7 +23,22 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 ----
 
-`aat:` 承载标题投影词表。`rel:` 承载由 xref `rel` 字段映射出的关系谓词。`rdf:` 承载 `rdf:type` 和 `rdf:reifies`。`prov:` 承载来源关系。`xsd:` 承载 typed literal。
+`aat:` 承载投影器自己的标题投影词表。`rel:` 承载由 xref `rel` 字段映射出的关系谓词。`field:` 承载由字段名映射出的字段谓词。`rdf:` 承载 `rdf:type` 和 `rdf:reifies`。`prov:` 承载来源关系。`xsd:` 承载 typed literal。
+
+`rel:` 与 `field:` 下的名字是书写下的词，由书自己的约定声明定义；`aat:` 下的名字是投影器定义的。二者分属不同的命名空间，查询者从谓词就能分辨一条事实出自投影器还是出自书。
+
+[#names-in-iri]
+=== 名字进入 IRI
+
+作者写下的名字进入 IRI 时，按原文写进 IRI，只转写 IRI 语法不允许出现的字符。关系谓词、字段谓词都按这条规则命名。
+
+投影先服务书的自然书写，再服务查询：作者在约定声明里写下 `难度`、`依据`，查询者照着同一个词写 `field:难度`、`rel:依据`，中间不经过任何换算。RDF 1.2 的 IRI 按 RFC 3987 定义，其中的 `ucschar` 包含汉字与中文标点，所以中文的名字原样就是合法的 IRI。
+
+转写规则：名字中的字符属于 RFC 3987 `ifragment` 允许的字符时原样保留，即 `iunreserved`（字母、数字、`-`、`.`、`_`、`~` 与 `ucschar`）、`sub-delims`（`!$&'()*+,;=`）、`:`、`@`、`/` 与 `?`；其余字符按 UTF-8 逐字节写成大写十六进制的 `%XX`。`%` 本身总是写成 `%25`，因此转写可逆：对名字部分做一次百分号解码，得到的就是原文。
+
+需要转写的字符是空格、`"`、`#`、`%`、`<`、`>`、`[`、`\`、`]`、`^`、反引号、`{`、`|`、`}`、控制字符，以及不在 `ucschar` 中的码位（例如私用区）。`#` 要转写，是因为这些名字写在命名空间的 `#` 之后，`#` 已经是命名空间与名字的分界。中文标点（`、，。：；“”《》——……`）与常见的英文标点（`.,:;!?'()&+=-/`）原样保留。`dockview 适配` 写成 `dockview%20适配`，`5% 盐水` 写成 `5%25%20盐水`。
+
+SPARQL 与 Turtle 的前缀名比 IRI 窄：`——`、`……`、弯引号不能写进前缀名，`/`、`(` 要写成 `\/`、`\(`。这时查询者写完整的 IRI `<…>`，序列化器写不成前缀名时也写完整的 IRI。前缀名的字符集只约束写法，不约束 IRI 本身，所以名字不为前缀名而改写。
 
 === 构成性对象
 

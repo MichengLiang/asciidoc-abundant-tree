@@ -54,6 +54,7 @@ edge:
 ```ttl
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
@@ -100,7 +101,7 @@ edge:
     aat:relativePath "samples/structural-payload.adoc";
     aat:role "rule";
     aat:startLine 39;
-    aat:status "active".
+    field:status "active".
 <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l44-o0> a aat:Heading;
     aat:childOrder 1;
     aat:contentEndLine 46;
@@ -130,8 +131,8 @@ edge:
     aat:headline "配送策略";
     aat:metadataEndLine 5;
     aat:metadataStartLine 5;
-    aat:owner "ops";
-    aat:policy-risk-profile <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l10-o0>;
+    field:owner "ops";
+    field:policy-risk-profile <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l10-o0>;
     aat:raw """[#delivery.policy, status=active, owner=ops]
 == 配送策略
 
@@ -170,7 +171,7 @@ edge:
     aat:relativePath "samples/structural-payload.adoc";
     aat:role "policy";
     aat:startLine 5;
-    aat:status "active";
+    field:status "active";
     rel:depends-on <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l39-o0>.
 <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l10-o0> aat:contentEndLine 22;
     aat:contentStartLine 13;
@@ -222,7 +223,7 @@ edge:
     aat:officialResolvedType "section";
     aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]";
     aat:rel "depends-on";
-    aat:relation-evidence <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l25-o0>;
+    field:relation-evidence <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#payload-l25-o0>;
     aat:relativePath "samples/structural-payload.adoc";
     aat:sourceHeading <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l5-o0>;
     aat:sourceSelector "delivery";
@@ -231,6 +232,6 @@ edge:
     aat:syntax "macro";
     aat:targetHeading <urn:aat:doc:6ff262e68773cfcc963dd1dc9840c01f1dbc591d071035139d16fb35040f3622#heading-l39-o0>;
     aat:targetSelector "capacity";
-    aat:weight "0.8".
+    field:weight "0.8".
 
 ```

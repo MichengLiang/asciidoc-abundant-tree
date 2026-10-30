@@ -6,6 +6,7 @@ SHACL shape graph 把 projection graph 上的事实变成可检查约束。role 
 [source,turtle]
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 @prefix ex: <https://micheng.dev/ns/structure-model#> .
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
@@ -14,7 +15,7 @@ SHACL shape graph 把 projection graph 上的事实变成可检查约束。role 
 ex:ProcessShape a sh:NodeShape ;
   sh:targetClass ex:ProcessHeading ;
   sh:property [
-    sh:path aat:owner ;
+    sh:path field:owner ;
     sh:minCount 1 ;
     sh:datatype xsd:string ;
     sh:message "process heading must declare owner"

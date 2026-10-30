@@ -6,6 +6,7 @@ import type {
 	XrefOccurrenceNode,
 } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
+import { fieldPredicate } from "../../src/rdf12-projection/field-predicate";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
 	integerLiteral,
@@ -285,7 +286,12 @@ describe("rdf12 xref edge projection", () => {
 			"targetSelector",
 			"missing-target",
 		);
-		expectStringTriple(projection.graph, edge, "payload", "delivery");
+		expectStringTriple(
+			projection.graph,
+			edge,
+			fieldPredicate("payload"),
+			"delivery",
+		);
 		expectStringTriple(projection.graph, edge, "payloadSelector", undefined);
 		expect(
 			projection.graph.match({
@@ -323,7 +329,7 @@ describe("rdf12 xref edge projection", () => {
 		const evidence = onlyObjectIri(
 			projection.graph,
 			complexPropertyEdge,
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence"),
 		);
 
 		expectTriple(projection.graph, aliasTargetEdge, "sourceHeading", delivery);
@@ -337,7 +343,7 @@ describe("rdf12 xref edge projection", () => {
 		expectTriple(
 			projection.graph,
 			complexPropertyEdge,
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence"),
 			evidence,
 		);
 		expectStringTriple(
@@ -515,13 +521,13 @@ describe("rdf12 xref edge projection", () => {
 		).toHaveLength(0);
 	});
 
-	it("preserves unmappable rel values without asserting a relation triple", () => {
-		const projection = projectAbundantDocumentToRdf12(invalidRelDocument(), {
+	it("leaves an empty rel as edge evidence without a relation triple", () => {
+		const projection = projectAbundantDocumentToRdf12(emptyRelDocument(), {
 			documentRoot: projectRoot,
 		});
 		const edge = onlyXrefEdge(projection.graph);
 
-		expectStringTriple(projection.graph, edge, "rel", " bad rel ");
+		expectStringTriple(projection.graph, edge, "rel", "");
 		expect(
 			projection.graph.match({
 				subject: iriTerm(edge),
@@ -531,8 +537,22 @@ describe("rdf12 xref edge projection", () => {
 		expect(
 			projection.graph
 				.toArray()
-				.filter((triple) => triple.predicate.value.includes("bad rel")),
+				.filter((triple) => triple.predicate.value.startsWith(namespaces.rel)),
 		).toHaveLength(0);
+	});
+
+	it("writes a rel value with spaces as written, percent-encoding the spaces", () => {
+		const projection = projectAbundantDocumentToRdf12(spacedRelDocument(), {
+			documentRoot: projectRoot,
+		});
+
+		expect(
+			projection.graph
+				.toArray()
+				.filter(
+					(triple) => triple.predicate.value === `${namespaces.rel}依%20据`,
+				),
+		).toHaveLength(1);
 	});
 
 	it("uses leading macro rel attributes as relation predicates", async () => {
@@ -588,7 +608,7 @@ describe("rdf12 xref edge projection", () => {
 		expectStringTriple(
 			projection.graph,
 			onlyXrefEdge(projection.graph),
-			"payload",
+			fieldPredicate("payload"),
 			"rel-delivery-capacity",
 		);
 		expectStringTriple(
@@ -722,17 +742,11 @@ function onlyXrefEdge(graph: Rdf12Graph): string {
 function expectTriple(
 	graph: Rdf12Graph,
 	subject: string,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	object: Rdf12IriTerm,
 ): void {
 	expect(
-		graph.has(
-			rdf12Triple(
-				iriTerm(subject),
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
-				object,
-			),
-		),
+		graph.has(rdf12Triple(iriTerm(subject), predicateTerm(predicate), object)),
 	).toBe(true);
 }
 
@@ -761,12 +775,12 @@ function expectTripleTerm(
 function onlyObjectIri(
 	graph: Rdf12Graph,
 	subject: string,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 ): Rdf12IriTerm {
 	const objects = graph
 		.match({
 			subject: iriTerm(subject),
-			predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+			predicate: predicateTerm(predicate),
 		})
 		.map((triple) => triple.object)
 		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
@@ -778,14 +792,14 @@ function onlyObjectIri(
 function expectStringTriple(
 	graph: Rdf12Graph,
 	subject: string,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: string | undefined,
 ): void {
 	if (value === undefined) {
 		expect(
 			graph.match({
 				subject: iriTerm(subject),
-				predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+				predicate: predicateTerm(predicate),
 			}),
 		).toHaveLength(0);
 		return;
@@ -795,7 +809,7 @@ function expectStringTriple(
 		graph.has(
 			rdf12Triple(
 				iriTerm(subject),
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
+				predicateTerm(predicate),
 				stringLiteral(value),
 			),
 		),
@@ -805,14 +819,14 @@ function expectStringTriple(
 function expectNumberTriple(
 	graph: Rdf12Graph,
 	subject: string,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: number,
 ): void {
 	expect(
 		graph.has(
 			rdf12Triple(
 				iriTerm(subject),
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
+				predicateTerm(predicate),
 				integerLiteral(value),
 			),
 		),
@@ -1138,7 +1152,7 @@ function relPayloadDocument(): AbundantDocument {
 	};
 }
 
-function invalidRelDocument(): AbundantDocument {
+function emptyRelDocument(): AbundantDocument {
 	return {
 		...baseDocument(),
 		children: [
@@ -1149,22 +1163,60 @@ function invalidRelDocument(): AbundantDocument {
 				[
 					{
 						kind: "paragraph",
-						text: "Invalid rel target.",
+						text: "Empty rel target.",
 						source: { span: { startLine: 4, endLine: 4 } },
 						children: [
 							{
 								kind: "xref",
 								syntax: "macro",
-								raw: "xref:target[Target, rel= bad rel ]",
+								raw: "xref:target[Target, rel=]",
 								target: "target",
 								label: "Target",
 								containingSectionId: "target",
 								attributes: {
-									rel: " bad rel ",
+									rel: "",
 								},
 								sourceSpan: {
 									start: { line: 4, column: 1 },
-									end: { line: 4, column: 36 },
+									end: { line: 4, column: 26 },
+								},
+							},
+						],
+					},
+				],
+				4,
+			),
+		],
+	};
+}
+
+function spacedRelDocument(): AbundantDocument {
+	return {
+		...baseDocument(),
+		children: [
+			sectionNode(
+				1,
+				"target",
+				"Target",
+				[
+					{
+						kind: "paragraph",
+						text: "Spaced rel target.",
+						source: { span: { startLine: 4, endLine: 4 } },
+						children: [
+							{
+								kind: "xref",
+								syntax: "macro",
+								raw: 'xref:target[Target, rel="依 据"]',
+								target: "target",
+								label: "Target",
+								containingSectionId: "target",
+								attributes: {
+									rel: "依 据",
+								},
+								sourceSpan: {
+									start: { line: 4, column: 1 },
+									end: { line: 4, column: 33 },
 								},
 							},
 						],
@@ -1296,4 +1348,11 @@ function baseDocument(): AbundantDocument {
 		headingInlineMetadataOccurrences: [],
 		toolDiagnostics: [],
 	};
+}
+
+// 字符串是投影器词表（aat:）里的名字；书的字段由调用处用 fieldPredicate 给出完整的谓词。
+function predicateTerm(predicate: string | Rdf12IriTerm): Rdf12IriTerm {
+	return typeof predicate === "string"
+		? iriTerm(`${namespaces.aat}${predicate}`)
+		: predicate;
 }

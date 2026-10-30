@@ -1,5 +1,6 @@
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
@@ -32,7 +33,6 @@
     aat:headline "冷链出库放行策略";
     aat:metadataEndLine 3;
     aat:metadataStartLine 3;
-    aat:owner "quality-ops";
     aat:raw """[#cold-chain-release.policy, status=active, owner=quality-ops]
 == 冷链出库放行策略
 
@@ -69,11 +69,12 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
 
 """;
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
-    aat:release-policy-config <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0>;
-    aat:review-playbook <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0>;
     aat:role "policy";
     aat:startLine 3;
-    aat:status "active";
+    field:owner "quality-ops";
+    field:release-policy-config <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0>;
+    field:review-playbook <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0>;
+    field:status "active";
     rel:depends-on <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0>.
 <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0> a aat:Heading;
     aat:addressLabel "temperature-audit";
@@ -96,7 +97,7 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
     aat:role "rule";
     aat:startLine 37;
-    aat:status "active".
+    field:status "active".
 <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0> aat:contentEndLine 23;
     aat:contentStartLine 20;
     aat:endLine 24;
@@ -139,7 +140,6 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc".
 <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0> rdf:reifies <<(<urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0> rel:depends-on <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0>)>>;
     a aat:XrefEdge;
-    aat:dependency-evidence <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0>;
     aat:displayLabel "温控审计规则";
     aat:endColumn 121;
     aat:endLine 6;
@@ -157,4 +157,5 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
     aat:syntax "macro";
     aat:targetHeading <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0>;
     aat:targetSelector "temperature-audit";
-    aat:weight "0.9".
+    field:dependency-evidence <urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0>;
+    field:weight "0.9".

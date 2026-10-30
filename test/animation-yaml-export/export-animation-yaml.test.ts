@@ -10,6 +10,7 @@ import { readBusinessNodes } from "../../src/animation-yaml-export/graph-reader"
 import { parsePayloadRaw } from "../../src/animation-yaml-export/payload-parser";
 import { makeAnimationYamlDocument } from "../../src/animation-yaml-export/yaml-shape";
 import { parseAbundantTree, rdf12 } from "../../src/index";
+import { fieldPredicate } from "../../src/rdf12-projection/field-predicate";
 import {
 	createRdf12Graph,
 	type Rdf12Graph,
@@ -316,14 +317,14 @@ describe("animation YAML export", () => {
 		add(graph, scene, "role", "animation-scene");
 		add(graph, scene, "generatedAddressLabel", "scene-generated");
 		add(graph, scene, "headline", "Scene From Graph");
-		add(graph, scene, "sequence", integerLiteral(2));
-		add(graph, scene, "field-status", "draft");
-		add(graph, scene, "field-assigned-to", "director");
-		add(graph, scene, "field-ready", "false");
+		addField(graph, scene, "sequence", integerLiteral(2));
+		addField(graph, scene, "status", "draft");
+		addField(graph, scene, "assigned-to", "director");
+		addField(graph, scene, "ready", "false");
 		add(graph, scene, "relativePath", "book.adoc");
 		add(graph, scene, "startLine", integerLiteral(7));
 		add(graph, scene, "endLine", integerLiteral(9));
-		graph.add(rdf12Triple(scene, aat("scene-payload"), payload));
+		graph.add(rdf12Triple(scene, field("scene-payload"), payload));
 		add(graph, payload, "format", "toml");
 		add(graph, payload, "raw", "unsupported = true");
 		addRelation(graph, scene, "adapted-from", source);
@@ -534,14 +535,14 @@ async function expectProfilePayloadHasNoSourcePayloadId(): Promise<void> {
 	const payload = onlyObjectIri(
 		projection.graph,
 		profile,
-		aat("animation-payload"),
+		field("animation-payload"),
 	);
 
 	expect(
 		projection.graph.match({ subject: payload, predicate: aat("payloadId") }),
 	).toHaveLength(0);
 	expect(
-		projection.graph.match({ subject: profile, predicate: aat("payload") }),
+		projection.graph.match({ subject: profile, predicate: field("payload") }),
 	).toHaveLength(0);
 	expect(
 		projection.graph.match({ subject: payload, predicate: aat("raw") }),
@@ -582,6 +583,10 @@ function aat(localName: string): Rdf12IriTerm {
 	return iriTerm(`${namespaces.aat}${localName}`);
 }
 
+function field(fieldName: string): Rdf12IriTerm {
+	return fieldPredicate(fieldName);
+}
+
 function rel(localName: string): Rdf12IriTerm {
 	return iriTerm(`${namespaces.rel}${localName}`);
 }
@@ -598,6 +603,16 @@ function add(
 ): void {
 	const object = typeof value === "string" ? stringLiteral(value) : value;
 	graph.add(rdf12Triple(subject, aat(predicateLocalName), object));
+}
+
+function addField(
+	graph: Rdf12Graph,
+	subject: Rdf12IriTerm,
+	fieldName: string,
+	value: string | ReturnType<typeof integerLiteral>,
+): void {
+	const object = typeof value === "string" ? stringLiteral(value) : value;
+	graph.add(rdf12Triple(subject, field(fieldName), object));
 }
 
 function addRelation(

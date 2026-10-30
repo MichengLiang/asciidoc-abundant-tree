@@ -30,10 +30,11 @@ steps:
 [source,turtle]
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 
 <urn:aat:doc:...#heading-l1-o0>
-  aat:release-policy-config <urn:aat:doc:...#payload-l4-o0> ;
-  aat:review-playbook <urn:aat:doc:...#payload-l10-o0> .
+  field:release-policy-config <urn:aat:doc:...#payload-l4-o0> ;
+  field:review-playbook <urn:aat:doc:...#payload-l10-o0> .
 
 <urn:aat:doc:...#payload-l4-o0> aat:forSelector "cold-chain-release" ;
   aat:format "json" .
@@ -63,9 +64,10 @@ reason: 放行策略必须读取温控审计结果。
 [source,turtle]
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 
 <urn:aat:doc:...#xref-edge-l3-c12-o0> a aat:XrefEdge ;
-  aat:dependency-evidence <urn:aat:doc:...#payload-l9-o0> .
+  field:dependency-evidence <urn:aat:doc:...#payload-l9-o0> .
 
 <urn:aat:doc:...#payload-l9-o0> aat:sourceValueId "rel-release-temperature-audit" ;
   aat:format "yaml" ;

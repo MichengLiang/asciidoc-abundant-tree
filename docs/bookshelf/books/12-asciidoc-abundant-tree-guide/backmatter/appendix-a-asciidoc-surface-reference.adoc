@@ -18,7 +18,7 @@
 |`aat:role "role"`
 
 |`[key=value]`
-|heading literal field，`aat:key "value"`
+|heading literal field，`field:key "value"`
 
 |标题下第一个连续描述列表
 |heading literal fields；字段值是描述的源表面原文，`+` 续接的块也在其中

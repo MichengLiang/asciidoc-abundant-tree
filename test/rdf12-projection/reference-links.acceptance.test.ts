@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseAbundantTree } from "../../src/parser";
+import { fieldPredicate } from "../../src/rdf12-projection/field-predicate";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
 	integerLiteral,
@@ -169,9 +170,19 @@ describe("rdf12 reference-links query contract acceptance", () => {
 		const edge = onlyXrefEdgeForSelector(projection.graph, "capacity");
 
 		expectStringTriple(projection.graph, deliveryPolicy, "role", "policy");
-		expectStringTriple(projection.graph, deliveryPolicy, "status", "active");
-		expectStringTriple(projection.graph, deliveryPolicy, "owner", "ops");
-		expectStringTriple(projection.graph, edge, "weight", "0.8");
+		expectStringTriple(
+			projection.graph,
+			deliveryPolicy,
+			fieldPredicate("status"),
+			"active",
+		);
+		expectStringTriple(
+			projection.graph,
+			deliveryPolicy,
+			fieldPredicate("owner"),
+			"ops",
+		);
+		expectStringTriple(projection.graph, edge, fieldPredicate("weight"), "0.8");
 		expect(
 			projection.graph.match({
 				predicate: iriTerm(`${namespaces.aat}payloadSelector`),
@@ -210,12 +221,12 @@ async function referenceProjection() {
 
 function onlyHeadingForLabel(
 	graph: Rdf12Graph,
-	predicateLocalName: "addressLabel" | "generatedAddressLabel" | "headline",
+	predicate: "addressLabel" | "generatedAddressLabel" | "headline",
 	value: string,
 ): Rdf12IriTerm {
 	const headings = graph
 		.match({
-			predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+			predicate: predicateTerm(predicate),
 			object: stringLiteral(value),
 		})
 		.map((triple) => triple.subject)
@@ -321,33 +332,23 @@ function expectLineSpan(
 function expectTriple(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	object: Rdf12IriTerm,
 ): void {
 	expect(
-		graph.has(
-			rdf12Triple(
-				subject,
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
-				object,
-			),
-		),
+		graph.has(rdf12Triple(subject, predicateTerm(predicate), object)),
 	).toBe(true);
 }
 
 function expectStringTriple(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: string,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(
-				subject,
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
-				stringLiteral(value),
-			),
+			rdf12Triple(subject, predicateTerm(predicate), stringLiteral(value)),
 		),
 	).toBe(true);
 }
@@ -355,16 +356,19 @@ function expectStringTriple(
 function expectIntegerTriple(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: number,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(
-				subject,
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
-				integerLiteral(value),
-			),
+			rdf12Triple(subject, predicateTerm(predicate), integerLiteral(value)),
 		),
 	).toBe(true);
+}
+
+// 字符串是投影器词表（aat:）里的名字；书的字段由调用处用 fieldPredicate 给出完整的谓词。
+function predicateTerm(predicate: string | Rdf12IriTerm): Rdf12IriTerm {
+	return typeof predicate === "string"
+		? iriTerm(`${namespaces.aat}${predicate}`)
+		: predicate;
 }

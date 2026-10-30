@@ -6,6 +6,12 @@ This project uses semantic versioning after `0.1.0`.
 
 ## Unreleased
 
+### Changed (breaking)
+
+- Field predicates move to their own namespace, `field:` (`https://micheng.dev/ns/asciidoc-field#`), and carry the field name as the book writes it: `难度` is `field:难度`, `status` is `field:status`. Only characters an IRI cannot carry (space, `"`, `#`, `%`, `<`, `>`, `[`, `\`, `]`, `^`, backtick, `{`, `|`, `}`, control characters, code points outside `ucschar`) are percent-encoded, and `%` always is, so one percent-decoding returns the name. Before, ASCII-identifier names were `aat:<name>` and every other name was `aat:field-<encodeURIComponent(name)>`: a query written with the book's own word (`?h 字段:落点 ?v`) matched nothing, and a book field named `role`, `rel` or `headline` shared a predicate with the projector's own vocabulary. A heading's `.role` stays `aat:role`; a field named `role` (`role:: recipe`, `hmeta:role[...]`) is now `field:role`.
+- A `rel` value that is neither an absolute IRI nor a known CURIE becomes a `rel:` predicate under the same rule: `rel=依据` is `rel:依据`, `rel="依 据"` is `rel:依%20据`. Only an empty `rel` leaves the edge evidence with `aat:rel` and no relation triple; non-ASCII relation words used to get no relation triple at all.
+- The animation YAML export reads fields from `field:` only.
+
 ## 0.2.6 - 2026-10-23
 
 ### Fixed

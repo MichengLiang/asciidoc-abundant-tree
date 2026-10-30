@@ -76,7 +76,7 @@ xref:capacity[运力规则, rel=depends-on]
 
 `rel` 只选择谓词。投影器不解释该谓词的业务语义。
 
-`rel` 字段是绝对 IRI 时，predicate 使用该 IRI。`rel` 字段是已知 CURIE 时，predicate 使用展开后的 IRI。`rel` 字段是普通 token 时，predicate 使用 `rel:` 命名空间下的稳定 IRI-safe 映射。`rel` 不能映射为合法 IRI 时，边证据保留 `aat:rel`，不生成主 relation triple。
+`rel` 字段是绝对 IRI 时，predicate 使用该 IRI。`rel` 字段是已知 CURIE 时，predicate 使用展开后的 IRI。其余非空的 `rel` 是书的关系谓词词表里的词，predicate 是 `rel:` 下按原文写成的名字，转写规则见 xref:names-in-iri[名字进入 IRI]：`rel=depends-on` 映射为 `rel:depends-on`，`rel=依据` 映射为 `rel:依据`。`rel` 为空时，边证据保留 `aat:rel`，不生成主 relation triple。
 
 === 边证据
 
@@ -99,8 +99,8 @@ xref:capacity[运力规则, rel=depends-on]
   aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;
-  aat:weight "0.8" ;
-  aat:relation-evidence :value-l25-o0 ;
+  field:weight "0.8" ;
+  field:relation-evidence :value-l25-o0 ;
   aat:raw "xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]" ;
   aat:relativePath "samples/structural-payload.adoc" ;
   aat:startLine 8 ;
@@ -109,8 +109,8 @@ xref:capacity[运力规则, rel=depends-on]
   aat:endColumn 96 .
 ----
 
-普通 xref named attributes 使用 `aat:` 命名空间下同名 field predicate。示例中的 `weight=0.8` 投影为 `aat:weight "0.8"`。字段值按源文档表面值保存为 string literal。
+普通 xref named attributes 投影为字段谓词，规则见 xref:field-predicate[Field Predicate]。示例中的 `weight=0.8` 投影为 `field:weight "0.8"`。字段值按源文档表面值保存为 string literal。
 
-xref edge complex property 也使用 field predicate。示例中的 `relation-evidence=rel-delivery-capacity` 匹配 source value block id 时，边证据输出 `aat:relation-evidence :value-l25-o0`。raw value object 保存该 source value block 的 raw、format、source coordinates 和 `aat:sourceValueId`。
+xref edge complex property 也使用 field predicate。示例中的 `relation-evidence=rel-delivery-capacity` 匹配 source value block id 时，边证据输出 `field:relation-evidence :value-l25-o0`。raw value object 保存该 source value block 的 raw、format、source coordinates 和 `aat:sourceValueId`。
 
 同一个 xref edge evidence 可以拥有多个 complex properties。每个 xref named attribute 的 key 是字段名；value 唯一匹配 source value block id 时，该字段值是 raw value object。未匹配或多义匹配时，该字段值是 string literal。

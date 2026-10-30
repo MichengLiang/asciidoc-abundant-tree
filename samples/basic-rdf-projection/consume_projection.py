@@ -14,6 +14,7 @@ from pyoxigraph import RdfFormat, Store
 
 SAMPLE_FILE = "basic-projection.adoc"
 NS_AAT = "https://micheng.dev/ns/asciidoc-abundant-tree#"
+NS_FIELD = "https://micheng.dev/ns/asciidoc-field#"
 
 
 def main() -> None:
@@ -81,10 +82,10 @@ def print_headings(store: Store) -> None:
         """
     ):
         heading = value(row["heading"])
-        labels = literal_values(store, heading, "addressLabel")
-        generated = literal_values(store, heading, "generatedAddressLabel")
-        roles = literal_values(store, heading, "role")
-        statuses = literal_values(store, heading, "status")
+        labels = literal_values(store, heading, "aat:addressLabel")
+        generated = literal_values(store, heading, "aat:generatedAddressLabel")
+        roles = literal_values(store, heading, "aat:role")
+        statuses = literal_values(store, heading, "field:status")
         label_text = ", ".join(labels or generated) or "-"
         role_text = f" role={roles[0]}" if roles else ""
         status_text = f" status={statuses[0]}" if statuses else ""
@@ -122,6 +123,7 @@ def print_xref_edges(store: Store) -> None:
     for row in store.query(
         """
         PREFIX aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>
+        PREFIX field: <https://micheng.dev/ns/asciidoc-field#>
         SELECT ?sourceHeadline ?targetHeadline ?targetSelector ?rel ?weight ?officialType WHERE {
           ?edge a aat:XrefEdge ;
                 aat:sourceHeading ?source ;
@@ -131,7 +133,7 @@ def print_xref_edges(store: Store) -> None:
           ?source aat:headline ?sourceHeadline .
           ?target aat:headline ?targetHeadline .
           OPTIONAL { ?edge aat:rel ?rel }
-          OPTIONAL { ?edge aat:weight ?weight }
+          OPTIONAL { ?edge field:weight ?weight }
         }
         ORDER BY ?sourceHeadline ?targetSelector
         """
@@ -164,12 +166,13 @@ def print_local_aliases(store: Store) -> None:
         print(f"  {value(row['label'])} -> {value(row['headline'])}")
 
 
-def literal_values(store: Store, subject: str, predicate_local_name: str) -> list[str]:
+def literal_values(store: Store, subject: str, predicate: str) -> list[str]:
     rows = store.query(
         f"""
         PREFIX aat: <{NS_AAT}>
+        PREFIX field: <{NS_FIELD}>
         SELECT ?value WHERE {{
-          <{subject}> aat:{predicate_local_name} ?value .
+          <{subject}> {predicate} ?value .
         }}
         ORDER BY ?value
         """

@@ -5,6 +5,22 @@
 
 literal field 保存源表面的 scalar value。complex property 保存源表面的 raw value object。二者使用同一套 field predicate 规则。
 
+[#field-predicate]
+=== Field Predicate
+
+字段名是书的约定词表里的词：作者在约定声明里写下它，在标题与 xref 上使用它，查询者照着它写查询。字段谓词因此是 `field:` 命名空间下按原文写成的名字，转写规则见 xref:names-in-iri[名字进入 IRI]：
+
+[source,text]
+----
+fieldPredicate = <https://micheng.dev/ns/asciidoc-field#> + 转写(fieldName)
+----
+
+`难度` 映射为 `field:难度`，`status` 映射为 `field:status`，`dockview 适配` 映射为 `field:dockview%20适配`。ASCII 与非 ASCII 的字段名走同一条规则。
+
+字段谓词不放在 `aat:` 下。`aat:` 是投影器自己的词表（`aat:headline`、`aat:role`、`aat:rel` 等），而字段名由书自己定，可能恰好是 `role`、`rel` 或 `headline`；两者同在一个命名空间时，查询者无法从谓词分辨投影器的事实与书的字段。
+
+字段谓词只表示"源表面上叫这个名字的字段"，不表示它在某本书里的含义。同名字段在不同的书里含义不同时，由下游按各书的约定声明映射。同一字段名在同一投影配置下得到同一谓词 IRI。
+
 === Literal Field
 
 标题 attrlist named attributes 直接投影为标题节点 literal fields。
@@ -21,8 +37,8 @@ literal field 保存源表面的 scalar value。complex property 保存源表面
 ----
 :heading-l5-o0
   aat:role "policy" ;
-  aat:status "active" ;
-  aat:owner "ops" .
+  field:status "active" ;
+  field:owner "ops" .
 ----
 
 xref named attributes 在未绑定 source value block id 时投影为 xref edge evidence literal fields。
@@ -38,12 +54,10 @@ xref:capacity[运力规则, rel=depends-on, weight=0.8]
 ----
 :xref-edge-l8-c8-o0
   aat:rel "depends-on" ;
-  aat:weight "0.8" .
+  field:weight "0.8" .
 ----
 
-literal field 不触发业务解释。`aat:role`、`aat:status`、`aat:owner`、`aat:weight` 只是源文档表面字段的 RDF 表达。下游消费者可以解释这些字段，也可以忽略这些字段。
-
-字段名映射必须确定。字段名匹配 `^[A-Za-z_][A-Za-z0-9._-]*$` 时，谓词 IRI 为 `aat:<fieldName>`；否则为 `aat:field-` 加上字段名的 `encodeURIComponent` 编码（`情况` → `aat:field-%E6%83%85%E5%86%B5`）。同一字段名在同一投影配置下得到同一谓词 IRI。
+literal field 不触发业务解释。`aat:role`、`field:status`、`field:owner`、`field:weight` 只是源文档表面字段的 RDF 表达。下游消费者可以解释这些字段，也可以忽略这些字段。
 
 `rel` 是 xref relation control field。它决定主 relation triple 的谓词，并可作为 `aat:rel` 保留。`rel` 不参与 source value id matching。
 
@@ -95,7 +109,7 @@ property role 必须稳定给出一个字段名。没有 property role 或有多
 
 [source,turtle]
 ----
-:heading-l5-o0 aat:policy-risk-profile :value-l10-o0 .
+:heading-l5-o0 field:policy-risk-profile :value-l10-o0 .
 
 :value-l10-o0 aat:forSelector "delivery" ;
   aat:format "json" ;
@@ -129,7 +143,7 @@ steps:
 ----
 ------
 
-该 source value block 已经由 `for` 字段声明为 heading complex property candidate。投影器按源位置确定 owning heading，并通过 `aat:review-playbook` 连接 raw value object。无值 marker 不输出 `aat:forSelector`。
+该 source value block 已经由 `for` 字段声明为 heading complex property candidate。投影器按源位置确定 owning heading，并通过 `field:review-playbook` 连接 raw value object。无值 marker 不输出 `aat:forSelector`。
 
 === Xref Edge Complex Property
 
@@ -158,7 +172,7 @@ edge:
 
 [source,turtle]
 ----
-:xref-edge-l8-c8-o0 aat:relation-evidence :value-l25-o0 .
+:xref-edge-l8-c8-o0 field:relation-evidence :value-l25-o0 .
 
 :value-l25-o0 aat:sourceValueId "rel-delivery-capacity" ;
   aat:format "yaml" ;
@@ -196,4 +210,4 @@ source value block 的本地 target ID 可以成为所属标题节点的 address
 
 format 表达 raw 的源文本语法。该事实来自 source block language：`[source,json]` 的 format 是 `json`，`[source,yaml]` 的 format 是 `yaml`。source block 没有 language 时，raw value object 不输出 `aat:format`；投影器不通过 raw 内容猜测格式。
 
-field predicate 与 format 是正交事实。`aat:policy-risk-profile` 或 `aat:relation-evidence` 表达下游模型入口；`json` 或 `yaml` 表达 raw 的文本语法。下游消费者按 field predicate 选择模型，按 format 解析 raw。
+field predicate 与 format 是正交事实。`field:policy-risk-profile` 或 `field:relation-evidence` 表达下游模型入口；`json` 或 `yaml` 表达 raw 的文本语法。下游消费者按 field predicate 选择模型，按 format 解析 raw。

@@ -1,29 +1,9 @@
 import { DataFactory } from "n3";
-import { aat, rdf, rel } from "./projection.mjs";
+import { aat, NS, rdf, rel } from "./projection.mjs";
 
 const { namedNode } = DataFactory;
 
 const ignoredHeadings = new Set(["建模约定"]);
-const aatFieldLocalNames = new Set([
-	"headline",
-	"addressLabel",
-	"generatedAddressLabel",
-	"headingLevel",
-	"headingLine",
-	"startLine",
-	"endLine",
-	"contentStartLine",
-	"contentEndLine",
-	"metadataStartLine",
-	"metadataEndLine",
-	"childOrder",
-	"documentOrder",
-	"raw",
-	"relativePath",
-	"role",
-	"containsDirectly",
-	"references",
-]);
 
 export function buildBusinessGraph(dataset, policy) {
 	const headingTerms = dataset.subjects(rdf("type"), aat("Heading"));
@@ -48,37 +28,30 @@ function headingNode(dataset, term) {
 	const label = dataset.literal(term, aat("headline")) ?? term.value;
 	const fields = {};
 	for (const quad of dataset.match(term, undefined, undefined)) {
-		const fieldName = headingFieldName(quad.predicate);
-		if (!fieldName) continue;
-		if (!fields[fieldName]) fields[fieldName] = [];
-		fields[fieldName].push(quad.object.value);
+		const name = fieldName(quad.predicate);
+		if (!name) continue;
+		if (!fields[name]) fields[name] = [];
+		fields[name].push(quad.object.value);
 	}
+	// 建模约定把描述列表里的 `role::` 也当作节点类型。aat 只把 `.recipe` 这样的 role 投影为 aat:role，
+	// `role::` 是书的字段（field:role），由这里按约定映射成节点类型。
+	const { role: roleField = [], ...otherFields } = fields;
 	return {
 		id: term.value,
 		term,
 		label,
-		roles: dataset.literals(term, aat("role")),
-		fields,
+		roles: [...dataset.literals(term, aat("role")), ...roleField],
+		fields: otherFields,
 		line: dataset.literal(term, aat("headingLine")),
 		level: dataset.literal(term, aat("headingLevel")),
 	};
 }
 
-function headingFieldName(predicate) {
-	if (
-		!predicate.value.startsWith(
-			"https://micheng.dev/ns/asciidoc-abundant-tree#",
-		)
-	) {
-		return undefined;
-	}
-	const localName = predicate.value.slice(
-		"https://micheng.dev/ns/asciidoc-abundant-tree#".length,
-	);
-	if (aatFieldLocalNames.has(localName)) {
-		return undefined;
-	}
-	return decodeURIComponent(localName.replace(/^field-/, ""));
+// 书的字段在 field: 下，名字按原文转写，一次百分号解码还原（aat 06 号书《名字进入 IRI》）。
+function fieldName(predicate) {
+	return predicate.value.startsWith(NS.field)
+		? decodeURIComponent(predicate.value.slice(NS.field.length))
+		: undefined;
 }
 
 function hierarchyEdges(dataset, policy, nodeByTerm) {
@@ -137,47 +110,11 @@ function xrefEdges(dataset, nodeByTerm) {
 function edgeAttributes(dataset, edgeTerm) {
 	const attributes = {};
 	for (const quad of dataset.match(edgeTerm, undefined, undefined)) {
-		const fieldName = edgeAttributeName(quad.predicate);
-		if (!fieldName) continue;
-		attributes[fieldName] = quad.object.value;
+		const name = fieldName(quad.predicate);
+		if (!name) continue;
+		attributes[name] = quad.object.value;
 	}
 	return attributes;
-}
-
-function edgeAttributeName(predicate) {
-	if (
-		!predicate.value.startsWith(
-			"https://micheng.dev/ns/asciidoc-abundant-tree#",
-		)
-	) {
-		return undefined;
-	}
-	const localName = predicate.value.slice(
-		"https://micheng.dev/ns/asciidoc-abundant-tree#".length,
-	);
-	const reserved = new Set([
-		"sourceHeading",
-		"targetHeading",
-		"sourceSelector",
-		"targetSelector",
-		"rel",
-		"raw",
-		"relativePath",
-		"startLine",
-		"endLine",
-		"startColumn",
-		"endColumn",
-		"syntax",
-		"displayLabel",
-		"officialHref",
-		"officialReftext",
-		"officialResolvedId",
-		"officialResolvedType",
-	]);
-	if (reserved.has(localName)) {
-		return undefined;
-	}
-	return decodeURIComponent(localName.replace(/^field-/, ""));
 }
 
 function dedupeEdges(edges) {

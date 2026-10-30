@@ -19,6 +19,7 @@ import {
 	expectLiteralValue,
 	expectResourceTypeCount,
 	expectTriple,
+	fieldTerm,
 	literalValues,
 	rdfTerm,
 	relTerm,
@@ -134,7 +135,7 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectTriple(graph, source, relTerm("depends-on"), target);
 		expectTriple(graph, edge, aatTerm("targetHeading"), target);
 		expectTriple(graph, edge, rdfTerm("reifies"), rdf12TripleTerm(relation));
-		expectTriple(graph, edge, aatTerm("weight"), stringLiteral("0.8"));
+		expectTriple(graph, edge, fieldTerm("weight"), stringLiteral("0.8"));
 	});
 
 	it("exposes heading and xref edge complex properties through field predicates", async () => {
@@ -157,21 +158,21 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		const policyRiskProfile = onlyObjectIri(
 			graph,
 			deliveryPolicy,
-			aatTerm("policy-risk-profile"),
+			fieldTerm("policy-risk-profile"),
 		);
 		const relationEvidence = onlyObjectIri(
 			graph,
 			edge,
-			aatTerm("relation-evidence"),
+			fieldTerm("relation-evidence"),
 		);
 
 		expectTriple(
 			graph,
 			deliveryPolicy,
-			aatTerm("policy-risk-profile"),
+			fieldTerm("policy-risk-profile"),
 			policyRiskProfile,
 		);
-		expectTriple(graph, edge, aatTerm("relation-evidence"), relationEvidence);
+		expectTriple(graph, edge, fieldTerm("relation-evidence"), relationEvidence);
 		expectTriple(
 			graph,
 			policyRiskProfile,
@@ -222,10 +223,15 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 		expectTriple(
 			graph,
 			deliveryPolicy,
-			aatTerm("status"),
+			fieldTerm("status"),
 			stringLiteral("active"),
 		);
-		expectTriple(graph, deliveryPolicy, aatTerm("owner"), stringLiteral("ops"));
+		expectTriple(
+			graph,
+			deliveryPolicy,
+			fieldTerm("owner"),
+			stringLiteral("ops"),
+		);
 	});
 
 	it("does not expose old RDF12 public contract types or predicates", async () => {

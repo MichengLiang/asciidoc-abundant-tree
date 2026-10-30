@@ -30,6 +30,7 @@ REPORT_DIR = "reports"
 
 NS_AAT = "https://micheng.dev/ns/asciidoc-abundant-tree#"
 NS_REL = "https://micheng.dev/ns/asciidoc-relation#"
+NS_FIELD = "https://micheng.dev/ns/asciidoc-field#"
 NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
 console = Console()
@@ -219,6 +220,7 @@ def headings(store: Store) -> list[Heading]:
     rows = store.query(
         f"""
         PREFIX aat: <{NS_AAT}>
+        PREFIX field: <{NS_FIELD}>
         SELECT ?heading ?order ?level ?headline ?line ?label ?generated ?faction ?gender ?generation WHERE {{
           ?heading a aat:Heading ;
                    aat:documentOrder ?order ;
@@ -227,9 +229,9 @@ def headings(store: Store) -> list[Heading]:
                    aat:headline ?headline .
           OPTIONAL {{ ?heading aat:addressLabel ?label }}
           OPTIONAL {{ ?heading aat:generatedAddressLabel ?generated }}
-          OPTIONAL {{ ?heading aat:faction ?faction }}
-          OPTIONAL {{ ?heading aat:gender ?gender }}
-          OPTIONAL {{ ?heading aat:generation ?generation }}
+          OPTIONAL {{ ?heading field:faction ?faction }}
+          OPTIONAL {{ ?heading field:gender ?gender }}
+          OPTIONAL {{ ?heading field:generation ?generation }}
         }}
         ORDER BY ?order ?label ?generated
         """
@@ -267,6 +269,7 @@ def relations(store: Store) -> list[Relation]:
     rows = store.query(
         f"""
         PREFIX aat: <{NS_AAT}>
+        PREFIX field: <{NS_FIELD}>
         SELECT ?edge ?source ?target ?sourceHeadline ?targetHeadline ?rel ?weight ?line ?raw
                ?targetSelector ?displayLabel ?officialType ?relativePath WHERE {{
           ?edge a aat:XrefEdge ;
@@ -281,7 +284,7 @@ def relations(store: Store) -> list[Relation]:
             ?target aat:headline ?targetHeadline .
           }}
           OPTIONAL {{ ?edge aat:rel ?rel }}
-          OPTIONAL {{ ?edge aat:weight ?weight }}
+          OPTIONAL {{ ?edge field:weight ?weight }}
           OPTIONAL {{ ?edge aat:displayLabel ?displayLabel }}
           OPTIONAL {{ ?edge aat:officialResolvedType ?officialType }}
         }}

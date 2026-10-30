@@ -44,7 +44,7 @@ node samples/basic-rdf-projection/query_with_oxigraph.mjs
 | document title heading | `= 基础 RDF 投影示例` | level 0 `aat:Heading` |
 | manual address label | `[#structure-example.process]` | `aat:addressLabel "structure-example"` |
 | generated address label | `=== 生成标签节点` | `aat:generatedAddressLabel "_生成标签节点"` |
-| heading direct fields | `status=draft, owner=docs-team` / `priority:: normal` / `summary:: ...` / `hmeta:review-state[...]` | `aat:status`、`aat:owner`、`aat:priority`、`aat:summary`、`aat:review-state` |
+| heading direct fields | `status=draft, owner=docs-team` / `priority:: normal` / `summary:: ...` / `hmeta:review-state[...]` | `field:status`、`field:owner`、`field:priority`、`field:summary`、`field:review-state` |
 | heading role | `.process` / `.rule` / `.evidence` | `aat:role`，下游模型映射为 role class |
 | heading tree | section nesting | `aat:containsDirectly`、`aat:childOrder`、`aat:documentOrder` |
 | explicit relation | `rel=requires` / `rel=documents` | `rel:requires`、`rel:documents` |
@@ -60,7 +60,7 @@ node samples/basic-rdf-projection/query_with_oxigraph.mjs
 
 字段较多，或字段值需要换行时，把字段写成标题下的第一个连续描述列表。`priority:: normal` 是单行字段；`summary::` 后接多行正文时，整段文本成为同一个 heading direct field。
 
-短字段也可以嵌入正文句子，例如 `hmeta:review-state[ready, label=可复核]`。`label` 是面向读者的显示文本，RDF 结构值来自 `value` 或第一个 positional value；因此这个例子投影为 `aat:review-state "ready"`，而不是 `"可复核"`。
+短字段也可以嵌入正文句子，例如 `hmeta:review-state[ready, label=可复核]`。`label` 是面向读者的显示文本，RDF 结构值来自 `value` 或第一个 positional value；因此这个例子投影为 `field:review-state "ready"`，而不是 `"可复核"`。
 
 ## 源 AsciiDoc
 
@@ -147,6 +147,7 @@ rel:documents rdfs:subPropertyOf ex:evidenceLink.
 
 ```ttl
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix ex: <https://micheng.dev/ns/structure-model#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix sh: <http://www.w3.org/ns/shacl#>.
@@ -176,13 +177,13 @@ ex:HeadingShape a sh:NodeShape;
 ex:ProcessShape a sh:NodeShape;
     sh:targetClass ex:ProcessHeading;
     sh:property [
-        sh:path aat:owner;
+        sh:path field:owner;
         sh:minCount 1;
         sh:datatype xsd:string;
         sh:message "process heading must declare owner"
     ];
     sh:property [
-        sh:path aat:status;
+        sh:path field:status;
         sh:minCount 1;
         sh:in ("draft" "active");
         sh:message "process heading status must be draft or active"
@@ -197,13 +198,13 @@ ex:ProcessShape a sh:NodeShape;
 ex:RuleShape a sh:NodeShape;
     sh:targetClass ex:RuleHeading;
     sh:property [
-        sh:path aat:priority;
+        sh:path field:priority;
         sh:minCount 1;
         sh:in ("normal" "high");
         sh:message "rule heading priority must be normal or high"
     ];
     sh:property [
-        sh:path aat:status;
+        sh:path field:status;
         sh:minCount 1;
         sh:hasValue "active";
         sh:message "rule heading status must be active"
@@ -218,7 +219,7 @@ ex:RuleShape a sh:NodeShape;
 ex:EvidenceShape a sh:NodeShape;
     sh:targetClass ex:EvidenceHeading;
     sh:property [
-        sh:path aat:status;
+        sh:path field:status;
         sh:minCount 1;
         sh:hasValue "active";
         sh:message "evidence heading status must be active"
@@ -236,6 +237,7 @@ ex:EvidenceShape a sh:NodeShape;
 ```ttl
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
@@ -273,7 +275,7 @@ ex:EvidenceShape a sh:NodeShape;
     aat:headline "约束规则";
     aat:metadataEndLine 10;
     aat:metadataStartLine 10;
-    aat:priority "normal";
+    field:priority "normal";
     aat:raw """[#required-rule.rule, status=active]
 == 约束规则
 
@@ -296,11 +298,11 @@ WHERE role = 'rule';
 
 """;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:review-state "ready";
+    field:review-state "ready";
     aat:role "rule";
     aat:startLine 10;
-    aat:status "active";
-    aat:summary "约束规则集中说明结构示例必须满足的条件。\n多行说明保留为同一个标题字段。".
+    field:status "active";
+    field:summary "约束规则集中说明结构示例必须满足的条件。\n多行说明保留为同一个标题字段。".
 <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l30-o0> a aat:Heading;
     aat:childOrder 1;
     aat:contentEndLine 32;
@@ -342,7 +344,7 @@ WHERE role = 'rule';
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
     aat:role "evidence";
     aat:startLine 34;
-    aat:status "active";
+    field:status "active";
     rel:documents <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>.
 <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0> a aat:Heading;
     aat:addressLabel "structure-example";
@@ -356,7 +358,7 @@ WHERE role = 'rule';
     aat:headline "结构示例";
     aat:metadataEndLine 5;
     aat:metadataStartLine 5;
-    aat:owner "docs-team";
+    field:owner "docs-team";
     aat:raw """[#structure-example.process, status=draft, owner=docs-team]
 == 结构示例
 
@@ -366,7 +368,7 @@ WHERE role = 'rule';
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
     aat:role "process";
     aat:startLine 5;
-    aat:status "draft";
+    field:status "draft";
     rel:requires <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>.
 <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#projection> a prov:Entity, aat:HeadingProjection;
     prov:hadPrimarySource <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source>;
@@ -429,7 +431,7 @@ WHERE role = 'rule';
     aat:syntax "macro";
     aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
     aat:targetSelector "required-rule";
-    aat:weight "0.7".
+    field:weight "0.7".
 ```
 
 ## Python 下游消费输出

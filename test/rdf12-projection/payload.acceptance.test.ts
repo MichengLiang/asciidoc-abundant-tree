@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseAbundantTree } from "../../src/parser";
+import { fieldPredicate } from "../../src/rdf12-projection/field-predicate";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
 	integerLiteral,
@@ -31,36 +32,36 @@ describe("rdf12 raw value query contract acceptance", () => {
 		const policyRiskProfile = onlyObjectIri(
 			projection.graph,
 			deliveryPolicy,
-			"policy-risk-profile",
+			fieldPredicate("policy-risk-profile"),
 		);
 		const relationEvidence = onlyObjectIri(
 			projection.graph,
 			xrefEdge,
-			"relation-evidence",
+			fieldPredicate("relation-evidence"),
 		);
 
 		expectTriple(
 			projection.graph,
 			deliveryPolicy,
-			"policy-risk-profile",
+			fieldPredicate("policy-risk-profile"),
 			policyRiskProfile,
 		);
 		expectTriple(
 			projection.graph,
 			xrefEdge,
-			"relation-evidence",
+			fieldPredicate("relation-evidence"),
 			relationEvidence,
 		);
 		expectNoTriple(
 			projection.graph,
 			deliveryPolicy,
-			"relation-evidence",
+			fieldPredicate("relation-evidence"),
 			relationEvidence,
 		);
 		expectNoTriple(
 			projection.graph,
 			capacityRule,
-			"relation-evidence",
+			fieldPredicate("relation-evidence"),
 			relationEvidence,
 		);
 		expectLiteral(
@@ -82,12 +83,12 @@ describe("rdf12 raw value query contract acceptance", () => {
 		const policyRiskProfile = onlyObjectIri(
 			projection.graph,
 			deliveryPolicy,
-			"policy-risk-profile",
+			fieldPredicate("policy-risk-profile"),
 		);
 		const relationEvidence = onlyObjectIri(
 			projection.graph,
 			xrefEdge,
-			"relation-evidence",
+			fieldPredicate("relation-evidence"),
 		);
 
 		expectForbiddenRawValueFields(projection.graph, policyRiskProfile);
@@ -162,12 +163,12 @@ edge:
 		const policyRiskProfile = onlyObjectIri(
 			projection.graph,
 			deliveryPolicy,
-			"policy-risk-profile",
+			fieldPredicate("policy-risk-profile"),
 		);
 		const relationEvidence = onlyObjectIri(
 			projection.graph,
 			xrefEdge,
-			"relation-evidence",
+			fieldPredicate("relation-evidence"),
 		);
 
 		for (const payload of [policyRiskProfile, relationEvidence]) {
@@ -239,12 +240,12 @@ function onlyXrefEdge(graph: Rdf12Graph): Rdf12IriTerm {
 function onlyObjectIri(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 ): Rdf12IriTerm {
 	const objects = graph
 		.match({
 			subject,
-			predicate: aat(predicateLocalName),
+			predicate: predicateTerm(predicate),
 		})
 		.map((triple) => triple.object)
 		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
@@ -262,41 +263,41 @@ function expectNoLegacyPayloadContract(graph: Rdf12Graph): void {
 	).toHaveLength(0);
 	expect(graph.match({ predicate: aat("hasPayload") })).toHaveLength(0);
 	expect(graph.match({ predicate: aat("payloadOf") })).toHaveLength(0);
-	expect(graph.match({ predicate: aat("payload") })).toHaveLength(0);
+	expect(graph.match({ predicate: fieldPredicate("payload") })).toHaveLength(0);
 	expect(graph.match({ predicate: aat("payloadSelector") })).toHaveLength(0);
 }
 
 function expectTriple(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	object: Rdf12IriTerm,
 ): void {
-	expect(graph.has(rdf12Triple(subject, aat(predicateLocalName), object))).toBe(
-		true,
-	);
+	expect(
+		graph.has(rdf12Triple(subject, predicateTerm(predicate), object)),
+	).toBe(true);
 }
 
 function expectNoTriple(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	object: Rdf12IriTerm,
 ): void {
-	expect(graph.has(rdf12Triple(subject, aat(predicateLocalName), object))).toBe(
-		false,
-	);
+	expect(
+		graph.has(rdf12Triple(subject, predicateTerm(predicate), object)),
+	).toBe(false);
 }
 
 function expectLiteral(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: string,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(subject, aat(predicateLocalName), stringLiteral(value)),
+			rdf12Triple(subject, predicateTerm(predicate), stringLiteral(value)),
 		),
 	).toBe(true);
 }
@@ -332,12 +333,12 @@ function expectLineSpan(
 function expectInteger(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: number,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(subject, aat(predicateLocalName), integerLiteral(value)),
+			rdf12Triple(subject, predicateTerm(predicate), integerLiteral(value)),
 		),
 	).toBe(true);
 }
@@ -348,4 +349,11 @@ function aat(localName: string): Rdf12IriTerm {
 
 function rdf(localName: string): Rdf12IriTerm {
 	return iriTerm(`${namespaces.rdf}${localName}`);
+}
+
+// 字符串是投影器词表（aat:）里的名字；书的字段由调用处用 fieldPredicate 给出完整的谓词。
+function predicateTerm(predicate: string | Rdf12IriTerm): Rdf12IriTerm {
+	return typeof predicate === "string"
+		? iriTerm(`${namespaces.aat}${predicate}`)
+		: predicate;
 }

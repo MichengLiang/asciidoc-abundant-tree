@@ -35,9 +35,9 @@ describe("rdf12 direct field predicate projection", () => {
 
 		expectStringTriple(projection.graph, heading, "addressLabel", "abc");
 		expectStringTriple(projection.graph, heading, "role", "section");
-		expectStringTriple(projection.graph, heading, "kind", "policy");
-		expectStringTriple(projection.graph, heading, "status", "active");
-		expectStringTriple(projection.graph, heading, "owner", "ops");
+		expectFieldTriple(projection.graph, heading, "kind", "policy");
+		expectFieldTriple(projection.graph, heading, "status", "active");
+		expectFieldTriple(projection.graph, heading, "owner", "ops");
 		expectNoPublicAttributeResources(projection.graph);
 		expectPredicateAbsent(projection.graph, `${namespaces.aat}id`);
 	});
@@ -50,21 +50,21 @@ describe("rdf12 direct field predicate projection", () => {
 		const evidence = onlyIriObject(
 			projection.graph,
 			edge,
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence").value,
 		);
 
 		expectStringTriple(projection.graph, edge, "rel", "depends-on");
-		expectStringTriple(projection.graph, edge, "weight", "0.8");
+		expectFieldTriple(projection.graph, edge, "weight", "0.8");
 		expectStringTriple(
 			projection.graph,
 			evidence,
 			"sourceValueId",
 			"rel-delivery-capacity",
 		);
-		expectNoLiteralTriple(
+		expectNoTripleWithPredicateIri(
 			projection.graph,
 			edge,
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence").value,
 			"rel-delivery-capacity",
 		);
 		expectPredicateAbsent(projection.graph, `${namespaces.aat}payloadSelector`);
@@ -72,7 +72,7 @@ describe("rdf12 direct field predicate projection", () => {
 		expectNoPublicAttributeResources(projection.graph);
 	});
 
-	it("maps encoded xref literal field names through the complex property projector", () => {
+	it("writes xref literal field names as written through the complex property projector", () => {
 		const projection = projectAbundantDocumentToRdf12(encodedFieldsDocument(), {
 			documentRoot: projectRoot,
 		});
@@ -81,13 +81,13 @@ describe("rdf12 direct field predicate projection", () => {
 		expectTripleWithPredicateIri(
 			projection.graph,
 			edge,
-			`${namespaces.aat}field-%C3%BCber%20score`,
+			`${namespaces.field}über%20score`,
 			"high",
 		);
 		expectTripleWithPredicateIri(
 			projection.graph,
 			edge,
-			`${namespaces.aat}field-9priority`,
+			`${namespaces.field}9priority`,
 			"urgent",
 		);
 		expectNoPublicAttributeResources(projection.graph);
@@ -358,12 +358,12 @@ function onlyHeadingWithLiteral(
 function onlyIriObject(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicateIri: string,
 ): Rdf12IriTerm {
 	const objects = graph
 		.match({
 			subject,
-			predicate: iriTerm(`${namespaces.aat}${predicateLocalName}`),
+			predicate: iriTerm(predicateIri),
 		})
 		.map((triple) => triple.object)
 		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
@@ -386,21 +386,18 @@ function expectStringTriple(
 	);
 }
 
-function expectNoLiteralTriple(
+function expectFieldTriple(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	fieldName: string,
 	value: string,
 ): void {
-	expect(
-		graph.has(
-			rdf12Triple(
-				subject,
-				iriTerm(`${namespaces.aat}${predicateLocalName}`),
-				stringLiteral(value),
-			),
-		),
-	).toBe(false);
+	expectTripleWithPredicateIri(
+		graph,
+		subject,
+		fieldPredicate(fieldName).value,
+		value,
+	);
 }
 
 function expectTripleWithPredicateIri(

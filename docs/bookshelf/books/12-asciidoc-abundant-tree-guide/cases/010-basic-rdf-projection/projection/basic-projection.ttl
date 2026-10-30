@@ -1,5 +1,6 @@
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
@@ -49,7 +50,6 @@
     aat:headline "结构示例";
     aat:metadataEndLine 3;
     aat:metadataStartLine 3;
-    aat:owner "docs-team";
     aat:raw """[#structure-example.process, status=draft, owner=docs-team]
 == 结构示例
 
@@ -59,7 +59,8 @@
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/010-basic-rdf-projection/source/basic-projection.adoc";
     aat:role "process";
     aat:startLine 3;
-    aat:status "draft";
+    field:owner "docs-team";
+    field:status "draft";
     rel:requires <urn:aat:doc:715af79b97142da6ff8692464bde0a849c46aa1217d59458cdc8ed9f9bda7316#heading-l8-o0>.
 <urn:aat:doc:715af79b97142da6ff8692464bde0a849c46aa1217d59458cdc8ed9f9bda7316#heading-l30-o0> a aat:Heading;
     aat:addressLabel "evidence-note";
@@ -85,7 +86,7 @@
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/010-basic-rdf-projection/source/basic-projection.adoc";
     aat:role "evidence";
     aat:startLine 30;
-    aat:status "active";
+    field:status "active";
     rel:documents <urn:aat:doc:715af79b97142da6ff8692464bde0a849c46aa1217d59458cdc8ed9f9bda7316#heading-l8-o0>.
 <urn:aat:doc:715af79b97142da6ff8692464bde0a849c46aa1217d59458cdc8ed9f9bda7316#heading-l8-o0> a aat:Heading;
     aat:addressLabel "required-rule", "rule-query-example";
@@ -100,7 +101,6 @@
     aat:headline "约束规则";
     aat:metadataEndLine 8;
     aat:metadataStartLine 8;
-    aat:priority "normal";
     aat:raw """[#required-rule.rule, status=active]
 == 约束规则
 
@@ -121,11 +121,12 @@ WHERE role = 'rule';
 
 """;
     aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/010-basic-rdf-projection/source/basic-projection.adoc";
-    aat:review-state "ready";
     aat:role "rule";
     aat:startLine 8;
-    aat:status "active";
-    aat:summary "约束规则集中说明结构示例必须满足的条件。\n多行说明保留为同一个标题字段。".
+    field:priority "normal";
+    field:review-state "ready";
+    field:status "active";
+    field:summary "约束规则集中说明结构示例必须满足的条件。\n多行说明保留为同一个标题字段。".
 <urn:aat:doc:715af79b97142da6ff8692464bde0a849c46aa1217d59458cdc8ed9f9bda7316#projection> a prov:Entity, aat:HeadingProjection;
     prov:hadPrimarySource <urn:aat:doc:715af79b97142da6ff8692464bde0a849c46aa1217d59458cdc8ed9f9bda7316#source>;
     prov:wasDerivedFrom <urn:aat:doc:715af79b97142da6ff8692464bde0a849c46aa1217d59458cdc8ed9f9bda7316#source>;
@@ -187,4 +188,4 @@ WHERE role = 'rule';
     aat:syntax "macro";
     aat:targetHeading <urn:aat:doc:715af79b97142da6ff8692464bde0a849c46aa1217d59458cdc8ed9f9bda7316#heading-l8-o0>;
     aat:targetSelector "required-rule";
-    aat:weight "0.7".
+    field:weight "0.7".

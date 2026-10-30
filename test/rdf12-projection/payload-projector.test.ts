@@ -7,6 +7,7 @@ import type {
 	XrefOccurrenceNode,
 } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
+import { fieldPredicate } from "../../src/rdf12-projection/field-predicate";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
 import {
 	integerLiteral,
@@ -34,10 +35,15 @@ describe("rdf12 complex property projection", () => {
 		const value = onlyIriObject(
 			projection.graph,
 			delivery,
-			"release-policy-config",
+			fieldPredicate("release-policy-config"),
 		);
 
-		expectTriple(projection.graph, delivery, "release-policy-config", value);
+		expectTriple(
+			projection.graph,
+			delivery,
+			fieldPredicate("release-policy-config"),
+			value,
+		);
 		expectLiteral(projection.graph, value, "forSelector", "delivery");
 		expectLiteral(projection.graph, value, "format", "json");
 		expectLiteral(projection.graph, value, "raw", '{"owner":"ops"}');
@@ -71,7 +77,7 @@ review_team: quality-ops
 		const value = onlyIriObject(
 			projection.graph,
 			delivery ?? iriTerm("urn:missing-heading"),
-			"review-playbook",
+			fieldPredicate("review-playbook"),
 		);
 
 		expectLiteral(projection.graph, value, "format", "yaml");
@@ -89,7 +95,7 @@ review_team: quality-ops
 			{ documentRoot: projectRoot },
 		);
 		expect(
-			absent.graph.match({ predicate: aat("review-playbook") }),
+			absent.graph.match({ predicate: fieldPredicate("review-playbook") }),
 		).toHaveLength(0);
 
 		const emptySelector = projectAbundantDocumentToRdf12(
@@ -103,7 +109,7 @@ review_team: quality-ops
 		const value = onlyIriObject(
 			emptySelector.graph,
 			delivery,
-			"review-playbook",
+			fieldPredicate("review-playbook"),
 		);
 		expectNoPredicate(emptySelector.graph, value, "forSelector");
 
@@ -117,7 +123,7 @@ review_team: quality-ops
 		const ownerValue = onlyIriObject(
 			explicitOwner.graph,
 			heading(explicitOwner.documentIri, "heading-l1-o0"),
-			"review-playbook",
+			fieldPredicate("review-playbook"),
 		);
 		expectNoPredicate(explicitOwner.graph, ownerValue, "forSelector");
 	});
@@ -150,17 +156,21 @@ review_team: quality-ops
 				documentRoot: projectRoot,
 			});
 
-			expect(projection.graph.match({ predicate: aat("first") })).toHaveLength(
-				0,
-			);
-			expect(projection.graph.match({ predicate: aat("second") })).toHaveLength(
-				0,
-			);
 			expect(
-				projection.graph.match({ predicate: aat("release-policy-config") }),
+				projection.graph.match({ predicate: fieldPredicate("first") }),
 			).toHaveLength(0);
 			expect(
-				projection.graph.match({ predicate: aat("review-playbook") }),
+				projection.graph.match({ predicate: fieldPredicate("second") }),
+			).toHaveLength(0);
+			expect(
+				projection.graph.match({
+					predicate: fieldPredicate("release-policy-config"),
+				}),
+			).toHaveLength(0);
+			expect(
+				projection.graph.match({
+					predicate: fieldPredicate("review-playbook"),
+				}),
 			).toHaveLength(0);
 		}
 	});
@@ -170,9 +180,18 @@ review_team: quality-ops
 			documentRoot: projectRoot,
 		});
 		const edge = onlyResourceOfType(projection.graph, "XrefEdge");
-		const value = onlyIriObject(projection.graph, edge, "dependency-evidence");
+		const value = onlyIriObject(
+			projection.graph,
+			edge,
+			fieldPredicate("dependency-evidence"),
+		);
 
-		expectTriple(projection.graph, edge, "dependency-evidence", value);
+		expectTriple(
+			projection.graph,
+			edge,
+			fieldPredicate("dependency-evidence"),
+			value,
+		);
 		expectLiteral(projection.graph, value, "sourceValueId", "rel-delivery");
 		expectLiteral(projection.graph, value, "format", "yaml");
 		expectLiteral(projection.graph, value, "raw", "reason: risk-control");
@@ -180,7 +199,7 @@ review_team: quality-ops
 		expectInteger(projection.graph, value, "contentStartLine", 11);
 		expectInteger(projection.graph, value, "contentEndLine", 11);
 		expectForbiddenRawValueFields(projection.graph, value);
-		expectNoPredicate(projection.graph, edge, "payload");
+		expectNoPredicate(projection.graph, edge, fieldPredicate("payload"));
 		expectNoPredicate(projection.graph, edge, "payloadSelector");
 	});
 
@@ -198,11 +217,20 @@ review_team: quality-ops
 		expectLiteral(
 			unmatched.graph,
 			unmatchedEdge,
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence"),
 			"missing-source-value",
 		);
-		expectLiteral(unmatched.graph, unmatchedEdge, "weight", "0.8");
-		expectNoIriObjects(unmatched.graph, unmatchedEdge, "dependency-evidence");
+		expectLiteral(
+			unmatched.graph,
+			unmatchedEdge,
+			fieldPredicate("weight"),
+			"0.8",
+		);
+		expectNoIriObjects(
+			unmatched.graph,
+			unmatchedEdge,
+			fieldPredicate("dependency-evidence"),
+		);
 
 		const ambiguous = projectAbundantDocumentToRdf12(
 			ambiguousEdgeValueDocument(),
@@ -212,10 +240,14 @@ review_team: quality-ops
 		expectLiteral(
 			ambiguous.graph,
 			ambiguousEdge,
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence"),
 			"rel-delivery",
 		);
-		expectNoIriObjects(ambiguous.graph, ambiguousEdge, "dependency-evidence");
+		expectNoIriObjects(
+			ambiguous.graph,
+			ambiguousEdge,
+			fieldPredicate("dependency-evidence"),
+		);
 	});
 
 	it("projects multiple xref edge complex properties on the same edge", () => {
@@ -257,10 +289,14 @@ review_team: quality-ops
 			["risk-assessment", "rel-risk"],
 			["review-procedure", "rel-review"],
 		] as const) {
-			const value = onlyIriObject(projection.graph, edge, field);
+			const value = onlyIriObject(
+				projection.graph,
+				edge,
+				fieldPredicate(field),
+			);
 			expectLiteral(projection.graph, value, "sourceValueId", id);
 		}
-		expectLiteral(projection.graph, edge, "weight", "0.8");
+		expectLiteral(projection.graph, edge, fieldPredicate("weight"), "0.8");
 	});
 
 	it("reuses one raw value object when multiple xref edges bind the same source value id", () => {
@@ -272,12 +308,12 @@ review_team: quality-ops
 		const firstValue = onlyIriObject(
 			projection.graph,
 			firstEdge ?? iriTerm("urn:missing-first-edge"),
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence"),
 		);
 		const secondValue = onlyIriObject(
 			projection.graph,
 			secondEdge ?? iriTerm("urn:missing-second-edge"),
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence"),
 		);
 
 		expect(firstValue).toEqual(secondValue);
@@ -303,12 +339,12 @@ review_team: quality-ops
 		const dependencyEvidence = onlyIriObject(
 			projection.graph,
 			edge,
-			"dependency-evidence",
+			fieldPredicate("dependency-evidence"),
 		);
 		const reviewProcedure = onlyIriObject(
 			projection.graph,
 			edge,
-			"review-procedure",
+			fieldPredicate("review-procedure"),
 		);
 
 		expect(dependencyEvidence).toEqual(reviewProcedure);
@@ -333,7 +369,7 @@ review_team: quality-ops
 		const value = onlyIriObject(
 			projection.graph,
 			heading(projection.documentIri, "heading-l1-o0"),
-			"release-policy-config",
+			fieldPredicate("release-policy-config"),
 		);
 
 		expectLiteral(projection.graph, value, "format", "yaml");
@@ -639,16 +675,16 @@ function xrefEdgesInOrder(graph: Rdf12Graph): Rdf12IriTerm[] {
 function literalValue(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 ): string {
 	const [value] = graph
-		.match({ subject, predicate: aat(predicateLocalName) })
+		.match({ subject, predicate: predicateTerm(predicate) })
 		.flatMap((triple) =>
 			triple.object.termType === "literal" ? [triple.object.value] : [],
 		);
 
 	if (value === undefined) {
-		throw new Error(`expected literal ${predicateLocalName}`);
+		throw new Error(`expected literal ${predicate}`);
 	}
 	return value;
 }
@@ -656,12 +692,12 @@ function literalValue(
 function onlyIriObject(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 ): Rdf12IriTerm {
 	const values = graph
 		.match({
 			subject,
-			predicate: aat(predicateLocalName),
+			predicate: predicateTerm(predicate),
 		})
 		.map((triple) => triple.object)
 		.filter((object): object is Rdf12IriTerm => object.termType === "iri");
@@ -673,11 +709,11 @@ function onlyIriObject(
 function expectNoIriObjects(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 ): void {
 	expect(
 		graph
-			.match({ subject, predicate: aat(predicateLocalName) })
+			.match({ subject, predicate: predicateTerm(predicate) })
 			.filter((triple) => triple.object.termType === "iri"),
 	).toHaveLength(0);
 }
@@ -685,23 +721,23 @@ function expectNoIriObjects(
 function expectTriple(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	object: Rdf12IriTerm,
 ): void {
-	expect(graph.has(rdf12Triple(subject, aat(predicateLocalName), object))).toBe(
-		true,
-	);
+	expect(
+		graph.has(rdf12Triple(subject, predicateTerm(predicate), object)),
+	).toBe(true);
 }
 
 function expectLiteral(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: string,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(subject, aat(predicateLocalName), stringLiteral(value)),
+			rdf12Triple(subject, predicateTerm(predicate), stringLiteral(value)),
 		),
 	).toBe(true);
 }
@@ -709,12 +745,12 @@ function expectLiteral(
 function expectNoLiteral(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: string,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(subject, aat(predicateLocalName), stringLiteral(value)),
+			rdf12Triple(subject, predicateTerm(predicate), stringLiteral(value)),
 		),
 	).toBe(false);
 }
@@ -722,12 +758,12 @@ function expectNoLiteral(
 function expectNoPredicate(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 ): void {
 	expect(
 		graph.match({
 			subject,
-			predicate: aat(predicateLocalName),
+			predicate: predicateTerm(predicate),
 		}),
 	).toHaveLength(0);
 }
@@ -746,12 +782,12 @@ function expectLineSpan(
 function expectInteger(
 	graph: Rdf12Graph,
 	subject: Rdf12IriTerm,
-	predicateLocalName: string,
+	predicate: string | Rdf12IriTerm,
 	value: number,
 ): void {
 	expect(
 		graph.has(
-			rdf12Triple(subject, aat(predicateLocalName), integerLiteral(value)),
+			rdf12Triple(subject, predicateTerm(predicate), integerLiteral(value)),
 		),
 	).toBe(true);
 }
@@ -773,7 +809,9 @@ function expectForbiddenRawValueFields(
 
 function expectForbiddenPublicPayloadPredicates(graph: Rdf12Graph): void {
 	for (const predicate of ["payload", "payloadSelector"]) {
-		expect(graph.match({ predicate: aat(predicate) })).toHaveLength(0);
+		expect(graph.match({ predicate: predicateTerm(predicate) })).toHaveLength(
+			0,
+		);
 	}
 }
 
@@ -783,4 +821,11 @@ function aat(localName: string): Rdf12IriTerm {
 
 function rdf(localName: string): Rdf12IriTerm {
 	return iriTerm(`${namespaces.rdf}${localName}`);
+}
+
+// 字符串是投影器词表（aat:）里的名字；书的字段由调用处用 fieldPredicate 给出完整的谓词。
+function predicateTerm(predicate: string | Rdf12IriTerm): Rdf12IriTerm {
+	return typeof predicate === "string"
+		? iriTerm(`${namespaces.aat}${predicate}`)
+		: predicate;
 }

@@ -12,6 +12,7 @@ import {
 	aatTerm,
 	expectIntegerValue,
 	expectLiteralValue,
+	fieldTerm,
 	literalValues,
 	rdfTerm,
 	termIri,
@@ -223,7 +224,7 @@ describe("rdf12 book-entry origin source coordinates", () => {
 		const payload = objectIri(
 			projection.graph,
 			heading,
-			aatTerm("policy-risk-profile"),
+			fieldTerm("policy-risk-profile"),
 		);
 
 		expectLiteralValue(

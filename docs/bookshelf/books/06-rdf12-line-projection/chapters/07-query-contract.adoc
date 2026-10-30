@@ -111,7 +111,7 @@ SELECT ?edge ?predicate ?target ?targetHeadline ?weight WHERE {
         aat:sourceHeading ?source ;
         aat:targetHeading ?target ;
         rdf:reifies <<( ?source ?predicate ?target )>> ;
-        aat:weight ?weight .
+        field:weight ?weight .
   ?target aat:headline ?targetHeadline .
 }
 ----
@@ -155,7 +155,7 @@ SELECT ?edge ?selector ?candidate WHERE {
 SELECT ?heading ?headline ?start ?end WHERE {
   ?heading a aat:Heading ;
            aat:role "policy" ;
-           aat:status "active" ;
+           field:status "active" ;
            aat:headline ?headline ;
            aat:startLine ?start ;
            aat:endLine ?end .
@@ -172,7 +172,7 @@ SELECT ?heading ?headline ?start ?end WHERE {
 ----
 SELECT ?raw ?format ?path ?start ?end WHERE {
   ?heading aat:addressLabel "delivery" ;
-           aat:policy-risk-profile ?value .
+           field:policy-risk-profile ?value .
   ?value aat:raw ?raw ;
          aat:format ?format ;
          aat:relativePath ?path ;
@@ -181,7 +181,7 @@ SELECT ?raw ?format ?path ?start ?end WHERE {
 }
 ----
 
-`aat:policy-risk-profile` 是下游模型入口。raw value object 保存 raw、format 和 source coordinate。查询不需要枚举机制字段或过滤 role。
+`field:policy-risk-profile` 是下游模型入口。raw value object 保存 raw、format 和 source coordinate。查询不需要枚举机制字段或过滤 role。
 
 冷链样例中的标题复杂属性查询使用业务字段名：
 
@@ -190,7 +190,7 @@ SELECT ?raw ?format ?path ?start ?end WHERE {
 SELECT ?configRaw ?playbookRaw WHERE {
   ?heading aat:addressLabel "cold-chain-release" ;
            aat:release-policy-config ?config ;
-           aat:review-playbook ?playbook .
+           field:review-playbook ?playbook .
   ?config aat:format "json" ;
           aat:raw ?configRaw .
   ?playbook aat:format "yaml" ;
@@ -209,7 +209,7 @@ SELECT ?raw ?format ?path ?start ?end WHERE {
   ?target aat:addressLabel "capacity" .
   ?edge a aat:XrefEdge ;
         rdf:reifies <<( ?source rel:depends-on ?target )>> ;
-        aat:relation-evidence ?value .
+        field:relation-evidence ?value .
   ?value aat:raw ?raw ;
          aat:format ?format ;
          aat:relativePath ?path ;

@@ -10,8 +10,9 @@ import { fieldPredicate } from "./field-predicate";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
 import { stringLiteral } from "./literals";
+import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
-import type { Rdf12IriTerm } from "./terms";
+import { iriTerm } from "./terms";
 import type { Rdf12XrefIndex } from "./xref-projector";
 
 export type ProjectSurfaceAttributesInput = {
@@ -36,6 +37,9 @@ type HeadingFieldFact = {
 	readonly sourceSpan?: SourceSpan;
 };
 
+// role 是投影器词表里的事实，落在 aat:role；其余都是书的字段，落在 field: 下（06 号书《Field Predicate》）。
+const rolePredicate = iriTerm(`${namespaces.aat}role`);
+
 export function projectSurfaceAttributes(
 	input: ProjectSurfaceAttributesInput,
 ): void {
@@ -47,7 +51,11 @@ export function projectSurfaceAttributes(
 		if (owner === undefined) {
 			continue;
 		}
-		addFieldTriple(input.graph, owner, fact.field, fact.value);
+		const predicate =
+			fact.sourceKind === "attrlist-role"
+				? rolePredicate
+				: fieldPredicate(fact.field);
+		input.graph.add(rdf12Triple(owner, predicate, stringLiteral(fact.value)));
 	}
 }
 
@@ -165,15 +173,4 @@ function sectionBySourceId(
 		}
 	}
 	return sections;
-}
-
-function addFieldTriple(
-	graph: Rdf12Graph,
-	subject: Rdf12IriTerm,
-	fieldName: string,
-	value: string,
-): void {
-	graph.add(
-		rdf12Triple(subject, fieldPredicate(fieldName), stringLiteral(value)),
-	);
 }

@@ -42,7 +42,7 @@ views:: `views/release-policy.mmd`
 
 `payload-schema.ts` 定义策略配置、复核手册和依赖证据的结构。`consume-payloads.ts` 按 field predicate 选择 schema，按 `aat:format` 选择 parser，按 source coordinate 把解析结果带回源文档。
 
-字段名和 format 是正交事实。`aat:release-policy-config` 选择业务模型；`aat:format "json"` 选择 parser；`aat:raw` 保存 source block body；`aat:contentStartLine` 和 `aat:contentEndLine` 指向可编辑 payload body。
+字段名和 format 是正交事实。`field:release-policy-config` 选择业务模型；`aat:format "json"` 选择 parser；`aat:raw` 保存 source block body；`aat:contentStartLine` 和 `aat:contentEndLine` 指向可编辑 payload body。
 
 === 输出表面
 

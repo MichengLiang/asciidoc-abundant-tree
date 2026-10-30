@@ -1,5 +1,6 @@
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
@@ -24,7 +25,6 @@
     aat:childOrder 1;
     aat:contentEndLine 12;
     aat:contentStartLine 12;
-    aat:destination "福州医院药房";
     aat:documentOrder 4;
     aat:endLine 13;
     aat:generatedAddressLabel "_批次运输任务ct_2026_0618";
@@ -33,7 +33,6 @@
     aat:headline "批次运输任务CT-2026-0618";
     aat:metadataEndLine 10;
     aat:metadataStartLine 10;
-    aat:origin "上海仓";
     aat:raw """[.shipment, status=active, origin=上海仓, destination=福州医院药房, temperature=2-8C]
 === 批次运输任务CT-2026-0618
 包含 xref:疫苗箱A17[rel=has-part] 和 xref:温度记录仪T09[rel=has-part]。
@@ -42,8 +41,10 @@
     aat:relativePath "samples/business-kg-js-demo/fixtures/cold-chain-operations-attrlist.adoc";
     aat:role "shipment";
     aat:startLine 10;
-    aat:status "active";
-    aat:temperature "2-8C";
+    field:destination "福州医院药房";
+    field:origin "上海仓";
+    field:status "active";
+    field:temperature "2-8C";
     rel:has-part <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l14-o0>, <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l17-o0>.
 <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l14-o0> a aat:Heading;
     aat:childOrder 3;
@@ -55,15 +56,15 @@
     aat:headline "疫苗箱A17";
     aat:metadataEndLine 14;
     aat:metadataStartLine 14;
-    aat:quantity "120";
     aat:raw """[.payload, sku=VAC-A, quantity=120]
 == 疫苗箱A17
 
 """;
     aat:relativePath "samples/business-kg-js-demo/fixtures/cold-chain-operations-attrlist.adoc";
     aat:role "payload";
-    aat:sku "VAC-A";
-    aat:startLine 14.
+    aat:startLine 14;
+    field:quantity "120";
+    field:sku "VAC-A".
 <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l17-o0> a aat:Heading;
     aat:childOrder 4;
     aat:contentEndLine 19;
@@ -83,8 +84,8 @@
 """;
     aat:relativePath "samples/business-kg-js-demo/fixtures/cold-chain-operations-attrlist.adoc";
     aat:role "sensor";
-    aat:sampleInterval "5分钟";
     aat:startLine 17;
+    field:sampleInterval "5分钟";
     rel:monitors <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l14-o0>.
 <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l21-o0> a aat:Heading;
     aat:childOrder 5;
@@ -103,7 +104,7 @@
     aat:relativePath "samples/business-kg-js-demo/fixtures/cold-chain-operations-attrlist.adoc";
     aat:role "process";
     aat:startLine 21;
-    aat:trigger "连续超温".
+    field:trigger "连续超温".
 <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l3-o0> a aat:Heading;
     aat:childOrder 1;
     aat:contentEndLine 4;
@@ -121,7 +122,6 @@
     aat:relativePath "samples/business-kg-js-demo/fixtures/cold-chain-operations-attrlist.adoc";
     aat:startLine 3.
 <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l6-o0> a aat:Heading;
-    aat:allowedExcursion "15分钟";
     aat:childOrder 2;
     aat:containsDirectly <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l10-o0>;
     aat:contentEndLine 8;
@@ -132,10 +132,8 @@
     aat:headingLevel 1;
     aat:headingLine 7;
     aat:headline "2-8C温控规则";
-    aat:maxTemperature "8C";
     aat:metadataEndLine 6;
     aat:metadataStartLine 6;
-    aat:minTemperature "2C";
     aat:raw """[.policy, minTemperature=2C, maxTemperature=8C, allowedExcursion=15分钟]
 == 2-8C温控规则
 超出允许偏离时触发 xref:温度偏离处置流程[rel=triggers, condition=超温超过15分钟]。
@@ -144,6 +142,9 @@
     aat:relativePath "samples/business-kg-js-demo/fixtures/cold-chain-operations-attrlist.adoc";
     aat:role "policy";
     aat:startLine 6;
+    field:allowedExcursion "15分钟";
+    field:maxTemperature "8C";
+    field:minTemperature "2C";
     rel:triggers <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l21-o0>.
 <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#projection> a prov:Entity, aat:HeadingProjection;
     prov:hadPrimarySource <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#source>;
@@ -189,7 +190,6 @@
     aat:targetSelector "疫苗箱A17".
 <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#xref-edge-l19-c4-o0> rdf:reifies <<(<urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l17-o0> rel:monitors <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l14-o0>)>>;
     a aat:XrefEdge;
-    aat:confidence "0.98";
     aat:endColumn 46;
     aat:endLine 19;
     aat:officialHref "#_疫苗箱a17";
@@ -205,10 +205,10 @@
     aat:startLine 19;
     aat:syntax "macro";
     aat:targetHeading <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l14-o0>;
-    aat:targetSelector "疫苗箱A17".
+    aat:targetSelector "疫苗箱A17";
+    field:confidence "0.98".
 <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#xref-edge-l8-c11-o0> rdf:reifies <<(<urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l6-o0> rel:triggers <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l21-o0>)>>;
     a aat:XrefEdge;
-    aat:condition "超温超过15分钟";
     aat:endColumn 58;
     aat:endLine 8;
     aat:officialHref "#_温度偏离处置流程";
@@ -224,4 +224,5 @@
     aat:startLine 8;
     aat:syntax "macro";
     aat:targetHeading <urn:aat:doc:e9388c76a0ef5e5cd2b38254cec9c2fa63bed65454075b7d2a260582801622f5#heading-l21-o0>;
-    aat:targetSelector "温度偏离处置流程".
+    aat:targetSelector "温度偏离处置流程";
+    field:condition "超温超过15分钟".

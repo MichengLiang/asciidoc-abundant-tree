@@ -1,5 +1,6 @@
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
@@ -72,7 +73,7 @@ line origin:: logical line 到 origin source line 的映射。
 """;
     aat:relativePath "backmatter/glossary.adoc";
     aat:startLine 2;
-    aat:style "appendix".
+    field:style "appendix".
 <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l6-o0> a aat:Heading;
     aat:childOrder 2;
     aat:containsDirectly <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l1-o2>, <urn:aat:doc:f9e2215732f74fa05a126f758cd149a392b7c297ff589e2637c9633da91e1189#heading-l2-o0>;

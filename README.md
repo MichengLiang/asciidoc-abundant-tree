@@ -65,7 +65,7 @@ The `rdf12` projection derives an RDF 1.2 graph from an `AbundantDocument`. The 
 
 Projection resources use deterministic IRIs generated from the document coordinate system, not author strings or ordering facts. Heading nodes expose their label space directly through `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`. Query code can use those fields to find headings, then read `relativePath`, `startLine`, and `endLine` for source inspection or patching.
 
-The graph includes source document provenance, heading nodes, direct heading containment, same-parent child order, global heading preorder, selector binding, xref edge evidence, RDF 1.2 reifiers for resolved xref relations, direct field predicates, and raw value objects. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder. Source coordinate fields such as `relativePath`, `startLine`, `endLine`, `headingLine`, and `raw` describe the origin source location and slice; they are not a heading order fallback. Xref edges keep raw selectors and official Asciidoctor evidence as separate facts. Attribute lists such as `[#delivery.policy, status=active]` preserve the explicit ID as `aat:addressLabel`, `.policy` as `aat:role`, and named fields as direct `aat:` predicates such as `aat:status`.
+The graph includes source document provenance, heading nodes, direct heading containment, same-parent child order, global heading preorder, selector binding, xref edge evidence, RDF 1.2 reifiers for resolved xref relations, direct field predicates, and raw value objects. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder. Source coordinate fields such as `relativePath`, `startLine`, `endLine`, `headingLine`, and `raw` describe the origin source location and slice; they are not a heading order fallback. Xref edges keep raw selectors and official Asciidoctor evidence as separate facts. Attribute lists such as `[#delivery.policy, status=active]` preserve the explicit ID as `aat:addressLabel`, `.policy` as `aat:role`, and named fields as field predicates written as named, such as `field:status`; book-defined field names live under `field:`, apart from the projector's own `aat:` vocabulary.
 
 Local non-heading target IDs from listings, tables, blocks, inline anchors, and source value blocks become `aat:addressLabel` values on the owning heading. They participate in the heading label space without creating listing, table, block, anchor, or source-value-block structure resources.
 
@@ -114,13 +114,14 @@ Projected Turtle:
 ```turtle
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
 <urn:aat:doc:...#heading-l3-o0> a aat:Heading;
     aat:addressLabel "delivery", "rel-delivery-capacity";
     aat:headline "配送策略";
     aat:role "policy";
-    aat:policy-risk-profile <urn:aat:doc:...#payload-l8-o0>;
+    field:policy-risk-profile <urn:aat:doc:...#payload-l8-o0>;
     rel:depends-on <urn:aat:doc:...#heading-l22-o0>.
 
 <urn:aat:doc:...#payload-l8-o0> aat:forSelector "delivery";
@@ -132,7 +133,7 @@ Projected Turtle:
     aat:sourceHeading <urn:aat:doc:...#heading-l3-o0>;
     aat:targetHeading <urn:aat:doc:...#heading-l22-o0>;
     aat:targetSelector "capacity";
-    aat:relation-evidence <urn:aat:doc:...#payload-l14-o0>;
+    field:relation-evidence <urn:aat:doc:...#payload-l14-o0>;
     aat:rel "depends-on".
 
 <urn:aat:doc:...#payload-l14-o0> aat:sourceValueId "rel-delivery-capacity";

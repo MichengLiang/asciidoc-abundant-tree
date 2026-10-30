@@ -22,9 +22,9 @@ image::assets/rain-street.jpg[]
   aat:addressLabel "asset-001" ;
   aat:headline "雨夜街角参考图" ;
   aat:role "photo" ;
-  aat:status "selected" ;
-  aat:location "福州" ;
-  aat:style "高对比霓虹" .
+  field:status "selected" ;
+  field:location "福州" ;
+  field:style "高对比霓虹" .
 ----
 
 文件是字节容器；标题节点是书稿中的资源容器。资源文件、外部链接、PDF 页、Kubernetes manifest、剧本场景、业务规则和 RAG chunk 都可以由标题节点命名、描述、连接和回源。资源不必被挤进一个文件边界；资源边界可以由书稿标题声明。

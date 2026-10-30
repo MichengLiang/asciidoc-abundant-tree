@@ -30,7 +30,7 @@ heading node 由 AsciiDoc 等号标题创建。源表面中的 `=`、`==`、`===
   aat:addressLabel "delivery" ;
   aat:headline "配送策略" ;
   aat:role "policy" ;
-  aat:status "active" ;
+  field:status "active" ;
   aat:headingLevel 1 ;
   aat:documentOrder 2 .
 
