@@ -7,7 +7,7 @@ import { completeOfficialSourceLocations } from "../src/official-source-location
 import { parseAbundantTree } from "../src/parser";
 import { resolveSourceInterval } from "../src/source-interval-resolver";
 import { buildLineTable, isLineComment, lineText } from "../src/source-lines";
-import { writeFixture } from "./helpers";
+import { officialAttributeLists, writeFixture } from "./helpers";
 
 // 描述的文字由官方并好，存在 ListItem 的 _text 里（list.js 202 行 foldFirst）。它是 @internal，生产代码不读，测试拿它当裁判。
 type OfficialItem = { _text: string | null };
@@ -79,6 +79,7 @@ describe("description text", () => {
 			writeFixture(`description-${name.replaceAll(" ", "-")}.adoc`, source),
 		);
 		completeOfficialSourceLocations(official, lineTable);
+		const attributeLists = await officialAttributeLists(lineTable);
 		const descriptions = walkOfficialBlocks(official).filter(
 			(surface) =>
 				surface.parent?.context === "dlist" &&
@@ -89,7 +90,11 @@ describe("description text", () => {
 
 		expect(descriptions.length).toBeGreaterThan(0);
 		for (const description of descriptions) {
-			const interval = resolveSourceInterval(description, lineTable);
+			const interval = resolveSourceInterval(
+				description,
+				lineTable,
+				attributeLists,
+			);
 			const text = (description.block as unknown as OfficialItem)._text ?? "";
 			const folded =
 				text === "" ? [] : text.split("\n").map((line) => line.trim());

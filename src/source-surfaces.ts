@@ -7,6 +7,7 @@ import {
 	sourceAwareDocumentForLineTable,
 } from "./book-entry/source-aware-coordinate";
 import { scanInlineOccurrencesInOfficialBlocks } from "./inline-occurrence-scanner";
+import type { AttributeListReadings } from "./metadata-parser";
 import type {
 	AnchorOccurrenceNode,
 	HeadingInlineMetadataOccurrenceNode,
@@ -69,6 +70,7 @@ type OriginHeadingBoundaryIndex = Map<string, readonly OriginHeadingBoundary[]>;
 export function projectSourceSurfaces(options: {
 	officialDocument: AsciidoctorBlock;
 	lineTable: LineTable;
+	attributeLists: AttributeListReadings;
 	sourceIdentity: SourceIdentityApi;
 	sourcePath?: string;
 }): SourceSurfaces {
@@ -111,7 +113,11 @@ export function projectSourceSurfaces(options: {
 			});
 			continue;
 		}
-		const interval = resolveSourceInterval(surface, options.lineTable);
+		const interval = resolveSourceInterval(
+			surface,
+			options.lineTable,
+			options.attributeLists,
+		);
 		if (!interval) {
 			continue;
 		}
@@ -157,6 +163,7 @@ export function projectSourceSurfaces(options: {
 	const { xrefRegions, anchorOccurrences, headingInlineMetadataOccurrences } =
 		scanInlineOccurrencesInOfficialBlocks({
 			lineTable: options.lineTable,
+			attributeLists: options.attributeLists,
 			blockSurfaces,
 			intervalByBlock,
 			sectionByLine,

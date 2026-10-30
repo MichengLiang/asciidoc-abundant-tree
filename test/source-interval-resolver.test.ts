@@ -1,16 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { createAsciidoctorFileAdapter } from "../src/asciidoctor-file-adapter";
-import { readAttributeLists } from "../src/metadata-parser";
 import type { OfficialBlockSurface } from "../src/official-block-walker";
 import { walkOfficialBlocks } from "../src/official-block-walker";
 import { completeOfficialSourceLocations } from "../src/official-source-location";
 import { resolveSourceInterval } from "../src/source-interval-resolver";
 import { buildLineTable } from "../src/source-lines";
-import { writeFixture } from "./helpers";
+import { officialAttributeLists, writeFixture } from "./helpers";
 
 describe("resolveSourceInterval", () => {
 	it("extends section spans from metadata to the next official sibling", async () => {
-		const { lineTable, surfaces } = await parseFixture(
+		const { lineTable, surfaces, attributeLists } = await parseFixture(
 			"resolver-section.adoc",
 			`= Probe
 
@@ -25,7 +24,7 @@ paragraph
 		);
 		const before = findSurface(surfaces, "section", "Before");
 
-		expect(resolveSourceInterval(before, lineTable)).toEqual(
+		expect(resolveSourceInterval(before, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				blockStartLine: 4,
 				metadataSpan: { startLine: 3, endLine: 3 },
@@ -35,7 +34,7 @@ paragraph
 	});
 
 	it("resolves fenced and dashed listing spans with content spans", async () => {
-		const { lineTable, surfaces } = await parseFixture(
+		const { lineTable, surfaces, attributeLists } = await parseFixture(
 			"resolver-listings.adoc",
 			`= Probe
 
@@ -56,7 +55,11 @@ dashed
 		);
 
 		expect(
-			resolveSourceInterval(listings[0] as OfficialBlockSurface, lineTable),
+			resolveSourceInterval(
+				listings[0] as OfficialBlockSurface,
+				lineTable,
+				attributeLists,
+			),
 		).toEqual(
 			expect.objectContaining({
 				blockStartLine: 5,
@@ -65,7 +68,11 @@ dashed
 			}),
 		);
 		expect(
-			resolveSourceInterval(listings[1] as OfficialBlockSurface, lineTable),
+			resolveSourceInterval(
+				listings[1] as OfficialBlockSurface,
+				lineTable,
+				attributeLists,
+			),
 		).toEqual(
 			expect.objectContaining({
 				blockStartLine: 10,
@@ -77,7 +84,7 @@ dashed
 	});
 
 	it("resolves table and pass spans without treating inner delimiter text as global structure", async () => {
-		const { lineTable, surfaces } = await parseFixture(
+		const { lineTable, surfaces, attributeLists } = await parseFixture(
 			"resolver-table-pass.adoc",
 			`= Probe
 
@@ -98,14 +105,14 @@ This prose mentions ---- as text.
 		const pass = findSurface(surfaces, "pass");
 		const table = findSurface(surfaces, "table");
 
-		expect(resolveSourceInterval(pass, lineTable)).toEqual(
+		expect(resolveSourceInterval(pass, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				blockStartLine: 5,
 				contentSpan: { startLine: 6, endLine: 6 },
 				span: { startLine: 5, endLine: 7 },
 			}),
 		);
-		expect(resolveSourceInterval(table, lineTable)).toEqual(
+		expect(resolveSourceInterval(table, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				blockStartLine: 11,
 				metadataSpan: { startLine: 9, endLine: 10 },
@@ -116,7 +123,7 @@ This prose mentions ---- as text.
 	});
 
 	it("keeps paragraph intervals to paragraph source content instead of sibling separators", async () => {
-		const { lineTable, surfaces } = await parseFixture(
+		const { lineTable, surfaces, attributeLists } = await parseFixture(
 			"resolver-paragraph-boundary.adoc",
 			`= Probe
 
@@ -132,7 +139,7 @@ code
 		);
 		const paragraph = findSurface(surfaces, "paragraph");
 
-		expect(resolveSourceInterval(paragraph, lineTable)).toEqual(
+		expect(resolveSourceInterval(paragraph, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				blockStartLine: 5,
 				contentSpan: { startLine: 5, endLine: 5 },
@@ -142,7 +149,7 @@ code
 	});
 
 	it("resolves literal and open blocks from their official source lines", async () => {
-		const { lineTable, surfaces } = await parseFixture(
+		const { lineTable, surfaces, attributeLists } = await parseFixture(
 			"resolver-literal-open.adoc",
 			`= Probe
 
@@ -158,14 +165,14 @@ open
 		const literal = findSurface(surfaces, "literal");
 		const open = findSurface(surfaces, "open");
 
-		expect(resolveSourceInterval(literal, lineTable)).toEqual(
+		expect(resolveSourceInterval(literal, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				blockStartLine: 3,
 				contentSpan: { startLine: 4, endLine: 4 },
 				span: { startLine: 3, endLine: 5 },
 			}),
 		);
-		expect(resolveSourceInterval(open, lineTable)).toEqual(
+		expect(resolveSourceInterval(open, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				blockStartLine: 7,
 				contentSpan: { startLine: 8, endLine: 8 },
@@ -174,7 +181,7 @@ open
 		);
 	});
 
-	it("returns undefined when official source location is missing", () => {
+	it("returns undefined when official source location is missing", async () => {
 		const surface = {
 			block: {},
 			context: "paragraph",
@@ -187,12 +194,16 @@ open
 			indexInParent: 0,
 		} satisfies OfficialBlockSurface;
 		const lineTable = buildLineTable("= Probe\n\ntext\n");
+		const attributeLists = await officialAttributeLists(lineTable);
 
-		expect(resolveSourceInterval(surface, lineTable)).toBeUndefined();
+		expect(
+			resolveSourceInterval(surface, lineTable, attributeLists),
+		).toBeUndefined();
 	});
 
-	it("reports delimiter and title-span fallbacks for malformed official anchors", () => {
+	it("reports delimiter and title-span fallbacks for malformed official anchors", async () => {
 		const lineTable = buildLineTable("plain text\nmore text\n");
+		const attributeLists = await officialAttributeLists(lineTable);
 		const listing = {
 			block: {},
 			context: "listing",
@@ -216,20 +227,21 @@ open
 			indexInParent: 0,
 		} satisfies OfficialBlockSurface;
 
-		expect(resolveSourceInterval(listing, lineTable)?.diagnostics).toHaveLength(
-			1,
-		);
 		expect(
-			resolveSourceInterval(section, lineTable)?.titleSpan,
+			resolveSourceInterval(listing, lineTable, attributeLists)?.diagnostics,
+		).toHaveLength(1);
+		expect(
+			resolveSourceInterval(section, lineTable, attributeLists)?.titleSpan,
 		).toBeUndefined();
 	});
 
-	it("handles missing sibling anchors and missing closing delimiters", () => {
+	it("handles missing sibling anchors and missing closing delimiters", async () => {
 		const lineTable = buildLineTable(`= Probe
 
 ----
 content
 `);
+		const attributeLists = await officialAttributeLists(lineTable);
 		const current = {
 			block: {},
 			context: "section",
@@ -266,17 +278,20 @@ content
 			indexInParent: 0,
 		} satisfies OfficialBlockSurface;
 
-		expect(resolveSourceInterval(current, lineTable)?.span).toEqual({
+		expect(
+			resolveSourceInterval(current, lineTable, attributeLists)?.span,
+		).toEqual({
 			startLine: 1,
 			endLine: 5,
 		});
-		expect(resolveSourceInterval(listing, lineTable)?.diagnostics).toHaveLength(
-			1,
-		);
+		expect(
+			resolveSourceInterval(listing, lineTable, attributeLists)?.diagnostics,
+		).toHaveLength(1);
 	});
 
-	it("falls back to file bounds for nonparagraph blocks without child or sibling anchors", () => {
+	it("falls back to file bounds for nonparagraph blocks without child or sibling anchors", async () => {
 		const lineTable = buildLineTable("= Probe\n\nordinary block\n");
+		const attributeLists = await officialAttributeLists(lineTable);
 		const block = {
 			block: {},
 			context: "admonition",
@@ -290,7 +305,7 @@ content
 			siblings: [],
 		} satisfies OfficialBlockSurface;
 
-		expect(resolveSourceInterval(block, lineTable)).toEqual(
+		expect(resolveSourceInterval(block, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				blockStartLine: 3,
 				span: { startLine: 3, endLine: 4 },
@@ -299,13 +314,14 @@ content
 				}),
 			}),
 		);
-		expect(resolveSourceInterval(block, lineTable)).not.toHaveProperty(
-			"contentSpan",
-		);
+		expect(
+			resolveSourceInterval(block, lineTable, attributeLists),
+		).not.toHaveProperty("contentSpan");
 	});
 
-	it("keeps intervals source-addressable when official source lines exceed the file", () => {
+	it("keeps intervals source-addressable when official source lines exceed the file", async () => {
 		const lineTable = buildLineTable("= Probe\n");
+		const attributeLists = await officialAttributeLists(lineTable);
 		const paragraph = {
 			block: {
 				getSource: () => "external paragraph",
@@ -331,7 +347,7 @@ content
 			indexInParent: 0,
 		} satisfies OfficialBlockSurface;
 
-		expect(resolveSourceInterval(paragraph, lineTable)).toEqual(
+		expect(resolveSourceInterval(paragraph, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				span: { startLine: 5, endLine: 5 },
 				contentSpan: { startLine: 5, endLine: 5 },
@@ -342,7 +358,7 @@ content
 				diagnostics: [],
 			}),
 		);
-		expect(resolveSourceInterval(listing, lineTable)).toEqual(
+		expect(resolveSourceInterval(listing, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				span: { startLine: 5, endLine: 5 },
 				sourceSpan: {
@@ -373,18 +389,22 @@ content
 		span,
 		contentSpan,
 	}) => {
-		const { lineTable, surfaces } = await parseCompletedFixture(
+		const { lineTable, surfaces, attributeLists } = await parseCompletedFixture(
 			`resolver-air-quote-${name}.adoc`,
 			`= Probe\n\n== 节\n\n${body}`,
 		);
 
 		expect(
-			resolveSourceInterval(findSurface(surfaces, "quote"), lineTable),
+			resolveSourceInterval(
+				findSurface(surfaces, "quote"),
+				lineTable,
+				attributeLists,
+			),
 		).toEqual(expect.objectContaining({ span, contentSpan, diagnostics: [] }));
 	});
 
 	it("spans a markdown quote over its bare > lines and credit line", async () => {
-		const { lineTable, surfaces } = await parseCompletedFixture(
+		const { lineTable, surfaces, attributeLists } = await parseCompletedFixture(
 			"resolver-markdown-quote.adoc",
 			[
 				"= Probe",
@@ -408,7 +428,7 @@ content
 			(surface) => surface.context === "quote",
 		) as [OfficialBlockSurface, OfficialBlockSurface];
 
-		expect(resolveSourceInterval(outer, lineTable)).toEqual(
+		expect(resolveSourceInterval(outer, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				metadataSpan: { startLine: 5, endLine: 5 },
 				span: { startLine: 5, endLine: 12 },
@@ -417,7 +437,7 @@ content
 			}),
 		);
 		// 外层只有 > 的行对内层是空行，内层的段落在那里结束。
-		expect(resolveSourceInterval(inner, lineTable)).toEqual(
+		expect(resolveSourceInterval(inner, lineTable, attributeLists)).toEqual(
 			expect.objectContaining({
 				span: { startLine: 8, endLine: 10 },
 				contentSpan: { startLine: 8, endLine: 9 },
@@ -430,23 +450,25 @@ content
 async function parseFixture(name: string, source: string) {
 	const path = writeFixture(name, source);
 	const lineTable = buildLineTable(source);
-	const adapter = createAsciidoctorFileAdapter();
-	const official = await adapter.loadFile(path);
-	await readAttributeLists(lineTable, (text) =>
-		adapter.readAttributeList(official, text),
-	);
-	return { lineTable, surfaces: walkOfficialBlocks(official) };
+	const official = await createAsciidoctorFileAdapter().loadFile(path);
+	return {
+		lineTable,
+		attributeLists: await officialAttributeLists(lineTable),
+		surfaces: walkOfficialBlocks(official),
+	};
 }
 
 async function parseCompletedFixture(name: string, source: string) {
 	const lineTable = buildLineTable(source);
-	const adapter = createAsciidoctorFileAdapter();
-	const official = await adapter.loadFile(writeFixture(name, source));
-	completeOfficialSourceLocations(official, lineTable);
-	await readAttributeLists(lineTable, (text) =>
-		adapter.readAttributeList(official, text),
+	const official = await createAsciidoctorFileAdapter().loadFile(
+		writeFixture(name, source),
 	);
-	return { lineTable, surfaces: walkOfficialBlocks(official) };
+	completeOfficialSourceLocations(official, lineTable);
+	return {
+		lineTable,
+		attributeLists: await officialAttributeLists(lineTable),
+		surfaces: walkOfficialBlocks(official),
+	};
 }
 
 function findSurface(

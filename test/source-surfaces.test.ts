@@ -7,10 +7,10 @@ import {
 	projectSourceSurfaces,
 	type SourceSurfaces,
 } from "../src/source-surfaces";
-import { scannedXrefRaws } from "./helpers";
+import { officialAttributeLists, scannedXrefRaws } from "./helpers";
 
 describe("projectSourceSurfaces", () => {
-	it("diagnoses unknown official block contexts and skips their inline content", () => {
+	it("diagnoses unknown official block contexts and skips their inline content", async () => {
 		const paragraph = makeBlock("paragraph", 2, {
 			source: "Nested <<target>> should not be scanned.",
 		});
@@ -28,7 +28,10 @@ describe("projectSourceSurfaces", () => {
 			].join("\n"),
 		);
 
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -41,7 +44,7 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
-	it("diagnoses recognized official blocks that have no source location", () => {
+	it("diagnoses recognized official blocks that have no source location", async () => {
 		const paragraph = makeBlock("paragraph", undefined, {
 			source: "Missing location <<target>> should not be scanned.",
 		});
@@ -57,7 +60,10 @@ describe("projectSourceSurfaces", () => {
 			].join("\n"),
 		);
 
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -79,7 +85,7 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
-	it("diagnoses unknown official blocks even when their source location is missing", () => {
+	it("diagnoses unknown official blocks even when their source location is missing", async () => {
 		const unknown = makeBlock("mystery", undefined, {
 			source: "Missing unknown <<target>> should not be scanned.",
 		});
@@ -88,7 +94,10 @@ describe("projectSourceSurfaces", () => {
 			"Missing unknown <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -104,7 +113,7 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
-	it("diagnoses missing context and source location without source scanning", () => {
+	it("diagnoses missing context and source location without source scanning", async () => {
 		const unknown = makeBlock(undefined, undefined, {
 			source: "Missing APIs <<target>> should not be scanned.",
 		});
@@ -113,7 +122,10 @@ describe("projectSourceSurfaces", () => {
 			"Missing APIs <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -132,7 +144,7 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
-	it("diagnoses missing official block context without projecting hidden inline content", () => {
+	it("diagnoses missing official block context without projecting hidden inline content", async () => {
 		const unknown = makeBlock(undefined, 1, {
 			source: "Unknown <<target>> should not be scanned.",
 		});
@@ -141,7 +153,10 @@ describe("projectSourceSurfaces", () => {
 			"Unknown <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 
 		expect(surfaces.toolDiagnostics).toEqual([
 			expect.objectContaining({
@@ -153,14 +168,17 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
-	it("keeps sections without official ids visible while leaving them out of the target catalog", () => {
+	it("keeps sections without official ids visible while leaving them out of the target catalog", async () => {
 		const section = makeBlock("section", 1, {
 			title: "Untargeted",
 		});
 		const officialDocument = makeDocument([section]);
 		const lineTable = buildLineTable("== Untargeted\nbody");
 
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 		const projected = projectOfficialDocument({
 			officialDocument,
 			lineTable,
@@ -194,11 +212,11 @@ describe("projectSourceSurfaces", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
-	it("preserves untitled section surfaces without inventing ids or titles", () => {
+	it("preserves untitled section surfaces without inventing ids or titles", async () => {
 		const section = makeBlock("section", 1);
 		const lineTable = buildLineTable("==\nbody");
 
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument: makeDocument([section]),
 			lineTable,
 		});
@@ -215,7 +233,7 @@ describe("projectSourceSurfaces", () => {
 		expect(surfaces.sectionByLine.get(1)).toBe(surfaces.sections[0]);
 	});
 
-	it("does not diagnose sourceDirectory-only locations without a comparable file identity", () => {
+	it("does not diagnose sourceDirectory-only locations without a comparable file identity", async () => {
 		const paragraph = makeBlock("paragraph", 1, {
 			directory: "/virtual/include",
 			source: "External <<target>> should not be scanned.",
@@ -224,7 +242,7 @@ describe("projectSourceSurfaces", () => {
 			"External <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument: makeDocument([paragraph]),
 			lineTable,
 			sourcePath: "/virtual/main.adoc",
@@ -234,7 +252,7 @@ describe("projectSourceSurfaces", () => {
 		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual(["<<target>>"]);
 	});
 
-	it("uses sourceFile in external source diagnostics when sourcePath is unavailable", () => {
+	it("uses sourceFile in external source diagnostics when sourcePath is unavailable", async () => {
 		const paragraph = makeBlock("paragraph", 1, {
 			file: "/virtual/include/included.adoc",
 			path: undefined,
@@ -244,7 +262,7 @@ describe("projectSourceSurfaces", () => {
 			"External <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument: makeDocument([paragraph]),
 			lineTable,
 			sourcePath: "/virtual/main.adoc",
@@ -259,7 +277,7 @@ describe("projectSourceSurfaces", () => {
 		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 	});
 
-	it("joins sourceDirectory and relative sourceFile before external source checks", () => {
+	it("joins sourceDirectory and relative sourceFile before external source checks", async () => {
 		const paragraph = makeBlock("paragraph", 1, {
 			directory: "/virtual/include",
 			file: "included.adoc",
@@ -269,7 +287,7 @@ describe("projectSourceSurfaces", () => {
 			"External <<target>> should not be scanned.",
 		);
 
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument: makeDocument([paragraph]),
 			lineTable,
 			sourcePath: "/virtual/main.adoc",
@@ -285,14 +303,14 @@ describe("projectSourceSurfaces", () => {
 		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 	});
 
-	it("diagnoses external unknown official blocks with both context and source-location warnings", () => {
+	it("diagnoses external unknown official blocks with both context and source-location warnings", async () => {
 		const unknown = makeBlock("mystery", 1, {
 			directory: "/virtual/include",
 			file: "included.adoc",
 			source: "External unknown <<target>> should not be scanned.",
 		});
 
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument: makeDocument([unknown]),
 			lineTable: buildLineTable(
 				"External unknown <<target>> should not be scanned.",
@@ -312,7 +330,7 @@ describe("projectSourceSurfaces", () => {
 		expect(scannedXrefRaws(surfaces.xrefRegions)).toEqual([]);
 	});
 
-	it("does not project unknown official block contexts into document children", () => {
+	it("does not project unknown official block contexts into document children", async () => {
 		const paragraph = makeBlock("paragraph", 2, {
 			source: "Nested paragraph should remain hidden.",
 		});
@@ -324,7 +342,10 @@ describe("projectSourceSurfaces", () => {
 		const lineTable = buildLineTable(
 			"Unknown block source.\nNested paragraph should remain hidden.\n",
 		);
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 
 		const projected = projectOfficialDocument({
 			officialDocument,
@@ -343,7 +364,7 @@ describe("projectSourceSurfaces", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
-	it("does not expose descendant sections from unknown official block contexts", () => {
+	it("does not expose descendant sections from unknown official block contexts", async () => {
 		const hiddenSection = makeBlock("section", 2, {
 			id: "hidden-section",
 			title: "Hidden Section",
@@ -356,7 +377,10 @@ describe("projectSourceSurfaces", () => {
 			["mystery container", "== Hidden Section", "hidden body"].join("\n"),
 		);
 
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 		const projected = projectOfficialDocument({
 			officialDocument,
 			lineTable,
@@ -383,7 +407,7 @@ describe("projectSourceSurfaces", () => {
 		expect(projected.targets).toEqual([]);
 	});
 
-	it("maps single-file section scopes using span, line, and full-document fallbacks", () => {
+	it("maps single-file section scopes using span, line, and full-document fallbacks", async () => {
 		const first = makeBlock("section", 1, {
 			id: "first",
 			title: "First",
@@ -396,7 +420,10 @@ describe("projectSourceSurfaces", () => {
 		const lineTable = buildLineTable(
 			["== First", "first body", "== Second", "second body"].join("\n"),
 		);
-		const surfaces = projectNodeSourceSurfaces({ officialDocument, lineTable });
+		const surfaces = await projectNodeSourceSurfaces({
+			officialDocument,
+			lineTable,
+		});
 
 		expect(surfaces.sectionByLine.get(1)?.ids).toEqual(["first"]);
 		expect(surfaces.sectionByLine.get(2)?.ids).toEqual(["first"]);
@@ -411,11 +438,15 @@ function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
 	};
 }
 
-function projectNodeSourceSurfaces(
-	options: Omit<Parameters<typeof projectSourceSurfaces>[0], "sourceIdentity">,
-): SourceSurfaces {
+async function projectNodeSourceSurfaces(
+	options: Omit<
+		Parameters<typeof projectSourceSurfaces>[0],
+		"sourceIdentity" | "attributeLists"
+	>,
+): Promise<SourceSurfaces> {
 	return projectSourceSurfaces({
 		...options,
+		attributeLists: await officialAttributeLists(options.lineTable),
 		sourceIdentity: nodeSourceIdentity,
 	});
 }

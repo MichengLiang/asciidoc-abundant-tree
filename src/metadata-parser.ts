@@ -17,20 +17,23 @@ const blockAnchorPattern = /^\[\[([^,\]]+)(?:,([^\]]+))?\]\]$/;
 const titlePattern = /^\.(.+)$/;
 const attrListPattern = /^\[([^\]]+)\]$/;
 
-// attrlist 由官方拆（09 号书第 8 章 Metadata Attachment），官方的 parseAttributes 却是异步的，而元数据扫描在同步的
-// 源区间推导里。所以解析之前先把源里每一个 attrlist 交给官方读一遍（readAttributeLists），扫描时按文字查。
-// 不带 block、不做替换时，官方的结果只取决于这段文字，按文字记下即可，与哪份文档、哪一行无关。
-const officialAttributeLists = new Map<string, Record<string, unknown>>();
+// 一次解析里，官方对每一个 attrlist 的读法，按方括号里的文字查（09 号书第 8 章 Metadata Attachment）。官方的
+// parseAttributes 是异步的，元数据扫描却在同步的源区间推导里，所以解析开始时先读好（readAttributeLists），随这次解析
+// 往下传。不带 block、不做替换时，官方的结果只取决于这段文字，按文字查即可。
+export type AttributeListReadings = ReadonlyMap<
+	string,
+	Readonly<Record<string, unknown>>
+>;
 
 export async function readAttributeLists(
 	lineTable: LineTable,
 	read: (text: string) => Promise<Record<string, unknown>>,
-): Promise<void> {
+): Promise<AttributeListReadings> {
+	const readings = new Map<string, Readonly<Record<string, unknown>>>();
 	for (const text of attrListTexts(lineTable)) {
-		if (!officialAttributeLists.has(text)) {
-			officialAttributeLists.set(text, await read(text));
-		}
+		readings.set(text, await read(text));
 	}
+	return readings;
 }
 
 // 引语里的块在去掉每一层 `> ` 以后才是官方读到的样子（source-lines.ts 的 quotedLineTable），各层都收。
@@ -61,13 +64,14 @@ function attrListTexts(lineTable: LineTable): Set<string> {
 export function collectPrecedingMetadata(
 	lineTable: LineTable,
 	ownerLine: number,
+	attributeLists: AttributeListReadings,
 ): MetadataSurface[] {
 	const surfaces: MetadataSurface[] = [];
 	let cursor = ownerLine - 1;
 
 	while (cursor > 0) {
 		const text = lineText(lineTable, cursor);
-		const surface = parseMetadataLine(lineTable, cursor, text);
+		const surface = parseMetadataLine(lineTable, cursor, text, attributeLists);
 		if (!surface) {
 			break;
 		}
@@ -82,6 +86,7 @@ function parseMetadataLine(
 	lineTable: LineTable,
 	line: number,
 	raw: string,
+	attributeLists: AttributeListReadings,
 ): MetadataSurface | undefined {
 	const sourceSpan = spanForLineText(lineTable, line, 1);
 	const idAttr = idAttrPattern.exec(raw) ?? idLongAttrPattern.exec(raw);
@@ -136,7 +141,7 @@ function parseMetadataLine(
 
 	const attrList = attrListPattern.exec(raw);
 	if (attrList?.[1]) {
-		const parsed = parseAttrList(attrList[1]);
+		const parsed = parseAttrList(attrList[1], attributeLists);
 		return definedObject({
 			node: {
 				kind: "metadata",
@@ -158,17 +163,20 @@ function parseMetadataLine(
 	return undefined;
 }
 
-function parseAttrList(raw: string): {
+function parseAttrList(
+	raw: string,
+	attributeLists: AttributeListReadings,
+): {
 	ids: string[];
 	roles: string[];
 	attributes: Record<string, string | number | boolean>;
 	style?: string;
 	language?: string;
 } {
-	const official = officialAttributeLists.get(raw);
+	const official = attributeLists.get(raw);
 	if (official === undefined) {
 		throw new Error(
-			`attrlist [${raw}] was not read by Asciidoctor before scanning; readAttributeLists must run first`,
+			`attrlist [${raw}] was not read by Asciidoctor before scanning; pass the readings from readAttributeLists for this source`,
 		);
 	}
 	const ids: string[] = [];

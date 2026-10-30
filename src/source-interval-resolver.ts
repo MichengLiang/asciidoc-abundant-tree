@@ -1,4 +1,5 @@
 import {
+	type AttributeListReadings,
 	collectPrecedingMetadata,
 	type MetadataSurface,
 } from "./metadata-parser";
@@ -51,6 +52,7 @@ export type SourceInterval = {
 export function resolveSourceInterval(
 	surface: OfficialBlockSurface,
 	sourceTable: LineTable,
+	attributeLists: AttributeListReadings,
 ): SourceInterval | undefined {
 	if (surface.sourceLine === undefined) {
 		return undefined;
@@ -64,7 +66,12 @@ export function resolveSourceInterval(
 		markdownQuoteDepth(surface.block),
 	);
 	const blockStartLine = surface.sourceLine;
-	const metadata = metadataForSurface(surface, lineTable, blockStartLine);
+	const metadata = metadataForSurface(
+		surface,
+		lineTable,
+		blockStartLine,
+		attributeLists,
+	);
 	const startLine = metadata.at(0)?.line ?? blockStartLine;
 	const diagnostics: ToolDiagnostic[] = [];
 	const delimitedContext = isDelimitedContext(surface.context);
@@ -85,6 +92,7 @@ export function resolveSourceInterval(
 					sourceTable,
 					blockStartLine,
 					surface,
+					attributeLists,
 				)
 			: undefined;
 	const sourceContentSpan = sourceContentSpanForContext(
@@ -92,10 +100,14 @@ export function resolveSourceInterval(
 		lineTable,
 		blockStartLine,
 	);
-	const nextSiblingStart = nextSiblingStartLine(surface, lineTable);
+	const nextSiblingStart = nextSiblingStartLine(
+		surface,
+		lineTable,
+		attributeLists,
+	);
 	const childEndLine =
 		surface.context === "dlist"
-			? lastChildEndLine(surface, sourceTable)
+			? lastChildEndLine(surface, sourceTable, attributeLists)
 			: undefined;
 	const endLine =
 		delimited?.span.endLine ??
@@ -103,7 +115,7 @@ export function resolveSourceInterval(
 		sourceContentSpan?.endLine ??
 		childEndLine ??
 		(nextSiblingStart !== undefined ? nextSiblingStart - 1 : undefined) ??
-		parentEndLine(surface, sourceTable) ??
+		parentEndLine(surface, sourceTable, attributeLists) ??
 		lineTable.lines.length;
 	const span = normalizeLineSpan({
 		startLine,
@@ -208,6 +220,7 @@ function descriptionSourceSpan(
 function nextSiblingStartLine(
 	surface: OfficialBlockSurface,
 	lineTable: LineTable,
+	attributeLists: AttributeListReadings,
 ): number | undefined {
 	const siblings = surface.parent?.children ?? surface.siblings;
 	const next = siblings?.[surface.indexInParent + 1];
@@ -217,7 +230,11 @@ function nextSiblingStartLine(
 	if (next.sourceLine === undefined) {
 		return undefined;
 	}
-	const metadata = collectPrecedingMetadata(lineTable, next.sourceLine);
+	const metadata = collectPrecedingMetadata(
+		lineTable,
+		next.sourceLine,
+		attributeLists,
+	);
 	return metadata.at(0)?.line ?? next.sourceLine;
 }
 
@@ -225,6 +242,7 @@ function metadataForSurface(
 	surface: OfficialBlockSurface,
 	lineTable: LineTable,
 	blockStartLine: number,
+	attributeLists: AttributeListReadings,
 ): MetadataSurface[] {
 	if (surface.context === "list_item") {
 		return [];
@@ -232,15 +250,16 @@ function metadataForSurface(
 	if (takesParentSourceLocation(surface.block)) {
 		return [];
 	}
-	return collectPrecedingMetadata(lineTable, blockStartLine);
+	return collectPrecedingMetadata(lineTable, blockStartLine, attributeLists);
 }
 
 function lastChildEndLine(
 	surface: OfficialBlockSurface,
 	sourceTable: LineTable,
+	attributeLists: AttributeListReadings,
 ): number | undefined {
 	const childLines = surface.children
-		.map((child) => enclosedEndLine(child, sourceTable))
+		.map((child) => enclosedEndLine(child, sourceTable, attributeLists))
 		.filter((line) => line !== undefined);
 	if (childLines.length === 0) {
 		return undefined;
@@ -253,12 +272,15 @@ function lastChildEndLine(
 function enclosedEndLine(
 	surface: OfficialBlockSurface,
 	sourceTable: LineTable,
+	attributeLists: AttributeListReadings,
 ): number | undefined {
 	const ends = [
 		surface.sourceLine === undefined
 			? undefined
-			: ownEndLine(surface, sourceTable, surface.sourceLine),
-		...surface.children.map((child) => enclosedEndLine(child, sourceTable)),
+			: ownEndLine(surface, sourceTable, surface.sourceLine, attributeLists),
+		...surface.children.map((child) =>
+			enclosedEndLine(child, sourceTable, attributeLists),
+		),
 	].filter((line) => line !== undefined);
 	return ends.length > 0 ? Math.max(...ends) : undefined;
 }
@@ -269,6 +291,7 @@ function ownEndLine(
 	surface: OfficialBlockSurface,
 	sourceTable: LineTable,
 	startLine: number,
+	attributeLists: AttributeListReadings,
 ): number {
 	const lineTable = quotedLineTable(
 		sourceTable,
@@ -278,7 +301,13 @@ function ownEndLine(
 		isDelimitedContext(surface.context) &&
 		!borrowsChildSourceLocation(surface.block)
 			? (resolveDelimitedBlockSpan(lineTable, startLine, surface) ??
-				resolveUndelimitedBlockSpan(lineTable, sourceTable, startLine, surface))
+				resolveUndelimitedBlockSpan(
+					lineTable,
+					sourceTable,
+					startLine,
+					surface,
+					attributeLists,
+				))
 			: undefined;
 	if (delimited) {
 		return delimited.span.endLine;
@@ -299,12 +328,13 @@ function ownEndLine(
 function parentEndLine(
 	surface: OfficialBlockSurface,
 	lineTable: LineTable,
+	attributeLists: AttributeListReadings,
 ): number | undefined {
 	const parent = surface.parent;
 	if (!parent) {
 		return lineTable.lines.length;
 	}
-	return resolveSourceInterval(parent, lineTable)?.span.endLine;
+	return resolveSourceInterval(parent, lineTable, attributeLists)?.span.endLine;
 }
 
 function resolveDelimitedBlockSpan(
@@ -342,6 +372,7 @@ function resolveUndelimitedBlockSpan(
 	sourceTable: LineTable,
 	startLine: number,
 	surface: OfficialBlockSurface,
+	attributeLists: AttributeListReadings,
 ): { span: LineSpan; contentSpan: LineSpan } | undefined {
 	const anchorText = lineText(lineTable, startLine);
 	// markdown 引语是按这一行认出来的，子块坐标也从这一行换算，锚点与官方块必然对得上，不再与子块的第一行比。
@@ -360,6 +391,7 @@ function resolveUndelimitedBlockSpan(
 			sourceTable,
 			startLine,
 			surface,
+			attributeLists,
 		);
 		return { span, contentSpan: span };
 	}
@@ -382,11 +414,17 @@ function cloakedParagraphSpan(
 	sourceTable: LineTable,
 	startLine: number,
 	surface: OfficialBlockSurface,
+	attributeLists: AttributeListReadings,
 ): LineSpan {
 	if (surface.children.length > 0) {
 		return {
 			startLine,
-			endLine: lastChildIntervalEnd(sourceTable, startLine, surface),
+			endLine: lastChildIntervalEnd(
+				sourceTable,
+				startLine,
+				surface,
+				attributeLists,
+			),
 		};
 	}
 	return {
@@ -399,9 +437,13 @@ function lastChildIntervalEnd(
 	sourceTable: LineTable,
 	startLine: number,
 	surface: OfficialBlockSurface,
+	attributeLists: AttributeListReadings,
 ): number {
 	const childEnds = surface.children
-		.map((child) => resolveSourceInterval(child, sourceTable)?.span.endLine)
+		.map(
+			(child) =>
+				resolveSourceInterval(child, sourceTable, attributeLists)?.span.endLine,
+		)
 		.filter((line): line is number => line !== undefined);
 	return Math.max(startLine, ...childEnds);
 }

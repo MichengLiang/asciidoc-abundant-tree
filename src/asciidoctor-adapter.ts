@@ -115,7 +115,6 @@ type SubstitutingNode = {
 	applySubs(text: string, subs?: string[]): Promise<string | string[]>;
 	applyTitleSubs(text: string): Promise<string | string[]>;
 	subAttributes(text: string): string;
-	extractAttributesFromText(text: string): Promise<unknown[]>;
 	parseAttributes(
 		attrlist: string,
 		posattrs?: string[],
@@ -422,7 +421,10 @@ const NORMAL_SUBS = [
 	"post_replacements",
 ];
 
-// 标签照官方的读法分出命名属性（substitutors.js 1147-1158 行），值取源文本：官方转换得到的值经过了 replacements。
+// 标签照官方的读法分出命名属性（substitutors.js 1147-1158 行用 extractAttributesFromText 拆），值取源文本。这里调
+// parseAttributes、不开替换：两者用同一个 AttributeList 拆，extractAttributesFromText 却把节点当 block 传入，单引号
+// 里的值会经过 replacements（'a--b' 成了破折号的实体），不是作者写下的值。整段只是一个位置属性时，两者给出的标签都是
+// 原文、命名属性都为空。
 async function candidateLabel(
 	owner: SubstitutingNode,
 	candidate: XrefProbeCandidate,
@@ -437,12 +439,10 @@ async function candidateLabel(
 	if (candidate.syntax === "shorthand" || !label.includes("=")) {
 		return { label };
 	}
-	const [text, extracted] = (await owner.extractAttributesFromText(label)) as [
-		unknown,
-		Record<string, unknown>,
-	];
+	const parsed = await owner.parseAttributes(label);
+	const text = parsed["1"];
 	const attributes: Record<string, string> = {};
-	for (const [name, value] of Object.entries(extracted ?? {})) {
+	for (const [name, value] of Object.entries(parsed)) {
 		if (!/^\d+$/u.test(name) && typeof value === "string") {
 			attributes[name] = value;
 		}

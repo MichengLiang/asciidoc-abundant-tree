@@ -860,6 +860,8 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefRegions } = scanInlineOccurrencesInOfficialBlocks({
+			// 替身源里没有 attrlist 行：官方读法是空的；若有，扫描时会因查不到而抛错。
+			attributeLists: new Map(),
 			sectionByLine: new Map(),
 			lineTable: buildLineTable("<<not-cell>>\n<<also-not-cell>>\n"),
 			blockSurfaces: [
@@ -911,6 +913,8 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefRegions } = scanInlineOccurrencesInOfficialBlocks({
+			// 替身源里没有 attrlist 行：官方读法是空的；若有，扫描时会因查不到而抛错。
+			attributeLists: new Map(),
 			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
@@ -1014,6 +1018,8 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefRegions } = scanInlineOccurrencesInOfficialBlocks({
+			// 替身源里没有 attrlist 行：官方读法是空的；若有，扫描时会因查不到而抛错。
+			attributeLists: new Map(),
 			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
@@ -1086,6 +1092,8 @@ describe("official table inline scanning", () => {
 
 		const { xrefRegions, anchorOccurrences } =
 			scanInlineOccurrencesInOfficialBlocks({
+				// 替身源里没有 attrlist 行：官方读法是空的；若有，扫描时会因查不到而抛错。
+				attributeLists: new Map(),
 				sectionByLine: new Map(),
 				lineTable: buildLineTable(
 					[
@@ -1161,6 +1169,8 @@ describe("official table inline scanning", () => {
 		]);
 
 		const { xrefRegions } = scanInlineOccurrencesInOfficialBlocks({
+			// 替身源里没有 attrlist 行：官方读法是空的；若有，扫描时会因查不到而抛错。
+			attributeLists: new Map(),
 			sectionByLine: new Map(),
 			lineTable: buildLineTable(
 				[
@@ -1204,6 +1214,8 @@ describe("official table inline scanning", () => {
 
 		const { xrefRegions, anchorOccurrences } =
 			scanInlineOccurrencesInOfficialBlocks({
+				// 替身源里没有 attrlist 行：官方读法是空的；若有，扫描时会因查不到而抛错。
+				attributeLists: new Map(),
 				sectionByLine: new Map(),
 				lineTable,
 				blockSurfaces: [

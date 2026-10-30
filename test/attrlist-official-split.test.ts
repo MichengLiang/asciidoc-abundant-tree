@@ -53,4 +53,22 @@ describe("attrlist split by Asciidoctor", () => {
 			].toSorted(),
 		);
 	});
+
+	it("keeps xref attribute values as written, quoted ones included", async () => {
+		const path = writeFixture(
+			"xref-attribute-values.adoc",
+			`= T
+
+[#target]
+== 目标
+
+见 xref:target[标签, note='a--b', x="c--d", y=e--f]。
+`,
+		);
+		const document = await parseAbundantTree({ sourcePath: path });
+		const [xref] = document.xrefOccurrences;
+
+		expect(xref?.label).toBe("标签");
+		expect(xref?.attributes).toEqual({ note: "a--b", x: "c--d", y: "e--f" });
+	});
 });

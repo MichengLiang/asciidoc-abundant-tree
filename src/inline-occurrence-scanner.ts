@@ -4,6 +4,7 @@ import {
 	sourceAwareDocumentForLineTable,
 } from "./book-entry/source-aware-coordinate";
 import { interpretHeadingInlineMetadataAttributes } from "./heading-inline-metadata";
+import type { AttributeListReadings } from "./metadata-parser";
 import type {
 	AnchorOccurrenceNode,
 	HeadingInlineMetadataOccurrenceNode,
@@ -57,6 +58,7 @@ const headingInlineMetadataPattern = /hmeta:([^\s[]+)\[([^\]]*)\]/gu;
 // 由 xref-recognition 交给官方探测；anchor 与 hmeta 仍由扫描器按源文本认。
 export function scanInlineOccurrencesInOfficialBlocks(options: {
 	lineTable: LineTable;
+	attributeLists: AttributeListReadings;
 	blockSurfaces: OfficialBlockSurface[];
 	intervalByBlock: WeakMap<AsciidoctorBlock, SourceInterval>;
 	sectionByLine: Map<number, SectionNode>;
@@ -69,6 +71,7 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 } {
 	const collected: Collected = {
 		lineTable: options.lineTable,
+		attributeLists: options.attributeLists,
 		xrefRegions: [],
 		regionsByOwner: new Map(),
 		anchorOccurrences: [],
@@ -199,6 +202,7 @@ function recoverSourceAwareInlineOrigins<
 
 type Collected = {
 	lineTable: LineTable;
+	attributeLists: AttributeListReadings;
 	xrefRegions: XrefProbeRegion[];
 	regionsByOwner: Map<
 		AsciidoctorBlock,
@@ -419,7 +423,11 @@ function scanTable(collected: Collected, block: AsciidoctorBlock): void {
 		const surfaces = walkOfficialBlocks(document);
 		const intervalByBlock = new WeakMap<AsciidoctorBlock, SourceInterval>();
 		for (const surface of surfaces) {
-			const interval = resolveSourceInterval(surface, collected.lineTable);
+			const interval = resolveSourceInterval(
+				surface,
+				collected.lineTable,
+				collected.attributeLists,
+			);
 			if (interval) {
 				intervalByBlock.set(surface.block, interval);
 				collected.toolDiagnostics?.push(...interval.diagnostics);

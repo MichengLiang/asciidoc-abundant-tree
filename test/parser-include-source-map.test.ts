@@ -10,7 +10,11 @@ import {
 	projectSourceSurfaces,
 	type SourceSurfaces,
 } from "../src/source-surfaces";
-import { scannedXrefRaws, writeFixture } from "./helpers";
+import {
+	officialAttributeLists,
+	scannedXrefRaws,
+	writeFixture,
+} from "./helpers";
 
 describe("include source map handling", () => {
 	it("keeps secure-mode include directives anchored to the main file", async () => {
@@ -50,7 +54,7 @@ include::included-secure.adoc[]
 		);
 	});
 
-	it("diagnoses and skips official blocks mapped outside the main source file", () => {
+	it("diagnoses and skips official blocks mapped outside the main source file", async () => {
 		const includedSection = makeBlock("section", 2, {
 			file: "/virtual/include/included.adoc",
 			id: "included-section",
@@ -58,7 +62,7 @@ include::included-secure.adoc[]
 			title: "Included Section",
 		});
 		const officialDocument = makeDocument([includedSection]);
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable(
 				["= Main", "", "include::included.adoc[]"].join("\n"),
@@ -80,7 +84,7 @@ include::included-secure.adoc[]
 		expect(surfaces.anchorOccurrences).toEqual([]);
 	});
 
-	it("does not project external source-map blocks after source surface filtering", () => {
+	it("does not project external source-map blocks after source surface filtering", async () => {
 		const includedParagraph = makeBlock("paragraph", 2, {
 			file: "/virtual/include/included.adoc",
 			id: "included-paragraph",
@@ -90,7 +94,7 @@ include::included-secure.adoc[]
 		const lineTable = buildLineTable(
 			["= Main", "include::included.adoc[]"].join("\n"),
 		);
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable,
 			sourcePath: "/virtual/main.adoc",
@@ -119,7 +123,7 @@ include::included-secure.adoc[]
 		expect(projected.targets).toEqual([]);
 	});
 
-	it("resolves relative source files against sourceDirectory before comparing to the main file", () => {
+	it("resolves relative source files against sourceDirectory before comparing to the main file", async () => {
 		const includedParagraph = makeBlock("paragraph", 2, {
 			directory: "/virtual/include",
 			file: "included.adoc",
@@ -127,17 +131,17 @@ include::included-secure.adoc[]
 		});
 		const officialDocument = makeDocument([includedParagraph]);
 
-		const external = projectNodeSourceSurfaces({
+		const external = await projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable("= Main\n\ninclude::included.adoc[]\n"),
 			sourcePath: "/virtual/main.adoc",
 		});
-		const sameFile = projectNodeSourceSurfaces({
+		const sameFile = await projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable("= Included\nIncluded <<target>>\n"),
 			sourcePath: "/virtual/include/included.adoc",
 		});
-		const noMainPath = projectNodeSourceSurfaces({
+		const noMainPath = await projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable("= Included\nIncluded <<target>>\n"),
 		});
@@ -155,7 +159,7 @@ include::included-secure.adoc[]
 		expect(scannedXrefRaws(noMainPath.xrefRegions)).toEqual(["<<target>>"]);
 	});
 
-	it("uses sourcePath before sourceFile and tolerates missing source file identity", () => {
+	it("uses sourcePath before sourceFile and tolerates missing source file identity", async () => {
 		const pathPreferredParagraph = makeBlock("paragraph", 2, {
 			file: "/virtual/other-name.adoc",
 			path: "/virtual/main.adoc",
@@ -171,7 +175,7 @@ include::included-secure.adoc[]
 			missingFileParagraph,
 		]);
 
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument,
 			lineTable: buildLineTable(
 				[
@@ -190,12 +194,12 @@ include::included-secure.adoc[]
 		]);
 	});
 
-	it("does not diagnose relative source files when no sourceDirectory is available", () => {
+	it("does not diagnose relative source files when no sourceDirectory is available", async () => {
 		const relativeOnlyParagraph = makeBlock("paragraph", 2, {
 			file: "included.adoc",
 			source: "Relative-only <<target>>",
 		});
-		const surfaces = projectNodeSourceSurfaces({
+		const surfaces = await projectNodeSourceSurfaces({
 			officialDocument: makeDocument([relativeOnlyParagraph]),
 			lineTable: buildLineTable("= Main\nRelative-only <<target>>\n"),
 			sourcePath: "/virtual/main.adoc",
@@ -212,11 +216,15 @@ function makeDocument(blocks: AsciidoctorBlock[]): AsciidoctorBlock {
 	};
 }
 
-function projectNodeSourceSurfaces(
-	options: Omit<Parameters<typeof projectSourceSurfaces>[0], "sourceIdentity">,
-): SourceSurfaces {
+async function projectNodeSourceSurfaces(
+	options: Omit<
+		Parameters<typeof projectSourceSurfaces>[0],
+		"sourceIdentity" | "attributeLists"
+	>,
+): Promise<SourceSurfaces> {
 	return projectSourceSurfaces({
 		...options,
+		attributeLists: await officialAttributeLists(options.lineTable),
 		sourceIdentity: nodeSourceIdentity,
 	});
 }

@@ -1,6 +1,13 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
+import {
+	type AsciidoctorBlock,
+	createAsciidoctorAdapter,
+} from "../src/asciidoctor-adapter";
+import {
+	type AttributeListReadings,
+	readAttributeLists,
+} from "../src/metadata-parser";
 import type {
 	SectionNode,
 	ToolDiagnostic,
@@ -21,6 +28,18 @@ export function writeFixture(name: string, source: string): string {
 	const path = join(fixtureRoot, name);
 	writeFileSync(path, source, "utf8");
 	return path;
+}
+
+// 官方对这份源里每一个 attrlist 的读法（解析时 parser-core 交给扫描的那一份）。不带 block、不做替换时官方的读法只
+// 取决于文字，所以替身官方块的测试也能拿一份空的真文档来读。
+export async function officialAttributeLists(
+	lineTable: LineTable,
+): Promise<AttributeListReadings> {
+	const adapter = createAsciidoctorAdapter();
+	const document = await adapter.loadSource("");
+	return readAttributeLists(lineTable, (text) =>
+		adapter.readAttributeList(document, text),
+	);
 }
 
 // 扫描器交给官方探测的 xref 候选（未经官方认定），按源位置排序。替身官方块做不了探测，单元测试看这一层。

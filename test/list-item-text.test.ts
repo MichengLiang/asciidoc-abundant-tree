@@ -6,7 +6,7 @@ import { completeOfficialSourceLocations } from "../src/official-source-location
 import { parseAbundantTree } from "../src/parser";
 import { resolveSourceInterval } from "../src/source-interval-resolver";
 import { buildLineTable, lineText } from "../src/source-lines";
-import { writeFixture } from "./helpers";
+import { officialAttributeLists, writeFixture } from "./helpers";
 
 // 条目的文字由官方并好，存在 ListItem 的 _text 里（list.js 196 行 foldFirst）。它是 @internal，生产代码不读，测试拿它当裁判。
 type OfficialItem = { _text: string | null };
@@ -36,6 +36,7 @@ describe("list item text", () => {
 			writeFixture(`list-item-${name.replaceAll(" ", "-")}.adoc`, source),
 		);
 		completeOfficialSourceLocations(official, lineTable);
+		const attributeLists = await officialAttributeLists(lineTable);
 		const items = walkOfficialBlocks(official).filter(
 			(surface) =>
 				surface.context === "list_item" && surface.parent?.context !== "dlist",
@@ -43,7 +44,11 @@ describe("list item text", () => {
 
 		expect(items.length).toBeGreaterThan(1);
 		for (const item of items) {
-			const span = resolveSourceInterval(item, lineTable)?.contentSpan;
+			const span = resolveSourceInterval(
+				item,
+				lineTable,
+				attributeLists,
+			)?.contentSpan;
 			const read: string[] = [];
 			for (
 				let line = span?.startLine ?? 0;

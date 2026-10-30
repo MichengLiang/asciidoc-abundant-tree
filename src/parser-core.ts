@@ -37,13 +37,14 @@ export async function parseAsciidoctorDocument(
 	input: ParserCoreInput,
 ): Promise<AbundantDocument> {
 	completeOfficialSourceLocations(input.officialDocument, input.lineTable);
-	// 元数据扫描是同步的，官方读 attrlist 是异步的：先让官方把源里每一个 attrlist 读一遍，扫描时按文字查。
-	await readAttributeLists(input.lineTable, (text) =>
+	// 元数据扫描是同步的，官方读 attrlist 是异步的：先让官方把这份源里每一个 attrlist 读一遍，随这次解析往下传。
+	const attributeLists = await readAttributeLists(input.lineTable, (text) =>
 		input.adapter.readAttributeList(input.officialDocument, text),
 	);
 	const sourceSurfaces = projectSourceSurfaces({
 		officialDocument: input.officialDocument,
 		lineTable: input.lineTable,
+		attributeLists,
 		sourceIdentity: input.sourceIdentity,
 		...(input.sourceSurfacePath ? { sourcePath: input.sourceSurfacePath } : {}),
 	});
