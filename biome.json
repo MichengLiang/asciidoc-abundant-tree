@@ -12,6 +12,7 @@
 			"!dist",
 			"!**/dist",
 			"!coverage",
+			"!build",
 			"!docs/bookshelf/build",
 			"!docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/reports.case-inventory.json",
 			"!docs/关于D2/probes",
