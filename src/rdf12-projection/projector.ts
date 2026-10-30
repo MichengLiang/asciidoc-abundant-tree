@@ -77,14 +77,14 @@ export function projectAbundantDocumentToRdf12(
 			: {}),
 	});
 	const { nodeIndex } = structure;
-	const labelCatalog = projectLabels({ graph, structure });
+	const headingOwners = projectLabels({ graph, structure });
 	const xrefIndex = projectXrefResources({
 		graph,
 		document,
 		options: normalizedOptions,
 		documentIri,
 		relativePath: coordinate.relativePath,
-		labelCatalog,
+		headingOwners,
 		nodeIndex,
 	});
 	projectSurfaceAttributes({
@@ -98,7 +98,7 @@ export function projectAbundantDocumentToRdf12(
 		document,
 		documentIri,
 		relativePath: coordinate.relativePath,
-		labelCatalog,
+		headingOwners,
 		nodeIndex,
 		xrefIndex,
 	});

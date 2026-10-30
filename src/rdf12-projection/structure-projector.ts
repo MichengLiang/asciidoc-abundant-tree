@@ -48,8 +48,8 @@ export type ProjectStructureResourcesInput = {
 
 export type HeadingNode = Rdf12NodeIndexEntry["node"];
 
-// 归属到标题的本地非标题 target ID：既是这个标题的地址，也写成它的 aat:addressLabel。
-export type HeadingTargetAlias = {
+// 归属到标题的本地非标题 target ID：它是这个标题的地址，经地址簿写成 aat:addressLabel。
+type HeadingTargetAlias = {
 	readonly owner: HeadingNode;
 	readonly id: string;
 };
@@ -57,7 +57,6 @@ export type HeadingTargetAlias = {
 export type StructureProjection = {
 	readonly nodeIndex: Rdf12NodeIndex;
 	readonly addressBook: HeadingAddressBook<HeadingNode>;
-	readonly targetAliases: readonly HeadingTargetAlias[];
 };
 
 // 标题的切片与位置先定下：地址簿要看整份文档的标题，其中有按位置归属的本地 target ID。
@@ -104,7 +103,7 @@ export function projectStructureResources(
 	}
 	projectHeadingStructureEdges(input.graph, nodeIndex, headingTree);
 
-	return { nodeIndex, addressBook, targetAliases };
+	return { nodeIndex, addressBook };
 }
 
 function headlineOf(heading: PlacedHeading): string {
@@ -244,9 +243,6 @@ function projectHeading(
 		addOptionalLineSpan(graph, iri, "metadata", slice.metadataSpan);
 	}
 	addOptionalLineSpan(graph, iri, "content", slice.contentSpan);
-	if (heading.kind === "section") {
-		addHeadingLabels(graph, iri, heading.node);
-	}
 
 	const { entry: _entry, slice: _slice, ...indexed } = heading;
 	nodeIndex.set({ ...indexed, iri, localId } as Rdf12NodeIndexEntry);
@@ -322,21 +318,6 @@ function addTypeAndSourceTriples(
 			relativePath,
 			span,
 		});
-	}
-}
-
-function addHeadingLabels(
-	graph: Rdf12Graph,
-	iri: Rdf12IriTerm,
-	node: SectionNode,
-): void {
-	const predicate =
-		node.idOrigin === "asciidoctor-generated"
-			? "generatedAddressLabel"
-			: "addressLabel";
-
-	for (const id of node.ids) {
-		addStringTriple(graph, iri, predicate, id);
 	}
 }
 

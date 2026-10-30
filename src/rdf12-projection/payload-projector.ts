@@ -8,7 +8,7 @@ import { fieldPredicate } from "./field-predicate";
 import type { Rdf12Graph } from "./graph";
 import { rdf12Triple } from "./graph";
 import { findInnermostHeadingBySourceLine } from "./heading-ownership";
-import type { Rdf12LabelCatalog } from "./label-catalog";
+import type { HeadingOwners } from "./labels";
 import { integerLiteral, stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
@@ -30,7 +30,7 @@ export type ProjectPayloadBlocksInput = {
 	readonly document: AbundantDocument;
 	readonly documentIri: string;
 	readonly relativePath: string;
-	readonly labelCatalog: Rdf12LabelCatalog;
+	readonly headingOwners: HeadingOwners;
 	readonly nodeIndex: Rdf12NodeIndex;
 	readonly xrefIndex: Rdf12XrefIndex;
 };
@@ -190,7 +190,7 @@ function headingOwnersForComplexProperty(
 	marker: HeadingMarker,
 ): readonly Rdf12IriTerm[] {
 	if (marker.kind === "selector") {
-		return context.labelCatalog.owners(marker.selector);
+		return context.headingOwners(marker.selector);
 	}
 
 	const owner = findInnermostHeadingBySourceLine({

@@ -5,7 +5,7 @@ import {
 	findHeadingBySectionId,
 	findInnermostHeadingBySourceLine,
 } from "./heading-ownership";
-import type { Rdf12LabelCatalog } from "./label-catalog";
+import type { HeadingOwners } from "./labels";
 import { stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
@@ -30,7 +30,7 @@ export type ProjectXrefResourcesInput = {
 	readonly options: NormalizedRdf12Options;
 	readonly documentIri: string;
 	readonly relativePath: string;
-	readonly labelCatalog: Rdf12LabelCatalog;
+	readonly headingOwners: HeadingOwners;
 	readonly nodeIndex: Rdf12NodeIndex;
 };
 
@@ -335,7 +335,7 @@ function writeTargetBinding(
 	if (xref.document !== undefined || xref.selector === undefined) {
 		return [];
 	}
-	const targets = context.labelCatalog.owners(xref.selector);
+	const targets = context.headingOwners(xref.selector);
 	for (const target of targets) {
 		context.graph.add(
 			rdf12Triple(xrefIri, iriTerm(`${namespaces.aat}targetHeading`), target),
