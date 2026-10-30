@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
-## Unreleased
+## 0.3.0 - 2026-10-31
 
 ### Changed (breaking)
 
@@ -14,6 +14,7 @@ This project uses semantic versioning after `0.1.0`.
 - Whether an xref exists, and what it points to, now comes from Asciidoctor's own substitution: the parser hands each text the official node substitutes back to that node with a sentinel before every `xref:` and `<<`, and keeps the ones Asciidoctor turns into xrefs. Xrefs inside `pass:[…]`, `+++…+++`, `$$…$$` and `+…+` passthroughs, and escaped `\xref:` / `\<<`, are no longer collected; `xref:` targets with spaces are; `xref:#id[]` and `<<#id>>` address `id`; attribute references in targets are expanded with the value at that position; `xref:other#x[]` names another document, as Asciidoctor reads it. Xrefs in the credit line of an air quote or markdown quote are collected, since Asciidoctor substitutes that line. Labels and named attributes are split by Asciidoctor's rules, keeping the written values (`label with = sign` stays a label).
 - `XrefOccurrenceNode` gains `selector` (the written target with attribute references expanded and the document part cut off; this is what binds) and `document` (the document part of an xref that names another document), and loses `targetKind`. `scope` is `local` or `external` only: the object model records Asciidoctor's facts and no longer concludes `unresolved`; whether a reference holds is decided by binding the selector in the RDF projection. The official layer gains `refid`, `path`, and `fragment`, and has `resolvedId` only when Asciidoctor found the target.
 - RDF: `aat:targetSelector` holds the selector rather than the written target, and an xref naming another document carries `aat:targetDocument` and is not bound in this document.
+- The official layer's `reftext` (RDF `aat:officialReftext`) is the text of the link Asciidoctor renders, with markup removed: `` xref:x[`100_body` 与 `200_lab`] `` gives `100_body 与 200_lab`, where it used to keep the written backticks.
 - An xref that Asciidoctor expands from an attribute value has no source text; it is reported as an `xref.without-source` warning instead of an occurrence.
 - A heading is addressed by its headline as written, by any `::`-joined suffix of its headline path (`xref:红烧肉::火候[]` reaches the 火候 under 红烧肉 when several headings are called 火候), and by its custom or generated ID. Selectors, including heading complex property `for=` values, match these addresses as whole strings, so a headline that itself contains `::` (`std::vector`) is still its own address.
 - A heading node is named after its address: its IRI is the document IRI, `#`, and the shortest address that only this heading owns in the whole label space, transcribed by the same rule as field names (`<#炒糖色>`, `<#红烧肉::火候>`, `<#It's%20A%20&%20B%20--%20C>`). Without such an address it takes its own custom ID, and siblings that share a headline under one parent are numbered `-1`, `-2`. The name is also emitted as `aat:name`. Before, heading IRIs were `#heading-l<line>-o<ordinal>` and moved with every edit above them.

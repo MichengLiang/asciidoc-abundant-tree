@@ -61,3 +61,14 @@ edge "{sec}"            targetHeading 0 candidateHeading 0
 * `xref:{sec}[]` 的目标是 `目标节`，在 label space 里绑定到标题「目标节」。
 * 属性没有定义时按 Asciidoctor 的默认（`attribute-missing: skip`）原样留下，与官方一致。
 * 正文里定义的属性（不在文档头）同样按官方在那个位置的取值展开。
+
+## 解决
+
+2026-10-30，aat 计划 #12 的 12.2（`git log --grep "Work-Package: 12.2"`），随 0.3.0 发布。规约在 09 号书第 7、8 章（xref 由官方转换认定）。
+
+目标里的属性引用由官方展开：官方先替换属性，再替换宏，记录用的转换器收到的已经是展开后的目标。正文中途才定义的属性，
+aat 照官方的属性回放（`restoreAttributes` 与 `playback`），按 xref 所在位置的取值展开源文里的 `selector`。指向别的文档的，
+`document` 写文档部分、`selector` 写片段，RDF 写成 `aat:targetDocument`，不在本文档里绑定。
+
+复现样例实测（0.3.0 之前的 dist）：前两处的 `document` 是 `other.adoc`、`selector` 是 `目标章节`、`href` 是 `other.html#目标章节`；
+第三处的 `selector` 是 `目标节`，绑到标题「目标节」（官方的 HTML 里它是一条断链，aat 按标题原文绑定）。

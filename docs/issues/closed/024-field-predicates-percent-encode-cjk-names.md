@@ -50,3 +50,17 @@ SELECT (COUNT(*) AS ?n) WHERE { ?h <https://micheng.dev/ns/asciidoc-abundant-tre
 ## 转告
 
 只陈述实测与规约原文；规约要不要改、怎样改由 aat 定。
+
+## 解决
+
+2026-10-30，aat 计划 #12 的 12.1（`git log --grep "Work-Package: 12.1"`），随 0.3.0 发布。规约在 06 号书第 1 章《名字进入 IRI》
+与第 6 章《Field Predicate》。
+
+* 字段离开 `aat:` 词表，放进独立的命名空间 `field:`（`https://micheng.dev/ns/asciidoc-field#`），与 `rel:` 并列。`aat:` 只装投影器
+  自己的词，书的字段名就算恰好叫 `headline`、`role`、`style`，也不会冒充 aat 的词。
+* 字段名不分中英文，一律按原文转写，规则与 023 相同：汉字原样，只转写 IRI 不允许的字符。`难度` 成为 `field:难度`，
+  `?h field:落点 ?v` 直接查得到。
+* `src/animation-yaml-export/graph-reader.ts` 只认 `field:` 下的谓词，按一次百分号解码还原字段名。
+
+节点 IRI 那一条（“读起来是同一类问题”）在同一轮的 12.3 里解决：标题节点以最短的唯一地址命名（`<#红烧肉::火候>`），
+文档 IRI 用可读的相对路径。Turtle 里中文谓词写不成前缀名的问题见议题 027。

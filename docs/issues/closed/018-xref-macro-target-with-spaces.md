@@ -46,3 +46,14 @@ Asciidoctor.js 4.1.1        #_role_的作用域 | role 的作用域 / 作用域�
 * `xref:role 的作用域[]` 与 `xref:role 的作用域[作用域一节]` 都进 `xrefOccurrences`，`target` 是 `role 的作用域`，`sourceSpan` 指向宏本身。
 * 收下的这两条照常取官方绑定，`officialHref` 与上面三个官方实现一致。
 * 宏认不认，以官方实现为准：拿上面的样例与官方逐条对照，不多收、不少收。
+
+## 解决
+
+2026-10-30，aat 计划 #12 的 12.2（`git log --grep "Work-Package: 12.2"`），随 0.3.0 发布。规约在 09 号书第 7、8 章（xref 由官方转换认定）。
+
+xref 有没有、指向哪里，不再由 aat 的正则判断。aat 在加载时交给 Asciidoctor 一个记录用的转换器（`Html5Converter` 的子类，覆写
+`convert_inline_anchor`），官方每转换出一个 xref，就把它的 `href`、`refid`、`path`、`fragment` 与显示文本记下来；扫描器只找候选的源位置，
+两边按块、按顺序对上（`src/xref-recognition.ts`、`src/asciidoctor-adapter.ts`）。目标的写法因此以官方为准，带空格的目标也就收下了。
+
+复现样例实测（0.3.0 之前的 dist）：三处都进 `xrefOccurrences`，`selector` 是 `role 的作用域`，`href` 是 `#_role_的作用域`，
+三条 xref 边都绑到标题「role 的作用域」。
