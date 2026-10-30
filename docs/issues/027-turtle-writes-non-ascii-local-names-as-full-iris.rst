@@ -2,7 +2,7 @@
 
 :发现: 2026-10-30，aat 计划 #12 的 12.1：字段改成 ``field:<原文>`` 以后，aat 写出的 Turtle 里 ``field:难度`` 仍是一整条 IRI。
 :代码版本: asciidoc-abundant-tree 仓库 ``b9cc8e8``（0.3.0 之前）；依赖 n3 2.0.3。
-:影响: 只影响 Turtle 的可读性，图本身是对的：pyoxigraph 读回以后 ``?h field:难度 ?v`` 照常查到。读 Turtle 的人看到的是``<https://micheng.dev/ns/asciidoc-field#难度>``，而不是 ``field:难度``。标题节点不受影响，它们经 ``@base`` 写成 ``<#红烧肉::火候>``。
+:影响: 只影响 Turtle 的可读性，图本身是对的：pyoxigraph 读回以后 ``?h field:难度 ?v`` 照常查到。读 Turtle 的人看到的是``<https://micheng.dev/ns/asciidoc-field#难度>``，而不是 ``field:难度``。标题节点不受影响：0.4.0 起它们的局部名是投影器起的 ``heading-<N>``，以空前缀写成 ``:heading-2``。仍受影响的只有书的词，即 ``field:`` 与 ``rel:`` 下的中文局部名。
 :涉及: ``src/rdf12-projection/turtle-serializer.ts``
 
 ## 复现（实测）
@@ -22,6 +22,8 @@
 
        <https://micheng.dev/ns/asciidoc-field#落点> "锅";
        <https://micheng.dev/ns/asciidoc-field#难度> "中".
+
+0.4.0 之前（仓库 ``cdb1629``，标题身份已改为 ``heading-<N>``）用同一份源复测，两条字段谓词仍写成完整 IRI，标题写成 ``:heading-2``。
 
 ## 原因
 
