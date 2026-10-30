@@ -8,6 +8,7 @@ import {
 	sourceAwareDocumentForLineTable,
 } from "./book-entry/source-aware-coordinate";
 import { attachHeadingDescriptionMetadata } from "./heading-description-metadata";
+import { readAttributeLists } from "./metadata-parser";
 import type { AbundantDocument, AsciidoctorLayer, ParserInfo } from "./model";
 import { definedObject } from "./object-utils";
 import { projectOfficialDocument } from "./official-projector";
@@ -36,6 +37,10 @@ export async function parseAsciidoctorDocument(
 	input: ParserCoreInput,
 ): Promise<AbundantDocument> {
 	completeOfficialSourceLocations(input.officialDocument, input.lineTable);
+	// 元数据扫描是同步的，官方读 attrlist 是异步的：先让官方把源里每一个 attrlist 读一遍，扫描时按文字查。
+	await readAttributeLists(input.lineTable, (text) =>
+		input.adapter.readAttributeList(input.officialDocument, text),
+	);
 	const sourceSurfaces = projectSourceSurfaces({
 		officialDocument: input.officialDocument,
 		lineTable: input.lineTable,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createAsciidoctorFileAdapter } from "../src/asciidoctor-file-adapter";
+import { readAttributeLists } from "../src/metadata-parser";
 import type { OfficialBlockSurface } from "../src/official-block-walker";
 import { walkOfficialBlocks } from "../src/official-block-walker";
 import { completeOfficialSourceLocations } from "../src/official-source-location";
@@ -428,20 +429,23 @@ content
 
 async function parseFixture(name: string, source: string) {
 	const path = writeFixture(name, source);
-	return {
-		lineTable: buildLineTable(source),
-		surfaces: walkOfficialBlocks(
-			await createAsciidoctorFileAdapter().loadFile(path),
-		),
-	};
+	const lineTable = buildLineTable(source);
+	const adapter = createAsciidoctorFileAdapter();
+	const official = await adapter.loadFile(path);
+	await readAttributeLists(lineTable, (text) =>
+		adapter.readAttributeList(official, text),
+	);
+	return { lineTable, surfaces: walkOfficialBlocks(official) };
 }
 
 async function parseCompletedFixture(name: string, source: string) {
 	const lineTable = buildLineTable(source);
-	const official = await createAsciidoctorFileAdapter().loadFile(
-		writeFixture(name, source),
-	);
+	const adapter = createAsciidoctorFileAdapter();
+	const official = await adapter.loadFile(writeFixture(name, source));
 	completeOfficialSourceLocations(official, lineTable);
+	await readAttributeLists(lineTable, (text) =>
+		adapter.readAttributeList(official, text),
+	);
 	return { lineTable, surfaces: walkOfficialBlocks(official) };
 }
 

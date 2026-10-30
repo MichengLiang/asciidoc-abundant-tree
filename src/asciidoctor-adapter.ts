@@ -116,6 +116,11 @@ type SubstitutingNode = {
 	applyTitleSubs(text: string): Promise<string | string[]>;
 	subAttributes(text: string): string;
 	extractAttributesFromText(text: string): Promise<unknown[]>;
+	parseAttributes(
+		attrlist: string,
+		posattrs?: string[],
+		opts?: Record<string, unknown>,
+	): Promise<Record<string, unknown>>;
 };
 
 const probeStates = new WeakMap<object, ProbeState>();
@@ -185,6 +190,11 @@ export type AsciidoctorAdapter = {
 		document: AsciidoctorBlock,
 		requests: readonly AttributeExpansionRequest[],
 	): Promise<string[]>;
+	// 块的 attrlist（方括号里的文字）照官方拆：哪段是命名属性、名字是什么、哪段是位置属性（位置属性的键是 "1"、"2"……）。
+	readAttributeList(
+		document: AsciidoctorBlock,
+		text: string,
+	): Promise<Record<string, unknown>>;
 };
 
 export type AttributeExpansionRequest = {
@@ -217,6 +227,7 @@ export function createAsciidoctorAdapter(
 		},
 		probeXrefs,
 		expandAttributes,
+		readAttributeList,
 	};
 }
 
@@ -224,6 +235,15 @@ function docnameOf(sourcePath: string): string {
 	const name = sourcePath.split(/[\\/]/u).at(-1) ?? sourcePath;
 	const dot = name.lastIndexOf(".");
 	return dot > 0 ? name.slice(0, dot) : name;
+}
+
+// 官方读块属性行时调 document.parseAttributes(..., { sub_input, sub_result })（parser.js 2839 行）。这里两个开关都不开：
+// 拆法与名字照官方的 AttributeList，值保留作者写下的样子（09 号书第 8 章 Metadata Attachment；字段值按源表面值保存）。
+async function readAttributeList(
+	document: AsciidoctorBlock,
+	text: string,
+): Promise<Record<string, unknown>> {
+	return (document as unknown as SubstitutingNode).parseAttributes(text);
 }
 
 // 按官方转换的顺序探测：先还原文档头的属性，再按文档顺序走官方块树，到每个块先回放它的属性条目

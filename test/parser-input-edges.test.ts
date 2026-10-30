@@ -200,14 +200,16 @@ quoted
 
 		expect(listings[0]).toEqual(
 			expect.objectContaining({
-				ids: ["late-id"],
+				// 官方只在第一个位置属性里认 #id 与 .role 的简写：#late-id、.late-role 是第 3、4 个位置属性，块没有 ID 与
+				// role（09 号书第 8 章 Metadata Attachment，attrlist 由官方拆）。
+				ids: [],
 				style: "source",
 				language: "ts",
 				metadata: [
 					expect.objectContaining({
 						metadataKind: "attrlist",
-						ids: ["late-id"],
-						roles: ["late-role"],
+						ids: [],
+						roles: [],
 						attributes: {
 							style: "source",
 							language: "ts",

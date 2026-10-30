@@ -10,6 +10,10 @@ This project uses semantic versioning after `0.1.0`.
 
 - Every type that appears in a public signature can be imported by name from the package entry: `Rdf12Options`, `Rdf12Projection`, `Rdf12Graph`, `Rdf12TriplePattern`, `Rdf12Triple`, `Rdf12Term`, `Rdf12IriTerm`, `Rdf12LiteralTerm`, `Rdf12TripleTerm`, `Rdf12PrefixMap`, `Rdf12NodeIndex`, `Rdf12NodeIndexEntry`, and the node types `NodeBase` and `UnknownNode` (also from `./browser`). Before, users could only reach them through `Parameters<typeof rdf12>[1]` or `Rdf12Result["graph"]`. `Rdf12PrefixMap` is now a named object type instead of `typeof` an internal constant.
 
+### Fixed
+
+- A block or heading attrlist is split the way Asciidoctor splits it, so only what Asciidoctor treats as a named attribute becomes one, and a field. In `[.dish, 难度=中, 葱、姜=多, a.b=1]`, `葱、姜=多` and `a.b=1` are positional attributes (their names do not match Asciidoctor's attribute name rule) and no longer turn into `field:葱、姜` and `field:a.b`. Commas inside quotes no longer split a value (`[cols="1,2"]` was read as `cols` = `"1`), and a quoted value no longer keeps its quotes. `#id` and `.role` are read only from the first positional attribute, as Asciidoctor does; before, `[source,ts,#late-id]` gave the block the ID `late-id`. Values are kept as written: attribute references in them are not expanded.
+
 ## 0.5.0 - 2026-10-31
 
 ### Removed (breaking)

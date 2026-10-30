@@ -8,6 +8,8 @@ Metadata surface 附着到紧随其后的 section 或 block。可附着 surface 
 
 紧邻性是 metadata attachment 的前提。远离 block 的普通行不得被解释为该 block 的 metadata。
 
+Attribute list 怎样拆，由官方定：哪一段是命名属性、名字是什么、哪一段是位置属性，取官方对源文本里方括号内文字的解析（`extractAttributesFromText`，与 xref 的 `attributes` 同一个做法，见下一节）；值取源文本。只有官方认作命名属性的才是命名属性。`[.dish, 难度=中, 葱、姜=多, a.b=1]` 里，`难度` 是命名属性；`葱、姜=多` 与 `a.b=1` 的名字不合 Asciidoctor 的属性名规则（`[\p{Word}][\p{Word}-]*`），官方把它们读成第 3、4 个位置属性，它们不是命名属性，也就不成为字段（06 号书第 2 章「标题头部属性」）。按逗号自己切开 attrlist 会把它们读成命名属性，引号里的逗号也会被切开。
+
 === Xref Occurrence
 
 Xref occurrence 是官方认下、并在源文本里找到位置的 xref（xref:Xref 由官方认定[Xref 由官方认定]）。它在源文本中的写法是下面几种：
