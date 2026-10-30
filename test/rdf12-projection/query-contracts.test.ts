@@ -20,6 +20,7 @@ import {
 	expectResourceTypeCount,
 	expectTriple,
 	fieldTerm,
+	headingStartingAt,
 	literalValues,
 	rdfTerm,
 	relTerm,
@@ -42,7 +43,7 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 			},
 		);
 		const parsed = parseTurtleToRdf12Graph(result.ttl);
-		const heading = headingLookup(result.documentIri);
+		const heading = (startLine: number) => headingStartingAt(parsed, startLine);
 
 		expect(() =>
 			assertRdf12GraphsEquivalent(result.graph, parsed),
@@ -67,10 +68,7 @@ describe("rdf12 query contract end-to-end acceptance", () => {
 
 `,
 		);
-		expectDirectChildren(parsed, heading("heading-l1-o0"), [
-			heading("heading-l5-o0"),
-			heading("heading-l39-o0"),
-		]);
+		expectDirectChildren(parsed, heading(1), [heading(5), heading(39)]);
 		expectHeadlinesByDocumentOrder(parsed, [
 			"root",
 			"配送策略",
@@ -352,11 +350,6 @@ function onlySubjectWithLiteral(
 
 	expect(subjects).toHaveLength(1);
 	return subjects[0] ?? termIri("");
-}
-
-function headingLookup(documentIri: string): (localId: string) => Rdf12IriTerm {
-	const base = documentIri.slice(0, documentIri.indexOf("#"));
-	return (localId) => termIri(`${base}#${localId}`);
 }
 
 function headingLookupFromGraph(

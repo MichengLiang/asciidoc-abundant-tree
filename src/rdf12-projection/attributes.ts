@@ -18,9 +18,6 @@ import type { Rdf12XrefIndex } from "./xref-projector";
 export type ProjectSurfaceAttributesInput = {
 	readonly graph: Rdf12Graph;
 	readonly document: AbundantDocument;
-	readonly baseIri: string;
-	readonly documentKey: string;
-	readonly relativePath: string;
 	readonly nodeIndex: Rdf12NodeIndex;
 	readonly xrefIndex: Rdf12XrefIndex;
 };

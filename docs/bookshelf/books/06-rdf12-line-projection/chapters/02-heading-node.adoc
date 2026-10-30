@@ -20,7 +20,9 @@
 
 === Headline
 
-`headline` 是标题文本，不包含标题等号标记。
+`headline` 是作者写下的标题文本：去掉等号标记，展开属性引用，行内标记照原样保留。`` == `book.adoc` 的职责 `` 的 headline 是 `` `book.adoc` 的职责 ``，`== It's A & B -- C` 的 headline 就是 `It's A & B -- C`。
+
+headline 不取 Asciidoctor 转换后的标题：转换替换了引号、符号与行内标记（`It&#8217;s A &amp; B&#8201;&#8212;&#8201;C`），作者按原文写下的引用就对不上它。xref 的 selector 是源文展开属性引用以后的文本（解析器规约第 8 章 Xref Occurrence），headline 与它处在同一个文本层，引用才能按原文绑定。转换后的标题是官方事实，留在官方层。
 
 [source,asciidoc]
 ----
@@ -37,35 +39,50 @@
 
 === 身份
 
-标题节点的 IRI 由投影器生成。address label、generated address label 和 headline 不构成节点 IRI。
+标题节点以它的地址命名，IRI 是 `<文档 IRI>#<名字>`，名字照 xref:names-in-iri[名字进入 IRI] 转写。查询者在主语与宾语的位置读到的，就是作者引用这一节时写的地址，例如 `<#炒糖色>`、`<#红烧肉::火候>`。按行号起的名字随编辑漂移，读不出是哪一节；地址只在标题改名、或别处出现同名标题时改变。
 
-节点 IRI 的输入是 `baseIri`、`documentKey` 和 heading local id。`documentKey` 是 relative path 的 sha256 十六进制摘要。heading local id 使用 `heading-l<startLine>-o<ordinal>`。同一 relative path、同一 startLine 下出现多个 heading 时，`ordinal` 按源文档顺序从 `0` 递增；无冲突时使用 `0`。
+名字按下面的顺序取，取到即止：
 
-规范形式：
+. 这个标题的地址路径（xref:heading-address[地址与 Label 空间]）中最短的一条，它在整份文档的 label 空间里只属于这个标题。
+. 这个标题自己的 custom ID 中，只属于它的一个。
+. 同一父标题下同名、又没有只属于自己的 ID 时，取只被这一组标题共享的最短地址路径，后面加 `-k`；`k` 是它在这一组里按文档顺序的位次，从 1 起。加了 `-k` 以后撞上别的地址时，路径往前补一级再加。
 
-[source,text]
-----
-documentKey = sha256(relativePath)
-localId     = heading-l<startLine>-o<ordinal>
-resourceIRI = <baseIri><documentKey>#<localId>
-----
+唯一性按整个 label 空间判断，custom ID 与生成 ID 都算在内，所以前两种名字写回 selector 时绑定到它自己；第三种情形里的标题在任何长度的路径上都多义，只能用 ID 引用。先取地址路径、后取 custom ID，是因为 custom ID 是别名：作者给标题补一个 ID，不改变它的名字。
 
-源文档中的作者字符串只作为查询 label 或 selector 使用。
+名字随文档变化。别处新增一个同名标题时，原来叫 `火候` 的标题改名为 `红烧肉::火候`；这一刻也正是 `xref:火候[]` 开始绑定成多义的时候，名字与引用一起变。
+
+名字另作字面量 `aat:name` 输出。消费者不解析 IRI 来取事实：名字读 `aat:name`，结构与顺序读 `aat:containsDirectly`、`aat:childOrder` 与 `aat:documentOrder`。
+
+文档 IRI 是 `baseIri` 加上源文件相对路径的转写，例如 `urn:aat:doc:books/07-structured-writing-conventions/book.adoc`。相对路径照《名字进入 IRI》转写，另把 `?` 写成 `%3F`：它在 `#` 之前，会被读成查询部分的开头。
+
+投影器自己起名的资源（来源文档、投影、投影活动、源文件、交叉引用边证据、raw value object）放在 `<文档 IRI>/projection#` 下，局部名照旧按行列起。`<文档 IRI>#` 之后只留给标题的名字：一节叫《Source》的标题，不会与来源资源成为同一个 IRI。
+
+Turtle 写出时以文档 IRI 为 `@base`，标题节点写作 `<#红烧肉::火候>`；JSON-LD 以 `@base` 写出同样的相对 IRI。
 
 示例：
 
 [source,turtle]
 ----
-:heading-l5-o0 a aat:Heading ;
+<#配送策略> a aat:Heading ;
   aat:headline "配送策略" ;
+  aat:name "配送策略" ;
   aat:addressLabel "delivery" .
 ----
 
-`delivery` 是 address label。`配送策略` 是 headline。二者都不构成 `:heading-l5-o0` 的身份。
+`配送策略` 在文档里只属于这一个标题，所以它就是名字；`delivery` 是这个标题的别名。
 
-=== Label 空间
+[#heading-address]
+=== 地址与 Label 空间
 
-标题节点 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成。selector 绑定标题节点时只查询这三类 label，不查询标题节点 IRI、role、普通字段谓词、xref display label 或 raw 文本。
+一节的地址是它的标题原文。标题重名、又要引用其中一个时，用 `::` 往前补直接上级的标题消歧，最长补到从文档标题起的完整路径；custom ID 是别名，用它也能引用。寻址的范围是整份文档（book-entry 下是整本书），不分文件，没有就近查找，也没有相对寻址。
+
+一个标题的地址有三类：
+
+地址路径:: 从文档标题到这个标题的各级 headline 依次以 `::` 连接而成的路径，取它的每一个后缀。家常菜谱里 `== 红烧肉` 下的 `=== 火候` 有 `火候`、`红烧肉::火候`、`家常菜谱::红烧肉::火候` 三条。只有一段的地址路径就是 headline。
+`aat:addressLabel`:: 标题自身的 custom ID，或归属到这个标题的本地非标题 target ID。
+`aat:generatedAddressLabel`:: 官方为没有 custom ID 的标题生成的 ID。
+
+这三类地址合起来是标题投影的 label 空间。selector 与地址按整串相等匹配：不拆 `::`，不做规范化，几类地址之间没有优先级。headline 本身带 `::` 时（`std::vector`），它的地址照样是原文整串；只有文档里另有 `std` 下的 `vector` 时才多义，照常报出。selector 绑定标题节点时只查询 label 空间，不查询标题节点 IRI、role、普通字段谓词、xref display label 或 raw 文本。地址路径不另写进 RDF：它由 `aat:containsDirectly` 与 `aat:headline` 推出。
 
 `aat:addressLabel` 表示标题投影图中可寻址到标题节点的作者声明 label。该 label 来自标题自身手动 ID，或来自归属到该标题切片的本地非标题 target ID。`aat:addressLabel` 不表示该 label 一定写在标题表面。
 
@@ -130,7 +147,7 @@ print("warp")
 
 [source,turtle]
 ----
-:heading-l5-o0 a aat:Heading ;
+<#配送策略> a aat:Heading ;
   aat:headline "配送策略" ;
   aat:addressLabel "delivery" ;
   aat:role "policy" ;
@@ -172,7 +189,7 @@ landing:: core 的 `resources/`。
 
 [source,turtle]
 ----
-:heading-l1-o0 a aat:Heading ;
+<#关闭标签> a aat:Heading ;
   aat:headline "关闭标签" ;
   aat:addressLabel "close-tab" ;
   aat:role "rule" ;

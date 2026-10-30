@@ -16,6 +16,7 @@ import {
 	expectResourceTypeCount,
 	expectTriple,
 	fieldTerm,
+	headingStartingAt,
 	literalValues,
 	rdfTerm,
 	relTerm,
@@ -34,38 +35,18 @@ describe("rdf12 heading projection target acceptance", () => {
 		const { graph, heading } = await structuralPayloadProjection();
 
 		expectResourceTypeCount(graph, aatTerm("Heading"), 4);
-		expectTriple(
-			graph,
-			heading("heading-l1-o0"),
-			rdfTerm("type"),
-			aatTerm("Heading"),
-		);
-		expectTriple(
-			graph,
-			heading("heading-l5-o0"),
-			rdfTerm("type"),
-			aatTerm("Heading"),
-		);
-		expectTriple(
-			graph,
-			heading("heading-l39-o0"),
-			rdfTerm("type"),
-			aatTerm("Heading"),
-		);
-		expectTriple(
-			graph,
-			heading("heading-l44-o0"),
-			rdfTerm("type"),
-			aatTerm("Heading"),
-		);
+		expectTriple(graph, heading(1), rdfTerm("type"), aatTerm("Heading"));
+		expectTriple(graph, heading(5), rdfTerm("type"), aatTerm("Heading"));
+		expectTriple(graph, heading(39), rdfTerm("type"), aatTerm("Heading"));
+		expectTriple(graph, heading(44), rdfTerm("type"), aatTerm("Heading"));
 	});
 
 	it("Batch 01 projects heading labels, headlines, levels, and raw slices", async () => {
 		const { graph, heading } = await structuralPayloadProjection();
-		const root = heading("heading-l1-o0");
-		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l39-o0");
-		const nestedHeading = heading("heading-l44-o0");
+		const root = heading(1);
+		const deliveryPolicy = heading(5);
+		const capacityRule = heading(39);
+		const nestedHeading = heading(44);
 
 		expectLiteralValue(graph, root, aatTerm("headline"), "root");
 		expectLiteralValue(graph, deliveryPolicy, aatTerm("headline"), "配送策略");
@@ -156,10 +137,10 @@ describe("rdf12 heading projection target acceptance", () => {
 	it("Batch 03 binds selectors only to heading label fields", async () => {
 		const { graph, labelCatalog, heading } =
 			await structuralPayloadProjection();
-		const root = heading("heading-l1-o0");
-		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l39-o0");
-		const nestedHeading = heading("heading-l44-o0");
+		const root = heading(1);
+		const deliveryPolicy = heading(5);
+		const capacityRule = heading(39);
+		const nestedHeading = heading(44);
 
 		expect(labelCatalog.owners("root")).toEqual([root]);
 		expect(labelCatalog.owners("delivery")).toEqual([deliveryPolicy]);
@@ -202,8 +183,8 @@ describe("rdf12 heading projection target acceptance", () => {
 
 	it("Batch 04 projects xref relation edge evidence and RDF 1.2 reifier", async () => {
 		const { graph, heading } = await structuralPayloadProjection();
-		const deliveryPolicy = heading("heading-l5-o0");
-		const capacityRule = heading("heading-l39-o0");
+		const deliveryPolicy = heading(5);
+		const capacityRule = heading(39);
 		const relation = rdf12Triple(
 			deliveryPolicy,
 			relTerm("depends-on"),
@@ -237,7 +218,7 @@ describe("rdf12 heading projection target acceptance", () => {
 
 	it("Batch 05 projects heading and xref direct field predicates", async () => {
 		const { graph, heading } = await structuralPayloadProjection();
-		const deliveryPolicy = heading("heading-l5-o0");
+		const deliveryPolicy = heading(5);
 		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
 
 		expectLiteralValue(graph, deliveryPolicy, aatTerm("role"), "policy");
@@ -248,7 +229,7 @@ describe("rdf12 heading projection target acceptance", () => {
 
 	it("Batch 06 binds heading and edge raw value complex properties", async () => {
 		const { graph, heading } = await structuralPayloadProjection();
-		const deliveryPolicy = heading("heading-l5-o0");
+		const deliveryPolicy = heading(5);
 		const xrefEdge = onlyResourceOfType(graph, aatTerm("XrefEdge"));
 		const policyRiskProfile = onlyObjectIri(
 			graph,
@@ -350,7 +331,7 @@ async function structuralPayloadProjection(): Promise<{
 	readonly labelCatalog: ReturnType<
 		typeof projectAbundantDocumentToRdf12
 	>["labelCatalog"];
-	readonly heading: (localId: string) => Rdf12IriTerm;
+	readonly heading: (startLine: number) => Rdf12IriTerm;
 }> {
 	const projection = projectAbundantDocumentToRdf12(
 		await parseAbundantTree({ sourcePath: structuralPayloadPath }),
@@ -360,14 +341,10 @@ async function structuralPayloadProjection(): Promise<{
 	return {
 		graph: projection.graph,
 		labelCatalog: projection.labelCatalog,
-		heading(localId: string) {
-			return termIri(resourceIri(projection.documentIri, localId));
+		heading(startLine: number) {
+			return headingStartingAt(projection.graph, startLine);
 		},
 	};
-}
-
-function resourceIri(documentIri: string, localId: string): string {
-	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
 }
 
 function headingByHeadline(graph: Rdf12Graph, headline: string): Rdf12IriTerm {

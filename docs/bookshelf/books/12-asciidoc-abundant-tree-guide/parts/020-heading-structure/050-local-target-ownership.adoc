@@ -24,11 +24,11 @@ SELECT * FROM rules;
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 
-<urn:aat:doc:guide#heading-l1-o0> a aat:Heading ;
+<urn:aat:doc:guide#查询示例> a aat:Heading ;
   aat:headline "查询示例" ;
   aat:addressLabel "rule-query-example" .
 
-<urn:aat:doc:guide#heading-l9-o0> aat:references <urn:aat:doc:guide#heading-l1-o0> .
+<urn:aat:doc:guide#使用说明> aat:references <urn:aat:doc:guide#查询示例> .
 ----
 
 target 归属依据 target 的源位置。xref 出现位置只决定 source heading。

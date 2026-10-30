@@ -7,6 +7,24 @@
   },
   "nodes": [
     {
+      "label": "2-8C温控规则",
+      "roles": [
+        "policy"
+      ],
+      "fields": {
+        "allowedExcursion": [
+          "15分钟"
+        ],
+        "maxTemperature": [
+          "8C"
+        ],
+        "minTemperature": [
+          "2C"
+        ]
+      },
+      "line": "7"
+    },
+    {
       "label": "批次运输任务CT-2026-0618",
       "roles": [
         "shipment"
@@ -28,19 +46,16 @@
       "line": "11"
     },
     {
-      "label": "疫苗箱A17",
+      "label": "温度偏离处置流程",
       "roles": [
-        "payload"
+        "process"
       ],
       "fields": {
-        "quantity": [
-          "120"
-        ],
-        "sku": [
-          "VAC-A"
+        "trigger": [
+          "连续超温"
         ]
       },
-      "line": "15"
+      "line": "22"
     },
     {
       "label": "温度记录仪T09",
@@ -55,34 +70,19 @@
       "line": "18"
     },
     {
-      "label": "温度偏离处置流程",
+      "label": "疫苗箱A17",
       "roles": [
-        "process"
+        "payload"
       ],
       "fields": {
-        "trigger": [
-          "连续超温"
+        "quantity": [
+          "120"
+        ],
+        "sku": [
+          "VAC-A"
         ]
       },
-      "line": "22"
-    },
-    {
-      "label": "2-8C温控规则",
-      "roles": [
-        "policy"
-      ],
-      "fields": {
-        "allowedExcursion": [
-          "15分钟"
-        ],
-        "maxTemperature": [
-          "8C"
-        ],
-        "minTemperature": [
-          "2C"
-        ]
-      },
-      "line": "7"
+      "line": "15"
     }
   ],
   "edges": [

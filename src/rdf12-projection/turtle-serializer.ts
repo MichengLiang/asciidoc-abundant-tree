@@ -8,18 +8,23 @@ export function serializeRdf12ProjectionToTurtle(
 	return writeTurtleSync(
 		rdf12GraphToN3Quads(projection.graph),
 		projection.prefixes,
+		projection.documentIri,
 	);
 }
 
+// 以文档 IRI 为 @base：标题节点写作 <#红烧肉::火候>（06 号书第 2 章「身份」）。n3 的 Writer 按 baseIRI 写相对 IRI，
+// 却不自己写出 @base，这里补在开头。
 function writeTurtleSync(
 	quads: Parameters<Writer["addQuads"]>[0],
 	prefixes: Rdf12Projection["prefixes"],
+	baseIri: string,
 ): string {
 	let output = "";
 	let writerError: Error | null = null;
 	const writer = new Writer({
 		format: "text/turtle",
 		prefixes,
+		baseIRI: baseIri,
 	});
 
 	writer.addQuads(quads);
@@ -35,7 +40,7 @@ function writeTurtleSync(
 		throw writerError;
 	}
 
-	return formatReadableRawLiterals(output);
+	return `@base <${baseIri}>.\n${formatReadableRawLiterals(output)}`;
 }
 
 function formatReadableRawLiterals(turtle: string): string {

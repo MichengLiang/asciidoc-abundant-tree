@@ -63,7 +63,7 @@ It is especially useful when a tool needs to answer questions such as:
 
 The `rdf12` projection derives an RDF 1.2 graph from an `AbundantDocument`. The source document remains the fact source, `AbundantDocument` is the input contract, and the RDF graph is the queryable projection.
 
-Projection resources use deterministic IRIs generated from the document coordinate system, not author strings or ordering facts. Heading nodes expose their label space directly through `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`. Query code can use those fields to find headings, then read `relativePath`, `startLine`, and `endLine` for source inspection or patching.
+A heading node is named after its address: the document IRI (`urn:aat:doc:` plus the source path) followed by `#` and the shortest address that only this heading owns, so queries read `<#炒糖色>` or `<#红烧肉::火候>` where a reference would write `xref:炒糖色[]` or `xref:红烧肉::火候[]`. The name is also emitted as `aat:name`. A heading is addressed by its headline as written, by `::`-joined suffixes of its headline path when headlines repeat, and by its custom or generated ID; selectors match these addresses as whole strings. Resources the projector names itself (provenance, xref edge evidence, raw value objects) live under `<document IRI>/projection#`. Query code can find headings through those fields, then read `relativePath`, `startLine`, and `endLine` for source inspection or patching.
 
 The graph includes source document provenance, heading nodes, direct heading containment, same-parent child order, global heading preorder, selector binding, xref edge evidence, RDF 1.2 reifiers for resolved xref relations, direct field predicates, and raw value objects. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder. Source coordinate fields such as `relativePath`, `startLine`, `endLine`, `headingLine`, and `raw` describe the origin source location and slice; they are not a heading order fallback. Xref edges keep raw selectors and official Asciidoctor evidence as separate facts. Attribute lists such as `[#delivery.policy, status=active]` preserve the explicit ID as `aat:addressLabel`, `.policy` as `aat:role`, and named fields as field predicates written as named, such as `field:status`; book-defined field names live under `field:`, apart from the projector's own `aat:` vocabulary.
 
@@ -112,31 +112,33 @@ signals:
 Projected Turtle:
 
 ```turtle
+@base <urn:aat:doc:book.adoc>.
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
-<urn:aat:doc:...#heading-l3-o0> a aat:Heading;
+<#配送策略> a aat:Heading;
     aat:addressLabel "delivery", "rel-delivery-capacity";
     aat:headline "配送策略";
+    aat:name "配送策略";
     aat:role "policy";
-    field:policy-risk-profile <urn:aat:doc:...#payload-l8-o0>;
-    rel:depends-on <urn:aat:doc:...#heading-l22-o0>.
+    field:policy-risk-profile <book.adoc/projection#payload-l8-o0>;
+    rel:depends-on <#运力规则>.
 
-<urn:aat:doc:...#payload-l8-o0> aat:forSelector "delivery";
+<book.adoc/projection#payload-l8-o0> aat:forSelector "delivery";
     aat:format "json";
     aat:raw "{\"owner\":{\"team\":\"ops\"},\"risk\":{\"signals\":[\"capacity\"]}}".
 
-<urn:aat:doc:...#xref-edge-l6-c8-o0> rdf:reifies <<(<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l22-o0>)>>;
+<book.adoc/projection#xref-edge-l6-c8-o0> rdf:reifies <<(<#配送策略> rel:depends-on <#运力规则>)>>;
     a aat:XrefEdge;
-    aat:sourceHeading <urn:aat:doc:...#heading-l3-o0>;
-    aat:targetHeading <urn:aat:doc:...#heading-l22-o0>;
+    aat:sourceHeading <#配送策略>;
+    aat:targetHeading <#运力规则>;
     aat:targetSelector "capacity";
-    field:relation-evidence <urn:aat:doc:...#payload-l14-o0>;
+    field:relation-evidence <book.adoc/projection#payload-l14-o0>;
     aat:rel "depends-on".
 
-<urn:aat:doc:...#payload-l14-o0> aat:sourceValueId "rel-delivery-capacity";
+<book.adoc/projection#payload-l14-o0> aat:sourceValueId "rel-delivery-capacity";
     aat:format "yaml";
     aat:raw "reason: risk-control\nsignals:\n  - capacity".
 ```

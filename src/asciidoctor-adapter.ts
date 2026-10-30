@@ -181,6 +181,15 @@ export type AsciidoctorAdapter = {
 		document: AsciidoctorBlock,
 		requests: readonly XrefProbeRequest[],
 	): Promise<XrefProbeResult[]>;
+	expandAttributes(
+		document: AsciidoctorBlock,
+		requests: readonly AttributeExpansionRequest[],
+	): Promise<string[]>;
+};
+
+export type AttributeExpansionRequest = {
+	readonly owner: AsciidoctorBlock;
+	readonly text: string;
 };
 
 export function createAsciidoctorAdapter(
@@ -207,6 +216,7 @@ export function createAsciidoctorAdapter(
 			return extractAnchorBindings(parseFragment(html));
 		},
 		probeXrefs,
+		expandAttributes,
 	};
 }
 
@@ -226,8 +236,33 @@ async function probeXrefs(
 	if (!state) {
 		throw new Error("probeXrefs requires a document loaded by this adapter");
 	}
-	const results = new Map<XrefProbeRequest, XrefProbeResult>();
-	const requestsByOwner = new Map<object, XrefProbeRequest[]>();
+	const root = official<Document>(document);
+	return inPlaybackOrder(document, requests, (request) =>
+		probeRequest(state, root, request),
+	);
+}
+
+// 标题的地址取作者写下的文字，属性引用按它在文中那个位置的取值展开（06 号书第 2 章 Headline），与 xref 的
+// selector 在同一个文本层。
+async function expandAttributes(
+	document: AsciidoctorBlock,
+	requests: readonly AttributeExpansionRequest[],
+): Promise<string[]> {
+	return inPlaybackOrder(document, requests, async (request) =>
+		(request.owner as unknown as SubstitutingNode).subAttributes(request.text),
+	);
+}
+
+async function inPlaybackOrder<
+	Request extends { readonly owner: object },
+	Result,
+>(
+	document: AsciidoctorBlock,
+	requests: readonly Request[],
+	visit: (request: Request) => Promise<Result>,
+): Promise<Result[]> {
+	const results = new Map<Request, Result>();
+	const requestsByOwner = new Map<object, Request[]>();
 	for (const request of requests) {
 		const owned = requestsByOwner.get(request.owner) ?? [];
 		owned.push(request);
@@ -240,19 +275,17 @@ async function probeXrefs(
 			node.getDocument() as unknown as AsciidoctorBlock,
 		).playbackAttributes(node.getAttributes());
 		for (const request of requestsByOwner.get(node) ?? []) {
-			results.set(request, await probeRequest(state, root, request));
+			results.set(request, await visit(request));
 		}
 		requestsByOwner.delete(node);
 	}
-	// 走不到的节点（块树之外的官方节点）不再回放属性，照文档末尾的属性取值探测。
+	// 走不到的节点（块树之外的官方节点）不再回放属性，照文档末尾的属性取值。
 	for (const owned of requestsByOwner.values()) {
 		for (const request of owned) {
-			results.set(request, await probeRequest(state, root, request));
+			results.set(request, await visit(request));
 		}
 	}
-	return requests.map(
-		(request) => results.get(request) ?? { recognized: [], withoutSource: [] },
-	);
+	return requests.map((request) => results.get(request) as Result);
 }
 
 async function probeRequest(

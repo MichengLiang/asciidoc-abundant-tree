@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import path from "node:path";
 
 export type PathCoordinateInput = {
@@ -10,7 +9,6 @@ export type PathCoordinate = {
 	readonly documentRoot: string;
 	readonly sourcePath: string;
 	readonly relativePath: string;
-	readonly documentKey: string;
 };
 
 export function computePathCoordinate(
@@ -35,12 +33,7 @@ export function computePathCoordinate(
 		documentRoot,
 		sourcePath,
 		relativePath: slashRelativePath,
-		documentKey: computeDocumentKey(slashRelativePath),
 	};
-}
-
-export function computeDocumentKey(relativePath: string): string {
-	return createHash("sha256").update(relativePath).digest("hex");
 }
 
 function selectPathApi(

@@ -32,6 +32,8 @@ export type SourceSurfaces = {
 	projectableBlocks: WeakSet<AsciidoctorBlock>;
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
 	sections: SectionNode[];
+	// 标题文字里写了属性引用的 section：属性要按它在文中那个位置的取值展开，交给 adapter 在官方块树上回放。
+	headlineExpansions: HeadlineExpansion[];
 	// 收下 xref 的官方节点与文字区域，交给 xref-recognition 由官方认定。
 	xrefRegions: XrefProbeRegion[];
 	anchorOccurrences: AnchorOccurrenceNode[];
@@ -40,6 +42,21 @@ export type SourceSurfaces = {
 	sectionByLine: Map<number, SectionNode>;
 	toolDiagnostics: ToolDiagnostic[];
 };
+
+export type HeadlineExpansion = {
+	readonly owner: AsciidoctorBlock;
+	readonly section: SectionNode;
+};
+
+// headline 取作者写下的标题文字（06 号书第 2 章 Headline）：照官方认标题的 ExtAtxSectionTitleRx（rx.js 268 行）
+// 去掉等号或 # 标记与结尾对称的标记。转换后的标题留在官方层（asciidoctor.reftext）。
+const atxSectionTitlePattern = /^(=={0,5}|##{0,5})[ \t]+(.+?)(?:[ \t]+\1)?$/u;
+
+export function sourceHeadline(text: string | undefined): string | undefined {
+	return text === undefined
+		? undefined
+		: atxSectionTitlePattern.exec(text)?.[2];
+}
 
 type OriginHeadingBoundary = {
 	readonly relativePath: string;
@@ -125,7 +142,7 @@ export function projectSourceSurfaces(options: {
 		}
 	}
 
-	const { sections, sectionByBlock } = buildSectionSurfaces(
+	const { sections, sectionByBlock, headlineExpansions } = buildSectionSurfaces(
 		blockSurfaces,
 		intervalByBlock,
 		options.lineTable,
@@ -153,6 +170,7 @@ export function projectSourceSurfaces(options: {
 		projectableBlocks,
 		sectionByBlock,
 		sections,
+		headlineExpansions,
 		xrefRegions,
 		anchorOccurrences,
 		headingInlineMetadataOccurrences,
@@ -230,8 +248,10 @@ function buildSectionSurfaces(
 ): {
 	sections: SectionNode[];
 	sectionByBlock: WeakMap<AsciidoctorBlock, SectionNode>;
+	headlineExpansions: HeadlineExpansion[];
 } {
 	const sections: SectionNode[] = [];
+	const headlineExpansions: HeadlineExpansion[] = [];
 	const sectionByBlock = new WeakMap<AsciidoctorBlock, SectionNode>();
 	const originHeadingBoundaryIndex = buildOriginHeadingBoundaryIndex(
 		blockSurfaces,
@@ -311,7 +331,10 @@ function buildSectionSurfaces(
 			kind: "section",
 			level: surface.level ?? 1,
 			ids: ids.length > 0 ? ids : officialId ? [officialId] : [],
-			title: surface.title ?? "",
+			title:
+				sourceHeadline(lineTable.lines[sourceLine - 1]?.text) ??
+				surface.title ??
+				"",
 			line: sectionLine,
 			span: sectionSpan,
 			titleSpan,
@@ -329,9 +352,12 @@ function buildSectionSurfaces(
 		}) as SectionNode;
 		sections.push(section);
 		sectionByBlock.set(surface.block, section);
+		if (section.title.includes("{")) {
+			headlineExpansions.push({ owner: surface.block, section });
+		}
 	}
 
-	return { sections, sectionByBlock };
+	return { sections, sectionByBlock, headlineExpansions };
 }
 
 function buildOriginHeadingBoundaryIndex(

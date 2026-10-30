@@ -65,25 +65,25 @@ edge:
 |===
 |节点 |headline |label |level |切片
 
-|`:heading-l1-o0`
+|`<#root>`
 |`root`
 |
 |`0`
 |line 1 到 line 4
 
-|`:heading-l5-o0`
+|`<#配送策略>`
 |`配送策略`
 |`delivery`, `rel-delivery-capacity`
 |`1`
 |line 5 到 line 38
 
-|`:heading-l39-o0`
+|`<#运力规则>`
 |`运力规则`
 |`capacity`
 |`1`
 |line 39 到 line 43
 
-|`:heading-l44-o0`
+|`<#我是3级标题>`
 |`我是3级标题`
 |`_我是3级标题`
 |`2`
@@ -96,16 +96,16 @@ edge:
 
 [source,turtle]
 ----
-:heading-l1-o0 aat:containsDirectly :heading-l5-o0 .
-:heading-l1-o0 aat:containsDirectly :heading-l39-o0 .
-:heading-l39-o0 aat:containsDirectly :heading-l44-o0 .
+<#root> aat:containsDirectly <#配送策略> .
+<#root> aat:containsDirectly <#运力规则> .
+<#运力规则> aat:containsDirectly <#我是3级标题> .
 
-:heading-l1-o0 aat:documentOrder 1 .
-:heading-l5-o0 aat:documentOrder 2 ;
+<#root> aat:documentOrder 1 .
+<#配送策略> aat:documentOrder 2 ;
     aat:childOrder 1 .
-:heading-l39-o0 aat:documentOrder 3 ;
+<#运力规则> aat:documentOrder 3 ;
     aat:childOrder 2 .
-:heading-l44-o0 aat:documentOrder 4 ;
+<#我是3级标题> aat:documentOrder 4 ;
     aat:childOrder 1 .
 ----
 
@@ -133,7 +133,7 @@ edge:
 
 [source,turtle]
 ------
-:heading-l5-o0 a aat:Heading ;
+<#配送策略> a aat:Heading ;
   aat:headline "配送策略" ;
   aat:addressLabel "delivery" ;
   aat:addressLabel "rel-delivery-capacity" ;
@@ -187,7 +187,7 @@ edge:
 ----
 """ .
 
-:heading-l39-o0 a aat:Heading ;
+<#运力规则> a aat:Heading ;
   aat:headline "运力规则" ;
   aat:addressLabel "capacity" ;
   aat:role "rule" ;
@@ -216,7 +216,7 @@ edge:
 
 [source,turtle]
 ----
-:heading-l5-o0 field:policy-risk-profile :value-l10-o0 .
+<#配送策略> field:policy-risk-profile :value-l10-o0 .
 
 :value-l10-o0 aat:forSelector "delivery" ;
   aat:format "json" ;
@@ -243,12 +243,12 @@ edge:
 
 [source,turtle]
 ----
-:heading-l5-o0 rel:depends-on :heading-l39-o0 .
+<#配送策略> rel:depends-on <#运力规则> .
 
 :xref-edge-l8-c8-o0 a aat:XrefEdge ;
-  rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l39-o0 )>> ;
-  aat:sourceHeading :heading-l5-o0 ;
-  aat:targetHeading :heading-l39-o0 ;
+  rdf:reifies <<( <#配送策略> rel:depends-on <#运力规则> )>> ;
+  aat:sourceHeading <#配送策略> ;
+  aat:targetHeading <#运力规则> ;
   aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;

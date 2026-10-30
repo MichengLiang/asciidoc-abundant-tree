@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
+import { nameInIri } from "../../src/rdf12-projection/iri-name";
 import {
 	integerLiteral,
 	stringLiteral,
@@ -11,6 +12,7 @@ import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
+import { headingStartingAt } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const structuralPayloadPath = join(
@@ -27,14 +29,11 @@ describe("rdf12 structure projection", () => {
 		);
 
 		expect(headings).toHaveLength(4);
-		for (const localId of [
-			"heading-l1-o0",
-			"heading-l5-o0",
-			"heading-l39-o0",
-			"heading-l44-o0",
-		]) {
-			const heading = resourceIri(projection.documentIri, localId);
+		// 标题以地址命名（06 号书第 2 章「身份」）：四个标题原文各不相同，名字就是标题原文。
+		for (const name of ["root", "配送策略", "运力规则", "我是3级标题"]) {
+			const heading = `${projection.headingNamespace}${nameInIri(name)}`;
 			expect(headings).toContain(heading);
+			expectStringTriple(projection.graph, heading, "name", name);
 			expectStringTriple(
 				projection.graph,
 				heading,
@@ -88,10 +87,10 @@ Port:: 8080
 
 	it("projects heading identity, headline, level, labels, and line coordinates", async () => {
 		const projection = await structuralPayloadProjection();
-		const root = resourceIri(projection.documentIri, "heading-l1-o0");
-		const deliveryPolicy = resourceIri(projection.documentIri, "heading-l5-o0");
-		const capacityRule = resourceIri(projection.documentIri, "heading-l39-o0");
-		const nestedHeading = resourceIri(projection.documentIri, "heading-l44-o0");
+		const root = headingStartingAt(projection.graph, 1).value;
+		const deliveryPolicy = headingStartingAt(projection.graph, 5).value;
+		const capacityRule = headingStartingAt(projection.graph, 39).value;
+		const nestedHeading = headingStartingAt(projection.graph, 44).value;
 
 		expectStringTriple(projection.graph, root, "headline", "root");
 		expectNumberTriple(projection.graph, root, "headingLevel", 0);
@@ -180,7 +179,7 @@ Port:: 8080
 		const projection = await structuralPayloadProjection();
 		const rootEntry = projection.nodeIndex
 			.entries()
-			.find((entry) => entry.localId === "heading-l1-o0");
+			.find((entry) => entry.localId === "root");
 
 		expect(rootEntry).toMatchObject({
 			kind: "document-title",
@@ -194,8 +193,8 @@ Port:: 8080
 		const projection = await structuralPayloadProjection();
 		const rootEntry = projection.nodeIndex
 			.entries()
-			.find((entry) => entry.localId === "heading-l1-o0");
-		const root = resourceIri(projection.documentIri, "heading-l1-o0");
+			.find((entry) => entry.localId === "root");
+		const root = headingStartingAt(projection.graph, 1).value;
 
 		if (rootEntry === undefined) {
 			throw new Error("expected root heading index entry");
@@ -235,7 +234,7 @@ Port:: 8080
 			virtualDocumentWithTitle(),
 			{ documentRoot: "/virtual" },
 		);
-		const root = resourceIri(projection.documentIri, "heading-l1-o0");
+		const root = headingStartingAt(projection.graph, 1).value;
 
 		expectStringTriple(projection.graph, root, "raw", "= root\n");
 		expectNumberTriple(projection.graph, root, "startLine", 1);
@@ -276,10 +275,6 @@ function resourcesOfType(graph: Rdf12Graph, typeIri: string): string[] {
 			object: iriTerm(typeIri),
 		})
 		.map((triple) => triple.subject.value);
-}
-
-function resourceIri(documentIri: string, localId: string): string {
-	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
 }
 
 function expectStringTriple(

@@ -10,10 +10,9 @@ import { computePathCoordinate } from "./path-coordinate";
 import { projectPayloadBlocks } from "./payload-projector";
 import { addProvenanceTriples } from "./provenance";
 import {
-	makeActivityLocalId,
-	makeProjectionLocalId,
-	makeResourceIri,
-	makeSourceLocalId,
+	documentIriFor,
+	headingNamespaceFor,
+	projectionResourceIri,
 } from "./resource-identity";
 import { normalizeSourceDigest } from "./source-digest";
 import { projectSourceFiles } from "./source-file-projector";
@@ -26,7 +25,9 @@ export type Rdf12Projection = {
 	readonly graph: Rdf12Graph;
 	readonly prefixes: Rdf12PrefixMap;
 	readonly relativePath: string;
+	// 文档 IRI：baseIri 加上源文件相对路径。标题节点是 headingNamespace 加名字，投影器的资源在 <文档 IRI>/projection# 下。
 	readonly documentIri: string;
+	readonly headingNamespace: string;
 	readonly sourceDocumentIri: string;
 	readonly projectionIri: string;
 	readonly projectionActivityIri: string;
@@ -46,32 +47,18 @@ export function projectAbundantDocumentToRdf12(
 	});
 	const sourceDigest = normalizeSourceDigest(normalizedOptions);
 	const graph = createRdf12Graph();
+	const documentIri = documentIriFor(
+		normalizedOptions.baseIri,
+		coordinate.relativePath,
+	);
 
-	const documentIri = makeResourceIri({
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
-		localId: "document",
-	});
-	const sourceDocumentIri = makeResourceIri({
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
-		localId: makeSourceLocalId(),
-	});
-	const projectionIri = makeResourceIri({
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
-		localId: makeProjectionLocalId(),
-	});
-	const projectionActivityIri = makeResourceIri({
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
-		localId: makeActivityLocalId(),
-	});
-	const abundantDocumentIri = makeResourceIri({
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
-		localId: "abundant-document",
-	});
+	const sourceDocumentIri = projectionResourceIri(documentIri, "source");
+	const projectionIri = projectionResourceIri(documentIri, "projection");
+	const projectionActivityIri = projectionResourceIri(documentIri, "activity");
+	const abundantDocumentIri = projectionResourceIri(
+		documentIri,
+		"abundant-document",
+	);
 
 	addProvenanceTriples({
 		graph,
@@ -84,35 +71,24 @@ export function projectAbundantDocumentToRdf12(
 	projectSourceFiles({
 		graph,
 		document,
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
+		documentIri,
 		sourceDocumentIri,
 	});
-	const nodeIndex = projectStructureResources({
+	const structure = projectStructureResources({
 		graph,
 		document,
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
 		documentIri,
 		relativePath: coordinate.relativePath,
 		...(normalizedOptions.sourceText !== undefined
 			? { sourceText: normalizedOptions.sourceText }
 			: {}),
 	});
-	const labelCatalog = projectLabels({
-		graph,
-		document,
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
-		documentIri,
-		relativePath: coordinate.relativePath,
-		nodeIndex,
-	});
+	const { nodeIndex } = structure;
+	const labelCatalog = projectLabels({ graph, structure });
 	const xrefIndex = projectXrefResources({
 		graph,
 		document,
 		options: normalizedOptions,
-		documentKey: coordinate.documentKey,
 		documentIri,
 		relativePath: coordinate.relativePath,
 		labelCatalog,
@@ -121,17 +97,13 @@ export function projectAbundantDocumentToRdf12(
 	projectSurfaceAttributes({
 		graph,
 		document,
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
-		relativePath: coordinate.relativePath,
 		nodeIndex,
 		xrefIndex,
 	});
 	projectPayloadBlocks({
 		graph,
 		document,
-		baseIri: normalizedOptions.baseIri,
-		documentKey: coordinate.documentKey,
+		documentIri,
 		relativePath: coordinate.relativePath,
 		labelCatalog,
 		nodeIndex,
@@ -142,7 +114,8 @@ export function projectAbundantDocumentToRdf12(
 		graph,
 		prefixes: namespaces,
 		relativePath: coordinate.relativePath,
-		documentIri: documentIri.value,
+		documentIri,
+		headingNamespace: headingNamespaceFor(documentIri),
 		sourceDocumentIri: sourceDocumentIri.value,
 		projectionIri: projectionIri.value,
 		projectionActivityIri: projectionActivityIri.value,

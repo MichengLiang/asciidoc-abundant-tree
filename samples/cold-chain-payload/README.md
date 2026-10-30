@@ -99,25 +99,27 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
 
 ## RDF12 Turtle 摘要
 
-下面是实际 Turtle 输出的摘录，不是可直接提交给 Turtle parser 的完整输出。`{document-hash}` 表示 CLI 按源文档路径计算出的 64 位十六进制 document key；当前样例的一次实际值是 `6133abcc6b1d0264191cad9fc3a3bb659b7f42a7f119bf1c6fc3a47571245ad0`。摘录省略 provenance、root heading、完整 heading raw、official xref evidence、未在摘录中使用的 prefix 和部分 source coordinate 字段；raw literal 中的 `...` 只表示摘录省略，不属于实际 raw 内容。未省略的谓词、line number、field predicate 和 raw value object 关系应与实际输出一致。
+下面是实际 Turtle 输出的摘录，不是可直接提交给 Turtle parser 的完整输出。输出以文档 IRI `urn:aat:doc:samples/cold-chain-payload/cold-chain-release.adoc` 为 `@base`：标题节点写作 `<#冷链出库放行策略>`，名字就是引用它时写的地址；投影器起名的 payload 与边证据在 `<cold-chain-release.adoc/projection#…>` 下。摘录省略 provenance、root heading、完整 heading raw、official xref evidence、未在摘录中使用的 prefix 和部分 source coordinate 字段；raw literal 中的 `...` 只表示摘录省略，不属于实际 raw 内容。未省略的谓词、line number、field predicate 和 raw value object 关系应与实际输出一致。
 
 ```ttl
+@base <urn:aat:doc:samples/cold-chain-payload/cold-chain-release.adoc>.
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
-<urn:aat:doc:{document-hash}#heading-l5-o0> a aat:Heading;
+<#冷链出库放行策略> a aat:Heading;
     aat:addressLabel "cold-chain-release", "rel-release-temperature-audit";
     aat:headline "冷链出库放行策略";
+    aat:name "冷链出库放行策略";
     field:owner "quality-ops";
-    field:release-policy-config <urn:aat:doc:{document-hash}#payload-l10-o0>;
-    field:review-playbook <urn:aat:doc:{document-hash}#payload-l34-o0>;
+    field:release-policy-config <cold-chain-release.adoc/projection#payload-l10-o0>;
+    field:review-playbook <cold-chain-release.adoc/projection#payload-l34-o0>;
     aat:role "policy";
     field:status "active";
-    rel:depends-on <urn:aat:doc:{document-hash}#heading-l55-o0>.
+    rel:depends-on <#温控审计规则>.
 
-<urn:aat:doc:{document-hash}#payload-l10-o0> aat:contentEndLine 31;
+<cold-chain-release.adoc/projection#payload-l10-o0> aat:contentEndLine 31;
     aat:contentStartLine 13;
     aat:endLine 32;
     aat:forSelector "cold-chain-release";
@@ -135,7 +137,7 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
     aat:relativePath "samples/cold-chain-payload/cold-chain-release.adoc";
     aat:startLine 10.
 
-<urn:aat:doc:{document-hash}#payload-l34-o0> aat:contentEndLine 41;
+<cold-chain-release.adoc/projection#payload-l34-o0> aat:contentEndLine 41;
     aat:contentStartLine 37;
     aat:endLine 42;
     aat:format "yaml";
@@ -147,7 +149,7 @@ steps:
     aat:relativePath "samples/cold-chain-payload/cold-chain-release.adoc";
     aat:startLine 34.
 
-<urn:aat:doc:{document-hash}#payload-l44-o0> aat:contentEndLine 52;
+<cold-chain-release.adoc/projection#payload-l44-o0> aat:contentEndLine 52;
     aat:contentStartLine 47;
     aat:endLine 53;
     aat:format "yaml";
@@ -161,12 +163,12 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
     aat:sourceValueId "rel-release-temperature-audit";
     aat:startLine 44.
 
-<urn:aat:doc:{document-hash}#xref-edge-l8-c12-o0> rdf:reifies <<(<urn:aat:doc:{document-hash}#heading-l5-o0> rel:depends-on <urn:aat:doc:{document-hash}#heading-l55-o0>)>>;
+<cold-chain-release.adoc/projection#xref-edge-l8-c12-o0> rdf:reifies <<(<#冷链出库放行策略> rel:depends-on <#温控审计规则>)>>;
     a aat:XrefEdge;
-    field:dependency-evidence <urn:aat:doc:{document-hash}#payload-l44-o0>;
+    field:dependency-evidence <cold-chain-release.adoc/projection#payload-l44-o0>;
     aat:rel "depends-on";
-    aat:sourceHeading <urn:aat:doc:{document-hash}#heading-l5-o0>;
-    aat:targetHeading <urn:aat:doc:{document-hash}#heading-l55-o0>;
+    aat:sourceHeading <#冷链出库放行策略>;
+    aat:targetHeading <#温控审计规则>;
     aat:targetSelector "temperature-audit";
     field:weight "0.9".
 ```

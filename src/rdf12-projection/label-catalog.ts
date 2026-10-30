@@ -1,10 +1,8 @@
 import { rdf12TermKey } from "./graph";
+import type { HeadingAddressKind } from "./heading-address";
 import type { Rdf12IriTerm } from "./terms";
 
-export type Rdf12HeadingLabelKind =
-	| "headline"
-	| "addressLabel"
-	| "generatedAddressLabel";
+export type Rdf12HeadingLabelKind = HeadingAddressKind;
 
 export type Rdf12LabelCatalogEntry = {
 	readonly value: string;

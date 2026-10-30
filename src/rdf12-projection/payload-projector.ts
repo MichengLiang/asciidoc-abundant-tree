@@ -14,9 +14,9 @@ import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
 import {
 	createOrdinalAllocator,
-	makeBlockResourceLocalId,
-	makeResourceIri,
+	makePayloadLocalId,
 	type OrdinalAllocator,
+	projectionResourceIri,
 } from "./resource-identity";
 import { bindSelector } from "./selector-binding";
 import {
@@ -29,8 +29,7 @@ import type { Rdf12XrefIndex, Rdf12XrefIndexEntry } from "./xref-projector";
 export type ProjectPayloadBlocksInput = {
 	readonly graph: Rdf12Graph;
 	readonly document: AbundantDocument;
-	readonly baseIri: string;
-	readonly documentKey: string;
+	readonly documentIri: string;
 	readonly relativePath: string;
 	readonly labelCatalog: Rdf12LabelCatalog;
 	readonly nodeIndex: Rdf12NodeIndex;
@@ -254,15 +253,10 @@ function createRawValueObject(
 		kind: "payload",
 		startLine: entry.span.startLine,
 	});
-	const value = makeResourceIri({
-		baseIri: context.baseIri,
-		documentKey: context.documentKey,
-		localId: makeBlockResourceLocalId({
-			kind: "payload",
-			startLine: entry.span.startLine,
-			ordinal,
-		}),
-	});
+	const value = projectionResourceIri(
+		context.documentIri,
+		makePayloadLocalId({ startLine: entry.span.startLine, ordinal }),
+	);
 
 	addLineSpanTriples({
 		graph: context.graph,

@@ -21,6 +21,7 @@ import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
+import { headingStartingAt } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const structuralPayloadPath = join(
@@ -31,7 +32,7 @@ const structuralPayloadPath = join(
 describe("rdf12 heading slices", () => {
 	it("projects document title raw as lines 1 through 4 with preamble content span", async () => {
 		const projection = await structuralPayloadProjection();
-		const root = resourceIri(projection.documentIri, "heading-l1-o0");
+		const root = headingStartingAt(projection.graph, 1).value;
 
 		expectStringTriple(
 			projection.graph,
@@ -54,7 +55,7 @@ describe("rdf12 heading slices", () => {
 
 	it("projects delivery policy raw as lines 5 through 38", async () => {
 		const projection = await structuralPayloadProjection();
-		const deliveryPolicy = resourceIri(projection.documentIri, "heading-l5-o0");
+		const deliveryPolicy = headingStartingAt(projection.graph, 5).value;
 
 		expectStringTriple(
 			projection.graph,
@@ -102,7 +103,7 @@ edge:
 
 	it("projects capacity rule raw as lines 39 through 43 without nested heading text", async () => {
 		const projection = await structuralPayloadProjection();
-		const capacityRule = resourceIri(projection.documentIri, "heading-l39-o0");
+		const capacityRule = headingStartingAt(projection.graph, 39).value;
 		const raw = onlyLiteralValue(projection.graph, capacityRule, "raw");
 
 		expect(raw).toBe(`[#capacity.rule, status=active]
@@ -119,7 +120,7 @@ edge:
 
 	it("projects the nested heading level as 2", async () => {
 		const projection = await structuralPayloadProjection();
-		const nestedHeading = resourceIri(projection.documentIri, "heading-l44-o0");
+		const nestedHeading = headingStartingAt(projection.graph, 44).value;
 
 		expectNumberTriple(projection.graph, nestedHeading, "headingLevel", 2);
 	});
@@ -154,7 +155,7 @@ NOTE: Admonition paragraph.
 == Next
 `;
 		const projection = await projectFixture("heading-rich-raw.adoc", source);
-		const rich = resourceIri(projection.documentIri, "heading-l3-o0");
+		const rich = headingStartingAt(projection.graph, 3).value;
 
 		expectStringTriple(
 			projection.graph,
@@ -206,7 +207,7 @@ NOTE: Admonition paragraph.
 == Next
 `;
 		const projection = await projectFixture("heading-table-raw.adoc", source);
-		const tableSection = resourceIri(projection.documentIri, "heading-l3-o0");
+		const tableSection = headingStartingAt(projection.graph, 3).value;
 		const raw = onlyLiteralValue(projection.graph, tableSection, "raw");
 
 		expect(raw).toContain("|Name |Value");
@@ -468,10 +469,6 @@ async function projectFixture(name: string, source: string) {
 			documentRoot: projectRoot,
 		},
 	);
-}
-
-function resourceIri(documentIri: string, localId: string): string {
-	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
 }
 
 function onlyLiteralValue(

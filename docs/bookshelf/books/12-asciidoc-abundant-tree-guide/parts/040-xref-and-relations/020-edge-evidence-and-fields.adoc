@@ -22,12 +22,12 @@ xref named attributes 投影为 xref edge evidence 上的 fields。字段主体�
 @prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l8-o0> .
+<urn:aat:doc:...#配送策略> rel:depends-on <urn:aat:doc:...#运力规则> .
 
-<urn:aat:doc:...#xref-edge-l6-c8-o0> a aat:XrefEdge ;
-  rdf:reifies <<(<urn:aat:doc:...#heading-l3-o0> rel:depends-on <urn:aat:doc:...#heading-l8-o0>)>> ;
-  aat:sourceHeading <urn:aat:doc:...#heading-l3-o0> ;
-  aat:targetHeading <urn:aat:doc:...#heading-l8-o0> ;
+<urn:aat:doc:.../projection#xref-edge-l6-c8-o0> a aat:XrefEdge ;
+  rdf:reifies <<(<urn:aat:doc:...#配送策略> rel:depends-on <urn:aat:doc:...#运力规则>)>> ;
+  aat:sourceHeading <urn:aat:doc:...#配送策略> ;
+  aat:targetHeading <urn:aat:doc:...#运力规则> ;
   aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;

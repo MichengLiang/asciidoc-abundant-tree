@@ -35,7 +35,7 @@ fieldPredicate = <https://micheng.dev/ns/asciidoc-field#> + 转写(fieldName)
 
 [source,turtle]
 ----
-:heading-l5-o0
+<#配送策略>
   aat:role "policy" ;
   field:status "active" ;
   field:owner "ops" .
@@ -81,7 +81,7 @@ raw value object 不保存字段名、结构分类标记或下游模型名。字
 
 带 `for` 或 `forSelector` marker 的 source value block 表达 heading complex property。该 block 的 property role 是字段名。source block language 是 format。block body 是 raw。
 
-带值 marker 查询 xref:heading-node[标题节点] 定义的 heading projection label space。绑定目标来自标题节点的 `aat:addressLabel`、`aat:generatedAddressLabel` 或 `aat:headline`。绑定失败或多义绑定时，不输出 heading complex property。
+带值 marker 查询 xref:heading-address[地址与 Label 空间] 定义的 label 空间，与 xref 的 selector 同一套规则：值可以是标题原文、带上级标题的地址路径（`for=红烧肉::火候`）、custom ID 或生成 ID。绑定失败或多义绑定时，不输出 heading complex property。
 
 无值 marker 表达 source ownership binding。投影器使用 source value block 的源位置，找到覆盖该 block 起始行的最内层 heading node，并把 complex property 写到该 heading node。源位置无法确定 owning heading 时，不输出 heading complex property。
 
@@ -109,7 +109,7 @@ property role 必须稳定给出一个字段名。没有 property role 或有多
 
 [source,turtle]
 ----
-:heading-l5-o0 field:policy-risk-profile :value-l10-o0 .
+<#配送策略> field:policy-risk-profile :value-l10-o0 .
 
 :value-l10-o0 aat:forSelector "delivery" ;
   aat:format "json" ;

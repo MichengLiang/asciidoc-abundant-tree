@@ -15,7 +15,7 @@
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 
-<urn:aat:doc:cold-chain-release#payload-l10-o0>
+<urn:aat:doc:cold-chain-release/projection#payload-l10-o0>
   aat:format "json" ;
   aat:raw "{\"temperatureWindowCelsius\":{\"min\":2,\"max\":8}}" ;
   aat:relativePath "source/cold-chain-release.adoc" ;
@@ -33,7 +33,7 @@ raw value object 不保存字段名。字段名由指向它的 field predicate �
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 @prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 
-<urn:aat:doc:cold-chain-release#heading-l1-o0> field:release-policy-config <urn:aat:doc:cold-chain-release#payload-l10-o0> .
+<urn:aat:doc:cold-chain-release#冷链出库放行策略> field:release-policy-config <urn:aat:doc:cold-chain-release/projection#payload-l10-o0> .
 ----
 
 raw 是 opaque literal。JSON、YAML、TOML、XML 或其它格式内部字段由下游消费者解释。这个设计让投影层保存源表面事实，让业务 schema 留在 TS/JS、SHACL、adapter 或领域模型中。

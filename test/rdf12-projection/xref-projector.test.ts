@@ -20,6 +20,10 @@ import {
 	rdf12TripleTerm,
 } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
+import {
+	headingStartingAt,
+	projectionResource,
+} from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
@@ -37,8 +41,8 @@ describe("rdf12 xref edge projection", () => {
 			projection.graph,
 			`${namespaces.aat}XrefEdge`,
 		).find((iri) => iri.includes("#xref-edge-l10-c60-o0"));
-		const source = heading(projection.documentIri, "heading-l8-o0");
-		const target = heading(projection.documentIri, "heading-l25-o0");
+		const source = headingStartingAt(projection.graph, 8);
+		const target = headingStartingAt(projection.graph, 25);
 		const predicate = iriTerm(`${namespaces.aat}references`);
 		const relation = rdf12Triple(source, predicate, target);
 
@@ -116,11 +120,14 @@ describe("rdf12 xref edge projection", () => {
 			sameLineXrefLabelsDocument(),
 			{ documentRoot: projectRoot },
 		);
-		const firstEdge = resourceIri(projection.documentIri, "xref-edge-l3-c1-o0");
-		const secondEdge = resourceIri(
+		const firstEdge = projectionResource(
+			projection.documentIri,
+			"xref-edge-l3-c1-o0",
+		).value;
+		const secondEdge = projectionResource(
 			projection.documentIri,
 			"xref-edge-l3-c12-o0",
-		);
+		).value;
 
 		expectStringTriple(projection.graph, firstEdge, "displayLabel", "A");
 		expectStringTriple(projection.graph, secondEdge, "displayLabel", "B");
@@ -167,9 +174,9 @@ describe("rdf12 xref edge projection", () => {
 				documentRoot: projectRoot,
 			},
 		);
-		const core = heading(projection.documentIri, "heading-l25-o0");
-		const troubleshooting = heading(projection.documentIri, "heading-l40-o0");
-		const conclusion = heading(projection.documentIri, "heading-l58-o0");
+		const core = headingStartingAt(projection.graph, 25);
+		const troubleshooting = headingStartingAt(projection.graph, 40);
+		const conclusion = headingStartingAt(projection.graph, 58);
 		const engineFromConclusion = edgeForSelector(
 			projection.graph,
 			"engine-code",
@@ -256,7 +263,7 @@ describe("rdf12 xref edge projection", () => {
 				{ documentRoot: projectRoot },
 			);
 			const edge = edgeForSelector(projection.graph, selector, edgeFragment);
-			const section = heading(projection.documentIri, "heading-l3-o0");
+			const section = headingStartingAt(projection.graph, 3);
 
 			expectTriple(projection.graph, edge, "sourceHeading", section);
 			expectTriple(projection.graph, edge, "targetHeading", section);
@@ -318,8 +325,8 @@ describe("rdf12 xref edge projection", () => {
 				documentRoot: projectRoot,
 			},
 		);
-		const delivery = heading(projection.documentIri, "heading-l1-o0");
-		const capacity = heading(projection.documentIri, "heading-l20-o0");
+		const delivery = headingStartingAt(projection.graph, 1);
+		const capacity = headingStartingAt(projection.graph, 20);
 		const aliasTargetEdge = edgeForSelector(
 			projection.graph,
 			"rel-delivery-capacity",
@@ -436,8 +443,8 @@ describe("rdf12 xref edge projection", () => {
 				})
 				.map((triple) => triple.object.value),
 		).toEqual([
-			heading(projection.documentIri, "heading-l1-o0").value,
-			heading(projection.documentIri, "heading-l4-o0").value,
+			headingStartingAt(projection.graph, 1).value,
+			headingStartingAt(projection.graph, 4).value,
 		]);
 		expect(
 			projection.graph.match({
@@ -459,9 +466,9 @@ describe("rdf12 xref edge projection", () => {
 			{ documentRoot: projectRoot },
 		);
 		const edge = onlyXrefEdge(projection.graph);
-		const actualSource = heading(projection.documentIri, "heading-l4-o0");
-		const otherDuplicate = heading(projection.documentIri, "heading-l1-o0");
-		const target = heading(projection.documentIri, "heading-l8-o0");
+		const actualSource = headingStartingAt(projection.graph, 4);
+		const otherDuplicate = headingStartingAt(projection.graph, 1);
+		const target = headingStartingAt(projection.graph, 8);
 		const relation = rdf12Triple(
 			actualSource,
 			iriTerm(`${namespaces.aat}references`),
@@ -487,8 +494,8 @@ describe("rdf12 xref edge projection", () => {
 			{ documentRoot: projectRoot },
 		);
 		const edge = onlyXrefEdge(projection.graph);
-		const source = heading(projection.documentIri, "heading-l1-o0");
-		const target = heading(projection.documentIri, "heading-l5-o0");
+		const source = headingStartingAt(projection.graph, 1);
+		const target = headingStartingAt(projection.graph, 5);
 		const relation = rdf12Triple(
 			source,
 			iriTerm(`${namespaces.aat}references`),
@@ -507,8 +514,8 @@ describe("rdf12 xref edge projection", () => {
 			documentRoot: projectRoot,
 		});
 		const edge = onlyXrefEdge(projection.graph);
-		const source = heading(projection.documentIri, "heading-l1-o0");
-		const target = heading(projection.documentIri, "heading-l1-o0");
+		const source = headingStartingAt(projection.graph, 1);
+		const target = headingStartingAt(projection.graph, 1);
 		const predicate = iriTerm(`${namespaces.rel}depends-on`);
 		const relation = rdf12Triple(source, predicate, target);
 
@@ -582,8 +589,12 @@ describe("rdf12 xref edge projection", () => {
 			.find((triple) => triple.predicate.value === `${namespaces.rel}is`);
 
 		expect(expectedRelation).toBeDefined();
-		expect(expectedRelation?.subject.value).toContain("#heading-l5-o0");
-		expect(expectedRelation?.object.value).toContain("#heading-l3-o0");
+		expect(expectedRelation?.subject.value).toBe(
+			`${projection.headingNamespace}苹果`,
+		);
+		expect(expectedRelation?.object.value).toBe(
+			`${projection.headingNamespace}水果`,
+		);
 		expect(
 			projection.graph.has(
 				rdf12Triple(
@@ -646,9 +657,9 @@ NOTE: Note points to xref:target-note[Note Target, rel=warns].
 			await parseAbundantTree({ sourcePath }),
 			{ documentRoot: projectRoot },
 		);
-		const source = heading(projection.documentIri, "heading-l3-o0");
-		const listTarget = heading(projection.documentIri, "heading-l10-o0");
-		const noteTarget = heading(projection.documentIri, "heading-l13-o0");
+		const source = headingStartingAt(projection.graph, 3);
+		const listTarget = headingStartingAt(projection.graph, 10);
+		const noteTarget = headingStartingAt(projection.graph, 13);
 		const listRelation = rdf12Triple(
 			source,
 			iriTerm(`${namespaces.rel}precedes`),
@@ -680,14 +691,6 @@ NOTE: Note points to xref:target-note[Note Target, rel=warns].
 
 async function referenceDocument(): Promise<AbundantDocument> {
 	return await parseAbundantTree({ sourcePath: referencePath });
-}
-
-function resourceIri(documentIri: string, localId: string): string {
-	return `${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`;
-}
-
-function heading(documentIri: string, localId: string): Rdf12IriTerm {
-	return iriTerm(resourceIri(documentIri, localId));
 }
 
 function resourcesOfType(graph: Rdf12Graph, typeIri: string): string[] {

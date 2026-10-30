@@ -235,6 +235,7 @@ ex:EvidenceShape a sh:NodeShape;
 ## 预生成 RDF12 Turtle
 
 ```ttl
+@base <urn:aat:doc:samples/basic-rdf-projection/basic-projection.adoc>.
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix field: <https://micheng.dev/ns/asciidoc-field#>.
@@ -244,10 +245,35 @@ ex:EvidenceShape a sh:NodeShape;
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#activity> a prov:Activity, aat:ProjectionActivity;
-    prov:used <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source>.
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l1-o0> a aat:Heading;
-    aat:containsDirectly <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>, <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l34-o0>, <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0>;
+<#关系证据说明> a aat:Heading;
+    aat:addressLabel "evidence-note";
+    aat:childOrder 3;
+    aat:contentEndLine 39;
+    aat:contentStartLine 37;
+    aat:documentOrder 5;
+    aat:endLine 40;
+    aat:headingLevel 1;
+    aat:headingLine 35;
+    aat:headline "关系证据说明";
+    aat:metadataEndLine 34;
+    aat:metadataStartLine 34;
+    aat:name "关系证据说明";
+    aat:raw """[#evidence-note.evidence, status=active]
+== 关系证据说明
+
+关系证据说明用 xref:rule-query-example[规则查询示例, rel=documents] 指向约束规则章节里的 listing target。
+
+关系证据说明也用 xref:required-rule[] 展示默认 `aat:references` 关系。
+
+""";
+    aat:references <#约束规则>;
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:role "evidence";
+    aat:startLine 34;
+    field:status "active";
+    rel:documents <#约束规则>.
+<#基础%20RDF%20投影示例> a aat:Heading;
+    aat:containsDirectly <#关系证据说明>, <#约束规则>, <#结构示例>;
     aat:contentEndLine 3;
     aat:contentStartLine 3;
     aat:documentOrder 1;
@@ -255,6 +281,7 @@ ex:EvidenceShape a sh:NodeShape;
     aat:headingLevel 0;
     aat:headingLine 1;
     aat:headline "基础 RDF 投影示例";
+    aat:name "基础 RDF 投影示例";
     aat:raw """= 基础 RDF 投影示例
 
 这个示例是一个小型结构夹具，用来展示 RDF12 heading projection 的基础查询面：标题树、地址标签、直接属性、交叉引用边证据和本地 target 归属。
@@ -262,10 +289,28 @@ ex:EvidenceShape a sh:NodeShape;
 """;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
     aat:startLine 1.
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0> a aat:Heading;
+<#生成标签节点> a aat:Heading;
+    aat:childOrder 1;
+    aat:contentEndLine 32;
+    aat:contentStartLine 32;
+    aat:documentOrder 4;
+    aat:endLine 33;
+    aat:generatedAddressLabel "_生成标签节点";
+    aat:headingLevel 2;
+    aat:headingLine 30;
+    aat:headline "生成标签节点";
+    aat:name "生成标签节点";
+    aat:raw """=== 生成标签节点
+
+这个标题没有手写 ID，用来展示 generated address label 进入 heading label space。
+
+""";
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:startLine 30.
+<#约束规则> a aat:Heading;
     aat:addressLabel "required-rule", "rule-query-example";
     aat:childOrder 2;
-    aat:containsDirectly <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l30-o0>;
+    aat:containsDirectly <#生成标签节点>;
     aat:contentEndLine 28;
     aat:contentStartLine 13;
     aat:documentOrder 3;
@@ -275,7 +320,7 @@ ex:EvidenceShape a sh:NodeShape;
     aat:headline "约束规则";
     aat:metadataEndLine 10;
     aat:metadataStartLine 10;
-    field:priority "normal";
+    aat:name "约束规则";
     aat:raw """[#required-rule.rule, status=active]
 == 约束规则
 
@@ -298,55 +343,13 @@ WHERE role = 'rule';
 
 """;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    field:review-state "ready";
     aat:role "rule";
     aat:startLine 10;
+    field:priority "normal";
+    field:review-state "ready";
     field:status "active";
     field:summary "约束规则集中说明结构示例必须满足的条件。\n多行说明保留为同一个标题字段。".
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l30-o0> a aat:Heading;
-    aat:childOrder 1;
-    aat:contentEndLine 32;
-    aat:contentStartLine 32;
-    aat:documentOrder 4;
-    aat:endLine 33;
-    aat:generatedAddressLabel "_生成标签节点";
-    aat:headingLevel 2;
-    aat:headingLine 30;
-    aat:headline "生成标签节点";
-    aat:raw """=== 生成标签节点
-
-这个标题没有手写 ID，用来展示 generated address label 进入 heading label space。
-
-""";
-    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:startLine 30.
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l34-o0> a aat:Heading;
-    aat:addressLabel "evidence-note";
-    aat:childOrder 3;
-    aat:contentEndLine 39;
-    aat:contentStartLine 37;
-    aat:documentOrder 5;
-    aat:endLine 40;
-    aat:headingLevel 1;
-    aat:headingLine 35;
-    aat:headline "关系证据说明";
-    aat:metadataEndLine 34;
-    aat:metadataStartLine 34;
-    aat:raw """[#evidence-note.evidence, status=active]
-== 关系证据说明
-
-关系证据说明用 xref:rule-query-example[规则查询示例, rel=documents] 指向约束规则章节里的 listing target。
-
-关系证据说明也用 xref:required-rule[] 展示默认 `aat:references` 关系。
-
-""";
-    aat:references <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
-    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:role "evidence";
-    aat:startLine 34;
-    field:status "active";
-    rel:documents <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>.
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0> a aat:Heading;
+<#结构示例> a aat:Heading;
     aat:addressLabel "structure-example";
     aat:childOrder 1;
     aat:contentEndLine 8;
@@ -358,7 +361,7 @@ WHERE role = 'rule';
     aat:headline "结构示例";
     aat:metadataEndLine 5;
     aat:metadataStartLine 5;
-    field:owner "docs-team";
+    aat:name "结构示例";
     aat:raw """[#structure-example.process, status=draft, owner=docs-team]
 == 结构示例
 
@@ -368,15 +371,18 @@ WHERE role = 'rule';
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
     aat:role "process";
     aat:startLine 5;
+    field:owner "docs-team";
     field:status "draft";
-    rel:requires <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>.
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#projection> a prov:Entity, aat:HeadingProjection;
-    prov:hadPrimarySource <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source>;
-    prov:wasDerivedFrom <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source>;
-    prov:wasGeneratedBy <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#activity>.
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#source> a prov:Entity, aat:AsciiDocSourceDocument;
+    rel:requires <#约束规则>.
+<basic-projection.adoc/projection#activity> a prov:Activity, aat:ProjectionActivity;
+    prov:used <basic-projection.adoc/projection#source>.
+<basic-projection.adoc/projection#projection> a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource <basic-projection.adoc/projection#source>;
+    prov:wasDerivedFrom <basic-projection.adoc/projection#source>;
+    prov:wasGeneratedBy <basic-projection.adoc/projection#activity>.
+<basic-projection.adoc/projection#source> a prov:Entity, aat:AsciiDocSourceDocument;
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc".
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l37-c9-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l34-o0> rel:documents <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>)>>;
+<basic-projection.adoc/projection#xref-edge-l37-c9-o0> rdf:reifies <<(<#关系证据说明> rel:documents <#约束规则>)>>;
     a aat:XrefEdge;
     aat:displayLabel "规则查询示例";
     aat:endColumn 55;
@@ -388,14 +394,14 @@ WHERE role = 'rule';
     aat:raw "xref:rule-query-example[规则查询示例, rel=documents]";
     aat:rel "documents";
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:sourceHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l34-o0>;
+    aat:sourceHeading <#关系证据说明>;
     aat:sourceSelector "evidence-note";
     aat:startColumn 9;
     aat:startLine 37;
     aat:syntax "macro";
-    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
+    aat:targetHeading <#约束规则>;
     aat:targetSelector "rule-query-example".
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l39-c10-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l34-o0> aat:references <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>)>>;
+<basic-projection.adoc/projection#xref-edge-l39-c10-o0> rdf:reifies <<(<#关系证据说明> aat:references <#约束规则>)>>;
     a aat:XrefEdge;
     aat:endColumn 30;
     aat:endLine 39;
@@ -405,14 +411,14 @@ WHERE role = 'rule';
     aat:officialResolvedType "section";
     aat:raw "xref:required-rule[]";
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:sourceHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l34-o0>;
+    aat:sourceHeading <#关系证据说明>;
     aat:sourceSelector "evidence-note";
     aat:startColumn 10;
     aat:startLine 39;
     aat:syntax "macro";
-    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
+    aat:targetHeading <#约束规则>;
     aat:targetSelector "required-rule".
-<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#xref-edge-l8-c8-o0> rdf:reifies <<(<urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0> rel:requires <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>)>>;
+<basic-projection.adoc/projection#xref-edge-l8-c8-o0> rdf:reifies <<(<#结构示例> rel:requires <#约束规则>)>>;
     a aat:XrefEdge;
     aat:displayLabel "约束规则";
     aat:endColumn 58;
@@ -424,12 +430,12 @@ WHERE role = 'rule';
     aat:raw "xref:required-rule[约束规则, rel=requires, weight=0.7]";
     aat:rel "requires";
     aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
-    aat:sourceHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l5-o0>;
+    aat:sourceHeading <#结构示例>;
     aat:sourceSelector "structure-example";
     aat:startColumn 8;
     aat:startLine 8;
     aat:syntax "macro";
-    aat:targetHeading <urn:aat:doc:0dc359eca041399da02627a3740ea0e2d7fe1efb46ff8d071ff39238aaf13d3d#heading-l10-o0>;
+    aat:targetHeading <#约束规则>;
     aat:targetSelector "required-rule";
     field:weight "0.7".
 ```

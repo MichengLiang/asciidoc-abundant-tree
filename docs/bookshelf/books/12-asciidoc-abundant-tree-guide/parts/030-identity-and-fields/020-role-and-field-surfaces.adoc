@@ -22,7 +22,7 @@ summary::
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 @prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 
-<urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "delivery" ;
+<urn:aat:doc:guide#配送策略> aat:addressLabel "delivery" ;
   aat:role "policy" ;
   field:status "active" ;
   field:owner "ops" ;

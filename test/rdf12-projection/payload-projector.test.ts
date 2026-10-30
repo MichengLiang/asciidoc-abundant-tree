@@ -17,6 +17,7 @@ import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm, type Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
+import { headingStartingAt } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
@@ -31,7 +32,7 @@ describe("rdf12 complex property projection", () => {
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const delivery = heading(projection.documentIri, "heading-l1-o0");
+		const delivery = headingStartingAt(projection.graph, 1);
 		const value = onlyIriObject(
 			projection.graph,
 			delivery,
@@ -105,7 +106,7 @@ review_team: quality-ops
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const delivery = heading(emptySelector.documentIri, "heading-l1-o0");
+		const delivery = headingStartingAt(emptySelector.graph, 1);
 		const value = onlyIriObject(
 			emptySelector.graph,
 			delivery,
@@ -122,7 +123,7 @@ review_team: quality-ops
 		);
 		const ownerValue = onlyIriObject(
 			explicitOwner.graph,
-			heading(explicitOwner.documentIri, "heading-l1-o0"),
+			headingStartingAt(explicitOwner.graph, 1),
 			fieldPredicate("review-playbook"),
 		);
 		expectNoPredicate(explicitOwner.graph, ownerValue, "forSelector");
@@ -368,7 +369,7 @@ review_team: quality-ops
 		);
 		const value = onlyIriObject(
 			projection.graph,
-			heading(projection.documentIri, "heading-l1-o0"),
+			headingStartingAt(projection.graph, 1),
 			fieldPredicate("release-policy-config"),
 		);
 
@@ -634,12 +635,6 @@ function xrefNode(
 			end: { line, column: 90 },
 		},
 	};
-}
-
-function heading(documentIri: string, localId: string): Rdf12IriTerm {
-	return iriTerm(
-		`${documentIri.slice(0, documentIri.indexOf("#"))}#${localId}`,
-	);
 }
 
 function onlyResourceOfType(

@@ -1,5 +1,6 @@
 import { namespaces } from "./namespaces";
 import type { Rdf12Projection } from "./projector";
+import { projectionResourceIri } from "./resource-identity";
 import type {
 	Rdf12IriTerm,
 	Rdf12LiteralTerm,
@@ -46,69 +47,85 @@ type JsonLdTerm = JsonLdIriTerm | JsonLdLiteralTerm | JsonLdTripleTerm;
 export function serializeRdf12ProjectionToJsonLd(
 	projection: Rdf12Projection,
 ): string {
+	const writer: JsonLdWriter = {
+		headingNamespace: projection.headingNamespace,
+		statementBase: projectionResourceIri(projection.documentIri, "").value,
+	};
 	const document: JsonLdDocument = {
 		"@context": {
+			"@base": projection.documentIri,
 			...projection.prefixes,
 			rdf12: rdf12JsonLdNamespace,
 		},
 		"@graph": projection.graph
 			.toArray()
-			.map((triple, index) => tripleToJsonLd(triple, index)),
+			.map((triple, index) => tripleToJsonLd(writer, triple, index)),
 	};
 
 	return `${JSON.stringify(document, null, 2)}\n`;
 }
 
-function tripleToJsonLd(triple: Rdf12Triple, index: number): JsonLdTriple {
+// 以文档 IRI 为 @base，标题节点写作相对的 "#红烧肉::火候"，与 Turtle 相同（06 号书第 2 章「身份」）。
+// 语句自己的 @id 是投影器起名的资源，放在 <文档 IRI>/projection# 下，不与标题的名字相撞。
+type JsonLdWriter = {
+	readonly headingNamespace: string;
+	readonly statementBase: string;
+};
+
+function tripleToJsonLd(
+	writer: JsonLdWriter,
+	triple: Rdf12Triple,
+	index: number,
+): JsonLdTriple {
 	return {
-		"@id": `${projectionStatementBase(triple.subject)}statement-${index}`,
+		"@id": `${writer.statementBase}statement-${index}`,
 		"@type": "rdf12:Triple",
-		...embeddedTripleToJsonLd(triple),
+		...embeddedTripleToJsonLd(writer, triple),
 	};
-}
-
-function projectionStatementBase(subject: Rdf12IriTerm): string {
-	const hashIndex = subject.value.lastIndexOf("#");
-	if (hashIndex === -1) {
-		return `${subject.value}#`;
-	}
-
-	return subject.value.slice(0, hashIndex + 1);
 }
 
 function embeddedTripleToJsonLd(
+	writer: JsonLdWriter,
 	triple: Rdf12Triple,
 ): Omit<JsonLdTriple, "@id" | "@type"> {
 	return {
-		subject: iriTermToJsonLd(triple.subject),
-		predicate: iriTermToJsonLd(triple.predicate),
-		object: termToJsonLd(triple.object),
+		subject: iriTermToJsonLd(writer, triple.subject),
+		predicate: iriTermToJsonLd(writer, triple.predicate),
+		object: termToJsonLd(writer, triple.object),
 	};
 }
 
-function termToJsonLd(term: Rdf12Term): JsonLdTerm {
+function termToJsonLd(writer: JsonLdWriter, term: Rdf12Term): JsonLdTerm {
 	switch (term.termType) {
 		case "iri":
-			return iriTermToJsonLd(term);
+			return iriTermToJsonLd(writer, term);
 		case "literal":
-			return literalTermToJsonLd(term);
+			return literalTermToJsonLd(writer, term);
 		case "triple":
-			return tripleTermToJsonLd(term);
+			return tripleTermToJsonLd(writer, term);
 	}
 }
 
-function iriTermToJsonLd(term: Rdf12IriTerm): JsonLdIriTerm {
+function iriTermToJsonLd(
+	writer: JsonLdWriter,
+	term: Rdf12IriTerm,
+): JsonLdIriTerm {
 	return {
-		"@id": term.value,
+		"@id": term.value.startsWith(writer.headingNamespace)
+			? `#${term.value.slice(writer.headingNamespace.length)}`
+			: term.value,
 		"@type": "rdf12:IriTerm",
 	};
 }
 
-function literalTermToJsonLd(term: Rdf12LiteralTerm): JsonLdLiteralTerm {
+function literalTermToJsonLd(
+	writer: JsonLdWriter,
+	term: Rdf12LiteralTerm,
+): JsonLdLiteralTerm {
 	const literal: JsonLdLiteralTerm = {
 		"@type": "rdf12:LiteralTerm",
 		"@value": term.value,
-		datatype: iriTermToJsonLd(term.datatype),
+		datatype: iriTermToJsonLd(writer, term.datatype),
 	};
 
 	if (term.language !== undefined) {
@@ -121,10 +138,13 @@ function literalTermToJsonLd(term: Rdf12LiteralTerm): JsonLdLiteralTerm {
 	return literal;
 }
 
-function tripleTermToJsonLd(term: Rdf12TripleTerm): JsonLdTripleTerm {
+function tripleTermToJsonLd(
+	writer: JsonLdWriter,
+	term: Rdf12TripleTerm,
+): JsonLdTripleTerm {
 	return {
 		"@type": "rdf12:TripleTerm",
-		triple: embeddedTripleToJsonLd(term.value),
+		triple: embeddedTripleToJsonLd(writer, term.value),
 	};
 }
 

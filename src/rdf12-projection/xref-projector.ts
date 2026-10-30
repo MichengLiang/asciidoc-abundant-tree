@@ -14,9 +14,9 @@ import { addReifierTriple } from "./reifier";
 import { mapRelationPredicate } from "./relation-predicate";
 import {
 	createOrdinalAllocator,
-	makeResourceIri,
 	makeXrefEdgeResourceLocalId,
 	type OrdinalAllocator,
+	projectionResourceIri,
 } from "./resource-identity";
 import { bindSelector } from "./selector-binding";
 import {
@@ -29,8 +29,7 @@ export type ProjectXrefResourcesInput = {
 	readonly graph: Rdf12Graph;
 	readonly document: AbundantDocument;
 	readonly options: NormalizedRdf12Options;
-	readonly documentKey: string;
-	readonly documentIri: Rdf12IriTerm;
+	readonly documentIri: string;
 	readonly relativePath: string;
 	readonly labelCatalog: Rdf12LabelCatalog;
 	readonly nodeIndex: Rdf12NodeIndex;
@@ -191,15 +190,14 @@ function createXrefResource(
 		startLine: xref.sourceSpan.start.line,
 		startColumn: xref.sourceSpan.start.column,
 	});
-	const xrefIri = makeResourceIri({
-		baseIri: context.options.baseIri,
-		documentKey: context.documentKey,
-		localId: makeXrefEdgeResourceLocalId({
+	const xrefIri = projectionResourceIri(
+		context.documentIri,
+		makeXrefEdgeResourceLocalId({
 			startLine: xref.sourceSpan.start.line,
 			startColumn: xref.sourceSpan.start.column,
 			ordinal,
 		}),
-	});
+	);
 
 	context.graph.add(
 		rdf12Triple(

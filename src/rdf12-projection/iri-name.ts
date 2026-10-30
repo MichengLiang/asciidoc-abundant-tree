@@ -11,6 +11,11 @@ export function nameInIri(name: string): string {
 	return written;
 }
 
+// 源文件的相对路径写在文档 IRI 里、# 之前：? 在那里会被读成查询部分的开头，另写成 %3F（06 号书第 2 章「身份」）。
+export function pathInIri(relativePath: string): string {
+	return nameInIri(relativePath).replaceAll("?", "%3F");
+}
+
 function isKept(character: string): boolean {
 	const codePoint = character.codePointAt(0) ?? 0;
 	return codePoint < 0x80 ? keptAscii.test(character) : isUcschar(codePoint);

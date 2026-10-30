@@ -14,7 +14,10 @@ import { projectOfficialDocument } from "./official-projector";
 import { completeOfficialSourceLocations } from "./official-source-location";
 import type { SourceIdentityApi } from "./source-identity";
 import { type LineTable, spanForLineText } from "./source-lines";
-import { projectSourceSurfaces } from "./source-surfaces";
+import {
+	type HeadlineExpansion,
+	projectSourceSurfaces,
+} from "./source-surfaces";
 import { recognizeXrefOccurrences } from "./xref-recognition";
 
 export type ParserCoreInput = {
@@ -48,6 +51,9 @@ export async function parseAsciidoctorDocument(
 		sectionByLine: sourceSurfaces.sectionByLine,
 		toolDiagnostics: sourceSurfaces.toolDiagnostics,
 	});
+	await expandHeadlineAttributes(input, sourceSurfaces.headlineExpansions);
+	const titleSource = documentTitleSource(input.lineTable);
+	const titleText = await documentTitleText(input);
 	const officialProjection = projectOfficialDocument({
 		officialDocument: input.officialDocument,
 		lineTable: input.lineTable,
@@ -67,7 +73,6 @@ export async function parseAsciidoctorDocument(
 		sourceSurfaces.anchorOccurrences,
 	);
 	completeXrefTargetTypes(xrefOccurrences, officialProjection.targets);
-	const titleSource = documentTitleSource(input.lineTable);
 
 	const document: AbundantDocument = {
 		kind: "document",
@@ -80,11 +85,12 @@ export async function parseAsciidoctorDocument(
 		parser: parserInfo(input.adapter),
 		title: {
 			kind: "title",
-			text: input.officialDocument.getDocumentTitle?.() ?? "",
+			text: titleText,
 			source: titleSource,
 			asciidoctor: definedObject({
 				context: input.officialDocument.getContext?.(),
 				nodeName: input.officialDocument.getNodeName?.(),
+				reftext: input.officialDocument.getDocumentTitle?.() ?? undefined,
 			}) as AsciidoctorLayer,
 		},
 		children: officialProjection.children,
@@ -96,6 +102,42 @@ export async function parseAsciidoctorDocument(
 		toolDiagnostics: sourceSurfaces.toolDiagnostics,
 	};
 	return attachHeadingDescriptionMetadata(document);
+}
+
+async function expandHeadlineAttributes(
+	input: ParserCoreInput,
+	expansions: readonly HeadlineExpansion[],
+): Promise<void> {
+	if (expansions.length === 0) {
+		return;
+	}
+	const expanded = await input.adapter.expandAttributes(
+		input.officialDocument,
+		expansions.map(({ owner, section }) => ({ owner, text: section.title })),
+	);
+	for (const [index, { section }] of expansions.entries()) {
+		section.title = expanded[index] ?? section.title;
+	}
+}
+
+// 文档标题同样取作者写下的文字（06 号书第 2 章 Headline），只认第一行的 `= 标题`；第一行不是标题时（标题来自
+// doctitle 属性等），照官方给的标题。
+async function documentTitleText(input: ParserCoreInput): Promise<string> {
+	const official = input.officialDocument.getDocumentTitle?.() ?? "";
+	const written = /^=[ \t]+(.+?)(?:[ \t]+=)?$/u.exec(
+		input.lineTable.lines[0]?.text ?? "",
+	)?.[1];
+	if (written === undefined || official === "") {
+		return official;
+	}
+	if (!written.includes("{")) {
+		return written;
+	}
+	const [expanded] = await input.adapter.expandAttributes(
+		input.officialDocument,
+		[{ owner: input.officialDocument, text: written }],
+	);
+	return expanded ?? written;
 }
 
 function documentTitleSource(lineTable: LineTable) {

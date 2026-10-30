@@ -5,15 +5,12 @@ import {
 } from "../../src/rdf12-projection/options";
 import {
 	createOrdinalAllocator,
-	documentResourceLocalId,
-	makeActivityLocalId,
-	makeAttributeLocalId,
-	makeBlockResourceLocalId,
-	makeLabelLocalId,
-	makeOccurrenceResourceLocalId,
-	makeProjectionLocalId,
-	makeResourceIri,
-	makeSourceLocalId,
+	documentIriFor,
+	headingIri,
+	headingNamespaceFor,
+	makePayloadLocalId,
+	makeXrefEdgeResourceLocalId,
+	projectionResourceIri,
 } from "../../src/rdf12-projection/resource-identity";
 import { normalizeSourceDigest } from "../../src/rdf12-projection/source-digest";
 
@@ -61,45 +58,45 @@ describe("rdf12 resource identity", () => {
 		);
 	});
 
-	it("builds resource IRIs from baseIri, documentKey, and local id only", () => {
-		const iri = makeResourceIri({
-			baseIri: "https://example.test/doc/",
-			documentKey: "doc-key",
-			localId: makeBlockResourceLocalId({
-				kind: "section",
-				startLine: 12,
-				ordinal: 0,
-			}),
-		});
-
-		expect(iri.value).toBe("https://example.test/doc/doc-key#section-l12-o0");
-		expect(iri.value).not.toContain("section-basics");
-		expect(iri.value).not.toContain("2. 基础概念");
-		expect(iri.value).not.toContain("sha256:");
+	it("names the document by its readable relative path", () => {
+		expect(documentIriFor("urn:aat:doc:", "books/07-菜谱/book.adoc")).toBe(
+			"urn:aat:doc:books/07-菜谱/book.adoc",
+		);
+		// 路径在 # 之前：? 会被读成查询部分的开头，# 会被读成片段的开头。
+		expect(documentIriFor("urn:aat:doc:", "a?b#c d.adoc")).toBe(
+			"urn:aat:doc:a%3Fb%23c%20d.adoc",
+		);
 	});
 
-	it("builds occurrence local ids with columns", () => {
+	it("names headings after their address and keeps projector resources apart", () => {
+		const document = "urn:aat:doc:book.adoc";
+
+		expect(headingNamespaceFor(document)).toBe("urn:aat:doc:book.adoc#");
+		expect(headingIri(document, "红烧肉::火候").value).toBe(
+			"urn:aat:doc:book.adoc#红烧肉::火候",
+		);
+		expect(headingIri(document, "It's A & B -- C").value).toBe(
+			"urn:aat:doc:book.adoc#It's%20A%20&%20B%20--%20C",
+		);
+		expect(projectionResourceIri(document, "source").value).toBe(
+			"urn:aat:doc:book.adoc/projection#source",
+		);
+		expect(headingIri(document, "source").value).not.toBe(
+			projectionResourceIri(document, "source").value,
+		);
+	});
+
+	it("builds projector local ids from source coordinates", () => {
 		expect(
-			makeOccurrenceResourceLocalId({
-				kind: "xref",
+			makeXrefEdgeResourceLocalId({
 				startLine: 10,
 				startColumn: 60,
 				ordinal: 1,
 			}),
-		).toBe("xref-l10-c60-o1");
-	});
-
-	it("provides stable local id helpers for non-structure resources", () => {
-		expect(documentResourceLocalId()).toBe("document");
-		expect(makeLabelLocalId({ startLine: 12, ordinal: 0 })).toBe(
-			"label-l12-o0",
+		).toBe("xref-edge-l10-c60-o1");
+		expect(makePayloadLocalId({ startLine: 12, ordinal: 0 })).toBe(
+			"payload-l12-o0",
 		);
-		expect(makeAttributeLocalId({ startLine: 12, ordinal: 0 })).toBe(
-			"attribute-l12-o0",
-		);
-		expect(makeProjectionLocalId()).toBe("projection");
-		expect(makeActivityLocalId()).toBe("activity");
-		expect(makeSourceLocalId()).toBe("source");
 	});
 
 	it("allocates stable ordinals for same kind, line, and column collisions", () => {
@@ -114,6 +111,6 @@ describe("rdf12 resource identity", () => {
 		expect(
 			allocator.next({ kind: "xref", startLine: 10, startColumn: 61 }),
 		).toBe(0);
-		expect(allocator.next({ kind: "section", startLine: 10 })).toBe(0);
+		expect(allocator.next({ kind: "payload", startLine: 10 })).toBe(0);
 	});
 });

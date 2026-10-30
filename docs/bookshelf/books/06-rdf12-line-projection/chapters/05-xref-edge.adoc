@@ -16,7 +16,7 @@ xref 所在的标题切片决定边的 source heading。
 
 === Target Heading
 
-xref 的 selector 由解析器给出：作者写下的目标在那个位置的属性取值下展开属性引用，再按官方规则切去 `#` 之前的文档部分（解析器规约第 8 章 Xref Occurrence）。selector 在标题投影 label 空间中绑定。标题投影 label 空间由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aat:headline` 构成；selector 不绑定到 role、字段谓词、xref display label、raw 文本或标题节点 IRI。
+xref 的 selector 由解析器给出：作者写下的目标在那个位置的属性取值下展开属性引用，再按官方规则切去 `#` 之前的文档部分（解析器规约第 8 章 Xref Occurrence）。selector 在标题投影 label 空间中按整串相等绑定；label 空间由地址路径、`aat:addressLabel` 与 `aat:generatedAddressLabel` 构成（xref:heading-address[地址与 Label 空间]）。`xref:红烧肉::火候[]` 的 selector 是 `红烧肉::火候`，绑定到红烧肉下的那一节火候。selector 不绑定到 role、字段谓词、xref display label、raw 文本或标题节点 IRI。
 
 指向别的文档的 xref 不在本文档的 label space 里绑定：边证据写 `aat:targetDocument`（文档部分）与 `aat:targetSelector`（片段），由读得到那份文档的消费者去绑定。
 
@@ -35,10 +35,10 @@ xref edge evidence 保留 selector 和官方解析事实。`aat:targetSelector` 
 [source,turtle]
 ----
 :xref-edge-l12-c4-o0 a aat:XrefEdge ;
-  aat:sourceHeading :heading-l5-o0 ;
+  aat:sourceHeading <#配送策略> ;
   aat:targetSelector "重复标题" ;
-  aat:candidateHeading :heading-l20-o0 ;
-  aat:candidateHeading :heading-l44-o0 ;
+  aat:candidateHeading <#配送策略::重复标题> ;
+  aat:candidateHeading <#运力规则::重复标题> ;
   aat:relativePath "samples/ambiguous.adoc" ;
   aat:startLine 12 ;
   aat:endLine 12 .
@@ -92,12 +92,12 @@ xref:capacity[运力规则, rel=depends-on]
 
 [source,turtle]
 ----
-:heading-l5-o0 rel:depends-on :heading-l39-o0 .
+<#配送策略> rel:depends-on <#运力规则> .
 
 :xref-edge-l8-c8-o0 a aat:XrefEdge ;
-  rdf:reifies <<( :heading-l5-o0 rel:depends-on :heading-l39-o0 )>> ;
-  aat:sourceHeading :heading-l5-o0 ;
-  aat:targetHeading :heading-l39-o0 ;
+  rdf:reifies <<( <#配送策略> rel:depends-on <#运力规则> )>> ;
+  aat:sourceHeading <#配送策略> ;
+  aat:targetHeading <#运力规则> ;
   aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;

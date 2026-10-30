@@ -1,16 +1,10 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { SectionNode } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
-import {
-	createRdf12Graph,
-	type Rdf12Graph,
-	rdf12Triple,
-} from "../../src/rdf12-projection/graph";
-import { projectLabels } from "../../src/rdf12-projection/labels";
+import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
+import { nameInIri } from "../../src/rdf12-projection/iri-name";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
-import { createRdf12NodeIndex } from "../../src/rdf12-projection/node-index";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm, type Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
@@ -19,6 +13,7 @@ import {
 	expectLiteralValue,
 	expectResourceTypeCount,
 	expectTriple,
+	headingStartingAt,
 	rdfTerm,
 	resourcesOfType,
 } from "./helpers/graph-matchers";
@@ -90,9 +85,12 @@ describe("rdf12 heading label space", () => {
 		expect(projection.labelCatalog.entries().length).toBeGreaterThan(0);
 		for (const entry of projection.labelCatalog.entries()) {
 			expect(headingOwners.has(entry.owner.value)).toBe(true);
-			expect(["headline", "addressLabel", "generatedAddressLabel"]).toContain(
-				entry.labelKind,
-			);
+			expect([
+				"headline",
+				"addressPath",
+				"addressLabel",
+				"generatedAddressLabel",
+			]).toContain(entry.labelKind);
 			expect("label" in entry).toBe(false);
 		}
 	});
@@ -104,9 +102,9 @@ describe("rdf12 heading label space", () => {
 		const [perfTableOwner] = projection.labelCatalog.owners("perf-table");
 		const [warningTextOwner] = projection.labelCatalog.owners("warning-text");
 
-		expect(engineCodeOwner?.value).toContain("#heading-l25-o0");
-		expect(perfTableOwner?.value).toContain("#heading-l40-o0");
-		expect(warningTextOwner?.value).toContain("#heading-l40-o0");
+		expect(engineCodeOwner).toEqual(headingStartingAt(projection.graph, 25));
+		expect(perfTableOwner).toEqual(headingStartingAt(projection.graph, 40));
+		expect(warningTextOwner).toEqual(headingStartingAt(projection.graph, 40));
 		expectLiteralValue(
 			projection.graph,
 			engineCodeOwner ?? iriTerm("urn:missing"),
@@ -136,7 +134,9 @@ describe("rdf12 heading label space", () => {
 			"rel-delivery-capacity",
 		);
 
-		expect(relDeliveryOwner?.value).toContain("#heading-l5-o0");
+		expect(relDeliveryOwner).toEqual(
+			headingStartingAt(payloadProjection.graph, 5),
+		);
 		expectLiteralValue(
 			payloadProjection.graph,
 			relDeliveryOwner ?? iriTerm("urn:missing"),
@@ -168,7 +168,7 @@ describe("rdf12 heading label space", () => {
 		);
 	});
 
-	it("does not use label values in heading IRIs", async () => {
+	it("names headings after their address, not after their aliases", async () => {
 		const projection = projectAbundantDocumentToRdf12(
 			await parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
@@ -182,16 +182,16 @@ describe("rdf12 heading label space", () => {
 		expect(deliveryPolicy).toEqual([expect.any(Object)]);
 		expect(capacityRule).toEqual([expect.any(Object)]);
 		expect(nestedGenerated).toEqual([expect.any(Object)]);
-		for (const owner of [
-			...deliveryPolicy,
-			...capacityRule,
-			...nestedGenerated,
-		]) {
-			expect(owner.value).toContain("#heading-l");
-			expect(owner.value).not.toContain("delivery");
-			expect(owner.value).not.toContain("capacity");
-			expect(owner.value).not.toContain("我是3级标题");
-		}
+		// 名字取最短的唯一地址路径，custom ID 与生成 ID 是别名，不进名字（06 号书第 2 章「身份」）。
+		expect(deliveryPolicy[0]?.value).toBe(
+			`${projection.headingNamespace}${nameInIri("配送策略")}`,
+		);
+		expect(capacityRule[0]?.value).toBe(
+			`${projection.headingNamespace}${nameInIri("运力规则")}`,
+		);
+		expect(nestedGenerated[0]?.value).toBe(
+			`${projection.headingNamespace}${nameInIri("我是3级标题")}`,
+		);
 	});
 
 	it("uses attrlist shorthand ids with roles as heading address labels only", async () => {
@@ -209,7 +209,7 @@ describe("rdf12 heading label space", () => {
 		);
 		const [heading] = projection.labelCatalog.owners("delivery-policy");
 
-		expect(heading?.value).toContain("#heading-l3-o0");
+		expect(heading?.value).toBe(`${projection.headingNamespace}配送策略`);
 		expect(projection.labelCatalog.owners("section")).toEqual([]);
 		expectTriple(
 			projection.graph,
@@ -217,67 +217,6 @@ describe("rdf12 heading label space", () => {
 			aatTerm("addressLabel"),
 			stringLiteral("delivery-policy"),
 		);
-	});
-
-	it("omits empty heading labels and unowned local target aliases", () => {
-		const graph = createRdf12Graph();
-		const nodeIndex = createRdf12NodeIndex();
-		const emptySection: SectionNode = {
-			kind: "section",
-			level: 1,
-			ids: [""],
-			title: "",
-			idOrigin: "source",
-		};
-		nodeIndex.set({
-			kind: "section",
-			node: emptySection,
-			iri: iriTerm("urn:test#empty-heading"),
-			localId: "empty-heading",
-			documentOrder: 1,
-			relativePath: "book.adoc",
-			sourceStartLine: 10,
-			sourceEndLine: 12,
-			startLine: 10,
-			endLine: 12,
-			targetType: "section",
-		});
-
-		const catalog = projectLabels({
-			graph,
-			document: {
-				kind: "document",
-				sourcePath: "book.adoc",
-				mode: "book-entry",
-				parser: { name: "@asciidoctor/core", version: "test" },
-				children: [],
-				targets: [
-					{
-						kind: "target",
-						id: "before-heading",
-						targetType: "inline-anchor",
-						idOrigin: "source",
-						source: { relativePath: "book.adoc" },
-						sourceSpan: {
-							start: { line: 3, column: 1 },
-							end: { line: 3, column: 18 },
-						},
-					},
-				],
-				xrefOccurrences: [],
-				anchorOccurrences: [],
-				headingInlineMetadataOccurrences: [],
-				toolDiagnostics: [],
-			},
-			baseIri: "https://example.invalid/",
-			documentKey: "book",
-			documentIri: iriTerm("urn:test#document"),
-			relativePath: "book.adoc",
-			nodeIndex,
-		});
-
-		expect(catalog.entries()).toEqual([]);
-		expect(graph.match({ predicate: aatTerm("addressLabel") })).toEqual([]);
 	});
 });
 

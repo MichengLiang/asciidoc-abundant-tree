@@ -37,11 +37,12 @@ describe("rdf12 reference-links query contract acceptance", () => {
 			"headline",
 			"3. 核心引擎设计",
 		);
-		expect(intro.value).toContain("#heading-l8-o0");
+		// 标题以标题原文命名，查到的就是作者引用它时写的地址（06 号书第 2 章「身份」）。
+		expect(intro.value).toBe(`${projection.headingNamespace}1.%20引言`);
 		expectLineSpan(projection.graph, intro, 8, 11);
-		expect(basics.value).toContain("#heading-l12-o0");
+		expect(basics.value).toBe(`${projection.headingNamespace}2.%20基础概念`);
 		expectLineSpan(projection.graph, basics, 12, 24);
-		expect(core.value).toContain("#heading-l25-o0");
+		expect(core.value).toBe(`${projection.headingNamespace}3.%20核心引擎设计`);
 		expectLineSpan(projection.graph, core, 25, 39);
 	});
 

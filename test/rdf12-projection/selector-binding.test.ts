@@ -10,6 +10,7 @@ import {
 	candidateNodesForSelector,
 } from "../../src/rdf12-projection/selector-binding";
 import { iriTerm } from "../../src/rdf12-projection/terms";
+import { headingStartingAt } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
@@ -22,7 +23,7 @@ describe("rdf12 selector binding", () => {
 		expect(result.status).toBe("bound");
 		expect(result.selector).toBe("section-basics");
 		if (result.status === "bound") {
-			expect(result.target.value).toContain("#heading-l12-o0");
+			expect(result.target).toEqual(headingStartingAt(projection.graph, 12));
 		}
 	});
 
@@ -33,27 +34,29 @@ describe("rdf12 selector binding", () => {
 
 		expect(generated.status).toBe("bound");
 		if (generated.status === "bound") {
-			expect(generated.target.value).toContain("#heading-l8-o0");
+			expect(generated.target).toEqual(headingStartingAt(projection.graph, 8));
 		}
 		expect(headline.status).toBe("bound");
 		if (headline.status === "bound") {
-			expect(headline.target.value).toContain("#heading-l25-o0");
+			expect(headline.target).toEqual(headingStartingAt(projection.graph, 25));
 		}
 	});
 
 	it("binds local non-heading target ids to their owning heading", async () => {
 		const reference = await referenceProjection();
 
-		for (const [selector, headingLocalId] of [
-			["engine-code", "#heading-l25-o0"],
-			["perf-table", "#heading-l40-o0"],
-			["warning-text", "#heading-l40-o0"],
+		for (const [selector, headingStartLine] of [
+			["engine-code", 25],
+			["perf-table", 40],
+			["warning-text", 40],
 		] as const) {
 			const result = bindSelector(reference.labelCatalog, selector);
 
 			expect(result.status).toBe("bound");
 			if (result.status === "bound") {
-				expect(result.target.value).toContain(headingLocalId);
+				expect(result.target).toEqual(
+					headingStartingAt(reference.graph, headingStartLine),
+				);
 			}
 		}
 	});
@@ -73,7 +76,7 @@ describe("rdf12 selector binding", () => {
 
 			expect(result.status).toBe("bound");
 			if (result.status === "bound") {
-				expect(result.target.value).toContain("#heading-l3-o0");
+				expect(result.target).toEqual(headingStartingAt(projection.graph, 3));
 			}
 		}
 	});
@@ -127,8 +130,8 @@ describe("rdf12 selector binding", () => {
 		if (result.status === "ambiguous") {
 			expect(result.selectorLiteral).toBe("Duplicate");
 			expect(result.candidates.map((candidate) => candidate.value)).toEqual([
-				expect.stringContaining("#heading-l1-o0"),
-				expect.stringContaining("#heading-l4-o0"),
+				headingStartingAt(projection.graph, 1).value,
+				headingStartingAt(projection.graph, 4).value,
 			]);
 			expect("target" in result).toBe(false);
 		}
@@ -137,8 +140,8 @@ describe("rdf12 selector binding", () => {
 				(candidate) => candidate.value,
 			),
 		).toEqual([
-			expect.stringContaining("#heading-l1-o0"),
-			expect.stringContaining("#heading-l4-o0"),
+			headingStartingAt(projection.graph, 1).value,
+			headingStartingAt(projection.graph, 4).value,
 		]);
 	});
 
@@ -152,8 +155,8 @@ describe("rdf12 selector binding", () => {
 		expect(result.status).toBe("ambiguous");
 		if (result.status === "ambiguous") {
 			expect(result.candidates.map((candidate) => candidate.value)).toEqual([
-				expect.stringContaining("#heading-l1-o0"),
-				expect.stringContaining("#heading-l5-o0"),
+				headingStartingAt(projection.graph, 1).value,
+				headingStartingAt(projection.graph, 5).value,
 			]);
 		}
 	});
@@ -166,7 +169,7 @@ describe("rdf12 selector binding", () => {
 
 		expect(result.status).toBe("bound");
 		if (result.status === "bound") {
-			expect(result.target.value).toContain("#heading-l1-o0");
+			expect(result.target).toEqual(headingStartingAt(projection.graph, 1));
 		}
 	});
 

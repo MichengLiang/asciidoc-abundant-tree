@@ -1,6 +1,20 @@
-import type { AbundantDocument, LineSpan, SectionNode } from "../model";
+import type {
+	AbundantDocument,
+	LineSpan,
+	SectionNode,
+	TargetNode,
+} from "../model";
 import { type Rdf12Graph, rdf12Triple } from "./graph";
 import {
+	buildHeadingAddressBook,
+	type HeadingAddressBook,
+} from "./heading-address";
+import {
+	findHeadingBySectionId,
+	findInnermostHeadingBySourceLine,
+} from "./heading-ownership";
+import {
+	type HeadingSlice,
 	resolveDocumentTitleHeadingSlice,
 	resolveHeadingSlice,
 } from "./heading-slice";
@@ -15,13 +29,9 @@ import {
 	createRdf12NodeIndex,
 	type MutableRdf12NodeIndex,
 	type Rdf12NodeIndex,
+	type Rdf12NodeIndexEntry,
 } from "./node-index";
-import {
-	createOrdinalAllocator,
-	makeHeadingResourceLocalId,
-	makeResourceIri,
-	type OrdinalAllocator,
-} from "./resource-identity";
+import { headingIri } from "./resource-identity";
 import {
 	addLineSpanTriples,
 	sourceRelativePathOrFallback,
@@ -31,176 +41,243 @@ import { iriTerm, type Rdf12IriTerm } from "./terms";
 export type ProjectStructureResourcesInput = {
 	readonly graph: Rdf12Graph;
 	readonly document: AbundantDocument;
-	readonly baseIri: string;
-	readonly documentKey: string;
-	readonly documentIri: Rdf12IriTerm;
+	readonly documentIri: string;
 	readonly relativePath: string;
 	readonly sourceText?: string;
 };
 
-type StructureProjectorContext = ProjectStructureResourcesInput & {
-	readonly nodeIndex: MutableRdf12NodeIndex;
-	readonly ordinalAllocator: OrdinalAllocator;
+export type HeadingNode = Rdf12NodeIndexEntry["node"];
+
+// 归属到标题的本地非标题 target ID：既是这个标题的地址，也写成它的 aat:addressLabel。
+export type HeadingTargetAlias = {
+	readonly owner: HeadingNode;
+	readonly id: string;
+};
+
+export type StructureProjection = {
+	readonly nodeIndex: Rdf12NodeIndex;
+	readonly addressBook: HeadingAddressBook<HeadingNode>;
+	readonly targetAliases: readonly HeadingTargetAlias[];
+};
+
+// 标题的切片与位置在名字之前定下：名字要看整份文档的 label 空间，其中有按位置归属的本地 target ID。
+type PlacedHeading = (Rdf12NodeIndexEntry extends infer Entry
+	? Entry extends Rdf12NodeIndexEntry
+		? Omit<Entry, "iri" | "localId">
+		: never
+	: never) & {
+	readonly entry: HeadingTreeEntry;
+	readonly slice: HeadingSlice;
 };
 
 export function projectStructureResources(
 	input: ProjectStructureResourcesInput,
-): Rdf12NodeIndex {
-	const context: StructureProjectorContext = {
-		...input,
-		nodeIndex: createRdf12NodeIndex(),
-		ordinalAllocator: createOrdinalAllocator(),
-	};
+): StructureProjection {
 	const headingTree = buildHeadingTreeProjection(input.document);
+	const placed = headingTree.entries.flatMap((entry) => {
+		const heading = placeHeading(input, entry);
+		return heading === undefined ? [] : [heading];
+	});
+	const targetAliases = collectTargetAliases(input, placed);
+	const addressBook = buildHeadingAddressBook(
+		placed.map((heading) => ({
+			key: heading.node,
+			...(heading.entry.parent !== undefined
+				? { parent: heading.entry.parent.node }
+				: {}),
+			headline: headlineOf(heading),
+			ids: heading.kind === "section" ? heading.node.ids : [],
+			idKind:
+				heading.kind === "section" &&
+				heading.node.idOrigin === "asciidoctor-generated"
+					? ("generatedAddressLabel" as const)
+					: ("addressLabel" as const),
+			targetAliases: targetAliases
+				.filter((alias) => alias.owner === heading.node)
+				.map((alias) => alias.id),
+		})),
+	);
 
-	for (const entry of headingTree.entries) {
-		projectHeadingTreeEntry(context, entry);
+	const nodeIndex = createRdf12NodeIndex();
+	for (const heading of placed) {
+		const name = addressBook.nameOf(heading.node);
+		if (name === undefined) {
+			continue;
+		}
+		projectHeading(input, nodeIndex, heading, name);
 	}
-	projectHeadingStructureEdges(context, headingTree);
+	projectHeadingStructureEdges(input.graph, nodeIndex, headingTree);
 
-	return context.nodeIndex;
+	return { nodeIndex, addressBook, targetAliases };
 }
 
-function projectHeadingTreeEntry(
-	context: StructureProjectorContext,
+function headlineOf(heading: PlacedHeading): string {
+	return heading.kind === "document-title"
+		? heading.node.text
+		: heading.node.title;
+}
+
+function placeHeading(
+	input: ProjectStructureResourcesInput,
 	entry: HeadingTreeEntry,
-): void {
-	if (entry.kind === "document-title") {
-		projectDocumentTitleHeading(context, entry);
-		return;
-	}
-
-	projectHeading(context, entry);
-}
-
-function projectDocumentTitleHeading(
-	context: StructureProjectorContext,
-	entry: HeadingTreeEntry & { readonly kind: "document-title" },
-): void {
-	const title = entry.node;
-	const sourceText =
-		context.document.mode === "book-entry"
-			? undefined
-			: (context.sourceText ?? context.document.sourceText);
-	const slice = resolveDocumentTitleHeadingSlice(context.document, {
-		...(sourceText !== undefined ? { sourceText } : {}),
-	});
-
-	if (slice === undefined) {
-		return;
-	}
-
-	const iri = createHeadingResource(context, {
-		startLine: slice.span.startLine,
-		span: slice.span,
-	});
-	const relativePath = title.source?.relativePath ?? context.relativePath;
-
-	addTypeAndSourceTriples(context.graph, iri, relativePath, slice.span);
-	addStringTriple(context.graph, iri, "headline", title.text);
-	addIntegerTriple(context.graph, iri, "headingLevel", 0);
-	addIntegerTriple(context.graph, iri, "documentOrder", entry.documentOrder);
-	addOptionalIntegerTriple(context.graph, iri, "childOrder", entry.childOrder);
-	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
-	addStringTriple(context.graph, iri, "raw", slice.raw);
-	addOptionalLineSpan(context.graph, iri, "content", slice.contentSpan);
-	context.nodeIndex.set({
-		node: title,
-		iri,
-		localId: localIdFromIri(iri),
-		kind: "document-title",
+): PlacedHeading | undefined {
+	const common = {
+		entry,
 		documentOrder: entry.documentOrder,
 		...(entry.childOrder !== undefined ? { childOrder: entry.childOrder } : {}),
+		targetType: "section" as const,
+	};
+	if (entry.kind === "document-title") {
+		const sourceText =
+			input.document.mode === "book-entry"
+				? undefined
+				: (input.sourceText ?? input.document.sourceText);
+		const slice = resolveDocumentTitleHeadingSlice(input.document, {
+			...(sourceText !== undefined ? { sourceText } : {}),
+		});
+		if (slice === undefined) {
+			return undefined;
+		}
+		const relativePath = entry.node.source?.relativePath ?? input.relativePath;
+		return {
+			...common,
+			node: entry.node,
+			kind: "document-title",
+			slice,
+			...(relativePath !== undefined
+				? {
+						relativePath,
+						sourceStartLine: slice.span.startLine,
+						sourceEndLine: slice.span.endLine,
+					}
+				: {}),
+			startLine: slice.span.startLine,
+			endLine: slice.span.endLine,
+		};
+	}
+
+	const slice = resolveHeadingSlice(entry.node);
+	if (slice === undefined) {
+		return undefined;
+	}
+	const relativePath = sourceRelativePathOrFallback(
+		entry.node.source,
+		input.relativePath,
+		input.document.mode,
+	);
+	return {
+		...common,
+		node: entry.node,
+		kind: "section",
+		slice,
 		...(relativePath !== undefined ? { relativePath } : {}),
-		...(relativePath !== undefined
-			? {
-					sourceStartLine: slice.span.startLine,
-					sourceEndLine: slice.span.endLine,
-				}
-			: {}),
+		...sourceScopeLines(input.document, entry.node, slice.span),
 		startLine: slice.span.startLine,
 		endLine: slice.span.endLine,
-		targetType: "section",
+	};
+}
+
+function collectTargetAliases(
+	input: ProjectStructureResourcesInput,
+	placed: readonly PlacedHeading[],
+): HeadingTargetAlias[] {
+	const headings = { entries: () => placed };
+	const aliases: HeadingTargetAlias[] = [];
+	for (const target of input.document.targets) {
+		if (
+			target.targetType === "section" ||
+			!target.id ||
+			(target.sourceSpan === undefined &&
+				target.containingSectionId === undefined)
+		) {
+			continue;
+		}
+		const owner =
+			findHeadingBySectionId(headings, target.containingSectionId) ??
+			ownerBySourceLine(input, headings, target);
+		if (owner !== undefined) {
+			aliases.push({ owner: owner.node, id: target.id });
+		}
+	}
+	return aliases;
+}
+
+function ownerBySourceLine(
+	input: ProjectStructureResourcesInput,
+	headings: { entries(): readonly PlacedHeading[] },
+	target: TargetNode,
+): PlacedHeading | undefined {
+	const relativePath = sourceRelativePathOrFallback(
+		target.source,
+		input.relativePath,
+		input.document.mode,
+	);
+	if (relativePath === undefined || target.sourceSpan === undefined) {
+		return undefined;
+	}
+	return findInnermostHeadingBySourceLine({
+		nodeIndex: headings,
+		relativePath,
+		line: target.sourceSpan.start.line,
 	});
 }
 
 function projectHeading(
-	context: StructureProjectorContext,
-	entry: HeadingTreeEntry & { readonly kind: "section" },
+	input: ProjectStructureResourcesInput,
+	nodeIndex: MutableRdf12NodeIndex,
+	heading: PlacedHeading,
+	name: string,
 ): void {
-	const node = entry.node;
-	const slice = resolveHeadingSlice(node);
+	const { graph } = input;
+	const iri = headingIri(input.documentIri, name);
+	const { slice } = heading;
 
-	if (slice === undefined) {
-		return;
+	addTypeAndSourceTriples(graph, iri, heading.relativePath, slice.span);
+	addStringTriple(graph, iri, "headline", headlineOf(heading));
+	addStringTriple(graph, iri, "name", name);
+	addIntegerTriple(
+		graph,
+		iri,
+		"headingLevel",
+		heading.kind === "section" ? heading.node.level : 0,
+	);
+	addIntegerTriple(graph, iri, "documentOrder", heading.documentOrder);
+	addOptionalIntegerTriple(graph, iri, "childOrder", heading.childOrder);
+	addIntegerTriple(graph, iri, "headingLine", slice.headingLine);
+	addStringTriple(graph, iri, "raw", slice.raw);
+	if (heading.kind === "section") {
+		addOptionalLineSpan(graph, iri, "metadata", slice.metadataSpan);
+	}
+	addOptionalLineSpan(graph, iri, "content", slice.contentSpan);
+	if (heading.kind === "section") {
+		addHeadingLabels(graph, iri, heading.node);
 	}
 
-	const iri = createHeadingResource(context, {
-		startLine: slice.span.startLine,
-		span: slice.span,
-	});
-	const relativePath = sourceRelativePathOrFallback(
-		node.source,
-		context.relativePath,
-		context.document.mode,
-	);
-
-	addTypeAndSourceTriples(context.graph, iri, relativePath, slice.span);
-	addIntegerTriple(context.graph, iri, "headingLine", slice.headingLine);
-	addIntegerTriple(context.graph, iri, "headingLevel", node.level);
-	addIntegerTriple(context.graph, iri, "documentOrder", entry.documentOrder);
-	addOptionalIntegerTriple(context.graph, iri, "childOrder", entry.childOrder);
-	addStringTriple(context.graph, iri, "headline", node.title);
-	addStringTriple(context.graph, iri, "raw", slice.raw);
-	addOptionalLineSpan(context.graph, iri, "metadata", slice.metadataSpan);
-	addOptionalLineSpan(context.graph, iri, "content", slice.contentSpan);
-	addHeadingLabels(context.graph, iri, node);
-	context.nodeIndex.set({
-		node,
-		iri,
-		localId: localIdFromIri(iri),
-		kind: "section",
-		documentOrder: entry.documentOrder,
-		...(entry.childOrder !== undefined ? { childOrder: entry.childOrder } : {}),
-		...(relativePath !== undefined ? { relativePath } : {}),
-		...sourceScopeLines(context.document, node, slice.span),
-		startLine: slice.span.startLine,
-		endLine: slice.span.endLine,
-		targetType: "section",
-	});
+	const { entry: _entry, slice: _slice, ...indexed } = heading;
+	nodeIndex.set({ ...indexed, iri, localId: name } as Rdf12NodeIndexEntry);
 }
 
 function projectHeadingStructureEdges(
-	context: StructureProjectorContext,
+	graph: Rdf12Graph,
+	nodeIndex: Rdf12NodeIndex,
 	headingTree: HeadingTreeProjection,
 ): void {
-	addHeadingStructureEdgesForChildren(context, undefined, headingTree.roots);
 	for (const entry of headingTree.entries) {
-		addHeadingStructureEdgesForChildren(context, entry, entry.children);
-	}
-}
-
-function addHeadingStructureEdgesForChildren(
-	context: StructureProjectorContext,
-	parent: HeadingTreeEntry | undefined,
-	children: readonly HeadingTreeEntry[],
-): void {
-	const parentIri =
-		parent === undefined ? undefined : context.nodeIndex.get(parent.node);
-	const projectedChildren = children.flatMap((child) => {
-		const iri = context.nodeIndex.get(child.node);
-		return iri === undefined ? [] : [iri];
-	});
-
-	for (const childIri of projectedChildren) {
-		if (parentIri !== undefined) {
-			context.graph.add(
-				rdf12Triple(
-					parentIri,
-					iriTerm(`${namespaces.aat}containsDirectly`),
-					childIri,
-				),
-			);
+		const parentIri = nodeIndex.get(entry.node);
+		if (parentIri === undefined) {
+			continue;
+		}
+		for (const child of entry.children) {
+			const childIri = nodeIndex.get(child.node);
+			if (childIri !== undefined) {
+				graph.add(
+					rdf12Triple(
+						parentIri,
+						iriTerm(`${namespaces.aat}containsDirectly`),
+						childIri,
+					),
+				);
+			}
 		}
 	}
 }
@@ -228,26 +305,6 @@ function sourceScopeLines(
 				sourceEndLine: sliceSpan.endLine,
 			}
 		: {};
-}
-
-function createHeadingResource(
-	context: StructureProjectorContext,
-	input: { readonly startLine: number; readonly span: LineSpan },
-): Rdf12IriTerm {
-	const ordinal = context.ordinalAllocator.next({
-		kind: "heading",
-		startLine: input.startLine,
-	});
-	const localId = makeHeadingResourceLocalId({
-		startLine: input.startLine,
-		ordinal,
-	});
-
-	return makeResourceIri({
-		baseIri: context.baseIri,
-		documentKey: context.documentKey,
-		localId,
-	});
 }
 
 function addTypeAndSourceTriples(
@@ -347,9 +404,4 @@ function addOptionalIntegerTriple(
 	}
 
 	addIntegerTriple(graph, subject, predicateLocalName, value);
-}
-
-function localIdFromIri(iri: Rdf12IriTerm): string {
-	const hashIndex = iri.value.lastIndexOf("#");
-	return hashIndex === -1 ? iri.value : iri.value.slice(hashIndex + 1);
 }

@@ -1,5 +1,6 @@
 {
 	"@context": {
+		"@base": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc",
 		"aat": "https://micheng.dev/ns/asciidoc-abundant-tree#",
 		"rel": "https://micheng.dev/ns/asciidoc-relation#",
 		"field": "https://micheng.dev/ns/asciidoc-field#",
@@ -12,58 +13,10 @@
 	},
 	"@graph": [
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-0",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-0",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#activity",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "http://www.w3.org/ns/prov#Activity",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-1",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#activity",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#ProjectionActivity",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-2",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#activity",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "http://www.w3.org/ns/prov#used",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#source",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-3",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -76,218 +29,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-4",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-1",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-5",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-6",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "1",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-7",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "2",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-8",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "0",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-9",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "1",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-10",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "冷链放行示例",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-11",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "= 冷链放行示例\n\n",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-12",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-13",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l1-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "1",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-14",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-15",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -304,10 +49,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-16",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-2",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -324,10 +69,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-17",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-3",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -344,10 +89,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-18",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-4",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -364,10 +109,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-19",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-5",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -384,10 +129,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-20",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-6",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -404,10 +149,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-21",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-7",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -424,10 +169,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-22",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-8",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -444,10 +189,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-23",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-9",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -464,10 +209,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-24",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-10",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -484,10 +229,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-25",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-11",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -504,10 +249,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-26",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-12",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -524,10 +269,30 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-27",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-13",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "冷链出库放行策略",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-14",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -544,10 +309,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-28",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-15",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -564,10 +329,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-29",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-16",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -584,10 +349,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-30",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-17",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -604,10 +369,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-31",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-18",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -624,10 +389,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-32",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-19",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -635,15 +400,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-33",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-20",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -651,15 +416,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l17-o0",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-34",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-21",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -676,10 +441,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-35",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-22",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -687,15 +452,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-36",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-23",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#冷链放行示例",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -708,10 +473,238 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-37",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-24",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "#冷链出库放行策略",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-25",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#containsDirectly",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "#温控审计规则",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-26",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-27",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-28",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-29",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-30",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "冷链放行示例",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-31",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "冷链放行示例",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-32",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "= 冷链放行示例\n\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-33",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-34",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#冷链放行示例",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-35",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#温控审计规则",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-36",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -728,10 +721,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-38",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-37",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -748,10 +741,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-39",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-38",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -768,10 +761,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-40",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-39",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -788,10 +781,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-41",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-40",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -808,10 +801,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-42",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-41",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -828,10 +821,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-43",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-42",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -848,10 +841,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-44",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-43",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -868,10 +861,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-45",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-44",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -888,10 +881,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-46",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-45",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -908,10 +901,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-47",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-46",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -928,10 +921,30 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-48",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-47",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "温控审计规则",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-48",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -948,10 +961,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-49",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-49",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -968,10 +981,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-50",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-50",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -988,10 +1001,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-51",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-51",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1008,10 +1021,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-52",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-52",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1028,10 +1041,58 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-53",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-53",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "http://www.w3.org/ns/prov#Activity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-54",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#ProjectionActivity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-55",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/ns/prov#used",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#source",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-56",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l17-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1048,10 +1109,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-54",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-57",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l17-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1068,10 +1129,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-55",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-58",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l17-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1088,10 +1149,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-56",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-59",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l17-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1108,10 +1169,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-57",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-60",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l17-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1128,10 +1189,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-58",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-61",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l17-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1148,10 +1209,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-59",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-62",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l17-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l17-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1168,10 +1229,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-60",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-63",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1188,10 +1249,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-61",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-64",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1208,10 +1269,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-62",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-65",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1228,10 +1289,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-63",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-66",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1248,10 +1309,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-64",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-67",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1268,10 +1329,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-65",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-68",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1288,10 +1349,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-66",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-69",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1308,10 +1369,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-67",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-70",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1328,10 +1389,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-68",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-71",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1348,10 +1409,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-69",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-72",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1368,10 +1429,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-70",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-73",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1388,10 +1449,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-71",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-74",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1408,10 +1469,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-72",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-75",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1428,10 +1489,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-73",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-76",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1448,10 +1509,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-74",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-77",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1468,10 +1529,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-75",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-78",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l8-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l8-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1488,10 +1549,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-76",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-79",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#projection",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1504,10 +1565,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-77",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-80",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#projection",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1520,10 +1581,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-78",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-81",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#projection",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1531,15 +1592,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#source",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#source",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-79",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-82",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#projection",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1547,15 +1608,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#source",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#source",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-80",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-83",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#projection",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1563,15 +1624,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#activity",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#activity",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-81",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-84",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#source",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#source",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1584,10 +1645,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-82",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-85",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#source",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#source",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1600,10 +1661,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-83",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-86",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#source",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#source",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1620,10 +1681,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-84",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-87",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1634,7 +1695,7 @@
 				"@type": "rdf12:TripleTerm",
 				"triple": {
 					"subject": {
-						"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+						"@id": "#冷链出库放行策略",
 						"@type": "rdf12:IriTerm"
 					},
 					"predicate": {
@@ -1642,17 +1703,17 @@
 						"@type": "rdf12:IriTerm"
 					},
 					"object": {
-						"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+						"@id": "#温控审计规则",
 						"@type": "rdf12:IriTerm"
 					}
 				}
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-85",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-88",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1665,10 +1726,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-86",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-89",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1685,10 +1746,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-87",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-90",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1705,10 +1766,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-88",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-91",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1725,10 +1786,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-89",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-92",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1745,10 +1806,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-90",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-93",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1765,10 +1826,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-91",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-94",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1785,10 +1846,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-92",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-95",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1805,10 +1866,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-93",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-96",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1825,10 +1886,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-94",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-97",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1845,10 +1906,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-95",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-98",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1865,10 +1926,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-96",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-99",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1876,15 +1937,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l3-o0",
+				"@id": "#冷链出库放行策略",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-97",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-100",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1901,10 +1962,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-98",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-101",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1921,10 +1982,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-99",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-102",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1941,10 +2002,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-100",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-103",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1961,10 +2022,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-101",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-104",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1972,15 +2033,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#heading-l37-o0",
+				"@id": "#温控审计规则",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-102",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-105",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1997,10 +2058,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-103",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-106",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2008,15 +2069,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#payload-l26-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#payload-l26-o0",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#statement-104",
+			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#statement-107",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:3c7bb810570e242b97d862b1ae8465d0c6155f39befb62ea8c6a8b1fa95ec5c5#xref-edge-l6-c12-o0",
+				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc/projection#xref-edge-l6-c12-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {

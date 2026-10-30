@@ -1,4 +1,30 @@
-import type { Rdf12NodeIndex, Rdf12NodeIndexEntry } from "./node-index";
+import type { SectionNode, TitleNode } from "../model";
+
+// 归属判断只用标题条目的位置与 section ID，不用 IRI：标题的名字要等本地 target 的归属定下以后才定得出来
+// （06 号书第 2 章「身份」），所以 IRI 生成之前的待定条目与 Rdf12NodeIndex 的条目都能交进来。
+export type HeadingOwnershipEntry =
+	| {
+			readonly kind: "section";
+			readonly node: SectionNode;
+			readonly relativePath?: string;
+			readonly sourceStartLine?: number;
+			readonly sourceEndLine?: number;
+			readonly startLine: number;
+			readonly endLine: number;
+	  }
+	| {
+			readonly kind: "document-title";
+			readonly node: TitleNode;
+			readonly relativePath?: string;
+			readonly sourceStartLine?: number;
+			readonly sourceEndLine?: number;
+			readonly startLine: number;
+			readonly endLine: number;
+	  };
+
+type HeadingEntries<T extends HeadingOwnershipEntry> = {
+	entries(): readonly T[];
+};
 
 /**
  * 出现处或目标所属的 section 对应的标题节点。
@@ -7,10 +33,10 @@ import type { Rdf12NodeIndex, Rdf12NodeIndexEntry } from "./node-index";
  * 同一个源文件里：被引入的文件没有自己的标题时，它属于引入它的那个标题。ID 在一份文档里唯一，
  * 仍多于一个候选时不选。
  */
-export function findHeadingBySectionId(
-	nodeIndex: Rdf12NodeIndex,
+export function findHeadingBySectionId<T extends HeadingOwnershipEntry>(
+	nodeIndex: HeadingEntries<T>,
 	sectionId: string | undefined,
-): Rdf12NodeIndexEntry | undefined {
+): T | undefined {
 	if (sectionId === undefined) {
 		return undefined;
 	}
@@ -23,11 +49,13 @@ export function findHeadingBySectionId(
 }
 
 // 只有来源坐标、没有所属 section 时的回退：按同一源文件里包含该行的最内层标题找。
-export function findInnermostHeadingBySourceLine(input: {
-	readonly nodeIndex: Rdf12NodeIndex;
+export function findInnermostHeadingBySourceLine<
+	T extends HeadingOwnershipEntry,
+>(input: {
+	readonly nodeIndex: HeadingEntries<T>;
 	readonly relativePath: string;
 	readonly line: number;
-}): Rdf12NodeIndexEntry | undefined {
+}): T | undefined {
 	const candidates = input.nodeIndex
 		.entries()
 		.filter((entry) => containsLine(entry, input))
@@ -51,7 +79,7 @@ export function findInnermostHeadingBySourceLine(input: {
 }
 
 function containsLine(
-	entry: Rdf12NodeIndexEntry,
+	entry: HeadingOwnershipEntry,
 	input: { readonly relativePath: string; readonly line: number },
 ): boolean {
 	return (
@@ -61,14 +89,14 @@ function containsLine(
 	);
 }
 
-function spanLength(entry: Rdf12NodeIndexEntry): number {
+function spanLength(entry: HeadingOwnershipEntry): number {
 	return endLine(entry) - startLine(entry);
 }
 
-function startLine(entry: Rdf12NodeIndexEntry): number {
+function startLine(entry: HeadingOwnershipEntry): number {
 	return entry.sourceStartLine ?? entry.startLine;
 }
 
-function endLine(entry: Rdf12NodeIndexEntry): number {
+function endLine(entry: HeadingOwnershipEntry): number {
 	return entry.sourceEndLine ?? entry.endLine;
 }

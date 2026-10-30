@@ -1,6 +1,14 @@
-import type { Rdf12Graph, Rdf12IriTerm } from "../rdf12-projection/graph";
+import type {
+	Rdf12Graph,
+	Rdf12IriTerm,
+	Rdf12Triple,
+} from "../rdf12-projection/graph";
 import { namespaces } from "../rdf12-projection/namespaces";
-import { iriTerm, rdf12TermKey } from "../rdf12-projection/terms";
+import {
+	iriTerm,
+	rdf12TermKey,
+	rdf12TripleTerm,
+} from "../rdf12-projection/terms";
 import { type ExportWarning, parsePayloadRaw } from "./payload-parser";
 import type { ExportedNode, SourceCoordinate } from "./yaml-shape";
 
@@ -138,24 +146,55 @@ function businessHeadingTerms(graph: Rdf12Graph): Rdf12IriTerm[] {
 	return [...headings.values()];
 }
 
+// 同一种关系的几个目标按引用在源文里的先后排列：located-at 的第一个是 environment。先后取自边证据的源坐标，
+// 不取 graph.match 的次序——那是三元组按 IRI 字符串排出来的，消费者不能从 IRI 读顺序（06 号书第 4 章）。
 function readRelations(
 	graph: Rdf12Graph,
 	heading: Rdf12IriTerm,
 ): Record<string, string[]> {
+	const relations = graph
+		.match({ subject: heading })
+		.flatMap((triple) => {
+			const rel = relationLocalName(triple.predicate);
+			if (rel === undefined || triple.object.termType !== "iri") {
+				return [];
+			}
+			const targetId =
+				firstLiteral(graph, triple.object, aat("addressLabel")) ??
+				firstLiteral(graph, triple.object, aat("generatedAddressLabel")) ??
+				firstLiteral(graph, triple.object, aat("headline")) ??
+				triple.object.value;
+			return [{ rel, targetId, position: relationPosition(graph, triple) }];
+		})
+		.toSorted(
+			(left, right) =>
+				left.position[0] - right.position[0] ||
+				left.position[1] - right.position[1],
+		);
 	const result: Record<string, string[]> = {};
-	for (const triple of graph.match({ subject: heading })) {
-		const rel = relationLocalName(triple.predicate);
-		if (rel === undefined || triple.object.termType !== "iri") {
-			continue;
-		}
-		const targetId =
-			firstLiteral(graph, triple.object, aat("addressLabel")) ??
-			firstLiteral(graph, triple.object, aat("generatedAddressLabel")) ??
-			firstLiteral(graph, triple.object, aat("headline")) ??
-			triple.object.value;
+	for (const { rel, targetId } of relations) {
 		result[rel] = [...(result[rel] ?? []), targetId];
 	}
 	return result;
+}
+
+function relationPosition(
+	graph: Rdf12Graph,
+	relation: Rdf12Triple,
+): readonly [number, number] {
+	const positions = graph
+		.match({ predicate: rdf("reifies"), object: rdf12TripleTerm(relation) })
+		.map(
+			(reifier) =>
+				[
+					firstInteger(graph, reifier.subject, aat("startLine")) ??
+						Number.MAX_SAFE_INTEGER,
+					firstInteger(graph, reifier.subject, aat("startColumn")) ??
+						Number.MAX_SAFE_INTEGER,
+				] as const,
+		)
+		.toSorted((left, right) => left[0] - right[0] || left[1] - right[1]);
+	return positions[0] ?? [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
 }
 
 function sourceCoordinate(
@@ -289,6 +328,10 @@ function relationLocalName(predicate: Rdf12IriTerm): string | undefined {
 	return predicate.value.startsWith(namespaces.rel)
 		? decodeURIComponent(predicate.value.slice(namespaces.rel.length))
 		: undefined;
+}
+
+function rdf(localName: string): Rdf12IriTerm {
+	return iriTerm(`${namespaces.rdf}${localName}`);
 }
 
 function aat(localName: string): Rdf12IriTerm {

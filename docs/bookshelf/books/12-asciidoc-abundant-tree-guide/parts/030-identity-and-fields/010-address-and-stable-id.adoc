@@ -17,10 +17,10 @@ heading label space 由 `aat:addressLabel`、`aat:generatedAddressLabel` 和 `aa
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 
-<urn:aat:doc:guide#heading-l1-o0> aat:addressLabel "delivery" ;
+<urn:aat:doc:guide#配送策略> aat:addressLabel "delivery" ;
   aat:headline "配送策略" .
 
-<urn:aat:doc:guide#heading-l4-o0> aat:generatedAddressLabel "_运力规则" ;
+<urn:aat:doc:guide#运力规则> aat:generatedAddressLabel "_运力规则" ;
   aat:headline "运力规则" .
 ----
 

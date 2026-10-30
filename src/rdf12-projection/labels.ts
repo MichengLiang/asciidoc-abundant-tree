@@ -1,126 +1,42 @@
-import type { AbundantDocument, TargetNode } from "../model";
 import { type Rdf12Graph, rdf12Triple } from "./graph";
 import {
-	findHeadingBySectionId,
-	findInnermostHeadingBySourceLine,
-} from "./heading-ownership";
-import {
 	createRdf12LabelCatalog,
-	type Rdf12HeadingLabelKind,
 	type Rdf12LabelCatalog,
 } from "./label-catalog";
 import { stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
-import type { Rdf12NodeIndex, Rdf12NodeIndexEntry } from "./node-index";
-import { sourceRelativePathOrFallback } from "./source-location";
-import { iriTerm, type Rdf12IriTerm } from "./terms";
+import type { StructureProjection } from "./structure-projector";
+import { iriTerm } from "./terms";
 
 export type ProjectLabelsInput = {
 	readonly graph: Rdf12Graph;
-	readonly document: AbundantDocument;
-	readonly baseIri: string;
-	readonly documentKey: string;
-	readonly documentIri: Rdf12IriTerm;
-	readonly relativePath: string;
-	readonly nodeIndex: Rdf12NodeIndex;
+	readonly structure: StructureProjection;
 };
 
+// label 空间就是标题的地址（06 号书第 2 章「地址与 Label 空间」）：地址路径、custom ID、归属到标题的本地 target ID
+// 与生成 ID。它们由 structure-projector 定名字时的同一份地址簿给出，绑定与命名用的是同一套地址。
 export function projectLabels(input: ProjectLabelsInput): Rdf12LabelCatalog {
+	const { nodeIndex, addressBook, targetAliases } = input.structure;
 	const catalog = createRdf12LabelCatalog();
 
-	for (const entry of input.nodeIndex.entries()) {
-		addHeadingLabels(catalog, entry);
+	for (const address of addressBook.addresses) {
+		const owner = nodeIndex.get(address.owner);
+		if (owner !== undefined) {
+			catalog.add({ owner, labelKind: address.kind, value: address.value });
+		}
 	}
-	for (const target of input.document.targets) {
-		addLocalTargetAlias(catalog, input, target);
+	for (const alias of targetAliases) {
+		const owner = nodeIndex.get(alias.owner);
+		if (owner !== undefined) {
+			input.graph.add(
+				rdf12Triple(
+					owner,
+					iriTerm(`${namespaces.aat}addressLabel`),
+					stringLiteral(alias.id),
+				),
+			);
+		}
 	}
 
 	return catalog;
-}
-
-function addHeadingLabels(
-	catalog: Rdf12LabelCatalog,
-	entry: Rdf12NodeIndexEntry,
-): void {
-	if (entry.kind === "document-title") {
-		addCatalogEntry(catalog, entry, "headline", entry.node.text);
-		return;
-	}
-
-	addCatalogEntry(catalog, entry, "headline", entry.node.title);
-	const labelKind: Rdf12HeadingLabelKind =
-		entry.node.idOrigin === "asciidoctor-generated"
-			? "generatedAddressLabel"
-			: "addressLabel";
-
-	for (const id of entry.node.ids) {
-		addCatalogEntry(catalog, entry, labelKind, id);
-	}
-}
-
-function addLocalTargetAlias(
-	catalog: Rdf12LabelCatalog,
-	input: ProjectLabelsInput,
-	target: TargetNode,
-): void {
-	if (
-		target.targetType === "section" ||
-		!target.id ||
-		(target.sourceSpan === undefined &&
-			target.containingSectionId === undefined)
-	) {
-		return;
-	}
-
-	const owner =
-		findHeadingBySectionId(input.nodeIndex, target.containingSectionId) ??
-		ownerBySourceLine(input, target);
-	if (owner === undefined) {
-		return;
-	}
-
-	addCatalogEntry(catalog, owner, "addressLabel", target.id);
-	input.graph.add(
-		rdf12Triple(
-			owner.iri,
-			iriTerm(`${namespaces.aat}addressLabel`),
-			stringLiteral(target.id),
-		),
-	);
-}
-
-function addCatalogEntry(
-	catalog: Rdf12LabelCatalog,
-	entry: Rdf12NodeIndexEntry,
-	labelKind: Rdf12HeadingLabelKind,
-	value: string | undefined,
-): void {
-	if (value === undefined || value.length === 0) {
-		return;
-	}
-
-	catalog.add({
-		owner: entry.iri,
-		labelKind,
-		value,
-	});
-}
-
-function ownerBySourceLine(
-	input: ProjectLabelsInput,
-	target: TargetNode,
-): Rdf12NodeIndexEntry | undefined {
-	const relativePath = sourceRelativePathOrFallback(
-		target.source,
-		input.relativePath,
-		input.document.mode,
-	);
-	if (relativePath === undefined || target.sourceSpan === undefined) {
-		return undefined;
-	}
-	return findInnermostHeadingBySourceLine({
-		nodeIndex: input.nodeIndex,
-		relativePath,
-		line: target.sourceSpan.start.line,
-	});
 }
