@@ -54,3 +54,16 @@ TypeDoc 只在 ``Rdf12Projection`` 收进文档以后才会对它们报同样的
 * 公开签名（函数参数与返回、导出类型的字段）里出现的每个类型，使用方都能从 ``.`` 或 ``./browser`` 入口按名字导入；
   或者签名不再露出它。哪些导出、哪些收进签名内部，由修的人按 09 号书第 10 章（CLI 与库 API）的公共契约定。
 * 判据可以直接写成测试：上面的 TypeDoc 命令对这两个入口不再报 "not included in the documentation"。
+
+## 采纳
+
+:采纳: 2026-10-31，小汤
+
+要做。读代码复核（f72e636）：七个类型仍未从入口导出。09 号书第 10 章「下游投影出口」写明 rdf12 要调用者提供投影选项、结果供下游继续使用，所以签名里露出的类型都要能按名字导入，没有收进签名内部的余地：七个全部从 . 入口导出，NodeBase、UnknownNode 在 model.ts 加 export，./browser 露出的同样导出；第 10 章补一句写明。判据照记录：TypeDoc 对两个入口不再报 not included in the documentation。
+
+## 解决
+
+:提交: 工作包 18.1（git log --grep "Work-Package: 18.1"）
+
+公共签名里出现的每个类型都从入口按名字导出（09 号书第 10 章「下游投影出口」新加的一段）。导出第一层以后，TypeDoc 又报出它们的方法签名露出的第二层，一路导出到闭合为止，共十四个：Rdf12Options、Rdf12Projection、Rdf12Graph、Rdf12TriplePattern、Rdf12Triple、Rdf12Term、Rdf12IriTerm、Rdf12LiteralTerm、Rdf12TripleTerm、Rdf12PrefixMap、Rdf12NodeIndex、Rdf12NodeIndexEntry，以及 model.ts 新加 export 的 NodeBase、UnknownNode（./browser 也导出这两个）。Rdf12PrefixMap 原是 typeof namespaces，改成具名的对象类型，免得签名引用一个内部常量；node-index.ts 里只作联合一支的 Rdf12HeadingIndexBase 就地写进联合，不另起公开名字。
+判据：TypeDoc 0.28 对 src/index.ts 与 src/browser.ts 不再报 “not included in the documentation”（只剩与本题无关的 git remote、bookshelf 路径两条）。新增 test/public-types.test.ts，按名字从两个入口 import 这些类型并用 expectTypeOf 对照 rdf12 的签名与结果字段，由 typecheck 核对。

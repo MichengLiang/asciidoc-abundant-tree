@@ -14,6 +14,7 @@ export type {
 	LineSpan,
 	ListingNode,
 	MetadataNode,
+	NodeBase,
 	OutputFormat,
 	ParagraphNode,
 	ParseAbundantTreeFromSourceOptions,
@@ -29,6 +30,7 @@ export type {
 	TextNode,
 	TitleNode,
 	ToolDiagnostic,
+	UnknownNode,
 	XrefOccurrenceNode,
 } from "./model";
 export {

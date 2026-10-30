@@ -7,7 +7,19 @@ export const prov = "http://www.w3.org/ns/prov#";
 export const dcterms = "http://purl.org/dc/terms/";
 export const xsd = "http://www.w3.org/2001/XMLSchema#";
 
-export const namespaces = {
+// 投影结果的 prefixes 字段就是这张表：它的类型写成具名的对象类型，使用方按名字导入它时不必引用这个常量。
+export type Rdf12PrefixMap = {
+	readonly aat: string;
+	readonly rel: string;
+	readonly field: string;
+	readonly rdf: string;
+	readonly rdfs: string;
+	readonly prov: string;
+	readonly dcterms: string;
+	readonly xsd: string;
+};
+
+export const namespaces: Rdf12PrefixMap = {
 	aat,
 	rel,
 	field,
@@ -16,4 +28,4 @@ export const namespaces = {
 	prov,
 	dcterms,
 	xsd,
-} as const;
+};

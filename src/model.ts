@@ -60,7 +60,7 @@ export type ToolDiagnostic = {
 	source?: SourceSpan;
 };
 
-type NodeBase = {
+export type NodeBase = {
 	kind: string;
 	source?: SourceLayer;
 	asciidoctor?: AsciidoctorLayer;
@@ -227,7 +227,7 @@ export type TextNode = NodeBase & {
 	value: string;
 };
 
-type UnknownNode = NodeBase & {
+export type UnknownNode = NodeBase & {
 	kind: "unknown";
 	raw?: string;
 };

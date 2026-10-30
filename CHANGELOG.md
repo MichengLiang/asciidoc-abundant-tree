@@ -4,6 +4,12 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## Unreleased
+
+### Added
+
+- Every type that appears in a public signature can be imported by name from the package entry: `Rdf12Options`, `Rdf12Projection`, `Rdf12Graph`, `Rdf12TriplePattern`, `Rdf12Triple`, `Rdf12Term`, `Rdf12IriTerm`, `Rdf12LiteralTerm`, `Rdf12TripleTerm`, `Rdf12PrefixMap`, `Rdf12NodeIndex`, `Rdf12NodeIndexEntry`, and the node types `NodeBase` and `UnknownNode` (also from `./browser`). Before, users could only reach them through `Parameters<typeof rdf12>[1]` or `Rdf12Result["graph"]`. `Rdf12PrefixMap` is now a named object type instead of `typeof` an internal constant.
+
 ## 0.5.0 - 2026-10-31
 
 ### Removed (breaking)

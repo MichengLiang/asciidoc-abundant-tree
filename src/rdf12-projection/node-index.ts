@@ -6,23 +6,21 @@ import type {
 } from "../model";
 import type { Rdf12IriTerm } from "./terms";
 
-type Rdf12HeadingIndexBase = {
-	readonly node: SectionNode;
-	readonly iri: Rdf12IriTerm;
-	readonly localId: string;
-	readonly kind: "section";
-	readonly documentOrder: number;
-	readonly childOrder?: number;
-	readonly relativePath?: string;
-	readonly sourceStartLine?: number;
-	readonly sourceEndLine?: number;
-	readonly startLine: number;
-	readonly endLine: number;
-	readonly targetType: "section";
-};
-
 export type Rdf12NodeIndexEntry =
-	| Rdf12HeadingIndexBase
+	| {
+			readonly node: SectionNode;
+			readonly iri: Rdf12IriTerm;
+			readonly localId: string;
+			readonly kind: "section";
+			readonly documentOrder: number;
+			readonly childOrder?: number;
+			readonly relativePath?: string;
+			readonly sourceStartLine?: number;
+			readonly sourceEndLine?: number;
+			readonly startLine: number;
+			readonly endLine: number;
+			readonly targetType: "section";
+	  }
 	| {
 			readonly node: TitleNode;
 			readonly iri: Rdf12IriTerm;

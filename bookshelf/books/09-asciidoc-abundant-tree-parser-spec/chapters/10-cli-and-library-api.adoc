@@ -52,4 +52,6 @@ CLI 参数错误、输入文件不存在和内部工具错误返回非零 exit c
 
 包导出 `rdf12(document, options)` 作为下游投影函数。下游投影函数以 `AbundantDocument` 为输入，并要求调用者提供自己的投影选项。它与 serializer 一样不调用 Asciidoctor，保持同步。
 
+公共签名里出现的每个类型，使用方都能从包的入口按名字导入：函数的参数与返回值、导出类型的字段用到的类型都在其中，例如 `rdf12` 的 `Rdf12Options`、结果的 `Rdf12Projection` 与它的 `Rdf12Graph`、`Rdf12PrefixMap`、`Rdf12NodeIndex`，以及节点联合用到的 `NodeBase`、`UnknownNode`。调用者要提供投影选项、要把结果交给自己的代码，就要写得出这些类型的名字；`./browser` 入口露出的类型同样从它导出。
+
 下游投影函数不改变解析器公共模型。它们定义自己的输出表面和验收条件。

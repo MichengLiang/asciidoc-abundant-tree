@@ -21,6 +21,7 @@ export type {
 	LineSpan,
 	ListingNode,
 	MetadataNode,
+	NodeBase,
 	OutputFormat,
 	ParagraphNode,
 	ParseAbundantTreeOptions,
@@ -36,9 +37,28 @@ export type {
 	TextNode,
 	TitleNode,
 	ToolDiagnostic,
+	UnknownNode,
 	XrefOccurrenceNode,
 } from "./model";
 export { parseAbundantTree } from "./parser";
+export type {
+	Rdf12Graph,
+	Rdf12TriplePattern,
+} from "./rdf12-projection/graph";
+export type { Rdf12PrefixMap } from "./rdf12-projection/namespaces";
+export type {
+	Rdf12NodeIndex,
+	Rdf12NodeIndexEntry,
+} from "./rdf12-projection/node-index";
+export type { Rdf12Options } from "./rdf12-projection/options";
+export type { Rdf12Projection } from "./rdf12-projection/projector";
+export type {
+	Rdf12IriTerm,
+	Rdf12LiteralTerm,
+	Rdf12Term,
+	Rdf12Triple,
+	Rdf12TripleTerm,
+} from "./rdf12-projection/terms";
 export {
 	formatAbundantTree,
 	serializeAbundantTree,

@@ -2,7 +2,7 @@ import type { AbundantDocument } from "../model";
 import { projectSurfaceAttributes } from "./attributes";
 import { createRdf12Graph, type Rdf12Graph } from "./graph";
 import { projectLabels } from "./labels";
-import { namespaces } from "./namespaces";
+import { namespaces, type Rdf12PrefixMap } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
 import { normalizeRdf12Options, type Rdf12Options } from "./options";
 import { computePathCoordinate } from "./path-coordinate";
@@ -13,8 +13,6 @@ import { normalizeSourceDigest } from "./source-digest";
 import { projectSourceFiles } from "./source-file-projector";
 import { projectStructureResources } from "./structure-projector";
 import { projectXrefResources } from "./xref-projector";
-
-export type Rdf12PrefixMap = typeof namespaces;
 
 export type Rdf12Projection = {
 	readonly graph: Rdf12Graph;
