@@ -23,7 +23,8 @@
 			"!samples/business-kg-js-demo/generated",
 			"!tmp",
 			"!*.tgz",
-			"!.wbs"
+			"!.wbs",
+			"!.bookgraph/cache"
 		]
 	},
 	"formatter": {
