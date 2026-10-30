@@ -17,7 +17,7 @@ image::assets/rain-street.jpg[]
 
 [source,turtle]
 ----
-<urn:aat:doc:...#雨夜街角参考图> a aat:Heading ;
+<urn:aat:doc:...#heading-1> a aat:Heading ;
   aat:addressLabel "asset-001" ;
   aat:headline "雨夜街角参考图" ;
   aat:role "photo" ;

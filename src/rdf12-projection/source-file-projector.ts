@@ -2,7 +2,7 @@ import type { AbundantDocument } from "../model";
 import { type Rdf12Graph, rdf12Triple } from "./graph";
 import { stringLiteral } from "./literals";
 import { namespaces } from "./namespaces";
-import { projectionResourceIri } from "./resource-identity";
+import { documentResourceIri } from "./resource-identity";
 import { iriTerm, type Rdf12IriTerm } from "./terms";
 
 export type ProjectSourceFilesInput = {
@@ -16,7 +16,7 @@ export function projectSourceFiles(input: ProjectSourceFilesInput): void {
 	const sourceFiles = input.document.sourceFiles ?? [];
 
 	for (const sourceFile of sourceFiles) {
-		const iri = projectionResourceIri(
+		const iri = documentResourceIri(
 			input.documentIri,
 			sourceFileLocalId(sourceFile.relativePath),
 		);

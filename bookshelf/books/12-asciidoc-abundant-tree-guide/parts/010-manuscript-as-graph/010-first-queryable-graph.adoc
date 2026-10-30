@@ -51,17 +51,17 @@ writeFileSync("projection/delivery.jsonld", projection.jsonLd);
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#> .
 @prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 
-<urn:aat:doc:...#配送策略> a aat:Heading ;
+<urn:aat:doc:...#heading-2> a aat:Heading ;
   aat:addressLabel "delivery" ;
   aat:headline "配送策略" ;
   aat:role "policy" ;
   field:status "active" ;
   field:owner "ops" ;
-  rel:depends-on <urn:aat:doc:...#运力规则> ;
+  rel:depends-on <urn:aat:doc:...#heading-3> ;
   aat:relativePath "source/delivery.adoc" ;
   aat:headingLine 4 .
 
-<urn:aat:doc:...#运力规则> a aat:Heading ;
+<urn:aat:doc:...#heading-3> a aat:Heading ;
   aat:addressLabel "capacity" ;
   aat:headline "运力规则" ;
   aat:role "rule" ;
@@ -72,7 +72,7 @@ writeFileSync("projection/delivery.jsonld", projection.jsonLd);
   aat:headingLine 9 .
 ----
 
-`urn:aat:doc:...` 是文档 IRI，`#` 之后是标题节点的名字，也就是引用这一节时写的地址。`delivery` 和 `capacity` 是这两个标题的别名，同样在 heading label space 中。引用写标题原文；消费者从 `aat:name` 读名字，不解析 IRI。
+`urn:aat:doc:...` 是文档 IRI，`#` 之后是投影器起的局部名 `heading-<N>`，`N` 是标题在文档里的先后。标题原文 `配送策略`、手写 ID `delivery` 都是这个节点的标签，同在 heading label space 中。引用写标题原文；消费者按标签反查标题，不解析 IRI。
 
 查询 active policy 的依赖：
 

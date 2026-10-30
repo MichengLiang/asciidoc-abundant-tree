@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
-import { nameInIri } from "../../src/rdf12-projection/iri-name";
 import {
 	integerLiteral,
 	stringLiteral,
@@ -29,11 +28,16 @@ describe("rdf12 structure projection", () => {
 		);
 
 		expect(headings).toHaveLength(4);
-		// 标题以地址命名（06 号书第 2 章「身份」）：四个标题原文各不相同，名字就是标题原文。
-		for (const name of ["root", "配送策略", "运力规则", "我是3级标题"]) {
-			const heading = `${projection.headingNamespace}${nameInIri(name)}`;
+		// 标题节点按 documentOrder 起名，标题原文是它的 headline 标签（06 号书第 2 章「身份」）。
+		for (const [order, headline] of [
+			[1, "root"],
+			[2, "配送策略"],
+			[3, "运力规则"],
+			[4, "我是3级标题"],
+		] as const) {
+			const heading = `${projection.documentIri}#heading-${order}`;
 			expect(headings).toContain(heading);
-			expectStringTriple(projection.graph, heading, "name", name);
+			expectStringTriple(projection.graph, heading, "headline", headline);
 			expectStringTriple(
 				projection.graph,
 				heading,
@@ -179,7 +183,7 @@ Port:: 8080
 		const projection = await structuralPayloadProjection();
 		const rootEntry = projection.nodeIndex
 			.entries()
-			.find((entry) => entry.localId === "root");
+			.find((entry) => entry.localId === "heading-1");
 
 		expect(rootEntry).toMatchObject({
 			kind: "document-title",
@@ -193,7 +197,7 @@ Port:: 8080
 		const projection = await structuralPayloadProjection();
 		const rootEntry = projection.nodeIndex
 			.entries()
-			.find((entry) => entry.localId === "root");
+			.find((entry) => entry.localId === "heading-1");
 		const root = headingStartingAt(projection.graph, 1).value;
 
 		if (rootEntry === undefined) {

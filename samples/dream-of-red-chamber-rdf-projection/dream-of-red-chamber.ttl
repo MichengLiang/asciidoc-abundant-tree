@@ -1,4 +1,3 @@
-@base <urn:aat:doc:samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc>.
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix field: <https://micheng.dev/ns/asciidoc-field#>.
@@ -7,196 +6,168 @@
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix : <urn:aat:doc:samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc#>.
 
-<#刘姥姥> a aat:Heading;
-    aat:addressLabel "liulaolao";
-    aat:childOrder 26;
-    aat:contentEndLine 458;
-    aat:contentStartLine 447;
-    aat:documentOrder 27;
-    aat:endLine 459;
+:activity a prov:Activity, aat:ProjectionActivity;
+    prov:used :source.
+:heading-10 a aat:Heading;
+    aat:addressLabel "wangxifeng";
+    aat:addressPath "红楼梦人物志::王熙凤";
+    aat:childOrder 9;
+    aat:contentEndLine 164;
+    aat:contentStartLine 145;
+    aat:documentOrder 10;
+    aat:endLine 165;
     aat:headingLevel 1;
-    aat:headingLine 445;
-    aat:headline "刘姥姥";
-    aat:metadataEndLine 444;
-    aat:metadataStartLine 444;
-    aat:name "刘姥姥";
-    aat:raw """[#liulaolao.section, faction=乡野, gender=女, generation=老一辈]
-== 刘姥姥
+    aat:headingLine 143;
+    aat:headline "王熙凤";
+    aat:metadataEndLine 142;
+    aat:metadataStartLine 142;
+    aat:raw """[#wangxifeng.section, faction=荣国府, gender=女, generation=第四代]
+== 王熙凤
 
-乡下老妪，与贾府八竿子打不着的远亲。
-她三进荣国府，是全书结构上最重要的线索人物。
+荣国府的实际管家人，人称"凤辣子"。
+xref:王夫人[王夫人, rel=niece-of, weight=0.6] 的内侄女，
+xref:贾琏[贾琏, rel=married-to, weight=0.5] 的妻子。
 
-一进荣国府时她小心翼翼，打秋风求接济。
-二进荣国府时她装疯卖傻，逗得贾母开怀大笑——
-"刘姥姥进大观园"的典故就出于此。
-三进荣国府时贾府已经败落，
-她仗义营救了 xref:巧姐[巧姐, rel=rescues, weight=0.9]，
-报答了当年的恩情。
+她精明能干、八面玲珑，把偌大一个荣国府打理得井井有条。
+"协理宁国府"一回最见她的才干——
+秦可卿去世后她受命料理丧事，事无巨细，安排得妥妥帖帖。
 
-刘姥姥看似粗鄙，实则大智若愚。
-她的存在，是对贾府奢靡生活最辛辣的对照。
+但她也心狠手辣。
+"弄权铁槛寺"中她收受贿赂，拆散一对有情人，逼得两条人命。
+尤二姐之死更是她一手导演——
+先哄骗尤二姐进府，再借秋桐之手百般折磨，最终逼其吞金自尽。
+
+她是 xref:贾母[贾母, rel=granddaughter-in-law-of, weight=0.6] 最得力的帮手，
+贾母的起居饮食都由她安排。
+但贾母去世后，她失去了靠山，在府中日渐孤立。
+
+与 xref:贾琏[贾琏, rel=married-to, weight=0.5] 的夫妻关系从恩爱走向反目。
+她的判词"机关算尽太聪明，反算了卿卿性命"，
+道尽了这个人物的悲剧。
 
 """;
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
     aat:role "section";
-    aat:startLine 444;
-    field:faction "乡野";
-    field:gender "女";
-    field:generation "老一辈".
-<#史湘云> a aat:Heading;
-    aat:addressLabel "shixiangyun";
-    aat:childOrder 20;
-    aat:contentEndLine 359;
-    aat:contentStartLine 341;
-    aat:documentOrder 21;
-    aat:endLine 360;
-    aat:headingLevel 1;
-    aat:headingLine 339;
-    aat:headline "史湘云";
-    aat:metadataEndLine 338;
-    aat:metadataStartLine 338;
-    aat:name "史湘云";
-    aat:raw """[#shixiangyun.section, faction=史家, gender=女, generation=第四代]
-== 史湘云
-
-贾母的侄孙女，史侯家的小姐。
-自幼父母双亡，由叔叔抚养长大。
-她性格豪爽，大大咧咧，是大观园中最开朗的姑娘。
-
-"憨湘云醉眠芍药裀"是全书最美的场景之一——
-她喝醉了酒，躺在石凳上睡着了，
-芍药花飞了一身，蜂围蝶绕。
-她还有咬舌的毛病，把"二哥哥"叫成"爱哥哥"，
-宝玉听了只是笑。
-
-她与 xref:林黛玉[林黛玉, rel=cousin, weight=0.5] 是表亲，
-两人同住过一段时间，感情不错。
-她也擅长作诗，与 xref:薛宝钗[薛宝钗, rel=poetry-friend, weight=0.6] 交好，
-两人常一起切磋诗艺。
-
-史湘云的结局众说纷纭，
-但"因麒麟伏白首双星"暗示她后来嫁了个如意郎君。
-
-// 大观园外
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 338;
-    field:faction "史家";
+    aat:startLine 142;
+    field:faction "荣国府";
     field:gender "女";
     field:generation "第四代";
-    rel:cousin <#林黛玉>;
-    rel:poetry-friend <#薛宝钗>.
-<#妙玉> a aat:Heading;
-    aat:addressLabel "miaoyu";
-    aat:childOrder 25;
-    aat:contentEndLine 442;
-    aat:contentStartLine 431;
-    aat:documentOrder 26;
-    aat:endLine 443;
+    rel:granddaughter-in-law-of :heading-3;
+    rel:married-to :heading-9;
+    rel:niece-of :heading-5.
+:heading-11 a aat:Heading;
+    aat:addressLabel "jiayuanchun";
+    aat:addressPath "红楼梦人物志::贾元春";
+    aat:childOrder 10;
+    aat:contentEndLine 180;
+    aat:contentStartLine 169;
+    aat:documentOrder 11;
+    aat:endLine 181;
     aat:headingLevel 1;
-    aat:headingLine 429;
-    aat:headline "妙玉";
-    aat:metadataEndLine 428;
-    aat:metadataStartLine 428;
-    aat:name "妙玉";
-    aat:raw """[#miaoyu.section, faction=大观园, gender=女, generation=出家人]
-== 妙玉
+    aat:headingLine 167;
+    aat:headline "贾元春";
+    aat:metadataEndLine 166;
+    aat:metadataStartLine 166;
+    aat:raw """[#jiayuanchun.section, faction=荣国府, gender=女, generation=第四代]
+== 贾元春
 
-栊翠庵的带发修行尼姑。
-出身官宦世家，因体弱多病而出家。
-她才华出众，诗才不凡，
-"凹晶馆联诗悲寂寞"一回中与黛玉、湘云联诗，
-写出了"寒塘渡鹤影，冷月葬花魂"的千古名句。
+贾政与王夫人的长女，入宫为妃。
+省亲一回是全书最华丽的场景——
+大观园就是为她省亲而建，耗资巨大。
 
-妙玉孤傲清高，连刘姥姥用过的茶杯她都嫌脏要扔掉。
-但她的结局却是全书中最悲惨的——
-"可怜金玉质，终陷淖泥中"，
-暗示她最终沦落风尘。
+元春在宫中并不快乐。
+她说当日既送我到那不得见人的去处，
+道尽了深宫寂寞。
+她的死讯传来，贾府上下一片哀恸，
+也预示着贾家最大的靠山轰然倒塌。
 
-// 刘姥姥
+与 xref:贾宝玉[贾宝玉, rel=sister-of, weight=0.7] 兄妹情深，
+宝玉的名字就是她取的。
 
 """;
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
     aat:role "section";
-    aat:startLine 428;
-    field:faction "大观园";
-    field:gender "女";
-    field:generation "出家人".
-<#尤三姐> a aat:Heading;
-    aat:addressLabel "yousanjie";
-    aat:childOrder 24;
-    aat:contentEndLine 426;
-    aat:contentStartLine 416;
-    aat:documentOrder 25;
-    aat:endLine 427;
-    aat:headingLevel 1;
-    aat:headingLine 414;
-    aat:headline "尤三姐";
-    aat:metadataEndLine 413;
-    aat:metadataStartLine 413;
-    aat:name "尤三姐";
-    aat:raw """[#yousanjie.section, faction=尤家, gender=女, generation=第四代]
-== 尤三姐
-
-尤二姐之妹，性格刚烈。
-她虽然也曾与贾珍厮混，却立誓要嫁给自己看中的人。
-她看中的是柳湘莲，非他不嫁。
-
-但柳湘莲听信了关于她品行不端的传言，
-上门退婚。尤三姐当场拔剑自刎，
-以死明志。
-"揉碎桃花红满地，玉山倾倒再难扶"——
-这是全书中最惨烈的死亡场景之一。
-
-// 金陵十二钗 · 正册之外
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 413;
-    field:faction "尤家";
-    field:gender "女";
-    field:generation "第四代".
-<#尤二姐> a aat:Heading;
-    aat:addressLabel "youerjie";
-    aat:childOrder 23;
-    aat:contentEndLine 411;
-    aat:contentStartLine 403;
-    aat:documentOrder 24;
-    aat:endLine 412;
-    aat:headingLevel 1;
-    aat:headingLine 401;
-    aat:headline "尤二姐";
-    aat:metadataEndLine 400;
-    aat:metadataStartLine 400;
-    aat:name "尤二姐";
-    aat:raw """[#youerjie.section, faction=尤家, gender=女, generation=第四代]
-== 尤二姐
-
-尤氏继母带来的女儿，容貌标致。
-她先与贾珍有染，后被 xref:贾琏[贾琏, rel=concubine-of, weight=0.7] 偷娶为外室。
-王熙凤得知后，将她骗入大观园，
-借秋桐之手百般折磨，最终逼她吞金自尽。
-
-尤二姐的悲剧在于她太天真——
-她以为进了贾府就能安生过日子，
-没想到 xref:王熙凤[rel=destroyed-by, weight=0.9] 会置她于死地。
-她死时腹中还有胎儿，一尸两命。
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 400;
-    field:faction "尤家";
+    aat:startLine 166;
+    field:faction "荣国府";
     field:gender "女";
     field:generation "第四代";
-    rel:concubine-of <#贾琏>;
-    rel:destroyed-by <#王熙凤>.
-<#晴雯> a aat:Heading;
+    rel:sister-of :heading-8.
+:heading-12 a aat:Heading;
+    aat:addressLabel "jiabaochai";
+    aat:addressPath "红楼梦人物志::贾兰";
+    aat:childOrder 11;
+    aat:contentEndLine 193;
+    aat:contentStartLine 185;
+    aat:documentOrder 12;
+    aat:endLine 194;
+    aat:headingLevel 1;
+    aat:headingLine 183;
+    aat:headline "贾兰";
+    aat:metadataEndLine 182;
+    aat:metadataStartLine 182;
+    aat:raw """[#jiabaochai.section, faction=荣国府, gender=男, generation=第四代]
+== 贾兰
+
+贾珠之子，李纨之子。
+父亲早亡，由母亲独自抚养长大。
+他勤奋好学，一心想通过科举重振家业。
+
+与 xref:贾宝玉[贾宝玉, rel=brother-of-paternal-cousin, weight=0.3] 是堂叔侄，
+性格天差地别——宝玉厌学，贾兰苦读。
+最终贾兰中举，算是贾家衰败后的一缕曙光。
+
+// 荣国府 · 丫鬟
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 182;
+    field:faction "荣国府";
+    field:gender "男";
+    field:generation "第四代";
+    rel:brother-of-paternal-cousin :heading-8.
+:heading-13 a aat:Heading;
+    aat:addressLabel "xiren";
+    aat:addressPath "红楼梦人物志::袭人";
+    aat:childOrder 12;
+    aat:contentEndLine 209;
+    aat:contentStartLine 198;
+    aat:documentOrder 13;
+    aat:endLine 210;
+    aat:headingLevel 1;
+    aat:headingLine 196;
+    aat:headline "袭人";
+    aat:metadataEndLine 195;
+    aat:metadataStartLine 195;
+    aat:raw """[#xiren.section, faction=荣国府, gender=女, generation=丫鬟]
+== 袭人
+
+贾宝玉的首席丫鬟，本名花珍珠。
+温柔和顺，忠心耿耿，是宝玉身边最稳重的人。
+她与宝玉有肌肤之亲（"贾宝玉初试云雨情"一回），
+暗中已被视为宝玉的准姨娘。
+
+袭人深谙为人处世之道，
+在王夫人面前进言，建议将宝玉搬出大观园，
+得到王夫人的赏识。
+但这也让她在宝玉房中的处境微妙——
+xref:晴雯[晴雯, rel=rival-servant, weight=0.5] 就曾当面嘲讽她"哈巴狗"。
+
+她最终嫁给了蒋玉菡，算是丫鬟中结局较好的。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 195;
+    field:faction "荣国府";
+    field:gender "女";
+    field:generation "丫鬟";
+    rel:rival-servant :heading-14.
+:heading-14 a aat:Heading;
     aat:addressLabel "qingwen";
+    aat:addressPath "红楼梦人物志::晴雯";
     aat:childOrder 13;
     aat:contentEndLine 224;
     aat:contentStartLine 214;
@@ -207,7 +178,6 @@
     aat:headline "晴雯";
     aat:metadataEndLine 211;
     aat:metadataStartLine 211;
-    aat:name "晴雯";
     aat:raw """[#qingwen.section, faction=荣国府, gender=女, generation=丫鬟]
 == 晴雯
 
@@ -230,9 +200,217 @@
     field:faction "荣国府";
     field:gender "女";
     field:generation "丫鬟";
-    rel:rival-servant <#袭人>.
-<#林黛玉> a aat:Heading;
+    rel:rival-servant :heading-13.
+:heading-15 a aat:Heading;
+    aat:addressLabel "yuanyang";
+    aat:addressPath "红楼梦人物志::鸳鸯";
+    aat:childOrder 14;
+    aat:contentEndLine 233;
+    aat:contentStartLine 229;
+    aat:documentOrder 15;
+    aat:endLine 234;
+    aat:headingLevel 1;
+    aat:headingLine 227;
+    aat:headline "鸳鸯";
+    aat:metadataEndLine 226;
+    aat:metadataStartLine 226;
+    aat:raw """[#yuanyang.section, faction=荣国府, gender=女, generation=丫鬟]
+== 鸳鸯
+
+贾母的首席大丫鬟，贾母须臾离不得她。
+贾赦想纳她为妾，她宁死不从，在贾母面前断发明志。
+贾母去世后，她自缢殉主，是全书中最有骨气的丫鬟。
+
+// 薛家
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 226;
+    field:faction "荣国府";
+    field:gender "女";
+    field:generation "丫鬟".
+:heading-16 a aat:Heading;
+    aat:addressLabel "xueyiniang";
+    aat:addressPath "红楼梦人物志::薛姨妈";
+    aat:childOrder 15;
+    aat:contentEndLine 250;
+    aat:contentStartLine 238;
+    aat:documentOrder 16;
+    aat:endLine 251;
+    aat:headingLevel 1;
+    aat:headingLine 236;
+    aat:headline "薛姨妈";
+    aat:metadataEndLine 235;
+    aat:metadataStartLine 235;
+    aat:raw """[#xueyiniang.section, faction=薛家, gender=女, generation=第三代]
+== 薛姨妈
+
+薛宝钗之母，王夫人的亲妹妹。
+薛家是皇商，"珍珠如土金如铁"，
+但到了薛姨妈这一代已经大不如前。
+她带着一双儿女进京，寄居贾府梨香院。
+
+薛姨妈性格温厚，不像姐姐王夫人那样严厉。
+她对 xref:薛宝钗[薛宝钗, rel=mother-of, weight=0.9] 教养有方，
+养出了一个端庄贤淑的女儿。
+对 xref:薛蟠[薛蟠, rel=mother-of, weight=0.5] 则过于溺爱，
+纵得他无法无天。
+
+她与 xref:王夫人[王夫人, rel=sister-of, weight=0.7] 姐妹感情深厚，
+两人心照不宣地推动"金玉良缘"。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 235;
+    field:faction "薛家";
+    field:gender "女";
+    field:generation "第三代";
+    rel:mother-of :heading-17, :heading-18;
+    rel:sister-of :heading-5.
+:heading-17 a aat:Heading;
+    aat:addressLabel "xuebaochai";
+    aat:addressPath "红楼梦人物志::薛宝钗";
+    aat:childOrder 16;
+    aat:contentEndLine 273;
+    aat:contentStartLine 255;
+    aat:documentOrder 17;
+    aat:endLine 274;
+    aat:headingLevel 1;
+    aat:headingLine 253;
+    aat:headline "薛宝钗";
+    aat:metadataEndLine 252;
+    aat:metadataStartLine 252;
+    aat:raw """[#xuebaochai.section, faction=薛家, gender=女, generation=第四代]
+== 薛宝钗
+
+薛姨妈之女，薛蟠之妹。
+品格端方，容貌丰美，是大观园中最符合世俗标准的大家闺秀。
+她佩戴金锁，上头的字与宝玉通灵宝玉上的字恰好是一对——
+这就是"金玉良缘"的由来。
+
+宝钗博学多才，诗才不在黛玉之下。
+"蘅芜苑夜拟菊花题"一回中，
+她与史湘云深夜商议诗题，展现了不凡的学识。
+但她也有务实的一面——
+她劝宝玉留心仕途经济，被宝玉当场下逐客令。
+
+与 xref:林黛玉[林黛玉, rel=rival-in-love, weight=0.8] 的关系最耐人寻味。
+两人从最初的暗中较劲，到后来的惺惺相惜，
+"金兰契互剖金兰语"一回中两人推心置腹，成为知己。
+最终宝钗嫁给了宝玉，却得不到他的心，
+守着一个心如死灰的丈夫，同样是悲剧。
+
+与 xref:贾宝玉[贾宝玉, rel=married-to, weight=0.6] 的婚姻是全书最大的讽刺——
+得到了人，得不到心。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 252;
+    field:faction "薛家";
+    field:gender "女";
+    field:generation "第四代";
+    rel:married-to :heading-8;
+    rel:rival-in-love :heading-20.
+:heading-18 a aat:Heading;
+    aat:addressLabel "xuepan";
+    aat:addressPath "红楼梦人物志::薛蟠";
+    aat:childOrder 17;
+    aat:contentEndLine 286;
+    aat:contentStartLine 278;
+    aat:documentOrder 18;
+    aat:endLine 287;
+    aat:headingLevel 1;
+    aat:headingLine 276;
+    aat:headline "薛蟠";
+    aat:metadataEndLine 275;
+    aat:metadataStartLine 275;
+    aat:raw """[#xuepan.section, faction=薛家, gender=男, generation=第四代]
+== 薛蟠
+
+薛姨妈之子，宝钗之兄。
+人称"呆霸王"，是全书中最典型的纨绔子弟。
+他打死冯渊，抢走香菱（甄英莲），
+靠贾府的关系才摆平了官司——这就是"葫芦僧判断葫芦案"。
+
+薛蟠粗鄙不堪，在学堂里闹出许多丑事。
+但他对妹妹 xref:薛宝钗[薛宝钗, rel=brother-of, weight=0.4] 还算有几分兄妹情。
+他娶了夏金桂，婚后被悍妻拿捏得死死的，
+算是因果报应。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 275;
+    field:faction "薛家";
+    field:gender "男";
+    field:generation "第四代";
+    rel:brother-of :heading-17.
+:heading-19 a aat:Heading;
+    aat:addressLabel "xiangling";
+    aat:addressPath "红楼梦人物志::香菱";
+    aat:childOrder 18;
+    aat:contentEndLine 301;
+    aat:contentStartLine 291;
+    aat:documentOrder 19;
+    aat:endLine 302;
+    aat:headingLevel 1;
+    aat:headingLine 289;
+    aat:headline "香菱";
+    aat:metadataEndLine 288;
+    aat:metadataStartLine 288;
+    aat:raw """[#xiangling.section, faction=薛家, gender=女, generation=丫鬟]
+== 香菱
+
+本名甄英莲，甄士隐之女。
+幼年被拐，几经辗转被薛蟠强买为妾。
+她生得清秀，性情温婉，跟 xref:薛宝钗[薛宝钗, rel=serves, weight=0.5] 学诗，
+"慕雅女雅集苦吟诗"一回写她痴迷诗的样子十分动人。
+
+香菱是全书中最令人怜惜的人物之一——
+从乡宦之女沦为奴婢，命运对她太不公。
+她的判词"根并荷花一茎香，平生遭际实堪伤"，
+道尽了她的一生。
+
+// 林家
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 288;
+    field:faction "薛家";
+    field:gender "女";
+    field:generation "丫鬟";
+    rel:serves :heading-17.
+:heading-1 a aat:Heading;
+    aat:containsDirectly :heading-10, :heading-11, :heading-12, :heading-13, :heading-14, :heading-15, :heading-16, :heading-17, :heading-18, :heading-19, :heading-20, :heading-21, :heading-22, :heading-23, :heading-24, :heading-25, :heading-26, :heading-27, :heading-2, :heading-3, :heading-4, :heading-5, :heading-6, :heading-7, :heading-8, :heading-9;
+    aat:contentEndLine 11;
+    aat:contentStartLine 2;
+    aat:documentOrder 1;
+    aat:endLine 12;
+    aat:headingLevel 0;
+    aat:headingLine 1;
+    aat:headline "红楼梦人物志";
+    aat:raw """= 红楼梦人物志
+弥澄亮
+v0.2, 2026-05
+:doctype: article
+:idprefix:
+:idseparator: -
+:toc: left
+
+本文以 AsciiDoc 结构化写作的方式，梳理《红楼梦》核心人物及其关系。
+每个二级标题是一个人物，xref 宏承载人物之间的语义关系（rel=），
+投影工具可自动提取为知识图谱。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 1.
+:heading-20 a aat:Heading;
     aat:addressLabel "lindaiyu";
+    aat:addressPath "红楼梦人物志::林黛玉";
     aat:childOrder 19;
     aat:contentEndLine 336;
     aat:contentStartLine 306;
@@ -243,7 +421,6 @@
     aat:headline "林黛玉";
     aat:metadataEndLine 303;
     aat:metadataStartLine 303;
-    aat:name "林黛玉";
     aat:raw """[#lindaiyu.section, faction=林家, gender=女, generation=第四代]
 == 林黛玉
 
@@ -286,96 +463,58 @@ xref:贾母[贾母, rel=granddaughter-of, weight=0.85] 是她的外祖母，
     field:faction "林家";
     field:gender "女";
     field:generation "第四代";
-    rel:disliked-by <#王夫人>;
-    rel:granddaughter-of <#贾母>;
-    rel:loves <#贾宝玉>;
-    rel:rival-in-love <#薛宝钗>.
-<#王夫人> a aat:Heading;
-    aat:addressLabel "wangfuren";
-    aat:childOrder 4;
-    aat:contentEndLine 72;
-    aat:contentStartLine 63;
-    aat:documentOrder 5;
-    aat:endLine 73;
+    rel:disliked-by :heading-5;
+    rel:granddaughter-of :heading-3;
+    rel:loves :heading-8;
+    rel:rival-in-love :heading-17.
+:heading-21 a aat:Heading;
+    aat:addressLabel "shixiangyun";
+    aat:addressPath "红楼梦人物志::史湘云";
+    aat:childOrder 20;
+    aat:contentEndLine 359;
+    aat:contentStartLine 341;
+    aat:documentOrder 21;
+    aat:endLine 360;
     aat:headingLevel 1;
-    aat:headingLine 61;
-    aat:headline "王夫人";
-    aat:metadataEndLine 60;
-    aat:metadataStartLine 60;
-    aat:name "王夫人";
-    aat:raw """[#wangfuren.section, faction=荣国府, gender=女, generation=第三代]
-== 王夫人
+    aat:headingLine 339;
+    aat:headline "史湘云";
+    aat:metadataEndLine 338;
+    aat:metadataStartLine 338;
+    aat:raw """[#shixiangyun.section, faction=史家, gender=女, generation=第四代]
+== 史湘云
 
-贾政之妻，宝玉之母。
-出身金陵王家，与 xref:王熙凤[王熙凤, rel=aunt-of, weight=0.6] 是姑侄。
-为人木讷老实，不善言辞，但心地并不慈善。
-她抄检大观园、撵走晴雯，手段狠辣。
+贾母的侄孙女，史侯家的小姐。
+自幼父母双亡，由叔叔抚养长大。
+她性格豪爽，大大咧咧，是大观园中最开朗的姑娘。
 
-王夫人吃斋念佛，看似与世无争，
-实则对 xref:林黛玉[林黛玉, rel=dislikes, weight=0.7] 颇有成见，
-认为她体弱多病、性情乖张，不宜做宝玉的妻子。
-她更属意 xref:薛宝钗[薛宝钗, rel=Prefers-as-daughter-in-law, weight=0.8]，
-因为宝钗性格稳重，符合她心中贤妻的标准。
+"憨湘云醉眠芍药裀"是全书最美的场景之一——
+她喝醉了酒，躺在石凳上睡着了，
+芍药花飞了一身，蜂围蝶绕。
+她还有咬舌的毛病，把"二哥哥"叫成"爱哥哥"，
+宝玉听了只是笑。
+
+她与 xref:林黛玉[林黛玉, rel=cousin, weight=0.5] 是表亲，
+两人同住过一段时间，感情不错。
+她也擅长作诗，与 xref:薛宝钗[薛宝钗, rel=poetry-friend, weight=0.6] 交好，
+两人常一起切磋诗艺。
+
+史湘云的结局众说纷纭，
+但"因麒麟伏白首双星"暗示她后来嫁了个如意郎君。
+
+// 大观园外
 
 """;
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
     aat:role "section";
-    aat:startLine 60;
-    field:faction "荣国府";
-    field:gender "女";
-    field:generation "第三代";
-    rel:Prefers-as-daughter-in-law <#薛宝钗>;
-    rel:aunt-of <#王熙凤>;
-    rel:dislikes <#林黛玉>.
-<#王熙凤> a aat:Heading;
-    aat:addressLabel "wangxifeng";
-    aat:childOrder 9;
-    aat:contentEndLine 164;
-    aat:contentStartLine 145;
-    aat:documentOrder 10;
-    aat:endLine 165;
-    aat:headingLevel 1;
-    aat:headingLine 143;
-    aat:headline "王熙凤";
-    aat:metadataEndLine 142;
-    aat:metadataStartLine 142;
-    aat:name "王熙凤";
-    aat:raw """[#wangxifeng.section, faction=荣国府, gender=女, generation=第四代]
-== 王熙凤
-
-荣国府的实际管家人，人称"凤辣子"。
-xref:王夫人[王夫人, rel=niece-of, weight=0.6] 的内侄女，
-xref:贾琏[贾琏, rel=married-to, weight=0.5] 的妻子。
-
-她精明能干、八面玲珑，把偌大一个荣国府打理得井井有条。
-"协理宁国府"一回最见她的才干——
-秦可卿去世后她受命料理丧事，事无巨细，安排得妥妥帖帖。
-
-但她也心狠手辣。
-"弄权铁槛寺"中她收受贿赂，拆散一对有情人，逼得两条人命。
-尤二姐之死更是她一手导演——
-先哄骗尤二姐进府，再借秋桐之手百般折磨，最终逼其吞金自尽。
-
-她是 xref:贾母[贾母, rel=granddaughter-in-law-of, weight=0.6] 最得力的帮手，
-贾母的起居饮食都由她安排。
-但贾母去世后，她失去了靠山，在府中日渐孤立。
-
-与 xref:贾琏[贾琏, rel=married-to, weight=0.5] 的夫妻关系从恩爱走向反目。
-她的判词"机关算尽太聪明，反算了卿卿性命"，
-道尽了这个人物的悲剧。
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 142;
-    field:faction "荣国府";
+    aat:startLine 338;
+    field:faction "史家";
     field:gender "女";
     field:generation "第四代";
-    rel:granddaughter-in-law-of <#贾母>;
-    rel:married-to <#贾琏>;
-    rel:niece-of <#王夫人>.
-<#秦可卿> a aat:Heading;
+    rel:cousin :heading-20;
+    rel:poetry-friend :heading-17.
+:heading-22 a aat:Heading;
     aat:addressLabel "qinkeqing";
+    aat:addressPath "红楼梦人物志::秦可卿";
     aat:childOrder 21;
     aat:contentEndLine 379;
     aat:contentStartLine 364;
@@ -386,7 +525,6 @@ xref:贾琏[贾琏, rel=married-to, weight=0.5] 的妻子。
     aat:headline "秦可卿";
     aat:metadataEndLine 361;
     aat:metadataStartLine 361;
-    aat:name "秦可卿";
     aat:raw """[#qinkeqing.section, faction=宁国府, gender=女, generation=第四代]
 == 秦可卿
 
@@ -414,260 +552,403 @@ xref:贾琏[贾琏, rel=married-to, weight=0.5] 的妻子。
     field:faction "宁国府";
     field:gender "女";
     field:generation "第四代";
-    rel:scandal-with <#贾珍>.
-<#红楼梦人物志> a aat:Heading;
-    aat:containsDirectly <#刘姥姥>, <#史湘云>, <#妙玉>, <#尤三姐>, <#尤二姐>, <#晴雯>, <#林黛玉>, <#王夫人>, <#王熙凤>, <#秦可卿>, <#薛姨妈>, <#薛宝钗>, <#薛蟠>, <#袭人>, <#贾元春>, <#贾兰>, <#贾宝玉>, <#贾府概况>, <#贾政>, <#贾母>, <#贾珍>, <#贾琏>, <#贾赦>, <#邢夫人>, <#香菱>, <#鸳鸯>;
-    aat:contentEndLine 11;
-    aat:contentStartLine 2;
-    aat:documentOrder 1;
-    aat:endLine 12;
-    aat:headingLevel 0;
-    aat:headingLine 1;
-    aat:headline "红楼梦人物志";
-    aat:name "红楼梦人物志";
-    aat:raw """= 红楼梦人物志
-弥澄亮
-v0.2, 2026-05
-:doctype: article
-:idprefix:
-:idseparator: -
-:toc: left
-
-本文以 AsciiDoc 结构化写作的方式，梳理《红楼梦》核心人物及其关系。
-每个二级标题是一个人物，xref 宏承载人物之间的语义关系（rel=），
-投影工具可自动提取为知识图谱。
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:startLine 1.
-<#薛姨妈> a aat:Heading;
-    aat:addressLabel "xueyiniang";
-    aat:childOrder 15;
-    aat:contentEndLine 250;
-    aat:contentStartLine 238;
-    aat:documentOrder 16;
-    aat:endLine 251;
+    rel:scandal-with :heading-23.
+:heading-23 a aat:Heading;
+    aat:addressLabel "jiashen";
+    aat:addressPath "红楼梦人物志::贾珍";
+    aat:childOrder 22;
+    aat:contentEndLine 398;
+    aat:contentStartLine 384;
+    aat:documentOrder 23;
+    aat:endLine 399;
     aat:headingLevel 1;
-    aat:headingLine 236;
-    aat:headline "薛姨妈";
-    aat:metadataEndLine 235;
-    aat:metadataStartLine 235;
-    aat:name "薛姨妈";
-    aat:raw """[#xueyiniang.section, faction=薛家, gender=女, generation=第三代]
-== 薛姨妈
+    aat:headingLine 382;
+    aat:headline "贾珍";
+    aat:metadataEndLine 381;
+    aat:metadataStartLine 381;
+    aat:raw """[#jiashen.section, faction=宁国府, gender=男, generation=第三代]
+== 贾珍
 
-薛宝钗之母，王夫人的亲妹妹。
-薛家是皇商，"珍珠如土金如铁"，
-但到了薛姨妈这一代已经大不如前。
-她带着一双儿女进京，寄居贾府梨香院。
+宁国府当家人，贾敬之子。
+袭了三品将军之爵，却不务正业，
+整日与狐朋狗友饮酒作乐。
 
-薛姨妈性格温厚，不像姐姐王夫人那样严厉。
-她对 xref:薛宝钗[薛宝钗, rel=mother-of, weight=0.9] 教养有方，
-养出了一个端庄贤淑的女儿。
-对 xref:薛蟠[薛蟠, rel=mother-of, weight=0.5] 则过于溺爱，
-纵得他无法无天。
+他与 xref:秦可卿[秦可卿, rel=scandal-with, weight=0.9] 的丑闻
+是宁国府最大的污点。
+秦可卿死后他"哭得泪人一般"，
+超出了公公对儿媳应有的悲痛程度。
 
-她与 xref:王夫人[王夫人, rel=sister-of, weight=0.7] 姐妹感情深厚，
-两人心照不宣地推动"金玉良缘"。
+贾珍还霸占了 xref:尤二姐[尤二姐, rel=harasses, weight=0.6] 和
+xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
+与贾蓉父子麀聚，荒淫无度。
+宁国府最终先一步被抄家，正是"箕裘颓堕皆从敬，家事消亡首罪宁"。
+
+// 尤氏姐妹
 
 """;
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
     aat:role "section";
-    aat:startLine 235;
-    field:faction "薛家";
+    aat:startLine 381;
+    field:faction "宁国府";
+    field:gender "男";
+    field:generation "第三代";
+    rel:harasses :heading-24, :heading-25;
+    rel:scandal-with :heading-22.
+:heading-24 a aat:Heading;
+    aat:addressLabel "youerjie";
+    aat:addressPath "红楼梦人物志::尤二姐";
+    aat:childOrder 23;
+    aat:contentEndLine 411;
+    aat:contentStartLine 403;
+    aat:documentOrder 24;
+    aat:endLine 412;
+    aat:headingLevel 1;
+    aat:headingLine 401;
+    aat:headline "尤二姐";
+    aat:metadataEndLine 400;
+    aat:metadataStartLine 400;
+    aat:raw """[#youerjie.section, faction=尤家, gender=女, generation=第四代]
+== 尤二姐
+
+尤氏继母带来的女儿，容貌标致。
+她先与贾珍有染，后被 xref:贾琏[贾琏, rel=concubine-of, weight=0.7] 偷娶为外室。
+王熙凤得知后，将她骗入大观园，
+借秋桐之手百般折磨，最终逼她吞金自尽。
+
+尤二姐的悲剧在于她太天真——
+她以为进了贾府就能安生过日子，
+没想到 xref:王熙凤[rel=destroyed-by, weight=0.9] 会置她于死地。
+她死时腹中还有胎儿，一尸两命。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 400;
+    field:faction "尤家";
+    field:gender "女";
+    field:generation "第四代";
+    rel:concubine-of :heading-9;
+    rel:destroyed-by :heading-10.
+:heading-25 a aat:Heading;
+    aat:addressLabel "yousanjie";
+    aat:addressPath "红楼梦人物志::尤三姐";
+    aat:childOrder 24;
+    aat:contentEndLine 426;
+    aat:contentStartLine 416;
+    aat:documentOrder 25;
+    aat:endLine 427;
+    aat:headingLevel 1;
+    aat:headingLine 414;
+    aat:headline "尤三姐";
+    aat:metadataEndLine 413;
+    aat:metadataStartLine 413;
+    aat:raw """[#yousanjie.section, faction=尤家, gender=女, generation=第四代]
+== 尤三姐
+
+尤二姐之妹，性格刚烈。
+她虽然也曾与贾珍厮混，却立誓要嫁给自己看中的人。
+她看中的是柳湘莲，非他不嫁。
+
+但柳湘莲听信了关于她品行不端的传言，
+上门退婚。尤三姐当场拔剑自刎，
+以死明志。
+"揉碎桃花红满地，玉山倾倒再难扶"——
+这是全书中最惨烈的死亡场景之一。
+
+// 金陵十二钗 · 正册之外
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 413;
+    field:faction "尤家";
+    field:gender "女";
+    field:generation "第四代".
+:heading-26 a aat:Heading;
+    aat:addressLabel "miaoyu";
+    aat:addressPath "红楼梦人物志::妙玉";
+    aat:childOrder 25;
+    aat:contentEndLine 442;
+    aat:contentStartLine 431;
+    aat:documentOrder 26;
+    aat:endLine 443;
+    aat:headingLevel 1;
+    aat:headingLine 429;
+    aat:headline "妙玉";
+    aat:metadataEndLine 428;
+    aat:metadataStartLine 428;
+    aat:raw """[#miaoyu.section, faction=大观园, gender=女, generation=出家人]
+== 妙玉
+
+栊翠庵的带发修行尼姑。
+出身官宦世家，因体弱多病而出家。
+她才华出众，诗才不凡，
+"凹晶馆联诗悲寂寞"一回中与黛玉、湘云联诗，
+写出了"寒塘渡鹤影，冷月葬花魂"的千古名句。
+
+妙玉孤傲清高，连刘姥姥用过的茶杯她都嫌脏要扔掉。
+但她的结局却是全书中最悲惨的——
+"可怜金玉质，终陷淖泥中"，
+暗示她最终沦落风尘。
+
+// 刘姥姥
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 428;
+    field:faction "大观园";
+    field:gender "女";
+    field:generation "出家人".
+:heading-27 a aat:Heading;
+    aat:addressLabel "liulaolao";
+    aat:addressPath "红楼梦人物志::刘姥姥";
+    aat:childOrder 26;
+    aat:contentEndLine 458;
+    aat:contentStartLine 447;
+    aat:documentOrder 27;
+    aat:endLine 459;
+    aat:headingLevel 1;
+    aat:headingLine 445;
+    aat:headline "刘姥姥";
+    aat:metadataEndLine 444;
+    aat:metadataStartLine 444;
+    aat:raw """[#liulaolao.section, faction=乡野, gender=女, generation=老一辈]
+== 刘姥姥
+
+乡下老妪，与贾府八竿子打不着的远亲。
+她三进荣国府，是全书结构上最重要的线索人物。
+
+一进荣国府时她小心翼翼，打秋风求接济。
+二进荣国府时她装疯卖傻，逗得贾母开怀大笑——
+"刘姥姥进大观园"的典故就出于此。
+三进荣国府时贾府已经败落，
+她仗义营救了 xref:巧姐[巧姐, rel=rescues, weight=0.9]，
+报答了当年的恩情。
+
+刘姥姥看似粗鄙，实则大智若愚。
+她的存在，是对贾府奢靡生活最辛辣的对照。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 444;
+    field:faction "乡野";
+    field:gender "女";
+    field:generation "老一辈".
+:heading-2 a aat:Heading;
+    aat:addressPath "红楼梦人物志::贾府概况";
+    aat:childOrder 1;
+    aat:contentEndLine 23;
+    aat:contentStartLine 15;
+    aat:documentOrder 2;
+    aat:endLine 24;
+    aat:generatedAddressLabel "贾府概况";
+    aat:headingLevel 1;
+    aat:headingLine 13;
+    aat:headline "贾府概况";
+    aat:raw """== 贾府概况
+
+贾府分宁、荣二公之后，以荣国府为主线。
+府中四代人，从贾母的慈威并施，到宝玉的叛逆出走，
+写尽了一个钟鸣鼎食之家由盛转衰的全过程。
+
+宁国府一支以贾珍为首，荒淫无度，先一步败落。
+荣国府则在贾母的庇护下多撑了几年，
+最终也难逃抄家之运。
+
+// 荣国府 · 第二代
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 13.
+:heading-3 a aat:Heading;
+    aat:addressLabel "jiamu";
+    aat:addressPath "红楼梦人物志::贾母";
+    aat:childOrder 2;
+    aat:contentEndLine 41;
+    aat:contentStartLine 28;
+    aat:documentOrder 3;
+    aat:endLine 42;
+    aat:headingLevel 1;
+    aat:headingLine 26;
+    aat:headline "贾母";
+    aat:metadataEndLine 25;
+    aat:metadataStartLine 25;
+    aat:raw """[#jiamu.section, faction=荣国府, gender=女, generation=第二代]
+== 贾母
+
+贾府的定海神针，人称"老祖宗"。
+史侯之女，嫁入贾家后主持荣国府数十年。
+年事虽高，心思通透，府中大小事务逃不过她的眼。
+
+她最疼爱 xref:贾宝玉[贾宝玉, rel=grandmother-of, weight=0.9]，
+为此不惜与 xref:贾政[贾政, rel=mother-of, weight=0.5] 的严厉管教对着干。
+xref:林黛玉[林黛玉, rel=grandmother-of, weight=0.85] 是她嫡亲外孙女，
+自幼接来身边教养，疼爱有加。
+
+贾母善于享乐，听戏、赏花、摆宴样样精通。
+她主持的元宵夜宴、中秋赏月，是全书最热闹的场景。
+但这份热闹底下，藏着她对家族前途的隐忧。
+
+// 荣国府 · 第三代
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 25;
+    field:faction "荣国府";
+    field:gender "女";
+    field:generation "第二代";
+    rel:grandmother-of :heading-20, :heading-8;
+    rel:mother-of :heading-4.
+:heading-4 a aat:Heading;
+    aat:addressLabel "jiazheng";
+    aat:addressPath "红楼梦人物志::贾政";
+    aat:childOrder 3;
+    aat:contentEndLine 58;
+    aat:contentStartLine 46;
+    aat:documentOrder 4;
+    aat:endLine 59;
+    aat:headingLevel 1;
+    aat:headingLine 44;
+    aat:headline "贾政";
+    aat:metadataEndLine 43;
+    aat:metadataStartLine 43;
+    aat:raw """[#jiazheng.section, faction=荣国府, gender=男, generation=第三代]
+== 贾政
+
+荣国府二老爷，工部员外郎。
+为人方正古板，一心望子成龙。
+对 xref:贾宝玉[贾宝玉, rel=father-of, weight=0.3] 管教极严，
+动辄训斥，曾将宝玉打得皮开肉绽（"不肖种种大承笞挞"一回）。
+
+贾政其实文才平平，却偏爱附庸风雅，
+养了一群清客相公谈诗论文。
+他内心对宝玉的聪慧并非不知，只是恨铁不成钢。
+
+与 xref:王夫人[王夫人, rel=married-to, weight=0.5] 夫妻多年，
+感情平淡，相敬如宾。
+xref:贾母[贾母, rel=son-of, weight=0.5] 是他的母亲，
+他在母亲面前始终恭顺，不敢违拗。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 43;
+    field:faction "荣国府";
+    field:gender "男";
+    field:generation "第三代";
+    rel:father-of :heading-8;
+    rel:married-to :heading-5;
+    rel:son-of :heading-3.
+:heading-5 a aat:Heading;
+    aat:addressLabel "wangfuren";
+    aat:addressPath "红楼梦人物志::王夫人";
+    aat:childOrder 4;
+    aat:contentEndLine 72;
+    aat:contentStartLine 63;
+    aat:documentOrder 5;
+    aat:endLine 73;
+    aat:headingLevel 1;
+    aat:headingLine 61;
+    aat:headline "王夫人";
+    aat:metadataEndLine 60;
+    aat:metadataStartLine 60;
+    aat:raw """[#wangfuren.section, faction=荣国府, gender=女, generation=第三代]
+== 王夫人
+
+贾政之妻，宝玉之母。
+出身金陵王家，与 xref:王熙凤[王熙凤, rel=aunt-of, weight=0.6] 是姑侄。
+为人木讷老实，不善言辞，但心地并不慈善。
+她抄检大观园、撵走晴雯，手段狠辣。
+
+王夫人吃斋念佛，看似与世无争，
+实则对 xref:林黛玉[林黛玉, rel=dislikes, weight=0.7] 颇有成见，
+认为她体弱多病、性情乖张，不宜做宝玉的妻子。
+她更属意 xref:薛宝钗[薛宝钗, rel=Prefers-as-daughter-in-law, weight=0.8]，
+因为宝钗性格稳重，符合她心中贤妻的标准。
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 60;
+    field:faction "荣国府";
     field:gender "女";
     field:generation "第三代";
-    rel:mother-of <#薛宝钗>, <#薛蟠>;
-    rel:sister-of <#王夫人>.
-<#薛宝钗> a aat:Heading;
-    aat:addressLabel "xuebaochai";
-    aat:childOrder 16;
-    aat:contentEndLine 273;
-    aat:contentStartLine 255;
-    aat:documentOrder 17;
-    aat:endLine 274;
+    rel:Prefers-as-daughter-in-law :heading-17;
+    rel:aunt-of :heading-10;
+    rel:dislikes :heading-20.
+:heading-6 a aat:Heading;
+    aat:addressLabel "jiashu";
+    aat:addressPath "红楼梦人物志::贾赦";
+    aat:childOrder 5;
+    aat:contentEndLine 85;
+    aat:contentStartLine 77;
+    aat:documentOrder 6;
+    aat:endLine 86;
     aat:headingLevel 1;
-    aat:headingLine 253;
-    aat:headline "薛宝钗";
-    aat:metadataEndLine 252;
-    aat:metadataStartLine 252;
-    aat:name "薛宝钗";
-    aat:raw """[#xuebaochai.section, faction=薛家, gender=女, generation=第四代]
-== 薛宝钗
+    aat:headingLine 75;
+    aat:headline "贾赦";
+    aat:metadataEndLine 74;
+    aat:metadataStartLine 74;
+    aat:raw """[#jiashu.section, faction=荣国府, gender=男, generation=第三代]
+== 贾赦
 
-薛姨妈之女，薛蟠之妹。
-品格端方，容貌丰美，是大观园中最符合世俗标准的大家闺秀。
-她佩戴金锁，上头的字与宝玉通灵宝玉上的字恰好是一对——
-这就是"金玉良缘"的由来。
+荣国府大老爷，贾母长子。
+袭了一等将军的爵位，却不务正业，
+整日与小妾喝酒取乐。
+他曾想纳 xref:鸳鸯[鸳鸯, rel=desires, weight=0.4] 为妾，
+被贾母痛斥一顿。
 
-宝钗博学多才，诗才不在黛玉之下。
-"蘅芜苑夜拟菊花题"一回中，
-她与史湘云深夜商议诗题，展现了不凡的学识。
-但她也有务实的一面——
-她劝宝玉留心仕途经济，被宝玉当场下逐客令。
-
-与 xref:林黛玉[林黛玉, rel=rival-in-love, weight=0.8] 的关系最耐人寻味。
-两人从最初的暗中较劲，到后来的惺惺相惜，
-"金兰契互剖金兰语"一回中两人推心置腹，成为知己。
-最终宝钗嫁给了宝玉，却得不到他的心，
-守着一个心如死灰的丈夫，同样是悲剧。
-
-与 xref:贾宝玉[贾宝玉, rel=married-to, weight=0.6] 的婚姻是全书最大的讽刺——
-得到了人，得不到心。
+贾赦与 xref:贾政[贾政, rel=brother-of, weight=0.3] 兄弟不和，
+表面上维持着体面，暗地里各怀心思。
+他与 xref:邢夫人[邢夫人, rel=married-to, weight=0.4] 夫妻关系冷淡。
 
 """;
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
     aat:role "section";
-    aat:startLine 252;
-    field:faction "薛家";
-    field:gender "女";
-    field:generation "第四代";
-    rel:married-to <#贾宝玉>;
-    rel:rival-in-love <#林黛玉>.
-<#薛蟠> a aat:Heading;
-    aat:addressLabel "xuepan";
-    aat:childOrder 17;
-    aat:contentEndLine 286;
-    aat:contentStartLine 278;
-    aat:documentOrder 18;
-    aat:endLine 287;
-    aat:headingLevel 1;
-    aat:headingLine 276;
-    aat:headline "薛蟠";
-    aat:metadataEndLine 275;
-    aat:metadataStartLine 275;
-    aat:name "薛蟠";
-    aat:raw """[#xuepan.section, faction=薛家, gender=男, generation=第四代]
-== 薛蟠
-
-薛姨妈之子，宝钗之兄。
-人称"呆霸王"，是全书中最典型的纨绔子弟。
-他打死冯渊，抢走香菱（甄英莲），
-靠贾府的关系才摆平了官司——这就是"葫芦僧判断葫芦案"。
-
-薛蟠粗鄙不堪，在学堂里闹出许多丑事。
-但他对妹妹 xref:薛宝钗[薛宝钗, rel=brother-of, weight=0.4] 还算有几分兄妹情。
-他娶了夏金桂，婚后被悍妻拿捏得死死的，
-算是因果报应。
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 275;
-    field:faction "薛家";
-    field:gender "男";
-    field:generation "第四代";
-    rel:brother-of <#薛宝钗>.
-<#袭人> a aat:Heading;
-    aat:addressLabel "xiren";
-    aat:childOrder 12;
-    aat:contentEndLine 209;
-    aat:contentStartLine 198;
-    aat:documentOrder 13;
-    aat:endLine 210;
-    aat:headingLevel 1;
-    aat:headingLine 196;
-    aat:headline "袭人";
-    aat:metadataEndLine 195;
-    aat:metadataStartLine 195;
-    aat:name "袭人";
-    aat:raw """[#xiren.section, faction=荣国府, gender=女, generation=丫鬟]
-== 袭人
-
-贾宝玉的首席丫鬟，本名花珍珠。
-温柔和顺，忠心耿耿，是宝玉身边最稳重的人。
-她与宝玉有肌肤之亲（"贾宝玉初试云雨情"一回），
-暗中已被视为宝玉的准姨娘。
-
-袭人深谙为人处世之道，
-在王夫人面前进言，建议将宝玉搬出大观园，
-得到王夫人的赏识。
-但这也让她在宝玉房中的处境微妙——
-xref:晴雯[晴雯, rel=rival-servant, weight=0.5] 就曾当面嘲讽她"哈巴狗"。
-
-她最终嫁给了蒋玉菡，算是丫鬟中结局较好的。
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 195;
-    field:faction "荣国府";
-    field:gender "女";
-    field:generation "丫鬟";
-    rel:rival-servant <#晴雯>.
-<#贾元春> a aat:Heading;
-    aat:addressLabel "jiayuanchun";
-    aat:childOrder 10;
-    aat:contentEndLine 180;
-    aat:contentStartLine 169;
-    aat:documentOrder 11;
-    aat:endLine 181;
-    aat:headingLevel 1;
-    aat:headingLine 167;
-    aat:headline "贾元春";
-    aat:metadataEndLine 166;
-    aat:metadataStartLine 166;
-    aat:name "贾元春";
-    aat:raw """[#jiayuanchun.section, faction=荣国府, gender=女, generation=第四代]
-== 贾元春
-
-贾政与王夫人的长女，入宫为妃。
-省亲一回是全书最华丽的场景——
-大观园就是为她省亲而建，耗资巨大。
-
-元春在宫中并不快乐。
-她说当日既送我到那不得见人的去处，
-道尽了深宫寂寞。
-她的死讯传来，贾府上下一片哀恸，
-也预示着贾家最大的靠山轰然倒塌。
-
-与 xref:贾宝玉[贾宝玉, rel=sister-of, weight=0.7] 兄妹情深，
-宝玉的名字就是她取的。
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 166;
-    field:faction "荣国府";
-    field:gender "女";
-    field:generation "第四代";
-    rel:sister-of <#贾宝玉>.
-<#贾兰> a aat:Heading;
-    aat:addressLabel "jiabaochai";
-    aat:childOrder 11;
-    aat:contentEndLine 193;
-    aat:contentStartLine 185;
-    aat:documentOrder 12;
-    aat:endLine 194;
-    aat:headingLevel 1;
-    aat:headingLine 183;
-    aat:headline "贾兰";
-    aat:metadataEndLine 182;
-    aat:metadataStartLine 182;
-    aat:name "贾兰";
-    aat:raw """[#jiabaochai.section, faction=荣国府, gender=男, generation=第四代]
-== 贾兰
-
-贾珠之子，李纨之子。
-父亲早亡，由母亲独自抚养长大。
-他勤奋好学，一心想通过科举重振家业。
-
-与 xref:贾宝玉[贾宝玉, rel=brother-of-paternal-cousin, weight=0.3] 是堂叔侄，
-性格天差地别——宝玉厌学，贾兰苦读。
-最终贾兰中举，算是贾家衰败后的一缕曙光。
-
-// 荣国府 · 丫鬟
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 182;
+    aat:startLine 74;
     field:faction "荣国府";
     field:gender "男";
-    field:generation "第四代";
-    rel:brother-of-paternal-cousin <#贾宝玉>.
-<#贾宝玉> a aat:Heading;
+    field:generation "第三代";
+    rel:brother-of :heading-4;
+    rel:desires :heading-15;
+    rel:married-to :heading-7.
+:heading-7 a aat:Heading;
+    aat:addressLabel "xingfuren";
+    aat:addressPath "红楼梦人物志::邢夫人";
+    aat:childOrder 6;
+    aat:contentEndLine 95;
+    aat:contentStartLine 90;
+    aat:documentOrder 7;
+    aat:endLine 96;
+    aat:headingLevel 1;
+    aat:headingLine 88;
+    aat:headline "邢夫人";
+    aat:metadataEndLine 87;
+    aat:metadataStartLine 87;
+    aat:raw """[#xingfuren.section, faction=荣国府, gender=女, generation=第三代]
+== 邢夫人
+
+贾赦继室，贾琏继母。
+出身寒微，嫁入贾府后处处小心。
+她为人刻薄小气，不得人心。
+在抄检大观园一事上推波助澜，与 xref:王夫人[王夫人, rel=sister-in-law-rival, weight=0.5] 暗中较劲。
+
+// 荣国府 · 第四代
+
+""";
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:role "section";
+    aat:startLine 87;
+    field:faction "荣国府";
+    field:gender "女";
+    field:generation "第三代";
+    rel:sister-in-law-rival :heading-5.
+:heading-8 a aat:Heading;
     aat:addressLabel "jiabaoyu";
+    aat:addressPath "红楼梦人物志::贾宝玉";
     aat:childOrder 7;
     aat:contentEndLine 125;
     aat:contentStartLine 100;
@@ -678,7 +959,6 @@ xref:晴雯[晴雯, rel=rival-servant, weight=0.5] 就曾当面嘲讽她"哈巴�
     aat:headline "贾宝玉";
     aat:metadataEndLine 97;
     aat:metadataStartLine 97;
-    aat:name "贾宝玉";
     aat:raw """[#jiabaoyu.section, faction=荣国府, gender=男, generation=第四代]
 == 贾宝玉
 
@@ -716,163 +996,17 @@ xref:贾兰[贾兰, rel=brother-of-paternal-cousin, weight=0.3] 是他侄子，
     field:faction "荣国府";
     field:gender "男";
     field:generation "第四代";
-    rel:brother-of-paternal-cousin <#贾兰>;
-    rel:cousin-of <#王熙凤>;
-    rel:grandson-of <#贾母>;
-    rel:loves <#林黛玉>;
-    rel:married-to <#薛宝钗>;
-    rel:mother-of <#王夫人>;
-    rel:serves <#晴雯>, <#袭人>;
-    rel:son-of <#贾政>.
-<#贾府概况> a aat:Heading;
-    aat:childOrder 1;
-    aat:contentEndLine 23;
-    aat:contentStartLine 15;
-    aat:documentOrder 2;
-    aat:endLine 24;
-    aat:generatedAddressLabel "贾府概况";
-    aat:headingLevel 1;
-    aat:headingLine 13;
-    aat:headline "贾府概况";
-    aat:name "贾府概况";
-    aat:raw """== 贾府概况
-
-贾府分宁、荣二公之后，以荣国府为主线。
-府中四代人，从贾母的慈威并施，到宝玉的叛逆出走，
-写尽了一个钟鸣鼎食之家由盛转衰的全过程。
-
-宁国府一支以贾珍为首，荒淫无度，先一步败落。
-荣国府则在贾母的庇护下多撑了几年，
-最终也难逃抄家之运。
-
-// 荣国府 · 第二代
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:startLine 13.
-<#贾政> a aat:Heading;
-    aat:addressLabel "jiazheng";
-    aat:childOrder 3;
-    aat:contentEndLine 58;
-    aat:contentStartLine 46;
-    aat:documentOrder 4;
-    aat:endLine 59;
-    aat:headingLevel 1;
-    aat:headingLine 44;
-    aat:headline "贾政";
-    aat:metadataEndLine 43;
-    aat:metadataStartLine 43;
-    aat:name "贾政";
-    aat:raw """[#jiazheng.section, faction=荣国府, gender=男, generation=第三代]
-== 贾政
-
-荣国府二老爷，工部员外郎。
-为人方正古板，一心望子成龙。
-对 xref:贾宝玉[贾宝玉, rel=father-of, weight=0.3] 管教极严，
-动辄训斥，曾将宝玉打得皮开肉绽（"不肖种种大承笞挞"一回）。
-
-贾政其实文才平平，却偏爱附庸风雅，
-养了一群清客相公谈诗论文。
-他内心对宝玉的聪慧并非不知，只是恨铁不成钢。
-
-与 xref:王夫人[王夫人, rel=married-to, weight=0.5] 夫妻多年，
-感情平淡，相敬如宾。
-xref:贾母[贾母, rel=son-of, weight=0.5] 是他的母亲，
-他在母亲面前始终恭顺，不敢违拗。
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 43;
-    field:faction "荣国府";
-    field:gender "男";
-    field:generation "第三代";
-    rel:father-of <#贾宝玉>;
-    rel:married-to <#王夫人>;
-    rel:son-of <#贾母>.
-<#贾母> a aat:Heading;
-    aat:addressLabel "jiamu";
-    aat:childOrder 2;
-    aat:contentEndLine 41;
-    aat:contentStartLine 28;
-    aat:documentOrder 3;
-    aat:endLine 42;
-    aat:headingLevel 1;
-    aat:headingLine 26;
-    aat:headline "贾母";
-    aat:metadataEndLine 25;
-    aat:metadataStartLine 25;
-    aat:name "贾母";
-    aat:raw """[#jiamu.section, faction=荣国府, gender=女, generation=第二代]
-== 贾母
-
-贾府的定海神针，人称"老祖宗"。
-史侯之女，嫁入贾家后主持荣国府数十年。
-年事虽高，心思通透，府中大小事务逃不过她的眼。
-
-她最疼爱 xref:贾宝玉[贾宝玉, rel=grandmother-of, weight=0.9]，
-为此不惜与 xref:贾政[贾政, rel=mother-of, weight=0.5] 的严厉管教对着干。
-xref:林黛玉[林黛玉, rel=grandmother-of, weight=0.85] 是她嫡亲外孙女，
-自幼接来身边教养，疼爱有加。
-
-贾母善于享乐，听戏、赏花、摆宴样样精通。
-她主持的元宵夜宴、中秋赏月，是全书最热闹的场景。
-但这份热闹底下，藏着她对家族前途的隐忧。
-
-// 荣国府 · 第三代
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 25;
-    field:faction "荣国府";
-    field:gender "女";
-    field:generation "第二代";
-    rel:grandmother-of <#林黛玉>, <#贾宝玉>;
-    rel:mother-of <#贾政>.
-<#贾珍> a aat:Heading;
-    aat:addressLabel "jiashen";
-    aat:childOrder 22;
-    aat:contentEndLine 398;
-    aat:contentStartLine 384;
-    aat:documentOrder 23;
-    aat:endLine 399;
-    aat:headingLevel 1;
-    aat:headingLine 382;
-    aat:headline "贾珍";
-    aat:metadataEndLine 381;
-    aat:metadataStartLine 381;
-    aat:name "贾珍";
-    aat:raw """[#jiashen.section, faction=宁国府, gender=男, generation=第三代]
-== 贾珍
-
-宁国府当家人，贾敬之子。
-袭了三品将军之爵，却不务正业，
-整日与狐朋狗友饮酒作乐。
-
-他与 xref:秦可卿[秦可卿, rel=scandal-with, weight=0.9] 的丑闻
-是宁国府最大的污点。
-秦可卿死后他"哭得泪人一般"，
-超出了公公对儿媳应有的悲痛程度。
-
-贾珍还霸占了 xref:尤二姐[尤二姐, rel=harasses, weight=0.6] 和
-xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
-与贾蓉父子麀聚，荒淫无度。
-宁国府最终先一步被抄家，正是"箕裘颓堕皆从敬，家事消亡首罪宁"。
-
-// 尤氏姐妹
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 381;
-    field:faction "宁国府";
-    field:gender "男";
-    field:generation "第三代";
-    rel:harasses <#尤三姐>, <#尤二姐>;
-    rel:scandal-with <#秦可卿>.
-<#贾琏> a aat:Heading;
+    rel:brother-of-paternal-cousin :heading-12;
+    rel:cousin-of :heading-10;
+    rel:grandson-of :heading-3;
+    rel:loves :heading-20;
+    rel:married-to :heading-17;
+    rel:mother-of :heading-5;
+    rel:serves :heading-13, :heading-14;
+    rel:son-of :heading-4.
+:heading-9 a aat:Heading;
     aat:addressLabel "jialian";
+    aat:addressPath "红楼梦人物志::贾琏";
     aat:childOrder 8;
     aat:contentEndLine 140;
     aat:contentStartLine 130;
@@ -883,7 +1017,6 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:headline "贾琏";
     aat:metadataEndLine 127;
     aat:metadataStartLine 127;
-    aat:name "贾琏";
     aat:raw """[#jialian.section, faction=荣国府, gender=男, generation=第四代]
 == 贾琏
 
@@ -906,149 +1039,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     field:faction "荣国府";
     field:gender "男";
     field:generation "第四代";
-    rel:brother-of <#贾宝玉>;
-    rel:married-to <#王熙凤>.
-<#贾赦> a aat:Heading;
-    aat:addressLabel "jiashu";
-    aat:childOrder 5;
-    aat:contentEndLine 85;
-    aat:contentStartLine 77;
-    aat:documentOrder 6;
-    aat:endLine 86;
-    aat:headingLevel 1;
-    aat:headingLine 75;
-    aat:headline "贾赦";
-    aat:metadataEndLine 74;
-    aat:metadataStartLine 74;
-    aat:name "贾赦";
-    aat:raw """[#jiashu.section, faction=荣国府, gender=男, generation=第三代]
-== 贾赦
-
-荣国府大老爷，贾母长子。
-袭了一等将军的爵位，却不务正业，
-整日与小妾喝酒取乐。
-他曾想纳 xref:鸳鸯[鸳鸯, rel=desires, weight=0.4] 为妾，
-被贾母痛斥一顿。
-
-贾赦与 xref:贾政[贾政, rel=brother-of, weight=0.3] 兄弟不和，
-表面上维持着体面，暗地里各怀心思。
-他与 xref:邢夫人[邢夫人, rel=married-to, weight=0.4] 夫妻关系冷淡。
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 74;
-    field:faction "荣国府";
-    field:gender "男";
-    field:generation "第三代";
-    rel:brother-of <#贾政>;
-    rel:desires <#鸳鸯>;
-    rel:married-to <#邢夫人>.
-<#邢夫人> a aat:Heading;
-    aat:addressLabel "xingfuren";
-    aat:childOrder 6;
-    aat:contentEndLine 95;
-    aat:contentStartLine 90;
-    aat:documentOrder 7;
-    aat:endLine 96;
-    aat:headingLevel 1;
-    aat:headingLine 88;
-    aat:headline "邢夫人";
-    aat:metadataEndLine 87;
-    aat:metadataStartLine 87;
-    aat:name "邢夫人";
-    aat:raw """[#xingfuren.section, faction=荣国府, gender=女, generation=第三代]
-== 邢夫人
-
-贾赦继室，贾琏继母。
-出身寒微，嫁入贾府后处处小心。
-她为人刻薄小气，不得人心。
-在抄检大观园一事上推波助澜，与 xref:王夫人[王夫人, rel=sister-in-law-rival, weight=0.5] 暗中较劲。
-
-// 荣国府 · 第四代
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 87;
-    field:faction "荣国府";
-    field:gender "女";
-    field:generation "第三代";
-    rel:sister-in-law-rival <#王夫人>.
-<#香菱> a aat:Heading;
-    aat:addressLabel "xiangling";
-    aat:childOrder 18;
-    aat:contentEndLine 301;
-    aat:contentStartLine 291;
-    aat:documentOrder 19;
-    aat:endLine 302;
-    aat:headingLevel 1;
-    aat:headingLine 289;
-    aat:headline "香菱";
-    aat:metadataEndLine 288;
-    aat:metadataStartLine 288;
-    aat:name "香菱";
-    aat:raw """[#xiangling.section, faction=薛家, gender=女, generation=丫鬟]
-== 香菱
-
-本名甄英莲，甄士隐之女。
-幼年被拐，几经辗转被薛蟠强买为妾。
-她生得清秀，性情温婉，跟 xref:薛宝钗[薛宝钗, rel=serves, weight=0.5] 学诗，
-"慕雅女雅集苦吟诗"一回写她痴迷诗的样子十分动人。
-
-香菱是全书中最令人怜惜的人物之一——
-从乡宦之女沦为奴婢，命运对她太不公。
-她的判词"根并荷花一茎香，平生遭际实堪伤"，
-道尽了她的一生。
-
-// 林家
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 288;
-    field:faction "薛家";
-    field:gender "女";
-    field:generation "丫鬟";
-    rel:serves <#薛宝钗>.
-<#鸳鸯> a aat:Heading;
-    aat:addressLabel "yuanyang";
-    aat:childOrder 14;
-    aat:contentEndLine 233;
-    aat:contentStartLine 229;
-    aat:documentOrder 15;
-    aat:endLine 234;
-    aat:headingLevel 1;
-    aat:headingLine 227;
-    aat:headline "鸳鸯";
-    aat:metadataEndLine 226;
-    aat:metadataStartLine 226;
-    aat:name "鸳鸯";
-    aat:raw """[#yuanyang.section, faction=荣国府, gender=女, generation=丫鬟]
-== 鸳鸯
-
-贾母的首席大丫鬟，贾母须臾离不得她。
-贾赦想纳她为妾，她宁死不从，在贾母面前断发明志。
-贾母去世后，她自缢殉主，是全书中最有骨气的丫鬟。
-
-// 薛家
-
-""";
-    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:role "section";
-    aat:startLine 226;
-    field:faction "荣国府";
-    field:gender "女";
-    field:generation "丫鬟".
-<dream-of-red-chamber.adoc/projection#activity> a prov:Activity, aat:ProjectionActivity;
-    prov:used <dream-of-red-chamber.adoc/projection#source>.
-<dream-of-red-chamber.adoc/projection#projection> a prov:Entity, aat:HeadingProjection;
-    prov:hadPrimarySource <dream-of-red-chamber.adoc/projection#source>;
-    prov:wasDerivedFrom <dream-of-red-chamber.adoc/projection#source>;
-    prov:wasGeneratedBy <dream-of-red-chamber.adoc/projection#activity>.
-<dream-of-red-chamber.adoc/projection#source> a prov:Entity, aat:AsciiDocSourceDocument;
+    rel:brother-of :heading-8;
+    rel:married-to :heading-10.
+:projection a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource :source;
+    prov:wasDerivedFrom :source;
+    prov:wasGeneratedBy :activity.
+:source a prov:Entity, aat:AsciiDocSourceDocument;
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc".
-<dream-of-red-chamber.adoc/projection#xref-edge-l105-c3-o0> rdf:reifies <<(<#贾宝玉> rel:loves <#林黛玉>)>>;
+:xref-edge-l105-c3-o0 rdf:reifies <<(:heading-8 rel:loves :heading-20)>>;
     a aat:XrefEdge;
     aat:displayLabel "林黛玉";
     aat:endColumn 40;
@@ -1058,15 +1057,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:林黛玉[林黛玉, rel=loves, weight=0.95]";
     aat:rel "loves";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 3;
     aat:startLine 105;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉";
     field:weight "0.95".
-<dream-of-red-chamber.adoc/projection#xref-edge-l109-c14-o0> rdf:reifies <<(<#贾宝玉> rel:married-to <#薛宝钗>)>>;
+:xref-edge-l109-c14-o0 rdf:reifies <<(:heading-8 rel:married-to :heading-17)>>;
     a aat:XrefEdge;
     aat:displayLabel "薛宝钗";
     aat:endColumn 55;
@@ -1076,15 +1075,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:薛宝钗[薛宝钗, rel=married-to, weight=0.6]";
     aat:rel "married-to";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 14;
     aat:startLine 109;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "薛宝钗";
     field:weight "0.6".
-<dream-of-red-chamber.adoc/projection#xref-edge-l110-c7-o0> rdf:reifies <<(<#贾宝玉> rel:mother-of <#王夫人>)>>;
+:xref-edge-l110-c7-o0 rdf:reifies <<(:heading-8 rel:mother-of :heading-5)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 47;
@@ -1094,15 +1093,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王夫人[王夫人, rel=mother-of, weight=0.5]";
     aat:rel "mother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 7;
     aat:startLine 110;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-5;
     aat:targetSelector "王夫人";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l111-c1-o0> rdf:reifies <<(<#贾宝玉> rel:cousin-of <#王熙凤>)>>;
+:xref-edge-l111-c1-o0 rdf:reifies <<(:heading-8 rel:cousin-of :heading-10)>>;
     a aat:XrefEdge;
     aat:displayLabel "王熙凤";
     aat:endColumn 41;
@@ -1112,15 +1111,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王熙凤[王熙凤, rel=cousin-of, weight=0.4]";
     aat:rel "cousin-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 1;
     aat:startLine 111;
     aat:syntax "macro";
-    aat:targetHeading <#王熙凤>;
+    aat:targetHeading :heading-10;
     aat:targetSelector "王熙凤";
     field:weight "0.4".
-<dream-of-red-chamber.adoc/projection#xref-edge-l114-c11-o0> rdf:reifies <<(<#贾宝玉> rel:serves <#袭人>)>>;
+:xref-edge-l114-c11-o0 rdf:reifies <<(:heading-8 rel:serves :heading-13)>>;
     a aat:XrefEdge;
     aat:displayLabel "袭人";
     aat:endColumn 46;
@@ -1130,15 +1129,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:袭人[袭人, rel=serves, weight=0.7]";
     aat:rel "serves";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 11;
     aat:startLine 114;
     aat:syntax "macro";
-    aat:targetHeading <#袭人>;
+    aat:targetHeading :heading-13;
     aat:targetSelector "袭人";
     field:weight "0.7".
-<dream-of-red-chamber.adoc/projection#xref-edge-l115-c1-o0> rdf:reifies <<(<#贾宝玉> rel:serves <#晴雯>)>>;
+:xref-edge-l115-c1-o0 rdf:reifies <<(:heading-8 rel:serves :heading-14)>>;
     a aat:XrefEdge;
     aat:displayLabel "晴雯";
     aat:endColumn 36;
@@ -1148,15 +1147,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:晴雯[晴雯, rel=serves, weight=0.6]";
     aat:rel "serves";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 1;
     aat:startLine 115;
     aat:syntax "macro";
-    aat:targetHeading <#晴雯>;
+    aat:targetHeading :heading-14;
     aat:targetSelector "晴雯";
     field:weight "0.6".
-<dream-of-red-chamber.adoc/projection#xref-edge-l119-c4-o0> rdf:reifies <<(<#贾宝玉> rel:grandson-of <#贾母>)>>;
+:xref-edge-l119-c4-o0 rdf:reifies <<(:heading-8 rel:grandson-of :heading-3)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾母";
     aat:endColumn 44;
@@ -1166,15 +1165,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾母[贾母, rel=grandson-of, weight=0.9]";
     aat:rel "grandson-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 4;
     aat:startLine 119;
     aat:syntax "macro";
-    aat:targetHeading <#贾母>;
+    aat:targetHeading :heading-3;
     aat:targetSelector "贾母";
     field:weight "0.9".
-<dream-of-red-chamber.adoc/projection#xref-edge-l121-c3-o0> rdf:reifies <<(<#贾宝玉> rel:son-of <#贾政>)>>;
+:xref-edge-l121-c3-o0 rdf:reifies <<(:heading-8 rel:son-of :heading-4)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾母";
     aat:endColumn 38;
@@ -1184,15 +1183,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾政[贾母, rel=son-of, weight=0.3]";
     aat:rel "son-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 3;
     aat:startLine 121;
     aat:syntax "macro";
-    aat:targetHeading <#贾政>;
+    aat:targetHeading :heading-4;
     aat:targetSelector "贾政";
     field:weight "0.3".
-<dream-of-red-chamber.adoc/projection#xref-edge-l124-c1-o0> rdf:reifies <<(<#贾宝玉> rel:brother-of-paternal-cousin <#贾兰>)>>;
+:xref-edge-l124-c1-o0 rdf:reifies <<(:heading-8 rel:brother-of-paternal-cousin :heading-12)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾兰";
     aat:endColumn 56;
@@ -1202,15 +1201,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾兰[贾兰, rel=brother-of-paternal-cousin, weight=0.3]";
     aat:rel "brother-of-paternal-cousin";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "jiabaoyu";
     aat:startColumn 1;
     aat:startLine 124;
     aat:syntax "macro";
-    aat:targetHeading <#贾兰>;
+    aat:targetHeading :heading-12;
     aat:targetSelector "贾兰";
     field:weight "0.3".
-<dream-of-red-chamber.adoc/projection#xref-edge-l132-c3-o0> rdf:reifies <<(<#贾琏> rel:married-to <#王熙凤>)>>;
+:xref-edge-l132-c3-o0 rdf:reifies <<(:heading-9 rel:married-to :heading-10)>>;
     a aat:XrefEdge;
     aat:displayLabel "王熙凤";
     aat:endColumn 44;
@@ -1220,15 +1219,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王熙凤[王熙凤, rel=married-to, weight=0.5]";
     aat:rel "married-to";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾琏>;
+    aat:sourceHeading :heading-9;
     aat:sourceSelector "jialian";
     aat:startColumn 3;
     aat:startLine 132;
     aat:syntax "macro";
-    aat:targetHeading <#王熙凤>;
+    aat:targetHeading :heading-10;
     aat:targetSelector "王熙凤";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l139-c4-o0> rdf:reifies <<(<#贾琏> rel:brother-of <#贾宝玉>)>>;
+:xref-edge-l139-c4-o0 rdf:reifies <<(:heading-9 rel:brother-of :heading-8)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾宝玉";
     aat:endColumn 45;
@@ -1238,15 +1237,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾宝玉[贾宝玉, rel=brother-of, weight=0.3]";
     aat:rel "brother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾琏>;
+    aat:sourceHeading :heading-9;
     aat:sourceSelector "jialian";
     aat:startColumn 4;
     aat:startLine 139;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-8;
     aat:targetSelector "贾宝玉";
     field:weight "0.3".
-<dream-of-red-chamber.adoc/projection#xref-edge-l146-c1-o0> rdf:reifies <<(<#王熙凤> rel:niece-of <#王夫人>)>>;
+:xref-edge-l146-c1-o0 rdf:reifies <<(:heading-10 rel:niece-of :heading-5)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 40;
@@ -1256,15 +1255,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王夫人[王夫人, rel=niece-of, weight=0.6]";
     aat:rel "niece-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#王熙凤>;
+    aat:sourceHeading :heading-10;
     aat:sourceSelector "wangxifeng";
     aat:startColumn 1;
     aat:startLine 146;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-5;
     aat:targetSelector "王夫人";
     field:weight "0.6".
-<dream-of-red-chamber.adoc/projection#xref-edge-l147-c1-o0> rdf:reifies <<(<#王熙凤> rel:married-to <#贾琏>)>>;
+:xref-edge-l147-c1-o0 rdf:reifies <<(:heading-10 rel:married-to :heading-9)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾琏";
     aat:endColumn 40;
@@ -1274,15 +1273,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾琏[贾琏, rel=married-to, weight=0.5]";
     aat:rel "married-to";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#王熙凤>;
+    aat:sourceHeading :heading-10;
     aat:sourceSelector "wangxifeng";
     aat:startColumn 1;
     aat:startLine 147;
     aat:syntax "macro";
-    aat:targetHeading <#贾琏>;
+    aat:targetHeading :heading-9;
     aat:targetSelector "贾琏";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l158-c4-o0> rdf:reifies <<(<#王熙凤> rel:granddaughter-in-law-of <#贾母>)>>;
+:xref-edge-l158-c4-o0 rdf:reifies <<(:heading-10 rel:granddaughter-in-law-of :heading-3)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾母";
     aat:endColumn 56;
@@ -1292,15 +1291,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾母[贾母, rel=granddaughter-in-law-of, weight=0.6]";
     aat:rel "granddaughter-in-law-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#王熙凤>;
+    aat:sourceHeading :heading-10;
     aat:sourceSelector "wangxifeng";
     aat:startColumn 4;
     aat:startLine 158;
     aat:syntax "macro";
-    aat:targetHeading <#贾母>;
+    aat:targetHeading :heading-3;
     aat:targetSelector "贾母";
     field:weight "0.6".
-<dream-of-red-chamber.adoc/projection#xref-edge-l162-c3-o0> rdf:reifies <<(<#王熙凤> rel:married-to <#贾琏>)>>;
+:xref-edge-l162-c3-o0 rdf:reifies <<(:heading-10 rel:married-to :heading-9)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾琏";
     aat:endColumn 42;
@@ -1310,15 +1309,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾琏[贾琏, rel=married-to, weight=0.5]";
     aat:rel "married-to";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#王熙凤>;
+    aat:sourceHeading :heading-10;
     aat:sourceSelector "wangxifeng";
     aat:startColumn 3;
     aat:startLine 162;
     aat:syntax "macro";
-    aat:targetHeading <#贾琏>;
+    aat:targetHeading :heading-9;
     aat:targetSelector "贾琏";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l179-c3-o0> rdf:reifies <<(<#贾元春> rel:sister-of <#贾宝玉>)>>;
+:xref-edge-l179-c3-o0 rdf:reifies <<(:heading-11 rel:sister-of :heading-8)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾宝玉";
     aat:endColumn 43;
@@ -1328,15 +1327,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾宝玉[贾宝玉, rel=sister-of, weight=0.7]";
     aat:rel "sister-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾元春>;
+    aat:sourceHeading :heading-11;
     aat:sourceSelector "jiayuanchun";
     aat:startColumn 3;
     aat:startLine 179;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-8;
     aat:targetSelector "贾宝玉";
     field:weight "0.7".
-<dream-of-red-chamber.adoc/projection#xref-edge-l189-c3-o0> rdf:reifies <<(<#贾兰> rel:brother-of-paternal-cousin <#贾宝玉>)>>;
+:xref-edge-l189-c3-o0 rdf:reifies <<(:heading-12 rel:brother-of-paternal-cousin :heading-8)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾宝玉";
     aat:endColumn 60;
@@ -1346,15 +1345,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾宝玉[贾宝玉, rel=brother-of-paternal-cousin, weight=0.3]";
     aat:rel "brother-of-paternal-cousin";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾兰>;
+    aat:sourceHeading :heading-12;
     aat:sourceSelector "jiabaochai";
     aat:startColumn 3;
     aat:startLine 189;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-8;
     aat:targetSelector "贾宝玉";
     field:weight "0.3".
-<dream-of-red-chamber.adoc/projection#xref-edge-l207-c1-o0> rdf:reifies <<(<#袭人> rel:rival-servant <#晴雯>)>>;
+:xref-edge-l207-c1-o0 rdf:reifies <<(:heading-13 rel:rival-servant :heading-14)>>;
     a aat:XrefEdge;
     aat:displayLabel "晴雯";
     aat:endColumn 43;
@@ -1364,15 +1363,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:晴雯[晴雯, rel=rival-servant, weight=0.5]";
     aat:rel "rival-servant";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#袭人>;
+    aat:sourceHeading :heading-13;
     aat:sourceSelector "xiren";
     aat:startColumn 1;
     aat:startLine 207;
     aat:syntax "macro";
-    aat:targetHeading <#晴雯>;
+    aat:targetHeading :heading-14;
     aat:targetSelector "晴雯";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l217-c4-o0> rdf:reifies <<(<#晴雯> rel:rival-servant <#袭人>)>>;
+:xref-edge-l217-c4-o0 rdf:reifies <<(:heading-14 rel:rival-servant :heading-13)>>;
     a aat:XrefEdge;
     aat:displayLabel "袭人";
     aat:endColumn 46;
@@ -1382,15 +1381,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:袭人[袭人, rel=rival-servant, weight=0.5]";
     aat:rel "rival-servant";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#晴雯>;
+    aat:sourceHeading :heading-14;
     aat:sourceSelector "qingwen";
     aat:startColumn 4;
     aat:startLine 217;
     aat:syntax "macro";
-    aat:targetHeading <#袭人>;
+    aat:targetHeading :heading-13;
     aat:targetSelector "袭人";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l244-c4-o0> rdf:reifies <<(<#薛姨妈> rel:mother-of <#薛宝钗>)>>;
+:xref-edge-l244-c4-o0 rdf:reifies <<(:heading-16 rel:mother-of :heading-17)>>;
     a aat:XrefEdge;
     aat:displayLabel "薛宝钗";
     aat:endColumn 44;
@@ -1400,15 +1399,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:薛宝钗[薛宝钗, rel=mother-of, weight=0.9]";
     aat:rel "mother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#薛姨妈>;
+    aat:sourceHeading :heading-16;
     aat:sourceSelector "xueyiniang";
     aat:startColumn 4;
     aat:startLine 244;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "薛宝钗";
     field:weight "0.9".
-<dream-of-red-chamber.adoc/projection#xref-edge-l246-c3-o0> rdf:reifies <<(<#薛姨妈> rel:mother-of <#薛蟠>)>>;
+:xref-edge-l246-c3-o0 rdf:reifies <<(:heading-16 rel:mother-of :heading-18)>>;
     a aat:XrefEdge;
     aat:displayLabel "薛蟠";
     aat:endColumn 41;
@@ -1418,15 +1417,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:薛蟠[薛蟠, rel=mother-of, weight=0.5]";
     aat:rel "mother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#薛姨妈>;
+    aat:sourceHeading :heading-16;
     aat:sourceSelector "xueyiniang";
     aat:startColumn 3;
     aat:startLine 246;
     aat:syntax "macro";
-    aat:targetHeading <#薛蟠>;
+    aat:targetHeading :heading-18;
     aat:targetSelector "薛蟠";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l249-c4-o0> rdf:reifies <<(<#薛姨妈> rel:sister-of <#王夫人>)>>;
+:xref-edge-l249-c4-o0 rdf:reifies <<(:heading-16 rel:sister-of :heading-5)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 44;
@@ -1436,15 +1435,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王夫人[王夫人, rel=sister-of, weight=0.7]";
     aat:rel "sister-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#薛姨妈>;
+    aat:sourceHeading :heading-16;
     aat:sourceSelector "xueyiniang";
     aat:startColumn 4;
     aat:startLine 249;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-5;
     aat:targetSelector "王夫人";
     field:weight "0.7".
-<dream-of-red-chamber.adoc/projection#xref-edge-l266-c3-o0> rdf:reifies <<(<#薛宝钗> rel:rival-in-love <#林黛玉>)>>;
+:xref-edge-l266-c3-o0 rdf:reifies <<(:heading-17 rel:rival-in-love :heading-20)>>;
     a aat:XrefEdge;
     aat:displayLabel "林黛玉";
     aat:endColumn 47;
@@ -1454,15 +1453,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:林黛玉[林黛玉, rel=rival-in-love, weight=0.8]";
     aat:rel "rival-in-love";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#薛宝钗>;
+    aat:sourceHeading :heading-17;
     aat:sourceSelector "xuebaochai";
     aat:startColumn 3;
     aat:startLine 266;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉";
     field:weight "0.8".
-<dream-of-red-chamber.adoc/projection#xref-edge-l272-c3-o0> rdf:reifies <<(<#薛宝钗> rel:married-to <#贾宝玉>)>>;
+:xref-edge-l272-c3-o0 rdf:reifies <<(:heading-17 rel:married-to :heading-8)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾宝玉";
     aat:endColumn 44;
@@ -1472,15 +1471,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾宝玉[贾宝玉, rel=married-to, weight=0.6]";
     aat:rel "married-to";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#薛宝钗>;
+    aat:sourceHeading :heading-17;
     aat:sourceSelector "xuebaochai";
     aat:startColumn 3;
     aat:startLine 272;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-8;
     aat:targetSelector "贾宝玉";
     field:weight "0.6".
-<dream-of-red-chamber.adoc/projection#xref-edge-l284-c7-o0> rdf:reifies <<(<#薛蟠> rel:brother-of <#薛宝钗>)>>;
+:xref-edge-l284-c7-o0 rdf:reifies <<(:heading-18 rel:brother-of :heading-17)>>;
     a aat:XrefEdge;
     aat:displayLabel "薛宝钗";
     aat:endColumn 48;
@@ -1490,15 +1489,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:薛宝钗[薛宝钗, rel=brother-of, weight=0.4]";
     aat:rel "brother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#薛蟠>;
+    aat:sourceHeading :heading-18;
     aat:sourceSelector "xuepan";
     aat:startColumn 7;
     aat:startLine 284;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "薛宝钗";
     field:weight "0.4".
-<dream-of-red-chamber.adoc/projection#xref-edge-l293-c14-o0> rdf:reifies <<(<#香菱> rel:serves <#薛宝钗>)>>;
+:xref-edge-l293-c14-o0 rdf:reifies <<(:heading-19 rel:serves :heading-17)>>;
     a aat:XrefEdge;
     aat:displayLabel "薛宝钗";
     aat:endColumn 51;
@@ -1508,15 +1507,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:薛宝钗[薛宝钗, rel=serves, weight=0.5]";
     aat:rel "serves";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#香菱>;
+    aat:sourceHeading :heading-19;
     aat:sourceSelector "xiangling";
     aat:startColumn 14;
     aat:startLine 293;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "薛宝钗";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l317-c3-o0> rdf:reifies <<(<#林黛玉> rel:loves <#贾宝玉>)>>;
+:xref-edge-l317-c3-o0 rdf:reifies <<(:heading-20 rel:loves :heading-8)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾宝玉";
     aat:endColumn 40;
@@ -1526,15 +1525,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾宝玉[贾宝玉, rel=loves, weight=0.95]";
     aat:rel "loves";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#林黛玉>;
+    aat:sourceHeading :heading-20;
     aat:sourceSelector "lindaiyu";
     aat:startColumn 3;
     aat:startLine 317;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-8;
     aat:targetSelector "贾宝玉";
     field:weight "0.95".
-<dream-of-red-chamber.adoc/projection#xref-edge-l32-c6-o0> rdf:reifies <<(<#贾母> rel:grandmother-of <#贾宝玉>)>>;
+:xref-edge-l32-c6-o0 rdf:reifies <<(:heading-3 rel:grandmother-of :heading-8)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾宝玉";
     aat:endColumn 51;
@@ -1544,15 +1543,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾宝玉[贾宝玉, rel=grandmother-of, weight=0.9]";
     aat:rel "grandmother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾母>;
+    aat:sourceHeading :heading-3;
     aat:sourceSelector "jiamu";
     aat:startColumn 6;
     aat:startLine 32;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-8;
     aat:targetSelector "贾宝玉";
     field:weight "0.9".
-<dream-of-red-chamber.adoc/projection#xref-edge-l327-c1-o0> rdf:reifies <<(<#林黛玉> rel:disliked-by <#王夫人>)>>;
+:xref-edge-l327-c1-o0 rdf:reifies <<(:heading-20 rel:disliked-by :heading-5)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 43;
@@ -1562,15 +1561,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王夫人[王夫人, rel=disliked-by, weight=0.7]";
     aat:rel "disliked-by";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#林黛玉>;
+    aat:sourceHeading :heading-20;
     aat:sourceSelector "lindaiyu";
     aat:startColumn 1;
     aat:startLine 327;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-5;
     aat:targetSelector "王夫人";
     field:weight "0.7".
-<dream-of-red-chamber.adoc/projection#xref-edge-l328-c1-o0> rdf:reifies <<(<#林黛玉> rel:rival-in-love <#薛宝钗>)>>;
+:xref-edge-l328-c1-o0 rdf:reifies <<(:heading-20 rel:rival-in-love :heading-17)>>;
     a aat:XrefEdge;
     aat:displayLabel "薛宝钗";
     aat:endColumn 45;
@@ -1580,15 +1579,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:薛宝钗[薛宝钗, rel=rival-in-love, weight=0.8]";
     aat:rel "rival-in-love";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#林黛玉>;
+    aat:sourceHeading :heading-20;
     aat:sourceSelector "lindaiyu";
     aat:startColumn 1;
     aat:startLine 328;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "薛宝钗";
     field:weight "0.8".
-<dream-of-red-chamber.adoc/projection#xref-edge-l33-c7-o0> rdf:reifies <<(<#贾母> rel:mother-of <#贾政>)>>;
+:xref-edge-l33-c7-o0 rdf:reifies <<(:heading-3 rel:mother-of :heading-4)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾政";
     aat:endColumn 45;
@@ -1598,15 +1597,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾政[贾政, rel=mother-of, weight=0.5]";
     aat:rel "mother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾母>;
+    aat:sourceHeading :heading-3;
     aat:sourceSelector "jiamu";
     aat:startColumn 7;
     aat:startLine 33;
     aat:syntax "macro";
-    aat:targetHeading <#贾政>;
+    aat:targetHeading :heading-4;
     aat:targetSelector "贾政";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l332-c1-o0> rdf:reifies <<(<#林黛玉> rel:granddaughter-of <#贾母>)>>;
+:xref-edge-l332-c1-o0 rdf:reifies <<(:heading-20 rel:granddaughter-of :heading-3)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾母";
     aat:endColumn 47;
@@ -1616,15 +1615,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾母[贾母, rel=granddaughter-of, weight=0.85]";
     aat:rel "granddaughter-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#林黛玉>;
+    aat:sourceHeading :heading-20;
     aat:sourceSelector "lindaiyu";
     aat:startColumn 1;
     aat:startLine 332;
     aat:syntax "macro";
-    aat:targetHeading <#贾母>;
+    aat:targetHeading :heading-3;
     aat:targetSelector "贾母";
     field:weight "0.85".
-<dream-of-red-chamber.adoc/projection#xref-edge-l34-c1-o0> rdf:reifies <<(<#贾母> rel:grandmother-of <#林黛玉>)>>;
+:xref-edge-l34-c1-o0 rdf:reifies <<(:heading-3 rel:grandmother-of :heading-20)>>;
     a aat:XrefEdge;
     aat:displayLabel "林黛玉";
     aat:endColumn 47;
@@ -1634,15 +1633,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:林黛玉[林黛玉, rel=grandmother-of, weight=0.85]";
     aat:rel "grandmother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾母>;
+    aat:sourceHeading :heading-3;
     aat:sourceSelector "jiamu";
     aat:startColumn 1;
     aat:startLine 34;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉";
     field:weight "0.85".
-<dream-of-red-chamber.adoc/projection#xref-edge-l351-c4-o0> rdf:reifies <<(<#史湘云> rel:cousin <#林黛玉>)>>;
+:xref-edge-l351-c4-o0 rdf:reifies <<(:heading-21 rel:cousin :heading-20)>>;
     a aat:XrefEdge;
     aat:displayLabel "林黛玉";
     aat:endColumn 41;
@@ -1652,15 +1651,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:林黛玉[林黛玉, rel=cousin, weight=0.5]";
     aat:rel "cousin";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#史湘云>;
+    aat:sourceHeading :heading-21;
     aat:sourceSelector "shixiangyun";
     aat:startColumn 4;
     aat:startLine 351;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l353-c10-o0> rdf:reifies <<(<#史湘云> rel:poetry-friend <#薛宝钗>)>>;
+:xref-edge-l353-c10-o0 rdf:reifies <<(:heading-21 rel:poetry-friend :heading-17)>>;
     a aat:XrefEdge;
     aat:displayLabel "薛宝钗";
     aat:endColumn 54;
@@ -1670,15 +1669,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:薛宝钗[薛宝钗, rel=poetry-friend, weight=0.6]";
     aat:rel "poetry-friend";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#史湘云>;
+    aat:sourceHeading :heading-21;
     aat:sourceSelector "shixiangyun";
     aat:startColumn 10;
     aat:startLine 353;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "薛宝钗";
     field:weight "0.6".
-<dream-of-red-chamber.adoc/projection#xref-edge-l376-c6-o0> rdf:reifies <<(<#秦可卿> rel:scandal-with <#贾珍>)>>;
+:xref-edge-l376-c6-o0 rdf:reifies <<(:heading-22 rel:scandal-with :heading-23)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾珍";
     aat:endColumn 47;
@@ -1688,15 +1687,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾珍[贾珍, rel=scandal-with, weight=0.9]";
     aat:rel "scandal-with";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#秦可卿>;
+    aat:sourceHeading :heading-22;
     aat:sourceSelector "qinkeqing";
     aat:startColumn 6;
     aat:startLine 376;
     aat:syntax "macro";
-    aat:targetHeading <#贾珍>;
+    aat:targetHeading :heading-23;
     aat:targetSelector "贾珍";
     field:weight "0.9".
-<dream-of-red-chamber.adoc/projection#xref-edge-l388-c4-o0> rdf:reifies <<(<#贾珍> rel:scandal-with <#秦可卿>)>>;
+:xref-edge-l388-c4-o0 rdf:reifies <<(:heading-23 rel:scandal-with :heading-22)>>;
     a aat:XrefEdge;
     aat:displayLabel "秦可卿";
     aat:endColumn 47;
@@ -1706,15 +1705,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:秦可卿[秦可卿, rel=scandal-with, weight=0.9]";
     aat:rel "scandal-with";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾珍>;
+    aat:sourceHeading :heading-23;
     aat:sourceSelector "jiashen";
     aat:startColumn 4;
     aat:startLine 388;
     aat:syntax "macro";
-    aat:targetHeading <#秦可卿>;
+    aat:targetHeading :heading-22;
     aat:targetSelector "秦可卿";
     field:weight "0.9".
-<dream-of-red-chamber.adoc/projection#xref-edge-l393-c8-o0> rdf:reifies <<(<#贾珍> rel:harasses <#尤二姐>)>>;
+:xref-edge-l393-c8-o0 rdf:reifies <<(:heading-23 rel:harasses :heading-24)>>;
     a aat:XrefEdge;
     aat:displayLabel "尤二姐";
     aat:endColumn 47;
@@ -1724,15 +1723,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:尤二姐[尤二姐, rel=harasses, weight=0.6]";
     aat:rel "harasses";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾珍>;
+    aat:sourceHeading :heading-23;
     aat:sourceSelector "jiashen";
     aat:startColumn 8;
     aat:startLine 393;
     aat:syntax "macro";
-    aat:targetHeading <#尤二姐>;
+    aat:targetHeading :heading-24;
     aat:targetSelector "尤二姐";
     field:weight "0.6".
-<dream-of-red-chamber.adoc/projection#xref-edge-l394-c1-o0> rdf:reifies <<(<#贾珍> rel:harasses <#尤三姐>)>>;
+:xref-edge-l394-c1-o0 rdf:reifies <<(:heading-23 rel:harasses :heading-25)>>;
     a aat:XrefEdge;
     aat:displayLabel "尤三姐";
     aat:endColumn 40;
@@ -1742,15 +1741,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:尤三姐[尤三姐, rel=harasses, weight=0.4]";
     aat:rel "harasses";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾珍>;
+    aat:sourceHeading :heading-23;
     aat:sourceSelector "jiashen";
     aat:startColumn 1;
     aat:startLine 394;
     aat:syntax "macro";
-    aat:targetHeading <#尤三姐>;
+    aat:targetHeading :heading-25;
     aat:targetSelector "尤三姐";
     field:weight "0.4".
-<dream-of-red-chamber.adoc/projection#xref-edge-l404-c12-o0> rdf:reifies <<(<#尤二姐> rel:concubine-of <#贾琏>)>>;
+:xref-edge-l404-c12-o0 rdf:reifies <<(:heading-24 rel:concubine-of :heading-9)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾琏";
     aat:endColumn 53;
@@ -1760,15 +1759,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾琏[贾琏, rel=concubine-of, weight=0.7]";
     aat:rel "concubine-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#尤二姐>;
+    aat:sourceHeading :heading-24;
     aat:sourceSelector "youerjie";
     aat:startColumn 12;
     aat:startLine 404;
     aat:syntax "macro";
-    aat:targetHeading <#贾琏>;
+    aat:targetHeading :heading-9;
     aat:targetSelector "贾琏";
     field:weight "0.7".
-<dream-of-red-chamber.adoc/projection#xref-edge-l410-c5-o0> rdf:reifies <<(<#尤二姐> rel:destroyed-by <#王熙凤>)>>;
+:xref-edge-l410-c5-o0 rdf:reifies <<(:heading-24 rel:destroyed-by :heading-10)>>;
     a aat:XrefEdge;
     aat:endColumn 43;
     aat:endLine 410;
@@ -1777,15 +1776,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王熙凤[rel=destroyed-by, weight=0.9]";
     aat:rel "destroyed-by";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#尤二姐>;
+    aat:sourceHeading :heading-24;
     aat:sourceSelector "youerjie";
     aat:startColumn 5;
     aat:startLine 410;
     aat:syntax "macro";
-    aat:targetHeading <#王熙凤>;
+    aat:targetHeading :heading-10;
     aat:targetSelector "王熙凤";
     field:weight "0.9".
-<dream-of-red-chamber.adoc/projection#xref-edge-l454-c8-o0> a aat:XrefEdge;
+:xref-edge-l454-c8-o0 a aat:XrefEdge;
     aat:displayLabel "巧姐";
     aat:endColumn 44;
     aat:endLine 454;
@@ -1794,14 +1793,14 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:巧姐[巧姐, rel=rescues, weight=0.9]";
     aat:rel "rescues";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#刘姥姥>;
+    aat:sourceHeading :heading-27;
     aat:sourceSelector "liulaolao";
     aat:startColumn 8;
     aat:startLine 454;
     aat:syntax "macro";
     aat:targetSelector "巧姐";
     field:weight "0.9".
-<dream-of-red-chamber.adoc/projection#xref-edge-l48-c3-o0> rdf:reifies <<(<#贾政> rel:father-of <#贾宝玉>)>>;
+:xref-edge-l48-c3-o0 rdf:reifies <<(:heading-4 rel:father-of :heading-8)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾宝玉";
     aat:endColumn 43;
@@ -1811,15 +1810,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾宝玉[贾宝玉, rel=father-of, weight=0.3]";
     aat:rel "father-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾政>;
+    aat:sourceHeading :heading-4;
     aat:sourceSelector "jiazheng";
     aat:startColumn 3;
     aat:startLine 48;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-8;
     aat:targetSelector "贾宝玉";
     field:weight "0.3".
-<dream-of-red-chamber.adoc/projection#xref-edge-l55-c3-o0> rdf:reifies <<(<#贾政> rel:married-to <#王夫人>)>>;
+:xref-edge-l55-c3-o0 rdf:reifies <<(:heading-4 rel:married-to :heading-5)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 44;
@@ -1829,15 +1828,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王夫人[王夫人, rel=married-to, weight=0.5]";
     aat:rel "married-to";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾政>;
+    aat:sourceHeading :heading-4;
     aat:sourceSelector "jiazheng";
     aat:startColumn 3;
     aat:startLine 55;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-5;
     aat:targetSelector "王夫人";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l57-c1-o0> rdf:reifies <<(<#贾政> rel:son-of <#贾母>)>>;
+:xref-edge-l57-c1-o0 rdf:reifies <<(:heading-4 rel:son-of :heading-3)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾母";
     aat:endColumn 36;
@@ -1847,15 +1846,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾母[贾母, rel=son-of, weight=0.5]";
     aat:rel "son-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾政>;
+    aat:sourceHeading :heading-4;
     aat:sourceSelector "jiazheng";
     aat:startColumn 1;
     aat:startLine 57;
     aat:syntax "macro";
-    aat:targetHeading <#贾母>;
+    aat:targetHeading :heading-3;
     aat:targetSelector "贾母";
     field:weight "0.5".
-<dream-of-red-chamber.adoc/projection#xref-edge-l64-c10-o0> rdf:reifies <<(<#王夫人> rel:aunt-of <#王熙凤>)>>;
+:xref-edge-l64-c10-o0 rdf:reifies <<(:heading-5 rel:aunt-of :heading-10)>>;
     a aat:XrefEdge;
     aat:displayLabel "王熙凤";
     aat:endColumn 48;
@@ -1865,15 +1864,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王熙凤[王熙凤, rel=aunt-of, weight=0.6]";
     aat:rel "aunt-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#王夫人>;
+    aat:sourceHeading :heading-5;
     aat:sourceSelector "wangfuren";
     aat:startColumn 10;
     aat:startLine 64;
     aat:syntax "macro";
-    aat:targetHeading <#王熙凤>;
+    aat:targetHeading :heading-10;
     aat:targetSelector "王熙凤";
     field:weight "0.6".
-<dream-of-red-chamber.adoc/projection#xref-edge-l69-c5-o0> rdf:reifies <<(<#王夫人> rel:dislikes <#林黛玉>)>>;
+:xref-edge-l69-c5-o0 rdf:reifies <<(:heading-5 rel:dislikes :heading-20)>>;
     a aat:XrefEdge;
     aat:displayLabel "林黛玉";
     aat:endColumn 44;
@@ -1883,15 +1882,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:林黛玉[林黛玉, rel=dislikes, weight=0.7]";
     aat:rel "dislikes";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#王夫人>;
+    aat:sourceHeading :heading-5;
     aat:sourceSelector "wangfuren";
     aat:startColumn 5;
     aat:startLine 69;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉";
     field:weight "0.7".
-<dream-of-red-chamber.adoc/projection#xref-edge-l71-c6-o0> rdf:reifies <<(<#王夫人> rel:Prefers-as-daughter-in-law <#薛宝钗>)>>;
+:xref-edge-l71-c6-o0 rdf:reifies <<(:heading-5 rel:Prefers-as-daughter-in-law :heading-17)>>;
     a aat:XrefEdge;
     aat:displayLabel "薛宝钗";
     aat:endColumn 63;
@@ -1901,15 +1900,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:薛宝钗[薛宝钗, rel=Prefers-as-daughter-in-law, weight=0.8]";
     aat:rel "Prefers-as-daughter-in-law";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#王夫人>;
+    aat:sourceHeading :heading-5;
     aat:sourceSelector "wangfuren";
     aat:startColumn 6;
     aat:startLine 71;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "薛宝钗";
     field:weight "0.8".
-<dream-of-red-chamber.adoc/projection#xref-edge-l80-c6-o0> rdf:reifies <<(<#贾赦> rel:desires <#鸳鸯>)>>;
+:xref-edge-l80-c6-o0 rdf:reifies <<(:heading-6 rel:desires :heading-15)>>;
     a aat:XrefEdge;
     aat:displayLabel "鸳鸯";
     aat:endColumn 42;
@@ -1919,15 +1918,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:鸳鸯[鸳鸯, rel=desires, weight=0.4]";
     aat:rel "desires";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾赦>;
+    aat:sourceHeading :heading-6;
     aat:sourceSelector "jiashu";
     aat:startColumn 6;
     aat:startLine 80;
     aat:syntax "macro";
-    aat:targetHeading <#鸳鸯>;
+    aat:targetHeading :heading-15;
     aat:targetSelector "鸳鸯";
     field:weight "0.4".
-<dream-of-red-chamber.adoc/projection#xref-edge-l83-c5-o0> rdf:reifies <<(<#贾赦> rel:brother-of <#贾政>)>>;
+:xref-edge-l83-c5-o0 rdf:reifies <<(:heading-6 rel:brother-of :heading-4)>>;
     a aat:XrefEdge;
     aat:displayLabel "贾政";
     aat:endColumn 44;
@@ -1937,15 +1936,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:贾政[贾政, rel=brother-of, weight=0.3]";
     aat:rel "brother-of";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾赦>;
+    aat:sourceHeading :heading-6;
     aat:sourceSelector "jiashu";
     aat:startColumn 5;
     aat:startLine 83;
     aat:syntax "macro";
-    aat:targetHeading <#贾政>;
+    aat:targetHeading :heading-4;
     aat:targetSelector "贾政";
     field:weight "0.3".
-<dream-of-red-chamber.adoc/projection#xref-edge-l85-c4-o0> rdf:reifies <<(<#贾赦> rel:married-to <#邢夫人>)>>;
+:xref-edge-l85-c4-o0 rdf:reifies <<(:heading-6 rel:married-to :heading-7)>>;
     a aat:XrefEdge;
     aat:displayLabel "邢夫人";
     aat:endColumn 45;
@@ -1955,15 +1954,15 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:邢夫人[邢夫人, rel=married-to, weight=0.4]";
     aat:rel "married-to";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#贾赦>;
+    aat:sourceHeading :heading-6;
     aat:sourceSelector "jiashu";
     aat:startColumn 4;
     aat:startLine 85;
     aat:syntax "macro";
-    aat:targetHeading <#邢夫人>;
+    aat:targetHeading :heading-7;
     aat:targetSelector "邢夫人";
     field:weight "0.4".
-<dream-of-red-chamber.adoc/projection#xref-edge-l93-c17-o0> rdf:reifies <<(<#邢夫人> rel:sister-in-law-rival <#王夫人>)>>;
+:xref-edge-l93-c17-o0 rdf:reifies <<(:heading-7 rel:sister-in-law-rival :heading-5)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 67;
@@ -1973,11 +1972,11 @@ xref:尤三姐[尤三姐, rel=harasses, weight=0.4]，
     aat:raw "xref:王夫人[王夫人, rel=sister-in-law-rival, weight=0.5]";
     aat:rel "sister-in-law-rival";
     aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
-    aat:sourceHeading <#邢夫人>;
+    aat:sourceHeading :heading-7;
     aat:sourceSelector "xingfuren";
     aat:startColumn 17;
     aat:startLine 93;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-5;
     aat:targetSelector "王夫人";
     field:weight "0.5".

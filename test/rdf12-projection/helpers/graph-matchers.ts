@@ -101,8 +101,7 @@ export function literalValues(
 		);
 }
 
-// 标题节点以地址命名（06 号书第 2 章「身份」）。按位置认标题的测试用切片起始行找它：同一行有几个标题时按文档顺序取第
-// ordinal 个，与原来 heading-l<startLine>-o<ordinal> 的取法相同。
+// 按位置认标题：用切片起始行找它，同一行有几个标题时按文档顺序取第 ordinal 个（book-entry 下不同文件的行号会相撞）。
 export function headingStartingAt(
 	graph: Rdf12Graph,
 	startLine: number,
@@ -135,10 +134,37 @@ function documentOrderOf(graph: Rdf12Graph, heading: Rdf12IriTerm): number {
 		: 0;
 }
 
-// 投影器自己起名的资源在 <文档 IRI>/projection# 下。
-export function projectionResource(
+// 图里的资源都是 <文档 IRI>#<局部名>（06 号书第 2 章「身份」）。
+export function documentResource(
 	documentIri: string,
 	localId: string,
 ): Rdf12IriTerm {
-	return iriTerm(`${documentIri}/projection#${localId}`);
+	return iriTerm(`${documentIri}#${localId}`);
+}
+
+// 按 label 空间反查：标题节点上 aat:headline、aat:addressPath、aat:addressLabel、aat:generatedAddressLabel 的值与
+// selector 整串相等的标题（06 号书第 2 章「地址与 Label 空间」），按 IRI 排序。
+export function labelOwners(
+	graph: Rdf12Graph,
+	selector: string,
+): Rdf12IriTerm[] {
+	const owners = new Map<string, Rdf12IriTerm>();
+	for (const name of [
+		"headline",
+		"addressPath",
+		"addressLabel",
+		"generatedAddressLabel",
+	]) {
+		for (const triple of graph.match({ predicate: aatTerm(name) })) {
+			if (
+				triple.object.termType === "literal" &&
+				triple.object.value === selector
+			) {
+				owners.set(triple.subject.value, triple.subject);
+			}
+		}
+	}
+	return [...owners.values()].toSorted((left, right) =>
+		left.value.localeCompare(right.value),
+	);
 }

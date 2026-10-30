@@ -2,15 +2,23 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { AbundantDocument } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
+import {
+	createRdf12LabelCatalog,
+	type Rdf12HeadingLabelKind,
+	type Rdf12LabelCatalog,
+} from "../../src/rdf12-projection/label-catalog";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
-import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
+import {
+	projectAbundantDocumentToRdf12,
+	type Rdf12Projection,
+} from "../../src/rdf12-projection/projector";
 import {
 	bindSelector,
 	candidateNodesForSelector,
 } from "../../src/rdf12-projection/selector-binding";
 import { iriTerm } from "../../src/rdf12-projection/terms";
-import { headingStartingAt } from "./helpers/graph-matchers";
+import { aatTerm, headingStartingAt } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
@@ -18,7 +26,7 @@ const referencePath = join(projectRoot, "samples/reference-links.adoc");
 describe("rdf12 selector binding", () => {
 	it("binds selectors to heading address labels", async () => {
 		const projection = await referenceProjection();
-		const result = bindSelector(projection.labelCatalog, "section-basics");
+		const result = bindSelector(catalogOf(projection), "section-basics");
 
 		expect(result.status).toBe("bound");
 		expect(result.selector).toBe("section-basics");
@@ -29,8 +37,8 @@ describe("rdf12 selector binding", () => {
 
 	it("binds selectors to heading generated address labels and headlines", async () => {
 		const projection = await referenceProjection();
-		const generated = bindSelector(projection.labelCatalog, "_1_引言");
-		const headline = bindSelector(projection.labelCatalog, "3. 核心引擎设计");
+		const generated = bindSelector(catalogOf(projection), "_1_引言");
+		const headline = bindSelector(catalogOf(projection), "3. 核心引擎设计");
 
 		expect(generated.status).toBe("bound");
 		if (generated.status === "bound") {
@@ -50,7 +58,7 @@ describe("rdf12 selector binding", () => {
 			["perf-table", 40],
 			["warning-text", 40],
 		] as const) {
-			const result = bindSelector(reference.labelCatalog, selector);
+			const result = bindSelector(catalogOf(reference), selector);
 
 			expect(result.status).toBe("bound");
 			if (result.status === "bound") {
@@ -72,7 +80,7 @@ describe("rdf12 selector binding", () => {
 				}),
 				{ documentRoot: projectRoot },
 			);
-			const result = bindSelector(projection.labelCatalog, selector);
+			const result = bindSelector(catalogOf(projection), selector);
 
 			expect(result.status).toBe("bound");
 			if (result.status === "bound") {
@@ -88,7 +96,7 @@ describe("rdf12 selector binding", () => {
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const [deliveryHeading] = payloadProjection.labelCatalog.owners("delivery");
+		const [deliveryHeading] = catalogOf(payloadProjection).owners("delivery");
 
 		for (const [projection, selector] of [
 			[payloadProjection, "section"],
@@ -101,7 +109,7 @@ describe("rdf12 selector binding", () => {
 			],
 			[payloadProjection, deliveryHeading?.value ?? ""],
 		] as const) {
-			expect(bindSelector(projection.labelCatalog, selector)).toEqual({
+			expect(bindSelector(catalogOf(projection), selector)).toEqual({
 				status: "unresolved",
 				selector,
 				selectorLiteral: selector,
@@ -111,7 +119,7 @@ describe("rdf12 selector binding", () => {
 
 	it("keeps unresolved selector literal available without creating a target", async () => {
 		const projection = await referenceProjection();
-		const result = bindSelector(projection.labelCatalog, "missing-target");
+		const result = bindSelector(catalogOf(projection), "missing-target");
 
 		expect(result).toEqual({
 			status: "unresolved",
@@ -124,7 +132,7 @@ describe("rdf12 selector binding", () => {
 		const projection = projectAbundantDocumentToRdf12(duplicateDocument(), {
 			documentRoot: projectRoot,
 		});
-		const result = bindSelector(projection.labelCatalog, "Duplicate");
+		const result = bindSelector(catalogOf(projection), "Duplicate");
 
 		expect(result.status).toBe("ambiguous");
 		if (result.status === "ambiguous") {
@@ -136,7 +144,7 @@ describe("rdf12 selector binding", () => {
 			expect("target" in result).toBe(false);
 		}
 		expect(
-			candidateNodesForSelector(projection.labelCatalog, "Duplicate").map(
+			candidateNodesForSelector(catalogOf(projection), "Duplicate").map(
 				(candidate) => candidate.value,
 			),
 		).toEqual([
@@ -150,7 +158,7 @@ describe("rdf12 selector binding", () => {
 		const projection = projectAbundantDocumentToRdf12(document, {
 			documentRoot: projectRoot,
 		});
-		const result = bindSelector(projection.labelCatalog, "shared");
+		const result = bindSelector(catalogOf(projection), "shared");
 
 		expect(result.status).toBe("ambiguous");
 		if (result.status === "ambiguous") {
@@ -165,7 +173,7 @@ describe("rdf12 selector binding", () => {
 		const projection = projectAbundantDocumentToRdf12(repeatedAliasDocument(), {
 			documentRoot: projectRoot,
 		});
-		const result = bindSelector(projection.labelCatalog, "shared");
+		const result = bindSelector(catalogOf(projection), "shared");
 
 		expect(result.status).toBe("bound");
 		if (result.status === "bound") {
@@ -178,7 +186,7 @@ describe("rdf12 selector binding", () => {
 			documentRoot: projectRoot,
 		});
 
-		expect(bindSelector(projection.labelCatalog, "Display Label")).toEqual({
+		expect(bindSelector(catalogOf(projection), "Display Label")).toEqual({
 			status: "unresolved",
 			selector: "Display Label",
 			selectorLiteral: "Display Label",
@@ -205,6 +213,30 @@ describe("rdf12 selector binding", () => {
 		).toThrow(/unexpectedly empty/u);
 	});
 });
+
+// 绑定目录与图上的标签是同一份事实：从标题节点上的四个标签谓词建目录（06 号书第 2 章「地址与 Label 空间」）。
+function catalogOf(projection: Rdf12Projection): Rdf12LabelCatalog {
+	const catalog = createRdf12LabelCatalog();
+	for (const labelKind of [
+		"headline",
+		"addressPath",
+		"addressLabel",
+		"generatedAddressLabel",
+	] satisfies Rdf12HeadingLabelKind[]) {
+		for (const triple of projection.graph.match({
+			predicate: aatTerm(labelKind),
+		})) {
+			if (triple.object.termType === "literal") {
+				catalog.add({
+					owner: triple.subject,
+					labelKind,
+					value: triple.object.value,
+				});
+			}
+		}
+	}
+	return catalog;
+}
 
 async function referenceProjection() {
 	return projectAbundantDocumentToRdf12(

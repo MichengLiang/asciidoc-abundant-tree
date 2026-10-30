@@ -4,6 +4,19 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## Unreleased
+
+### Changed (breaking)
+
+- A heading node's IRI is `<document IRI>#heading-<N>`, `N` being its `aat:documentOrder`, and `aat:name` is gone. In 0.3.0 the IRI was the shortest address that only this heading owned, which made the projector decide which headings counted as duplicates and number the ones it could not tell apart (`-1`, `-2`); a heading's IRI also changed whenever another heading with the same headline appeared elsewhere. Authored text now only appears as labels on the node, and consumers find headings by querying those labels, not by reading IRIs.
+- Every address path of two or more segments is written as `aat:addressPath` (`红烧肉::火候`, `家常菜谱::红烧肉::火候`), so the heading label space is the values of four predicates on the graph: `aat:headline`, `aat:addressPath`, `aat:addressLabel`, `aat:generatedAddressLabel`. `Rdf12Projection` loses `labelCatalog`; bind a selector by matching it against those four predicates.
+- All resources live directly under `<document IRI>#` again: `/projection#` is gone, since no authored text is left in a local id to collide with `source` or `projection`. `Rdf12Projection` loses `headingNamespace`.
+- Turtle output declares the empty prefix `:` as `<document IRI>#` instead of writing `@base`, so resources read `:heading-3`, `:xref-edge-l8-c8-o0`; JSON-LD writes full IRIs and no longer carries `@base`.
+
+### Fixed
+
+- A heading whose headline expands to an empty string (`== {empty}`) had no name in 0.3.0 and was dropped from the graph, together with the source heading of every xref it contains. It is a heading node again, with an empty `aat:headline`.
+
 ## 0.3.0 - 2026-10-31
 
 ### Changed (breaking)

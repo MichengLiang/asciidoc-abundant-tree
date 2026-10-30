@@ -13,8 +13,9 @@ export type ProjectLabelsInput = {
 	readonly structure: StructureProjection;
 };
 
-// label 空间就是标题的地址（06 号书第 2 章「地址与 Label 空间」）：地址路径、custom ID、归属到标题的本地 target ID
-// 与生成 ID。它们由 structure-projector 定名字时的同一份地址簿给出，绑定与命名用的是同一套地址。
+// label 空间就是标题的地址（06 号书第 2 章「地址与 Label 空间」），全部写进图：消费者只拿得到图，要按同一套地址反查、
+// 绑定指向别的文档的引用。headline、custom ID 与生成 ID 由 structure-projector 写出，这里补上两段以上的地址路径与
+// 归属到标题的本地 target ID；绑定用的目录与图上的标签出自同一份地址簿。
 export function projectLabels(input: ProjectLabelsInput): Rdf12LabelCatalog {
 	const { nodeIndex, addressBook, targetAliases } = input.structure;
 	const catalog = createRdf12LabelCatalog();
@@ -23,6 +24,15 @@ export function projectLabels(input: ProjectLabelsInput): Rdf12LabelCatalog {
 		const owner = nodeIndex.get(address.owner);
 		if (owner !== undefined) {
 			catalog.add({ owner, labelKind: address.kind, value: address.value });
+			if (address.kind === "addressPath") {
+				input.graph.add(
+					rdf12Triple(
+						owner,
+						iriTerm(`${namespaces.aat}addressPath`),
+						stringLiteral(address.value),
+					),
+				);
+			}
 		}
 	}
 	for (const alias of targetAliases) {

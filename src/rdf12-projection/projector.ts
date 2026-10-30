@@ -1,7 +1,6 @@
 import type { AbundantDocument } from "../model";
 import { projectSurfaceAttributes } from "./attributes";
 import { createRdf12Graph, type Rdf12Graph } from "./graph";
-import type { Rdf12LabelCatalog } from "./label-catalog";
 import { projectLabels } from "./labels";
 import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
@@ -9,11 +8,7 @@ import { normalizeRdf12Options, type Rdf12Options } from "./options";
 import { computePathCoordinate } from "./path-coordinate";
 import { projectPayloadBlocks } from "./payload-projector";
 import { addProvenanceTriples } from "./provenance";
-import {
-	documentIriFor,
-	headingNamespaceFor,
-	projectionResourceIri,
-} from "./resource-identity";
+import { documentIriFor, documentResourceIri } from "./resource-identity";
 import { normalizeSourceDigest } from "./source-digest";
 import { projectSourceFiles } from "./source-file-projector";
 import { projectStructureResources } from "./structure-projector";
@@ -25,15 +20,13 @@ export type Rdf12Projection = {
 	readonly graph: Rdf12Graph;
 	readonly prefixes: Rdf12PrefixMap;
 	readonly relativePath: string;
-	// 文档 IRI：baseIri 加上源文件相对路径。标题节点是 headingNamespace 加名字，投影器的资源在 <文档 IRI>/projection# 下。
+	// 文档 IRI：baseIri 加上源文件相对路径。图里每个资源都是 <文档 IRI>#<局部名>。
 	readonly documentIri: string;
-	readonly headingNamespace: string;
 	readonly sourceDocumentIri: string;
 	readonly projectionIri: string;
 	readonly projectionActivityIri: string;
 	readonly abundantDocumentIri: string;
 	readonly nodeIndex: Rdf12NodeIndex;
-	readonly labelCatalog: Rdf12LabelCatalog;
 };
 
 export function projectAbundantDocumentToRdf12(
@@ -52,10 +45,10 @@ export function projectAbundantDocumentToRdf12(
 		coordinate.relativePath,
 	);
 
-	const sourceDocumentIri = projectionResourceIri(documentIri, "source");
-	const projectionIri = projectionResourceIri(documentIri, "projection");
-	const projectionActivityIri = projectionResourceIri(documentIri, "activity");
-	const abundantDocumentIri = projectionResourceIri(
+	const sourceDocumentIri = documentResourceIri(documentIri, "source");
+	const projectionIri = documentResourceIri(documentIri, "projection");
+	const projectionActivityIri = documentResourceIri(documentIri, "activity");
+	const abundantDocumentIri = documentResourceIri(
 		documentIri,
 		"abundant-document",
 	);
@@ -115,12 +108,10 @@ export function projectAbundantDocumentToRdf12(
 		prefixes: namespaces,
 		relativePath: coordinate.relativePath,
 		documentIri,
-		headingNamespace: headingNamespaceFor(documentIri),
 		sourceDocumentIri: sourceDocumentIri.value,
 		projectionIri: projectionIri.value,
 		projectionActivityIri: projectionActivityIri.value,
 		abundantDocumentIri: abundantDocumentIri.value,
 		nodeIndex,
-		labelCatalog,
 	};
 }

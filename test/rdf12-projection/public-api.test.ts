@@ -35,7 +35,7 @@ describe("rdf12 public API", () => {
 			sourcePath: structuralPayloadPath,
 		});
 		const result = rdf12(document, { documentRoot: projectRoot });
-		const root = iriTerm(`${result.headingNamespace}root`);
+		const root = iriTerm(`${result.documentIri}#heading-1`);
 
 		expect(
 			result.graph.has(
@@ -83,7 +83,7 @@ supplied body
 			sourcePath: structuralPayloadPath,
 		});
 		const result = rdf12(document, { documentRoot: projectRoot, sourceText });
-		const root = iriTerm(`${result.headingNamespace}root`);
+		const root = iriTerm(`${result.documentIri}#heading-1`);
 
 		expect(
 			result.graph.has(

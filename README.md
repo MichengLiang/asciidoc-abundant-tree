@@ -62,7 +62,7 @@ It is especially useful when a tool needs to answer questions such as:
 
 The `rdf12` projection derives an RDF 1.2 graph from an `AbundantDocument`. The source document remains the fact source, `AbundantDocument` is the input contract, and the RDF graph is the queryable projection.
 
-A heading node is named after its address: the document IRI (`urn:aat:doc:` plus the source path) followed by `#` and the shortest address that only this heading owns, so queries read `<#炒糖色>` or `<#红烧肉::火候>` where a reference would write `xref:炒糖色[]` or `xref:红烧肉::火候[]`. The name is also emitted as `aat:name`. A heading is addressed by its headline as written, by `::`-joined suffixes of its headline path when headlines repeat, and by its custom or generated ID; selectors match these addresses as whole strings. Resources the projector names itself (provenance, xref edge evidence, raw value objects) live under `<document IRI>/projection#`. Query code can find headings through those fields, then read `relativePath`, `startLine`, and `endLine` for source inspection or patching.
+Every resource in the graph is named `<document IRI>#<local id>`, where the document IRI is `urn:aat:doc:` plus the source path relative to `documentRoot`. The projector picks the local ids itself and never puts authored text in them: a heading is `heading-<N>`, `N` being its `aat:documentOrder`; xref edge evidence and raw value objects are named after their source coordinates. What authors write is attached to the heading as labels: the headline (`aat:headline`), every `::`-joined suffix of its headline path with two or more segments (`aat:addressPath`, e.g. `红烧肉::火候`), and its custom or generated ID (`aat:addressLabel`, `aat:generatedAddressLabel`). These four predicates are the heading label space; a selector binds to the headings whose label equals it as a whole string. The projector does not decide which headings count as duplicates, and consumers find headings by querying labels, not by parsing IRIs. Query code can then read `relativePath`, `startLine`, and `endLine` for source inspection or patching.
 
 The graph includes source document provenance, heading nodes, direct heading containment, same-parent child order, global heading preorder, selector binding, xref edge evidence, RDF 1.2 reifiers for resolved xref relations, direct field predicates, and raw value objects. `aat:containsDirectly` expresses direct parent-child heading relationships, `aat:childOrder` orders direct children within the same parent, and `aat:documentOrder` orders all headings by logical preorder. Source coordinate fields such as `relativePath`, `startLine`, `endLine`, `headingLine`, and `raw` describe the origin source location and slice; they are not a heading order fallback. Xref edges keep raw selectors and official Asciidoctor evidence as separate facts. Attribute lists such as `[#delivery.policy, status=active]` preserve the explicit ID as `aat:addressLabel`, `.policy` as `aat:role`, and named fields as field predicates written as named, such as `field:status`; book-defined field names live under `field:`, apart from the projector's own `aat:` vocabulary.
 
@@ -72,7 +72,7 @@ The RDF 1.2 heading projection does not emit `aat:previousSibling`. Consumers th
 
 Heading complex properties use a `for` or `forSelector` marker to bind a raw value object to a heading through a field predicate. A marker with a selector value queries the heading label space; a no-value marker binds by source ownership. Edge complex properties use a named xref attribute such as `relation-evidence=<source-value-id>` and a source value block id to bind a raw value object to xref edge evidence through a field predicate. Field names come from source roles or xref named attribute keys; they determine the public query entry. Raw value format comes from the source block language such as `[source,json]` or `[source,yaml]`; raw value objects preserve raw text and source coordinates without separate kind, id, or role predicates. Raw value objects are opaque and are not expanded into business RDF predicates.
 
-Ordinary xref target selectors and xref field values use separate spaces. The xref selector is the written target with its attribute references expanded and any document part cut off; it queries `aat:addressLabel`, `aat:generatedAddressLabel`, and `aat:headline`. An xref that names another document records it as `aat:targetDocument` and is not bound in this document. A named xref attribute value queries source value ids. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and xref named attribute keys become field predicates; neither is emitted as a legacy surface-attribute resource.
+Ordinary xref target selectors and xref field values use separate spaces. The xref selector is the written target with its attribute references expanded and any document part cut off; it queries the heading label space: `aat:headline`, `aat:addressPath`, `aat:addressLabel`, and `aat:generatedAddressLabel`. An xref that names another document records it as `aat:targetDocument` and is not bound in this document. A named xref attribute value queries source value ids. The `rel` control field is retained as `aat:rel` while selecting the main relation predicate, and xref named attribute keys become field predicates; neither is emitted as a legacy surface-attribute resource.
 
 JSON-LD output is a frontend-friendly projection of the same RDF graph. RDF 1.2 triple terms are represented as structured `rdf12:TripleTerm` objects rather than flattened strings.
 
@@ -111,33 +111,33 @@ signals:
 Projected Turtle:
 
 ```turtle
-@base <urn:aat:doc:book.adoc>.
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix field: <https://micheng.dev/ns/asciidoc-field#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix : <urn:aat:doc:book.adoc#>.
 
-<#配送策略> a aat:Heading;
+:heading-2 a aat:Heading;
     aat:addressLabel "delivery", "rel-delivery-capacity";
+    aat:addressPath "投影预览::配送策略";
     aat:headline "配送策略";
-    aat:name "配送策略";
     aat:role "policy";
-    field:policy-risk-profile <book.adoc/projection#payload-l8-o0>;
-    rel:depends-on <#运力规则>.
+    field:policy-risk-profile :payload-l8-o0;
+    rel:depends-on :heading-3.
 
-<book.adoc/projection#payload-l8-o0> aat:forSelector "delivery";
+:payload-l8-o0 aat:forSelector "delivery";
     aat:format "json";
     aat:raw "{\"owner\":{\"team\":\"ops\"},\"risk\":{\"signals\":[\"capacity\"]}}".
 
-<book.adoc/projection#xref-edge-l6-c8-o0> rdf:reifies <<(<#配送策略> rel:depends-on <#运力规则>)>>;
+:xref-edge-l6-c8-o0 rdf:reifies <<(:heading-2 rel:depends-on :heading-3)>>;
     a aat:XrefEdge;
-    aat:sourceHeading <#配送策略>;
-    aat:targetHeading <#运力规则>;
+    aat:sourceHeading :heading-2;
+    aat:targetHeading :heading-3;
     aat:targetSelector "capacity";
-    field:relation-evidence <book.adoc/projection#payload-l14-o0>;
+    field:relation-evidence :payload-l14-o0;
     aat:rel "depends-on".
 
-<book.adoc/projection#payload-l14-o0> aat:sourceValueId "rel-delivery-capacity";
+:payload-l14-o0 aat:sourceValueId "rel-delivery-capacity";
     aat:format "yaml";
     aat:raw "reason: risk-control\nsignals:\n  - capacity".
 ```

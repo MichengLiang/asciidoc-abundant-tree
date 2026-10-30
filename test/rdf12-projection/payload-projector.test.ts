@@ -17,7 +17,7 @@ import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
 import { iriTerm, type Rdf12IriTerm } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
-import { headingStartingAt } from "./helpers/graph-matchers";
+import { headingStartingAt, labelOwners } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const sourcePath = join(projectRoot, "samples/reference-links.adoc");
@@ -74,7 +74,7 @@ review_team: quality-ops
 			await parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
-		const [delivery] = projection.labelCatalog.owners("delivery");
+		const [delivery] = labelOwners(projection.graph, "delivery");
 		const value = onlyIriObject(
 			projection.graph,
 			delivery ?? iriTerm("urn:missing-heading"),

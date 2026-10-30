@@ -64,25 +64,25 @@ edge:
 |===
 |节点 |headline |label |level |切片
 
-|`<#root>`
+|`:heading-1`
 |`root`
 |
 |`0`
 |line 1 到 line 4
 
-|`<#配送策略>`
+|`:heading-2`
 |`配送策略`
 |`delivery`, `rel-delivery-capacity`
 |`1`
 |line 5 到 line 38
 
-|`<#运力规则>`
+|`:heading-3`
 |`运力规则`
 |`capacity`
 |`1`
 |line 39 到 line 43
 
-|`<#我是3级标题>`
+|`:heading-4`
 |`我是3级标题`
 |`_我是3级标题`
 |`2`
@@ -95,16 +95,16 @@ edge:
 
 [source,turtle]
 ----
-<#root> aat:containsDirectly <#配送策略> .
-<#root> aat:containsDirectly <#运力规则> .
-<#运力规则> aat:containsDirectly <#我是3级标题> .
+:heading-1 aat:containsDirectly :heading-2 .
+:heading-1 aat:containsDirectly :heading-3 .
+:heading-3 aat:containsDirectly :heading-4 .
 
-<#root> aat:documentOrder 1 .
-<#配送策略> aat:documentOrder 2 ;
+:heading-1 aat:documentOrder 1 .
+:heading-2 aat:documentOrder 2 ;
     aat:childOrder 1 .
-<#运力规则> aat:documentOrder 3 ;
+:heading-3 aat:documentOrder 3 ;
     aat:childOrder 2 .
-<#我是3级标题> aat:documentOrder 4 ;
+:heading-4 aat:documentOrder 4 ;
     aat:childOrder 1 .
 ----
 
@@ -132,8 +132,9 @@ edge:
 
 [source,turtle]
 ------
-<#配送策略> a aat:Heading ;
+:heading-2 a aat:Heading ;
   aat:headline "配送策略" ;
+  aat:addressPath "root::配送策略" ;
   aat:addressLabel "delivery" ;
   aat:addressLabel "rel-delivery-capacity" ;
   aat:role "policy" ;
@@ -186,8 +187,9 @@ edge:
 ----
 """ .
 
-<#运力规则> a aat:Heading ;
+:heading-3 a aat:Heading ;
   aat:headline "运力规则" ;
+  aat:addressPath "root::运力规则" ;
   aat:addressLabel "capacity" ;
   aat:role "rule" ;
   field:status "active" ;
@@ -215,7 +217,7 @@ edge:
 
 [source,turtle]
 ----
-<#配送策略> field:policy-risk-profile :value-l10-o0 .
+:heading-2 field:policy-risk-profile :value-l10-o0 .
 
 :value-l10-o0 aat:forSelector "delivery" ;
   aat:format "json" ;
@@ -242,12 +244,12 @@ edge:
 
 [source,turtle]
 ----
-<#配送策略> rel:depends-on <#运力规则> .
+:heading-2 rel:depends-on :heading-3 .
 
 :xref-edge-l8-c8-o0 a aat:XrefEdge ;
-  rdf:reifies <<( <#配送策略> rel:depends-on <#运力规则> )>> ;
-  aat:sourceHeading <#配送策略> ;
-  aat:targetHeading <#运力规则> ;
+  rdf:reifies <<( :heading-2 rel:depends-on :heading-3 )>> ;
+  aat:sourceHeading :heading-2 ;
+  aat:targetHeading :heading-3 ;
   aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;
@@ -314,17 +316,17 @@ edge:
 
 [source,turtle]
 ----
-:heading-capacity a aat:Heading ;
+:heading-1 a aat:Heading ;
   aat:headline "运力规则" ;
   aat:addressLabel "capacity" ;
   aat:addressLabel "capacity-evidence" .
 
-:heading-delivery rel:depends-on :heading-capacity .
+:heading-2 rel:depends-on :heading-1 .
 
 :xref-edge-capacity-evidence a aat:XrefEdge ;
-  rdf:reifies <<( :heading-delivery rel:depends-on :heading-capacity )>> ;
-  aat:sourceHeading :heading-delivery ;
-  aat:targetHeading :heading-capacity ;
+  rdf:reifies <<( :heading-2 rel:depends-on :heading-1 )>> ;
+  aat:sourceHeading :heading-2 ;
+  aat:targetHeading :heading-1 ;
   aat:targetSelector "capacity-evidence" ;
   aat:displayLabel "运力证据" ;
   aat:officialResolvedId "capacity-evidence" ;
@@ -338,12 +340,14 @@ edge:
 `samples/structural-payload.adoc` 的投影必须满足：
 
 * 标题节点数量为四个。
+* 标题节点的 IRI 是 `<文档 IRI>#heading-<N>`，`N` 是它的 `aat:documentOrder`：`root`、`配送策略`、`运力规则`、`我是3级标题` 依次是 `:heading-1` 到 `:heading-4`。
 * `= root` 创建标题节点。
 * `配送策略` 节点有 `aat:addressLabel "delivery"`、`aat:addressLabel "rel-delivery-capacity"`、`aat:role "policy"`、`field:status "active"` 和 `field:owner "ops"`。
 * `运力规则` 节点有 `aat:addressLabel "capacity"`、`aat:role "rule"` 和 `field:status "active"`。
 * `运力规则` 节点自身 raw 不包含 `=== 我是3级标题`。
 * `root` 直接包含 `配送策略` 和 `运力规则`。
 * `运力规则` 直接包含 `我是3级标题`。
+* `我是3级标题` 节点有 `aat:addressPath "运力规则::我是3级标题"` 和 `aat:addressPath "root::运力规则::我是3级标题"`；只有一段的地址 `我是3级标题` 是它的 `aat:headline`，不另写 `aat:addressPath`。
 * `配送策略` 和 `运力规则` 在 `root` 的 direct children 中分别拥有 `aat:childOrder 1` 和 `aat:childOrder 2`。
 * 四个标题节点的 `aat:documentOrder` 按 `root`、`配送策略`、`运力规则`、`我是3级标题` 连续递增。
 * `配送策略` 到 `运力规则` 生成 `rel:depends-on` 边。

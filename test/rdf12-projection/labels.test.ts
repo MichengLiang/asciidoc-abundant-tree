@@ -2,7 +2,6 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseAbundantTree } from "../../src/parser";
 import { type Rdf12Graph, rdf12Triple } from "../../src/rdf12-projection/graph";
-import { nameInIri } from "../../src/rdf12-projection/iri-name";
 import { stringLiteral } from "../../src/rdf12-projection/literals";
 import { namespaces } from "../../src/rdf12-projection/namespaces";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
@@ -14,6 +13,7 @@ import {
 	expectResourceTypeCount,
 	expectTriple,
 	headingStartingAt,
+	labelOwners,
 	rdfTerm,
 	resourcesOfType,
 } from "./helpers/graph-matchers";
@@ -74,33 +74,33 @@ describe("rdf12 heading label space", () => {
 		expect(rdfValueLabelExpressionCount(projection.graph)).toBe(0);
 	});
 
-	it("records only heading owners in the selector label catalog", async () => {
+	it("writes label values only on heading nodes", async () => {
 		const projection = await referenceProjection();
 		const headingOwners = new Set(
 			resourcesOfType(projection.graph, aatTerm("Heading")).map(
 				(heading) => heading.value,
 			),
 		);
+		const labelTriples = [
+			"headline",
+			"addressPath",
+			"addressLabel",
+			"generatedAddressLabel",
+		].flatMap((name) => projection.graph.match({ predicate: aatTerm(name) }));
 
-		expect(projection.labelCatalog.entries().length).toBeGreaterThan(0);
-		for (const entry of projection.labelCatalog.entries()) {
-			expect(headingOwners.has(entry.owner.value)).toBe(true);
-			expect([
-				"headline",
-				"addressPath",
-				"addressLabel",
-				"generatedAddressLabel",
-			]).toContain(entry.labelKind);
-			expect("label" in entry).toBe(false);
+		expect(labelTriples.length).toBeGreaterThan(0);
+		for (const triple of labelTriples) {
+			expect(headingOwners.has(triple.subject.value)).toBe(true);
+			expect(triple.object.termType).toBe("literal");
 		}
 	});
 
 	it("projects local non-heading target ids as owning heading address labels", async () => {
 		const projection = await referenceProjection();
 
-		const [engineCodeOwner] = projection.labelCatalog.owners("engine-code");
-		const [perfTableOwner] = projection.labelCatalog.owners("perf-table");
-		const [warningTextOwner] = projection.labelCatalog.owners("warning-text");
+		const [engineCodeOwner] = labelOwners(projection.graph, "engine-code");
+		const [perfTableOwner] = labelOwners(projection.graph, "perf-table");
+		const [warningTextOwner] = labelOwners(projection.graph, "warning-text");
 
 		expect(engineCodeOwner).toEqual(headingStartingAt(projection.graph, 25));
 		expect(perfTableOwner).toEqual(headingStartingAt(projection.graph, 40));
@@ -130,7 +130,8 @@ describe("rdf12 heading label space", () => {
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const [relDeliveryOwner] = payloadProjection.labelCatalog.owners(
+		const [relDeliveryOwner] = labelOwners(
+			payloadProjection.graph,
 			"rel-delivery-capacity",
 		);
 
@@ -149,7 +150,7 @@ describe("rdf12 heading label space", () => {
 		const projection = await referenceProjection();
 
 		for (const value of ["代码清单 3-1", "重力井的危险性"]) {
-			expect(projection.labelCatalog.owners(value)).toEqual([]);
+			expect(labelOwners(projection.graph, value)).toEqual([]);
 		}
 
 		const payloadProjection = projectAbundantDocumentToRdf12(
@@ -159,39 +160,38 @@ describe("rdf12 heading label space", () => {
 			{ documentRoot: projectRoot },
 		);
 
-		expect(payloadProjection.labelCatalog.owners("policy")).toEqual([]);
-		expect(
-			payloadProjection.labelCatalog.owners("policy-risk-profile"),
-		).toEqual([]);
-		expect(payloadProjection.labelCatalog.owners("relation-evidence")).toEqual(
+		expect(labelOwners(payloadProjection.graph, "policy")).toEqual([]);
+		expect(labelOwners(payloadProjection.graph, "policy-risk-profile")).toEqual(
+			[],
+		);
+		expect(labelOwners(payloadProjection.graph, "relation-evidence")).toEqual(
 			[],
 		);
 	});
 
-	it("names headings after their address, not after their aliases", async () => {
+	it("treats custom IDs and generated IDs as labels of the same heading, not as its identity", async () => {
 		const projection = projectAbundantDocumentToRdf12(
 			await parseAbundantTree({
 				sourcePath: join(projectRoot, "samples/structural-payload.adoc"),
 			}),
 			{ documentRoot: projectRoot },
 		);
-		const deliveryPolicy = projection.labelCatalog.owners("delivery");
-		const capacityRule = projection.labelCatalog.owners("capacity");
-		const nestedGenerated = projection.labelCatalog.owners("_我是3级标题");
 
-		expect(deliveryPolicy).toEqual([expect.any(Object)]);
-		expect(capacityRule).toEqual([expect.any(Object)]);
-		expect(nestedGenerated).toEqual([expect.any(Object)]);
-		// 名字取最短的唯一地址路径，custom ID 与生成 ID 是别名，不进名字（06 号书第 2 章「身份」）。
-		expect(deliveryPolicy[0]?.value).toBe(
-			`${projection.headingNamespace}${nameInIri("配送策略")}`,
+		expect(labelOwners(projection.graph, "delivery")).toEqual(
+			labelOwners(projection.graph, "配送策略"),
 		);
-		expect(capacityRule[0]?.value).toBe(
-			`${projection.headingNamespace}${nameInIri("运力规则")}`,
+		expect(labelOwners(projection.graph, "capacity")).toEqual(
+			labelOwners(projection.graph, "运力规则"),
 		);
-		expect(nestedGenerated[0]?.value).toBe(
-			`${projection.headingNamespace}${nameInIri("我是3级标题")}`,
+		expect(labelOwners(projection.graph, "_我是3级标题")).toEqual(
+			labelOwners(projection.graph, "我是3级标题"),
 		);
+		for (const [owner] of [
+			labelOwners(projection.graph, "delivery"),
+			labelOwners(projection.graph, "capacity"),
+		]) {
+			expect(owner?.value).toMatch(/#heading-\d+$/u);
+		}
 	});
 
 	it("uses attrlist shorthand ids with roles as heading address labels only", async () => {
@@ -207,10 +207,10 @@ describe("rdf12 heading label space", () => {
 			await parseAbundantTree({ sourcePath: path }),
 			{ documentRoot: projectRoot },
 		);
-		const [heading] = projection.labelCatalog.owners("delivery-policy");
+		const [heading] = labelOwners(projection.graph, "delivery-policy");
 
-		expect(heading?.value).toBe(`${projection.headingNamespace}配送策略`);
-		expect(projection.labelCatalog.owners("section")).toEqual([]);
+		expect(heading?.value).toBe(`${projection.documentIri}#heading-2`);
+		expect(labelOwners(projection.graph, "section")).toEqual([]);
 		expectTriple(
 			projection.graph,
 			heading ?? iriTerm(""),

@@ -1,4 +1,3 @@
-@base <urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc>.
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix field: <https://micheng.dev/ns/asciidoc-field#>.
@@ -7,39 +6,24 @@
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix : <urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#>.
 
-<#家常菜> a aat:Heading;
-    aat:childOrder 4;
-    aat:contentEndLine 36;
-    aat:contentStartLine 36;
-    aat:documentOrder 8;
-    aat:endLine 37;
-    aat:generatedAddressLabel "_家常菜";
-    aat:headingLevel 1;
-    aat:headingLine 35;
-    aat:headline "家常菜";
-    aat:name "家常菜";
-    aat:raw """== 家常菜
-role:: category
-
-""";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
-    aat:startLine 35;
-    field:role "category".
-<#家庭食材与菜谱知识库> a aat:Heading;
-    aat:containsDirectly <#家常菜>, <#建模约定>, <#番茄炒蛋>, <#食材>;
+:activity a prov:Activity, aat:ProjectionActivity;
+    prov:used :source.
+:heading-1 a aat:Heading;
+    aat:containsDirectly :heading-2, :heading-3, :heading-7, :heading-8;
     aat:documentOrder 1;
     aat:endLine 2;
     aat:headingLevel 0;
     aat:headingLine 1;
     aat:headline "家庭食材与菜谱知识库";
-    aat:name "家庭食材与菜谱知识库";
     aat:raw """= 家庭食材与菜谱知识库
 
 """;
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
     aat:startLine 1.
-<#建模约定> a aat:Heading;
+:heading-2 a aat:Heading;
+    aat:addressPath "家庭食材与菜谱知识库::建模约定";
     aat:childOrder 1;
     aat:contentEndLine 4;
     aat:contentStartLine 4;
@@ -49,61 +33,16 @@ role:: category
     aat:headingLevel 1;
     aat:headingLine 3;
     aat:headline "建模约定";
-    aat:name "建模约定";
     aat:raw """== 建模约定
 本文档约定：标题层级解释为 `part-of`。显式 `xref` 的 `rel` 是业务边谓词。标题下第一个扁平描述列表是节点业务字段。
 
 """;
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
     aat:startLine 3.
-<#炒制步骤> a aat:Heading;
-    aat:childOrder 3;
-    aat:contentEndLine 30;
-    aat:contentStartLine 29;
-    aat:documentOrder 6;
-    aat:endLine 31;
-    aat:generatedAddressLabel "_炒制步骤";
-    aat:headingLevel 2;
-    aat:headingLine 28;
-    aat:headline "炒制步骤";
-    aat:name "炒制步骤";
-    aat:raw """=== 炒制步骤
-role:: step
-estimatedTime:: 5分钟
-
-""";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
-    aat:startLine 28;
-    field:estimatedTime "5分钟";
-    field:role "step".
-<#番茄> a aat:Heading;
+:heading-3 a aat:Heading;
+    aat:addressPath "家庭食材与菜谱知识库::番茄炒蛋";
     aat:childOrder 2;
-    aat:contentEndLine 26;
-    aat:contentStartLine 22;
-    aat:documentOrder 5;
-    aat:endLine 27;
-    aat:generatedAddressLabel "_番茄";
-    aat:headingLevel 2;
-    aat:headingLine 21;
-    aat:headline "番茄";
-    aat:name "番茄";
-    aat:raw """=== 番茄
-role:: ingredient
-storage:: 常温
-flavor:: 酸甜
-
-属于 xref:食材[rel=is-a]。
-
-""";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
-    aat:startLine 21;
-    field:flavor "酸甜";
-    field:role "ingredient";
-    field:storage "常温";
-    rel:is-a <#食材>.
-<#番茄炒蛋> a aat:Heading;
-    aat:childOrder 2;
-    aat:containsDirectly <#炒制步骤>, <#番茄>, <#鸡蛋>;
+    aat:containsDirectly :heading-4, :heading-5, :heading-6;
     aat:contentEndLine 12;
     aat:contentStartLine 7;
     aat:documentOrder 3;
@@ -112,7 +51,6 @@ flavor:: 酸甜
     aat:headingLevel 1;
     aat:headingLine 6;
     aat:headline "番茄炒蛋";
-    aat:name "番茄炒蛋";
     aat:raw """== 番茄炒蛋
 role:: recipe
 serving:: 2人份
@@ -122,32 +60,15 @@ summary:: 一道由番茄和鸡蛋组成的家常菜。
 属于 xref:家常菜[rel=is-a]。
 
 """;
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
     aat:startLine 6;
     field:difficulty "简单";
     field:role "recipe";
     field:serving "2人份";
     field:summary "一道由番茄和鸡蛋组成的家常菜。";
-    rel:is-a <#家常菜>.
-<#食材> a aat:Heading;
-    aat:childOrder 3;
-    aat:contentEndLine 33;
-    aat:contentStartLine 33;
-    aat:documentOrder 7;
-    aat:endLine 34;
-    aat:generatedAddressLabel "_食材";
-    aat:headingLevel 1;
-    aat:headingLine 32;
-    aat:headline "食材";
-    aat:name "食材";
-    aat:raw """== 食材
-role:: category
-
-""";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
-    aat:startLine 32;
-    field:role "category".
-<#鸡蛋> a aat:Heading;
+    rel:is-a :heading-8.
+:heading-4 a aat:Heading;
+    aat:addressPath "家庭食材与菜谱知识库::番茄炒蛋::鸡蛋", "番茄炒蛋::鸡蛋";
     aat:childOrder 1;
     aat:contentEndLine 19;
     aat:contentStartLine 15;
@@ -157,7 +78,6 @@ role:: category
     aat:headingLevel 2;
     aat:headingLine 14;
     aat:headline "鸡蛋";
-    aat:name "鸡蛋";
     aat:raw """=== 鸡蛋
 role:: ingredient
 storage:: 冷藏
@@ -166,21 +86,100 @@ allergen:: 蛋类
 属于 xref:食材[rel=is-a]。
 
 """;
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
     aat:startLine 14;
     field:allergen "蛋类";
     field:role "ingredient";
     field:storage "冷藏";
-    rel:is-a <#食材>.
-<recipe-knowledge.adoc/projection#activity> a prov:Activity, aat:ProjectionActivity;
-    prov:used <recipe-knowledge.adoc/projection#source>.
-<recipe-knowledge.adoc/projection#projection> a prov:Entity, aat:HeadingProjection;
-    prov:hadPrimarySource <recipe-knowledge.adoc/projection#source>;
-    prov:wasDerivedFrom <recipe-knowledge.adoc/projection#source>;
-    prov:wasGeneratedBy <recipe-knowledge.adoc/projection#activity>.
-<recipe-knowledge.adoc/projection#source> a prov:Entity, aat:AsciiDocSourceDocument;
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc".
-<recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0> rdf:reifies <<(<#番茄炒蛋> rel:is-a <#家常菜>)>>;
+    rel:is-a :heading-7.
+:heading-5 a aat:Heading;
+    aat:addressPath "家庭食材与菜谱知识库::番茄炒蛋::番茄", "番茄炒蛋::番茄";
+    aat:childOrder 2;
+    aat:contentEndLine 26;
+    aat:contentStartLine 22;
+    aat:documentOrder 5;
+    aat:endLine 27;
+    aat:generatedAddressLabel "_番茄";
+    aat:headingLevel 2;
+    aat:headingLine 21;
+    aat:headline "番茄";
+    aat:raw """=== 番茄
+role:: ingredient
+storage:: 常温
+flavor:: 酸甜
+
+属于 xref:食材[rel=is-a]。
+
+""";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:startLine 21;
+    field:flavor "酸甜";
+    field:role "ingredient";
+    field:storage "常温";
+    rel:is-a :heading-7.
+:heading-6 a aat:Heading;
+    aat:addressPath "家庭食材与菜谱知识库::番茄炒蛋::炒制步骤", "番茄炒蛋::炒制步骤";
+    aat:childOrder 3;
+    aat:contentEndLine 30;
+    aat:contentStartLine 29;
+    aat:documentOrder 6;
+    aat:endLine 31;
+    aat:generatedAddressLabel "_炒制步骤";
+    aat:headingLevel 2;
+    aat:headingLine 28;
+    aat:headline "炒制步骤";
+    aat:raw """=== 炒制步骤
+role:: step
+estimatedTime:: 5分钟
+
+""";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:startLine 28;
+    field:estimatedTime "5分钟";
+    field:role "step".
+:heading-7 a aat:Heading;
+    aat:addressPath "家庭食材与菜谱知识库::食材";
+    aat:childOrder 3;
+    aat:contentEndLine 33;
+    aat:contentStartLine 33;
+    aat:documentOrder 7;
+    aat:endLine 34;
+    aat:generatedAddressLabel "_食材";
+    aat:headingLevel 1;
+    aat:headingLine 32;
+    aat:headline "食材";
+    aat:raw """== 食材
+role:: category
+
+""";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:startLine 32;
+    field:role "category".
+:heading-8 a aat:Heading;
+    aat:addressPath "家庭食材与菜谱知识库::家常菜";
+    aat:childOrder 4;
+    aat:contentEndLine 36;
+    aat:contentStartLine 36;
+    aat:documentOrder 8;
+    aat:endLine 37;
+    aat:generatedAddressLabel "_家常菜";
+    aat:headingLevel 1;
+    aat:headingLine 35;
+    aat:headline "家常菜";
+    aat:raw """== 家常菜
+role:: category
+
+""";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:startLine 35;
+    field:role "category".
+:projection a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource :source;
+    prov:wasDerivedFrom :source;
+    prov:wasGeneratedBy :activity.
+:source a prov:Entity, aat:AsciiDocSourceDocument;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc".
+:xref-edge-l12-c4-o0 rdf:reifies <<(:heading-3 rel:is-a :heading-8)>>;
     a aat:XrefEdge;
     aat:endColumn 22;
     aat:endLine 12;
@@ -188,15 +187,15 @@ allergen:: 蛋类
     aat:officialReftext "[家常菜]";
     aat:raw "xref:家常菜[rel=is-a]";
     aat:rel "is-a";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
-    aat:sourceHeading <#番茄炒蛋>;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:sourceHeading :heading-3;
     aat:sourceSelector "_番茄炒蛋";
     aat:startColumn 4;
     aat:startLine 12;
     aat:syntax "macro";
-    aat:targetHeading <#家常菜>;
+    aat:targetHeading :heading-8;
     aat:targetSelector "家常菜".
-<recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0> rdf:reifies <<(<#鸡蛋> rel:is-a <#食材>)>>;
+:xref-edge-l19-c4-o0 rdf:reifies <<(:heading-4 rel:is-a :heading-7)>>;
     a aat:XrefEdge;
     aat:endColumn 21;
     aat:endLine 19;
@@ -204,15 +203,15 @@ allergen:: 蛋类
     aat:officialReftext "[食材]";
     aat:raw "xref:食材[rel=is-a]";
     aat:rel "is-a";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
-    aat:sourceHeading <#鸡蛋>;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:sourceHeading :heading-4;
     aat:sourceSelector "_鸡蛋";
     aat:startColumn 4;
     aat:startLine 19;
     aat:syntax "macro";
-    aat:targetHeading <#食材>;
+    aat:targetHeading :heading-7;
     aat:targetSelector "食材".
-<recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0> rdf:reifies <<(<#番茄> rel:is-a <#食材>)>>;
+:xref-edge-l26-c4-o0 rdf:reifies <<(:heading-5 rel:is-a :heading-7)>>;
     a aat:XrefEdge;
     aat:endColumn 21;
     aat:endLine 26;
@@ -220,11 +219,11 @@ allergen:: 蛋类
     aat:officialReftext "[食材]";
     aat:raw "xref:食材[rel=is-a]";
     aat:rel "is-a";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
-    aat:sourceHeading <#番茄>;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc";
+    aat:sourceHeading :heading-5;
     aat:sourceSelector "_番茄";
     aat:startColumn 4;
     aat:startLine 26;
     aat:syntax "macro";
-    aat:targetHeading <#食材>;
+    aat:targetHeading :heading-7;
     aat:targetSelector "食材".

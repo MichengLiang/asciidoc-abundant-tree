@@ -8,9 +8,7 @@ heading node:: 由等号标题创建的 RDF resource。标题节点是标题投�
 
 headline:: 作者写下的标题文本：去掉等号标记，展开属性引用，行内标记照原样保留。
 
-heading name:: 标题节点的名字：在整份文档的 label 空间里只属于这个标题的最短地址，写在标题节点 IRI 的 `#` 之后，并作为 `aat:name` 输出。
-
-address path:: 从文档标题到某个标题的各级 headline 依次以 `::` 连接而成的路径的一个后缀，例如 `红烧肉::火候`。只有一段的地址路径就是 headline。
+address path:: 从文档标题到某个标题的各级 headline 依次以 `::` 连接而成的路径的一个后缀，例如 `红烧肉::火候`。两段以上的写成 `aat:addressPath`；只有一段的就是 headline。
 
 heading slice:: 标题节点对应的连续源文本区域。该区域从标题头部 metadata 或标题行开始，到下一个标题切片起点之前结束。
 
@@ -50,7 +48,7 @@ address label:: 标题投影图中可寻址到 heading node 的作者声明 labe
 
 generated address label:: 解析器为没有手动 ID 的标题恢复出的可寻址 label。
 
-heading projection label space:: selector 绑定 heading node 时查询的 label 空间。该空间由地址路径、`aat:addressLabel` 和 `aat:generatedAddressLabel` 构成，selector 按整串相等匹配。
+heading projection label space:: selector 绑定 heading node 时查询的 label 空间：标题节点上 `aat:headline`、`aat:addressPath`、`aat:addressLabel` 与 `aat:generatedAddressLabel` 四个谓词的值，selector 按整串相等匹配。
 
 relative path:: 相对于投影调用方指定文档根目录的文件路径。
 

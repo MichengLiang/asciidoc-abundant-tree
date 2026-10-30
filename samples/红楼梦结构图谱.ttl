@@ -1,4 +1,3 @@
-@base <urn:aat:doc:samples/红楼梦结构图谱.adoc>.
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix field: <https://micheng.dev/ns/asciidoc-field#>.
@@ -7,32 +6,292 @@
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix : <urn:aat:doc:samples/红楼梦结构图谱.adoc#>.
 
-<#大观园> a aat:Heading;
-    aat:childOrder 7;
-    aat:containsDirectly <#怡红院>, <#潇湘馆>, <#蘅芜苑>;
-    aat:contentEndLine 126;
-    aat:contentStartLine 126;
-    aat:documentOrder 26;
-    aat:endLine 127;
-    aat:generatedAddressLabel "_大观园";
-    aat:headingLevel 1;
-    aat:headingLine 125;
-    aat:headline "大观园";
-    aat:metadataEndLine 124;
-    aat:metadataStartLine 124;
-    aat:name "大观园";
-    aat:raw """[.location]
-== 大观园
-为元春省亲而建造的巨大皇家园林，后成为少男少女的封闭式乌托邦。
+:activity a prov:Activity, aat:ProjectionActivity;
+    prov:used :source.
+:heading-10 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾赦", "荣国府::贾赦";
+    aat:childOrder 4;
+    aat:contentEndLine 46;
+    aat:contentStartLine 44;
+    aat:documentOrder 10;
+    aat:endLine 47;
+    aat:generatedAddressLabel "_贾赦";
+    aat:headingLevel 2;
+    aat:headingLine 43;
+    aat:headline "贾赦";
+    aat:metadataEndLine 42;
+    aat:metadataStartLine 42;
+    aat:raw """[.person, generation=3]
+=== 贾赦
+贾母长子，世袭一等将军。为人好色贪婪。
+其妻为 xref:邢夫人[rel=spouse, status=primary]。
+其子为 xref:贾琏[rel=kinship, type=son]；其女为 xref:贾迎春[rel=kinship, type=daughter]。
 
 """;
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "location";
-    aat:startLine 124.
-<#宁国府> a aat:Heading;
+    aat:role "person";
+    aat:startLine 42;
+    field:generation "3";
+    rel:kinship :heading-18.
+:heading-11 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾政", "荣国府::贾政";
+    aat:childOrder 5;
+    aat:contentEndLine 50;
+    aat:contentStartLine 50;
+    aat:documentOrder 11;
+    aat:endLine 51;
+    aat:generatedAddressLabel "_贾政";
+    aat:headingLevel 2;
+    aat:headingLine 49;
+    aat:headline "贾政";
+    aat:metadataEndLine 48;
+    aat:metadataStartLine 48;
+    aat:raw """[.person, generation=3]
+=== 贾政
+贾母次子，工部员外郎，封建正统道德的化身。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 48;
+    field:generation "3".
+:heading-12 a aat:Heading;
+    aat:addressLabel "wang-furen-rong";
+    aat:addressPath "红楼梦结构图谱::荣国府::王夫人", "荣国府::王夫人";
     aat:childOrder 6;
-    aat:containsDirectly <#秦可卿>, <#贾敬>, <#贾珍>, <#贾蓉>;
+    aat:contentEndLine 56;
+    aat:contentStartLine 54;
+    aat:documentOrder 12;
+    aat:endLine 57;
+    aat:headingLevel 2;
+    aat:headingLine 53;
+    aat:headline "王夫人";
+    aat:metadataEndLine 52;
+    aat:metadataStartLine 52;
+    aat:raw """[#wang-furen-rong.person, generation=3]
+=== 王夫人
+贾政之妻，金陵王家出身。
+她对大观园的统治具有绝对威权，并极其厌恶 xref:林黛玉[rel=dislike] 与 xref:晴雯[rel=dislike]。
+她的子嗣包括 xref:贾珠[rel=kinship, type=son]、xref:贾元春[rel=kinship, type=daughter]、xref:贾宝玉[rel=kinship, type=son]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 52;
+    field:generation "3";
+    rel:dislike :heading-20;
+    rel:kinship :heading-15, :heading-16, :heading-17.
+:heading-13 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::赵姨娘", "荣国府::赵姨娘";
+    aat:childOrder 7;
+    aat:contentEndLine 60;
+    aat:contentStartLine 60;
+    aat:documentOrder 13;
+    aat:endLine 61;
+    aat:generatedAddressLabel "_赵姨娘";
+    aat:headingLevel 2;
+    aat:headingLine 59;
+    aat:headline "赵姨娘";
+    aat:metadataEndLine 58;
+    aat:metadataStartLine 58;
+    aat:raw """[.person, generation=3]
+=== 赵姨娘
+贾政之妾。育有 xref:贾探春[rel=kinship, type=daughter] 与 xref:贾环[rel=kinship, type=son]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 58;
+    field:generation "3".
+:heading-14 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾敏", "荣国府::贾敏";
+    aat:childOrder 8;
+    aat:contentEndLine 64;
+    aat:contentStartLine 64;
+    aat:documentOrder 14;
+    aat:endLine 65;
+    aat:generatedAddressLabel "_贾敏";
+    aat:headingLevel 2;
+    aat:headingLine 63;
+    aat:headline "贾敏";
+    aat:metadataEndLine 62;
+    aat:metadataStartLine 62;
+    aat:raw """[.person, generation=3]
+=== 贾敏
+贾母之女。嫁与林如海，育有 xref:林黛玉[rel=kinship, type=daughter]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 62;
+    field:generation "3";
+    rel:kinship :heading-20.
+:heading-15 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾珠", "荣国府::贾珠";
+    aat:childOrder 9;
+    aat:contentEndLine 68;
+    aat:contentStartLine 68;
+    aat:documentOrder 15;
+    aat:endLine 69;
+    aat:generatedAddressLabel "_贾珠";
+    aat:headingLevel 2;
+    aat:headingLine 67;
+    aat:headline "贾珠";
+    aat:metadataEndLine 66;
+    aat:metadataStartLine 66;
+    aat:raw """[.person, generation=4]
+=== 贾珠
+贾政与王夫人长子，早夭。其妻为 xref:李纨[rel=spouse, status=primary]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 66;
+    field:generation "4".
+:heading-16 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾元春", "荣国府::贾元春";
+    aat:childOrder 10;
+    aat:contentEndLine 72;
+    aat:contentStartLine 72;
+    aat:documentOrder 16;
+    aat:endLine 73;
+    aat:generatedAddressLabel "_贾元春";
+    aat:headingLevel 2;
+    aat:headingLine 71;
+    aat:headline "贾元春";
+    aat:metadataEndLine 70;
+    aat:metadataStartLine 70;
+    aat:raw """[.person, generation=4]
+=== 贾元春
+贾政与王夫人长女。入宫为妃，其晋升直接促成了 xref:大观园[rel=cause] 的修建。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 70;
+    field:generation "4";
+    rel:cause :heading-26.
+:heading-17 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾宝玉", "荣国府::贾宝玉";
+    aat:childOrder 11;
+    aat:contentEndLine 79;
+    aat:contentStartLine 76;
+    aat:documentOrder 17;
+    aat:endLine 80;
+    aat:generatedAddressLabel "_贾宝玉";
+    aat:headingLevel 2;
+    aat:headingLine 75;
+    aat:headline "贾宝玉";
+    aat:metadataEndLine 74;
+    aat:metadataStartLine 74;
+    aat:raw """[.person, generation=4]
+=== 贾宝玉
+荣国府的核心节点。他是 xref:神瑛侍者[rel=incarnation] 的现世化身。
+出生时口衔 xref:通灵宝玉[rel=possess]。
+他居于大观园中的 xref:怡红院[rel=reside-in]。
+他深爱着 xref:林黛玉[rel=love, reciprocal=true]，但最终依附于宗法安排，与 xref:薛宝钗[rel=spouse, status=primary] 成婚。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 74;
+    field:generation "4";
+    rel:incarnation :heading-3;
+    rel:love :heading-20;
+    rel:reside-in :heading-27;
+    rel:spouse :heading-30.
+:heading-18 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾琏", "荣国府::贾琏";
+    aat:childOrder 12;
+    aat:contentEndLine 84;
+    aat:contentStartLine 83;
+    aat:documentOrder 18;
+    aat:endLine 85;
+    aat:generatedAddressLabel "_贾琏";
+    aat:headingLevel 2;
+    aat:headingLine 82;
+    aat:headline "贾琏";
+    aat:metadataEndLine 81;
+    aat:metadataStartLine 81;
+    aat:raw """[.person, generation=4]
+=== 贾琏
+贾赦之子，荣国府的实际庶务管理者。
+其妻为 xref:王熙凤[rel=spouse, status=primary]。他与 xref:尤二姐[rel=spouse, status=concubine] 发生过私情。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 81;
+    field:generation "4";
+    rel:spouse :heading-19.
+:heading-19 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::王熙凤", "荣国府::王熙凤";
+    aat:childOrder 13;
+    aat:contentEndLine 89;
+    aat:contentStartLine 88;
+    aat:documentOrder 19;
+    aat:endLine 90;
+    aat:generatedAddressLabel "_王熙凤";
+    aat:headingLevel 2;
+    aat:headingLine 87;
+    aat:headline "王熙凤";
+    aat:metadataEndLine 86;
+    aat:metadataStartLine 86;
+    aat:raw """[.person, generation=4]
+=== 王熙凤
+荣国府的实际内务掌权者，金陵王家出身（王夫人内侄女）。
+性格泼辣，手段极其冷酷。其贴身大丫鬟为 xref:平儿[rel=serve, level=primary]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 86;
+    field:generation "4".
+:heading-1 a aat:Heading;
+    aat:containsDirectly :heading-21, :heading-26, :heading-2, :heading-30, :heading-31, :heading-32, :heading-3, :heading-4, :heading-5, :heading-6;
+    aat:documentOrder 1;
+    aat:endLine 2;
+    aat:headingLevel 0;
+    aat:headingLine 1;
+    aat:headline "红楼梦结构图谱";
+    aat:raw """= 红楼梦结构图谱
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 1.
+:heading-20 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::林黛玉", "荣国府::林黛玉";
+    aat:childOrder 14;
+    aat:contentEndLine 95;
+    aat:contentStartLine 93;
+    aat:documentOrder 20;
+    aat:endLine 96;
+    aat:generatedAddressLabel "_林黛玉";
+    aat:headingLevel 2;
+    aat:headingLine 92;
+    aat:headline "林黛玉";
+    aat:metadataEndLine 91;
+    aat:metadataStartLine 91;
+    aat:raw """[.person, generation=4]
+=== 林黛玉
+寄居荣国府的表小姐。她是 xref:绛珠仙草[rel=incarnation] 的现世化身。
+居于 xref:潇湘馆[rel=reside-in]。
+她来到人间的唯一目的，是向 xref:贾宝玉[rel=love, action=repay-tears] 还泪。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 91;
+    field:generation "4";
+    rel:incarnation :heading-4;
+    rel:love :heading-17;
+    rel:reside-in :heading-28.
+:heading-21 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::宁国府";
+    aat:childOrder 6;
+    aat:containsDirectly :heading-22, :heading-23, :heading-24, :heading-25;
     aat:contentEndLine 101;
     aat:contentStartLine 99;
     aat:documentOrder 21;
@@ -43,7 +302,6 @@
     aat:headline "宁国府";
     aat:metadataEndLine 97;
     aat:metadataStartLine 97;
-    aat:name "宁国府";
     aat:raw """[.clan]
 == 宁国府
 // ==========================================
@@ -54,8 +312,252 @@
     aat:relativePath "samples/红楼梦结构图谱.adoc";
     aat:role "clan";
     aat:startLine 97.
-<#宝玉挨打> a aat:Heading;
+:heading-22 a aat:Heading;
+    aat:addressPath "宁国府::贾敬", "红楼梦结构图谱::宁国府::贾敬";
+    aat:childOrder 1;
+    aat:contentEndLine 105;
+    aat:contentStartLine 105;
+    aat:documentOrder 22;
+    aat:endLine 106;
+    aat:generatedAddressLabel "_贾敬";
+    aat:headingLevel 2;
+    aat:headingLine 104;
+    aat:headline "贾敬";
+    aat:metadataEndLine 103;
+    aat:metadataStartLine 103;
+    aat:raw """[.person, generation=3]
+=== 贾敬
+沉迷修道炼丹，完全放弃对宁国府的管理。其子为 xref:贾珍[rel=kinship, type=son]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 103;
+    field:generation "3";
+    rel:kinship :heading-23.
+:heading-23 a aat:Heading;
+    aat:addressPath "宁国府::贾珍", "红楼梦结构图谱::宁国府::贾珍";
+    aat:childOrder 2;
+    aat:contentEndLine 110;
+    aat:contentStartLine 109;
+    aat:documentOrder 23;
+    aat:endLine 111;
+    aat:generatedAddressLabel "_贾珍";
+    aat:headingLevel 2;
+    aat:headingLine 108;
+    aat:headline "贾珍";
+    aat:metadataEndLine 107;
+    aat:metadataStartLine 107;
+    aat:raw """[.person, generation=4]
+=== 贾珍
+宁国府现任当家人，贾氏族长。骄奢淫逸，导致宁府“除了那两个石头狮子干净，只怕连猫儿狗儿都不干净”。
+其妻为 xref:尤氏[rel=spouse, status=primary]。其子为 xref:贾蓉[rel=kinship, type=son]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 107;
+    field:generation "4";
+    rel:kinship :heading-24.
+:heading-24 a aat:Heading;
+    aat:addressPath "宁国府::贾蓉", "红楼梦结构图谱::宁国府::贾蓉";
+    aat:childOrder 3;
+    aat:contentEndLine 114;
+    aat:contentStartLine 114;
+    aat:documentOrder 24;
+    aat:endLine 115;
+    aat:generatedAddressLabel "_贾蓉";
+    aat:headingLevel 2;
+    aat:headingLine 113;
+    aat:headline "贾蓉";
+    aat:metadataEndLine 112;
+    aat:metadataStartLine 112;
+    aat:raw """[.person, generation=5]
+=== 贾蓉
+贾珍之子。其首任妻子为 xref:秦可卿[rel=spouse, status=primary]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 112;
+    field:generation "5";
+    rel:spouse :heading-25.
+:heading-25 a aat:Heading;
+    aat:addressPath "宁国府::秦可卿", "红楼梦结构图谱::宁国府::秦可卿";
+    aat:childOrder 4;
+    aat:contentEndLine 122;
+    aat:contentStartLine 118;
+    aat:documentOrder 25;
+    aat:endLine 123;
+    aat:generatedAddressLabel "_秦可卿";
+    aat:headingLevel 2;
+    aat:headingLine 117;
+    aat:headline "秦可卿";
+    aat:metadataEndLine 116;
+    aat:metadataStartLine 116;
+    aat:raw """[.person, generation=5]
+=== 秦可卿
+// ==========================================
+// 第四卷：大观园空间与丫鬟生态
+// ==========================================
+
+贾蓉之妻。其行事温柔和平，但早逝。临终前曾托梦给 xref:王熙凤[rel=enlighten]，预言贾府的衰败并提出保全宗族之策。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 116;
+    field:generation "5";
+    rel:enlighten :heading-19.
+:heading-26 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::大观园";
+    aat:childOrder 7;
+    aat:containsDirectly :heading-27, :heading-28, :heading-29;
+    aat:contentEndLine 126;
+    aat:contentStartLine 126;
+    aat:documentOrder 26;
+    aat:endLine 127;
+    aat:generatedAddressLabel "_大观园";
+    aat:headingLevel 1;
+    aat:headingLine 125;
+    aat:headline "大观园";
+    aat:metadataEndLine 124;
+    aat:metadataStartLine 124;
+    aat:raw """[.location]
+== 大观园
+为元春省亲而建造的巨大皇家园林，后成为少男少女的封闭式乌托邦。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "location";
+    aat:startLine 124.
+:heading-27 a aat:Heading;
+    aat:addressPath "大观园::怡红院", "红楼梦结构图谱::大观园::怡红院";
+    aat:childOrder 1;
+    aat:contentEndLine 136;
+    aat:contentStartLine 130;
+    aat:documentOrder 27;
+    aat:endLine 137;
+    aat:generatedAddressLabel "_怡红院";
+    aat:headingLevel 2;
+    aat:headingLine 129;
+    aat:headline "怡红院";
+    aat:metadataEndLine 128;
+    aat:metadataStartLine 128;
+    aat:raw """[.location]
+=== 怡红院
+大观园内一处院落。xref:贾宝玉[rel=reside-in] 居于此。
+其内部形成了复杂的主仆生态。
+核心服务者包括：
+
+* xref:花袭人[rel=serve, target=贾宝玉, level=primary]（暗中投靠了 xref:wang-furen-rong[王夫人, rel=loyalty]）
+* xref:晴雯[rel=serve, target=贾宝玉, level=primary]（性格反叛，最终被迫害致死）
+* xref:麝月[rel=serve, target=贾宝玉, level=secondary]
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "location";
+    aat:startLine 128;
+    rel:loyalty :heading-12;
+    rel:reside-in :heading-17.
+:heading-28 a aat:Heading;
+    aat:addressPath "大观园::潇湘馆", "红楼梦结构图谱::大观园::潇湘馆";
+    aat:childOrder 2;
+    aat:contentEndLine 141;
+    aat:contentStartLine 140;
+    aat:documentOrder 28;
+    aat:endLine 142;
+    aat:generatedAddressLabel "_潇湘馆";
+    aat:headingLevel 2;
+    aat:headingLine 139;
+    aat:headline "潇湘馆";
+    aat:metadataEndLine 138;
+    aat:metadataStartLine 138;
+    aat:raw """[.location]
+=== 潇湘馆
+大观园内种满翠竹的幽静院落。xref:林黛玉[rel=reside-in] 居于此。
+贴身丫鬟为 xref:紫鹃[rel=serve, target=林黛玉, level=primary]。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "location";
+    aat:startLine 138;
+    rel:reside-in :heading-20.
+:heading-29 a aat:Heading;
+    aat:addressPath "大观园::蘅芜苑", "红楼梦结构图谱::大观园::蘅芜苑";
+    aat:childOrder 3;
+    aat:contentEndLine 145;
+    aat:contentStartLine 145;
+    aat:documentOrder 29;
+    aat:endLine 146;
+    aat:generatedAddressLabel "_蘅芜苑";
+    aat:headingLevel 2;
+    aat:headingLine 144;
+    aat:headline "蘅芜苑";
+    aat:metadataEndLine 143;
+    aat:metadataStartLine 143;
+    aat:raw """[.location]
+=== 蘅芜苑
+大观园内无花少叶、以香草为主的院落。xref:薛宝钗[rel=reside-in] 居于此。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "location";
+    aat:startLine 143;
+    rel:reside-in :heading-30.
+:heading-2 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::警幻仙子";
+    aat:childOrder 1;
+    aat:contentEndLine 8;
+    aat:contentStartLine 5;
+    aat:documentOrder 2;
+    aat:endLine 9;
+    aat:generatedAddressLabel "_警幻仙子";
+    aat:headingLevel 1;
+    aat:headingLine 4;
+    aat:headline "警幻仙子";
+    aat:metadataEndLine 3;
+    aat:metadataStartLine 3;
+    aat:raw """[.metaphysical]
+== 警幻仙子
+// ==========================================
+// 第一卷：太虚幻境与神话本源
+// ==========================================
+太虚幻境之主，司人间之风情月债，掌尘世之女怨男痴。她试图通过梦境向 xref:贾宝玉[rel=enlighten] 揭示命运的虚无。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "metaphysical";
+    aat:startLine 3;
+    rel:enlighten :heading-17.
+:heading-30 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::薛宝钗";
+    aat:childOrder 8;
+    aat:contentEndLine 150;
+    aat:contentStartLine 149;
+    aat:documentOrder 30;
+    aat:endLine 151;
+    aat:generatedAddressLabel "_薛宝钗";
+    aat:headingLevel 1;
+    aat:headingLine 148;
+    aat:headline "薛宝钗";
+    aat:metadataEndLine 147;
+    aat:metadataStartLine 147;
+    aat:raw """[.person, generation=4]
+== 薛宝钗
+寄居贾府的皇商薛家之女。八面玲珑，信奉封建礼教。
+她最终与 xref:贾宝玉[rel=spouse, status=primary] 完成了“金玉良缘”的谶言，但这直接导致了 xref:林黛玉[rel=cause-death] 的悲剧。
+
+""";
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:role "person";
+    aat:startLine 147;
+    field:generation "4";
+    rel:cause-death :heading-20;
+    rel:spouse :heading-17.
+:heading-31 a aat:Heading;
     aat:addressLabel "event-baoyu-beaten";
+    aat:addressPath "红楼梦结构图谱::宝玉挨打";
     aat:childOrder 9;
     aat:contentEndLine 164;
     aat:contentStartLine 154;
@@ -66,7 +568,6 @@
     aat:headline "宝玉挨打";
     aat:metadataEndLine 152;
     aat:metadataStartLine 152;
-    aat:name "宝玉挨打";
     aat:raw """[#event-baoyu-beaten.event]
 == 宝玉挨打
 // ==========================================
@@ -85,38 +586,10 @@
     aat:relativePath "samples/红楼梦结构图谱.adoc";
     aat:role "event";
     aat:startLine 152;
-    rel:participate <#王夫人>, <#贾宝玉>, <#贾政>, <#贾母>.
-<#怡红院> a aat:Heading;
-    aat:childOrder 1;
-    aat:contentEndLine 136;
-    aat:contentStartLine 130;
-    aat:documentOrder 27;
-    aat:endLine 137;
-    aat:generatedAddressLabel "_怡红院";
-    aat:headingLevel 2;
-    aat:headingLine 129;
-    aat:headline "怡红院";
-    aat:metadataEndLine 128;
-    aat:metadataStartLine 128;
-    aat:name "怡红院";
-    aat:raw """[.location]
-=== 怡红院
-大观园内一处院落。xref:贾宝玉[rel=reside-in] 居于此。
-其内部形成了复杂的主仆生态。
-核心服务者包括：
-
-* xref:花袭人[rel=serve, target=贾宝玉, level=primary]（暗中投靠了 xref:wang-furen-rong[王夫人, rel=loyalty]）
-* xref:晴雯[rel=serve, target=贾宝玉, level=primary]（性格反叛，最终被迫害致死）
-* xref:麝月[rel=serve, target=贾宝玉, level=secondary]
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "location";
-    aat:startLine 128;
-    rel:loyalty <#王夫人>;
-    rel:reside-in <#贾宝玉>.
-<#抄检大观园> a aat:Heading;
+    rel:participate :heading-11, :heading-12, :heading-17, :heading-9.
+:heading-32 a aat:Heading;
     aat:addressLabel "event-raid-on-garden";
+    aat:addressPath "红楼梦结构图谱::抄检大观园";
     aat:childOrder 10;
     aat:contentEndLine 174;
     aat:contentStartLine 168;
@@ -127,7 +600,6 @@
     aat:headline "抄检大观园";
     aat:metadataEndLine 166;
     aat:metadataStartLine 166;
-    aat:name "抄检大观园";
     aat:raw """[#event-raid-on-garden.event]
 == 抄检大观园
 贾府内部自相残杀的标志性转折点，标志着大观园乌托邦的破灭。
@@ -142,108 +614,10 @@
     aat:relativePath "samples/红楼梦结构图谱.adoc";
     aat:role "event";
     aat:startLine 166;
-    rel:cause-decline <#荣国府>;
-    rel:participate <#王夫人>, <#王熙凤>.
-<#林黛玉> a aat:Heading;
-    aat:childOrder 14;
-    aat:contentEndLine 95;
-    aat:contentStartLine 93;
-    aat:documentOrder 20;
-    aat:endLine 96;
-    aat:generatedAddressLabel "_林黛玉";
-    aat:headingLevel 2;
-    aat:headingLine 92;
-    aat:headline "林黛玉";
-    aat:metadataEndLine 91;
-    aat:metadataStartLine 91;
-    aat:name "林黛玉";
-    aat:raw """[.person, generation=4]
-=== 林黛玉
-寄居荣国府的表小姐。她是 xref:绛珠仙草[rel=incarnation] 的现世化身。
-居于 xref:潇湘馆[rel=reside-in]。
-她来到人间的唯一目的，是向 xref:贾宝玉[rel=love, action=repay-tears] 还泪。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 91;
-    field:generation "4";
-    rel:incarnation <#绛珠仙草>;
-    rel:love <#贾宝玉>;
-    rel:reside-in <#潇湘馆>.
-<#潇湘馆> a aat:Heading;
-    aat:childOrder 2;
-    aat:contentEndLine 141;
-    aat:contentStartLine 140;
-    aat:documentOrder 28;
-    aat:endLine 142;
-    aat:generatedAddressLabel "_潇湘馆";
-    aat:headingLevel 2;
-    aat:headingLine 139;
-    aat:headline "潇湘馆";
-    aat:metadataEndLine 138;
-    aat:metadataStartLine 138;
-    aat:name "潇湘馆";
-    aat:raw """[.location]
-=== 潇湘馆
-大观园内种满翠竹的幽静院落。xref:林黛玉[rel=reside-in] 居于此。
-贴身丫鬟为 xref:紫鹃[rel=serve, target=林黛玉, level=primary]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "location";
-    aat:startLine 138;
-    rel:reside-in <#林黛玉>.
-<#王夫人> a aat:Heading;
-    aat:addressLabel "wang-furen-rong";
-    aat:childOrder 6;
-    aat:contentEndLine 56;
-    aat:contentStartLine 54;
-    aat:documentOrder 12;
-    aat:endLine 57;
-    aat:headingLevel 2;
-    aat:headingLine 53;
-    aat:headline "王夫人";
-    aat:metadataEndLine 52;
-    aat:metadataStartLine 52;
-    aat:name "王夫人";
-    aat:raw """[#wang-furen-rong.person, generation=3]
-=== 王夫人
-贾政之妻，金陵王家出身。
-她对大观园的统治具有绝对威权，并极其厌恶 xref:林黛玉[rel=dislike] 与 xref:晴雯[rel=dislike]。
-她的子嗣包括 xref:贾珠[rel=kinship, type=son]、xref:贾元春[rel=kinship, type=daughter]、xref:贾宝玉[rel=kinship, type=son]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 52;
-    field:generation "3";
-    rel:dislike <#林黛玉>;
-    rel:kinship <#贾元春>, <#贾宝玉>, <#贾珠>.
-<#王熙凤> a aat:Heading;
-    aat:childOrder 13;
-    aat:contentEndLine 89;
-    aat:contentStartLine 88;
-    aat:documentOrder 19;
-    aat:endLine 90;
-    aat:generatedAddressLabel "_王熙凤";
-    aat:headingLevel 2;
-    aat:headingLine 87;
-    aat:headline "王熙凤";
-    aat:metadataEndLine 86;
-    aat:metadataStartLine 86;
-    aat:name "王熙凤";
-    aat:raw """[.person, generation=4]
-=== 王熙凤
-荣国府的实际内务掌权者，金陵王家出身（王夫人内侄女）。
-性格泼辣，手段极其冷酷。其贴身大丫鬟为 xref:平儿[rel=serve, level=primary]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 86;
-    field:generation "4".
-<#神瑛侍者> a aat:Heading;
+    rel:cause-decline :heading-6;
+    rel:participate :heading-12, :heading-19.
+:heading-3 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::神瑛侍者";
     aat:childOrder 2;
     aat:contentEndLine 12;
     aat:contentStartLine 12;
@@ -255,7 +629,6 @@
     aat:headline "神瑛侍者";
     aat:metadataEndLine 10;
     aat:metadataStartLine 10;
-    aat:name "神瑛侍者";
     aat:raw """[.metaphysical]
 == 神瑛侍者
 曾在灵河岸边浇灌仙草。后凡心偶炽，下凡造历幻缘。
@@ -264,47 +637,8 @@
     aat:relativePath "samples/红楼梦结构图谱.adoc";
     aat:role "metaphysical";
     aat:startLine 10.
-<#秦可卿> a aat:Heading;
-    aat:childOrder 4;
-    aat:contentEndLine 122;
-    aat:contentStartLine 118;
-    aat:documentOrder 25;
-    aat:endLine 123;
-    aat:generatedAddressLabel "_秦可卿";
-    aat:headingLevel 2;
-    aat:headingLine 117;
-    aat:headline "秦可卿";
-    aat:metadataEndLine 116;
-    aat:metadataStartLine 116;
-    aat:name "秦可卿";
-    aat:raw """[.person, generation=5]
-=== 秦可卿
-// ==========================================
-// 第四卷：大观园空间与丫鬟生态
-// ==========================================
-
-贾蓉之妻。其行事温柔和平，但早逝。临终前曾托梦给 xref:王熙凤[rel=enlighten]，预言贾府的衰败并提出保全宗族之策。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 116;
-    field:generation "5";
-    rel:enlighten <#王熙凤>.
-<#红楼梦结构图谱> a aat:Heading;
-    aat:containsDirectly <#大观园>, <#宁国府>, <#宝玉挨打>, <#抄检大观园>, <#神瑛侍者>, <#绛珠仙草>, <#荣国府>, <#薛宝钗>, <#补天顽石>, <#警幻仙子>;
-    aat:documentOrder 1;
-    aat:endLine 2;
-    aat:headingLevel 0;
-    aat:headingLine 1;
-    aat:headline "红楼梦结构图谱";
-    aat:name "红楼梦结构图谱";
-    aat:raw """= 红楼梦结构图谱
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:startLine 1.
-<#绛珠仙草> a aat:Heading;
+:heading-4 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::绛珠仙草";
     aat:childOrder 3;
     aat:contentEndLine 16;
     aat:contentStartLine 16;
@@ -316,7 +650,6 @@
     aat:headline "绛珠仙草";
     aat:metadataEndLine 14;
     aat:metadataStartLine 14;
-    aat:name "绛珠仙草";
     aat:raw """[.metaphysical]
 == 绛珠仙草
 受神瑛侍者甘露之惠，得换人形。为报灌溉之恩，下凡将一生所有的眼泪还他。
@@ -325,78 +658,8 @@
     aat:relativePath "samples/红楼梦结构图谱.adoc";
     aat:role "metaphysical";
     aat:startLine 14.
-<#荣国府> a aat:Heading;
-    aat:childOrder 5;
-    aat:containsDirectly <#林黛玉>, <#王夫人>, <#王熙凤>, <#贾代善>, <#贾元春>, <#贾宝玉>, <#贾政>, <#贾敏>, <#贾母>, <#贾源>, <#贾珠>, <#贾琏>, <#贾赦>, <#赵姨娘>;
-    aat:contentEndLine 27;
-    aat:contentStartLine 25;
-    aat:documentOrder 6;
-    aat:endLine 28;
-    aat:generatedAddressLabel "_荣国府";
-    aat:headingLevel 1;
-    aat:headingLine 24;
-    aat:headline "荣国府";
-    aat:metadataEndLine 23;
-    aat:metadataStartLine 23;
-    aat:name "荣国府";
-    aat:raw """[.clan]
-== 荣国府
-// ==========================================
-// 第二卷：荣国府宗法网络
-// ==========================================
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "clan";
-    aat:startLine 23.
-<#薛宝钗> a aat:Heading;
-    aat:childOrder 8;
-    aat:contentEndLine 150;
-    aat:contentStartLine 149;
-    aat:documentOrder 30;
-    aat:endLine 151;
-    aat:generatedAddressLabel "_薛宝钗";
-    aat:headingLevel 1;
-    aat:headingLine 148;
-    aat:headline "薛宝钗";
-    aat:metadataEndLine 147;
-    aat:metadataStartLine 147;
-    aat:name "薛宝钗";
-    aat:raw """[.person, generation=4]
-== 薛宝钗
-寄居贾府的皇商薛家之女。八面玲珑，信奉封建礼教。
-她最终与 xref:贾宝玉[rel=spouse, status=primary] 完成了“金玉良缘”的谶言，但这直接导致了 xref:林黛玉[rel=cause-death] 的悲剧。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 147;
-    field:generation "4";
-    rel:cause-death <#林黛玉>;
-    rel:spouse <#贾宝玉>.
-<#蘅芜苑> a aat:Heading;
-    aat:childOrder 3;
-    aat:contentEndLine 145;
-    aat:contentStartLine 145;
-    aat:documentOrder 29;
-    aat:endLine 146;
-    aat:generatedAddressLabel "_蘅芜苑";
-    aat:headingLevel 2;
-    aat:headingLine 144;
-    aat:headline "蘅芜苑";
-    aat:metadataEndLine 143;
-    aat:metadataStartLine 143;
-    aat:name "蘅芜苑";
-    aat:raw """[.location]
-=== 蘅芜苑
-大观园内无花少叶、以香草为主的院落。xref:薛宝钗[rel=reside-in] 居于此。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "location";
-    aat:startLine 143;
-    rel:reside-in <#薛宝钗>.
-<#补天顽石> a aat:Heading;
+:heading-5 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::补天顽石";
     aat:childOrder 4;
     aat:contentEndLine 20;
     aat:contentStartLine 20;
@@ -408,7 +671,6 @@
     aat:headline "补天顽石";
     aat:metadataEndLine 18;
     aat:metadataStartLine 18;
-    aat:name "补天顽石";
     aat:raw """[.metaphysical]
 == 补天顽石
 女娲炼石补天遗下的唯一一块未用之石。被茫茫大士、渺渺真人携入红尘。
@@ -418,199 +680,32 @@
     aat:relativePath "samples/红楼梦结构图谱.adoc";
     aat:role "metaphysical";
     aat:startLine 18.
-<#警幻仙子> a aat:Heading;
-    aat:childOrder 1;
-    aat:contentEndLine 8;
-    aat:contentStartLine 5;
-    aat:documentOrder 2;
-    aat:endLine 9;
-    aat:generatedAddressLabel "_警幻仙子";
-    aat:headingLevel 1;
-    aat:headingLine 4;
-    aat:headline "警幻仙子";
-    aat:metadataEndLine 3;
-    aat:metadataStartLine 3;
-    aat:name "警幻仙子";
-    aat:raw """[.metaphysical]
-== 警幻仙子
-// ==========================================
-// 第一卷：太虚幻境与神话本源
-// ==========================================
-太虚幻境之主，司人间之风情月债，掌尘世之女怨男痴。她试图通过梦境向 xref:贾宝玉[rel=enlighten] 揭示命运的虚无。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "metaphysical";
-    aat:startLine 3;
-    rel:enlighten <#贾宝玉>.
-<#贾代善> a aat:Heading;
-    aat:childOrder 2;
-    aat:contentEndLine 35;
-    aat:contentStartLine 35;
-    aat:documentOrder 8;
-    aat:endLine 36;
-    aat:generatedAddressLabel "_贾代善";
-    aat:headingLevel 2;
-    aat:headingLine 34;
-    aat:headline "贾代善";
-    aat:metadataEndLine 33;
-    aat:metadataStartLine 33;
-    aat:name "贾代善";
-    aat:raw """[.person, generation=2]
-=== 贾代善
-贾源之子。其妻为 xref:贾母[rel=spouse, status=primary]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 33;
-    field:generation "2";
-    rel:spouse <#贾母>.
-<#贾元春> a aat:Heading;
-    aat:childOrder 10;
-    aat:contentEndLine 72;
-    aat:contentStartLine 72;
-    aat:documentOrder 16;
-    aat:endLine 73;
-    aat:generatedAddressLabel "_贾元春";
-    aat:headingLevel 2;
-    aat:headingLine 71;
-    aat:headline "贾元春";
-    aat:metadataEndLine 70;
-    aat:metadataStartLine 70;
-    aat:name "贾元春";
-    aat:raw """[.person, generation=4]
-=== 贾元春
-贾政与王夫人长女。入宫为妃，其晋升直接促成了 xref:大观园[rel=cause] 的修建。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 70;
-    field:generation "4";
-    rel:cause <#大观园>.
-<#贾宝玉> a aat:Heading;
-    aat:childOrder 11;
-    aat:contentEndLine 79;
-    aat:contentStartLine 76;
-    aat:documentOrder 17;
-    aat:endLine 80;
-    aat:generatedAddressLabel "_贾宝玉";
-    aat:headingLevel 2;
-    aat:headingLine 75;
-    aat:headline "贾宝玉";
-    aat:metadataEndLine 74;
-    aat:metadataStartLine 74;
-    aat:name "贾宝玉";
-    aat:raw """[.person, generation=4]
-=== 贾宝玉
-荣国府的核心节点。他是 xref:神瑛侍者[rel=incarnation] 的现世化身。
-出生时口衔 xref:通灵宝玉[rel=possess]。
-他居于大观园中的 xref:怡红院[rel=reside-in]。
-他深爱着 xref:林黛玉[rel=love, reciprocal=true]，但最终依附于宗法安排，与 xref:薛宝钗[rel=spouse, status=primary] 成婚。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 74;
-    field:generation "4";
-    rel:incarnation <#神瑛侍者>;
-    rel:love <#林黛玉>;
-    rel:reside-in <#怡红院>;
-    rel:spouse <#薛宝钗>.
-<#贾政> a aat:Heading;
+:heading-6 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府";
     aat:childOrder 5;
-    aat:contentEndLine 50;
-    aat:contentStartLine 50;
-    aat:documentOrder 11;
-    aat:endLine 51;
-    aat:generatedAddressLabel "_贾政";
-    aat:headingLevel 2;
-    aat:headingLine 49;
-    aat:headline "贾政";
-    aat:metadataEndLine 48;
-    aat:metadataStartLine 48;
-    aat:name "贾政";
-    aat:raw """[.person, generation=3]
-=== 贾政
-贾母次子，工部员外郎，封建正统道德的化身。
+    aat:containsDirectly :heading-10, :heading-11, :heading-12, :heading-13, :heading-14, :heading-15, :heading-16, :heading-17, :heading-18, :heading-19, :heading-20, :heading-7, :heading-8, :heading-9;
+    aat:contentEndLine 27;
+    aat:contentStartLine 25;
+    aat:documentOrder 6;
+    aat:endLine 28;
+    aat:generatedAddressLabel "_荣国府";
+    aat:headingLevel 1;
+    aat:headingLine 24;
+    aat:headline "荣国府";
+    aat:metadataEndLine 23;
+    aat:metadataStartLine 23;
+    aat:raw """[.clan]
+== 荣国府
+// ==========================================
+// 第二卷：荣国府宗法网络
+// ==========================================
 
 """;
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 48;
-    field:generation "3".
-<#贾敏> a aat:Heading;
-    aat:childOrder 8;
-    aat:contentEndLine 64;
-    aat:contentStartLine 64;
-    aat:documentOrder 14;
-    aat:endLine 65;
-    aat:generatedAddressLabel "_贾敏";
-    aat:headingLevel 2;
-    aat:headingLine 63;
-    aat:headline "贾敏";
-    aat:metadataEndLine 62;
-    aat:metadataStartLine 62;
-    aat:name "贾敏";
-    aat:raw """[.person, generation=3]
-=== 贾敏
-贾母之女。嫁与林如海，育有 xref:林黛玉[rel=kinship, type=daughter]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 62;
-    field:generation "3";
-    rel:kinship <#林黛玉>.
-<#贾敬> a aat:Heading;
-    aat:childOrder 1;
-    aat:contentEndLine 105;
-    aat:contentStartLine 105;
-    aat:documentOrder 22;
-    aat:endLine 106;
-    aat:generatedAddressLabel "_贾敬";
-    aat:headingLevel 2;
-    aat:headingLine 104;
-    aat:headline "贾敬";
-    aat:metadataEndLine 103;
-    aat:metadataStartLine 103;
-    aat:name "贾敬";
-    aat:raw """[.person, generation=3]
-=== 贾敬
-沉迷修道炼丹，完全放弃对宁国府的管理。其子为 xref:贾珍[rel=kinship, type=son]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 103;
-    field:generation "3";
-    rel:kinship <#贾珍>.
-<#贾母> a aat:Heading;
-    aat:childOrder 3;
-    aat:contentEndLine 40;
-    aat:contentStartLine 39;
-    aat:documentOrder 9;
-    aat:endLine 41;
-    aat:generatedAddressLabel "_贾母";
-    aat:headingLevel 2;
-    aat:headingLine 38;
-    aat:headline "贾母";
-    aat:metadataEndLine 37;
-    aat:metadataStartLine 37;
-    aat:name "贾母";
-    aat:raw """[.person, generation=2]
-=== 贾母
-史侯家的小姐，史太君。荣国府的最高血缘与权力中枢。
-其子嗣包括 xref:贾赦[rel=kinship, type=son]、xref:贾政[rel=kinship, type=son]、xref:贾敏[rel=kinship, type=daughter]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 37;
-    field:generation "2";
-    rel:kinship <#贾政>, <#贾敏>, <#贾赦>.
-<#贾源> a aat:Heading;
+    aat:role "clan";
+    aat:startLine 23.
+:heading-7 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾源", "荣国府::贾源";
     aat:childOrder 1;
     aat:contentEndLine 31;
     aat:contentStartLine 31;
@@ -622,7 +717,6 @@
     aat:headline "贾源";
     aat:metadataEndLine 29;
     aat:metadataStartLine 29;
-    aat:name "贾源";
     aat:raw """[.person, generation=1]
 === 贾源
 荣国公，贾府基业的开创者。
@@ -632,155 +726,60 @@
     aat:role "person";
     aat:startLine 29;
     field:generation "1".
-<#贾珍> a aat:Heading;
+:heading-8 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾代善", "荣国府::贾代善";
     aat:childOrder 2;
-    aat:contentEndLine 110;
-    aat:contentStartLine 109;
-    aat:documentOrder 23;
-    aat:endLine 111;
-    aat:generatedAddressLabel "_贾珍";
+    aat:contentEndLine 35;
+    aat:contentStartLine 35;
+    aat:documentOrder 8;
+    aat:endLine 36;
+    aat:generatedAddressLabel "_贾代善";
     aat:headingLevel 2;
-    aat:headingLine 108;
-    aat:headline "贾珍";
-    aat:metadataEndLine 107;
-    aat:metadataStartLine 107;
-    aat:name "贾珍";
-    aat:raw """[.person, generation=4]
-=== 贾珍
-宁国府现任当家人，贾氏族长。骄奢淫逸，导致宁府“除了那两个石头狮子干净，只怕连猫儿狗儿都不干净”。
-其妻为 xref:尤氏[rel=spouse, status=primary]。其子为 xref:贾蓉[rel=kinship, type=son]。
+    aat:headingLine 34;
+    aat:headline "贾代善";
+    aat:metadataEndLine 33;
+    aat:metadataStartLine 33;
+    aat:raw """[.person, generation=2]
+=== 贾代善
+贾源之子。其妻为 xref:贾母[rel=spouse, status=primary]。
 
 """;
     aat:relativePath "samples/红楼梦结构图谱.adoc";
     aat:role "person";
-    aat:startLine 107;
-    field:generation "4";
-    rel:kinship <#贾蓉>.
-<#贾珠> a aat:Heading;
-    aat:childOrder 9;
-    aat:contentEndLine 68;
-    aat:contentStartLine 68;
-    aat:documentOrder 15;
-    aat:endLine 69;
-    aat:generatedAddressLabel "_贾珠";
-    aat:headingLevel 2;
-    aat:headingLine 67;
-    aat:headline "贾珠";
-    aat:metadataEndLine 66;
-    aat:metadataStartLine 66;
-    aat:name "贾珠";
-    aat:raw """[.person, generation=4]
-=== 贾珠
-贾政与王夫人长子，早夭。其妻为 xref:李纨[rel=spouse, status=primary]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 66;
-    field:generation "4".
-<#贾琏> a aat:Heading;
-    aat:childOrder 12;
-    aat:contentEndLine 84;
-    aat:contentStartLine 83;
-    aat:documentOrder 18;
-    aat:endLine 85;
-    aat:generatedAddressLabel "_贾琏";
-    aat:headingLevel 2;
-    aat:headingLine 82;
-    aat:headline "贾琏";
-    aat:metadataEndLine 81;
-    aat:metadataStartLine 81;
-    aat:name "贾琏";
-    aat:raw """[.person, generation=4]
-=== 贾琏
-贾赦之子，荣国府的实际庶务管理者。
-其妻为 xref:王熙凤[rel=spouse, status=primary]。他与 xref:尤二姐[rel=spouse, status=concubine] 发生过私情。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 81;
-    field:generation "4";
-    rel:spouse <#王熙凤>.
-<#贾蓉> a aat:Heading;
+    aat:startLine 33;
+    field:generation "2";
+    rel:spouse :heading-9.
+:heading-9 a aat:Heading;
+    aat:addressPath "红楼梦结构图谱::荣国府::贾母", "荣国府::贾母";
     aat:childOrder 3;
-    aat:contentEndLine 114;
-    aat:contentStartLine 114;
-    aat:documentOrder 24;
-    aat:endLine 115;
-    aat:generatedAddressLabel "_贾蓉";
+    aat:contentEndLine 40;
+    aat:contentStartLine 39;
+    aat:documentOrder 9;
+    aat:endLine 41;
+    aat:generatedAddressLabel "_贾母";
     aat:headingLevel 2;
-    aat:headingLine 113;
-    aat:headline "贾蓉";
-    aat:metadataEndLine 112;
-    aat:metadataStartLine 112;
-    aat:name "贾蓉";
-    aat:raw """[.person, generation=5]
-=== 贾蓉
-贾珍之子。其首任妻子为 xref:秦可卿[rel=spouse, status=primary]。
+    aat:headingLine 38;
+    aat:headline "贾母";
+    aat:metadataEndLine 37;
+    aat:metadataStartLine 37;
+    aat:raw """[.person, generation=2]
+=== 贾母
+史侯家的小姐，史太君。荣国府的最高血缘与权力中枢。
+其子嗣包括 xref:贾赦[rel=kinship, type=son]、xref:贾政[rel=kinship, type=son]、xref:贾敏[rel=kinship, type=daughter]。
 
 """;
     aat:relativePath "samples/红楼梦结构图谱.adoc";
     aat:role "person";
-    aat:startLine 112;
-    field:generation "5";
-    rel:spouse <#秦可卿>.
-<#贾赦> a aat:Heading;
-    aat:childOrder 4;
-    aat:contentEndLine 46;
-    aat:contentStartLine 44;
-    aat:documentOrder 10;
-    aat:endLine 47;
-    aat:generatedAddressLabel "_贾赦";
-    aat:headingLevel 2;
-    aat:headingLine 43;
-    aat:headline "贾赦";
-    aat:metadataEndLine 42;
-    aat:metadataStartLine 42;
-    aat:name "贾赦";
-    aat:raw """[.person, generation=3]
-=== 贾赦
-贾母长子，世袭一等将军。为人好色贪婪。
-其妻为 xref:邢夫人[rel=spouse, status=primary]。
-其子为 xref:贾琏[rel=kinship, type=son]；其女为 xref:贾迎春[rel=kinship, type=daughter]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 42;
-    field:generation "3";
-    rel:kinship <#贾琏>.
-<#赵姨娘> a aat:Heading;
-    aat:childOrder 7;
-    aat:contentEndLine 60;
-    aat:contentStartLine 60;
-    aat:documentOrder 13;
-    aat:endLine 61;
-    aat:generatedAddressLabel "_赵姨娘";
-    aat:headingLevel 2;
-    aat:headingLine 59;
-    aat:headline "赵姨娘";
-    aat:metadataEndLine 58;
-    aat:metadataStartLine 58;
-    aat:name "赵姨娘";
-    aat:raw """[.person, generation=3]
-=== 赵姨娘
-贾政之妾。育有 xref:贾探春[rel=kinship, type=daughter] 与 xref:贾环[rel=kinship, type=son]。
-
-""";
-    aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:role "person";
-    aat:startLine 58;
-    field:generation "3".
-<红楼梦结构图谱.adoc/projection#activity> a prov:Activity, aat:ProjectionActivity;
-    prov:used <红楼梦结构图谱.adoc/projection#source>.
-<红楼梦结构图谱.adoc/projection#projection> a prov:Entity, aat:HeadingProjection;
-    prov:hadPrimarySource <红楼梦结构图谱.adoc/projection#source>;
-    prov:wasDerivedFrom <红楼梦结构图谱.adoc/projection#source>;
-    prov:wasGeneratedBy <红楼梦结构图谱.adoc/projection#activity>.
-<红楼梦结构图谱.adoc/projection#source> a prov:Entity, aat:AsciiDocSourceDocument;
+    aat:startLine 37;
+    field:generation "2";
+    rel:kinship :heading-10, :heading-11, :heading-14.
+:projection a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource :source;
+    prov:wasDerivedFrom :source;
+    prov:wasGeneratedBy :activity.
+:source a prov:Entity, aat:AsciiDocSourceDocument;
     aat:relativePath "samples/红楼梦结构图谱.adoc".
-<红楼梦结构图谱.adoc/projection#xref-edge-l105-c24-o0> rdf:reifies <<(<#贾敬> rel:kinship <#贾珍>)>>;
+:xref-edge-l105-c24-o0 rdf:reifies <<(:heading-22 rel:kinship :heading-23)>>;
     a aat:XrefEdge;
     aat:endColumn 54;
     aat:endLine 105;
@@ -789,15 +788,15 @@
     aat:raw "xref:贾珍[rel=kinship, type=son]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾敬>;
+    aat:sourceHeading :heading-22;
     aat:sourceSelector "_贾敬";
     aat:startColumn 24;
     aat:startLine 105;
     aat:syntax "macro";
-    aat:targetHeading <#贾珍>;
+    aat:targetHeading :heading-23;
     aat:targetSelector "贾珍";
     field:type "son".
-<红楼梦结构图谱.adoc/projection#xref-edge-l110-c45-o0> rdf:reifies <<(<#贾珍> rel:kinship <#贾蓉>)>>;
+:xref-edge-l110-c45-o0 rdf:reifies <<(:heading-23 rel:kinship :heading-24)>>;
     a aat:XrefEdge;
     aat:endColumn 75;
     aat:endLine 110;
@@ -806,15 +805,15 @@
     aat:raw "xref:贾蓉[rel=kinship, type=son]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾珍>;
+    aat:sourceHeading :heading-23;
     aat:sourceSelector "_贾珍";
     aat:startColumn 45;
     aat:startLine 110;
     aat:syntax "macro";
-    aat:targetHeading <#贾蓉>;
+    aat:targetHeading :heading-24;
     aat:targetSelector "贾蓉";
     field:type "son".
-<红楼梦结构图谱.adoc/projection#xref-edge-l110-c5-o0> a aat:XrefEdge;
+:xref-edge-l110-c5-o0 a aat:XrefEdge;
     aat:endColumn 40;
     aat:endLine 110;
     aat:officialHref "#尤氏";
@@ -822,14 +821,14 @@
     aat:raw "xref:尤氏[rel=spouse, status=primary]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾珍>;
+    aat:sourceHeading :heading-23;
     aat:sourceSelector "_贾珍";
     aat:startColumn 5;
     aat:startLine 110;
     aat:syntax "macro";
     aat:targetSelector "尤氏";
     field:status "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l114-c13-o0> rdf:reifies <<(<#贾蓉> rel:spouse <#秦可卿>)>>;
+:xref-edge-l114-c13-o0 rdf:reifies <<(:heading-24 rel:spouse :heading-25)>>;
     a aat:XrefEdge;
     aat:endColumn 49;
     aat:endLine 114;
@@ -838,15 +837,15 @@
     aat:raw "xref:秦可卿[rel=spouse, status=primary]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾蓉>;
+    aat:sourceHeading :heading-24;
     aat:sourceSelector "_贾蓉";
     aat:startColumn 13;
     aat:startLine 114;
     aat:syntax "macro";
-    aat:targetHeading <#秦可卿>;
+    aat:targetHeading :heading-25;
     aat:targetSelector "秦可卿";
     field:status "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l122-c26-o0> rdf:reifies <<(<#秦可卿> rel:enlighten <#王熙凤>)>>;
+:xref-edge-l122-c26-o0 rdf:reifies <<(:heading-25 rel:enlighten :heading-19)>>;
     a aat:XrefEdge;
     aat:endColumn 49;
     aat:endLine 122;
@@ -855,14 +854,14 @@
     aat:raw "xref:王熙凤[rel=enlighten]";
     aat:rel "enlighten";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#秦可卿>;
+    aat:sourceHeading :heading-25;
     aat:sourceSelector "_秦可卿";
     aat:startColumn 26;
     aat:startLine 122;
     aat:syntax "macro";
-    aat:targetHeading <#王熙凤>;
+    aat:targetHeading :heading-19;
     aat:targetSelector "王熙凤".
-<红楼梦结构图谱.adoc/projection#xref-edge-l130-c10-o0> rdf:reifies <<(<#怡红院> rel:reside-in <#贾宝玉>)>>;
+:xref-edge-l130-c10-o0 rdf:reifies <<(:heading-27 rel:reside-in :heading-17)>>;
     a aat:XrefEdge;
     aat:endColumn 33;
     aat:endLine 130;
@@ -871,14 +870,14 @@
     aat:raw "xref:贾宝玉[rel=reside-in]";
     aat:rel "reside-in";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#怡红院>;
+    aat:sourceHeading :heading-27;
     aat:sourceSelector "_怡红院";
     aat:startColumn 10;
     aat:startLine 130;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "贾宝玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l134-c3-o0> a aat:XrefEdge;
+:xref-edge-l134-c3-o0 a aat:XrefEdge;
     aat:endColumn 49;
     aat:endLine 134;
     aat:officialHref "#花袭人";
@@ -886,7 +885,7 @@
     aat:raw "xref:花袭人[rel=serve, target=贾宝玉, level=primary]";
     aat:rel "serve";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#怡红院>;
+    aat:sourceHeading :heading-27;
     aat:sourceSelector "_怡红院";
     aat:startColumn 3;
     aat:startLine 134;
@@ -894,7 +893,7 @@
     aat:targetSelector "花袭人";
     field:level "primary";
     field:target "贾宝玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l134-c56-o0> rdf:reifies <<(<#怡红院> rel:loyalty <#王夫人>)>>;
+:xref-edge-l134-c56-o0 rdf:reifies <<(:heading-27 rel:loyalty :heading-12)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 94;
@@ -906,14 +905,14 @@
     aat:raw "xref:wang-furen-rong[王夫人, rel=loyalty]";
     aat:rel "loyalty";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#怡红院>;
+    aat:sourceHeading :heading-27;
     aat:sourceSelector "_怡红院";
     aat:startColumn 56;
     aat:startLine 134;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-12;
     aat:targetSelector "wang-furen-rong".
-<红楼梦结构图谱.adoc/projection#xref-edge-l135-c3-o0> a aat:XrefEdge;
+:xref-edge-l135-c3-o0 a aat:XrefEdge;
     aat:endColumn 48;
     aat:endLine 135;
     aat:officialHref "#晴雯";
@@ -921,7 +920,7 @@
     aat:raw "xref:晴雯[rel=serve, target=贾宝玉, level=primary]";
     aat:rel "serve";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#怡红院>;
+    aat:sourceHeading :heading-27;
     aat:sourceSelector "_怡红院";
     aat:startColumn 3;
     aat:startLine 135;
@@ -929,7 +928,7 @@
     aat:targetSelector "晴雯";
     field:level "primary";
     field:target "贾宝玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l136-c3-o0> a aat:XrefEdge;
+:xref-edge-l136-c3-o0 a aat:XrefEdge;
     aat:endColumn 50;
     aat:endLine 136;
     aat:officialHref "#麝月";
@@ -937,7 +936,7 @@
     aat:raw "xref:麝月[rel=serve, target=贾宝玉, level=secondary]";
     aat:rel "serve";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#怡红院>;
+    aat:sourceHeading :heading-27;
     aat:sourceSelector "_怡红院";
     aat:startColumn 3;
     aat:startLine 136;
@@ -945,7 +944,7 @@
     aat:targetSelector "麝月";
     field:level "secondary";
     field:target "贾宝玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l140-c15-o0> rdf:reifies <<(<#潇湘馆> rel:reside-in <#林黛玉>)>>;
+:xref-edge-l140-c15-o0 rdf:reifies <<(:heading-28 rel:reside-in :heading-20)>>;
     a aat:XrefEdge;
     aat:endColumn 38;
     aat:endLine 140;
@@ -954,14 +953,14 @@
     aat:raw "xref:林黛玉[rel=reside-in]";
     aat:rel "reside-in";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#潇湘馆>;
+    aat:sourceHeading :heading-28;
     aat:sourceSelector "_潇湘馆";
     aat:startColumn 15;
     aat:startLine 140;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l141-c7-o0> a aat:XrefEdge;
+:xref-edge-l141-c7-o0 a aat:XrefEdge;
     aat:endColumn 52;
     aat:endLine 141;
     aat:officialHref "#紫鹃";
@@ -969,7 +968,7 @@
     aat:raw "xref:紫鹃[rel=serve, target=林黛玉, level=primary]";
     aat:rel "serve";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#潇湘馆>;
+    aat:sourceHeading :heading-28;
     aat:sourceSelector "_潇湘馆";
     aat:startColumn 7;
     aat:startLine 141;
@@ -977,7 +976,7 @@
     aat:targetSelector "紫鹃";
     field:level "primary";
     field:target "林黛玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l145-c19-o0> rdf:reifies <<(<#蘅芜苑> rel:reside-in <#薛宝钗>)>>;
+:xref-edge-l145-c19-o0 rdf:reifies <<(:heading-29 rel:reside-in :heading-30)>>;
     a aat:XrefEdge;
     aat:endColumn 42;
     aat:endLine 145;
@@ -986,14 +985,14 @@
     aat:raw "xref:薛宝钗[rel=reside-in]";
     aat:rel "reside-in";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#蘅芜苑>;
+    aat:sourceHeading :heading-29;
     aat:sourceSelector "_蘅芜苑";
     aat:startColumn 19;
     aat:startLine 145;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-30;
     aat:targetSelector "薛宝钗".
-<红楼梦结构图谱.adoc/projection#xref-edge-l150-c6-o0> rdf:reifies <<(<#薛宝钗> rel:spouse <#贾宝玉>)>>;
+:xref-edge-l150-c6-o0 rdf:reifies <<(:heading-30 rel:spouse :heading-17)>>;
     a aat:XrefEdge;
     aat:endColumn 42;
     aat:endLine 150;
@@ -1002,15 +1001,15 @@
     aat:raw "xref:贾宝玉[rel=spouse, status=primary]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#薛宝钗>;
+    aat:sourceHeading :heading-30;
     aat:sourceSelector "_薛宝钗";
     aat:startColumn 6;
     aat:startLine 150;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "贾宝玉";
     field:status "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l150-c64-o0> rdf:reifies <<(<#薛宝钗> rel:cause-death <#林黛玉>)>>;
+:xref-edge-l150-c64-o0 rdf:reifies <<(:heading-30 rel:cause-death :heading-20)>>;
     a aat:XrefEdge;
     aat:endColumn 89;
     aat:endLine 150;
@@ -1019,14 +1018,14 @@
     aat:raw "xref:林黛玉[rel=cause-death]";
     aat:rel "cause-death";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#薛宝钗>;
+    aat:sourceHeading :heading-30;
     aat:sourceSelector "_薛宝钗";
     aat:startColumn 64;
     aat:startLine 150;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l162-c7-o0> rdf:reifies <<(<#宝玉挨打> rel:participate <#贾政>)>>;
+:xref-edge-l162-c7-o0 rdf:reifies <<(:heading-31 rel:participate :heading-11)>>;
     a aat:XrefEdge;
     aat:endColumn 47;
     aat:endLine 162;
@@ -1035,15 +1034,15 @@
     aat:raw "xref:贾政[rel=participate, role=initiator]";
     aat:rel "participate";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#宝玉挨打>;
+    aat:sourceHeading :heading-31;
     aat:sourceSelector "event-baoyu-beaten";
     aat:startColumn 7;
     aat:startLine 162;
     aat:syntax "macro";
-    aat:targetHeading <#贾政>;
+    aat:targetHeading :heading-11;
     aat:targetSelector "贾政";
     field:role "initiator".
-<红楼梦结构图谱.adoc/projection#xref-edge-l163-c7-o0> rdf:reifies <<(<#宝玉挨打> rel:participate <#贾宝玉>)>>;
+:xref-edge-l163-c7-o0 rdf:reifies <<(:heading-31 rel:participate :heading-17)>>;
     a aat:XrefEdge;
     aat:endColumn 45;
     aat:endLine 163;
@@ -1052,15 +1051,15 @@
     aat:raw "xref:贾宝玉[rel=participate, role=victim]";
     aat:rel "participate";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#宝玉挨打>;
+    aat:sourceHeading :heading-31;
     aat:sourceSelector "event-baoyu-beaten";
     aat:startColumn 7;
     aat:startLine 163;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "贾宝玉";
     field:role "victim".
-<红楼梦结构图谱.adoc/projection#xref-edge-l164-c51-o0> rdf:reifies <<(<#宝玉挨打> rel:participate <#王夫人>)>>;
+:xref-edge-l164-c51-o0 rdf:reifies <<(:heading-31 rel:participate :heading-12)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 110;
@@ -1072,15 +1071,15 @@
     aat:raw "xref:wang-furen-rong[王夫人, rel=participate, role=intervener]";
     aat:rel "participate";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#宝玉挨打>;
+    aat:sourceHeading :heading-31;
     aat:sourceSelector "event-baoyu-beaten";
     aat:startColumn 51;
     aat:startLine 164;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-12;
     aat:targetSelector "wang-furen-rong";
     field:role "intervener".
-<红楼梦结构图谱.adoc/projection#xref-edge-l164-c7-o0> rdf:reifies <<(<#宝玉挨打> rel:participate <#贾母>)>>;
+:xref-edge-l164-c7-o0 rdf:reifies <<(:heading-31 rel:participate :heading-9)>>;
     a aat:XrefEdge;
     aat:endColumn 48;
     aat:endLine 164;
@@ -1089,15 +1088,15 @@
     aat:raw "xref:贾母[rel=participate, role=intervener]";
     aat:rel "participate";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#宝玉挨打>;
+    aat:sourceHeading :heading-31;
     aat:sourceSelector "event-baoyu-beaten";
     aat:startColumn 7;
     aat:startLine 164;
     aat:syntax "macro";
-    aat:targetHeading <#贾母>;
+    aat:targetHeading :heading-9;
     aat:targetSelector "贾母";
     field:role "intervener".
-<红楼梦结构图谱.adoc/projection#xref-edge-l171-c7-o0> rdf:reifies <<(<#抄检大观园> rel:participate <#王夫人>)>>;
+:xref-edge-l171-c7-o0 rdf:reifies <<(:heading-32 rel:participate :heading-12)>>;
     a aat:XrefEdge;
     aat:displayLabel "王夫人";
     aat:endColumn 65;
@@ -1109,15 +1108,15 @@
     aat:raw "xref:wang-furen-rong[王夫人, rel=participate, role=initiator]";
     aat:rel "participate";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#抄检大观园>;
+    aat:sourceHeading :heading-32;
     aat:sourceSelector "event-raid-on-garden";
     aat:startColumn 7;
     aat:startLine 171;
     aat:syntax "macro";
-    aat:targetHeading <#王夫人>;
+    aat:targetHeading :heading-12;
     aat:targetSelector "wang-furen-rong";
     field:role "initiator".
-<红楼梦结构图谱.adoc/projection#xref-edge-l172-c7-o0> rdf:reifies <<(<#抄检大观园> rel:participate <#王熙凤>)>>;
+:xref-edge-l172-c7-o0 rdf:reifies <<(:heading-32 rel:participate :heading-19)>>;
     a aat:XrefEdge;
     aat:endColumn 47;
     aat:endLine 172;
@@ -1126,15 +1125,15 @@
     aat:raw "xref:王熙凤[rel=participate, role=executor]";
     aat:rel "participate";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#抄检大观园>;
+    aat:sourceHeading :heading-32;
     aat:sourceSelector "event-raid-on-garden";
     aat:startColumn 7;
     aat:startLine 172;
     aat:syntax "macro";
-    aat:targetHeading <#王熙凤>;
+    aat:targetHeading :heading-19;
     aat:targetSelector "王熙凤";
     field:role "executor".
-<红楼梦结构图谱.adoc/projection#xref-edge-l173-c14-o0> a aat:XrefEdge;
+:xref-edge-l173-c14-o0 a aat:XrefEdge;
     aat:endColumn 38;
     aat:endLine 173;
     aat:officialHref "#晴雯";
@@ -1142,13 +1141,13 @@
     aat:raw "xref:晴雯[rel=cause-death]";
     aat:rel "cause-death";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#抄检大观园>;
+    aat:sourceHeading :heading-32;
     aat:sourceSelector "event-raid-on-garden";
     aat:startColumn 14;
     aat:startLine 173;
     aat:syntax "macro";
     aat:targetSelector "晴雯".
-<红楼梦结构图谱.adoc/projection#xref-edge-l173-c46-o0> a aat:XrefEdge;
+:xref-edge-l173-c46-o0 a aat:XrefEdge;
     aat:endColumn 70;
     aat:endLine 173;
     aat:officialHref "#司棋";
@@ -1156,13 +1155,13 @@
     aat:raw "xref:司棋[rel=cause-expel]";
     aat:rel "cause-expel";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#抄检大观园>;
+    aat:sourceHeading :heading-32;
     aat:sourceSelector "event-raid-on-garden";
     aat:startColumn 46;
     aat:startLine 173;
     aat:syntax "macro";
     aat:targetSelector "司棋".
-<红楼梦结构图谱.adoc/projection#xref-edge-l174-c10-o0> rdf:reifies <<(<#抄检大观园> rel:cause-decline <#荣国府>)>>;
+:xref-edge-l174-c10-o0 rdf:reifies <<(:heading-32 rel:cause-decline :heading-6)>>;
     a aat:XrefEdge;
     aat:endColumn 37;
     aat:endLine 174;
@@ -1171,14 +1170,14 @@
     aat:raw "xref:荣国府[rel=cause-decline]";
     aat:rel "cause-decline";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#抄检大观园>;
+    aat:sourceHeading :heading-32;
     aat:sourceSelector "event-raid-on-garden";
     aat:startColumn 10;
     aat:startLine 174;
     aat:syntax "macro";
-    aat:targetHeading <#荣国府>;
+    aat:targetHeading :heading-6;
     aat:targetSelector "荣国府".
-<红楼梦结构图谱.adoc/projection#xref-edge-l35-c10-o0> rdf:reifies <<(<#贾代善> rel:spouse <#贾母>)>>;
+:xref-edge-l35-c10-o0 rdf:reifies <<(:heading-8 rel:spouse :heading-9)>>;
     a aat:XrefEdge;
     aat:endColumn 45;
     aat:endLine 35;
@@ -1187,15 +1186,15 @@
     aat:raw "xref:贾母[rel=spouse, status=primary]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾代善>;
+    aat:sourceHeading :heading-8;
     aat:sourceSelector "_贾代善";
     aat:startColumn 10;
     aat:startLine 35;
     aat:syntax "macro";
-    aat:targetHeading <#贾母>;
+    aat:targetHeading :heading-9;
     aat:targetSelector "贾母";
     field:status "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l40-c38-o0> rdf:reifies <<(<#贾母> rel:kinship <#贾政>)>>;
+:xref-edge-l40-c38-o0 rdf:reifies <<(:heading-9 rel:kinship :heading-11)>>;
     a aat:XrefEdge;
     aat:endColumn 68;
     aat:endLine 40;
@@ -1204,15 +1203,15 @@
     aat:raw "xref:贾政[rel=kinship, type=son]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾母>;
+    aat:sourceHeading :heading-9;
     aat:sourceSelector "_贾母";
     aat:startColumn 38;
     aat:startLine 40;
     aat:syntax "macro";
-    aat:targetHeading <#贾政>;
+    aat:targetHeading :heading-11;
     aat:targetSelector "贾政";
     field:type "son".
-<红楼梦结构图谱.adoc/projection#xref-edge-l40-c69-o0> rdf:reifies <<(<#贾母> rel:kinship <#贾敏>)>>;
+:xref-edge-l40-c69-o0 rdf:reifies <<(:heading-9 rel:kinship :heading-14)>>;
     a aat:XrefEdge;
     aat:endColumn 104;
     aat:endLine 40;
@@ -1221,15 +1220,15 @@
     aat:raw "xref:贾敏[rel=kinship, type=daughter]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾母>;
+    aat:sourceHeading :heading-9;
     aat:sourceSelector "_贾母";
     aat:startColumn 69;
     aat:startLine 40;
     aat:syntax "macro";
-    aat:targetHeading <#贾敏>;
+    aat:targetHeading :heading-14;
     aat:targetSelector "贾敏";
     field:type "daughter".
-<红楼梦结构图谱.adoc/projection#xref-edge-l40-c7-o0> rdf:reifies <<(<#贾母> rel:kinship <#贾赦>)>>;
+:xref-edge-l40-c7-o0 rdf:reifies <<(:heading-9 rel:kinship :heading-10)>>;
     a aat:XrefEdge;
     aat:endColumn 37;
     aat:endLine 40;
@@ -1238,15 +1237,15 @@
     aat:raw "xref:贾赦[rel=kinship, type=son]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾母>;
+    aat:sourceHeading :heading-9;
     aat:sourceSelector "_贾母";
     aat:startColumn 7;
     aat:startLine 40;
     aat:syntax "macro";
-    aat:targetHeading <#贾赦>;
+    aat:targetHeading :heading-10;
     aat:targetSelector "贾赦";
     field:type "son".
-<红楼梦结构图谱.adoc/projection#xref-edge-l45-c5-o0> a aat:XrefEdge;
+:xref-edge-l45-c5-o0 a aat:XrefEdge;
     aat:endColumn 41;
     aat:endLine 45;
     aat:officialHref "#邢夫人";
@@ -1254,14 +1253,14 @@
     aat:raw "xref:邢夫人[rel=spouse, status=primary]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾赦>;
+    aat:sourceHeading :heading-10;
     aat:sourceSelector "_贾赦";
     aat:startColumn 5;
     aat:startLine 45;
     aat:syntax "macro";
     aat:targetSelector "邢夫人";
     field:status "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l46-c40-o0> a aat:XrefEdge;
+:xref-edge-l46-c40-o0 a aat:XrefEdge;
     aat:endColumn 76;
     aat:endLine 46;
     aat:officialHref "#贾迎春";
@@ -1269,14 +1268,14 @@
     aat:raw "xref:贾迎春[rel=kinship, type=daughter]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾赦>;
+    aat:sourceHeading :heading-10;
     aat:sourceSelector "_贾赦";
     aat:startColumn 40;
     aat:startLine 46;
     aat:syntax "macro";
     aat:targetSelector "贾迎春";
     field:type "daughter".
-<红楼梦结构图谱.adoc/projection#xref-edge-l46-c5-o0> rdf:reifies <<(<#贾赦> rel:kinship <#贾琏>)>>;
+:xref-edge-l46-c5-o0 rdf:reifies <<(:heading-10 rel:kinship :heading-18)>>;
     a aat:XrefEdge;
     aat:endColumn 35;
     aat:endLine 46;
@@ -1285,15 +1284,15 @@
     aat:raw "xref:贾琏[rel=kinship, type=son]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾赦>;
+    aat:sourceHeading :heading-10;
     aat:sourceSelector "_贾赦";
     aat:startColumn 5;
     aat:startLine 46;
     aat:syntax "macro";
-    aat:targetHeading <#贾琏>;
+    aat:targetHeading :heading-18;
     aat:targetSelector "贾琏";
     field:type "son".
-<红楼梦结构图谱.adoc/projection#xref-edge-l55-c22-o0> rdf:reifies <<(<#王夫人> rel:dislike <#林黛玉>)>>;
+:xref-edge-l55-c22-o0 rdf:reifies <<(:heading-12 rel:dislike :heading-20)>>;
     a aat:XrefEdge;
     aat:endColumn 43;
     aat:endLine 55;
@@ -1302,14 +1301,14 @@
     aat:raw "xref:林黛玉[rel=dislike]";
     aat:rel "dislike";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#王夫人>;
+    aat:sourceHeading :heading-12;
     aat:sourceSelector "wang-furen-rong";
     aat:startColumn 22;
     aat:startLine 55;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l55-c46-o0> a aat:XrefEdge;
+:xref-edge-l55-c46-o0 a aat:XrefEdge;
     aat:endColumn 66;
     aat:endLine 55;
     aat:officialHref "#晴雯";
@@ -1317,13 +1316,13 @@
     aat:raw "xref:晴雯[rel=dislike]";
     aat:rel "dislike";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#王夫人>;
+    aat:sourceHeading :heading-12;
     aat:sourceSelector "wang-furen-rong";
     aat:startColumn 46;
     aat:startLine 55;
     aat:syntax "macro";
     aat:targetSelector "晴雯".
-<红楼梦结构图谱.adoc/projection#xref-edge-l56-c39-o0> rdf:reifies <<(<#王夫人> rel:kinship <#贾元春>)>>;
+:xref-edge-l56-c39-o0 rdf:reifies <<(:heading-12 rel:kinship :heading-16)>>;
     a aat:XrefEdge;
     aat:endColumn 75;
     aat:endLine 56;
@@ -1332,15 +1331,15 @@
     aat:raw "xref:贾元春[rel=kinship, type=daughter]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#王夫人>;
+    aat:sourceHeading :heading-12;
     aat:sourceSelector "wang-furen-rong";
     aat:startColumn 39;
     aat:startLine 56;
     aat:syntax "macro";
-    aat:targetHeading <#贾元春>;
+    aat:targetHeading :heading-16;
     aat:targetSelector "贾元春";
     field:type "daughter".
-<红楼梦结构图谱.adoc/projection#xref-edge-l56-c76-o0> rdf:reifies <<(<#王夫人> rel:kinship <#贾宝玉>)>>;
+:xref-edge-l56-c76-o0 rdf:reifies <<(:heading-12 rel:kinship :heading-17)>>;
     a aat:XrefEdge;
     aat:endColumn 107;
     aat:endLine 56;
@@ -1349,15 +1348,15 @@
     aat:raw "xref:贾宝玉[rel=kinship, type=son]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#王夫人>;
+    aat:sourceHeading :heading-12;
     aat:sourceSelector "wang-furen-rong";
     aat:startColumn 76;
     aat:startLine 56;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "贾宝玉";
     field:type "son".
-<红楼梦结构图谱.adoc/projection#xref-edge-l56-c8-o0> rdf:reifies <<(<#王夫人> rel:kinship <#贾珠>)>>;
+:xref-edge-l56-c8-o0 rdf:reifies <<(:heading-12 rel:kinship :heading-15)>>;
     a aat:XrefEdge;
     aat:endColumn 38;
     aat:endLine 56;
@@ -1366,15 +1365,15 @@
     aat:raw "xref:贾珠[rel=kinship, type=son]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#王夫人>;
+    aat:sourceHeading :heading-12;
     aat:sourceSelector "wang-furen-rong";
     aat:startColumn 8;
     aat:startLine 56;
     aat:syntax "macro";
-    aat:targetHeading <#贾珠>;
+    aat:targetHeading :heading-15;
     aat:targetSelector "贾珠";
     field:type "son".
-<红楼梦结构图谱.adoc/projection#xref-edge-l60-c48-o0> a aat:XrefEdge;
+:xref-edge-l60-c48-o0 a aat:XrefEdge;
     aat:endColumn 78;
     aat:endLine 60;
     aat:officialHref "#贾环";
@@ -1382,14 +1381,14 @@
     aat:raw "xref:贾环[rel=kinship, type=son]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#赵姨娘>;
+    aat:sourceHeading :heading-13;
     aat:sourceSelector "_赵姨娘";
     aat:startColumn 48;
     aat:startLine 60;
     aat:syntax "macro";
     aat:targetSelector "贾环";
     field:type "son".
-<红楼梦结构图谱.adoc/projection#xref-edge-l60-c9-o0> a aat:XrefEdge;
+:xref-edge-l60-c9-o0 a aat:XrefEdge;
     aat:endColumn 45;
     aat:endLine 60;
     aat:officialHref "#贾探春";
@@ -1397,14 +1396,14 @@
     aat:raw "xref:贾探春[rel=kinship, type=daughter]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#赵姨娘>;
+    aat:sourceHeading :heading-13;
     aat:sourceSelector "_赵姨娘";
     aat:startColumn 9;
     aat:startLine 60;
     aat:syntax "macro";
     aat:targetSelector "贾探春";
     field:type "daughter".
-<红楼梦结构图谱.adoc/projection#xref-edge-l64-c15-o0> rdf:reifies <<(<#贾敏> rel:kinship <#林黛玉>)>>;
+:xref-edge-l64-c15-o0 rdf:reifies <<(:heading-14 rel:kinship :heading-20)>>;
     a aat:XrefEdge;
     aat:endColumn 51;
     aat:endLine 64;
@@ -1413,15 +1412,15 @@
     aat:raw "xref:林黛玉[rel=kinship, type=daughter]";
     aat:rel "kinship";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾敏>;
+    aat:sourceHeading :heading-14;
     aat:sourceSelector "_贾敏";
     aat:startColumn 15;
     aat:startLine 64;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉";
     field:type "daughter".
-<红楼梦结构图谱.adoc/projection#xref-edge-l68-c17-o0> a aat:XrefEdge;
+:xref-edge-l68-c17-o0 a aat:XrefEdge;
     aat:endColumn 52;
     aat:endLine 68;
     aat:officialHref "#李纨";
@@ -1429,14 +1428,14 @@
     aat:raw "xref:李纨[rel=spouse, status=primary]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾珠>;
+    aat:sourceHeading :heading-15;
     aat:sourceSelector "_贾珠";
     aat:startColumn 17;
     aat:startLine 68;
     aat:syntax "macro";
     aat:targetSelector "李纨";
     field:status "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l72-c24-o0> rdf:reifies <<(<#贾元春> rel:cause <#大观园>)>>;
+:xref-edge-l72-c24-o0 rdf:reifies <<(:heading-16 rel:cause :heading-26)>>;
     a aat:XrefEdge;
     aat:endColumn 43;
     aat:endLine 72;
@@ -1445,14 +1444,14 @@
     aat:raw "xref:大观园[rel=cause]";
     aat:rel "cause";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾元春>;
+    aat:sourceHeading :heading-16;
     aat:sourceSelector "_贾元春";
     aat:startColumn 24;
     aat:startLine 72;
     aat:syntax "macro";
-    aat:targetHeading <#大观园>;
+    aat:targetHeading :heading-26;
     aat:targetSelector "大观园".
-<红楼梦结构图谱.adoc/projection#xref-edge-l76-c13-o0> rdf:reifies <<(<#贾宝玉> rel:incarnation <#神瑛侍者>)>>;
+:xref-edge-l76-c13-o0 rdf:reifies <<(:heading-17 rel:incarnation :heading-3)>>;
     a aat:XrefEdge;
     aat:endColumn 39;
     aat:endLine 76;
@@ -1461,14 +1460,14 @@
     aat:raw "xref:神瑛侍者[rel=incarnation]";
     aat:rel "incarnation";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-17;
     aat:sourceSelector "_贾宝玉";
     aat:startColumn 13;
     aat:startLine 76;
     aat:syntax "macro";
-    aat:targetHeading <#神瑛侍者>;
+    aat:targetHeading :heading-3;
     aat:targetSelector "神瑛侍者".
-<红楼梦结构图谱.adoc/projection#xref-edge-l77-c7-o0> a aat:XrefEdge;
+:xref-edge-l77-c7-o0 a aat:XrefEdge;
     aat:endColumn 29;
     aat:endLine 77;
     aat:officialHref "#通灵宝玉";
@@ -1476,13 +1475,13 @@
     aat:raw "xref:通灵宝玉[rel=possess]";
     aat:rel "possess";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-17;
     aat:sourceSelector "_贾宝玉";
     aat:startColumn 7;
     aat:startLine 77;
     aat:syntax "macro";
     aat:targetSelector "通灵宝玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l78-c10-o0> rdf:reifies <<(<#贾宝玉> rel:reside-in <#怡红院>)>>;
+:xref-edge-l78-c10-o0 rdf:reifies <<(:heading-17 rel:reside-in :heading-27)>>;
     a aat:XrefEdge;
     aat:endColumn 33;
     aat:endLine 78;
@@ -1491,14 +1490,14 @@
     aat:raw "xref:怡红院[rel=reside-in]";
     aat:rel "reside-in";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-17;
     aat:sourceSelector "_贾宝玉";
     aat:startColumn 10;
     aat:startLine 78;
     aat:syntax "macro";
-    aat:targetHeading <#怡红院>;
+    aat:targetHeading :heading-27;
     aat:targetSelector "怡红院".
-<红楼梦结构图谱.adoc/projection#xref-edge-l79-c55-o0> rdf:reifies <<(<#贾宝玉> rel:spouse <#薛宝钗>)>>;
+:xref-edge-l79-c55-o0 rdf:reifies <<(:heading-17 rel:spouse :heading-30)>>;
     a aat:XrefEdge;
     aat:endColumn 91;
     aat:endLine 79;
@@ -1507,15 +1506,15 @@
     aat:raw "xref:薛宝钗[rel=spouse, status=primary]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-17;
     aat:sourceSelector "_贾宝玉";
     aat:startColumn 55;
     aat:startLine 79;
     aat:syntax "macro";
-    aat:targetHeading <#薛宝钗>;
+    aat:targetHeading :heading-30;
     aat:targetSelector "薛宝钗";
     field:status "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l79-c6-o0> rdf:reifies <<(<#贾宝玉> rel:love <#林黛玉>)>>;
+:xref-edge-l79-c6-o0 rdf:reifies <<(:heading-17 rel:love :heading-20)>>;
     a aat:XrefEdge;
     aat:endColumn 41;
     aat:endLine 79;
@@ -1524,15 +1523,15 @@
     aat:raw "xref:林黛玉[rel=love, reciprocal=true]";
     aat:rel "love";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾宝玉>;
+    aat:sourceHeading :heading-17;
     aat:sourceSelector "_贾宝玉";
     aat:startColumn 6;
     aat:startLine 79;
     aat:syntax "macro";
-    aat:targetHeading <#林黛玉>;
+    aat:targetHeading :heading-20;
     aat:targetSelector "林黛玉";
     field:reciprocal "true".
-<红楼梦结构图谱.adoc/projection#xref-edge-l8-c35-o0> rdf:reifies <<(<#警幻仙子> rel:enlighten <#贾宝玉>)>>;
+:xref-edge-l8-c35-o0 rdf:reifies <<(:heading-2 rel:enlighten :heading-17)>>;
     a aat:XrefEdge;
     aat:endColumn 58;
     aat:endLine 8;
@@ -1541,14 +1540,14 @@
     aat:raw "xref:贾宝玉[rel=enlighten]";
     aat:rel "enlighten";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#警幻仙子>;
+    aat:sourceHeading :heading-2;
     aat:sourceSelector "_警幻仙子";
     aat:startColumn 35;
     aat:startLine 8;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "贾宝玉".
-<红楼梦结构图谱.adoc/projection#xref-edge-l84-c45-o0> a aat:XrefEdge;
+:xref-edge-l84-c45-o0 a aat:XrefEdge;
     aat:endColumn 83;
     aat:endLine 84;
     aat:officialHref "#尤二姐";
@@ -1556,14 +1555,14 @@
     aat:raw "xref:尤二姐[rel=spouse, status=concubine]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾琏>;
+    aat:sourceHeading :heading-18;
     aat:sourceSelector "_贾琏";
     aat:startColumn 45;
     aat:startLine 84;
     aat:syntax "macro";
     aat:targetSelector "尤二姐";
     field:status "concubine".
-<红楼梦结构图谱.adoc/projection#xref-edge-l84-c5-o0> rdf:reifies <<(<#贾琏> rel:spouse <#王熙凤>)>>;
+:xref-edge-l84-c5-o0 rdf:reifies <<(:heading-18 rel:spouse :heading-19)>>;
     a aat:XrefEdge;
     aat:endColumn 41;
     aat:endLine 84;
@@ -1572,15 +1571,15 @@
     aat:raw "xref:王熙凤[rel=spouse, status=primary]";
     aat:rel "spouse";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#贾琏>;
+    aat:sourceHeading :heading-18;
     aat:sourceSelector "_贾琏";
     aat:startColumn 5;
     aat:startLine 84;
     aat:syntax "macro";
-    aat:targetHeading <#王熙凤>;
+    aat:targetHeading :heading-19;
     aat:targetSelector "王熙凤";
     field:status "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l89-c21-o0> a aat:XrefEdge;
+:xref-edge-l89-c21-o0 a aat:XrefEdge;
     aat:endColumn 54;
     aat:endLine 89;
     aat:officialHref "#平儿";
@@ -1588,14 +1587,14 @@
     aat:raw "xref:平儿[rel=serve, level=primary]";
     aat:rel "serve";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#王熙凤>;
+    aat:sourceHeading :heading-19;
     aat:sourceSelector "_王熙凤";
     aat:startColumn 21;
     aat:startLine 89;
     aat:syntax "macro";
     aat:targetSelector "平儿";
     field:level "primary".
-<红楼梦结构图谱.adoc/projection#xref-edge-l93-c14-o0> rdf:reifies <<(<#林黛玉> rel:incarnation <#绛珠仙草>)>>;
+:xref-edge-l93-c14-o0 rdf:reifies <<(:heading-20 rel:incarnation :heading-4)>>;
     a aat:XrefEdge;
     aat:endColumn 40;
     aat:endLine 93;
@@ -1604,14 +1603,14 @@
     aat:raw "xref:绛珠仙草[rel=incarnation]";
     aat:rel "incarnation";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#林黛玉>;
+    aat:sourceHeading :heading-20;
     aat:sourceSelector "_林黛玉";
     aat:startColumn 14;
     aat:startLine 93;
     aat:syntax "macro";
-    aat:targetHeading <#绛珠仙草>;
+    aat:targetHeading :heading-4;
     aat:targetSelector "绛珠仙草".
-<红楼梦结构图谱.adoc/projection#xref-edge-l94-c4-o0> rdf:reifies <<(<#林黛玉> rel:reside-in <#潇湘馆>)>>;
+:xref-edge-l94-c4-o0 rdf:reifies <<(:heading-20 rel:reside-in :heading-28)>>;
     a aat:XrefEdge;
     aat:endColumn 27;
     aat:endLine 94;
@@ -1620,14 +1619,14 @@
     aat:raw "xref:潇湘馆[rel=reside-in]";
     aat:rel "reside-in";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#林黛玉>;
+    aat:sourceHeading :heading-20;
     aat:sourceSelector "_林黛玉";
     aat:startColumn 4;
     aat:startLine 94;
     aat:syntax "macro";
-    aat:targetHeading <#潇湘馆>;
+    aat:targetHeading :heading-28;
     aat:targetSelector "潇湘馆".
-<红楼梦结构图谱.adoc/projection#xref-edge-l95-c15-o0> rdf:reifies <<(<#林黛玉> rel:love <#贾宝玉>)>>;
+:xref-edge-l95-c15-o0 rdf:reifies <<(:heading-20 rel:love :heading-17)>>;
     a aat:XrefEdge;
     aat:endColumn 53;
     aat:endLine 95;
@@ -1636,11 +1635,11 @@
     aat:raw "xref:贾宝玉[rel=love, action=repay-tears]";
     aat:rel "love";
     aat:relativePath "samples/红楼梦结构图谱.adoc";
-    aat:sourceHeading <#林黛玉>;
+    aat:sourceHeading :heading-20;
     aat:sourceSelector "_林黛玉";
     aat:startColumn 15;
     aat:startLine 95;
     aat:syntax "macro";
-    aat:targetHeading <#贾宝玉>;
+    aat:targetHeading :heading-17;
     aat:targetSelector "贾宝玉";
     field:action "repay-tears".

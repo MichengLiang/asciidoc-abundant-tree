@@ -1,6 +1,5 @@
 {
 	"@context": {
-		"@base": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 		"aat": "https://micheng.dev/ns/asciidoc-abundant-tree#",
 		"rel": "https://micheng.dev/ns/asciidoc-relation#",
 		"field": "https://micheng.dev/ns/asciidoc-field#",
@@ -13,10 +12,58 @@
 	},
 	"@graph": [
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-0",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-0",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家常菜",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "http://www.w3.org/ns/prov#Activity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-1",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#ProjectionActivity",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-2",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#activity",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/ns/prov#used",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-3",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -29,306 +76,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-1",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-4",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "4",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-2",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "36",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-3",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "36",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-4",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "8",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-5",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "37",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-6",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "_家常菜",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-7",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "1",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-8",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "35",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-9",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "家常菜",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-10",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "家常菜",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-11",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "== 家常菜\nrole:: category\n\n",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-12",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-13",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "35",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-14",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家常菜",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-field#role",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "category",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-15",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-16",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -336,15 +87,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#家常菜",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-17",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-5",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -352,15 +103,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-18",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-6",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -368,15 +119,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-19",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-7",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -384,15 +135,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#食材",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-20",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-8",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -409,10 +160,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-21",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-9",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -429,10 +180,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-22",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-10",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -449,10 +200,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-23",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-11",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -469,10 +220,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-24",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-12",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -489,30 +240,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-25",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-13",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "家庭食材与菜谱知识库",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-26",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -529,10 +260,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-27",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-14",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -541,7 +272,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -549,10 +280,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-28",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-15",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#家庭食材与菜谱知识库",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -569,10 +300,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-29",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-16",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -585,10 +316,30 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-30",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-17",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "家庭食材与菜谱知识库::建模约定",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-18",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -605,10 +356,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-31",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-19",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -625,10 +376,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-32",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-20",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -645,10 +396,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-33",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-21",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -665,10 +416,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-34",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-22",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -685,10 +436,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-35",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-23",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -705,10 +456,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-36",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-24",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -725,10 +476,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-37",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-25",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -745,10 +496,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-38",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-26",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -765,30 +516,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-39",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-27",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "建模约定",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-40",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -805,10 +536,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-41",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-28",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -817,7 +548,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -825,10 +556,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-42",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-29",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#建模约定",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -845,10 +576,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-43",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-30",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#炒制步骤",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -861,119 +592,19 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-44",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-31",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#炒制步骤",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "3",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-45",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "30",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-46",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "29",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-47",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "6",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-48",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "31",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-49",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "_炒制步骤",
+				"@value": "家庭食材与菜谱知识库::番茄炒蛋",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -981,206 +612,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-50",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-32",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "2",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-51",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "28",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-52",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "炒制步骤",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-53",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "炒制步骤",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-54",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "=== 炒制步骤\nrole:: step\nestimatedTime:: 5分钟\n\n",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-55",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-56",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "28",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-57",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-field#estimatedTime",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "5分钟",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-58",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#炒制步骤",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-field#role",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "step",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-59",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-60",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1197,362 +632,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-61",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-33",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "26",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-62",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "22",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-63",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "5",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-64",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "27",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-65",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "_番茄",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-66",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "2",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-67",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "21",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-68",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "番茄",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-69",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "番茄",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-70",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "=== 番茄\nrole:: ingredient\nstorage:: 常温\nflavor:: 酸甜\n\n属于 xref:食材[rel=is-a]。\n\n",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-71",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-72",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "21",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-73",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-field#flavor",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "酸甜",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-74",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-field#role",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "ingredient",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-75",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-field#storage",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "常温",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-76",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-relation#is-a",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-77",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄炒蛋",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-78",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄炒蛋",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "2",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-79",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1560,15 +643,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#炒制步骤",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-80",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-34",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1576,15 +659,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#番茄",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-81",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-35",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1592,15 +675,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-82",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-36",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1617,10 +700,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-83",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-37",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1637,10 +720,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-84",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-38",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1657,10 +740,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-85",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-39",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1677,10 +760,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-86",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-40",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1697,10 +780,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-87",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-41",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1717,10 +800,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-88",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-42",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1737,10 +820,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-89",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-43",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1757,30 +840,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-90",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-44",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "番茄炒蛋",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-91",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1797,10 +860,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-92",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-45",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1809,7 +872,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -1817,10 +880,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-93",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-46",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1837,10 +900,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-94",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-47",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1857,10 +920,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-95",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-48",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1877,10 +940,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-96",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-49",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1897,10 +960,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-97",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-50",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1917,10 +980,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-98",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-51",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1928,15 +991,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#家常菜",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-99",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-52",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#食材",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -1949,119 +1012,19 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-100",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-53",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#食材",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "3",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-101",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "33",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-102",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "33",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-103",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "7",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-104",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "34",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-105",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "_食材",
+				"@value": "家庭食材与菜谱知识库::番茄炒蛋::鸡蛋",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -2069,59 +1032,19 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-106",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-54",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#食材",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "1",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-107",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "32",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-108",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "食材",
+				"@value": "番茄炒蛋::鸡蛋",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -2129,126 +1052,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-109",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-55",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "食材",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-110",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "== 食材\nrole:: category\n\n",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-111",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-112",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "32",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-113",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#食材",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-field#role",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "category",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-114",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#鸡蛋",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
-				"@type": "rdf12:IriTerm"
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-115",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2265,10 +1072,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-116",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-56",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2285,10 +1092,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-117",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-57",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2305,10 +1112,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-118",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-58",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2325,10 +1132,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-119",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-59",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2345,10 +1152,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-120",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-60",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2365,10 +1172,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-121",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-61",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2385,10 +1192,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-122",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-62",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2405,10 +1212,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-123",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-63",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2425,30 +1232,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-124",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-64",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#name",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "鸡蛋",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-125",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2465,10 +1252,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-126",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-65",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2477,7 +1264,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -2485,10 +1272,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-127",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-66",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2505,10 +1292,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-128",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-67",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2525,10 +1312,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-129",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-68",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2545,10 +1332,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-130",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-69",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2565,10 +1352,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-131",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-70",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2576,15 +1363,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#食材",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-132",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-71",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#activity",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2592,15 +1379,371 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "http://www.w3.org/ns/prov#Activity",
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-133",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-72",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#activity",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "家庭食材与菜谱知识库::番茄炒蛋::番茄",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-73",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "番茄炒蛋::番茄",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-74",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-75",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "26",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-76",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "22",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-77",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "5",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-78",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "27",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-79",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "_番茄",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-80",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-81",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "21",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-82",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "番茄",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-83",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "=== 番茄\nrole:: ingredient\nstorage:: 常温\nflavor:: 酸甜\n\n属于 xref:食材[rel=is-a]。\n\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-84",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-85",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "21",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-86",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-field#flavor",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "酸甜",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-87",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-field#role",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "ingredient",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-88",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-field#storage",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "常温",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-89",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-relation#is-a",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-90",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2608,31 +1751,927 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#ProjectionActivity",
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-134",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-91",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#activity",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
-				"@id": "http://www.w3.org/ns/prov#used",
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#source",
+				"@type": "rdf12:LiteralTerm",
+				"@value": "家庭食材与菜谱知识库::番茄炒蛋::炒制步骤",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-92",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "番茄炒蛋::炒制步骤",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-93",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "3",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-94",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "30",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-95",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "29",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-96",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "6",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-97",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "31",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-98",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "_炒制步骤",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-99",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-100",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "28",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-101",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "炒制步骤",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-102",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "=== 炒制步骤\nrole:: step\nestimatedTime:: 5分钟\n\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-103",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-104",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "28",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-105",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-field#estimatedTime",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "5分钟",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-106",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-field#role",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "step",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-107",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-135",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-108",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#projection",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "家庭食材与菜谱知识库::食材",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-109",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "3",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-110",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "33",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-111",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "33",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-112",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "7",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-113",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "34",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-114",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "_食材",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-115",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-116",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "32",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-117",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "食材",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-118",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "== 食材\nrole:: category\n\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-119",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-120",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "32",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-121",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-field#role",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "category",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-122",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#Heading",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-123",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#addressPath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "家庭食材与菜谱知识库::家常菜",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-124",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-125",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "36",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-126",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "36",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-127",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "8",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-128",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "37",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-129",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#generatedAddressLabel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "_家常菜",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-130",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-131",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "35",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-132",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "家常菜",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-133",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#raw",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "== 家常菜\nrole:: category\n\n",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-134",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-135",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "35",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-136",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-field#role",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "category",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-137",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2645,10 +2684,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-136",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-138",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#projection",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2661,10 +2700,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-137",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-139",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#projection",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2672,15 +2711,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#source",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-138",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-140",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#projection",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2688,15 +2727,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#source",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-139",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-141",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#projection",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2704,15 +2743,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#activity",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#activity",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-140",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-142",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#source",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2725,10 +2764,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-141",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-143",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#source",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2741,10 +2780,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-142",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-144",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#source",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2753,7 +2792,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -2761,10 +2800,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-143",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-145",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2775,7 +2814,7 @@
 				"@type": "rdf12:TripleTerm",
 				"triple": {
 					"subject": {
-						"@id": "#番茄炒蛋",
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 						"@type": "rdf12:IriTerm"
 					},
 					"predicate": {
@@ -2783,17 +2822,17 @@
 						"@type": "rdf12:IriTerm"
 					},
 					"object": {
-						"@id": "#家常菜",
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
 						"@type": "rdf12:IriTerm"
 					}
 				}
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-144",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-146",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2806,10 +2845,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-145",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-147",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2826,10 +2865,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-146",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-148",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2846,10 +2885,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-147",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-149",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2866,10 +2905,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-148",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-150",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2886,10 +2925,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-149",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-151",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2906,10 +2945,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-150",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-152",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2926,10 +2965,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-151",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-153",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2938,7 +2977,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -2946,10 +2985,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-152",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-154",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2957,15 +2996,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#番茄炒蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-153",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-155",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -2982,10 +3021,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-154",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-156",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3002,10 +3041,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-155",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-157",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3022,10 +3061,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-156",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-158",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3042,10 +3081,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-157",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-159",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3053,15 +3092,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#家常菜",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-158",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-160",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l12-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3078,10 +3117,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-159",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-161",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3092,7 +3131,7 @@
 				"@type": "rdf12:TripleTerm",
 				"triple": {
 					"subject": {
-						"@id": "#鸡蛋",
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 						"@type": "rdf12:IriTerm"
 					},
 					"predicate": {
@@ -3100,17 +3139,17 @@
 						"@type": "rdf12:IriTerm"
 					},
 					"object": {
-						"@id": "#食材",
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
 						"@type": "rdf12:IriTerm"
 					}
 				}
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-160",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-162",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3123,10 +3162,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-161",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-163",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3143,10 +3182,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-162",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-164",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3163,10 +3202,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-163",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-165",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3183,10 +3222,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-164",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-166",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3203,10 +3242,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-165",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-167",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3223,10 +3262,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-166",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-168",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3243,10 +3282,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-167",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-169",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3255,7 +3294,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -3263,10 +3302,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-168",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-170",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3274,15 +3313,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#鸡蛋",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-169",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-171",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3299,10 +3338,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-170",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-172",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3319,10 +3358,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-171",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-173",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3339,10 +3378,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-172",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-174",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3359,10 +3398,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-173",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-175",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3370,15 +3409,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#食材",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-174",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-176",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l19-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3395,10 +3434,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-175",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-177",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3409,7 +3448,7 @@
 				"@type": "rdf12:TripleTerm",
 				"triple": {
 					"subject": {
-						"@id": "#番茄",
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
 						"@type": "rdf12:IriTerm"
 					},
 					"predicate": {
@@ -3417,17 +3456,17 @@
 						"@type": "rdf12:IriTerm"
 					},
 					"object": {
-						"@id": "#食材",
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
 						"@type": "rdf12:IriTerm"
 					}
 				}
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-176",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-178",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3440,10 +3479,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-177",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-179",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3460,10 +3499,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-178",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-180",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3480,10 +3519,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-179",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-181",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3500,10 +3539,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-180",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-182",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3520,10 +3559,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-181",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-183",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3540,10 +3579,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-182",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-184",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3560,10 +3599,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-183",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-185",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3572,7 +3611,7 @@
 			},
 			"object": {
 				"@type": "rdf12:LiteralTerm",
-				"@value": "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
 				"datatype": {
 					"@id": "http://www.w3.org/2001/XMLSchema#string",
 					"@type": "rdf12:IriTerm"
@@ -3580,10 +3619,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-184",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-186",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3591,15 +3630,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#番茄",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-185",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-187",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3616,10 +3655,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-186",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-188",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3636,10 +3675,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-187",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-189",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3656,10 +3695,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-188",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-190",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3676,10 +3715,10 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-189",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-191",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
@@ -3687,15 +3726,15 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
-				"@id": "#食材",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
 				"@type": "rdf12:IriTerm"
 			}
 		},
 		{
-			"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#statement-190",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-192",
 			"@type": "rdf12:Triple",
 			"subject": {
-				"@id": "urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc/projection#xref-edge-l26-c4-o0",
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {

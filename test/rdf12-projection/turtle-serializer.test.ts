@@ -35,6 +35,14 @@ describe("rdf12 Turtle serialization", () => {
 		expect(turtle).toContain("aat:startLine 10");
 	});
 
+	it("writes the document's resources with the empty prefix and no @base", () => {
+		const turtle = serializeRdf12ProjectionToTurtle(testProjection());
+
+		expect(turtle).toContain("@prefix : <urn:aat:doc:test#>.");
+		expect(turtle).toMatch(/^:heading-1 /mu);
+		expect(turtle).not.toContain("@base");
+	});
+
 	it("serializes the same graph to identical text across repeated calls", () => {
 		const projection = testProjection();
 
@@ -230,8 +238,8 @@ describe("rdf12 Turtle serialization", () => {
 
 function testProjection(): Rdf12Projection {
 	const graph = createRdf12Graph();
-	const source = iriTerm("urn:aat:doc:test#heading-l1-o0");
-	const target = iriTerm("urn:aat:doc:test#heading-l3-o0");
+	const source = iriTerm("urn:aat:doc:test#heading-1");
+	const target = iriTerm("urn:aat:doc:test#heading-3");
 	const references = iriTerm(`${namespaces.aat}references`);
 	const xref = iriTerm("urn:aat:doc:test#xref-edge-l10-c60-o0");
 	const relation = rdf12Triple(source, references, target);
@@ -271,7 +279,6 @@ function testProjection(): Rdf12Projection {
 		prefixes: namespaces,
 		relativePath: "samples/reference-links.adoc",
 		documentIri: "urn:aat:doc:test",
-		headingNamespace: "urn:aat:doc:test#",
 		sourceDocumentIri: "urn:aat:doc:test#source",
 		projectionIri: "urn:aat:doc:test#projection",
 		projectionActivityIri: "urn:aat:doc:test#activity",
@@ -279,12 +286,6 @@ function testProjection(): Rdf12Projection {
 		nodeIndex: {
 			get: () => undefined,
 			findByTarget: () => undefined,
-			entries: () => [],
-		},
-		labelCatalog: {
-			add: () => undefined,
-			find: () => [],
-			owners: () => [],
 			entries: () => [],
 		},
 	};
@@ -314,7 +315,6 @@ function rawProjection(
 		prefixes: namespaces,
 		relativePath: "samples/reference-links.adoc",
 		documentIri: "urn:aat:doc:test",
-		headingNamespace: "urn:aat:doc:test#",
 		sourceDocumentIri: "urn:aat:doc:test#source",
 		projectionIri: "urn:aat:doc:test#projection",
 		projectionActivityIri: "urn:aat:doc:test#activity",
@@ -322,12 +322,6 @@ function rawProjection(
 		nodeIndex: {
 			get: () => undefined,
 			findByTarget: () => undefined,
-			entries: () => [],
-		},
-		labelCatalog: {
-			add: () => undefined,
-			find: () => [],
-			owners: () => [],
 			entries: () => [],
 		},
 	};

@@ -4,29 +4,38 @@
 
 [source,asciidoc]
 ----
+= 指南
+
 [#delivery.policy]
 == 配送策略
 
 == 运力规则
 ----
 
-`配送策略` 的地址是它的 headline `配送策略`，手写 ID `delivery` 是它的别名。`运力规则` 没有手写 ID，projection 为它生成 generated address label。
+`配送策略` 的地址是它的 headline `配送策略`，手写 ID `delivery` 是它的另一个地址。`运力规则` 没有手写 ID，projection 为它生成 generated address label。这些地址都是标题节点上的标签；标题节点的 IRI 由投影器按标题在文档里的先后起名，不含作者写的字符串。
 
 [source,turtle]
 ----
-@base <urn:aat:doc:guide.adoc> .
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
+@prefix : <urn:aat:doc:guide.adoc#> .
 
-<#配送策略> aat:name "配送策略" ;
+:heading-2 aat:headline "配送策略" ;
   aat:addressLabel "delivery" ;
-  aat:headline "配送策略" .
+  aat:addressPath "指南::配送策略" .
 
-<#运力规则> aat:name "运力规则" ;
+:heading-3 aat:headline "运力规则" ;
   aat:generatedAddressLabel "_运力规则" ;
-  aat:headline "运力规则" .
+  aat:addressPath "指南::运力规则" .
 ----
 
-label space 由三类地址构成：地址路径、`aat:addressLabel` 和 `aat:generatedAddressLabel`。selector 与地址按整串相等匹配。寻址范围是整份文档，book-entry mode 下是整本书；binding 不按文件或目录就近查找，也没有相对寻址。selector binding 不查询 role、普通字段、raw、display label 或 heading IRI。
+label space 就是标题节点上四个谓词的值：`aat:headline`、`aat:addressPath`（两段以上的地址路径）、`aat:addressLabel` 和 `aat:generatedAddressLabel`。selector 与标签按整串相等匹配。寻址范围是整份文档，book-entry mode 下是整本书；binding 不按文件或目录就近查找，也没有相对寻址。selector binding 不查询 role、普通字段、raw、display label 或 heading IRI。label space 全部在图上，查询者按地址反查标题，写的是：
+
+[source,sparql]
+----
+SELECT ?heading WHERE {
+  ?heading aat:headline|aat:addressPath|aat:addressLabel|aat:generatedAddressLabel "配送策略" .
+}
+----
 
 === 重名与上级标题
 
@@ -47,9 +56,9 @@ label space 由三类地址构成：地址路径、`aat:addressLabel` 和 `aat:g
 
 `+xref:火候[]+` 有两个候选，binding 报多义；`+xref:红烧肉::火候[]+` 只绑定到红烧肉下的那一节。补上级标题不是给这一节起第二个名字，只是把同一个地址写全。仍有歧义时继续往前补，最长到从文档标题起的完整路径。链接默认显示目标标题“火候”，读者看不出是哪道菜的，所以这里写上显示文本。
 
-标题节点的名字是能唯一指到它的最短地址。上面两节的名字分别是 `<#红烧肉::火候>` 和 `<#清蒸鲈鱼::火候>`，名字同时写成字面量 `aat:name`。
+两节《火候》的地址路径都写在图上：一节有 `aat:addressPath "红烧肉::火候"`，另一节有 `aat:addressPath "清蒸鲈鱼::火候"`，两节的 `aat:headline` 都是 `火候`。投影器不判断哪几节算重复，也不给它们另起名字；按 `火候` 反查得到两节，按 `红烧肉::火候` 反查得到一节，由查询者读结果。
 
-custom ID 是别名。同一父标题下有两个同名小节时，完整路径也分不开它们；这时给要引用的那一节写 `[#id]`，引用写这个 ID。
+custom ID 是同一节的另一个地址。同一父标题下有两个同名小节时，完整路径也分不开它们；这时给要引用的那一节写 `[#id]`，引用写这个 ID。
 
 === 改名与稳定编号
 

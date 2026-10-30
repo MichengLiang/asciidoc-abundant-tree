@@ -31,7 +31,7 @@ import {
 	type Rdf12NodeIndex,
 	type Rdf12NodeIndexEntry,
 } from "./node-index";
-import { headingIri } from "./resource-identity";
+import { documentResourceIri, makeHeadingLocalId } from "./resource-identity";
 import {
 	addLineSpanTriples,
 	sourceRelativePathOrFallback,
@@ -60,7 +60,7 @@ export type StructureProjection = {
 	readonly targetAliases: readonly HeadingTargetAlias[];
 };
 
-// 标题的切片与位置在名字之前定下：名字要看整份文档的 label 空间，其中有按位置归属的本地 target ID。
+// 标题的切片与位置先定下：地址簿要看整份文档的标题，其中有按位置归属的本地 target ID。
 type PlacedHeading = (Rdf12NodeIndexEntry extends infer Entry
 	? Entry extends Rdf12NodeIndexEntry
 		? Omit<Entry, "iri" | "localId">
@@ -100,11 +100,7 @@ export function projectStructureResources(
 
 	const nodeIndex = createRdf12NodeIndex();
 	for (const heading of placed) {
-		const name = addressBook.nameOf(heading.node);
-		if (name === undefined) {
-			continue;
-		}
-		projectHeading(input, nodeIndex, heading, name);
+		projectHeading(input, nodeIndex, heading);
 	}
 	projectHeadingStructureEdges(input.graph, nodeIndex, headingTree);
 
@@ -226,15 +222,14 @@ function projectHeading(
 	input: ProjectStructureResourcesInput,
 	nodeIndex: MutableRdf12NodeIndex,
 	heading: PlacedHeading,
-	name: string,
 ): void {
 	const { graph } = input;
-	const iri = headingIri(input.documentIri, name);
+	const localId = makeHeadingLocalId(heading.documentOrder);
+	const iri = documentResourceIri(input.documentIri, localId);
 	const { slice } = heading;
 
 	addTypeAndSourceTriples(graph, iri, heading.relativePath, slice.span);
 	addStringTriple(graph, iri, "headline", headlineOf(heading));
-	addStringTriple(graph, iri, "name", name);
 	addIntegerTriple(
 		graph,
 		iri,
@@ -254,7 +249,7 @@ function projectHeading(
 	}
 
 	const { entry: _entry, slice: _slice, ...indexed } = heading;
-	nodeIndex.set({ ...indexed, iri, localId: name } as Rdf12NodeIndexEntry);
+	nodeIndex.set({ ...indexed, iri, localId } as Rdf12NodeIndexEntry);
 }
 
 function projectHeadingStructureEdges(

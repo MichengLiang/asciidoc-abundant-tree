@@ -38,49 +38,50 @@ headline 不取 Asciidoctor 转换后的标题：转换替换了引号、符号�
 
 === 身份
 
-标题节点以它的地址命名，IRI 是 `<文档 IRI>#<名字>`，名字照 xref:名字进入 IRI[名字进入 IRI] 转写。查询者在主语与宾语的位置读到的，就是作者引用这一节时写的地址，例如 `<#炒糖色>`、`<#红烧肉::火候>`。按行号起的名字随编辑漂移，读不出是哪一节；地址只在标题改名、或别处出现同名标题时改变。
+标题节点的 IRI 由投影器生成：`<文档 IRI>#heading-<N>`，`N` 是这个标题的 `aat:documentOrder`，即它在全局 preorder 里的位次（第 4 章「全局顺序」），整份文档内唯一，从 1 起连续。作者写下的字符串，包括 headline、地址路径和 custom ID，都不进入标题节点的 IRI。它们是挂在节点上的标签，见 xref:地址与 Label 空间[地址与 Label 空间]。
 
-名字按下面的顺序取，取到即止：
+RDF 只要求一个资源一个 IRI，并且 IRI 在图里唯一（RDF 1.2 Concepts §1.3）。查询者用标签反查标题节点，不解析 IRI，所以 IRI 不必读得出是哪一节。作者的字符串不能当身份：标题会重名，用它当身份，投影器就得判断哪几个标题算重复、给分不开的编号，这是在替下游解释源文档（第 1 章「投影对象」）。`aat:documentOrder` 本来就是标题的事实，用它起名不需要任何去冲突的规则；行号在 book-entry 下跨文件相撞，单用行号不能成为身份。
 
-. 这个标题的地址路径（xref:地址与 Label 空间[地址与 Label 空间]）中最短的一条，它在整份文档的 label 空间里只属于这个标题。
-. 这个标题自己的 custom ID 中，只属于它的一个。
-. 同一父标题下同名、又没有只属于自己的 ID 时，取只被这一组标题共享的最短地址路径，后面加 `-k`；`k` 是它在这一组里按文档顺序的位次，从 1 起。加了 `-k` 以后撞上别的地址时，路径往前补一级再加。
+标题节点的 IRI 随编辑变化：前面插入一个标题，后面每个标题的 IRI 都变。它只在一次投影里指称资源。跨投影认同一节，读 `aat:relativePath` 与 `aat:headingLine`，或者用标签查。
 
-唯一性按整个 label 空间判断，custom ID 与生成 ID 都算在内，所以前两种名字写回 selector 时绑定到它自己；第三种情形里的标题在任何长度的路径上都多义，只能用 ID 引用。先取地址路径、后取 custom ID，是因为 custom ID 是别名：作者给标题补一个 ID，不改变它的名字。
+文档 IRI 是 `baseIri` 加上源文件相对路径的转写，例如 `urn:aat:doc:books/07-structured-writing-conventions/book.adoc`。相对路径照《名字进入 IRI》转写，另把 `?` 写成 `%3F`：它在 `#` 之前，会被读成查询部分的开头。相对路径是文档在 document root 坐标里的身份，与 `aat:relativePath` 是同一个事实，不是标签。
 
-名字随文档变化。别处新增一个同名标题时，原来叫 `火候` 的标题改名为 `红烧肉::火候`；这一刻也正是 `+xref:火候[]+` 开始绑定成多义的时候，名字与引用一起变。
+投影器的其它资源（来源文档、投影、投影活动、源文件、交叉引用边证据、raw value object）也在 `<文档 IRI>#` 下，局部名由投影器按资源类别与位置起：`source`、`projection`、`activity`、`xref-edge-l<行>-c<列>-o<序号>`、`payload-l<行>-o<序号>` 等，各类前缀与 `heading-` 互不相交。标题节点的局部名里没有作者的字符串，所以一节叫《Source》的标题不会与来源资源撞成同一个 IRI。
 
-名字另作字面量 `aat:name` 输出。消费者不解析 IRI 来取事实：名字读 `aat:name`，结构与顺序读 `aat:containsDirectly`、`aat:childOrder` 与 `aat:documentOrder`。
-
-文档 IRI 是 `baseIri` 加上源文件相对路径的转写，例如 `urn:aat:doc:books/07-structured-writing-conventions/book.adoc`。相对路径照《名字进入 IRI》转写，另把 `?` 写成 `%3F`：它在 `#` 之前，会被读成查询部分的开头。
-
-投影器自己起名的资源（来源文档、投影、投影活动、源文件、交叉引用边证据、raw value object）放在 `<文档 IRI>/projection#` 下，局部名照旧按行列起。`<文档 IRI>#` 之后只留给标题的名字：一节叫《Source》的标题，不会与来源资源成为同一个 IRI。
-
-Turtle 写出时以文档 IRI 为 `@base`，标题节点写作 `<#红烧肉::火候>`；JSON-LD 以 `@base` 写出同样的相对 IRI。
+Turtle 写出时以空前缀 `:` 代表 `<文档 IRI>#`，标题节点写作 `:heading-3`。
 
 示例：
 
 [source,turtle]
 ----
-<#配送策略> a aat:Heading ;
+:heading-2 a aat:Heading ;
   aat:headline "配送策略" ;
-  aat:name "配送策略" ;
   aat:addressLabel "delivery" .
 ----
 
-`配送策略` 在文档里只属于这一个标题，所以它就是名字；`delivery` 是这个标题的别名。
+`配送策略` 是 headline，`delivery` 是 custom ID，二者都是 `:heading-2` 的标签，都不构成它的身份。
 
 === 地址与 Label 空间
 
-一节的地址是它的标题原文。标题重名、又要引用其中一个时，用 `::` 往前补直接上级的标题消歧，最长补到从文档标题起的完整路径；custom ID 是别名，用它也能引用。寻址的范围是整份文档（book-entry 下是整本书），不分文件，没有就近查找，也没有相对寻址。
+一节的地址是它的标题原文。标题重名、又要引用其中一个时，用 `::` 往前补直接上级的标题，最长补到从文档标题起的完整路径；custom ID 是这一节的另一个地址，用它也能引用。寻址的范围是整份文档（book-entry 下是整本书），不分文件，没有就近查找，也没有相对寻址。哪种写法算健康的寻址（一处引用只指一节、不写按位置的称呼等），由书的约定规定，在下游检查，投影器不判断。
 
-一个标题的地址有三类：
+一个标题的地址都作为标签写在标题节点上，共四个谓词：
 
-地址路径:: 从文档标题到这个标题的各级 headline 依次以 `::` 连接而成的路径，取它的每一个后缀。家常菜谱里 `== 红烧肉` 下的 `=== 火候` 有 `火候`、`红烧肉::火候`、`家常菜谱::红烧肉::火候` 三条。只有一段的地址路径就是 headline。
+`aat:headline`:: 标题原文，即只有一段的地址。
+`aat:addressPath`:: 从文档标题到这个标题的各级 headline 依次以 `::` 连接而成的路径，取它的每一个两段以上的后缀，各写一条。家常菜谱里 `== 红烧肉` 下的 `=== 火候` 写 `红烧肉::火候` 与 `家常菜谱::红烧肉::火候` 两条；`火候` 已是 headline，不重复写。
 `aat:addressLabel`:: 标题自身的 custom ID，或归属到这个标题的本地非标题 target ID。
 `aat:generatedAddressLabel`:: 官方为没有 custom ID 的标题生成的 ID。
 
-这三类地址合起来是标题投影的 label 空间。selector 与地址按整串相等匹配：不拆 `::`，不做规范化，几类地址之间没有优先级。headline 本身带 `::` 时（`std::vector`），它的地址照样是原文整串；只有文档里另有 `std` 下的 `vector` 时才多义，照常报出。selector 绑定标题节点时只查询 label 空间，不查询标题节点 IRI、role、普通字段谓词、xref display label 或 raw 文本。地址路径不另写进 RDF：它由 `aat:containsDirectly` 与 `aat:headline` 推出。
+这四个谓词的值合起来是标题投影的 label 空间。selector 与标签按整串相等匹配：不拆 `::`，不做规范化，几个谓词之间没有优先级。headline 本身带 `::` 时（`std::vector`），它照样是一个整串；文档里另有 `std` 下的 `vector` 时，`std::vector` 有两个拥有者。selector 绑定标题节点时只查询 label 空间，不查询标题节点 IRI、role、普通字段谓词、xref display label 或 raw 文本。
+
+地址路径要写进图，因为 label 空间要能只靠图读出来。指向别的文档的引用由读得到那份文档的消费者去绑定（第 5 章「Target Heading」），查询者也要按地址反查；他们手里只有图。地址路径也不能只给完整路径、让消费者自己做后缀匹配：`std::vector` 是一个 headline 时，按 `::` 切段的后缀匹配会把它错配给 selector `vector`。按 label 空间绑定的写法是：
+
+[source,sparql]
+----
+SELECT ?heading WHERE {
+  ?heading aat:headline|aat:addressPath|aat:addressLabel|aat:generatedAddressLabel "红烧肉::火候" .
+}
+----
 
 `aat:addressLabel` 表示标题投影图中可寻址到标题节点的作者声明 label。该 label 来自标题自身手动 ID，或来自归属到该标题切片的本地非标题 target ID。`aat:addressLabel` 不表示该 label 一定写在标题表面。
 
@@ -111,11 +112,11 @@ print("warp")
 
 [source,turtle]
 ----
-:core a aat:Heading ;
+:heading-1 a aat:Heading ;
   aat:headline "核心引擎设计" ;
   aat:addressLabel "engine-code" .
 
-:conclusion aat:references :core .
+:heading-2 aat:references :heading-1 .
 ----
 
 该投影不创建 listing block 结构节点：
@@ -144,7 +145,7 @@ print("warp")
 
 [source,turtle]
 ----
-<#配送策略> a aat:Heading ;
+:heading-2 a aat:Heading ;
   aat:headline "配送策略" ;
   aat:addressLabel "delivery" ;
   aat:role "policy" ;
@@ -185,7 +186,7 @@ landing:: core 的 `resources/`。
 
 [source,turtle]
 ----
-<#关闭标签> a aat:Heading ;
+:heading-1 a aat:Heading ;
   aat:headline "关闭标签" ;
   aat:addressLabel "close-tab" ;
   aat:role "rule" ;

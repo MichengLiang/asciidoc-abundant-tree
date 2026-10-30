@@ -31,14 +31,14 @@ steps:
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 @prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 
-<urn:aat:doc:...#冷链出库放行策略>
-  field:release-policy-config <urn:aat:doc:.../projection#payload-l4-o0> ;
-  field:review-playbook <urn:aat:doc:.../projection#payload-l10-o0> .
+<urn:aat:doc:...#heading-1>
+  field:release-policy-config <urn:aat:doc:...#payload-l4-o0> ;
+  field:review-playbook <urn:aat:doc:...#payload-l10-o0> .
 
-<urn:aat:doc:.../projection#payload-l4-o0> aat:forSelector "cold-chain-release" ;
+<urn:aat:doc:...#payload-l4-o0> aat:forSelector "cold-chain-release" ;
   aat:format "json" .
 
-<urn:aat:doc:.../projection#payload-l10-o0> aat:format "yaml" .
+<urn:aat:doc:...#payload-l10-o0> aat:format "yaml" .
 ----
 
 xref edge complex property 由 xref named attribute 和 source value block 共同表达。attribute key 是字段名；attribute value 唯一匹配 source value block id 时，字段值是 raw value object。
@@ -65,10 +65,10 @@ reason: 放行策略必须读取温控审计结果。
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 @prefix field: <https://micheng.dev/ns/asciidoc-field#> .
 
-<urn:aat:doc:.../projection#xref-edge-l3-c12-o0> a aat:XrefEdge ;
-  field:dependency-evidence <urn:aat:doc:.../projection#payload-l9-o0> .
+<urn:aat:doc:...#xref-edge-l3-c12-o0> a aat:XrefEdge ;
+  field:dependency-evidence <urn:aat:doc:...#payload-l9-o0> .
 
-<urn:aat:doc:.../projection#payload-l9-o0> aat:sourceValueId "rel-release-temperature-audit" ;
+<urn:aat:doc:...#payload-l9-o0> aat:sourceValueId "rel-release-temperature-audit" ;
   aat:format "yaml" ;
   aat:raw "source: quality-sop-2026\nrisk_level: high\nreason: 放行策略必须读取温控审计结果。" .
 ----

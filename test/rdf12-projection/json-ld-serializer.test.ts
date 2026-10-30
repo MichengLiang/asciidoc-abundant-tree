@@ -19,18 +19,18 @@ describe("rdf12 JSON-LD serialization", () => {
 			serializeRdf12ProjectionToJsonLd(testProjection()),
 		);
 
+		expect(jsonLd["@context"]["@base"]).toBeUndefined();
 		expect(jsonLd["@context"]).toMatchObject({
-			"@base": "urn:aat:doc:test.adoc",
 			aat: namespaces.aat,
 			rdf: namespaces.rdf,
 			rdf12: "https://micheng.dev/ns/asciidoc-abundant-tree/rdf12-json-ld#",
 		});
 		expect(jsonLd["@graph"]).toHaveLength(5);
 		expect(jsonLd["@graph"]).toContainEqual({
-			"@id": "urn:aat:doc:test.adoc/projection#statement-0",
+			"@id": "urn:aat:doc:test.adoc#statement-0",
 			"@type": "rdf12:Triple",
 			subject: {
-				"@id": "#红烧肉::火候",
+				"@id": "urn:aat:doc:test.adoc#heading-3",
 				"@type": "rdf12:IriTerm",
 			},
 			predicate: {
@@ -38,15 +38,15 @@ describe("rdf12 JSON-LD serialization", () => {
 				"@type": "rdf12:IriTerm",
 			},
 			object: {
-				"@id": "#炒糖色",
+				"@id": "urn:aat:doc:test.adoc#heading-5",
 				"@type": "rdf12:IriTerm",
 			},
 		});
 		expect(jsonLd["@graph"]).toContainEqual({
-			"@id": "urn:aat:doc:test.adoc/projection#statement-1",
+			"@id": "urn:aat:doc:test.adoc#statement-1",
 			"@type": "rdf12:Triple",
 			subject: {
-				"@id": "urn:aat:doc:test.adoc/projection#xref-edge-l10-c60-o0",
+				"@id": "urn:aat:doc:test.adoc#xref-edge-l10-c60-o0",
 				"@type": "rdf12:IriTerm",
 			},
 			predicate: {
@@ -57,7 +57,7 @@ describe("rdf12 JSON-LD serialization", () => {
 				"@type": "rdf12:TripleTerm",
 				triple: {
 					subject: {
-						"@id": "#红烧肉::火候",
+						"@id": "urn:aat:doc:test.adoc#heading-3",
 						"@type": "rdf12:IriTerm",
 					},
 					predicate: {
@@ -65,7 +65,7 @@ describe("rdf12 JSON-LD serialization", () => {
 						"@type": "rdf12:IriTerm",
 					},
 					object: {
-						"@id": "#炒糖色",
+						"@id": "urn:aat:doc:test.adoc#heading-5",
 						"@type": "rdf12:IriTerm",
 					},
 				},
@@ -96,11 +96,11 @@ describe("rdf12 JSON-LD serialization", () => {
 
 function testProjection(): Rdf12Projection {
 	const graph = createRdf12Graph();
-	// 标题节点写成以文档 IRI 为 @base 的相对 IRI；投影器的资源照写完整 IRI（06 号书第 2 章「身份」）。
-	const source = iriTerm("urn:aat:doc:test.adoc#红烧肉::火候");
-	const target = iriTerm("urn:aat:doc:test.adoc#炒糖色");
+	// JSON-LD 照写完整 IRI；图里的资源都是 <文档 IRI>#<局部名>（06 号书第 2 章「身份」）。
+	const source = iriTerm("urn:aat:doc:test.adoc#heading-3");
+	const target = iriTerm("urn:aat:doc:test.adoc#heading-5");
 	const references = iriTerm(`${namespaces.aat}references`);
-	const xref = iriTerm("urn:aat:doc:test.adoc/projection#xref-edge-l10-c60-o0");
+	const xref = iriTerm("urn:aat:doc:test.adoc#xref-edge-l10-c60-o0");
 	const relation = rdf12Triple(source, references, target);
 
 	graph.add(relation);
@@ -142,20 +142,13 @@ function testProjection(): Rdf12Projection {
 		prefixes: namespaces,
 		relativePath: "samples/reference-links.adoc",
 		documentIri: "urn:aat:doc:test.adoc",
-		headingNamespace: "urn:aat:doc:test.adoc#",
-		sourceDocumentIri: "urn:aat:doc:test.adoc/projection#source",
-		projectionIri: "urn:aat:doc:test.adoc/projection#projection",
-		projectionActivityIri: "urn:aat:doc:test.adoc/projection#activity",
-		abundantDocumentIri: "urn:aat:doc:test.adoc/projection#abundant-document",
+		sourceDocumentIri: "urn:aat:doc:test.adoc#source",
+		projectionIri: "urn:aat:doc:test.adoc#projection",
+		projectionActivityIri: "urn:aat:doc:test.adoc#activity",
+		abundantDocumentIri: "urn:aat:doc:test.adoc#abundant-document",
 		nodeIndex: {
 			get: () => undefined,
 			findByTarget: () => undefined,
-			entries: () => [],
-		},
-		labelCatalog: {
-			add: () => undefined,
-			find: () => [],
-			owners: () => [],
 			entries: () => [],
 		},
 	};

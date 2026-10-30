@@ -14,9 +14,9 @@ import { addReifierTriple } from "./reifier";
 import { mapRelationPredicate } from "./relation-predicate";
 import {
 	createOrdinalAllocator,
+	documentResourceIri,
 	makeXrefEdgeResourceLocalId,
 	type OrdinalAllocator,
-	projectionResourceIri,
 } from "./resource-identity";
 import { bindSelector } from "./selector-binding";
 import {
@@ -190,7 +190,7 @@ function createXrefResource(
 		startLine: xref.sourceSpan.start.line,
 		startColumn: xref.sourceSpan.start.column,
 	});
-	const xrefIri = projectionResourceIri(
+	const xrefIri = documentResourceIri(
 		context.documentIri,
 		makeXrefEdgeResourceLocalId({
 			startLine: xref.sourceSpan.start.line,

@@ -17,6 +17,7 @@ import {
 	expectTriple,
 	fieldTerm,
 	headingStartingAt,
+	labelOwners,
 	literalValues,
 	rdfTerm,
 	relTerm,
@@ -135,23 +136,22 @@ describe("rdf12 heading projection target acceptance", () => {
 	});
 
 	it("Batch 03 binds selectors only to heading label fields", async () => {
-		const { graph, labelCatalog, heading } =
-			await structuralPayloadProjection();
+		const { graph, heading } = await structuralPayloadProjection();
 		const root = heading(1);
 		const deliveryPolicy = heading(5);
 		const capacityRule = heading(39);
 		const nestedHeading = heading(44);
 
-		expect(labelCatalog.owners("root")).toEqual([root]);
-		expect(labelCatalog.owners("delivery")).toEqual([deliveryPolicy]);
-		expect(labelCatalog.owners("配送策略")).toEqual([deliveryPolicy]);
-		expect(labelCatalog.owners("rel-delivery-capacity")).toEqual([
+		expect(labelOwners(graph, "root")).toEqual([root]);
+		expect(labelOwners(graph, "delivery")).toEqual([deliveryPolicy]);
+		expect(labelOwners(graph, "配送策略")).toEqual([deliveryPolicy]);
+		expect(labelOwners(graph, "rel-delivery-capacity")).toEqual([
 			deliveryPolicy,
 		]);
-		expect(labelCatalog.owners("capacity")).toEqual([capacityRule]);
-		expect(labelCatalog.owners("运力规则")).toEqual([capacityRule]);
-		expect(labelCatalog.owners("_我是3级标题")).toEqual([nestedHeading]);
-		expect(labelCatalog.owners("我是3级标题")).toEqual([nestedHeading]);
+		expect(labelOwners(graph, "capacity")).toEqual([capacityRule]);
+		expect(labelOwners(graph, "运力规则")).toEqual([capacityRule]);
+		expect(labelOwners(graph, "_我是3级标题")).toEqual([nestedHeading]);
+		expect(labelOwners(graph, "我是3级标题")).toEqual([nestedHeading]);
 
 		for (const selector of [
 			"section",
@@ -163,7 +163,7 @@ describe("rdf12 heading projection target acceptance", () => {
 			deliveryPolicy.value,
 			`配送策略依赖 xref:capacity[运力规则, rel=depends-on, weight=0.8, relation-evidence=rel-delivery-capacity]。`,
 		]) {
-			expect(labelCatalog.owners(selector)).toEqual([]);
+			expect(labelOwners(graph, selector)).toEqual([]);
 		}
 
 		for (const labelType of [
@@ -328,9 +328,6 @@ describe("rdf12 heading projection target acceptance", () => {
 
 async function structuralPayloadProjection(): Promise<{
 	readonly graph: Rdf12Graph;
-	readonly labelCatalog: ReturnType<
-		typeof projectAbundantDocumentToRdf12
-	>["labelCatalog"];
 	readonly heading: (startLine: number) => Rdf12IriTerm;
 }> {
 	const projection = projectAbundantDocumentToRdf12(
@@ -340,7 +337,6 @@ async function structuralPayloadProjection(): Promise<{
 
 	return {
 		graph: projection.graph,
-		labelCatalog: projection.labelCatalog,
 		heading(startLine: number) {
 			return headingStartingAt(projection.graph, startLine);
 		},

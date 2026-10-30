@@ -20,12 +20,12 @@ heading node 由 AsciiDoc 等号标题创建。源表面中的 `=`、`==`、`===
 
 [source,turtle]
 ----
-<urn:aat:doc:...#项目知识库> a aat:Heading ;
+<urn:aat:doc:...#heading-1> a aat:Heading ;
   aat:headline "项目知识库" ;
   aat:headingLevel 0 ;
   aat:documentOrder 1 .
 
-<urn:aat:doc:...#配送策略> a aat:Heading ;
+<urn:aat:doc:...#heading-2> a aat:Heading ;
   aat:addressLabel "delivery" ;
   aat:headline "配送策略" ;
   aat:role "policy" ;
@@ -33,19 +33,19 @@ heading node 由 AsciiDoc 等号标题创建。源表面中的 `=`、`==`、`===
   aat:headingLevel 1 ;
   aat:documentOrder 2 .
 
-<urn:aat:doc:...#运力约束> a aat:Heading ;
+<urn:aat:doc:...#heading-3> a aat:Heading ;
   aat:headline "运力约束" ;
   aat:headingLevel 2 ;
   aat:documentOrder 3 .
 ----
 
-heading node 以它的地址命名：IRI 的 `#` 之后是在整份文档里只属于它的最短地址，通常就是标题原文；标题重名时补上上级标题，写成 `配送策略::运力约束` 这样的地址路径。标题原文、地址路径、作者写下的 ID 和生成 label 进入 label space。查询者按地址或 label 找到 heading node，再读取该节点的字段、关系、raw 和回源坐标。
+heading node 的 IRI 由投影器起名：`#` 之后是 `heading-<N>`，`N` 就是它的 `aat:documentOrder`。标题原文、`配送策略::运力约束` 这样的地址路径、作者写下的 ID 和生成 label 是挂在节点上的标签，组成 label space。查询者按地址或 label 找到 heading node，再读取该节点的字段、关系、raw 和回源坐标。
 
 heading slice 是标题节点对应的连续源文本区域。切片起点是标题头部 metadata 的第一行；没有 metadata 时，起点是标题行。切片终点是下一个标题切片起点的前一行；没有下一个标题时，终点是源文件末尾。
 
 [source,turtle]
 ----
-<urn:aat:doc:...#配送策略> aat:raw """[#delivery.policy, status=active]
+<urn:aat:doc:...#heading-2> aat:raw """[#delivery.policy, status=active]
 == 配送策略
 
 配送策略描述订单进入配送流程后的规则。

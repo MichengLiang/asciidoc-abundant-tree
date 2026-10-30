@@ -577,8 +577,20 @@ function bindReferences(config, document) {
             return [];
         return [{ id, title: entry.node.title ?? id, relativePath: entry.relativePath ?? "", line: entry.sourceStartLine ?? entry.startLine }];
     });
+    // 指向别的书的引用由这里绑定：目标书的 label space 就是它图上四个标签谓词的值，按整串相等找拥有者（06 号书第 2 章
+    // 「地址与 Label 空间」）。
+    const ownersByLabel = new Map();
+    for (const name of ["headline", "addressPath", "addressLabel", "generatedAddressLabel"]) {
+        for (const triple of graph.match({ predicate: { termType: "iri", value: `${AAT_NAMESPACE}${name}` } })) {
+            if (triple.object.termType !== "literal")
+                continue;
+            const iris = ownersByLabel.get(triple.object.value) ?? new Set();
+            iris.add(triple.subject.value);
+            ownersByLabel.set(triple.object.value, iris);
+        }
+    }
     const owners = (selector) => {
-        return located(projection.labelCatalog.owners(selector).map((owner) => owner.value));
+        return located([...(ownersByLabel.get(selector) ?? [])]);
     };
     // 指向整本书的 xref（没有片段）没有 targetSelector，不在这里：它没有可绑定的东西，留给 HTML 本地资源检查。
     const edges = graph.match({ predicate: { termType: "iri", value: `${AAT_NAMESPACE}targetSelector` } }).map((triple) => ({

@@ -7,41 +7,6 @@
   },
   "nodes": [
     {
-      "label": "家常菜",
-      "roles": [
-        "category"
-      ],
-      "fields": {},
-      "line": "36"
-    },
-    {
-      "label": "炒制步骤",
-      "roles": [
-        "step"
-      ],
-      "fields": {
-        "estimatedTime": [
-          "5分钟"
-        ]
-      },
-      "line": "29"
-    },
-    {
-      "label": "番茄",
-      "roles": [
-        "ingredient"
-      ],
-      "fields": {
-        "flavor": [
-          "酸甜"
-        ],
-        "storage": [
-          "常温"
-        ]
-      },
-      "line": "22"
-    },
-    {
       "label": "番茄炒蛋",
       "roles": [
         "recipe"
@@ -60,14 +25,6 @@
       "line": "6"
     },
     {
-      "label": "食材",
-      "roles": [
-        "category"
-      ],
-      "fields": {},
-      "line": "33"
-    },
-    {
       "label": "鸡蛋",
       "roles": [
         "ingredient"
@@ -84,6 +41,49 @@
         ]
       },
       "line": "14"
+    },
+    {
+      "label": "番茄",
+      "roles": [
+        "ingredient"
+      ],
+      "fields": {
+        "flavor": [
+          "酸甜"
+        ],
+        "storage": [
+          "常温"
+        ]
+      },
+      "line": "22"
+    },
+    {
+      "label": "炒制步骤",
+      "roles": [
+        "step"
+      ],
+      "fields": {
+        "estimatedTime": [
+          "5分钟"
+        ]
+      },
+      "line": "29"
+    },
+    {
+      "label": "食材",
+      "roles": [
+        "category"
+      ],
+      "fields": {},
+      "line": "33"
+    },
+    {
+      "label": "家常菜",
+      "roles": [
+        "category"
+      ],
+      "fields": {},
+      "line": "36"
     }
   ],
   "edges": [

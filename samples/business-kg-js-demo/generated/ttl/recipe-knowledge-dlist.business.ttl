@@ -4,33 +4,33 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
-<https://micheng.dev/ns/business-kg-demo/resource/%E5%AE%B6%E5%B8%B8%E8%8F%9C> a kg:Node;
-    rdfs:label "家常菜";
-    kg:nodeKind "category".
-<https://micheng.dev/ns/business-kg-demo/resource/%E7%82%92%E5%88%B6%E6%AD%A5%E9%AA%A4> a kg:Node;
-    rdfs:label "炒制步骤";
-    kg:nodeKind "step";
-    kg:estimatedTime "5分钟".
-<https://micheng.dev/ns/business-kg-demo/resource/%E7%95%AA%E8%8C%84> a kg:Node;
-    rdfs:label "番茄";
-    kg:nodeKind "ingredient";
-    kg:flavor "酸甜";
-    kg:storage "常温".
 <https://micheng.dev/ns/business-kg-demo/resource/%E7%95%AA%E8%8C%84%E7%82%92%E8%9B%8B> a kg:Node;
     rdfs:label "番茄炒蛋";
     kg:nodeKind "recipe";
     kg:difficulty "简单";
     kg:serving "2人份";
     kg:summary "一道由番茄和鸡蛋组成的家常菜。".
-<https://micheng.dev/ns/business-kg-demo/resource/%E9%A3%9F%E6%9D%90> a kg:Node;
-    rdfs:label "食材";
-    kg:nodeKind "category".
 <https://micheng.dev/ns/business-kg-demo/resource/%E9%B8%A1%E8%9B%8B> a kg:Node;
     rdfs:label "鸡蛋";
     kg:nodeKind "ingredient";
     kg:allergen "蛋类";
     kg:protein "高";
     kg:storage "冷藏".
+<https://micheng.dev/ns/business-kg-demo/resource/%E7%95%AA%E8%8C%84> a kg:Node;
+    rdfs:label "番茄";
+    kg:nodeKind "ingredient";
+    kg:flavor "酸甜";
+    kg:storage "常温".
+<https://micheng.dev/ns/business-kg-demo/resource/%E7%82%92%E5%88%B6%E6%AD%A5%E9%AA%A4> a kg:Node;
+    rdfs:label "炒制步骤";
+    kg:nodeKind "step";
+    kg:estimatedTime "5分钟".
+<https://micheng.dev/ns/business-kg-demo/resource/%E9%A3%9F%E6%9D%90> a kg:Node;
+    rdfs:label "食材";
+    kg:nodeKind "category".
+<https://micheng.dev/ns/business-kg-demo/resource/%E5%AE%B6%E5%B8%B8%E8%8F%9C> a kg:Node;
+    rdfs:label "家常菜";
+    kg:nodeKind "category".
 <https://micheng.dev/ns/business-kg-demo/resource/%E7%82%92%E5%88%B6%E6%AD%A5%E9%AA%A4> rel:part-of <https://micheng.dev/ns/business-kg-demo/resource/%E7%95%AA%E8%8C%84%E7%82%92%E8%9B%8B>.
 <https://micheng.dev/ns/business-kg-demo/edge/%E7%82%92%E5%88%B6%E6%AD%A5%E9%AA%A4-part-of-%E7%95%AA%E8%8C%84%E7%82%92%E8%9B%8B-hierarchy-policy> a kg:Edge;
     kg:edgeSource <https://micheng.dev/ns/business-kg-demo/resource/%E7%82%92%E5%88%B6%E6%AD%A5%E9%AA%A4>;

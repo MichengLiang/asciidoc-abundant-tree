@@ -208,7 +208,6 @@ function testProjection(): Rdf12Projection {
 		prefixes: namespaces,
 		relativePath: "samples/reference-links.adoc",
 		documentIri: "urn:aat:doc:test",
-		headingNamespace: "urn:aat:doc:test#",
 		sourceDocumentIri: "urn:aat:doc:test#source",
 		projectionIri: "urn:aat:doc:test#projection",
 		projectionActivityIri: "urn:aat:doc:test#activity",
@@ -216,12 +215,6 @@ function testProjection(): Rdf12Projection {
 		nodeIndex: {
 			get: () => undefined,
 			findByTarget: () => undefined,
-			entries: () => [],
-		},
-		labelCatalog: {
-			add: () => undefined,
-			find: () => [],
-			owners: () => [],
 			entries: () => [],
 		},
 	};

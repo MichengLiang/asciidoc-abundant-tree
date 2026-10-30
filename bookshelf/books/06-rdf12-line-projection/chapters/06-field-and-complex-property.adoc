@@ -33,7 +33,7 @@ fieldPredicate = <https://micheng.dev/ns/asciidoc-field#> + 转写(fieldName)
 
 [source,turtle]
 ----
-<#配送策略>
+:heading-2
   aat:role "policy" ;
   field:status "active" ;
   field:owner "ops" .
@@ -107,7 +107,7 @@ property role 必须稳定给出一个字段名。没有 property role 或有多
 
 [source,turtle]
 ----
-<#配送策略> field:policy-risk-profile :value-l10-o0 .
+:heading-2 field:policy-risk-profile :value-l10-o0 .
 
 :value-l10-o0 aat:forSelector "delivery" ;
   aat:format "json" ;

@@ -434,21 +434,8 @@ function expectNoPublicAttributeResources(graph: Rdf12Graph): void {
 		}),
 	).toHaveLength(0);
 	expectPredicateAbsent(graph, `${namespaces.aat}hasAttribute`);
+	expectPredicateAbsent(graph, `${namespaces.aat}name`);
 	expectPredicateAbsent(graph, `${namespaces.rdf}value`);
-	// aat:name 只是标题节点的名字（06 号书第 2 章「身份」），不再是属性资源的属性名。
-	for (const triple of graph.match({
-		predicate: iriTerm(`${namespaces.aat}name`),
-	})) {
-		expect(
-			graph.has(
-				rdf12Triple(
-					triple.subject,
-					iriTerm(`${namespaces.rdf}type`),
-					iriTerm(`${namespaces.aat}Heading`),
-				),
-			),
-		).toBe(true);
-	}
 }
 
 function expectPredicateAbsent(graph: Rdf12Graph, predicateIri: string): void {

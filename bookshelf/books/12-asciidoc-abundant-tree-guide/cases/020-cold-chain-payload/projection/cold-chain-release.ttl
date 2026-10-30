@@ -1,4 +1,3 @@
-@base <urn:aat:doc:docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc>.
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 @prefix field: <https://micheng.dev/ns/asciidoc-field#>.
@@ -7,9 +6,25 @@
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix : <urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc#>.
 
-<#冷链出库放行策略> a aat:Heading;
+:activity a prov:Activity, aat:ProjectionActivity;
+    prov:used :source.
+:heading-1 a aat:Heading;
+    aat:containsDirectly :heading-2, :heading-3;
+    aat:documentOrder 1;
+    aat:endLine 2;
+    aat:headingLevel 0;
+    aat:headingLine 1;
+    aat:headline "冷链放行示例";
+    aat:raw """= 冷链放行示例
+
+""";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:startLine 1.
+:heading-2 a aat:Heading;
     aat:addressLabel "cold-chain-release", "rel-release-temperature-audit";
+    aat:addressPath "冷链放行示例::冷链出库放行策略";
     aat:childOrder 1;
     aat:contentEndLine 35;
     aat:contentStartLine 6;
@@ -20,7 +35,6 @@
     aat:headline "冷链出库放行策略";
     aat:metadataEndLine 3;
     aat:metadataStartLine 3;
-    aat:name "冷链出库放行策略";
     aat:raw """[#cold-chain-release.policy, status=active, owner=quality-ops]
 == 冷链出库放行策略
 
@@ -56,29 +70,17 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
 ----
 
 """;
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
     aat:role "policy";
     aat:startLine 3;
     field:owner "quality-ops";
-    field:release-policy-config <cold-chain-release.adoc/projection#payload-l8-o0>;
-    field:review-playbook <cold-chain-release.adoc/projection#payload-l17-o0>;
+    field:release-policy-config :payload-l8-o0;
+    field:review-playbook :payload-l17-o0;
     field:status "active";
-    rel:depends-on <#温控审计规则>.
-<#冷链放行示例> a aat:Heading;
-    aat:containsDirectly <#冷链出库放行策略>, <#温控审计规则>;
-    aat:documentOrder 1;
-    aat:endLine 2;
-    aat:headingLevel 0;
-    aat:headingLine 1;
-    aat:headline "冷链放行示例";
-    aat:name "冷链放行示例";
-    aat:raw """= 冷链放行示例
-
-""";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
-    aat:startLine 1.
-<#温控审计规则> a aat:Heading;
+    rel:depends-on :heading-3.
+:heading-3 a aat:Heading;
     aat:addressLabel "temperature-audit";
+    aat:addressPath "冷链放行示例::温控审计规则";
     aat:childOrder 2;
     aat:contentEndLine 40;
     aat:contentStartLine 40;
@@ -89,20 +91,17 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
     aat:headline "温控审计规则";
     aat:metadataEndLine 37;
     aat:metadataStartLine 37;
-    aat:name "温控审计规则";
     aat:raw """[#temperature-audit.rule, status=active]
 == 温控审计规则
 
 温控审计规则定义冷链药品在出库前必须满足的温度记录完整性要求。
 
 """;
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
     aat:role "rule";
     aat:startLine 37;
     field:status "active".
-<cold-chain-release.adoc/projection#activity> a prov:Activity, aat:ProjectionActivity;
-    prov:used <cold-chain-release.adoc/projection#source>.
-<cold-chain-release.adoc/projection#payload-l17-o0> aat:contentEndLine 23;
+:payload-l17-o0 aat:contentEndLine 23;
     aat:contentStartLine 20;
     aat:endLine 24;
     aat:format "yaml";
@@ -110,9 +109,9 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
 steps:
   - check last temperature checkpoint
   - compare shipment route exception log""";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
     aat:startLine 17.
-<cold-chain-release.adoc/projection#payload-l26-o0> aat:contentEndLine 34;
+:payload-l26-o0 aat:contentEndLine 34;
     aat:contentStartLine 29;
     aat:endLine 35;
     aat:format "yaml";
@@ -122,10 +121,10 @@ required_signals:
   - route_exception_log
 risk_level: high
 reason: 放行策略必须读取温控审计结果，才能判断冷链药品是否允许出库。""";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
     aat:sourceValueId "rel-release-temperature-audit";
     aat:startLine 26.
-<cold-chain-release.adoc/projection#payload-l8-o0> aat:contentEndLine 14;
+:payload-l8-o0 aat:contentEndLine 14;
     aat:contentStartLine 11;
     aat:endLine 15;
     aat:forSelector "cold-chain-release";
@@ -134,15 +133,15 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
   "temperatureWindowCelsius": {"min": 2, "max": 8},
   "manualReviewWhen": ["sensor_gap", "route_exception"]
 }""";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
     aat:startLine 8.
-<cold-chain-release.adoc/projection#projection> a prov:Entity, aat:HeadingProjection;
-    prov:hadPrimarySource <cold-chain-release.adoc/projection#source>;
-    prov:wasDerivedFrom <cold-chain-release.adoc/projection#source>;
-    prov:wasGeneratedBy <cold-chain-release.adoc/projection#activity>.
-<cold-chain-release.adoc/projection#source> a prov:Entity, aat:AsciiDocSourceDocument;
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc".
-<cold-chain-release.adoc/projection#xref-edge-l6-c12-o0> rdf:reifies <<(<#冷链出库放行策略> rel:depends-on <#温控审计规则>)>>;
+:projection a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource :source;
+    prov:wasDerivedFrom :source;
+    prov:wasGeneratedBy :activity.
+:source a prov:Entity, aat:AsciiDocSourceDocument;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc".
+:xref-edge-l6-c12-o0 rdf:reifies <<(:heading-2 rel:depends-on :heading-3)>>;
     a aat:XrefEdge;
     aat:displayLabel "温控审计规则";
     aat:endColumn 121;
@@ -153,13 +152,13 @@ reason: 放行策略必须读取温控审计结果，才能判断冷链药品是
     aat:officialResolvedType "section";
     aat:raw "xref:temperature-audit[温控审计规则, rel=depends-on, weight=0.9, dependency-evidence=rel-release-temperature-audit]";
     aat:rel "depends-on";
-    aat:relativePath "docs/bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
-    aat:sourceHeading <#冷链出库放行策略>;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:sourceHeading :heading-2;
     aat:sourceSelector "cold-chain-release";
     aat:startColumn 12;
     aat:startLine 6;
     aat:syntax "macro";
-    aat:targetHeading <#温控审计规则>;
+    aat:targetHeading :heading-3;
     aat:targetSelector "temperature-audit";
-    field:dependency-evidence <cold-chain-release.adoc/projection#payload-l26-o0>;
+    field:dependency-evidence :payload-l26-o0;
     field:weight "0.9".

@@ -22,7 +22,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 ----
 
-示例另以文档 IRI 为 `@base`，标题节点写作 `<#配送策略>`；投影器自己起名的资源用空前缀 `:` 写，它代表 `<文档 IRI>/projection#`，例如 `:xref-edge-l8-c8-o0`（xref:第一部：投影对象::标题节点[标题节点] 的「身份」）。
+示例另以空前缀 `:` 代表 `<文档 IRI>#`，标题节点写作 `:heading-2`，交叉引用边证据写作 `:xref-edge-l8-c8-o0`（xref:第一部：投影对象::标题节点[标题节点] 的「身份」）。
 
 `aat:` 承载投影器自己的标题投影词表。`rel:` 承载由 xref `rel` 字段映射出的关系谓词。`field:` 承载由字段名映射出的字段谓词。`rdf:` 承载 `rdf:type` 和 `rdf:reifies`。`prov:` 承载来源关系。`xsd:` 承载 typed literal。
 
@@ -30,7 +30,7 @@
 
 === 名字进入 IRI
 
-作者写下的名字进入 IRI 时，按原文写进 IRI，只转写 IRI 语法不允许出现的字符。关系谓词、字段谓词与标题节点的名字（xref:第一部：投影对象::标题节点[标题节点] 的「身份」）都按这条规则命名。
+作者写下的名字进入 IRI 时，按原文写进 IRI，只转写 IRI 语法不允许出现的字符。关系谓词与字段谓词按这条规则命名。标题节点不在其中：它的 IRI 由投影器生成，作者写的标题是它的标签（xref:第一部：投影对象::标题节点[标题节点] 的「身份」）。
 
 投影先服务书的自然书写，再服务查询：作者在约定声明里写下 `难度`、`依据`，查询者照着同一个词写 `field:难度`、`rel:依据`，中间不经过任何换算。RDF 1.2 的 IRI 按 RFC 3987 定义，其中的 `ucschar` 包含汉字与中文标点，所以中文的名字原样就是合法的 IRI。
 
@@ -66,6 +66,7 @@ raw value object 的 RDF identity 由投影器生成。source value block 的手
 
 * 按 address label 查找标题节点。address label 来自标题自身手动 ID，或来自归属到该标题的本地非标题 target ID。
 * 按 headline 查找标题节点。
+* 按地址查找标题节点：在 label 空间的四个谓词上按整串相等反查（xref:第一部：投影对象::标题节点[标题节点] 的「地址与 Label 空间」）。
 * 读取标题节点自身的 raw 切片。
 * 沿标题层级边递归读取子标题，并按 `aat:childOrder` 排序同父 direct children。
 * 按 `aat:documentOrder` 读取全局 preorder 标题序列。

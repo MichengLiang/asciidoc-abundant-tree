@@ -14,9 +14,9 @@ import { namespaces } from "./namespaces";
 import type { Rdf12NodeIndex } from "./node-index";
 import {
 	createOrdinalAllocator,
+	documentResourceIri,
 	makePayloadLocalId,
 	type OrdinalAllocator,
-	projectionResourceIri,
 } from "./resource-identity";
 import { bindSelector } from "./selector-binding";
 import {
@@ -253,7 +253,7 @@ function createRawValueObject(
 		kind: "payload",
 		startLine: entry.span.startLine,
 	});
-	const value = projectionResourceIri(
+	const value = documentResourceIri(
 		context.documentIri,
 		makePayloadLocalId({ startLine: entry.span.startLine, ordinal }),
 	);

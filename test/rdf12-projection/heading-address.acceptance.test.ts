@@ -2,20 +2,21 @@ import { describe, expect, it } from "vitest";
 import type { SectionNode } from "../../src/model";
 import { parseAbundantTree } from "../../src/parser";
 import { fieldPredicate } from "../../src/rdf12-projection/field-predicate";
-import { nameInIri } from "../../src/rdf12-projection/iri-name";
+import type { Rdf12Graph } from "../../src/rdf12-projection/graph";
 import { projectAbundantDocumentToRdf12 } from "../../src/rdf12-projection/projector";
-import { iriTerm } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
 import {
 	aatTerm,
 	expectLiteralValue,
+	labelOwners,
 	literalValues,
 	resourcesOfType,
 } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 
-// 06 号书第 2 章「身份」「地址与 Label 空间」：标题以地址命名，selector 按整串相等绑定到地址。
+// 06 号书第 2 章「身份」「地址与 Label 空间」：标题的 IRI 由投影器按 documentOrder 起，作者写的地址都是图上的标签，
+// selector 按整串相等绑定到拥有这个标签的标题。
 const cookbook = `= 家常菜谱
 :dish: 红烧肉
 
@@ -55,8 +56,8 @@ const cookbook = `= 家常菜谱
 ----
 `;
 
-async function cookbookProjection() {
-	const path = writeFixture("rdf12-heading-address.adoc", cookbook);
+async function project(name: string, source: string) {
+	const path = writeFixture(name, source);
 	const document = await parseAbundantTree({ sourcePath: path });
 	return {
 		document,
@@ -66,43 +67,55 @@ async function cookbookProjection() {
 	};
 }
 
-function heading(namespace: string, name: string) {
-	return iriTerm(`${namespace}${nameInIri(name)}`);
+function cookbookProjection() {
+	return project("rdf12-heading-address.adoc", cookbook);
 }
 
-describe("rdf12 heading addresses and names", () => {
-	it("names every heading after its shortest address and keeps the names distinct", async () => {
-		const { projection } = await cookbookProjection();
-		const names = resourcesOfType(projection.graph, aatTerm("Heading")).flatMap(
-			(node) => literalValues(projection.graph, node, aatTerm("name")),
-		);
+function owners(projection: { graph: Rdf12Graph }, selector: string) {
+	return labelOwners(projection.graph, selector)
+		.map((owner) => owner.value)
+		.toSorted();
+}
 
-		expect(names.toSorted()).toEqual(
-			[
-				"家常菜谱",
-				"红烧肉",
-				"红烧肉::火候",
-				"清蒸鲈鱼",
-				"清蒸鲈鱼::火候",
-				"It's A & B -- C",
-				"`book.adoc` 的职责",
-				"Source",
-				"附录",
-				"关闭对象甲",
-				"关闭对象-2",
-				"关闭对象-3",
-				"std::vector",
-				"引用",
-			].toSorted(),
-		);
-		for (const name of names) {
-			expectLiteralValue(
+function only(projection: { graph: Rdf12Graph }, selector: string) {
+	const [owner, ...rest] = labelOwners(projection.graph, selector);
+	if (owner === undefined || rest.length > 0) {
+		throw new Error(`expected exactly one owner of ${selector}`);
+	}
+	return owner;
+}
+
+describe("rdf12 heading identity and labels", () => {
+	it("names every heading <document IRI>#heading-<documentOrder> and writes no aat:name", async () => {
+		const { projection } = await cookbookProjection();
+		const headings = resourcesOfType(projection.graph, aatTerm("Heading"));
+
+		expect(headings).toHaveLength(14);
+		for (const node of headings) {
+			const [order] = literalValues(
 				projection.graph,
-				heading(projection.headingNamespace, name),
-				aatTerm("name"),
-				name,
+				node,
+				aatTerm("documentOrder"),
 			);
+			expect(node.value).toBe(`${projection.documentIri}#heading-${order}`);
 		}
+		expect(projection.graph.match({ predicate: aatTerm("name") })).toEqual([]);
+	});
+
+	it("writes every address path of two or more segments as aat:addressPath", async () => {
+		const { projection } = await cookbookProjection();
+		const porkHeat = only(projection, "红烧肉::火候");
+
+		expect(
+			literalValues(
+				projection.graph,
+				porkHeat,
+				aatTerm("addressPath"),
+			).toSorted(),
+		).toEqual(["家常菜谱::红烧肉::火候", "红烧肉::火候"].toSorted());
+		expect(owners(projection, "火候")).toEqual(
+			[porkHeat.value, only(projection, "清蒸鲈鱼::火候").value].toSorted(),
+		);
 	});
 
 	it("takes headlines from the source text, with attribute references expanded", async () => {
@@ -117,13 +130,13 @@ describe("rdf12 heading addresses and names", () => {
 		expect(document.title?.text).toBe("家常菜谱");
 		expectLiteralValue(
 			projection.graph,
-			heading(projection.headingNamespace, "It's A & B -- C"),
+			only(projection, "It's A & B -- C"),
 			aatTerm("headline"),
 			"It's A & B -- C",
 		);
 	});
 
-	it("binds selectors written as headlines, qualified paths, and headlines that contain ::", async () => {
+	it("binds selectors to the heading that owns the same label on the graph", async () => {
 		const { projection } = await cookbookProjection();
 		const targets = new Map(
 			projection.graph
@@ -137,49 +150,25 @@ describe("rdf12 heading addresses and names", () => {
 					triple.object.termType === "iri" ? triple.object.value : "",
 				]),
 		);
-		const namespace = projection.headingNamespace;
 
-		expect(targets.get("红烧肉::火候")).toBe(
-			heading(namespace, "红烧肉::火候").value,
-		);
-		expect(targets.get("It's A & B -- C")).toBe(
-			heading(namespace, "It's A & B -- C").value,
-		);
-		expect(targets.get("Source")).toBe(heading(namespace, "Source").value);
-		expect(targets.get("std::vector")).toBe(
-			heading(namespace, "std::vector").value,
-		);
-		expect(targets.has("火候")).toBe(false);
-		const [bare] = projection.graph
-			.match({ predicate: aatTerm("targetSelector") })
-			.filter((triple) => triple.object.value === "火候");
-		if (bare === undefined) {
-			throw new Error("expected the bare xref:火候[] edge evidence");
+		for (const selector of [
+			"红烧肉::火候",
+			"It's A & B -- C",
+			"Source",
+			"std::vector",
+		]) {
+			expect(targets.get(selector)).toBe(only(projection, selector).value);
 		}
-		expect(
-			projection.graph
-				.match({
-					subject: bare.subject,
-					predicate: aatTerm("candidateHeading"),
-				})
-				.map((triple) => triple.object.value)
-				.toSorted(),
-		).toEqual(
-			[
-				heading(namespace, "红烧肉::火候").value,
-				heading(namespace, "清蒸鲈鱼::火候").value,
-			].toSorted(),
-		);
 	});
 
 	it("keeps a heading called Source apart from the projection's source resource", async () => {
 		const { projection } = await cookbookProjection();
 
-		expect(heading(projection.headingNamespace, "Source").value).not.toBe(
+		expect(only(projection, "Source").value).not.toBe(
 			projection.sourceDocumentIri,
 		);
 		expect(projection.sourceDocumentIri).toBe(
-			`${projection.documentIri}/projection#source`,
+			`${projection.documentIri}#source`,
 		);
 	});
 
@@ -187,7 +176,7 @@ describe("rdf12 heading addresses and names", () => {
 		const { projection } = await cookbookProjection();
 
 		const [value] = projection.graph.match({
-			subject: heading(projection.headingNamespace, "红烧肉::火候"),
+			subject: only(projection, "红烧肉::火候"),
 			predicate: fieldPredicate("temperature-profile"),
 		});
 
@@ -208,6 +197,39 @@ describe("rdf12 heading addresses and names", () => {
 		expect(projection.documentIri).toBe(
 			"urn:aat:doc:tmp/test-fixtures/rdf12-heading-address.adoc",
 		);
-		expect(projection.headingNamespace).toBe(`${projection.documentIri}#`);
+	});
+
+	it("keeps a heading whose headline is empty, together with the xrefs it contains", async () => {
+		// 标题原文展开后为空时，它没有 headline 标签，但仍是一个标题节点；按地址起名时它曾因取不到名字而整节消失。
+		const { projection } = await project(
+			"rdf12-empty-headline.adoc",
+			`= 书
+:empty:
+
+== {empty}
+
+见 xref:另一节[]。
+
+== 另一节
+`,
+		);
+		const empty = `${projection.documentIri}#heading-2`;
+		const headingIris = resourcesOfType(
+			projection.graph,
+			aatTerm("Heading"),
+		).map((node) => node.value);
+
+		expect(headingIris).toContain(empty);
+		expect(
+			literalValues(
+				projection.graph,
+				{ termType: "iri", value: empty },
+				aatTerm("headline"),
+			),
+		).toEqual([""]);
+		const [edge] = projection.graph.match({
+			predicate: aatTerm("sourceHeading"),
+		});
+		expect(edge?.object.value).toBe(empty);
 	});
 });

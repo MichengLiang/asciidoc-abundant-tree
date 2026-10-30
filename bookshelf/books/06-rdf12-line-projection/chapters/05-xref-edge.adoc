@@ -34,10 +34,10 @@ xref edge evidence 保留 selector 和官方解析事实。`aat:targetSelector` 
 [source,turtle]
 ----
 :xref-edge-l12-c4-o0 a aat:XrefEdge ;
-  aat:sourceHeading <#配送策略> ;
+  aat:sourceHeading :heading-2 ;
   aat:targetSelector "重复标题" ;
-  aat:candidateHeading <#配送策略::重复标题> ;
-  aat:candidateHeading <#运力规则::重复标题> ;
+  aat:candidateHeading :heading-3 ;
+  aat:candidateHeading :heading-5 ;
   aat:relativePath "samples/ambiguous.adoc" ;
   aat:startLine 12 ;
   aat:endLine 12 .
@@ -91,12 +91,12 @@ xref:capacity[运力规则, rel=depends-on]
 
 [source,turtle]
 ----
-<#配送策略> rel:depends-on <#运力规则> .
+:heading-2 rel:depends-on :heading-3 .
 
 :xref-edge-l8-c8-o0 a aat:XrefEdge ;
-  rdf:reifies <<( <#配送策略> rel:depends-on <#运力规则> )>> ;
-  aat:sourceHeading <#配送策略> ;
-  aat:targetHeading <#运力规则> ;
+  rdf:reifies <<( :heading-2 rel:depends-on :heading-3 )>> ;
+  aat:sourceHeading :heading-2 ;
+  aat:targetHeading :heading-3 ;
   aat:targetSelector "capacity" ;
   aat:displayLabel "运力规则" ;
   aat:rel "depends-on" ;

@@ -20,10 +20,7 @@ import {
 	rdf12TripleTerm,
 } from "../../src/rdf12-projection/terms";
 import { writeFixture } from "../helpers";
-import {
-	headingStartingAt,
-	projectionResource,
-} from "./helpers/graph-matchers";
+import { documentResource, headingStartingAt } from "./helpers/graph-matchers";
 
 const projectRoot = process.cwd();
 const referencePath = join(projectRoot, "samples/reference-links.adoc");
@@ -120,11 +117,11 @@ describe("rdf12 xref edge projection", () => {
 			sameLineXrefLabelsDocument(),
 			{ documentRoot: projectRoot },
 		);
-		const firstEdge = projectionResource(
+		const firstEdge = documentResource(
 			projection.documentIri,
 			"xref-edge-l3-c1-o0",
 		).value;
-		const secondEdge = projectionResource(
+		const secondEdge = documentResource(
 			projection.documentIri,
 			"xref-edge-l3-c12-o0",
 		).value;
@@ -590,10 +587,10 @@ describe("rdf12 xref edge projection", () => {
 
 		expect(expectedRelation).toBeDefined();
 		expect(expectedRelation?.subject.value).toBe(
-			`${projection.headingNamespace}苹果`,
+			`${projection.documentIri}#heading-3`,
 		);
 		expect(expectedRelation?.object.value).toBe(
-			`${projection.headingNamespace}水果`,
+			`${projection.documentIri}#heading-2`,
 		);
 		expect(
 			projection.graph.has(

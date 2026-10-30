@@ -6,11 +6,10 @@ import {
 import {
 	createOrdinalAllocator,
 	documentIriFor,
-	headingIri,
-	headingNamespaceFor,
+	documentResourceIri,
+	makeHeadingLocalId,
 	makePayloadLocalId,
 	makeXrefEdgeResourceLocalId,
-	projectionResourceIri,
 } from "../../src/rdf12-projection/resource-identity";
 import { normalizeSourceDigest } from "../../src/rdf12-projection/source-digest";
 
@@ -68,21 +67,15 @@ describe("rdf12 resource identity", () => {
 		);
 	});
 
-	it("names headings after their address and keeps projector resources apart", () => {
+	it("puts every resource under <document IRI># with projector-made local ids", () => {
 		const document = "urn:aat:doc:book.adoc";
 
-		expect(headingNamespaceFor(document)).toBe("urn:aat:doc:book.adoc#");
-		expect(headingIri(document, "红烧肉::火候").value).toBe(
-			"urn:aat:doc:book.adoc#红烧肉::火候",
+		expect(makeHeadingLocalId(3)).toBe("heading-3");
+		expect(documentResourceIri(document, makeHeadingLocalId(3)).value).toBe(
+			"urn:aat:doc:book.adoc#heading-3",
 		);
-		expect(headingIri(document, "It's A & B -- C").value).toBe(
-			"urn:aat:doc:book.adoc#It's%20A%20&%20B%20--%20C",
-		);
-		expect(projectionResourceIri(document, "source").value).toBe(
-			"urn:aat:doc:book.adoc/projection#source",
-		);
-		expect(headingIri(document, "source").value).not.toBe(
-			projectionResourceIri(document, "source").value,
+		expect(documentResourceIri(document, "source").value).toBe(
+			"urn:aat:doc:book.adoc#source",
 		);
 	});
 

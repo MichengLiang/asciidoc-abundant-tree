@@ -19,9 +19,9 @@
 ----
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#> .
 
-<urn:aat:doc:guide#知识库> aat:containsDirectly <urn:aat:doc:guide#配送策略> .
-<urn:aat:doc:guide#知识库> aat:containsDirectly <urn:aat:doc:guide#计费策略> .
-<urn:aat:doc:guide#配送策略> aat:containsDirectly <urn:aat:doc:guide#运力约束> .
+<urn:aat:doc:guide#heading-1> aat:containsDirectly <urn:aat:doc:guide#heading-2> .
+<urn:aat:doc:guide#heading-1> aat:containsDirectly <urn:aat:doc:guide#heading-4> .
+<urn:aat:doc:guide#heading-2> aat:containsDirectly <urn:aat:doc:guide#heading-3> .
 ----
 
 直接包含不表达传递闭包。`知识库` 直接包含 `配送策略` 和 `计费策略`；`知识库` 不直接包含 `运力约束`。
