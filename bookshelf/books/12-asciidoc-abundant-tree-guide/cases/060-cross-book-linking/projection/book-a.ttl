@@ -1,5 +1,60 @@
 @prefix aat: <https://micheng.dev/ns/asciidoc-abundant-tree#>.
+@prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
+@prefix field: <https://micheng.dev/ns/asciidoc-field#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix : <urn:aat:doc:book-a/book.adoc#>.
 
-<urn:case:cross-book/book-a#共享术语> a aat:Heading;
-  aat:headline "共享术语";
-  aat:addressLabel "shared-term".
+:activity a prov:Activity, aat:ProjectionActivity;
+    prov:used :source.
+:heading-1 a aat:Heading;
+    aat:containsDirectly :heading-2;
+    aat:documentOrder 1;
+    aat:endLine 1;
+    aat:headingLevel 0;
+    aat:headingLine 1;
+    aat:headline "Book A";
+    aat:raw """= Book A
+""";
+    aat:relativePath "book-a/book.adoc";
+    aat:startLine 1.
+:heading-2 a aat:Heading;
+    aat:addressLabel "shared-term";
+    aat:addressPath "Book A::共享术语";
+    aat:childOrder 1;
+    aat:contentEndLine 6;
+    aat:contentStartLine 6;
+    aat:documentOrder 2;
+    aat:endLine 6;
+    aat:headingLevel 1;
+    aat:headingLine 4;
+    aat:headline "共享术语";
+    aat:metadataEndLine 3;
+    aat:metadataStartLine 3;
+    aat:raw """[#shared-term.concept]
+== 共享术语
+
+Book A 定义共享术语。
+""";
+    aat:relativePath "book-a/book.adoc";
+    aat:role "concept";
+    aat:startLine 3.
+:projection a prov:Entity, aat:HeadingProjection;
+    prov:hadPrimarySource :source;
+    prov:wasDerivedFrom :source;
+    prov:wasGeneratedBy :activity.
+<urn:aat:doc:book-a/book.adoc#source-file-book-a%2Fbook.adoc> a aat:SourceFile;
+    aat:raw """= Book A
+
+[#shared-term.concept]
+== 共享术语
+
+Book A 定义共享术语。
+""";
+    aat:relativePath "book-a/book.adoc".
+:source a prov:Entity, aat:AsciiDocSourceDocument;
+    aat:relativePath "book-a/book.adoc";
+    aat:sourceFile <urn:aat:doc:book-a/book.adoc#source-file-book-a%2Fbook.adoc>.

@@ -3,6 +3,6 @@
 		"rel": "https://micheng.dev/ns/asciidoc-relation#",
 		"sameConceptAs": { "@id": "rel:same-concept-as", "@type": "@id" }
 	},
-	"@id": "urn:case:cross-book/book-a#共享术语",
-	"sameConceptAs": "urn:case:cross-book/book-b#共享术语"
+	"@id": "urn:aat:doc:book-a/book.adoc#heading-2",
+	"sameConceptAs": "urn:aat:doc:book-b/book.adoc#heading-2"
 }

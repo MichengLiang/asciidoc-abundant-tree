@@ -1,4 +1,4 @@
 @prefix rel: <https://micheng.dev/ns/asciidoc-relation#>.
 
-<urn:case:cross-book/book-a#共享术语>
-  rel:same-concept-as <urn:case:cross-book/book-b#共享术语>.
+<urn:aat:doc:book-a/book.adoc#heading-2>
+  rel:same-concept-as <urn:aat:doc:book-b/book.adoc#heading-2>.
