@@ -4,6 +4,7 @@
 :代码版本: asciidoc-abundant-tree 仓库 ``b9cc8e8``（0.3.0 之前）；依赖 n3 2.0.3。
 :影响: 只影响 Turtle 的可读性，图本身是对的：pyoxigraph 读回以后 ``?h field:难度 ?v`` 照常查到。读 Turtle 的人看到的是``<https://micheng.dev/ns/asciidoc-field#难度>``，而不是 ``field:难度``。标题节点不受影响：0.4.0 起它们的局部名是投影器起的 ``heading-<N>``，以空前缀写成 ``:heading-2``。仍受影响的只有书的词，即 ``field:`` 与 ``rel:`` 下的中文局部名。
 :涉及: ``src/rdf12-projection/turtle-serializer.ts``
+:复测: ``bd62f3e`` 上仍复现（5dcc0b2 之后的 dist）：field:难度 写成完整 IRI；n3 最新 2.13.12 与 3.0.0-alpha.12 的 Writer 仍只缩写 ASCII 局部名。
 
 ## 复现（实测）
 
@@ -36,3 +37,9 @@ n3 2.0.3 的 ``N3Writer.js`` 第 301–302 行，前缀名的局部名只认 ``[
 
 * 给 n3.js 提 PR，让 Writer 照 ``PN_LOCAL`` 判断，需要转义的字符（如 ``/``、``(``）写成 ``\/``；
 * aat 的序列化自己补：写完以后再把能写成前缀名的完整 IRI 换回前缀名。
+
+## 采纳
+
+:采纳: 2026-10-31，小汤
+
+要做，修在 n3.js 那一层：Writer 判断合法局部名时，以注册前缀 IRI 开头的那一支只认 ASCII，而 Turtle 的 PN_LOCAL 收汉字（#820 之后 ex:foo 那一支已照 PN_LOCAL 判断）。已提上游 PR rdfjs/N3.js#875（让两支共用 #820 的局部名模式，附往返测试与性能对比）。不在 aat 里另写 Turtle 后处理：那是在错的层再造一份序列化规则。上游合并发布后，aat 升级 n3（现锁 2.0.3，同时升到当时最新），核对书架与 cases 的 Turtle 只在前缀名写法上变化，随之关闭本记录。
