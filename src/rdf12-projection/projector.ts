@@ -88,6 +88,8 @@ export function projectAbundantDocumentToRdf12(
 	projectSurfaceAttributes({
 		graph,
 		document,
+		documentIri,
+		relativePath: coordinate.relativePath,
 		nodeIndex,
 		xrefIndex,
 	});

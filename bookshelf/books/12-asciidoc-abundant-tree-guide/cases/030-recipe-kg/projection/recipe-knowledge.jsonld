@@ -63,6 +63,2372 @@
 			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-3",
 			"@type": "rdf12:Triple",
 			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#role",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "recipe",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-4",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-5",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "7",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-6",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "role",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-7",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-8",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-9",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "7",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-10",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-11",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#serving",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "2人份",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-12",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-13",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "8",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-14",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "serving",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-15",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-16",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-17",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "8",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-18",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-19",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#difficulty",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "简单",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-20",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-21",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "9",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-22",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "difficulty",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-23",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-24",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-25",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "9",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-26",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-27",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-3",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#summary",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "一道由番茄和鸡蛋组成的家常菜。",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-28",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-3",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-29",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-3",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "10",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-30",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-3",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "summary",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-31",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-3",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "3",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-32",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-3",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-33",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-3",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "10",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-34",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-3-3",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-35",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#role",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "ingredient",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-36",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-37",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "15",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-38",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "role",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-39",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-40",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-41",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "15",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-42",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-43",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#storage",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "冷藏",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-44",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-45",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "16",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-46",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "storage",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-47",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-48",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-49",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "16",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-50",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-51",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#allergen",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "蛋类",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-52",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-53",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "17",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-54",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "allergen",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-55",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-56",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-57",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "17",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-58",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-4-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-59",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#role",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "ingredient",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-60",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-61",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "22",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-62",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "role",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-63",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-64",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-65",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "22",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-66",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-67",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#storage",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "常温",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-68",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-69",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "23",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-70",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "storage",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-71",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-72",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-73",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "23",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-74",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-75",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#flavor",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "酸甜",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-76",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-77",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "24",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-78",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "flavor",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-79",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-80",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-81",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "24",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-82",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-5-2",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-83",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#role",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "step",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-84",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-85",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "29",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-86",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "role",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-87",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-88",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-89",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "29",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-90",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-91",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#estimatedTime",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "5分钟",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-92",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-93",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "30",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-94",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "estimatedTime",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-95",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-96",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-97",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "30",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-98",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-6-1",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-99",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-7-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#role",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "category",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-100",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-7-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-101",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-7-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "33",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-102",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-7-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "role",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-103",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-7-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-104",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-7-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-105",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-7-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "33",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-106",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-7-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-107",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-8-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#role",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "category",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-108",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-8-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-109",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-8-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "36",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-110",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-8-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "role",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-111",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-8-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-112",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-8-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-113",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-8-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "36",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-114",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#field-evidence-8-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "description-list",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-115",
+			"@type": "rdf12:Triple",
+			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
@@ -76,7 +2442,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-4",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-116",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -92,7 +2458,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-5",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-117",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -108,7 +2474,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-6",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-118",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -124,7 +2490,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-7",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-119",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -140,7 +2506,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-8",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-120",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -160,7 +2526,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-9",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-121",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -180,7 +2546,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-10",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-122",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -200,7 +2566,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-11",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-123",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -220,7 +2586,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-12",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-124",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -240,7 +2606,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-13",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-125",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -260,7 +2626,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-14",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-126",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -280,7 +2646,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-15",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-127",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-1",
@@ -300,7 +2666,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-16",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-128",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -316,7 +2682,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-17",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-129",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -336,7 +2702,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-18",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-130",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -356,7 +2722,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-19",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-131",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -376,7 +2742,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-20",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-132",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -396,7 +2762,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-21",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-133",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -416,7 +2782,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-22",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-134",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -436,7 +2802,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-23",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-135",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -456,7 +2822,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-24",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-136",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -476,7 +2842,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-25",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-137",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -496,7 +2862,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-26",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-138",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -516,7 +2882,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-27",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-139",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -536,7 +2902,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-28",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-140",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -556,7 +2922,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-29",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-141",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-2",
@@ -576,7 +2942,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-30",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-142",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -592,7 +2958,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-31",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-143",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -612,7 +2978,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-32",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-144",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -632,7 +2998,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-33",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-145",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -648,7 +3014,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-34",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-146",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -664,7 +3030,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-35",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-147",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -680,7 +3046,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-36",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-148",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -700,7 +3066,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-37",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-149",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -720,7 +3086,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-38",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-150",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -740,7 +3106,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-39",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-151",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -760,7 +3126,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-40",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-152",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -780,7 +3146,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-41",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-153",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -800,7 +3166,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-42",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-154",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -820,7 +3186,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-43",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-155",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -840,7 +3206,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-44",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-156",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -860,7 +3226,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-45",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-157",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -880,7 +3246,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-46",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-158",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -900,7 +3266,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-47",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-159",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -920,7 +3286,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-48",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-160",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -940,7 +3306,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-49",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-161",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -960,7 +3326,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-50",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-162",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -980,7 +3346,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-51",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-163",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-3",
@@ -996,7 +3362,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-52",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-164",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1012,7 +3378,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-53",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-165",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1032,7 +3398,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-54",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-166",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1052,7 +3418,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-55",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-167",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1072,7 +3438,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-56",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-168",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1092,7 +3458,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-57",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-169",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1112,7 +3478,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-58",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-170",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1132,7 +3498,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-59",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-171",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1152,7 +3518,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-60",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-172",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1172,7 +3538,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-61",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-173",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1192,7 +3558,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-62",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-174",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1212,7 +3578,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-63",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-175",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1232,7 +3598,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-64",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-176",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1252,7 +3618,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-65",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-177",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1272,7 +3638,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-66",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-178",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1292,7 +3658,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-67",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-179",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1312,7 +3678,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-68",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-180",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1332,7 +3698,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-69",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-181",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1352,7 +3718,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-70",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-182",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-4",
@@ -1368,7 +3734,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-71",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-183",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1384,7 +3750,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-72",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-184",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1404,7 +3770,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-73",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-185",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1424,7 +3790,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-74",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-186",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1444,7 +3810,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-75",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-187",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1464,7 +3830,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-76",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-188",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1484,7 +3850,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-77",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-189",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1504,7 +3870,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-78",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-190",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1524,7 +3890,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-79",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-191",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1544,7 +3910,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-80",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-192",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1564,7 +3930,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-81",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-193",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1584,7 +3950,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-82",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-194",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1604,7 +3970,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-83",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-195",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1624,7 +3990,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-84",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-196",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1644,7 +4010,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-85",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-197",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1664,7 +4030,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-86",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-198",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1684,7 +4050,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-87",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-199",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1704,7 +4070,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-88",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-200",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1724,7 +4090,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-89",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-201",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-5",
@@ -1740,7 +4106,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-90",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-202",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1756,7 +4122,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-91",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-203",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1776,7 +4142,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-92",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-204",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1796,7 +4162,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-93",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-205",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1816,7 +4182,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-94",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-206",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1836,7 +4202,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-95",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-207",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1856,7 +4222,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-96",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-208",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1876,7 +4242,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-97",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-209",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1896,7 +4262,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-98",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-210",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1916,7 +4282,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-99",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-211",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1936,7 +4302,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-100",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-212",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1956,7 +4322,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-101",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-213",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1976,7 +4342,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-102",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-214",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -1996,7 +4362,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-103",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-215",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -2016,7 +4382,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-104",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-216",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -2036,7 +4402,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-105",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-217",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -2056,7 +4422,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-106",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-218",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-6",
@@ -2076,7 +4442,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-107",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-219",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2092,7 +4458,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-108",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-220",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2112,7 +4478,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-109",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-221",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2132,7 +4498,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-110",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-222",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2152,7 +4518,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-111",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-223",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2172,7 +4538,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-112",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-224",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2192,7 +4558,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-113",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-225",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2212,7 +4578,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-114",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-226",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2232,7 +4598,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-115",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-227",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2252,7 +4618,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-116",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-228",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2272,7 +4638,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-117",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-229",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2292,7 +4658,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-118",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-230",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2312,7 +4678,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-119",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-231",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2332,7 +4698,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-120",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-232",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2352,7 +4718,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-121",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-233",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-7",
@@ -2372,7 +4738,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-122",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-234",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2388,7 +4754,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-123",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-235",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2408,7 +4774,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-124",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-236",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2428,7 +4794,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-125",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-237",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2448,7 +4814,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-126",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-238",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2468,7 +4834,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-127",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-239",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2488,7 +4854,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-128",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-240",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2508,7 +4874,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-129",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-241",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2528,7 +4894,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-130",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-242",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2548,7 +4914,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-131",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-243",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2568,7 +4934,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-132",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-244",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2588,7 +4954,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-133",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-245",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2608,7 +4974,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-134",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-246",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2628,7 +4994,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-135",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-247",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2648,7 +5014,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-136",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-248",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#heading-8",
@@ -2668,7 +5034,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-137",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-249",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
@@ -2684,7 +5050,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-138",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-250",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
@@ -2700,7 +5066,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-139",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-251",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
@@ -2716,7 +5082,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-140",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-252",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
@@ -2732,7 +5098,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-141",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-253",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#projection",
@@ -2748,7 +5114,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-142",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-254",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
@@ -2764,7 +5130,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-143",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-255",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
@@ -2780,7 +5146,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-144",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-256",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#source",
@@ -2800,7 +5166,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-145",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-257",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2829,7 +5195,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-146",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-258",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2845,7 +5211,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-147",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-259",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2865,7 +5231,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-148",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-260",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2885,7 +5251,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-149",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-261",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2905,7 +5271,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-150",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-262",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2925,7 +5291,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-151",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-263",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2945,7 +5311,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-152",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-264",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2965,7 +5331,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-153",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-265",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -2985,7 +5351,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-154",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-266",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -3001,7 +5367,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-155",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-267",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -3021,7 +5387,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-156",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-268",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -3041,7 +5407,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-157",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-269",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -3061,7 +5427,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-158",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-270",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -3081,7 +5447,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-159",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-271",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -3097,7 +5463,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-160",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-272",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l12-c4-o0",
@@ -3117,7 +5483,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-161",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-273",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3146,7 +5512,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-162",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-274",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3162,7 +5528,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-163",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-275",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3182,7 +5548,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-164",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-276",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3202,7 +5568,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-165",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-277",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3222,7 +5588,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-166",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-278",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3242,7 +5608,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-167",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-279",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3262,7 +5628,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-168",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-280",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3282,7 +5648,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-169",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-281",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3302,7 +5668,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-170",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-282",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3318,7 +5684,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-171",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-283",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3338,7 +5704,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-172",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-284",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3358,7 +5724,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-173",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-285",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3378,7 +5744,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-174",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-286",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3398,7 +5764,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-175",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-287",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3414,7 +5780,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-176",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-288",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l19-c4-o0",
@@ -3434,7 +5800,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-177",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-289",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3463,7 +5829,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-178",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-290",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3479,7 +5845,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-179",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-291",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3499,7 +5865,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-180",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-292",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3519,7 +5885,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-181",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-293",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3539,7 +5905,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-182",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-294",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3559,7 +5925,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-183",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-295",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3579,7 +5945,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-184",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-296",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3599,7 +5965,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-185",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-297",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3619,7 +5985,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-186",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-298",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3635,7 +6001,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-187",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-299",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3655,7 +6021,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-188",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-300",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3675,7 +6041,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-189",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-301",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3695,7 +6061,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-190",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-302",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3715,7 +6081,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-191",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-303",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",
@@ -3731,7 +6097,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-192",
+			"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#statement-304",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:bookshelf/books/12-asciidoc-abundant-tree-guide/cases/030-recipe-kg/source/recipe-knowledge.adoc#xref-edge-l26-c4-o0",

@@ -10,6 +10,158 @@
 
 :activity a prov:Activity, aat:ProjectionActivity;
     prov:used :source.
+:field-evidence-10-0 rdf:reifies <<(:heading-10 field:generation "3")>>;
+    a aat:FieldEvidence;
+    aat:endLine 42;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 42;
+    aat:surface "attrlist".
+:field-evidence-11-0 rdf:reifies <<(:heading-11 field:generation "3")>>;
+    a aat:FieldEvidence;
+    aat:endLine 48;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 48;
+    aat:surface "attrlist".
+:field-evidence-12-0 rdf:reifies <<(:heading-12 field:generation "3")>>;
+    a aat:FieldEvidence;
+    aat:endLine 52;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 52;
+    aat:surface "attrlist".
+:field-evidence-13-0 rdf:reifies <<(:heading-13 field:generation "3")>>;
+    a aat:FieldEvidence;
+    aat:endLine 58;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 58;
+    aat:surface "attrlist".
+:field-evidence-14-0 rdf:reifies <<(:heading-14 field:generation "3")>>;
+    a aat:FieldEvidence;
+    aat:endLine 62;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 62;
+    aat:surface "attrlist".
+:field-evidence-15-0 rdf:reifies <<(:heading-15 field:generation "4")>>;
+    a aat:FieldEvidence;
+    aat:endLine 66;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 66;
+    aat:surface "attrlist".
+:field-evidence-16-0 rdf:reifies <<(:heading-16 field:generation "4")>>;
+    a aat:FieldEvidence;
+    aat:endLine 70;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 70;
+    aat:surface "attrlist".
+:field-evidence-17-0 rdf:reifies <<(:heading-17 field:generation "4")>>;
+    a aat:FieldEvidence;
+    aat:endLine 74;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 74;
+    aat:surface "attrlist".
+:field-evidence-18-0 rdf:reifies <<(:heading-18 field:generation "4")>>;
+    a aat:FieldEvidence;
+    aat:endLine 81;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 81;
+    aat:surface "attrlist".
+:field-evidence-19-0 rdf:reifies <<(:heading-19 field:generation "4")>>;
+    a aat:FieldEvidence;
+    aat:endLine 86;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 86;
+    aat:surface "attrlist".
+:field-evidence-20-0 rdf:reifies <<(:heading-20 field:generation "4")>>;
+    a aat:FieldEvidence;
+    aat:endLine 91;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 91;
+    aat:surface "attrlist".
+:field-evidence-22-0 rdf:reifies <<(:heading-22 field:generation "3")>>;
+    a aat:FieldEvidence;
+    aat:endLine 103;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 103;
+    aat:surface "attrlist".
+:field-evidence-23-0 rdf:reifies <<(:heading-23 field:generation "4")>>;
+    a aat:FieldEvidence;
+    aat:endLine 107;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 107;
+    aat:surface "attrlist".
+:field-evidence-24-0 rdf:reifies <<(:heading-24 field:generation "5")>>;
+    a aat:FieldEvidence;
+    aat:endLine 112;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 112;
+    aat:surface "attrlist".
+:field-evidence-25-0 rdf:reifies <<(:heading-25 field:generation "5")>>;
+    a aat:FieldEvidence;
+    aat:endLine 116;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 116;
+    aat:surface "attrlist".
+:field-evidence-30-0 rdf:reifies <<(:heading-30 field:generation "4")>>;
+    a aat:FieldEvidence;
+    aat:endLine 147;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 147;
+    aat:surface "attrlist".
+:field-evidence-7-0 rdf:reifies <<(:heading-7 field:generation "1")>>;
+    a aat:FieldEvidence;
+    aat:endLine 29;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 29;
+    aat:surface "attrlist".
+:field-evidence-8-0 rdf:reifies <<(:heading-8 field:generation "2")>>;
+    a aat:FieldEvidence;
+    aat:endLine 33;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 33;
+    aat:surface "attrlist".
+:field-evidence-9-0 rdf:reifies <<(:heading-9 field:generation "2")>>;
+    a aat:FieldEvidence;
+    aat:endLine 37;
+    aat:fieldName "generation";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/红楼梦结构图谱.adoc";
+    aat:startLine 37;
+    aat:surface "attrlist".
 :heading-10 a aat:Heading;
     aat:addressPath "红楼梦结构图谱::荣国府::贾赦", "荣国府::贾赦";
     aat:childOrder 4;

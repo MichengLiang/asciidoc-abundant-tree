@@ -157,6 +157,8 @@ named attributes 投影为字段谓词，规则见 xref:Field Predicate[Field Pr
 
 字段值统一按源文档表面值保存为 string literal。
 
+每个 named attribute 字段另有一个字段证据，写明它写在 attrlist 里、原名与所在的行（第 6 章「字段证据」）。
+
 `#id` 不投影为字段。它投影为 `aat:addressLabel`。点号 role token 不投影为字段谓词。它投影为 `aat:role`。named attribute 才进入 `field:` 下的字段谓词。
 
 标题 complex property 也使用同一套字段名映射。标题 complex property 的字段名来自 source value block 的 property role，字段值是 raw value object。标题 metadata role 仍只表达标题角色，不表达 complex property 字段名。
@@ -210,6 +212,8 @@ landing:: core 的 `resources/`。
 字段值是描述的源文档表面值，取自字段所在源文件的原文，范围从描述在源文件中的起点到该条目的最后一行。条目的最后一行按 AsciiDoc 的列表续接读原文确定：直接文字到空行为止，续接标记挂上的块到它结束为止，空行之后紧跟的列表项或缩进行仍属于条目，细则见解析器规约（09 号书）的 Heading Description Metadata 一节。续接标记 `+` 挂上的段落、listing、表格等块属于字段值。投影器只移除服务于描述列表容器的表面：term、分隔符，以及描述内部把块挂到条目上的外层续接行；外层续接行移除后留下一个空行，块与块之间的分隔因此保留。字段值内部的 AsciiDoc 语法按作者写下的原样保存：行内标记、xref 宏和 include 指令都不被替换或展开。字段值去除行尾空白、公共缩进和首尾空行；源文本中的换行保存为真实换行，源文本中字面的 `\n` 保持为两个字符。
 
 描述列表字段与标题头部 named attributes 使用同一套字段名映射，字段值作为 string literal 保存。投影器不解释字段值的业务语义，也不把字段值中的块解析为结构节点。
+
+同一个名字写在 attrlist 里和写在描述列表里，得到同一条字段三元组；写在哪里由各自的字段证据区分（第 6 章「字段证据」）。
 
 === 重复 label
 

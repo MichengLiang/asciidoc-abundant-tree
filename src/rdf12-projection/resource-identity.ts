@@ -40,6 +40,14 @@ export function makePayloadLocalId(input: {
 	return `payload-l${input.startLine}-o${input.ordinal}`;
 }
 
+// 字段证据按所属标题的 documentOrder 与字段在标题内的顺序起名，不用行号：理由同标题（06 号书第 6 章「字段证据」）。
+export function makeFieldEvidenceLocalId(input: {
+	readonly documentOrder: number;
+	readonly fieldOrder: number;
+}): string {
+	return `field-evidence-${input.documentOrder}-${input.fieldOrder}`;
+}
+
 export function makeXrefEdgeResourceLocalId(input: {
 	readonly startLine: number;
 	readonly startColumn: number;

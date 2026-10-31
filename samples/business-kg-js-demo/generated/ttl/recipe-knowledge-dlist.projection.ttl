@@ -10,6 +10,126 @@
 
 :activity a prov:Activity, aat:ProjectionActivity;
     prov:used :source.
+:field-evidence-3-0 rdf:reifies <<(:heading-3 field:role "recipe")>>;
+    a aat:FieldEvidence;
+    aat:endLine 7;
+    aat:fieldName "role";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 7;
+    aat:surface "description-list".
+:field-evidence-3-1 rdf:reifies <<(:heading-3 field:serving "2人份")>>;
+    a aat:FieldEvidence;
+    aat:endLine 8;
+    aat:fieldName "serving";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 8;
+    aat:surface "description-list".
+:field-evidence-3-2 rdf:reifies <<(:heading-3 field:difficulty "简单")>>;
+    a aat:FieldEvidence;
+    aat:endLine 9;
+    aat:fieldName "difficulty";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 9;
+    aat:surface "description-list".
+:field-evidence-3-3 rdf:reifies <<(:heading-3 field:summary "一道由番茄和鸡蛋组成的家常菜。")>>;
+    a aat:FieldEvidence;
+    aat:endLine 10;
+    aat:fieldName "summary";
+    aat:fieldOrder 3;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 10;
+    aat:surface "description-list".
+:field-evidence-4-0 rdf:reifies <<(:heading-4 field:role "ingredient")>>;
+    a aat:FieldEvidence;
+    aat:endLine 15;
+    aat:fieldName "role";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 15;
+    aat:surface "description-list".
+:field-evidence-4-1 rdf:reifies <<(:heading-4 field:storage "冷藏")>>;
+    a aat:FieldEvidence;
+    aat:endLine 16;
+    aat:fieldName "storage";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 16;
+    aat:surface "description-list".
+:field-evidence-4-2 rdf:reifies <<(:heading-4 field:allergen "蛋类")>>;
+    a aat:FieldEvidence;
+    aat:endLine 17;
+    aat:fieldName "allergen";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 17;
+    aat:surface "description-list".
+:field-evidence-4-3 rdf:reifies <<(:heading-4 field:protein "高")>>;
+    a aat:FieldEvidence;
+    aat:endLine 18;
+    aat:fieldName "protein";
+    aat:fieldOrder 3;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 18;
+    aat:surface "description-list".
+:field-evidence-5-0 rdf:reifies <<(:heading-5 field:role "ingredient")>>;
+    a aat:FieldEvidence;
+    aat:endLine 23;
+    aat:fieldName "role";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 23;
+    aat:surface "description-list".
+:field-evidence-5-1 rdf:reifies <<(:heading-5 field:storage "常温")>>;
+    a aat:FieldEvidence;
+    aat:endLine 24;
+    aat:fieldName "storage";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 24;
+    aat:surface "description-list".
+:field-evidence-5-2 rdf:reifies <<(:heading-5 field:flavor "酸甜")>>;
+    a aat:FieldEvidence;
+    aat:endLine 25;
+    aat:fieldName "flavor";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 25;
+    aat:surface "description-list".
+:field-evidence-6-0 rdf:reifies <<(:heading-6 field:role "step")>>;
+    a aat:FieldEvidence;
+    aat:endLine 30;
+    aat:fieldName "role";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 30;
+    aat:surface "description-list".
+:field-evidence-6-1 rdf:reifies <<(:heading-6 field:estimatedTime "5分钟")>>;
+    a aat:FieldEvidence;
+    aat:endLine 31;
+    aat:fieldName "estimatedTime";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 31;
+    aat:surface "description-list".
+:field-evidence-7-0 rdf:reifies <<(:heading-7 field:role "category")>>;
+    a aat:FieldEvidence;
+    aat:endLine 34;
+    aat:fieldName "role";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 34;
+    aat:surface "description-list".
+:field-evidence-8-0 rdf:reifies <<(:heading-8 field:role "category")>>;
+    a aat:FieldEvidence;
+    aat:endLine 37;
+    aat:fieldName "role";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/business-kg-js-demo/fixtures/recipe-knowledge-dlist.adoc";
+    aat:startLine 37;
+    aat:surface "description-list".
 :heading-1 a aat:Heading;
     aat:containsDirectly :heading-2, :heading-3, :heading-7, :heading-8;
     aat:documentOrder 1;

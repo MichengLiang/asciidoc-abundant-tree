@@ -164,6 +164,23 @@ SELECT ?heading ?headline ?start ?end WHERE {
 
 直接字段谓词表达源文档表面字段。该查询不要求投影器解释 `policy` 或 `active` 的业务含义。
 
+=== 按字段名读出标题字段写在哪里
+
+[source,sparql]
+----
+SELECT ?heading ?value ?surface ?path ?line WHERE {
+  ?evidence a aat:FieldEvidence ;
+            rdf:reifies <<( ?heading ?field ?value )>> ;
+            aat:fieldName "难度" ;
+            aat:surface ?surface ;
+            aat:relativePath ?path ;
+            aat:startLine ?line .
+}
+ORDER BY ?path ?line
+----
+
+按作者写下的字段名查，不必知道字段谓词的转写。 `?surface` 说明这个字段写在 attrlist、描述列表还是 `hmeta:` 宏里；书的约定只认某种写法时，下游据此核对。
+
 === 读取 Heading Complex Property
 
 消费者按 field predicate 读取 heading complex property。

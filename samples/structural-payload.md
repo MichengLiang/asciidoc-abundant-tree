@@ -64,6 +64,30 @@ edge:
 
 :activity a prov:Activity, aat:ProjectionActivity;
     prov:used :source.
+:field-evidence-2-0 rdf:reifies <<(:heading-2 field:status "active")>>;
+    a aat:FieldEvidence;
+    aat:endLine 5;
+    aat:fieldName "status";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/structural-payload.adoc";
+    aat:startLine 5;
+    aat:surface "attrlist".
+:field-evidence-2-1 rdf:reifies <<(:heading-2 field:owner "ops")>>;
+    a aat:FieldEvidence;
+    aat:endLine 5;
+    aat:fieldName "owner";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/structural-payload.adoc";
+    aat:startLine 5;
+    aat:surface "attrlist".
+:field-evidence-3-0 rdf:reifies <<(:heading-3 field:status "active")>>;
+    a aat:FieldEvidence;
+    aat:endLine 39;
+    aat:fieldName "status";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/structural-payload.adoc";
+    aat:startLine 39;
+    aat:surface "attrlist".
 :heading-1 a aat:Heading;
     aat:containsDirectly :heading-2, :heading-3;
     aat:contentEndLine 3;

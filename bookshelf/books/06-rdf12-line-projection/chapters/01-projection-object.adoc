@@ -42,13 +42,14 @@ SPARQL 与 Turtle 的前缀名比 IRI 窄：`——`、`……`、弯引号不�
 
 === 构成性对象
 
-标题投影图承诺两类结构查询资源：
+标题投影图承诺三类结构查询资源：
 
 [horizontal]
 标题节点:: 由源文档中的等号标题创建。标题节点是文档结构、阅读、回源和递归查询的单位。
 交叉引用边证据:: 由标题切片中的 xref 创建。边证据保存关系边的 raw、位置、字段、官方解析事实和 RDF 1.2 reifier 关系。
+字段证据:: 由标题字段创建，每个标题字段一个。字段证据保存字段名原文、字段写在哪种表面和回源坐标，以 RDF 1.2 reifier 关系指向那条字段三元组。
 
-标题投影图的其它事实归属于这两类资源。标题字段归属于 heading node。xref edge 字段归属于 xref edge evidence。来源坐标归属于可回源的 heading node、xref edge evidence 和 raw value object。
+标题投影图的其它事实归属于这三类资源。标题字段归属于 heading node，它写在哪里归属于字段证据。xref edge 字段归属于 xref edge evidence。来源坐标归属于可回源的 heading node、xref edge evidence、字段证据和 raw value object。
 
 source document、projection 和 projection activity 是 provenance 资源。它们描述图从哪份源文件派生、由哪次投影活动生成。它们不属于标题节点集合，也不参与标题层级边。
 
@@ -72,6 +73,7 @@ raw value object 的 RDF identity 由投影器生成。source value block 的手
 * 按 `aat:documentOrder` 读取全局 preorder 标题序列。
 * 查看标题节点发出的交叉引用边。
 * 读取 heading node 上的 literal fields 和 complex properties。
+* 按作者写下的字段名查找标题字段，读出它写在 attrlist、描述列表还是 `hmeta:` 宏里。
 * 读取 xref edge evidence 上的 literal fields、complex properties 和 xref raw。
 * 通过 field predicate 与 format 选择下游 raw 解析路径。
 * 从查询结果回到源文件行范围。
@@ -80,7 +82,7 @@ raw value object 的 RDF identity 由投影器生成。source value block 的手
 
 === 完整性
 
-标题节点提供阅读单位。标题层级边提供递归阅读路径。`aat:childOrder` 提供同父 direct children 的局部顺序。`aat:documentOrder` 提供全局 preorder。交叉引用边提供作者显式写出的非层级关系。字段提供标题和边证据上的查询面。raw value object 提供复杂字段值的 raw 承载面。回源坐标提供读取和修改闭环。
+标题节点提供阅读单位。标题层级边提供递归阅读路径。`aat:childOrder` 提供同父 direct children 的局部顺序。`aat:documentOrder` 提供全局 preorder。交叉引用边提供作者显式写出的非层级关系。字段提供标题和边证据上的查询面；字段证据提供标题字段的原名、写法、顺序与回源坐标。raw value object 提供复杂字段值的 raw 承载面。回源坐标提供读取和修改闭环。
 
 这些对象共同构成标题投影图。标题投影图以标题为结构单位，并以标题切片、标题层级、交叉引用、字段、raw value object 和回源坐标满足阅读、遍历、关系查询、复杂值消费和源文件修改动作。
 

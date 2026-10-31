@@ -59,6 +59,34 @@ literal field 不触发业务解释。`aat:role`、`field:status`、`field:owner
 
 `rel` 是 xref relation control field。它决定主 relation triple 的谓词，并可作为 `aat:rel` 保留。`rel` 不参与 source value id matching。
 
+=== 字段证据
+
+标题字段写在三种表面上：标题头部 attrlist 的 named attribute、标题下描述列表的条目、标题切片里 `hmeta:字段[值]` 宏。每个标题字段有一个字段证据，以 `rdf:reifies` 指向它的字段三元组：
+
+[source,turtle]
+----
+:field-evidence-5-0 a aat:FieldEvidence ;
+  rdf:reifies <<( :heading-5 field:难度 "中" )>> ;
+  aat:fieldName "难度" ;
+  aat:surface "attrlist" ;
+  aat:fieldOrder 0 ;
+  aat:relativePath "chapters/030-braised.adoc" ;
+  aat:startLine 3 ;
+  aat:endLine 3 .
+----
+
+字段证据交出字段三元组丢掉的三样事实。
+
+字段名原文:: `aat:fieldName` 是作者写下的字段名。字段谓词是它的转写（xref:名字进入 IRI[名字进入 IRI]），按作者写的名字比对字段时读它，不必复刻转写；与 `aat:headline` 之于标题同理。
+写在哪种表面:: `aat:surface` 取 `attrlist`、`description-list`、`heading-inline` 之一。同一个名字、同一个值写在 attrlist 里与写在描述列表里，得到同一条字段三元组；书的约定可以只认其中一种写法（工作区 07 号样书《声明本书的约定》），所以写法作为源表面事实交出。投影器不判断哪种写法对。
+顺序与回源:: `aat:fieldOrder` 是字段在所属标题内的源顺序，从 `0` 起：先 attrlist，再描述列表，再 `hmeta:` 宏，各表面内按源文档顺序。RDF 三元组没有顺序，字段的先后靠它。`aat:relativePath`、`aat:startLine`、`aat:endLine` 是字段所在的源文件与行：attrlist 字段取那一行 attrlist，描述列表字段取 term 所在的行，`hmeta:` 字段取宏所在的行。book-entry 下字段可以写在 include 进来的文件里，与标题不在同一个文件。
+
+所属标题是被 reify 的三元组的主语，字段证据不另写一份。字段证据 IRI 使用 `field-evidence-<documentOrder>-<fieldOrder>` local id：`documentOrder` 是所属标题的全局顺序号（与标题节点 IRI 同一个数）。不用行号，因为 book-entry 下行号在不同文件间会相撞（xref:第一部：投影对象::标题节点[标题节点] 的「身份」）。
+
+同一个名字、同一个值在同一个标题下写了两处时，字段三元组按 RDF 集合语义只有一条，字段证据仍是两个，各 reify 同一个三元组项。
+
+role 不产生字段证据：它只写在 attrlist 里，所在的行是标题头部 metadata 的行。complex property 不产生字段证据：raw value object 自带回源坐标。xref 的 literal field 不产生字段证据：它们写在 xref 的 attrlist 里，xref 边证据本身就是它们的回源坐标。
+
 === Raw Value Object
 
 raw value object 是 complex property 的值。raw value object 保存 source value block 的 raw、format、source coordinate 和 binding evidence。

@@ -10,6 +10,30 @@
 
 :activity a prov:Activity, aat:ProjectionActivity;
     prov:used :source.
+:field-evidence-2-0 rdf:reifies <<(:heading-2 field:status "active")>>;
+    a aat:FieldEvidence;
+    aat:endLine 3;
+    aat:fieldName "status";
+    aat:fieldOrder 0;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:startLine 3;
+    aat:surface "attrlist".
+:field-evidence-2-1 rdf:reifies <<(:heading-2 field:owner "quality-ops")>>;
+    a aat:FieldEvidence;
+    aat:endLine 3;
+    aat:fieldName "owner";
+    aat:fieldOrder 1;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:startLine 3;
+    aat:surface "attrlist".
+:field-evidence-3-0 rdf:reifies <<(:heading-3 field:status "active")>>;
+    a aat:FieldEvidence;
+    aat:endLine 37;
+    aat:fieldName "status";
+    aat:fieldOrder 0;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/020-cold-chain-payload/source/cold-chain-release.adoc";
+    aat:startLine 37;
+    aat:surface "attrlist".
 :heading-1 a aat:Heading;
     aat:containsDirectly :heading-2, :heading-3;
     aat:documentOrder 1;

@@ -10,6 +10,606 @@
 
 :activity a prov:Activity, aat:ProjectionActivity;
     prov:used :source.
+:field-evidence-10-0 rdf:reifies <<(:heading-10 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 142;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 142;
+    aat:surface "attrlist".
+:field-evidence-10-1 rdf:reifies <<(:heading-10 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 142;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 142;
+    aat:surface "attrlist".
+:field-evidence-10-2 rdf:reifies <<(:heading-10 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 142;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 142;
+    aat:surface "attrlist".
+:field-evidence-11-0 rdf:reifies <<(:heading-11 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 166;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 166;
+    aat:surface "attrlist".
+:field-evidence-11-1 rdf:reifies <<(:heading-11 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 166;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 166;
+    aat:surface "attrlist".
+:field-evidence-11-2 rdf:reifies <<(:heading-11 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 166;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 166;
+    aat:surface "attrlist".
+:field-evidence-12-0 rdf:reifies <<(:heading-12 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 182;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 182;
+    aat:surface "attrlist".
+:field-evidence-12-1 rdf:reifies <<(:heading-12 field:gender "男")>>;
+    a aat:FieldEvidence;
+    aat:endLine 182;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 182;
+    aat:surface "attrlist".
+:field-evidence-12-2 rdf:reifies <<(:heading-12 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 182;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 182;
+    aat:surface "attrlist".
+:field-evidence-13-0 rdf:reifies <<(:heading-13 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 195;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 195;
+    aat:surface "attrlist".
+:field-evidence-13-1 rdf:reifies <<(:heading-13 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 195;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 195;
+    aat:surface "attrlist".
+:field-evidence-13-2 rdf:reifies <<(:heading-13 field:generation "丫鬟")>>;
+    a aat:FieldEvidence;
+    aat:endLine 195;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 195;
+    aat:surface "attrlist".
+:field-evidence-14-0 rdf:reifies <<(:heading-14 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 211;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 211;
+    aat:surface "attrlist".
+:field-evidence-14-1 rdf:reifies <<(:heading-14 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 211;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 211;
+    aat:surface "attrlist".
+:field-evidence-14-2 rdf:reifies <<(:heading-14 field:generation "丫鬟")>>;
+    a aat:FieldEvidence;
+    aat:endLine 211;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 211;
+    aat:surface "attrlist".
+:field-evidence-15-0 rdf:reifies <<(:heading-15 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 226;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 226;
+    aat:surface "attrlist".
+:field-evidence-15-1 rdf:reifies <<(:heading-15 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 226;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 226;
+    aat:surface "attrlist".
+:field-evidence-15-2 rdf:reifies <<(:heading-15 field:generation "丫鬟")>>;
+    a aat:FieldEvidence;
+    aat:endLine 226;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 226;
+    aat:surface "attrlist".
+:field-evidence-16-0 rdf:reifies <<(:heading-16 field:faction "薛家")>>;
+    a aat:FieldEvidence;
+    aat:endLine 235;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 235;
+    aat:surface "attrlist".
+:field-evidence-16-1 rdf:reifies <<(:heading-16 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 235;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 235;
+    aat:surface "attrlist".
+:field-evidence-16-2 rdf:reifies <<(:heading-16 field:generation "第三代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 235;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 235;
+    aat:surface "attrlist".
+:field-evidence-17-0 rdf:reifies <<(:heading-17 field:faction "薛家")>>;
+    a aat:FieldEvidence;
+    aat:endLine 252;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 252;
+    aat:surface "attrlist".
+:field-evidence-17-1 rdf:reifies <<(:heading-17 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 252;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 252;
+    aat:surface "attrlist".
+:field-evidence-17-2 rdf:reifies <<(:heading-17 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 252;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 252;
+    aat:surface "attrlist".
+:field-evidence-18-0 rdf:reifies <<(:heading-18 field:faction "薛家")>>;
+    a aat:FieldEvidence;
+    aat:endLine 275;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 275;
+    aat:surface "attrlist".
+:field-evidence-18-1 rdf:reifies <<(:heading-18 field:gender "男")>>;
+    a aat:FieldEvidence;
+    aat:endLine 275;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 275;
+    aat:surface "attrlist".
+:field-evidence-18-2 rdf:reifies <<(:heading-18 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 275;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 275;
+    aat:surface "attrlist".
+:field-evidence-19-0 rdf:reifies <<(:heading-19 field:faction "薛家")>>;
+    a aat:FieldEvidence;
+    aat:endLine 288;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 288;
+    aat:surface "attrlist".
+:field-evidence-19-1 rdf:reifies <<(:heading-19 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 288;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 288;
+    aat:surface "attrlist".
+:field-evidence-19-2 rdf:reifies <<(:heading-19 field:generation "丫鬟")>>;
+    a aat:FieldEvidence;
+    aat:endLine 288;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 288;
+    aat:surface "attrlist".
+:field-evidence-20-0 rdf:reifies <<(:heading-20 field:faction "林家")>>;
+    a aat:FieldEvidence;
+    aat:endLine 303;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 303;
+    aat:surface "attrlist".
+:field-evidence-20-1 rdf:reifies <<(:heading-20 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 303;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 303;
+    aat:surface "attrlist".
+:field-evidence-20-2 rdf:reifies <<(:heading-20 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 303;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 303;
+    aat:surface "attrlist".
+:field-evidence-21-0 rdf:reifies <<(:heading-21 field:faction "史家")>>;
+    a aat:FieldEvidence;
+    aat:endLine 338;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 338;
+    aat:surface "attrlist".
+:field-evidence-21-1 rdf:reifies <<(:heading-21 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 338;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 338;
+    aat:surface "attrlist".
+:field-evidence-21-2 rdf:reifies <<(:heading-21 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 338;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 338;
+    aat:surface "attrlist".
+:field-evidence-22-0 rdf:reifies <<(:heading-22 field:faction "宁国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 361;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 361;
+    aat:surface "attrlist".
+:field-evidence-22-1 rdf:reifies <<(:heading-22 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 361;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 361;
+    aat:surface "attrlist".
+:field-evidence-22-2 rdf:reifies <<(:heading-22 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 361;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 361;
+    aat:surface "attrlist".
+:field-evidence-23-0 rdf:reifies <<(:heading-23 field:faction "宁国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 381;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 381;
+    aat:surface "attrlist".
+:field-evidence-23-1 rdf:reifies <<(:heading-23 field:gender "男")>>;
+    a aat:FieldEvidence;
+    aat:endLine 381;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 381;
+    aat:surface "attrlist".
+:field-evidence-23-2 rdf:reifies <<(:heading-23 field:generation "第三代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 381;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 381;
+    aat:surface "attrlist".
+:field-evidence-24-0 rdf:reifies <<(:heading-24 field:faction "尤家")>>;
+    a aat:FieldEvidence;
+    aat:endLine 400;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 400;
+    aat:surface "attrlist".
+:field-evidence-24-1 rdf:reifies <<(:heading-24 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 400;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 400;
+    aat:surface "attrlist".
+:field-evidence-24-2 rdf:reifies <<(:heading-24 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 400;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 400;
+    aat:surface "attrlist".
+:field-evidence-25-0 rdf:reifies <<(:heading-25 field:faction "尤家")>>;
+    a aat:FieldEvidence;
+    aat:endLine 413;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 413;
+    aat:surface "attrlist".
+:field-evidence-25-1 rdf:reifies <<(:heading-25 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 413;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 413;
+    aat:surface "attrlist".
+:field-evidence-25-2 rdf:reifies <<(:heading-25 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 413;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 413;
+    aat:surface "attrlist".
+:field-evidence-26-0 rdf:reifies <<(:heading-26 field:faction "大观园")>>;
+    a aat:FieldEvidence;
+    aat:endLine 428;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 428;
+    aat:surface "attrlist".
+:field-evidence-26-1 rdf:reifies <<(:heading-26 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 428;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 428;
+    aat:surface "attrlist".
+:field-evidence-26-2 rdf:reifies <<(:heading-26 field:generation "出家人")>>;
+    a aat:FieldEvidence;
+    aat:endLine 428;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 428;
+    aat:surface "attrlist".
+:field-evidence-27-0 rdf:reifies <<(:heading-27 field:faction "乡野")>>;
+    a aat:FieldEvidence;
+    aat:endLine 444;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 444;
+    aat:surface "attrlist".
+:field-evidence-27-1 rdf:reifies <<(:heading-27 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 444;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 444;
+    aat:surface "attrlist".
+:field-evidence-27-2 rdf:reifies <<(:heading-27 field:generation "老一辈")>>;
+    a aat:FieldEvidence;
+    aat:endLine 444;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 444;
+    aat:surface "attrlist".
+:field-evidence-3-0 rdf:reifies <<(:heading-3 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 25;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 25;
+    aat:surface "attrlist".
+:field-evidence-3-1 rdf:reifies <<(:heading-3 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 25;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 25;
+    aat:surface "attrlist".
+:field-evidence-3-2 rdf:reifies <<(:heading-3 field:generation "第二代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 25;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 25;
+    aat:surface "attrlist".
+:field-evidence-4-0 rdf:reifies <<(:heading-4 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 43;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 43;
+    aat:surface "attrlist".
+:field-evidence-4-1 rdf:reifies <<(:heading-4 field:gender "男")>>;
+    a aat:FieldEvidence;
+    aat:endLine 43;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 43;
+    aat:surface "attrlist".
+:field-evidence-4-2 rdf:reifies <<(:heading-4 field:generation "第三代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 43;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 43;
+    aat:surface "attrlist".
+:field-evidence-5-0 rdf:reifies <<(:heading-5 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 60;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 60;
+    aat:surface "attrlist".
+:field-evidence-5-1 rdf:reifies <<(:heading-5 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 60;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 60;
+    aat:surface "attrlist".
+:field-evidence-5-2 rdf:reifies <<(:heading-5 field:generation "第三代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 60;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 60;
+    aat:surface "attrlist".
+:field-evidence-6-0 rdf:reifies <<(:heading-6 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 74;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 74;
+    aat:surface "attrlist".
+:field-evidence-6-1 rdf:reifies <<(:heading-6 field:gender "男")>>;
+    a aat:FieldEvidence;
+    aat:endLine 74;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 74;
+    aat:surface "attrlist".
+:field-evidence-6-2 rdf:reifies <<(:heading-6 field:generation "第三代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 74;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 74;
+    aat:surface "attrlist".
+:field-evidence-7-0 rdf:reifies <<(:heading-7 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 87;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 87;
+    aat:surface "attrlist".
+:field-evidence-7-1 rdf:reifies <<(:heading-7 field:gender "女")>>;
+    a aat:FieldEvidence;
+    aat:endLine 87;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 87;
+    aat:surface "attrlist".
+:field-evidence-7-2 rdf:reifies <<(:heading-7 field:generation "第三代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 87;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 87;
+    aat:surface "attrlist".
+:field-evidence-8-0 rdf:reifies <<(:heading-8 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 97;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 97;
+    aat:surface "attrlist".
+:field-evidence-8-1 rdf:reifies <<(:heading-8 field:gender "男")>>;
+    a aat:FieldEvidence;
+    aat:endLine 97;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 97;
+    aat:surface "attrlist".
+:field-evidence-8-2 rdf:reifies <<(:heading-8 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 97;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 97;
+    aat:surface "attrlist".
+:field-evidence-9-0 rdf:reifies <<(:heading-9 field:faction "荣国府")>>;
+    a aat:FieldEvidence;
+    aat:endLine 127;
+    aat:fieldName "faction";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 127;
+    aat:surface "attrlist".
+:field-evidence-9-1 rdf:reifies <<(:heading-9 field:gender "男")>>;
+    a aat:FieldEvidence;
+    aat:endLine 127;
+    aat:fieldName "gender";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 127;
+    aat:surface "attrlist".
+:field-evidence-9-2 rdf:reifies <<(:heading-9 field:generation "第四代")>>;
+    a aat:FieldEvidence;
+    aat:endLine 127;
+    aat:fieldName "generation";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/dream-of-red-chamber-rdf-projection/dream-of-red-chamber.adoc";
+    aat:startLine 127;
+    aat:surface "attrlist".
 :heading-10 a aat:Heading;
     aat:addressLabel "wangxifeng";
     aat:addressPath "红楼梦人物志::王熙凤";

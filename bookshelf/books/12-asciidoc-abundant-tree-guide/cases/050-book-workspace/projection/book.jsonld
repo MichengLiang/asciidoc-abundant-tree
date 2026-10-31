@@ -63,6 +63,175 @@
 			"@id": "urn:aat:doc:book.adoc#statement-3",
 			"@type": "rdf12:Triple",
 			"subject": {
+				"@id": "urn:aat:doc:book.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:TripleTerm",
+				"triple": {
+					"subject": {
+						"@id": "urn:aat:doc:book.adoc#heading-5",
+						"@type": "rdf12:IriTerm"
+					},
+					"predicate": {
+						"@id": "https://micheng.dev/ns/asciidoc-field#style",
+						"@type": "rdf12:IriTerm"
+					},
+					"object": {
+						"@type": "rdf12:LiteralTerm",
+						"@value": "appendix",
+						"datatype": {
+							"@id": "http://www.w3.org/2001/XMLSchema#string",
+							"@type": "rdf12:IriTerm"
+						}
+					}
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-4",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#FieldEvidence",
+				"@type": "rdf12:IriTerm"
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-5",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "10",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-6",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldName",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "style",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-7",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#fieldOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "0",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-8",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#relativePath",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "book.adoc",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-9",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#startLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "10",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-10",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#field-evidence-5-0",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#surface",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "attrlist",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-11",
+			"@type": "rdf12:Triple",
+			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
 				"@type": "rdf12:IriTerm"
 			},
@@ -76,7 +245,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-4",
+			"@id": "urn:aat:doc:book.adoc#statement-12",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -92,7 +261,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-5",
+			"@id": "urn:aat:doc:book.adoc#statement-13",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -108,7 +277,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-6",
+			"@id": "urn:aat:doc:book.adoc#statement-14",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -128,7 +297,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-7",
+			"@id": "urn:aat:doc:book.adoc#statement-15",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -148,7 +317,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-8",
+			"@id": "urn:aat:doc:book.adoc#statement-16",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -168,7 +337,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-9",
+			"@id": "urn:aat:doc:book.adoc#statement-17",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -188,7 +357,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-10",
+			"@id": "urn:aat:doc:book.adoc#statement-18",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -208,7 +377,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-11",
+			"@id": "urn:aat:doc:book.adoc#statement-19",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -228,7 +397,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-12",
+			"@id": "urn:aat:doc:book.adoc#statement-20",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -248,7 +417,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-13",
+			"@id": "urn:aat:doc:book.adoc#statement-21",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-1",
@@ -268,7 +437,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-14",
+			"@id": "urn:aat:doc:book.adoc#statement-22",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -284,7 +453,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-15",
+			"@id": "urn:aat:doc:book.adoc#statement-23",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -304,7 +473,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-16",
+			"@id": "urn:aat:doc:book.adoc#statement-24",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -324,7 +493,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-17",
+			"@id": "urn:aat:doc:book.adoc#statement-25",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -344,7 +513,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-18",
+			"@id": "urn:aat:doc:book.adoc#statement-26",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -364,7 +533,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-19",
+			"@id": "urn:aat:doc:book.adoc#statement-27",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -384,7 +553,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-20",
+			"@id": "urn:aat:doc:book.adoc#statement-28",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -404,7 +573,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-21",
+			"@id": "urn:aat:doc:book.adoc#statement-29",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -424,7 +593,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-22",
+			"@id": "urn:aat:doc:book.adoc#statement-30",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -444,7 +613,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-23",
+			"@id": "urn:aat:doc:book.adoc#statement-31",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -464,7 +633,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-24",
+			"@id": "urn:aat:doc:book.adoc#statement-32",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -484,7 +653,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-25",
+			"@id": "urn:aat:doc:book.adoc#statement-33",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -504,7 +673,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-26",
+			"@id": "urn:aat:doc:book.adoc#statement-34",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -524,7 +693,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-27",
+			"@id": "urn:aat:doc:book.adoc#statement-35",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-2",
@@ -544,7 +713,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-28",
+			"@id": "urn:aat:doc:book.adoc#statement-36",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -560,7 +729,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-29",
+			"@id": "urn:aat:doc:book.adoc#statement-37",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -580,7 +749,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-30",
+			"@id": "urn:aat:doc:book.adoc#statement-38",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -600,7 +769,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-31",
+			"@id": "urn:aat:doc:book.adoc#statement-39",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -616,7 +785,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-32",
+			"@id": "urn:aat:doc:book.adoc#statement-40",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -632,7 +801,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-33",
+			"@id": "urn:aat:doc:book.adoc#statement-41",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -652,7 +821,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-34",
+			"@id": "urn:aat:doc:book.adoc#statement-42",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -672,7 +841,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-35",
+			"@id": "urn:aat:doc:book.adoc#statement-43",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -692,7 +861,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-36",
+			"@id": "urn:aat:doc:book.adoc#statement-44",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -712,7 +881,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-37",
+			"@id": "urn:aat:doc:book.adoc#statement-45",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -732,7 +901,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-38",
+			"@id": "urn:aat:doc:book.adoc#statement-46",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -752,7 +921,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-39",
+			"@id": "urn:aat:doc:book.adoc#statement-47",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -772,7 +941,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-40",
+			"@id": "urn:aat:doc:book.adoc#statement-48",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -792,7 +961,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-41",
+			"@id": "urn:aat:doc:book.adoc#statement-49",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -812,7 +981,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-42",
+			"@id": "urn:aat:doc:book.adoc#statement-50",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -832,7 +1001,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-43",
+			"@id": "urn:aat:doc:book.adoc#statement-51",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-3",
@@ -852,7 +1021,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-44",
+			"@id": "urn:aat:doc:book.adoc#statement-52",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-4",
@@ -868,7 +1037,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-45",
+			"@id": "urn:aat:doc:book.adoc#statement-53",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-4",
@@ -888,7 +1057,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-46",
+			"@id": "urn:aat:doc:book.adoc#statement-54",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-4",
@@ -908,7 +1077,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-47",
+			"@id": "urn:aat:doc:book.adoc#statement-55",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-4",
@@ -928,166 +1097,6 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-48",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:book.adoc#heading-4",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "1",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:book.adoc#statement-49",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:book.adoc#heading-4",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "4",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:book.adoc#statement-50",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:book.adoc#heading-4",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "4",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:book.adoc#statement-51",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:book.adoc#heading-4",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "4",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:book.adoc#statement-52",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:book.adoc#heading-4",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "4",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:book.adoc#statement-53",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:book.adoc#heading-4",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "1",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:book.adoc#statement-54",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:book.adoc#heading-4",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "2",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#integer",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
-			"@id": "urn:aat:doc:book.adoc#statement-55",
-			"@type": "rdf12:Triple",
-			"subject": {
-				"@id": "urn:aat:doc:book.adoc#heading-4",
-				"@type": "rdf12:IriTerm"
-			},
-			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
-				"@type": "rdf12:IriTerm"
-			},
-			"object": {
-				"@type": "rdf12:LiteralTerm",
-				"@value": "对象边界",
-				"datatype": {
-					"@id": "http://www.w3.org/2001/XMLSchema#string",
-					"@type": "rdf12:IriTerm"
-				}
-			}
-		},
-		{
 			"@id": "urn:aat:doc:book.adoc#statement-56",
 			"@type": "rdf12:Triple",
 			"subject": {
@@ -1095,7 +1104,7 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
-				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#childOrder",
 				"@type": "rdf12:IriTerm"
 			},
 			"object": {
@@ -1115,6 +1124,166 @@
 				"@type": "rdf12:IriTerm"
 			},
 			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-58",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#heading-4",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#contentStartLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-59",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#heading-4",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#documentOrder",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-60",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#heading-4",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#endLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "4",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-61",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#heading-4",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLevel",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-62",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#heading-4",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headingLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "2",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-63",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#heading-4",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#headline",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "对象边界",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#string",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-64",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#heading-4",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
+				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataEndLine",
+				"@type": "rdf12:IriTerm"
+			},
+			"object": {
+				"@type": "rdf12:LiteralTerm",
+				"@value": "1",
+				"datatype": {
+					"@id": "http://www.w3.org/2001/XMLSchema#integer",
+					"@type": "rdf12:IriTerm"
+				}
+			}
+		},
+		{
+			"@id": "urn:aat:doc:book.adoc#statement-65",
+			"@type": "rdf12:Triple",
+			"subject": {
+				"@id": "urn:aat:doc:book.adoc#heading-4",
+				"@type": "rdf12:IriTerm"
+			},
+			"predicate": {
 				"@id": "https://micheng.dev/ns/asciidoc-abundant-tree#metadataStartLine",
 				"@type": "rdf12:IriTerm"
 			},
@@ -1128,7 +1297,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-58",
+			"@id": "urn:aat:doc:book.adoc#statement-66",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-4",
@@ -1148,7 +1317,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-59",
+			"@id": "urn:aat:doc:book.adoc#statement-67",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-4",
@@ -1164,7 +1333,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-60",
+			"@id": "urn:aat:doc:book.adoc#statement-68",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-4",
@@ -1184,7 +1353,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-61",
+			"@id": "urn:aat:doc:book.adoc#statement-69",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-4",
@@ -1204,7 +1373,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-62",
+			"@id": "urn:aat:doc:book.adoc#statement-70",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1220,7 +1389,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-63",
+			"@id": "urn:aat:doc:book.adoc#statement-71",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1240,7 +1409,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-64",
+			"@id": "urn:aat:doc:book.adoc#statement-72",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1260,7 +1429,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-65",
+			"@id": "urn:aat:doc:book.adoc#statement-73",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1280,7 +1449,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-66",
+			"@id": "urn:aat:doc:book.adoc#statement-74",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1300,7 +1469,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-67",
+			"@id": "urn:aat:doc:book.adoc#statement-75",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1320,7 +1489,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-68",
+			"@id": "urn:aat:doc:book.adoc#statement-76",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1340,7 +1509,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-69",
+			"@id": "urn:aat:doc:book.adoc#statement-77",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1360,7 +1529,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-70",
+			"@id": "urn:aat:doc:book.adoc#statement-78",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1380,7 +1549,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-71",
+			"@id": "urn:aat:doc:book.adoc#statement-79",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1400,7 +1569,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-72",
+			"@id": "urn:aat:doc:book.adoc#statement-80",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1420,7 +1589,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-73",
+			"@id": "urn:aat:doc:book.adoc#statement-81",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1440,7 +1609,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-74",
+			"@id": "urn:aat:doc:book.adoc#statement-82",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1460,7 +1629,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-75",
+			"@id": "urn:aat:doc:book.adoc#statement-83",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1480,7 +1649,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-76",
+			"@id": "urn:aat:doc:book.adoc#statement-84",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1500,7 +1669,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-77",
+			"@id": "urn:aat:doc:book.adoc#statement-85",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#heading-5",
@@ -1520,7 +1689,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-78",
+			"@id": "urn:aat:doc:book.adoc#statement-86",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#projection",
@@ -1536,7 +1705,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-79",
+			"@id": "urn:aat:doc:book.adoc#statement-87",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#projection",
@@ -1552,7 +1721,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-80",
+			"@id": "urn:aat:doc:book.adoc#statement-88",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#projection",
@@ -1568,7 +1737,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-81",
+			"@id": "urn:aat:doc:book.adoc#statement-89",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#projection",
@@ -1584,7 +1753,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-82",
+			"@id": "urn:aat:doc:book.adoc#statement-90",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#projection",
@@ -1600,7 +1769,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-83",
+			"@id": "urn:aat:doc:book.adoc#statement-91",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-backmatter%2Fglossary.adoc",
@@ -1616,7 +1785,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-84",
+			"@id": "urn:aat:doc:book.adoc#statement-92",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-backmatter%2Fglossary.adoc",
@@ -1636,7 +1805,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-85",
+			"@id": "urn:aat:doc:book.adoc#statement-93",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-backmatter%2Fglossary.adoc",
@@ -1656,7 +1825,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-86",
+			"@id": "urn:aat:doc:book.adoc#statement-94",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-book.adoc",
@@ -1672,7 +1841,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-87",
+			"@id": "urn:aat:doc:book.adoc#statement-95",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-book.adoc",
@@ -1692,7 +1861,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-88",
+			"@id": "urn:aat:doc:book.adoc#statement-96",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-book.adoc",
@@ -1712,7 +1881,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-89",
+			"@id": "urn:aat:doc:book.adoc#statement-97",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-frontmatter%2Fpreface.adoc",
@@ -1728,7 +1897,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-90",
+			"@id": "urn:aat:doc:book.adoc#statement-98",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-frontmatter%2Fpreface.adoc",
@@ -1748,7 +1917,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-91",
+			"@id": "urn:aat:doc:book.adoc#statement-99",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-frontmatter%2Fpreface.adoc",
@@ -1768,7 +1937,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-92",
+			"@id": "urn:aat:doc:book.adoc#statement-100",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-parts%2F010-object%2F010-object-boundary.adoc",
@@ -1784,7 +1953,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-93",
+			"@id": "urn:aat:doc:book.adoc#statement-101",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-parts%2F010-object%2F010-object-boundary.adoc",
@@ -1804,7 +1973,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-94",
+			"@id": "urn:aat:doc:book.adoc#statement-102",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source-file-parts%2F010-object%2F010-object-boundary.adoc",
@@ -1824,7 +1993,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-95",
+			"@id": "urn:aat:doc:book.adoc#statement-103",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source",
@@ -1840,7 +2009,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-96",
+			"@id": "urn:aat:doc:book.adoc#statement-104",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source",
@@ -1856,7 +2025,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-97",
+			"@id": "urn:aat:doc:book.adoc#statement-105",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source",
@@ -1876,7 +2045,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-98",
+			"@id": "urn:aat:doc:book.adoc#statement-106",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source",
@@ -1892,7 +2061,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-99",
+			"@id": "urn:aat:doc:book.adoc#statement-107",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source",
@@ -1908,7 +2077,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-100",
+			"@id": "urn:aat:doc:book.adoc#statement-108",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source",
@@ -1924,7 +2093,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-101",
+			"@id": "urn:aat:doc:book.adoc#statement-109",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#source",
@@ -1940,7 +2109,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-102",
+			"@id": "urn:aat:doc:book.adoc#statement-110",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -1969,7 +2138,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-103",
+			"@id": "urn:aat:doc:book.adoc#statement-111",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -1985,7 +2154,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-104",
+			"@id": "urn:aat:doc:book.adoc#statement-112",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2005,7 +2174,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-105",
+			"@id": "urn:aat:doc:book.adoc#statement-113",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2025,7 +2194,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-106",
+			"@id": "urn:aat:doc:book.adoc#statement-114",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2045,7 +2214,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-107",
+			"@id": "urn:aat:doc:book.adoc#statement-115",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2065,7 +2234,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-108",
+			"@id": "urn:aat:doc:book.adoc#statement-116",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2085,7 +2254,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-109",
+			"@id": "urn:aat:doc:book.adoc#statement-117",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2105,7 +2274,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-110",
+			"@id": "urn:aat:doc:book.adoc#statement-118",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2125,7 +2294,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-111",
+			"@id": "urn:aat:doc:book.adoc#statement-119",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2145,7 +2314,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-112",
+			"@id": "urn:aat:doc:book.adoc#statement-120",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2165,7 +2334,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-113",
+			"@id": "urn:aat:doc:book.adoc#statement-121",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2181,7 +2350,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-114",
+			"@id": "urn:aat:doc:book.adoc#statement-122",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2201,7 +2370,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-115",
+			"@id": "urn:aat:doc:book.adoc#statement-123",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2221,7 +2390,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-116",
+			"@id": "urn:aat:doc:book.adoc#statement-124",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2241,7 +2410,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-117",
+			"@id": "urn:aat:doc:book.adoc#statement-125",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2261,7 +2430,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-118",
+			"@id": "urn:aat:doc:book.adoc#statement-126",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",
@@ -2277,7 +2446,7 @@
 			}
 		},
 		{
-			"@id": "urn:aat:doc:book.adoc#statement-119",
+			"@id": "urn:aat:doc:book.adoc#statement-127",
 			"@type": "rdf12:Triple",
 			"subject": {
 				"@id": "urn:aat:doc:book.adoc#xref-edge-l4-c10-o0",

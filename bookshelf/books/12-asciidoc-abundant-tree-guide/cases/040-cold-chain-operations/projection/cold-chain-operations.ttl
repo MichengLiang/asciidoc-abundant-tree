@@ -10,6 +10,94 @@
 
 :activity a prov:Activity, aat:ProjectionActivity;
     prov:used :source.
+:field-evidence-3-0 rdf:reifies <<(:heading-3 field:minTemperature "2C")>>;
+    a aat:FieldEvidence;
+    aat:endLine 6;
+    aat:fieldName "minTemperature";
+    aat:fieldOrder 0;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 6;
+    aat:surface "attrlist".
+:field-evidence-3-1 rdf:reifies <<(:heading-3 field:maxTemperature "8C")>>;
+    a aat:FieldEvidence;
+    aat:endLine 6;
+    aat:fieldName "maxTemperature";
+    aat:fieldOrder 1;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 6;
+    aat:surface "attrlist".
+:field-evidence-3-2 rdf:reifies <<(:heading-3 field:allowedExcursion "15分钟")>>;
+    a aat:FieldEvidence;
+    aat:endLine 6;
+    aat:fieldName "allowedExcursion";
+    aat:fieldOrder 2;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 6;
+    aat:surface "attrlist".
+:field-evidence-4-0 rdf:reifies <<(:heading-4 field:status "active")>>;
+    a aat:FieldEvidence;
+    aat:endLine 10;
+    aat:fieldName "status";
+    aat:fieldOrder 0;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 10;
+    aat:surface "attrlist".
+:field-evidence-4-1 rdf:reifies <<(:heading-4 field:origin "上海仓")>>;
+    a aat:FieldEvidence;
+    aat:endLine 10;
+    aat:fieldName "origin";
+    aat:fieldOrder 1;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 10;
+    aat:surface "attrlist".
+:field-evidence-4-2 rdf:reifies <<(:heading-4 field:destination "福州医院药房")>>;
+    a aat:FieldEvidence;
+    aat:endLine 10;
+    aat:fieldName "destination";
+    aat:fieldOrder 2;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 10;
+    aat:surface "attrlist".
+:field-evidence-4-3 rdf:reifies <<(:heading-4 field:temperature "2-8C")>>;
+    a aat:FieldEvidence;
+    aat:endLine 10;
+    aat:fieldName "temperature";
+    aat:fieldOrder 3;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 10;
+    aat:surface "attrlist".
+:field-evidence-5-0 rdf:reifies <<(:heading-5 field:sku "VAC-A")>>;
+    a aat:FieldEvidence;
+    aat:endLine 14;
+    aat:fieldName "sku";
+    aat:fieldOrder 0;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 14;
+    aat:surface "attrlist".
+:field-evidence-5-1 rdf:reifies <<(:heading-5 field:quantity "120")>>;
+    a aat:FieldEvidence;
+    aat:endLine 14;
+    aat:fieldName "quantity";
+    aat:fieldOrder 1;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 14;
+    aat:surface "attrlist".
+:field-evidence-6-0 rdf:reifies <<(:heading-6 field:sampleInterval "5分钟")>>;
+    a aat:FieldEvidence;
+    aat:endLine 17;
+    aat:fieldName "sampleInterval";
+    aat:fieldOrder 0;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 17;
+    aat:surface "attrlist".
+:field-evidence-7-0 rdf:reifies <<(:heading-7 field:trigger "连续超温")>>;
+    a aat:FieldEvidence;
+    aat:endLine 21;
+    aat:fieldName "trigger";
+    aat:fieldOrder 0;
+    aat:relativePath "bookshelf/books/12-asciidoc-abundant-tree-guide/cases/040-cold-chain-operations/source/cold-chain-operations.adoc";
+    aat:startLine 21;
+    aat:surface "attrlist".
 :heading-1 a aat:Heading;
     aat:containsDirectly :heading-2, :heading-3, :heading-5, :heading-6, :heading-7;
     aat:documentOrder 1;

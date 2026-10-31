@@ -10,6 +10,14 @@
 
 :activity a prov:Activity, aat:ProjectionActivity;
     prov:used :source.
+:field-evidence-5-0 rdf:reifies <<(:heading-5 field:style "appendix")>>;
+    a aat:FieldEvidence;
+    aat:endLine 10;
+    aat:fieldName "style";
+    aat:fieldOrder 0;
+    aat:relativePath "book.adoc";
+    aat:startLine 10;
+    aat:surface "attrlist".
 :heading-1 a aat:Heading;
     aat:containsDirectly :heading-2, :heading-3;
     aat:documentOrder 1;

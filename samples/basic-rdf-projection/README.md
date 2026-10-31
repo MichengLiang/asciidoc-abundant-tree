@@ -247,6 +247,62 @@ ex:EvidenceShape a sh:NodeShape;
 
 :activity a prov:Activity, aat:ProjectionActivity;
     prov:used :source.
+:field-evidence-2-0 rdf:reifies <<(:heading-2 field:status "draft")>>;
+    a aat:FieldEvidence;
+    aat:endLine 5;
+    aat:fieldName "status";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:startLine 5;
+    aat:surface "attrlist".
+:field-evidence-2-1 rdf:reifies <<(:heading-2 field:owner "docs-team")>>;
+    a aat:FieldEvidence;
+    aat:endLine 5;
+    aat:fieldName "owner";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:startLine 5;
+    aat:surface "attrlist".
+:field-evidence-3-0 rdf:reifies <<(:heading-3 field:status "active")>>;
+    a aat:FieldEvidence;
+    aat:endLine 10;
+    aat:fieldName "status";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:startLine 10;
+    aat:surface "attrlist".
+:field-evidence-3-1 rdf:reifies <<(:heading-3 field:priority "normal")>>;
+    a aat:FieldEvidence;
+    aat:endLine 13;
+    aat:fieldName "priority";
+    aat:fieldOrder 1;
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:startLine 13;
+    aat:surface "description-list".
+:field-evidence-3-2 rdf:reifies <<(:heading-3 field:summary "约束规则集中说明结构示例必须满足的条件。\n多行说明保留为同一个标题字段。")>>;
+    a aat:FieldEvidence;
+    aat:endLine 14;
+    aat:fieldName "summary";
+    aat:fieldOrder 2;
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:startLine 14;
+    aat:surface "description-list".
+:field-evidence-3-3 rdf:reifies <<(:heading-3 field:review-state "ready")>>;
+    a aat:FieldEvidence;
+    aat:endLine 18;
+    aat:fieldName "review-state";
+    aat:fieldOrder 3;
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:startLine 18;
+    aat:surface "heading-inline".
+:field-evidence-5-0 rdf:reifies <<(:heading-5 field:status "active")>>;
+    a aat:FieldEvidence;
+    aat:endLine 34;
+    aat:fieldName "status";
+    aat:fieldOrder 0;
+    aat:relativePath "samples/basic-rdf-projection/basic-projection.adoc";
+    aat:startLine 34;
+    aat:surface "attrlist".
 :heading-1 a aat:Heading;
     aat:containsDirectly :heading-2, :heading-3, :heading-5;
     aat:contentEndLine 3;

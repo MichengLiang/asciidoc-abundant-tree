@@ -1,5 +1,9 @@
 import type { AsciidoctorBlock } from "./asciidoctor-adapter";
-import type { MetadataNode } from "./model";
+import {
+	recoverSourceAwareSourceLayer,
+	sourceAwareDocumentForLineTable,
+} from "./book-entry/source-aware-coordinate";
+import type { MetadataNode, SourceLayer, SourceSpan } from "./model";
 import { definedObject } from "./object-utils";
 import {
 	isLineComment,
@@ -156,7 +160,7 @@ function parseMetadataLine(
 				raw,
 				line,
 				ids: [id],
-				source: { raw, line, sourceSpan },
+				source: metadataSource(lineTable, line, raw, sourceSpan),
 			},
 			line,
 			ids: [id],
@@ -173,7 +177,7 @@ function parseMetadataLine(
 				raw,
 				line,
 				ids: [id],
-				source: { raw, line, sourceSpan },
+				source: metadataSource(lineTable, line, raw, sourceSpan),
 			},
 			line,
 			ids: [id],
@@ -188,7 +192,7 @@ function parseMetadataLine(
 				metadataKind: "title",
 				raw,
 				line,
-				source: { raw, line, sourceSpan },
+				source: metadataSource(lineTable, line, raw, sourceSpan),
 			},
 			line,
 			ids: [],
@@ -208,7 +212,7 @@ function parseMetadataLine(
 				ids: parsed.ids,
 				roles: parsed.roles,
 				attributes: parsed.attributes,
-				source: { raw, line, sourceSpan },
+				source: metadataSource(lineTable, line, raw, sourceSpan),
 			},
 			line,
 			ids: parsed.ids,
@@ -218,6 +222,26 @@ function parseMetadataLine(
 	}
 
 	return undefined;
+}
+
+// source layer 是回源以后的坐标（10 号书第 7 章 Parser Integration）：book-entry 下 line 是展开 include 之后的逻辑行，
+// 要经 line origin 回到作者写下它的文件与行。回不了源（生成的行）时不拿逻辑行冒充源坐标，只留 raw；逻辑行在节点的 line 上。
+function metadataSource(
+	lineTable: LineTable,
+	line: number,
+	raw: string,
+	sourceSpan: SourceSpan,
+): SourceLayer {
+	const document = sourceAwareDocumentForLineTable(lineTable);
+	if (document === undefined) {
+		return { raw, line, sourceSpan };
+	}
+	const recovered = recoverSourceAwareSourceLayer(
+		document,
+		{ startLine: line, endLine: line },
+		{ logicalSourceSpan: sourceSpan, diagnosticContext: "block metadata" },
+	);
+	return recovered.ok ? { ...recovered.sourceLayer, raw } : { raw };
 }
 
 function parseAttrList(

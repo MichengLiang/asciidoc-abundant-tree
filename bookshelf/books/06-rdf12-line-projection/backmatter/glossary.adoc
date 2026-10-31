@@ -24,6 +24,8 @@ field predicate:: 由源表面的字段名映射得到的谓词：`field:` 命�
 
 literal field:: 值为 string literal 的字段。标题 metadata named attribute、标题下描述列表字段和未绑定 source value block 的 xref named attribute 产生 literal field。
 
+field evidence:: 字段证据。每个标题字段一个，以 `rdf:reifies` 指向字段三元组，保存字段名原文（`aat:fieldName`）、写法（`aat:surface`：`attrlist`、`description-list`、`heading-inline`）、标题内的顺序（`aat:fieldOrder`）和回源坐标。
+
 heading description field:: 写在标题下第一个连续描述列表中的标题字段。字段名是 term 的源表面文本，字段值是描述的源文档表面值，包括续接标记挂上的块。
 
 complex property:: 值为 raw value object 的字段。heading node 和 xref edge evidence 都可以拥有 complex property。
