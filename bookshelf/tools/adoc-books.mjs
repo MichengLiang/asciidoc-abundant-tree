@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 import { readFileSync } from "node:fs";
-import { createRequire } from "node:module";
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import asciidoctorFactory from "@asciidoctor/core";
+import { convertFile as convertAsciiDocFile, Extensions, LoggerManager, MemoryLogger } from "@asciidoctor/core";
 import { parseAbundantTree, rdf12 } from "asciidoc-abundant-tree";
-const require = createRequire(import.meta.url);
 const DIAGRAM_BLOCK_PATTERN = /^\[(?:actdiag|blockdiag|bpmn|bytefield|c4plantuml|d2|dbml|ditaa|erd|excalidraw|graphviz|mermaid|nomnoml|nwdiag|packetdiag|pikchr|plantuml|rackdiag|seqdiag|svgbob|symbolator|umlet|vega|vegalite|wavedrom|structurizr|diagramsnet|wireviz)(?:,|\])/m;
 const HTML_ANCHOR_PATTERN = /\b(?:id|name)="([^"]+)"/g;
 const AAT_NAMESPACE = "https://micheng.dev/ns/asciidoc-abundant-tree#";
@@ -158,61 +156,50 @@ async function workspaceUsesDiagrams(rootDir, books) {
         sources.push(await combinedBookSource(book.bookDir));
     return sources.some((source) => DIAGRAM_BLOCK_PATTERN.test(source));
 }
-function createAsciidoctor(loadKroki) {
-    const asciidoctor = asciidoctorFactory();
+// 每次构建单独一个 registry，include 解析器与 Kroki 都登记在它上面：登记在全局会留在进程里，把上一个工作区的解析器
+// 带进下一个（DESIGN.adoc 的 Cheap Performance Rules）。
+async function createExtensionRegistry(config, loadKroki) {
+    const registry = Extensions.create();
+    registerIncludeResolvers(registry, config);
     if (loadKroki) {
         try {
-            require("asciidoctor-kroki").register(asciidoctor.Extensions);
+            (await import("asciidoctor-kroki")).register(registry);
         }
         catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             throw new Error(`current workspace contains diagram blocks, but asciidoctor-kroki could not be loaded: ${message}`);
         }
     }
-    return asciidoctor;
+    return registry;
 }
 // 书架登记的 include 解析器，在 HTML 这一侧由 Asciidoctor 的 include 处理器调用；阅读数据一侧由 aat 调用同一份，
-// 两侧读同一份行（DESIGN.adoc 的 Workspace Configuration）。每次构建单独一个 registry：Asciidoctor 3 的全局扩展
-// 在进程里一直留着，登记在全局会把上一个工作区的解析器带进下一个。
-function includeResolverRegistry(asciidoctor, config) {
+// 两侧读同一份行（DESIGN.adoc 的 Workspace Configuration）。
+function registerIncludeResolvers(registry, config) {
     if (config.includeResolvers.length === 0)
-        return asciidoctor.Extensions.create();
+        return;
     const claiming = (target) => config.includeResolvers.find((resolver) => target.startsWith(resolver.prefix));
-    // 以分组登记：registry 每绑定一个文档就重置一次，只有分组会重新登记。catalog 与各本书共用这一个 registry，
-    // 直接调 registry.includeProcessor 时只有第一个文档用得上；之后的文档把 include::前缀:… 当作 URI，
-    // 悄悄转成链接，不报任何消息。
-    return asciidoctor.Extensions.create(function () {
-        this.includeProcessor(function () {
-            this.handles((target) => claiming(target) !== undefined);
-            this.process((document, reader, target, attributes) => {
-                const resolver = claiming(target);
-                const cursor = reader.getCursor();
-                const sourcePath = cursor.getFile();
-                // 游标已越过 directive 这一行。
-                const location = `include::${target}[] in ${sourcePath}: line ${cursor.getLineNumber() - 1}`;
-                let resolution;
-                try {
-                    resolution = resolver.resolve({
-                        target: target.slice(resolver.prefix.length),
-                        attributes: includeAttributes(attributes),
-                        sourcePath
-                    });
-                }
-                catch (error) {
-                    const message = error instanceof Error ? error.message : String(error);
-                    throw new Error(`include resolver '${resolver.prefix}' failed for ${location}: ${message}`, { cause: error });
-                }
-                if (typeof objectValue(resolution).then === "function") {
-                    // 不再等它：它若 reject，没人接住就成了进程级的未处理 rejection。
-                    Promise.resolve(resolution).catch(() => { });
-                    throw new Error(`include resolver '${resolver.prefix}' returned a Promise for ${location}; ` +
-                        "the HTML build runs on Asciidoctor.js 3, whose include processors are synchronous");
-                }
-                const { text, absolutePath, startLine } = checkedResolution(resolution, config.documentRoot, `include resolver '${resolver.prefix}'`, location);
-                // 显示用的路径照 Asciidoctor 自己 include 文件时的写法，相对文档的 base_dir。
-                const displayPath = path.relative(document.getBaseDir(), absolutePath).split(path.sep).join("/");
-                reader.pushInclude(text, absolutePath, displayPath, startLine, attributes);
-            });
+    // 直接登记在 registry 上：Asciidoctor.js 4 里 Extensions.create(分组函数) 登记的处理器从不被调用，include::前缀:…
+    // 被当作 URI 悄悄转成链接、不报任何消息；直接登记的处理器对 catalog 与各本书都有效。
+    registry.includeProcessor(function () {
+        this.handles((target) => claiming(target) !== undefined);
+        this.process(async (document, reader, target, attributes) => {
+            const resolver = claiming(target);
+            const cursor = reader.getCursor();
+            const sourcePath = cursor.getFile();
+            // 游标已越过 directive 这一行。
+            const location = `include::${target}[] in ${sourcePath}: line ${cursor.getLineNumber() - 1}`;
+            let resolution;
+            try {
+                resolution = await resolver.resolve({ target: target.slice(resolver.prefix.length), attributes, sourcePath });
+            }
+            catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                throw new Error(`include resolver '${resolver.prefix}' failed for ${location}: ${message}`, { cause: error });
+            }
+            const { text, absolutePath, startLine } = checkedResolution(resolution, config.documentRoot, `include resolver '${resolver.prefix}'`, location);
+            // 显示用的路径照 Asciidoctor 自己 include 文件时的写法，相对文档的 base_dir。
+            const displayPath = path.relative(document.getBaseDir(), absolutePath).split(path.sep).join("/");
+            reader.pushInclude(text, absolutePath, displayPath, startLine, attributes);
         });
     });
 }
@@ -265,17 +252,6 @@ function shown(line) {
     const clipped = line.length > 60 ? `${line.slice(0, 60)}…` : line;
     return JSON.stringify(clipped).replaceAll("﻿", "\\uFEFF");
 }
-// Asciidoctor.js 3 把位置属性放在 $positional 列表里；aat 跑在 4 上，位置属性以 "1"、"2" 为键。
-// 解析器只认后一种形状，同一个解析器才能服务两侧。留空的位置属性（[,x]）在 3 里是 undefined、在 4 里是 null，
-// 这里交 null；中间留空（[a,,b]）时 3 已把空位丢掉、编号与 4 不同，无从还原，规约写明位置属性不能留空。
-function includeAttributes(attributes) {
-    const { $positional, ...named } = attributes;
-    const positional = Array.isArray($positional) ? $positional : [];
-    return {
-        ...Object.fromEntries(positional.map((value, index) => [String(index + 1), value === undefined ? null : String(value)])),
-        ...Object.fromEntries(Object.entries(named).map(([name, value]) => [name, String(value)]))
-    };
-}
 function shouldFetchDiagrams() {
     const value = process.env[FETCH_DIAGRAMS_ENV];
     return value === "1" || value === "true";
@@ -319,14 +295,12 @@ function formatAsciidoctorMessage(message) {
     const text = messageText(message);
     return location ? `${severity}: ${location}: ${text}` : `${severity}: ${text}`;
 }
-function convertFile(asciidoctor, extensionRegistry, input, outputFile, baseDir, attributes = {}) {
-    const loggerManager = asciidoctor.LoggerManager;
-    const defaultLogger = loggerManager.getLogger();
-    const memoryLogger = asciidoctor.MemoryLogger.create();
-    loggerManager.setLogger(memoryLogger);
-    let document;
+async function convertFile(extensionRegistry, input, outputFile, baseDir, attributes = {}) {
+    const defaultLogger = LoggerManager.getLogger();
+    const memoryLogger = MemoryLogger.create();
+    LoggerManager.setLogger(memoryLogger);
     try {
-        document = asciidoctor.convertFile(input, {
+        await convertAsciiDocFile(input, {
             safe: "unsafe",
             base_dir: baseDir,
             to_file: outputFile,
@@ -336,21 +310,20 @@ function convertFile(asciidoctor, extensionRegistry, input, outputFile, baseDir,
         });
     }
     finally {
-        loggerManager.setLogger(defaultLogger);
+        LoggerManager.setLogger(defaultLogger);
     }
     const messages = memoryLogger.getMessages();
     if (messages.length > 0) {
         throw new Error(`AsciiDoc strict check failed for ${input}\n${messages.map(formatAsciidoctorMessage).join("\n")}`);
     }
-    return document;
 }
-async function buildHtml(rootDir, books, asciidoctor, extensionRegistry, useKroki, fetchDiagrams) {
+async function buildHtml(rootDir, books, extensionRegistry, useKroki, fetchDiagrams) {
     await mkdir(path.join(rootDir, "build", "html"), { recursive: true });
-    convertFile(asciidoctor, extensionRegistry, path.join(rootDir, "catalog.adoc"), path.join(rootDir, "build", "html", "catalog.html"), rootDir);
+    await convertFile(extensionRegistry, path.join(rootDir, "catalog.adoc"), path.join(rootDir, "build", "html", "catalog.html"), rootDir);
     await pruneStaleBookHtmlDirs(rootDir, books);
     for (const book of books) {
         await mkdir(book.htmlOutputDir, { recursive: true });
-        convertFile(asciidoctor, extensionRegistry, book.input, path.join(book.htmlOutputDir, "book.html"), book.bookDir, {
+        await convertFile(extensionRegistry, book.input, path.join(book.htmlOutputDir, "book.html"), book.bookDir, {
             ...(useKroki && fetchDiagrams ? { "kroki-fetch-diagram": "", "kroki-http-method": "post" } : {})
         });
     }
@@ -1255,8 +1228,8 @@ export async function buildWorkspace(rootDir = process.cwd()) {
     const config = await loadRuntimeConfig(rootDir);
     const useKroki = await workspaceUsesDiagrams(rootDir, books);
     const fetchDiagrams = shouldFetchDiagrams();
-    const asciidoctor = createAsciidoctor(useKroki);
-    await buildHtml(rootDir, books, asciidoctor, includeResolverRegistry(asciidoctor, config), useKroki, fetchDiagrams);
+    const extensionRegistry = await createExtensionRegistry(config, useKroki);
+    await buildHtml(rootDir, books, extensionRegistry, useKroki, fetchDiagrams);
     await copyAssets(rootDir, books);
     await addHomeLinks(rootDir, books, config);
     await writeRootIndex(rootDir, config.rootIndex);

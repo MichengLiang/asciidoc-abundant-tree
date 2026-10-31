@@ -3,15 +3,15 @@
 	"private": true,
 	"type": "module",
 	"engines": {
-		"node": ">=20.19.0"
+		"node": ">=22"
 	},
 	"scripts": {
 		"build": "node tools/adoc-books.mjs build",
 		"clean": "node tools/adoc-books.mjs clean"
 	},
 	"devDependencies": {
-		"@asciidoctor/core": "^3.0.4",
+		"@asciidoctor/core": "^4.1.1",
 		"asciidoc-abundant-tree": "workspace:*",
-		"asciidoctor-kroki": "^0.18.1"
+		"asciidoctor-kroki": "^2.0.0"
 	}
 }
