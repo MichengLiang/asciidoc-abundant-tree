@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import type { AsciidoctorBlock } from "../src/asciidoctor-adapter";
 import type { SourceAwareLogicalDocument } from "../src/book-entry/line-origin-model";
 import { registerSourceAwareDocumentForRecovery } from "../src/book-entry/source-aware-coordinate";
-import { scanInlineOccurrencesInOfficialBlocks } from "../src/inline-occurrence-scanner";
+import {
+	finishAnchorOccurrences,
+	scanInlineOccurrencesInOfficialBlocks,
+} from "../src/inline-occurrence-scanner";
 import type {
 	AnchorOccurrenceNode,
 	SectionNode,
@@ -1245,6 +1248,11 @@ describe("official table inline scanning", () => {
 				]),
 				toolDiagnostics: diagnostics,
 			});
+		// 锚点候选的回源在官方认定之后（finishAnchorOccurrences），这里把候选全当作认下了，看回源。
+		const anchors = finishAnchorOccurrences(anchorOccurrences, {
+			lineTable,
+			toolDiagnostics: diagnostics,
+		});
 
 		const xrefOccurrences = await recognizeEveryCandidate({
 			regions: xrefRegions,
@@ -1278,7 +1286,7 @@ describe("official table inline scanning", () => {
 			}),
 		);
 		expect(indentedXref).not.toHaveProperty("sourceSpan");
-		expect(anchorOccurrences).toEqual([
+		expect(anchors).toEqual([
 			expect.objectContaining({
 				raw: "[[anchor]]",
 				sourceSpan: {

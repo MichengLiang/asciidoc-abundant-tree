@@ -107,7 +107,33 @@ export type XrefProbeResult = {
 	readonly withoutSource: readonly OfficialXref[];
 };
 
-type ProbeState = { active: boolean; hits: OfficialXref[] };
+// 锚点同 xref（09 号书第 8 章 Anchor Occurrence）：候选在 text 中的起点，转换器在探测期间接到的行内锚点
+// （convert_inline_anchor，type 为 ref，参考文献条目为 bibref）紧跟在哪个哨兵后面，官方就认下了哪个候选。
+export type AnchorProbeRequest = {
+	readonly owner: AsciidoctorBlock;
+	readonly title: boolean;
+	readonly text: string;
+	readonly candidates: readonly { readonly offset: number }[];
+};
+
+export type OfficialInlineAnchor = {
+	readonly id: string;
+	readonly type: "ref" | "bibref";
+};
+
+export type AnchorProbeResult = {
+	readonly recognized: readonly {
+		readonly candidate: number;
+		readonly official: OfficialInlineAnchor;
+	}[];
+};
+
+// 探测期间转换器把接到的哪一类行内节点换成记录标记：capture 交回要记下的事实，交回 undefined 的节点照常转换。
+type ProbeState = {
+	active: boolean;
+	capture: ((node: Inline, html: string) => unknown) | undefined;
+	hits: unknown[];
+};
 
 // 4.x 在 load.js 32 行把 Substitutors 混进 AbstractNode.prototype，每个节点都有这些替换方法；类型声明却只把它们
 // 写成独立的 Substitutors 命名空间（types/substitutors.d.ts），没有并进 AbstractBlock。签名照那份声明。
@@ -130,14 +156,15 @@ export function xrefProbeLoadOptions(): {
 	readonly converter: typeof Html5Converter;
 	register(document: AsciidoctorBlock): void;
 } {
-	const state: ProbeState = { active: false, hits: [] };
+	const state: ProbeState = { active: false, capture: undefined, hits: [] };
 	class XrefProbeConverter extends Html5Converter {
 		override async convert_inline_anchor(node: Inline): Promise<string> {
 			const html = await super.convert_inline_anchor(node);
-			if (!state.active || node.getType() !== "xref") {
+			const hit = state.active ? state.capture?.(node, html) : undefined;
+			if (hit === undefined) {
 				return html;
 			}
-			state.hits.push(officialXref(node, html));
+			state.hits.push(hit);
 			return String.fromCodePoint(MARKER_BASE + state.hits.length - 1);
 		}
 	}
@@ -185,6 +212,10 @@ export type AsciidoctorAdapter = {
 		document: AsciidoctorBlock,
 		requests: readonly XrefProbeRequest[],
 	): Promise<XrefProbeResult[]>;
+	probeAnchors(
+		document: AsciidoctorBlock,
+		requests: readonly AnchorProbeRequest[],
+	): Promise<AnchorProbeResult[]>;
 	expandAttributes(
 		document: AsciidoctorBlock,
 		requests: readonly AttributeExpansionRequest[],
@@ -225,6 +256,7 @@ export function createAsciidoctorAdapter(
 			return extractAnchorBindings(parseFragment(html));
 		},
 		probeXrefs,
+		probeAnchors,
 		expandAttributes,
 		readAttributeList,
 	};
@@ -234,6 +266,27 @@ function docnameOf(sourcePath: string): string {
 	const name = sourcePath.split(/[\\/]/u).at(-1) ?? sourcePath;
 	const dot = name.lastIndexOf(".");
 	return dot > 0 ? name.slice(0, dot) : name;
+}
+
+// 官方 refs 目录里这个 ID 登记成了什么（09 号书第 8 章 Anchor Occurrence）。两种锚点不经 convert_inline_anchor 认定，
+// 按登记判：块锚点（单独一行的 [[id]]）与节标题末尾的 [[id]] 是所附着块的 ID，官方登记的是这个块（parser.js 1459 行
+// 登记块，2353 行登记节；节标题末尾的锚点由 InlineSectionAnchorRx 摘下）；参考文献条目由 catalogInlineBiblioAnchor
+// （1753 行）在读列表项时登记为 type 为 bibref 的行内锚点。
+export function officialRefKind(
+	document: AsciidoctorBlock,
+	id: string,
+): "block" | "ref" | "bibref" | undefined {
+	const node = document.getRefs?.()[id] as
+		| { getContext?: () => string; getType?: () => string }
+		| undefined;
+	if (node === undefined) {
+		return undefined;
+	}
+	if (node.getContext?.() !== "anchor") {
+		return "block";
+	}
+	const type = node.getType?.();
+	return type === "ref" || type === "bibref" ? type : undefined;
 }
 
 // 官方读块属性行时调 document.parseAttributes(..., { sub_input, sub_result })（parser.js 2839 行）。这里两个开关都不开：
@@ -313,61 +366,12 @@ async function probeRequest(
 	request: XrefProbeRequest,
 ): Promise<XrefProbeResult> {
 	const owner = request.owner as unknown as SubstitutingNode;
-	const subs = probeSubstitutions(request);
-	if (subs === undefined || request.candidates.length > MAX_PROBE_INDEX) {
-		return { recognized: [], withoutSource: [] };
-	}
-	let marked = "";
-	let last = 0;
-	request.candidates.forEach((candidate, index) => {
-		const base = request.text.startsWith("xref:", candidate.offset)
-			? WORD_SENTINEL_BASE
-			: NON_WORD_SENTINEL_BASE;
-		marked +=
-			request.text.slice(last, candidate.offset) +
-			String.fromCodePoint(base + index);
-		last = candidate.offset;
-	});
-	marked += request.text.slice(last);
-
-	const footnotes = root.getFootnotes();
-	const footnotesBefore = footnotes.length;
-	state.active = true;
-	state.hits = [];
-	let output: string;
-	try {
-		output = String(
-			request.title
-				? await owner.applyTitleSubs(marked)
-				: await owner.applySubs(marked, subs),
-		);
-		// 脚注里的 xref 随脚注文字登记进文档的脚注表，不在替换的输出里。
-		output += footnotes
-			.slice(footnotesBefore)
-			.map((footnote) => footnote.getText())
-			.join("");
-	} finally {
-		state.active = false;
-	}
-	// 探测登记的脚注不属于文档。
-	footnotes.splice(footnotesBefore);
-	const hits = state.hits;
-	state.hits = [];
-
+	const marked = await probeMarked(state, root, request, (node, html) =>
+		node.getType() === "xref" ? officialXref(node, html) : undefined,
+	);
 	const recognized: RecognizedXref[] = [];
 	const withoutSource: OfficialXref[] = [];
-	const codePoints = [...output].map(
-		(character) => character.codePointAt(0) ?? 0,
-	);
-	for (const [index, codePoint] of codePoints.entries()) {
-		if (codePoint < MARKER_BASE) {
-			continue;
-		}
-		const official = hits[codePoint - MARKER_BASE];
-		if (!official) {
-			continue;
-		}
-		const candidateIndex = sentinelIndex(codePoints[index - 1] ?? 0);
+	for (const { candidate: candidateIndex, hit: official } of marked) {
 		const candidate =
 			candidateIndex === undefined
 				? undefined
@@ -386,6 +390,109 @@ async function probeRequest(
 	return { recognized, withoutSource };
 }
 
+// 锚点的探测与 xref 同一个做法，只是转换器记下的是行内锚点（09 号书第 8 章 Anchor Occurrence）。
+async function probeAnchors(
+	document: AsciidoctorBlock,
+	requests: readonly AnchorProbeRequest[],
+): Promise<AnchorProbeResult[]> {
+	const state = probeStates.get(document);
+	if (!state) {
+		throw new Error("probeAnchors requires a document loaded by this adapter");
+	}
+	const root = official<Document>(document);
+	return inPlaybackOrder(document, requests, async (request) => {
+		const marked = await probeMarked(state, root, request, (node) => {
+			const type = node.getType();
+			return type === "ref" || type === "bibref"
+				? ({ id: node.getId() ?? "", type } satisfies OfficialInlineAnchor)
+				: undefined;
+		});
+		return {
+			recognized: marked.flatMap(({ candidate, hit }) =>
+				candidate === undefined || !request.candidates[candidate]
+					? []
+					: [{ candidate, official: hit }],
+			),
+		};
+	});
+}
+
+// 一段文字交给收下它的官方节点重跑一遍替换：每个候选前插一个哨兵，转换器把 capture 认下的节点换成记录标记，
+// 交回每个标记与紧挨在它前面的哨兵（没有哨兵时 candidate 为 undefined）。哨兵与候选的第一个字符同类（见上）。
+async function probeMarked<Hit>(
+	state: ProbeState,
+	root: Document,
+	request: {
+		readonly owner: AsciidoctorBlock;
+		readonly title: boolean;
+		readonly text: string;
+		readonly candidates: readonly { readonly offset: number }[];
+	},
+	capture: (node: Inline, html: string) => Hit | undefined,
+): Promise<{ readonly candidate: number | undefined; readonly hit: Hit }[]> {
+	const owner = request.owner as unknown as SubstitutingNode;
+	const subs = probeSubstitutions(request);
+	if (subs === undefined || request.candidates.length > MAX_PROBE_INDEX) {
+		return [];
+	}
+	let marked = "";
+	let last = 0;
+	request.candidates.forEach((candidate, index) => {
+		const base = wordCharacter.test(request.text.charAt(candidate.offset))
+			? WORD_SENTINEL_BASE
+			: NON_WORD_SENTINEL_BASE;
+		marked +=
+			request.text.slice(last, candidate.offset) +
+			String.fromCodePoint(base + index);
+		last = candidate.offset;
+	});
+	marked += request.text.slice(last);
+
+	const footnotes = root.getFootnotes();
+	const footnotesBefore = footnotes.length;
+	state.active = true;
+	state.capture = capture;
+	state.hits = [];
+	let output: string;
+	try {
+		output = String(
+			request.title
+				? await owner.applyTitleSubs(marked)
+				: await owner.applySubs(marked, subs),
+		);
+		// 脚注里的 xref 随脚注文字登记进文档的脚注表，不在替换的输出里。
+		output += footnotes
+			.slice(footnotesBefore)
+			.map((footnote) => footnote.getText())
+			.join("");
+	} finally {
+		state.active = false;
+		state.capture = undefined;
+	}
+	// 探测登记的脚注不属于文档。
+	footnotes.splice(footnotesBefore);
+	const hits = state.hits as Hit[];
+	state.hits = [];
+
+	const found: { candidate: number | undefined; hit: Hit }[] = [];
+	const codePoints = [...output].map(
+		(character) => character.codePointAt(0) ?? 0,
+	);
+	for (const [index, codePoint] of codePoints.entries()) {
+		if (codePoint < MARKER_BASE) {
+			continue;
+		}
+		const hit = hits[codePoint - MARKER_BASE];
+		if (hit === undefined) {
+			continue;
+		}
+		found.push({ candidate: sentinelIndex(codePoints[index - 1] ?? 0), hit });
+	}
+	return found;
+}
+
+const wordCharacter = /^[\p{Alphabetic}\p{N}\p{Pc}]$/u;
+
 function sentinelIndex(codePoint: number): number | undefined {
 	for (const base of [WORD_SENTINEL_BASE, NON_WORD_SENTINEL_BASE]) {
 		if (codePoint >= base && codePoint <= base + MAX_PROBE_INDEX) {
@@ -396,7 +503,10 @@ function sentinelIndex(codePoint: number): number | undefined {
 }
 
 // 单元格的替换列表不经 getSubstitutions 交出：literal 单元格只做 basic 替换，其余做 normal 替换（table.js 436-451 行）。
-function probeSubstitutions(request: XrefProbeRequest): string[] | undefined {
+function probeSubstitutions(request: {
+	readonly owner: AsciidoctorBlock;
+	readonly title: boolean;
+}): string[] | undefined {
 	if (request.title) {
 		return [];
 	}

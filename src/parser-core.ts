@@ -1,3 +1,4 @@
+import { recognizeAnchorOccurrences } from "./anchor-recognition";
 import type {
 	AsciidoctorAdapter,
 	AsciidoctorBlock,
@@ -57,6 +58,14 @@ export async function parseAsciidoctorDocument(
 		sectionByLine: sourceSurfaces.sectionByLine,
 		toolDiagnostics: sourceSurfaces.toolDiagnostics,
 	});
+	const anchorOccurrences = await recognizeAnchorOccurrences({
+		adapter: input.adapter,
+		officialDocument: input.officialDocument,
+		lineTable: input.lineTable,
+		regions: sourceSurfaces.xrefRegions,
+		anchors: sourceSurfaces.anchorOccurrences,
+		toolDiagnostics: sourceSurfaces.toolDiagnostics,
+	});
 	await expandHeadlineAttributes(input, sourceSurfaces.headlineExpansions);
 	const titleSource = documentTitleSource(input.lineTable);
 	const titleText = await documentTitleText(input);
@@ -66,7 +75,7 @@ export async function parseAsciidoctorDocument(
 		sections: sourceSurfaces.sections,
 		sectionByLine: sourceSurfaces.sectionByLine,
 		xrefOccurrences,
-		anchorOccurrences: sourceSurfaces.anchorOccurrences,
+		anchorOccurrences,
 		headingInlineMetadataOccurrences:
 			sourceSurfaces.headingInlineMetadataOccurrences,
 		intervalByBlock: sourceSurfaces.intervalByBlock,
@@ -74,10 +83,7 @@ export async function parseAsciidoctorDocument(
 		sectionByBlock: sourceSurfaces.sectionByBlock,
 	});
 
-	addAnchorTargets(
-		officialProjection.targets,
-		sourceSurfaces.anchorOccurrences,
-	);
+	addAnchorTargets(officialProjection.targets, anchorOccurrences);
 	completeXrefTargetTypes(xrefOccurrences, officialProjection.targets);
 
 	const document: AbundantDocument = {
@@ -102,7 +108,7 @@ export async function parseAsciidoctorDocument(
 		children: officialProjection.children,
 		targets: officialProjection.targets,
 		xrefOccurrences,
-		anchorOccurrences: sourceSurfaces.anchorOccurrences,
+		anchorOccurrences,
 		headingInlineMetadataOccurrences:
 			sourceSurfaces.headingInlineMetadataOccurrences,
 		toolDiagnostics: sourceSurfaces.toolDiagnostics,

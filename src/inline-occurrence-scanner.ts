@@ -106,19 +106,42 @@ export function scanInlineOccurrencesInOfficialBlocks(options: {
 					options.toolDiagnostics,
 				)
 			: occurrences;
-	const recoveredAnchors = recover(anchorOccurrences);
 	const recoveredHeadingInlineMetadata = recover(
 		headingInlineMetadataOccurrences,
 	);
 
 	return {
 		xrefRegions: collected.xrefRegions,
-		anchorOccurrences:
-			dedupeOccurrences(recoveredAnchors).sort(compareSourceSpans),
+		// 锚点候选同 xref 区域一样留在逻辑文档的坐标上：官方认定（anchor-recognition）按区域里的位置对齐，认定以后由
+		// finishAnchorOccurrences 去重、回源。
+		anchorOccurrences,
 		headingInlineMetadataOccurrences: dedupeOccurrences(
 			recoveredHeadingInlineMetadata,
 		).sort(compareSourceSpans),
 	};
+}
+
+// 官方认下的锚点的收尾，与 finishXrefOccurrences 相同：去重在回源之前。逻辑文档的坐标在整本书里唯一，回源以后只剩
+// 文件内的行列，几个文件同一行同一列写着同样的锚点时会被当成重复。
+export function finishAnchorOccurrences(
+	anchors: AnchorOccurrenceNode[],
+	options: {
+		lineTable: LineTable;
+		toolDiagnostics?: ToolDiagnostic[] | undefined;
+	},
+): AnchorOccurrenceNode[] {
+	const unique = dedupeOccurrences(anchors);
+	const sourceAwareDocument = sourceAwareDocumentForLineTable(
+		options.lineTable,
+	);
+	const recovered = sourceAwareDocument
+		? recoverSourceAwareInlineOrigins(
+				unique,
+				sourceAwareDocument,
+				options.toolDiagnostics,
+			)
+		: unique;
+	return recovered.sort(compareSourceSpans);
 }
 
 // 官方认下的 xref 的收尾：判定所属 section、去重、book-entry 下回源、按源位置排序。

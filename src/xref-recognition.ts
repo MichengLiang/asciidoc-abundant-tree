@@ -116,7 +116,7 @@ export function regionCandidates(region: XrefProbeRegion): Array<
 	}));
 }
 
-function regionText(region: XrefProbeRegion): string {
+export function regionText(region: XrefProbeRegion): string {
 	return region.segments
 		.map((segment) =>
 			segment.line.text.slice(segment.startIndex, segment.endIndex),
@@ -248,6 +248,26 @@ function positionAt(region: XrefProbeRegion, offset: number): SourcePosition {
 		line: last?.line.number ?? 1,
 		column: last ? [...last.line.text.slice(0, last.endIndex)].length + 1 : 1,
 	};
+}
+
+// positionAt 的反向：源位置落在区域的哪一段里，换算成 regionText 里的偏移；不在任何一段里时为 undefined。
+export function offsetAt(
+	region: XrefProbeRegion,
+	position: SourcePosition,
+): number | undefined {
+	let segmentStart = 0;
+	for (const segment of region.segments) {
+		if (segment.line.number === position.line) {
+			const index = [...segment.line.text]
+				.slice(0, position.column - 1)
+				.join("").length;
+			if (index >= segment.startIndex && index < segment.endIndex) {
+				return segmentStart + index - segment.startIndex;
+			}
+		}
+		segmentStart += segment.endIndex - segment.startIndex + 1;
+	}
+	return undefined;
 }
 
 function withoutSourceDiagnostic(
