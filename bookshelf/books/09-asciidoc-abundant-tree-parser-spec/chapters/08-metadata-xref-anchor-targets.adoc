@@ -61,7 +61,7 @@ Anchor occurrence 来自 inline 或 block anchor syntax。
 anchor:id[]
 ----
 
-Anchor occurrence 是官方认下、并在源文本里找到位置的行内锚点，与 xref occurrence 同一个原则、同一个机制：官方转换时，每个行内锚点都交给转换器的 `convert_inline_anchor`（type 为 `ref`，参考文献条目为 `bibref`），解析器的探测转换器把它们按块、按先后记下，扫描器只给候选与位置，两边对齐。候选照 Asciidoctor 的 inline anchor 正则找：ID 的首字符是字母、`_` 或 `:`，其后是字母、数字、连接标点、`-`、`:` 或 `.`；`[[` 前面紧挨着 `[` 或 `\` 时不是 anchor，`anchor:` 前面紧挨着 `\` 时也不是。
+Anchor occurrence 是官方认下、并在源文本里找到位置的行内锚点，与 xref occurrence 同一个原则、同一个机制：官方转换时，每个行内锚点都交给转换器的 `convert_inline_anchor`（type 为 `ref`），解析器的探测转换器把它们按块、按先后记下，扫描器只给候选与位置，两边对齐。候选照 Asciidoctor 的 inline anchor 正则找：ID 的首字符是字母、`_` 或 `:`，其后是字母、数字、连接标点、`-`、`:` 或 `.`；`[[` 前面紧挨着 `[` 或 `\` 时不是 anchor，`anchor:` 前面紧挨着 `\` 时也不是。
 
 不以官方的 refs 目录（`getRefs()`）为准：它不完整。官方只在读段落时登记行内锚点（`parser.js` 1181 行 `catalogInlineAnchors`），单元格只在文字以 `[[` 开头时登记（`table.js` 528 行）；列表项、描述、单元格、块标题里的锚点都不进目录，转换出的 HTML 里却都有 `<a id>`，链接也到得了。反过来，`+++[[三加号]]+++` 进了目录，转换时却按透传原样输出，HTML 里没有这个锚点。作者写透传，意思就是不要解释这段文字；转换结果与此一致，目录不一致。所以 `+++…+++`、`pass:[]` 里的写法都不是 anchor occurrence。
 
@@ -70,6 +70,8 @@ Anchor occurrence 是官方认下、并在源文本里找到位置的行内锚�
 book-entry 下，锚点与 xref 一样先去重、再回源：去重按逻辑文档里的位置做。几个文件在同一行同一列写着同样的锚点时，回源以后行列相同、只是文件不同，在回源之后按行列去重会把它们并成一个；先去重，它们各是一个 occurrence。
 
 参考文献条目是另一种 anchor：`[bibliography]` 样式的无序列表里，列表项文本以 `[[[id]]]` 或 `[[[id,reftext]]]` 开头。它只在这个位置成立；别处的 `[[[id]]]` 按上一条规则不产生 anchor，不会读出以 `[` 开头的 ID。
+
+参考文献条目不经探测，以官方的 refs 目录为准：官方的 `InlineBiblioAnchorRx` 锚定在列表项文字的开头，探测插在前面的标记会让官方认不出它；而官方对这一种的登记是完整的（它只在这个位置成立，读列表项时就登记）。节标题末尾的 `\[[id]]` 也不经探测：官方读标题时用 `InlineSectionAnchorRx` 把它摘下，作为这一节的 ID，所以它与块锚点一样，以官方节的 ID 为准。
 
 [source,asciidoc]
 ----
