@@ -4,6 +4,16 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.7.0 - 2026-11-01
+
+### Added
+
+- Every heading field has field evidence, an `aat:FieldEvidence` that `rdf:reifies` the field triple (`<<( :heading-5 field:难度 "中" )>>`) and records what the triple loses: `aat:fieldName`, the field name as the author wrote it (the predicate is its transliteration, so a consumer can match fields by name without reimplementing it); `aat:surface`, which surface the field was written on — `attrlist`, `description-list` or `heading-inline` (`hmeta:`); `aat:fieldOrder`, its 0-based source order within the heading (attrlist, then the description list, then `hmeta:` macros); and `aat:relativePath`, `aat:startLine`, `aat:endLine`, the file and lines it was written on, which in a book-entry document may be an included file. The same name and value written twice still give one field triple, reified by two evidences. The evidence IRI is `field-evidence-<documentOrder>-<fieldOrder>`; roles, complex properties and xref fields get no evidence. Field triples themselves are unchanged. Specified in book 06, chapter 6 「字段证据」.
+
+### Fixed
+
+- In a book-entry document, a block or heading metadata node's `source` layer is the file and line the author wrote it on, recovered through the line origin as book 10 chapter 7 requires. Before, it held the line of the logical document (after include expansion) and no path; a metadata line that cannot be traced back (a generated line) now keeps only its `raw`.
+
 ## 0.6.1 - 2026-10-31
 
 ### Fixed
