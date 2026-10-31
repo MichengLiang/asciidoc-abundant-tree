@@ -4,6 +4,13 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.6.1 - 2026-10-31
+
+### Fixed
+
+- In a book-entry document, an xref to a file included into the book is an xref inside the book, as Asciidoctor reads it: `xref:chapters/b.adoc#乙[]` binds `乙` in the book's own label space, gets an `aat:targetHeading`, and its `aat:officialHref` is `#乙`, no longer `chapters/b.html#乙` with `aat:targetDocument`. Includes nested inside chapters count too. aat expands includes itself and then parsed the logical text as a new document whose `catalog.includes` was empty; the logical document now carries the table Asciidoctor recorded while expanding the includes. Paths are read from the entry document's directory, as Asciidoctor reads them: `xref:b.adoc#乙[]` written in `chapters/a.adoc` still points to another document.
+- An xref to the current document without a fragment (`xref:book.adoc[]` in a single file, or `xref:chapters/b.adoc[]` to an included chapter) points to the document itself, as Asciidoctor renders it (`#`). It has no `aat:targetSelector` and binds no heading; before, the whole path was used as a selector and could bind a heading that happened to carry that text.
+
 ## 0.6.0 - 2026-10-31
 
 ### Added
