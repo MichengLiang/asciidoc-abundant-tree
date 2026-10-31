@@ -19,11 +19,17 @@
 
 书库是 [create-asciidoc-multi-book-workspace](https://github.com/MichengLiang/asciidoc-multi-book-workspace)
 生成的标准书库：`tools/adoc-books.mjs` 是模板 runtime 的副本，`adoc-books.config.mjs` 只写书库首页的标题与回目录的
-链接文字。runtime 用 aat 投影每本书，按 aat 的绑定检查每一处引用，并把 HTML 里的链接接到 aat 绑定的标题上：
-标题原文、`::` 限定地址这样的引用，Asciidoctor 自己的 HTML 认不出，在这里照样是通的。
+链接文字。runtime 只初始化与渲染（模板 0.7.0 起）：它用 aat 投影每本书，一处引用恰好对上一节时，把 HTML 里的链接
+接到那一节上，标题原文、`::` 限定地址这样的引用，Asciidoctor 自己的 HTML 认不出，在这里照样是通的；对上零节或几节的
+链接照 Asciidoctor 写下的样子留着，构建不报。构建只在做不出页面时失败。
 
-书库是 aat 这个 pnpm 工作区的成员，依赖写作 `workspace:*`：投影书的就是仓库里当前的 aat。aat 改了投影，书里的
-引用随 `pnpm check` 的末尾（`pnpm check:books`）重新核对一遍。
+书里的引用对不对，归读投影的工具：workbench 的 bookgraph。`.bookgraph/config.toml` 列着这七本书，
+`bookgraph.audit("micheng-ts/projects/asciidoc-abundant-tree")` 审全部书的书内与跨书引用，报出绑不上与对上几节的。
+改书、改投影的提交都要过它：推进 aat 的 hora 计划时，把它与 `pnpm check` 一起挂在 `before_commit` 上，书里两组
+非空就挡下。GitHub 上没有 bookgraph，CI 与 Pages 只构建书库，不审引用。
+
+书库是 aat 这个 pnpm 工作区的成员，依赖写作 `workspace:*`：投影书的就是仓库里当前的 aat。`pnpm check` 的末尾
+（`pnpm build:books`）用它把书库构建一遍：aat 改了投影，书库还渲染得出来。
 
 ## 运行
 
@@ -32,7 +38,6 @@
 ```bash
 pnpm install
 pnpm build                       # 书库用的是 aat 的 dist
-pnpm --dir bookshelf run check   # 引用、锚点、include 与本地资源
 pnpm --dir bookshelf run build   # build/html/index.html
 ```
 

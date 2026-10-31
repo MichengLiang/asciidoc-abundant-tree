@@ -29,13 +29,12 @@ jobs:
           cache: pnpm
       - uses: actions/configure-pages@v6
       # 书架是 aat 这个 pnpm 工作区的成员，依赖 workspace:* 的 aat：先装整个工作区、构建 aat 的 dist，
-      # 书架才能用仓库里当前的 aat 检查引用、把链接接到 aat 绑定的标题上。
+      # 书架才能用仓库里当前的 aat 把链接接到投影里恰好对上的那一节。书里的引用对不对由 workbench 的 bookgraph 审，
+      # GitHub 上没有它，这里只构建（bookshelf/README.md）。
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
       - name: Build asciidoc-abundant-tree
         run: pnpm build
-      - name: Check bookshelf
-        run: pnpm --dir bookshelf run check
       - name: Build bookshelf
         run: pnpm --dir bookshelf run build
       - uses: actions/upload-pages-artifact@v5

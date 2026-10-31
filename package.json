@@ -76,8 +76,8 @@
 	},
 	"scripts": {
 		"build": "tsdown",
-		"check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:apps && pnpm pack:check && pnpm smoke:cli && pnpm check:books",
-		"check:books": "pnpm --dir bookshelf check",
+		"check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:apps && pnpm pack:check && pnpm smoke:cli && pnpm build:books",
+		"build:books": "pnpm --dir bookshelf build",
 		"check:browser": "pnpm build && pnpm test:browser && pnpm --dir apps/projection-teacher test:e2e",
 		"dev": "tsx src/cli.ts",
 		"lint": "biome check --vcs-use-ignore-file=false .",
