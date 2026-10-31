@@ -1353,6 +1353,7 @@ function makeInlineSourceAwareDocument(): SourceAwareLogicalDocument {
 	return {
 		entryPath: "/virtual/book.adoc",
 		documentRoot: "/virtual",
+		officialIncludes: {},
 		logicalText: [
 			"xref:target[Label]",
 			" xref:indented[Indented]",

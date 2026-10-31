@@ -173,7 +173,7 @@ export async function preprocessBookEntryWithOfficialReader(
 	}
 	const includeResolvers = options.includeResolvers ?? [];
 	validateIncludeGraph(entryPath, documentRoot, [], includeResolvers);
-	const officialLines = await options.adapter.readPreprocessedLines({
+	const official = await options.adapter.readPreprocessedLines({
 		...readerPreprocessingOptions({
 			sourcePath: entryPath,
 			attributes: options.attributes,
@@ -183,7 +183,7 @@ export async function preprocessBookEntryWithOfficialReader(
 	const state: PreprocessorState = {
 		documentRoot,
 		includeResolvers,
-		officialLines,
+		officialLines: official.lines,
 		sourceSet: createSourceSet({ documentRoot }),
 		records: [],
 		diagnostics: [],
@@ -202,6 +202,7 @@ export async function preprocessBookEntryWithOfficialReader(
 		logicalText: safe.text,
 		lines: safe.lineRecords,
 		sourceFiles: state.sourceSet.records(),
+		officialIncludes: official.includes,
 		diagnostics: state.diagnostics,
 		...(state.optionalIncludes.length > 0
 			? { optionalIncludes: state.optionalIncludes }

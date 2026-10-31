@@ -1,0 +1,7 @@
+= 自己
+
+== 节
+
+见 xref:self.adoc#节[]。
+
+见 xref:self.adoc[本文]。

@@ -8,6 +8,7 @@ import {
 	type AsciidoctorBlock,
 	createAsciidoctorAdapter,
 	createExtensionRegistry,
+	type OfficialIncludes,
 	xrefProbeLoadOptions,
 } from "./asciidoctor-adapter";
 import {
@@ -37,6 +38,13 @@ export type ReaderPush = {
 	readonly resolved?: ResolvedInclude;
 };
 
+// 官方 Reader 展开 include 的结果：逐行的输出，以及展开时登记下的 catalog.includes。逻辑文档交给官方解析时要带上
+// 这张表，官方才把指向被拼进来的文件的 xref 认作本文档（10 号书「Asciidoctor 调用」）。
+export type OfficialPreprocessing = {
+	readonly lines: readonly OfficialReaderLine[];
+	readonly includes: OfficialIncludes;
+};
+
 export type AsciidoctorFileAdapter = AsciidoctorAdapter & {
 	loadFile(sourcePath: string): Promise<AsciidoctorBlock>;
 	readPreprocessedLines(options: {
@@ -47,7 +55,7 @@ export type AsciidoctorFileAdapter = AsciidoctorAdapter & {
 			readonly resolvers: readonly IncludeResolver[];
 			readonly documentRoot: string;
 		};
-	}): Promise<readonly OfficialReaderLine[]>;
+	}): Promise<OfficialPreprocessing>;
 };
 
 export function createAsciidoctorFileAdapter(): AsciidoctorFileAdapter {
@@ -118,7 +126,7 @@ export function createAsciidoctorFileAdapter(): AsciidoctorFileAdapter {
 					},
 				});
 			}
-			return lines;
+			return { lines, includes: { ...document.catalog.includes } };
 		},
 	};
 }

@@ -40,6 +40,8 @@ Asciidoctor 应解析 logical text，而不是 entry file。
 
 该调用不得再次展开 include。Include resolution 已由 book-entry pipeline 完成。
 
+Include 展开以后，被拼进来的文件仍是这份文档的一部分。Asciidoctor 自己读 include 时，把每个读进来的文件登记进 `catalog.includes`（Asciidoctor.js 4.1.1 `reader.js` 的 `PreprocessorReader`；键是去掉扩展名、相对入口文档目录的路径，嵌套的 include 也相对入口目录），判断一个 xref 是不是书内引用时查这张表（`substitutors.js` 1215 行起）。Book-entry pipeline 用官方的 `PreprocessorReader` 展开 include，那一次读取登记下的表是满的；解析 logical text 的这次调用以 entry file 的文件名作 `docname`，并带上这张表，官方才把指向被拼进来的文件的 xref 读作书内引用，与 Asciidoctor 直接渲染这本书时相同。表照官方登记的原样交回，pipeline 不另判哪些文件属于这本书；include resolver 引入的内容官方登记不登记，也照官方原样。
+
 Asciidoctor 在该调用中提供 official AST、section tree、block context 和 ref catalog。Raw recovery、xref sourceSpan 和 block source coordinate 不得从 Asciidoctor include sourcemap 推导。
 
 === 与 Parser 规约的关系

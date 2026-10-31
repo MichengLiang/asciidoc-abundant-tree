@@ -1,0 +1,11 @@
+== 甲
+
+见 xref:chapters/b.adoc#乙[]。
+
+见 xref:chapters/sub/c.adoc#丙[]。
+
+见 xref:chapters/b.adoc[整章]。
+
+见 xref:b.adoc#乙[]。
+
+见 xref:sub/c.adoc#丙[]。

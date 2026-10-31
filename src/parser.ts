@@ -41,6 +41,7 @@ export async function parseAbundantTree(
 			officialDocument: await adapter.loadSource(
 				sourceAwareDocument.logicalText,
 				sourcePath,
+				sourceAwareDocument.officialIncludes,
 			),
 			adapter,
 			lineTable,

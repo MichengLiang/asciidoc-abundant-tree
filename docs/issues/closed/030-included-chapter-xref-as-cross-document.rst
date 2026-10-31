@@ -71,3 +71,15 @@ include，表里有它，于是写成书内。
 * 目标是本书以外的文档时照旧。
 * 下游现状：bookgraph 25.2 自己按"本书 book.adoc 或本书源文件就是书内"判（ ``.aktant/bookgraph/src/bookgraph/review.py`` ），
   不读 officialHref，不受影响；修好以后它与 aat 的事实一致。
+
+## 解决
+
+:提交: 工作包 22.1（git log --grep "Work-Package: 22.1"）
+
+推断经实测证实：book-entry 预处理用官方 PreprocessorReader 展开 include，那份文档的 ``catalog.includes`` 是满的；之后解析逻辑文本时新开了一份文档，表丢了，官方判书内的那一行（Asciidoctor.js 4.1.1 ``substitutors.js`` 1215 行起）看不到被拼进来的文件。
+
+修法是把官方登记的事实原样交回官方，不让 aat 自己判“是不是本书源文件”： ``readPreprocessedLines`` 交出 ``catalog.includes`` ，逻辑文档带上它（ ``officialIncludes`` ）， ``loadSource`` 以 ``parse: false`` 加载、填表、再解析。规约写在 06 号书第 5 章「Target Heading」、09 号书第 8 章 Xref Occurrence 与 10 号书第 7 章「Asciidoctor 调用」。
+
+同根的另一处一起修了：官方认作本文档、又不带片段的引用（``xref:chapters/b.adoc[章节]`` 、single-file 里的 ``xref:本文件.adoc[]`` ）官方 ``refid`` 为空、写成 ``#`` ，指向文档本身；aat 原先把整串目标当 selector 去 label 空间找标题，现在没有 selector。
+
+测试： ``test/rdf12-projection/included-file-xref.acceptance.test.ts`` （夹具 ``test/book-entry/fixtures/included-file-xref/`` ，含嵌套 include）钉住带片段的绑到本书那一节、 ``officialHref`` 为 ``#乙`` / ``#丙`` ；整章链接没有 selector 与 targetHeading、 ``officialHref`` 为 ``#`` ；按入口目录读路径，相对写引用文件的写法仍是跨文档；single-file 自引用不带片段时同样指向文档本身。修复前四条里有三条失败，按入口目录读的那条本来就对。

@@ -136,6 +136,7 @@ describe("book-entry official Reader source coordinate recovery", () => {
 		const sourceAwareDocument: SourceAwareLogicalDocument = {
 			entryPath: "/virtual/book.adoc",
 			documentRoot: "/virtual",
+			officialIncludes: {},
 			logicalText: "degraded",
 			lines: [
 				{
@@ -564,6 +565,7 @@ function makeTwoFileSourceAwareDocument(): SourceAwareLogicalDocument {
 	return {
 		entryPath: entry.absolutePath,
 		documentRoot: "/virtual",
+		officialIncludes: {},
 		logicalText: "alpha\nbeta",
 		sourceFiles: [entry, chapter],
 		diagnostics: [],
@@ -578,6 +580,7 @@ function makeGeneratedAndDegradedSourceAwareDocument(): SourceAwareLogicalDocume
 	return {
 		entryPath: "/virtual/book.adoc",
 		documentRoot: "/virtual",
+		officialIncludes: {},
 		logicalText: ":leveloffset: +1\nunknown",
 		sourceFiles: [],
 		diagnostics: [],
@@ -612,6 +615,7 @@ function makeSectionSourceAwareDocument(): SourceAwareLogicalDocument {
 	return {
 		entryPath: "/virtual/book.adoc",
 		documentRoot: "/virtual",
+		officialIncludes: {},
 		logicalText: "[#intro]\n== Intro\nbody\n\n== Next\nnext",
 		sourceFiles: [chapter],
 		diagnostics: [],

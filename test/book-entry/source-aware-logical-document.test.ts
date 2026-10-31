@@ -71,6 +71,7 @@ function makeDocument(): SourceAwareLogicalDocument {
 	return {
 		entryPath: "/book.adoc",
 		documentRoot: "/",
+		officialIncludes: {},
 		logicalText: text,
 		sourceFiles: [
 			{

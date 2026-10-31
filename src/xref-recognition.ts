@@ -208,10 +208,15 @@ function occurrence(
 // 地址按作者写下的文字取，不取官方的 fragment：官方解析成功一个自然引用后，把 fragment 改写成它找到的 ID
 // （substitutors.js 1244 行），作者写下的标题原文就丢了。展开属性以后照官方切 # 的规则（同文件 1162-1166 行）：
 // 开头的 # 只表示本文档；# 之前有文字、官方又认作别的文档时，那段文字是文档部分。
+// 官方认作本文档、又不带片段（xref:本文件.adoc[]、xref:被拼进来的章节.adoc[]）时 refid 为空、href 是 #
+// （同文件 1228-1231 行）：引用指向文档本身，没有 selector。
 function addressOf(
 	expandedTarget: string,
 	official: OfficialXref,
 ): { selector?: string; document?: string } {
+	if (official.path === undefined && official.refid === undefined) {
+		return {};
+	}
 	const hash = expandedTarget.indexOf("#");
 	const hasFragment =
 		hash !== -1 && (hash === 0 || expandedTarget[hash - 1] !== "&");

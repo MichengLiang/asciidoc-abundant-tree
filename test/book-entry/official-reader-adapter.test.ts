@@ -12,10 +12,11 @@ describe("Asciidoctor adapter official Reader line evidence", () => {
 			["first", "second"].join("\n"),
 		);
 
-		const lines = await createAsciidoctorFileAdapter().readPreprocessedLines({
-			sourcePath: entryPath,
-			baseDir: join(fixtureRoot, "ordinary"),
-		});
+		const { lines } =
+			await createAsciidoctorFileAdapter().readPreprocessedLines({
+				sourcePath: entryPath,
+				baseDir: join(fixtureRoot, "ordinary"),
+			});
 
 		expect(lines.map((line) => [line.text, line.cursor.lineNumber])).toEqual([
 			["first", 1],
@@ -34,10 +35,11 @@ describe("Asciidoctor adapter official Reader line evidence", () => {
 			["included one", "included two"].join("\n"),
 		);
 
-		const lines = await createAsciidoctorFileAdapter().readPreprocessedLines({
-			sourcePath: entryPath,
-			baseDir: root,
-		});
+		const { lines } =
+			await createAsciidoctorFileAdapter().readPreprocessedLines({
+				sourcePath: entryPath,
+				baseDir: root,
+			});
 
 		expect(
 			lines.map((line) => [

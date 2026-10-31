@@ -101,7 +101,7 @@ describe("selected include parity with the official Reader", () => {
 						sourcePath: entry,
 						baseDir: dirname(entry),
 					})
-				)
+				).lines
 					.filter((line) => line.cursor.file === sourcePath)
 					.map((line) => line.text);
 				// 走与预处理器相同的 attrlist 解析：`tags=x,z` 里的逗号先分开属性，官方只拿到 `tags=x`。

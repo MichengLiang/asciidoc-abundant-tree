@@ -1,0 +1,6 @@
+= 书
+:doctype: book
+
+include::chapters/a.adoc[]
+
+include::chapters/b.adoc[]

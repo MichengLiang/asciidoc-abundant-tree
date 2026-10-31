@@ -203,9 +203,12 @@ export type AsciidoctorAdapter = {
 	parserVersion: string;
 	// sourcePath 是这段文字所在的文件：官方从文件加载时据它设 docname（load.js 104-106 行），引用自己的
 	// `xref:本文件.adoc#id[]` 才认作本文档。只交文字时要补上，读法才与官方读这个文件时相同。
+	// includes 是官方展开 include 时登记的 catalog.includes：这段文字是 include 拼成的（book-entry）时，官方据它把
+	// 指向被拼进来的文件的 xref 认作本文档（substitutors.js 1215 行起）。
 	loadSource(
 		sourceText: string,
 		sourcePath?: string,
+		includes?: OfficialIncludes,
 	): Promise<AsciidoctorBlock>;
 	extractAnchorBindings(html: string): HtmlAnchorBinding[];
 	probeXrefs(
@@ -232,12 +235,15 @@ export type AttributeExpansionRequest = {
 	readonly text: string;
 };
 
+// 键是去掉扩展名、相对入口文档目录的路径；值 true 表示整份引入，null 表示只引入了一部分（reader.js 918-926 行）。
+export type OfficialIncludes = Readonly<Record<string, boolean | null>>;
+
 export function createAsciidoctorAdapter(
 	extensionRegistry: Registry = createExtensionRegistry(),
 ): AsciidoctorAdapter {
 	return {
 		parserVersion: getVersion(),
-		async loadSource(sourceText, sourcePath) {
+		async loadSource(sourceText, sourcePath, includes) {
 			const probing = xrefProbeLoadOptions();
 			const document = (await load(sourceText, {
 				safe: "secure",
@@ -245,10 +251,18 @@ export function createAsciidoctorAdapter(
 				to_file: false,
 				extension_registry: extensionRegistry,
 				converter: probing.converter,
+				// 先不解析：表要在解析之前交回，官方在解析时已经替换了标题、列表条目等文字里的 xref（document.js
+				// 1840-1890 行）。探针转换器随加载交出，解析时照样接得住这些 xref。
+				parse: false,
 				...(sourcePath !== undefined
 					? { attributes: { docname: docnameOf(sourcePath) } }
 					: {}),
-			})) as unknown as AsciidoctorBlock;
+			})) as unknown as AsciidoctorBlock & {
+				catalog: { includes: Record<string, boolean | null> };
+				parse(): Promise<unknown>;
+			};
+			Object.assign(document.catalog.includes, includes);
+			await document.parse();
 			probing.register(document);
 			return document;
 		},

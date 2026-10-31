@@ -267,7 +267,7 @@ describe("book-entry official Reader preprocessor", () => {
 
 		// 末尾补的空行若不进 logical document，`:leveloffset!:` 会被读成“内文。”段落的正文，leveloffset 不再复位。
 		expect(document.lines.map((line) => line.text)).toEqual(
-			official.map((line) => line.text),
+			official.lines.map((line) => line.text),
 		);
 		expect(parsed.toolDiagnostics).toEqual([]);
 		expect(part?.children).toEqual([

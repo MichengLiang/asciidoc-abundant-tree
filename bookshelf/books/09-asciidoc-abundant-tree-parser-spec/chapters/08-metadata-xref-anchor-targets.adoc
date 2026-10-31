@@ -40,13 +40,17 @@ xref:target[label,key=value]
 |哪些是命名属性由官方定，值取源文本：对源文本里方括号内的文字调用官方的 `parseAttributes`，不开替换，与块的 attribute list 同一个做法（上一节）。官方转换时用 `extractAttributesFromText` 拆，拆法相同，但它把节点当作 block，单引号里的值经过 replacements（`'a--b'` 变成破折号的实体），不是作者写下的值。`label` 是第一个位置属性。
 
 |`selector`、`document`
-|源文本经官方规则得出：在这个位置的属性取值下展开 `target` 的属性引用，再按官方切 `#` 的规则分成文档部分与片段。片段是 `selector`；指向别的文档时，文档部分是 `document`。
+|源文本经官方规则得出：在这个位置的属性取值下展开 `target` 的属性引用，再按官方切 `#` 的规则分成文档部分与片段。片段是 `selector`；官方认作别的文档时，文档部分是 `document`。是不是别的文档见下文。
 
 |`asciidoctor` 层的 `href`、`refid`、`path`、`fragment`、`reftext`
 |官方 xref 节点。`reftext` 是转换器给出的链接文字。
 |===
 
 `selector` 不取官方的 fragment：官方解析成功一个自然引用以后，把 fragment 改写成它找到的 ID（`substitutors.js` 1244 行），`role 的作用域` 成了 `_role_的作用域`，作者写下的文字就丢了；而 label space 按作者写下的标题原文绑定。
+
+是不是别的文档由官方判：路径去掉 `.adoc` 以后等于 `docname`，或登记在 `catalog.includes` 里，就是本文档（`substitutors.js` 1215 行起），官方 xref 节点不带 `path`。带片段的，`refid` 是片段；不带片段的指向这份文档本身，`refid` 为空、href 是 `#`，这时没有 `selector`，也没有 `document`。官方 xref 节点带 `path` 时才是别的文档。
+
+这两样要与官方直接读这个文件时相同，否则同一个引用在 aat 与渲染里读法不同。从文字加载时（single-file 交文字、浏览器入口）补上文件名作 `docname`，官方从文件加载时也是这样设的（`load.js` 104-106 行）。book-entry 的逻辑文档还要带上官方展开 include 时登记的 `catalog.includes`（xref:../10-book-entry-source-mapped-logical-document/book.adoc#Asciidoctor 调用[10 号书：Asciidoctor 调用]）：解析器自己不判断哪个文件属于这本书。
 
 Xref occurrence 不验证外部 target。Interdocument target 保持 raw target 和 official href。
 

@@ -1,3 +1,4 @@
+import type { OfficialIncludes } from "../asciidoctor-adapter";
 import type { LineTable } from "../source-lines";
 import type { ColumnMap, IdentityColumnMap } from "./column-map";
 import { type BookEntryDiagnostic, constructionError } from "./diagnostics";
@@ -97,6 +98,8 @@ export type SourceAwareLogicalDocument = {
 	readonly logicalText: string;
 	readonly lines: readonly LogicalLineRecord[];
 	readonly sourceFiles: readonly SourceFileRecord[];
+	// 官方展开 include 时登记的 catalog.includes，解析逻辑文本时原样交回官方（10 号书「Asciidoctor 调用」）。
+	readonly officialIncludes: OfficialIncludes;
 	readonly diagnostics: readonly BookEntryDiagnostic[];
 	readonly optionalIncludes?: readonly IncludeDirectiveEvidence[] | undefined;
 };
