@@ -131,6 +131,101 @@ describe("xrefs recognized by the official conversion", () => {
 		);
 	});
 
+	it("reads a dotted target as a document path, as Asciidoctor does, and a leading # as an address (issue 033)", async () => {
+		const source = [
+			"= T",
+			":book: other.adoc",
+			"",
+			"== 大瓶 2.5KG",
+			"",
+			"== 2.5KG大瓶",
+			"",
+			"== 版本 v1.2",
+			"",
+			"== C# 入门",
+			"",
+			"== 上级",
+			"",
+			"=== 版本 v2.0",
+			"",
+			"== 引用",
+			"",
+			"xref:大瓶 2.5KG[] xref:2.5KG大瓶[] xref:版本 v1.2[]",
+			"",
+			"xref:#大瓶 2.5KG[] xref:#2.5KG大瓶[] xref:#版本 v1.2[] xref:#C# 入门[] xref:#上级::版本 v2.0[]",
+			"",
+			"<<大瓶 2.5KG>> <<2.5KG大瓶>>",
+			"",
+			"xref:other.adoc#x[] xref:{book}#x[]",
+		].join("\n");
+		const document = await parse(source);
+
+		// 官方的 isExtname：最后一个 . 之后没有 / 就是路径，投影器照给 document，不去 label 空间找同名标题（06 号书第 5 章
+		// 「Target Heading」）；开头的 # 一定走片段，<<…>> 只认 .adoc 结尾。
+		expect(
+			document.xrefOccurrences.map((xref) => [
+				xref.raw,
+				xref.document,
+				xref.selector,
+			]),
+		).toEqual([
+			["xref:大瓶 2.5KG[]", "大瓶 2.5KG", undefined],
+			["xref:2.5KG大瓶[]", "2.5KG大瓶", undefined],
+			["xref:版本 v1.2[]", "版本 v1.2", undefined],
+			["xref:#大瓶 2.5KG[]", undefined, "大瓶 2.5KG"],
+			["xref:#2.5KG大瓶[]", undefined, "2.5KG大瓶"],
+			["xref:#版本 v1.2[]", undefined, "版本 v1.2"],
+			["xref:#C# 入门[]", undefined, "C# 入门"],
+			["xref:#上级::版本 v2.0[]", undefined, "上级::版本 v2.0"],
+			["<<大瓶 2.5KG>>", undefined, "大瓶 2.5KG"],
+			["<<2.5KG大瓶>>", undefined, "2.5KG大瓶"],
+			["xref:other.adoc#x[]", "other.adoc", "x"],
+			["xref:{book}#x[]", "other.adoc", "x"],
+		]);
+		expect(document.xrefOccurrences).toHaveLength(
+			await officialXrefCount(source),
+		);
+
+		const projection = projectAbundantDocumentToRdf12(document, {
+			documentRoot: process.cwd(),
+		});
+		const headlineOf = (heading: { value: string }) =>
+			projection.graph.match({
+				subject: iriTerm(heading.value),
+				predicate: iriTerm(`${namespaces.aat}headline`),
+			})[0]?.object.value;
+		expect(
+			projection.graph
+				.match({ predicate: iriTerm(`${namespaces.aat}targetHeading`) })
+				.map((triple) => headlineOf(triple.object as { value: string }))
+				.sort(),
+		).toEqual(
+			[
+				"大瓶 2.5KG",
+				"2.5KG大瓶",
+				"版本 v1.2",
+				"C# 入门",
+				"版本 v2.0",
+				"大瓶 2.5KG",
+				"2.5KG大瓶",
+			].sort(),
+		);
+		expect(
+			projection.graph
+				.match({ predicate: iriTerm(`${namespaces.aat}targetDocument`) })
+				.map((triple) => triple.object.value)
+				.sort(),
+		).toEqual(
+			[
+				"大瓶 2.5KG",
+				"2.5KG大瓶",
+				"版本 v1.2",
+				"other.adoc",
+				"other.adoc",
+			].sort(),
+		);
+	});
+
 	it("follows the official reading of escapes, extensionless documents and the single-plus passthrough", async () => {
 		const source = [
 			"= T",

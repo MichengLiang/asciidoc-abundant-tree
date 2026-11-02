@@ -19,6 +19,10 @@ xref 的 selector 由解析器给出：作者写下的目标在那个位置的�
 
 哪个是别的文档，照官方判（Asciidoctor.js 4.1.1 `substitutors.js` 1215 行起）：xref 的路径去掉 `.adoc` 以后，是这份文档自己，或是 include 拼进这份文档的文件，就是书内引用。被拼进来的文件不是另一份文档，它的文字就是这份文档的一部分：`book.adoc` 把 `chapters/b.adoc` include 进来，`+xref:chapters/b.adoc#乙[]+` 的 selector 是 `乙`，在本文档的 label 空间里绑定；绑定到的标题节点本来就带着 `chapters/b.adoc` 的回源坐标。不带片段的书内引用（`+xref:chapters/b.adoc[]+`、`+xref:book.adoc[]+`）指向这份文档本身，官方写成 `#`，没有 selector，不绑定标题节点。路径照官方按入口文档所在的目录读，不按写下引用的那个文件：写在 `chapters/a.adoc` 里的 `+xref:b.adoc#乙[]+` 指向入口目录下的 `b.adoc`，是别的文档。
 
+目标是不是路径，也照官方判（同文件 1196–1204 行）。xref 宏写法的目标里没有 `#` 时，以 `.adoc` 结尾的是路径，最后一个 `.` 之后没有 `/` 的也是路径（官方的 `isExtname`，`helpers.js` 186–189 行），其余才是本文档里的地址。所以标题原文带 `.` 的一节（`大瓶 2.5KG`、`版本 v1.2`），`+xref:大瓶 2.5KG[]+` 被官方读成名为 `大瓶 2.5KG` 的文档：边证据写 `aat:targetDocument "大瓶 2.5KG"`，不在本文档的 label 空间里绑定。投影器不改判；改判了，同一处引用在图上指向一节，在渲染里指向一个文件。目标以 `#` 开头时官方一定读作本文档里的地址，`#` 之后的全部文字是 selector：`+xref:#大瓶 2.5KG[]+` 的 selector 是 `大瓶 2.5KG`，`+xref:#上级::版本 v2.0[]+` 的是 `上级::版本 v2.0`；标题原文本身带 `#` 的（`C# 入门`）也这样写，`+xref:#C# 入门[]+` 的 selector 是 `C# 入门`。`+<<…>>+` 写法只把以 `.adoc` 结尾的目标当路径，`+<<大瓶 2.5KG>>+` 照常按地址绑定。
+
+被读成路径的引用，图上同时有它写下的 `aat:targetDocument` 和 label 空间里的标签：哪一处写的文档名恰好是本文档某一节的地址，下游按这两样就查得出来，投影器不另写诊断（这是解释，归读投影的一方）。
+
 指向别的文档的 xref 不在本文档的 label space 里绑定：边证据写 `aat:targetDocument`（文档部分）与 `aat:targetSelector`（片段），由读得到那份文档的消费者去绑定。
 
 `aat:addressLabel` 来自标题自身手动 ID，或来自归属到标题的本地非标题 target ID。selector 指向 listing、table、block、inline anchor 或 source value block 的本地 target ID 时，target heading 是该 target ID 所属的标题节点。
