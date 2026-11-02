@@ -4,6 +4,16 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.8.1 - 2026-11-02
+
+### Fixed
+
+- A section's style is in the object model again, on its official layer: `section.asciidoctor.style` is Asciidoctor's style of the section (`preface` for `[preface]`, `appendix`, `colophon`, …), and is absent when the section has none. 0.8.0 removed the positional style from `metadata.attributes`, but a section had no other place that carried it, so a renderer telling a preface or an appendix apart could no longer read it. The value comes from the section's `style` attribute, where Asciidoctor.js 4 keeps it (`getStyle()` is null on sections); a named `style=` gives the section that style too, as Asciidoctor reads it. The graph is unchanged. Specified in book 09, chapter 5.
+
+### Upgrading
+
+- Correction to the 0.8.0 Upgrading note, which said to read a positional style from "the node's `style`": a section has no `style` field. For a section, read `section.asciidoctor.style`; for a listing or another block, read the block's own `style` and `language`.
+
 ## 0.8.0 - 2026-11-02
 
 ### Changed (breaking)
