@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file.
 
 This project uses semantic versioning after `0.1.0`.
 
+## 0.8.0 - 2026-11-02
+
+### Changed (breaking)
+
+- An attrlist's `attributes` in the object model holds only what Asciidoctor treats as named attributes. The style derived from the first positional attribute (`preface` in `[preface]`, `source` in `[source,ts]`) and the language derived from the second (`ts`) are no longer copied into `attributes.style` and `attributes.language`; they stay on the block or heading as `style` and `language`. A bare `for` or `forSelector` marker in the positional attributes (`[source.配方,json,for]`) is no longer `attributes.for = true`: it is listed in the new `markers` array of the metadata node. A named `style=…` or `for=…` is still a named attribute.
+
+### Fixed
+
+- A positional attribute no longer becomes a heading field. `[preface]`, `[appendix]`, `[bibliography]` and the like gave the heading a `field:style` with field evidence whose `aat:fieldName` was `style`, a name the author never wrote; `[.dish, for]` on a heading gave `field:for "true"`. Only named attributes become fields, as book 06 chapter 2 「标题头部属性」 says; `[.dish, style=炖]` still gives `field:style "炖"`. A heading's remaining field evidences keep their order and are renumbered from 0. (asciidoc-abundant-tree#031)
+
+### Documentation
+
+- Books 06, 09 and 12 state when Asciidoctor reads an xref target as a document path: in the macro form, a target without `#` that ends in `.adoc`, or whose last `.` is not followed by `/`, is a path. `xref:版本 v1.2[]` therefore points to a document named `版本 v1.2` and binds no heading; aat keeps that reading. To reference a heading whose text contains `.` or `#`, write `xref:#版本 v1.2[]`, `xref:#上级::版本 v2.0[]` or `xref:#C# 入门[]`: a leading `#` always means an address in this document. The `<<…>>` form only treats `.adoc` targets as paths. Behavior is unchanged; a contract test pins these readings. (asciidoc-abundant-tree#033)
+
+### Development
+
+- `pnpm lint` and `pnpm format` honor `.gitignore`: generated and cached files that git ignores (such as a `.docparts_cache/` written at the repository root) are no longer linted, and `biome.json` only lists tracked files that should not be linted.
+
+### Upgrading
+
+- Consumers of the object model that read `metadata.attributes.style` or `metadata.attributes.language` for a positional style or language read the node's `style` and `language` instead; consumers that read `attributes.for === true` or `attributes.forSelector === true` read `markers`. Graph consumers that queried `field:style` to find preface or appendix headings no longer find them that way.
+
 ## 0.7.0 - 2026-11-01
 
 ### Added
