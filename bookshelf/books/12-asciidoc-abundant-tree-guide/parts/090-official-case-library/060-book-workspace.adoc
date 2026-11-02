@@ -30,7 +30,7 @@ entry file 保存书籍的整体顺序。included files 保存可维护章节。
 
 === 书籍结构
 
-frontmatter 提供书籍身份、摘要、前言和阅读入口。parts 与 chapters 承担正文论证。backmatter 提供术语表、参考文献、附录和索引。source-order notation 保留插入空间；标题原文支撑 xref；indexterm 支撑书后检索。
+frontmatter 提供版本说明、前言和致谢。parts 与 chapters 承担正文论证。backmatter 提供术语表、参考文献、附录和索引。source-order notation 保留插入空间；标题原文支撑 xref；indexterm 支撑书后检索。
 
 === 输出表面
 

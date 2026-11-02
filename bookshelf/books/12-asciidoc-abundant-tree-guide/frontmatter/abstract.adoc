@@ -1,5 +1,0 @@
-== 摘要
-
-本书定义一种以书稿为工作界面的信息建模方法。作者用 AsciiDoc 标题、字段、交叉引用和 source value block 组织可读文本；`asciidoc-abundant-tree` 将这些源表面投影为 RDF 1.2 图；TS/JS 程序在图上执行查询、校验、业务建模、视图生成、适配器输出和回源报告。
-
-本书的核心单位是 heading node。一个标题既是读者的阅读入口，也是图中的资源节点。字段描述节点，xref 连接节点，raw value object 保存复杂信息，source coordinate 把查询结果连接回源文件行号。读者由此获得一套可读、可查、可验证、可回源、可由代码和 agent 共同维护的信息工作界面。

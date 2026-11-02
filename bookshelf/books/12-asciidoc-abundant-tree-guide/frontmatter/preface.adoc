@@ -1,7 +1,20 @@
 == 前言
 
+本书定义一种以书稿为工作界面的信息建模方法。作者用 AsciiDoc 标题、字段、交叉引用和 source value block 组织可读文本；`asciidoc-abundant-tree` 将这些源表面投影为 RDF 1.2 图；TS/JS 程序在图上执行查询、校验、业务建模、视图生成、适配器输出和回源报告。
+
 AsciiDoc 已经是一种成熟的书稿语言。它有标题、章节、交叉引用、属性、描述列表、include、附录、术语表和参考文献。`asciidoc-abundant-tree` 在这个可读书稿表面上建立 source-aware projection，使标题、字段、xref、payload 和行号成为可查询图事实。
 
-信息进入图的路径从源书稿开始。第一部建立第一张可查询图；第二部到第四部展开资源节点、字段、引用和复杂属性；第五部进入查询、校验、报告和回源动作；第六部进入多文件书稿作为长期知识人工制品的组织方式；第七部进入从 projection graph 派生 business graph 的建模方法；第八部进入领域闭环。
+本书的核心单位是 heading node。一个标题既是读者的阅读入口，也是图中的资源节点。字段描述节点，xref 连接节点，raw value object 保存复杂信息，source coordinate 把查询结果连接回源文件行号。读者由此获得一套可读、可查、可验证、可回源、可由代码和 agent 共同维护的信息工作界面。
+
+信息进入图的路径从源书稿开始。第一部从引言出发，建立第一张可查询图；第二部到第四部展开资源节点、字段、引用和复杂属性；第五部进入查询、校验、报告和回源动作；第六部进入多文件书稿作为长期知识人工制品的组织方式；第七部进入从 projection graph 派生 business graph 的建模方法；第八部进入领域闭环。
+
+不同的读者沿不同的路径读这本书：
+
+* AsciiDoc 作者从第一部读到第四部，先掌握标题节点、字段、引用和复杂属性的源表面，再进入第六部理解多文件书稿组织。
+* TypeScript / JavaScript 开发者从第一部建立投影闭环，接着阅读第五部的 RDF/JS、SPARQL、SHACL 和报告章节，再进入第八部复制领域闭环。
+* 领域建模者从第七部开始建立 role、rel、field、payload schema 和 hierarchy policy，再回到第二部到第四部核对每种建模表面的投影规则。
+* 书籍维护者阅读第六部和书后的附录，使用 book-entry、frontmatter、parts、chapters、backmatter、术语表、参考文献和索引维护长期书稿。
+* AI agent 操作者重点阅读第一部、第五部和第八部。source coordinate、source-aware report 和领域闭环目录把查询结果连接到可编辑源文件。
+* RDF 与知识图谱工程师阅读第二部到第五部，核对 heading node、xref edge evidence、raw value object、RDF 1.2 reifier、SHACL 和 SPARQL 查询面。
 
 书中的代码采用 TypeScript / JavaScript 主线，并按公开 npm 包的消费方式书写。Python 示例只作为跨语言消费补充出现。领域闭环中的生成物保留 source-aware report，使读者从图查询结果回到源文件位置。

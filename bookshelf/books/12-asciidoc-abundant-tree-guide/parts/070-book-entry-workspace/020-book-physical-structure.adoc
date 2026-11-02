@@ -4,26 +4,21 @@
 
 === Frontmatter
 
-frontmatter 位于正文 parts 之前。半书名页、标题页和版权页提供书籍身份；摘要、前言、致谢、引言和阅读路径提供进入对象的入口。
+frontmatter 位于正文 parts 之前，只用 book 的前置样式：`[colophon]` 记版本、版权与出版信息，`[dedication]` 是献词，`[preface]` 说明这本书覆盖什么、怎样读，`[acknowledgments]` 是致谢。书名、作者和版本写在文档头，书名页由转换器生成，不另写半书名页或标题页。book 没有摘要：`[abstract]` 是 article 的样式，在 book 里会成为编了号的一章。引言是论述的起点时，作为正文第一部的第一章。
 
 [source,asciidoc]
 ----
-\include::frontmatter/half-title.adoc[]
-
-\include::frontmatter/title-page.adoc[]
-
-\include::frontmatter/copyright.adoc[]
-
-[abstract]
-\include::frontmatter/abstract.adoc[]
+[colophon]
+\include::frontmatter/colophon.adoc[]
 
 [preface]
 \include::frontmatter/preface.adoc[]
 
-\include::frontmatter/introduction.adoc[]
+[acknowledgments]
+\include::frontmatter/acknowledgments.adoc[]
 ----
 
-frontmatter 文件参与 source set。其标题、字段和引用同样进入 projection graph。读者检视一本书时，frontmatter 提供书籍对象、责任、版本、阅读路径和入口论题。
+frontmatter 文件参与 source set。其标题、字段和引用同样进入 projection graph。读者检视一本书时，frontmatter 提供书籍的版本、责任和阅读路径。
 
 === Parts 与 Chapters
 

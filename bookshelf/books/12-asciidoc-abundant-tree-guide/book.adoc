@@ -6,15 +6,6 @@ include::../../shared/attributes.adoc[]
 :part-signifier: Part
 :source-highlighter: highlight.js
 
-include::frontmatter/half-title.adoc[]
-
-include::frontmatter/title-page.adoc[]
-
-include::frontmatter/copyright.adoc[]
-
-[abstract]
-include::frontmatter/abstract.adoc[]
-
 [colophon]
 include::frontmatter/colophon.adoc[]
 
@@ -24,14 +15,12 @@ include::frontmatter/preface.adoc[]
 [acknowledgments]
 include::frontmatter/acknowledgments.adoc[]
 
-include::frontmatter/introduction.adoc[]
-
-include::frontmatter/reading-paths.adoc[]
-
 = 书稿即图
 
 [partintro]
 一段 AsciiDoc 源文档可以同时成为读者阅读的章节和程序查询的资源图。标题创建节点，字段创建谓词，xref 创建关系，source coordinate 把查询结果带回源文件。
+
+include::parts/010-manuscript-as-graph/000-introduction.adoc[]
 
 include::parts/010-manuscript-as-graph/010-first-queryable-graph.adoc[]
 

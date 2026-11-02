@@ -1,3 +1,0 @@
-== 半书名页
-
-AsciiDoc Abundant Tree：用书稿构建可查询知识图谱

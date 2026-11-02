@@ -1,5 +1,14 @@
 == 版本说明
 
-本书属于 `{series-name}` 书架。书稿使用 book-entry 结构组织，源文件位于 `docs/bookshelf/books/12-asciidoc-abundant-tree-guide/`。
+本书副标题：标题节点、RDF 1.2 投影、TS/JS 消费与领域闭环。
+
+Copyright © 2026 弥澄亮。
+
+本书属于 `{series-name}` 书架，随 `asciidoc-abundant-tree` 项目发布。书稿使用 book-entry 结构组织，源文件位于 `bookshelf/books/12-asciidoc-abundant-tree-guide/`。项目源码、示例和包入口以公开仓库与 npm 包为准。
+
+[horizontal]
+源码仓库:: link:https://github.com/MichengLiang/asciidoc-abundant-tree[]
+npm 包:: link:https://www.npmjs.com/package/asciidoc-abundant-tree[]
+许可证:: Apache-2.0
 
 本书示例代码使用公开 npm 包 `asciidoc-abundant-tree`。示例执行入口以包的 Library API 与 CLI 为准；仓库开发命令只出现在维护者语境中。
