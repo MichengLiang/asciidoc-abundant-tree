@@ -362,12 +362,7 @@ function escapeJsonValueForScript(value) {
         .replaceAll("\u2029", "\\u2029");
 }
 function sectionStyle(section) {
-    for (const metadata of section.metadata ?? []) {
-        const style = metadata.attributes?.style;
-        if (typeof style === "string")
-            return style;
-    }
-    return undefined;
+    return section.asciidoctor?.style;
 }
 function firstSectionId(section) {
     const id = section.ids?.[0];
@@ -544,15 +539,19 @@ function bindReferences(config, document) {
         .filter((entry) => entry.kind === "section")
         .map((entry) => [entry.iri.value, entry]));
     // 地址的名字：选择器是这一节的标题或某个限定地址时，照写下的样子显示，各级标题之间用间隔号；是 ID（作者声明的或生成的）
-    // 时显示标题——ID 是给引用用的第二个地址，不是给读者看的名字。按图上是哪个标签判，不按字符串里有没有 :: 猜。
+    // 时显示标题——ID 是给引用用的第二个地址，不是给读者看的名字。按图上是哪个标签判，不按字符串里有没有 :: 猜：
+    // 标题原文本身带 :: 的（std::vector）是一个标题，原样显示，只有限定地址才按 :: 拆开。
     const located = (iris, selector) => [...iris].flatMap((iri) => {
         const entry = sections.get(iri);
         const id = entry?.node.ids?.[0];
         if (entry === undefined || id === undefined)
             return [];
         const node = { termType: "iri", value: iri };
-        const named = values(node, "headline").includes(selector) || values(node, "addressPath").includes(selector);
-        return [{ id, shown: named ? selector.split("::").join("·") : entry.node.title ?? id }];
+        if (values(node, "headline").includes(selector))
+            return [{ id, shown: selector }];
+        if (values(node, "addressPath").includes(selector))
+            return [{ id, shown: selector.split("::").join("·") }];
+        return [{ id, shown: entry.node.title ?? id }];
     });
     // 别的书指过来的引用在这本书的 label space 里找：图上四个标签谓词的值，按整串相等找拥有者。
     const ownersByLabel = new Map();
