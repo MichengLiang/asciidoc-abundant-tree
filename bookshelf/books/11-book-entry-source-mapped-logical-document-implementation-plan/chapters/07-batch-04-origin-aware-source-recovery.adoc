@@ -21,7 +21,7 @@
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Line Origin[10 号书：Line Origin]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Source Coordinate Recovery[10 号书：Source Coordinate Recovery]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Diagnostics[10 号书：Diagnostics]
-* xref:执行契约::执行契约[本书：执行契约]
+* xref:批次共守的规则[本书：批次共守的规则]
 * `src/source-lines.ts`
 * `src/source-surfaces.ts`
 * `src/inline-occurrence-scanner.ts`

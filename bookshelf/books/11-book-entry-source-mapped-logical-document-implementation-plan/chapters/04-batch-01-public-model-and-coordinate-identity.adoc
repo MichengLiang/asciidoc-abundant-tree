@@ -21,7 +21,7 @@
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Entry 与 Source Set[10 号书：Entry 与 Source Set]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Line Origin[10 号书：Line Origin]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Public API 与 CLI[10 号书：Public API 与 CLI]
-* xref:执行契约::执行契约[本书：执行契约]
+* xref:批次共守的规则[本书：批次共守的规则]
 * `src/model.ts`
 * `src/serializers.ts`
 * `src/index.ts`

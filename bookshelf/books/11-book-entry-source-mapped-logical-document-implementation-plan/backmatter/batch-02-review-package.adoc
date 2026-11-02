@@ -188,8 +188,8 @@ src/book-entry/** Lines: 100% (78/78)
 * 本批没有修改批次边界外文件。
 * 本批没有修改 `src/parser.ts`、`src/asciidoctor-adapter.ts`、`src/rdf12-projection/**`、`src/model.ts`、`src/serializers.ts`、`src/index.ts`、`README.md` 或 `CHANGELOG.md`。
 * 本批没有引入全局打回条件；全局 branch coverage 阈值失败为已记录基线，`src/book-entry/**` 覆盖率满足本批要求。
-* 本批数据流符合 xref:执行契约::执行契约[执行契约]。
-* 本批控制流符合 xref:执行契约::执行契约[执行契约]。
+* 本批数据流符合 xref:批次共守的规则[]。
+* 本批控制流符合 xref:批次共守的规则[]。
 * 本批新增代码有对应测试。
 * 本批打回对象已由真实 shared attributes include fixture 和断言覆盖。
 * 本批性能相关结构没有无界扫描高频路径；logical line lookup 使用 lineOrigins 下标。

@@ -1,4 +1,4 @@
-== 投影对象
+== 标题投影图
 
 标题投影图是从单个 AsciiDoc 源文档导出的 RDF 1.2 图。该图描述 heading node、heading node 之间的 structure edge、标题切片中的 xref edge evidence，以及归属于 heading node 或 xref edge evidence 的字段。
 

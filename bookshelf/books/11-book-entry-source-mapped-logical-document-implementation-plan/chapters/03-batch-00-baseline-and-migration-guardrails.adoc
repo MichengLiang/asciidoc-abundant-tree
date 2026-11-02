@@ -22,7 +22,7 @@ Batch 00 没有前置批次。开始前必须确认本计划书执行契约已�
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc[10 号书全文]
 * xref:../08-body-lab-material-system/book.adoc#Lab Object 的成立条件[8 号书：Lab]
 * xref:../08-body-lab-material-system/book.adoc#Body 评判清单[8 号书：实例评判标准]
-* xref:执行契约::执行契约[本书：执行契约]
+* xref:批次共守的规则[本书：批次共守的规则]
 * xref:当前源码状态[本书：当前源码状态]
 * `src/model.ts`
 * `src/parser.ts`
