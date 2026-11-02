@@ -1,13 +1,13 @@
-= 附录 C：CLI 与 Library API
+= CLI 与 Library API
 
-== 安装
+=== 安装
 
 [source,bash]
 ----
 pnpm add asciidoc-abundant-tree
 ----
 
-== CLI
+=== CLI
 
 [source,bash]
 ----
@@ -21,7 +21,7 @@ asciidoc-abundant-tree <file.adoc> --format rdf12-json-ld
 asciidoc-abundant-tree <file.adoc> --mode book-entry --document-root <root> --format rdf12
 ----
 
-== Library API
+=== Library API
 
 [source,typescript]
 ----
@@ -42,7 +42,7 @@ const jsonLd = projection.jsonLd;
 const graph = projection.graph;
 ----
 
-== Browser Subpath
+=== Browser Subpath
 
 [source,typescript]
 ----

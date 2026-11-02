@@ -1,4 +1,4 @@
-== 关闭记录
+= 关闭记录
 
 本关闭记录记录 `11-book-entry-source-mapped-logical-document-implementation-plan` 的 Batch 08 通过与计划关闭事实。
 

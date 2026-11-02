@@ -1,6 +1,6 @@
-= 附录 E：SHACL 模板
+= SHACL 模板
 
-== Heading 基础 Shape
+=== Heading 基础 Shape
 
 [source,turtle]
 ----
@@ -31,7 +31,7 @@ ex:HeadingShape a sh:NodeShape ;
   ] .
 ----
 
-== Role 约束 Shape
+=== Role 约束 Shape
 
 [source,turtle]
 ----

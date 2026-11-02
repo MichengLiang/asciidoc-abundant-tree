@@ -94,7 +94,7 @@ include::backmatter/closure-record-template.adoc[]
 [appendix]
 include::backmatter/closure-record.adoc[]
 
-[appendix]
+[glossary]
 include::backmatter/glossary.adoc[]
 
 [bibliography]

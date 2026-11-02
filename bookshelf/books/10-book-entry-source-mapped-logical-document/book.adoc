@@ -50,7 +50,7 @@ include::chapters/10-public-api-and-cli.adoc[]
 
 include::chapters/11-contract-tests.adoc[]
 
-[appendix]
+[glossary]
 include::backmatter/glossary.adoc[]
 
 [bibliography]

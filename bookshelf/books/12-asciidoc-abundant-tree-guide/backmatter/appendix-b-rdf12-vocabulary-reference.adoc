@@ -1,4 +1,4 @@
-= 附录 B：RDF 1.2 投影词表速查
+= RDF 1.2 投影词表速查
 
 [cols="1,2", options="header"]
 |===

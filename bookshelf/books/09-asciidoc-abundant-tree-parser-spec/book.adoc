@@ -57,7 +57,7 @@ include::chapters/11-engineering-contract.adoc[]
 
 include::chapters/12-acceptance-and-gates.adoc[]
 
-[appendix]
+[glossary]
 include::backmatter/glossary.adoc[]
 
 [bibliography]

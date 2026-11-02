@@ -1,4 +1,4 @@
-== 术语表
+= 术语表
 
 source document:: 作为事实来源的 AsciiDoc 源文件。
 

@@ -1,4 +1,4 @@
-== 参考坐标
+= 参考坐标
 
 * [[[wbs]]] Project Management Institute, _Practice Standard for Work Breakdown Structures_. Work package 用于标记有边界、有交付物、有验收的工作单元。
 * [[[cm]]] ISO/IEC/IEEE 828, _Systems and software engineering -- Configuration management_. Baseline、change control 和 traceability 用于标记可引用项目状态与受控变更。

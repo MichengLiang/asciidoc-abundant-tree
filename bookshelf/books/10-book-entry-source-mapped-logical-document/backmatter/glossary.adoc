@@ -1,4 +1,4 @@
-== 术语表
+= 术语表
 
 [glossary]
 book-entry mode:: 从书稿入口构造 source-mapped logical document 的输入模式。

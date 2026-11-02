@@ -1,4 +1,4 @@
-== 参考坐标
+= 参考坐标
 
 * xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc[asciidoc-abundant-tree 解析器规约]：本计划的 parser 公共模型、single-file 输入、source layer、official layer、diagnostics、CLI/API 和验收门禁来源。
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc[书稿入口回源逻辑文档规约]：本计划的目标 body 依据。

@@ -1,4 +1,4 @@
-== 术语表
+= 术语表
 
 [glossary]
 AbundantDocument:: `asciidoc-abundant-tree` 解析器的公共 TypeScript 数据模型。

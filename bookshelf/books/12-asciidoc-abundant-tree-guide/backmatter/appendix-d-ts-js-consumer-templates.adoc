@@ -1,6 +1,6 @@
-= 附录 D：TS/JS Consumer 模板
+= TS/JS Consumer 模板
 
-== Projection 生成
+=== Projection 生成
 
 [source,typescript]
 ----
@@ -15,7 +15,7 @@ writeFileSync("projection/input.ttl", projection.ttl);
 writeFileSync("projection/input.jsonld", projection.jsonLd);
 ----
 
-== Turtle 读取
+=== Turtle 读取
 
 [source,typescript]
 ----
@@ -26,7 +26,7 @@ const ttl = readFileSync("projection/input.ttl", "utf8");
 const store = new Store(new Parser({ format: "Turtle" }).parse(ttl));
 ----
 
-== Heading Report
+=== Heading Report
 
 [source,typescript]
 ----

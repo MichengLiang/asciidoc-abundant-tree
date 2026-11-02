@@ -44,7 +44,7 @@ include::chapters/07-query-contract.adoc[]
 
 include::chapters/08-worked-example.adoc[]
 
-[appendix]
+[glossary]
 include::backmatter/glossary.adoc[]
 
 [bibliography]
