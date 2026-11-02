@@ -349,8 +349,8 @@ describe("parseAbundantTree", () => {
 			expect.objectContaining({
 				ids: ["box-id"],
 				roles: ["role-a", "role-b"],
+				// sidebar 是第一个位置属性推出的 style，作者没写 style 这个名字，不进 attributes（#031）。
 				attributes: {
-					style: "sidebar",
 					key: "value",
 				},
 			}),

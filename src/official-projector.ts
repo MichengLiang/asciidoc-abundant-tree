@@ -757,8 +757,7 @@ function hasRdf12SourceOwnerMarker(surface: MetadataSurface): boolean {
 	if (surface.node.metadataKind !== "attrlist") {
 		return false;
 	}
-	const attributes = surface.node.attributes ?? {};
-	return attributes.for === true || attributes.forSelector === true;
+	return (surface.node.markers?.length ?? 0) > 0;
 }
 
 function buildTable(

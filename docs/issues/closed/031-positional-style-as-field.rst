@@ -32,3 +32,15 @@
 - ``[preface]`` 标题没有 ``field:style`` ，也没有对应的字段证据；作者写的 ``[.dish, style=炖]`` 照旧是字段。
 - ``[source,ts]`` 块的 ``aat:format "ts"`` 不变。
 - 规约：06 号书第 2 章写明位置属性推出的 style 不进 ``field:`` 。
+
+## 解决
+
+:提交: 工作包 26.1（git log --grep "Work-Package: 26.1"）
+
+位置属性不再并入命名属性。``src/metadata-parser.ts`` 的 ``parseAttrList`` 把第一个位置属性推出的 style、style 之后的第二个位置属性推出的 language 只作为 metadata surface 的 ``style``、``language`` 交出，``attributes`` 只装官方认下的命名属性；投影写标题字段读的是 ``attributes``，所以 ``[preface]`` 的标题没有 ``field:style``，也没有字段证据。作者写下的 ``style=炖`` 是命名属性，照旧是字段。
+
+同根的一处一并改了：位置属性里无值的 ``for`` / ``forSelector``（heading complex property marker）原来写成 ``attributes.for = true``，放在标题上会投影成 ``field:for "true"``；现在记在 metadata 节点新增的 ``markers`` 上，source value block 的读者（``official-projector.ts`` 的 listing 语言、``payload-projector.ts`` 的 marker）从那里读。
+
+规约：06 号书第 2 章「标题头部属性」写明位置属性不是 named attribute、不成字段；09 号书第 8 章「Metadata Attachment」写明 style、language 另记、``attributes`` 只装命名属性。
+
+测试：``test/rdf12-projection/field-evidence.test.ts`` 新增一条，钉住 ``[preface]`` 与 ``[.dish, for]`` 的标题没有字段与证据、``style=炖`` 有字段与证据、无值 ``for`` 的 source value block 仍是所在标题的 complex property，``aat:format`` 仍是位置属性推出的 ``json``；对象模型里 metadata 的 ``attributes`` 不再含 style、language，三处单测跟着改。

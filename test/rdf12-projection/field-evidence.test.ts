@@ -154,7 +154,7 @@ level: high
 			`= 菜谱
 :doctype: book
 
-[preface]
+[preface, 来源=自序]
 include::front.adoc[]
 
 include::chapters/dishes.adoc[]
@@ -191,9 +191,10 @@ include::chapters/dishes.adoc[]
 				}),
 			),
 		).toEqual([
-			// [preface] 写在 book.adoc 里，修饰 include 进来的标题：证据指向它写下的那一行。
+			// [preface, 来源=自序] 写在 book.adoc 里，修饰 include 进来的标题：证据指向它写下的那一行。preface 是位置属性，
+			// 不是字段，没有证据（#031）。
 			{
-				fieldName: "style",
+				fieldName: "来源",
 				surface: "attrlist",
 				relativePath: "book.adoc",
 				startLine: 4,
@@ -211,6 +212,56 @@ include::chapters/dishes.adoc[]
 				startLine: 6,
 			},
 		]);
+	});
+
+	it("does not turn positional attributes into fields (#031)", async () => {
+		const { graph, documentIri } = await projectSingle(`= Probe
+:doctype: book
+
+[preface]
+== 前言
+
+[.dish, style=炖]
+== 红烧肉
+
+[.dish, for]
+== 甲
+
+== 乙
+
+[source.配方,json,for]
+----
+{"a": 1}
+----
+`);
+		const fieldsOf = (documentOrder: number) =>
+			graph
+				.match({ subject: headingIri(documentIri, documentOrder) })
+				.filter((triple) =>
+					triple.predicate.value.startsWith(fieldPredicate("").value),
+				)
+				.map((triple) =>
+					triple.predicate.value.slice(fieldPredicate("").value.length),
+				);
+
+		// [preface] 的 preface、[.dish, for] 的 for 是位置属性，作者没写 style、for 这样的名字；style=炖 是命名属性。
+		expect(fieldsOf(2)).toEqual([]);
+		expect(fieldsOf(3)).toEqual(["style"]);
+		expect(fieldsOf(4)).toEqual([]);
+		expect(evidenceOf(graph).map(({ fieldName }) => fieldName)).toEqual([
+			"style",
+		]);
+		// 无值 for 照旧让 source value block 成为它所在标题的 complex property，格式取位置属性推出的 language。
+		expect(fieldsOf(5)).toEqual(["配方"]);
+		const [rawValue] = graph.match({
+			subject: headingIri(documentIri, 5),
+			predicate: fieldPredicate("配方"),
+		});
+		expect(
+			rawValue?.object.termType === "iri"
+				? literalValues(graph, rawValue.object, aatTerm("format"))
+				: [],
+		).toEqual(["json"]);
 	});
 });
 

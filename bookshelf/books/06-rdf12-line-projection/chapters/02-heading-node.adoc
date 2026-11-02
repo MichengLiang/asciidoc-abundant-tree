@@ -161,6 +161,8 @@ named attributes 投影为字段谓词，规则见 xref:Field Predicate[Field Pr
 
 `#id` 不投影为字段。它投影为 `aat:addressLabel`。点号 role token 不投影为字段谓词。它投影为 `aat:role`。named attribute 才进入 `field:` 下的字段谓词。
 
+位置属性不是 named attribute，不成为字段。`[preface]`、`[appendix]` 里的 `preface`、`appendix` 是第一个位置属性，官方称之为这一节的 style；作者写下的是一个词，没有写下 `style` 这个名字。`field:` 下的字段名是作者写下的名字（字段证据的 `aat:fieldName` 记的就是它），所以 `[preface]` 的标题没有 `field:style`，也没有对应的字段证据。作者写下 `style=炖` 时，`style` 是作者写的名字，照样是字段。
+
 标题 complex property 也使用同一套字段名映射。标题 complex property 的字段名来自 source value block 的 property role，字段值是 raw value object。标题 metadata role 仍只表达标题角色，不表达 complex property 字段名。
 
 === 标题下描述列表字段

@@ -12,6 +12,8 @@ Metadata surface 附着到紧随其后的 section 或 block。可附着 surface 
 
 Attribute list 怎样拆，由官方定：哪一段是命名属性、名字是什么、哪一段是位置属性，取官方对源文本里方括号内文字的解析：官方读块属性行时调用 `parseAttributes`（`parser.js` 2839 行），解析器照样调用它，只是不开替换（`sub_input`、`sub_result`），所以拆法与名字照官方，值保留作者写下的样子。不用 `extractAttributesFromText`：它会替换单引号里的值，并另行处理第一个位置属性。只有官方认作命名属性的才是命名属性。`[.dish, 难度=中, 葱、姜=多, a.b=1]` 里，`难度` 是命名属性；`葱、姜=多` 与 `a.b=1` 的名字不合 Asciidoctor 的属性名规则（`[\p{Word}][\p{Word}-]*`），官方把它们读成第 3、4 个位置属性，它们不是命名属性，也就不成为字段（06 号书第 2 章「标题头部属性」）。按逗号自己切开 attrlist 会把它们读成命名属性，引号里的逗号也会被切开。
 
+位置属性推出的名字另记，不并入命名属性。第一个位置属性的主体是 style（`[preface]` 的 `preface`、`[source,ts]` 的 `source`），style 之后的第二个位置属性是 language（`[source,ts]` 的 `ts`）；它们记在 metadata surface 的 `style`、`language` 上，listing 的语言、raw value object 的格式从这里读。attribute list 的 `attributes` 只装官方认下的命名属性，所以作者没有写下 `style`、`language` 这两个名字时，`attributes` 里没有它们；作者写了 `style=炖`，`attributes` 里就有 `style`。
+
 === Xref Occurrence
 
 Xref occurrence 是官方认下、并在源文本里找到位置的 xref（xref:Xref 由官方认定[Xref 由官方认定]）。它在源文本中的写法是下面几种：

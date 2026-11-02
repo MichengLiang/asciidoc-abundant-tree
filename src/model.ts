@@ -80,6 +80,9 @@ export type MetadataNode = NodeBase & {
 	ids?: string[];
 	roles?: string[];
 	attributes?: Record<string, string | number | boolean>;
+	// 位置属性里的 heading complex property marker（`[source,yaml,for]`）。marker 是作者写下的一个词，不是名为
+	// `for` 的命名属性，所以不放进 attributes：attributes 只装官方认下的命名属性，标题的字段从那里来。
+	markers?: ("for" | "forSelector")[];
 };
 
 export type SectionNode = NodeBase & {

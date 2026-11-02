@@ -210,9 +210,8 @@ quoted
 						metadataKind: "attrlist",
 						ids: [],
 						roles: [],
+						// source、ts 是位置属性推出的 style 与 language，只在块的 style、language 上（#031）。
 						attributes: {
-							style: "source",
-							language: "ts",
 							flag: "",
 							key: "value=with=equals",
 						},
@@ -231,9 +230,7 @@ quoted
 					}),
 					expect.objectContaining({
 						metadataKind: "attrlist",
-						attributes: {
-							style: "quote",
-						},
+						attributes: {},
 					}),
 				],
 			}),
@@ -356,10 +353,12 @@ ordinary bare token
 		);
 
 		expect(listings[0]).not.toHaveProperty("language");
+		// 无值的 for 是位置属性里的一个词，记作 marker，不是名为 for 的命名属性。
 		expect(attrlists[0]).toEqual(
 			expect.objectContaining({
 				roles: ["banana"],
-				attributes: { for: true },
+				attributes: {},
+				markers: ["for"],
 			}),
 		);
 		expect(attrlists[1]).toEqual(

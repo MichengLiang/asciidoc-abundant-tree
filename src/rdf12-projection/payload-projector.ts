@@ -54,6 +54,7 @@ type SourceValueBlockEntry = {
 	readonly relativePath: string;
 	readonly roles: readonly string[];
 	readonly attributes: Readonly<Record<string, string | number | boolean>>;
+	readonly markers: ReadonlySet<"for" | "forSelector">;
 };
 
 type HeadingMarker =
@@ -137,6 +138,9 @@ function sourceValueBlockEntry(
 		relativePath,
 		roles: sourceValueRoles(node.metadata),
 		attributes: sourceValueAttributes(node.metadata),
+		markers: new Set(
+			node.metadata?.flatMap((item) => item.markers ?? []) ?? [],
+		),
 	};
 }
 
@@ -160,7 +164,7 @@ function projectHeadingComplexProperty(
 	context: ComplexPropertyProjectorContext,
 	entry: SourceValueBlockEntry,
 ): void {
-	const marker = headingMarkerFor(entry.attributes);
+	const marker = headingMarkerFor(entry.attributes, entry.markers);
 	if (marker === undefined) {
 		return;
 	}
@@ -268,14 +272,20 @@ function createRawValueObject(
 	return value;
 }
 
+// 带值的 marker 是命名属性（for=甲），无值的是位置属性里的一个词（[source,yaml,for]）。
 function headingMarkerFor(
 	attributes: Readonly<Record<string, string | number | boolean>>,
+	markers: ReadonlySet<"for" | "forSelector">,
 ): HeadingMarker | undefined {
-	const forSelector = markerValue(attributes.forSelector);
-	if (forSelector !== undefined) {
-		return forSelector;
+	for (const name of ["forSelector", "for"] as const) {
+		const marker =
+			markerValue(attributes[name]) ??
+			(markers.has(name) ? ({ kind: "source-owner" } as const) : undefined);
+		if (marker !== undefined) {
+			return marker;
+		}
 	}
-	return markerValue(attributes.for);
+	return undefined;
 }
 
 function markerValue(

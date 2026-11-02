@@ -212,6 +212,7 @@ function parseMetadataLine(
 				ids: parsed.ids,
 				roles: parsed.roles,
 				attributes: parsed.attributes,
+				...(parsed.markers ? { markers: parsed.markers } : {}),
 				source: metadataSource(lineTable, line, raw, sourceSpan),
 			},
 			line,
@@ -251,6 +252,7 @@ function parseAttrList(
 	ids: string[];
 	roles: string[];
 	attributes: Record<string, string | number | boolean>;
+	markers?: ("for" | "forSelector")[];
 	style?: string;
 	language?: string;
 } {
@@ -263,8 +265,11 @@ function parseAttrList(
 	const ids: string[] = [];
 	const roles: string[] = [];
 	const attributes: Record<string, string | number | boolean> = {};
+	const markers: ("for" | "forSelector")[] = [];
 
 	// 位置属性的键是 "1"、"2"……，其余是官方认下的命名属性；名字不合官方属性名规则的整段（葱、姜=多）是位置属性。
+	// 位置属性推出的 style、language 与 marker 另记，不并入 attributes：作者没有写下 style、language 这样的名字，
+	// attributes 里的每一项都会成为标题的字段（09 号书第 8 章「Metadata Attachment」）。
 	const positional = new Map<number, string>();
 	for (const [key, value] of Object.entries(official)) {
 		if (typeof value !== "string") {
@@ -277,30 +282,33 @@ function parseAttrList(
 		}
 	}
 
+	// 作者写了命名的 style= 时官方同样把它当 style。
+	let style =
+		typeof attributes.style === "string" ? attributes.style : undefined;
+	let language =
+		typeof attributes.language === "string" ? attributes.language : undefined;
 	const first = positional.get(1);
 	if (first !== undefined) {
 		const parsedFirst = parseStyleIdRoles(first);
 		ids.push(...parsedFirst.ids);
 		roles.push(...parsedFirst.roles);
-		if (parsedFirst.style) {
-			attributes.style = parsedFirst.style;
-		}
+		style = parsedFirst.style ?? style;
 	}
 	for (const [index, value] of positional) {
 		if (index === 1) {
 			continue;
 		}
 		if (value === "for" || value === "forSelector") {
-			attributes[value] = true;
+			markers.push(value);
 			continue;
 		}
 		if (
 			index === 2 &&
-			typeof attributes.style === "string" &&
+			style !== undefined &&
 			!value.includes("#") &&
 			!value.includes(".")
 		) {
-			attributes.language = value;
+			language = value;
 		}
 	}
 
@@ -308,13 +316,14 @@ function parseAttrList(
 		ids,
 		roles,
 		attributes,
-		style: typeof attributes.style === "string" ? attributes.style : undefined,
-		language:
-			typeof attributes.language === "string" ? attributes.language : undefined,
+		markers: markers.length > 0 ? markers : undefined,
+		style,
+		language,
 	}) as {
 		ids: string[];
 		roles: string[];
 		attributes: Record<string, string | number | boolean>;
+		markers?: ("for" | "forSelector")[];
 		style?: string;
 		language?: string;
 	};
