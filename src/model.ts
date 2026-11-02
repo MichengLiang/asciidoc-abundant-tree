@@ -51,6 +51,8 @@ export type AsciidoctorLayer = {
 	resolvedId?: string;
 	resolvedType?: TargetType;
 	reftext?: string;
+	// 官方读出的节 style（[preface] 的 preface）：从位置属性推出，不是作者写下的命名属性，只在官方层。
+	style?: string;
 };
 
 export type ToolDiagnostic = {

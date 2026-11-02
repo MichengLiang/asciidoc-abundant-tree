@@ -40,6 +40,7 @@ Title 保存标题文本和可恢复的 source location。没有源标题行时�
 * `metadata`：附着到标题的 metadata。
 * `descriptionMetadata`：标题下描述列表字段，见 <<Heading Description Metadata>>。
 * `children`：该 section 内的子 section 和 block。
+* `asciidoctor.style`：官方读出的这一节的 style（节的 `style` 属性，`section.getAttribute('style')`；4.x 的节不设节点 style，`getStyle()` 是 null），`[preface]`、`[appendix]`、`[colophon]` 的 `preface`、`appendix`、`colophon`；没有时省略。它是官方从第一个位置属性推出的名字，不是作者写下的命名属性，所以在官方层，不在 metadata 的 `attributes` 里（第 8 章「Metadata Attachment」）。渲染一方区分前言、附录、版权页这类节时读它。
 
 official section tree 决定 section identity 和父子结构。source layer 恢复 raw、metadata、line span 和 title span。
 

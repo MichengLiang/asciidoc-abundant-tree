@@ -214,6 +214,8 @@ function buildSection(
 		resolvedId: officialId,
 		resolvedType: "section",
 		reftext: block.getTitle?.(),
+		// 4.x 的节不设节点 style（getStyle() 是 null），官方把它留在节的 style 属性里。
+		style: stringAttr(block, "style"),
 	}) as AsciidoctorLayer;
 	registerOfficialBlockTarget(context, block, {
 		targetType: "section",
