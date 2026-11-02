@@ -31,6 +31,27 @@
 书库是 aat 这个 pnpm 工作区的成员，依赖写作 `workspace:*`：投影书的就是仓库里当前的 aat。`pnpm check` 的末尾
 （`pnpm build:books`）用它把书库构建一遍：aat 改了投影，书库还渲染得出来。
 
+## 书的结构
+
+书照工作区模板的书籍结构写，不另立规矩。模板的规矩写在它的样书 00 号《完整书籍结构标本》与它的 `DESIGN.adoc`
+（Shared Attributes、Sample Front Matter、Sample Back Matter）、`docs/guides/part-numbering.adoc` 里；它们与
+《芝加哥手册》对书的划分一致，Asciidoctor 的 book 文档类型也照这个划分设特殊节：一本书分前置内容、正文、后附内容，
+部是正文内部的划分，附录、术语表、参考文献、索引属于后附，不属于哪一部。落到这七本书上：
+
+- 文档头：`book.adoc` 的书名、作者、版本三行之后紧接 `include::../../shared/attributes.adoc[]`，不留空行（空行结束
+  文档头，只在文档头生效的属性就不生效了）。书库共有的属性在 `shared/attributes.adoc` 写一次，包括附录的 caption
+  “附录”；只属于一本书的写在 include 之后，盖过共有的。
+- 部：标题只写部讲什么，不写“第一部”这样的序号；有部的书在自己的文档头写 `:partnums:` 与 `:part-signifier: Part`，
+  编号由 Asciidoctor 生成（Part I、Part II），目录与正文一致，调换顺序也不会错号。
+- 前置内容：只用 book 的前置样式 `[colophon]`、`[dedication]`、`[preface]`、`[acknowledgments]`。书名、作者、
+  版本在文档头，书名页由转换器生成，不写半书名页、标题页这样的节；版权与出版信息写在 `[colophon]`。书没有摘要
+  （`[abstract]` 属于 article，在 book 里会成为编了号的一章）；一本书覆盖什么、怎样读，写在前言里。引言是论述的
+  起点时，作为正文第一部的第一章。
+- 后附内容：有部的书里，附录、术语表、参考文献、索引的标题写成 `=`，与各部并列（Asciidoctor 把它们调成第 1 级，
+  仍与各部并列）；写成 `==` 就成了最后一部里的一章。它们的第一级小节写 `===`：在 `=` 的附录下写 `==`，小节会离开
+  附录、成为编了号的章。样式按内容取：术语表是 `[glossary]`，参考文献是 `[bibliography]`，索引是 `[index]`，
+  其余才是 `[appendix]`。附录标题不写“附录 A”，字母由 Asciidoctor 按顺序加。
+
 ## 运行
 
 在仓库根：

@@ -81,7 +81,7 @@ literal field 不触发业务解释。`aat:role`、`field:status`、`field:owner
 写在哪种表面:: `aat:surface` 取 `attrlist`、`description-list`、`heading-inline` 之一。同一个名字、同一个值写在 attrlist 里与写在描述列表里，得到同一条字段三元组；书的约定可以只认其中一种写法（工作区 07 号样书《声明本书的约定》），所以写法作为源表面事实交出。投影器不判断哪种写法对。
 顺序与回源:: `aat:fieldOrder` 是字段在所属标题内的源顺序，从 `0` 起：先 attrlist，再描述列表，再 `hmeta:` 宏，各表面内按源文档顺序。RDF 三元组没有顺序，字段的先后靠它。`aat:relativePath`、`aat:startLine`、`aat:endLine` 是字段所在的源文件与行：attrlist 字段取那一行 attrlist，描述列表字段取 term 所在的行，`hmeta:` 字段取宏所在的行。book-entry 下字段可以写在 include 进来的文件里，与标题不在同一个文件。
 
-所属标题是被 reify 的三元组的主语，字段证据不另写一份。字段证据 IRI 使用 `field-evidence-<documentOrder>-<fieldOrder>` local id：`documentOrder` 是所属标题的全局顺序号（与标题节点 IRI 同一个数）。不用行号，因为 book-entry 下行号在不同文件间会相撞（xref:第一部：投影对象::标题节点[标题节点] 的「身份」）。
+所属标题是被 reify 的三元组的主语，字段证据不另写一份。字段证据 IRI 使用 `field-evidence-<documentOrder>-<fieldOrder>` local id：`documentOrder` 是所属标题的全局顺序号（与标题节点 IRI 同一个数）。不用行号，因为 book-entry 下行号在不同文件间会相撞（xref:投影对象::标题节点[标题节点] 的「身份」）。
 
 同一个名字、同一个值在同一个标题下写了两处时，字段三元组按 RDF 集合语义只有一条，字段证据仍是两个，各 reify 同一个三元组项。
 

@@ -1,21 +1,14 @@
 = AsciiDoc 标题切片到 RDF 1.2 投影规约
 弥澄亮 <MichengLiang>
 v0.2, 2026-05
-:doctype: book
-:toc: left
-:toclevels: 3
-:sectnums:
-:icons: font
-:experimental:
-:idprefix:
-:idseparator: -
-
 include::../../shared/attributes.adoc[]
+:partnums:
+:part-signifier: Part
 
 [preface]
 include::frontmatter/preface.adoc[]
 
-= 第一部：投影对象
+= 投影对象
 
 [partintro]
 这一部定义标题投影图的对象边界、消费者动作和输入事实。
@@ -24,7 +17,7 @@ include::chapters/01-projection-object.adoc[]
 
 include::chapters/02-heading-node.adoc[]
 
-= 第二部：标题结构
+= 标题结构
 
 [partintro]
 这一部定义标题切片、直接父子关系、同父局部顺序、全局 preorder 和回源坐标。
@@ -33,7 +26,7 @@ include::chapters/03-heading-slice.adoc[]
 
 include::chapters/04-structure-edges.adoc[]
 
-= 第三部：引用、字段与复杂属性
+= 引用、字段与复杂属性
 
 [partintro]
 这一部定义交叉引用边、literal field、heading complex property 和 xref edge complex property。
@@ -42,7 +35,7 @@ include::chapters/05-xref-edge.adoc[]
 
 include::chapters/06-field-and-complex-property.adoc[]
 
-= 第四部：查询与验收
+= 查询与验收
 
 [partintro]
 这一部定义公共查询面、完整样例和验收事实。

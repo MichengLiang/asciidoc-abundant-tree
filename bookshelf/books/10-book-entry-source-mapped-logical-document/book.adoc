@@ -1,21 +1,14 @@
 = 书稿入口回源逻辑文档规约
 弥澄亮 <MichengLiang>
 v0.1, 2026-06
-:doctype: book
-:toc: left
-:toclevels: 3
-:sectnums:
-:icons: font
-:experimental:
-:idprefix:
-:idseparator: -
-
 include::../../shared/attributes.adoc[]
+:partnums:
+:part-signifier: Part
 
 [preface]
 include::frontmatter/preface.adoc[]
 
-= 第一部：对象边界
+= 对象边界
 
 [partintro]
 这一部定义书稿入口回源逻辑文档的对象、消费者、entry file 和 source set。
@@ -26,7 +19,7 @@ include::chapters/02-consumer-actions.adoc[]
 
 include::chapters/03-entry-and-source-set.adoc[]
 
-= 第二部：逻辑文档构造
+= 逻辑文档构造
 
 [partintro]
 这一部定义 include resolution、logical document 和 line origin。
@@ -37,7 +30,7 @@ include::chapters/05-logical-document.adoc[]
 
 include::chapters/06-line-origin.adoc[]
 
-= 第三部：解析器集成与回源
+= 解析器集成与回源
 
 [partintro]
 这一部定义 logical document 如何进入解析器，以及 source coordinate 和 raw 如何从 origin 恢复。
@@ -48,7 +41,7 @@ include::chapters/08-source-coordinate-recovery.adoc[]
 
 include::chapters/09-diagnostics.adoc[]
 
-= 第四部：公共入口与验收
+= 公共入口与验收
 
 [partintro]
 这一部定义 public API、CLI、contract tests 和完成条件。

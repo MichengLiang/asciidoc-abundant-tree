@@ -15,13 +15,13 @@
 
 执行者必须阅读：
 
-* xref:../10-book-entry-source-mapped-logical-document/book.adoc#对象边界[10 号书：对象边界]
+* xref:../10-book-entry-source-mapped-logical-document/book.adoc#对象边界::对象边界[10 号书：对象边界]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Entry 与 Source Set[10 号书：Entry 与 Source Set]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Include Resolution[10 号书：Include Resolution]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Logical Document[10 号书：Logical Document]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Line Origin[10 号书：Line Origin]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Diagnostics[10 号书：Diagnostics]
-* xref:执行契约[本书：执行契约]
+* xref:执行契约::执行契约[本书：执行契约]
 * `src/source-lines.ts`
 * `test/book-entry/fixtures/**`
 * `test/book-entry/book-entry-negative.test.ts`

@@ -18,7 +18,7 @@
 * xref:../09-asciidoc-abundant-tree-parser-spec/book.adoc#Diagnostics 与 Failure Surface[9 号书：Diagnostics 与 Failure Surface]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Diagnostics[10 号书：Diagnostics]
 * xref:../10-book-entry-source-mapped-logical-document/book.adoc#Contract Tests[10 号书：Contract Tests]
-* xref:执行契约[本书：执行契约]
+* xref:执行契约::执行契约[本书：执行契约]
 * `src/book-entry/**`
 * `src/parser.ts`
 * `src/cli.ts`
