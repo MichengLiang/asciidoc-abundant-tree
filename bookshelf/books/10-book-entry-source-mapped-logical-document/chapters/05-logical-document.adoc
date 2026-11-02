@@ -24,7 +24,7 @@ Entry file：
 
 [source,asciidoc]
 ----
-= 第一部：投影对象
+= 投影对象
 
 \include::chapters/01-projection-object.adoc[]
 ----
@@ -34,24 +34,24 @@ Chapter file：
 [source,asciidoc]
 ----
 [#projection-object]
-== 投影对象
+== 标题投影图
 
-本章定义投影对象的输入事实。
+本章定义标题投影图的输入事实。
 ----
 
 Logical text：
 
 [source,asciidoc]
 ----
-= 第一部：投影对象
+= 投影对象
 
 [#projection-object]
-== 投影对象
+== 标题投影图
 
-本章定义投影对象的输入事实。
+本章定义标题投影图的输入事实。
 ----
 
-Logical text 用于结构解析。`= 第一部：投影对象` 的 source coordinate 指向 entry file。`== 投影对象` 的 source coordinate 指向 chapter file。
+Logical text 用于结构解析。`= 投影对象` 的 source coordinate 指向 entry file。`== 标题投影图` 的 source coordinate 指向 chapter file。
 
 === 非源文件身份
 

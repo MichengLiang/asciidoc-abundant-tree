@@ -68,7 +68,7 @@ Entry file：
 
 [source,asciidoc]
 ----
-= 第一部：投影对象
+= 投影对象
 
 \include::chapters/01-projection-object.adoc[]
 ----
@@ -78,21 +78,21 @@ Chapter file：
 [source,asciidoc]
 ----
 [#projection-object]
-== 投影对象
+== 标题投影图
 
-投影对象保存输入事实、图事实和回源坐标。
+标题投影图保存输入事实、图事实和回源坐标。
 ----
 
 Logical text：
 
 [source,asciidoc]
 ----
-= 第一部：投影对象
+= 投影对象
 
 [#projection-object]
-== 投影对象
+== 标题投影图
 
-投影对象保存输入事实、图事实和回源坐标。
+标题投影图保存输入事实、图事实和回源坐标。
 ----
 
 logical text 服务结构解析。作者编辑对象仍然是 entry file 和 included source files。directive line 保留在 entry file 的原始 source text 中，并通过 source file reconstruction surface 回源。
